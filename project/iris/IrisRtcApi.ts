@@ -1,89 +1,58 @@
 import { ILocalVideoTrack, IRemoteVideoTrack } from "agora-rtc-sdk-ng";
+import { IrisCEventHandler, IrisEventHandlerHandle } from "./base/BaseType";
+import { IrisApiEngine } from "./engine/IrisApiEngine";
+import { IrisVideoFrameBufferManager } from "./engine/IrisVideoFrameBufferManager";
 
-
-export enum VIDEO_SOURCE_TYPE {
-    /** Video captured by the camera.
-     */
-    VIDEO_SOURCE_CAMERA_PRIMARY,
-    VIDEO_SOURCE_CAMERA = VIDEO_SOURCE_CAMERA_PRIMARY,
-    /** Video captured by the secondary camera.
-     */
-    VIDEO_SOURCE_CAMERA_SECONDARY,
-    /** Video for screen sharing.
-     */
-    VIDEO_SOURCE_SCREEN_PRIMARY,
-    VIDEO_SOURCE_SCREEN = VIDEO_SOURCE_SCREEN_PRIMARY,
-    /** Video for secondary screen sharing.
-     */
-    VIDEO_SOURCE_SCREEN_SECONDARY,
-    /** Not define.
-     */
-    VIDEO_SOURCE_CUSTOM,
-    /** Video for media player sharing.
-     */
-    VIDEO_SOURCE_MEDIA_PLAYER,
-    /** Video for png image.
-     */
-    VIDEO_SOURCE_RTC_IMAGE_PNG,
-    /** Video for png image.
-     */
-    VIDEO_SOURCE_RTC_IMAGE_JPEG,
-    /** Video for png image.
-     */
-    VIDEO_SOURCE_RTC_IMAGE_GIF,
-    /** Remote video received from network.
-     */
-    VIDEO_SOURCE_REMOTE,
-    /** Video for transcoded.
-     */
-    VIDEO_SOURCE_TRANSCODED,
-
-    VIDEO_SOURCE_UNKNOWN = 100
-};
-
-interface IrisApiEngine {
-
-};
-
-interface IrisCEventHandler {
-    OnEvent(event: string, data: string, buffer: Array<any>, length: Array<number>, buffer_count: number);
-};
-
-interface IrisEventHandlerHandle {
-
-};
-
-interface IrisRtcCAudioFrameObserver {
-}
-
-interface IrisRtcAudioFrameObserverHandle extends IrisRtcCAudioFrameObserver {
-}
 
 //IrisApiEngine
 function CreateIrisApiEngine(): IrisApiEngine {
+    return new IrisApiEngine();
 }
 
 function DestroyIrisApiEngine(engine_ptr: IrisApiEngine): number {
+    engine_ptr.release();
+    return 0;
 }
 
 //eventHandler
 function SetIrisRtcEngineEventHandler(
     engine_ptr: IrisApiEngine,
     event_handler: IrisCEventHandler): IrisEventHandlerHandle {
+
+    engine_ptr.setIrisRtcEngineEventHandler(event_handler);
+    let handle: IrisEventHandlerHandle = event_handler;
+    return handle;
 }
 
 function UnsetIrisRtcEngineEventHandler(
     engine_ptr: IrisApiEngine,
     handle: IrisEventHandlerHandle): number {
+
+    let event_handler: IrisCEventHandler = handle
+    engine_ptr.unsetIrisRtcEngineEventHandler(event_handler);
+    return 0;
 }
 
 function CallIrisApi(
     engine_ptr: IrisApiEngine, func_name: string,
     params: string, paramLength: number,
     buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any = {}): number {
+
+    return engine_ptr.callIrisApi(func_name, params, paramLength, buffer, bufferLength, result);
+
 }
 
+function Attach(engine_ptr: IrisApiEngine,
+    manager_ptr: IrisVideoFrameBufferManager) {
 
+    engine_ptr.attach(manager_ptr);
+}
+
+function Detach(engine_ptr: IrisApiEngine,
+    manager_ptr: IrisVideoFrameBufferManager) {
+
+    engine_ptr.detach(manager_ptr);
+}
 
 
 

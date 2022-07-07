@@ -1,7 +1,8 @@
 import { IAgoraRTCClient, UID } from "agora-rtc-sdk-ng";
 
+export type walkFun<T> = (channelId: string, uid: UID, t: T) => void;
 
-export class IrisContaniner<T> {
+export class Contaniner<T> {
 
     private _contaniner: Map<string, Map<UID, T>> = new Map();
 
@@ -31,8 +32,12 @@ export class IrisContaniner<T> {
         return this._contaniner[channelId]?.[uid];
     }
 
-    public clear() {
-        //todo 
+    walkT(cb: walkFun<T>) {
+        this._contaniner.forEach((map: Map<UID, T>, channelId: string) => {
+            map.forEach((t: T, uid: UID) => {
+                cb(channelId, uid, t);
+            });
+        })
     }
 
 }

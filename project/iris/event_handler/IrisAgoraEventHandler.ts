@@ -1,5 +1,6 @@
 import AgoraRTC, { DeviceInfo } from "agora-rtc-sdk-ng";
-import { IrisRtcEngine } from "./IrisRtcEngine";
+import { IrisRtcEngine } from "../IrisRtcEngine";
+
 
 export class IrisAgoraCallerHandler {
     private _engine: IrisRtcEngine;

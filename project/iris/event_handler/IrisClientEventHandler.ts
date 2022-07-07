@@ -1,8 +1,7 @@
 import { IAgoraRTCClient, ConnectionState, ConnectionDisconnectedReason, IAgoraRTCRemoteUser, UID, RemoteStreamType, ChannelMediaRelayState, ChannelMediaRelayError, ChannelMediaRelayEvent, NetworkQuality } from "agora-rtc-sdk-ng";
-import { AgoraRtcEr }
-import { IrisRtcEngine } from "./IrisRtcEngine";
+import { IrisRtcEngine } from "../IrisRtcEngine";
 
-export class IrisClientCallerHandler {
+export class IrisClientEventHandler {
 
     private _client: IAgoraRTCClient;
     private _engine: IrisRtcEngine;
