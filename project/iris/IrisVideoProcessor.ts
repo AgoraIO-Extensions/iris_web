@@ -4,17 +4,17 @@ import { IrisApiEngine } from "./engine/IrisApiEngine";
 import { IrisVideoFrameBufferManager } from "./engine/IrisVideoFrameBufferManager";
 
 
-function CreateIrisVideoFrameBufferManager(): IrisVideoFrameBufferManager {
+export function CreateIrisVideoFrameBufferManager(): IrisVideoFrameBufferManager {
     return new IrisVideoFrameBufferManager();
 }
 
 
-function FreeIrisVideoFrameBufferManager(manager_ptr: IrisVideoFrameBufferManager) {
+export function FreeIrisVideoFrameBufferManager(manager_ptr: IrisVideoFrameBufferManager) {
     manager_ptr.release();
 }
 
 
-function EnableVideoFrameBufferByConfig(
+export function EnableVideoFrameBufferByConfig(
     manager_ptr: IrisVideoFrameBufferManager,
     buffer: IrisCVideoFrameBuffer,
     config: IrisVideoFrameBufferConfig): IrisVideoFrameBufferDelegateHandle {
@@ -25,7 +25,7 @@ function EnableVideoFrameBufferByConfig(
 }
 
 
-function DisableVideoFrameBufferByDelegate(
+export function DisableVideoFrameBufferByDelegate(
     manager_ptr: IrisVideoFrameBufferManager,
     handle: IrisVideoFrameBufferDelegateHandle) {
 
@@ -33,27 +33,27 @@ function DisableVideoFrameBufferByDelegate(
 }
 
 
-function DisableVideoFrameBufferByConfig(
+export function DisableVideoFrameBufferByConfig(
     manager_ptr: IrisVideoFrameBufferManager,
     config: IrisVideoFrameBufferConfig) {
 
     manager_ptr.disableVideoFrameBufferByConfig(config);
 }
 
-function DisableAllVideoFrameBuffer(
+export function DisableAllVideoFrameBuffer(
     manager_ptr: IrisVideoFrameBufferManager) {
 
     manager_ptr.disableAllVideoFrameBuffer();
 }
 
-function GetVideoFrame(
+export function GetVideoFrame(
     manager_ptr: IrisVideoFrameBufferManager,
     uid: UID, channel_id: string): VideoParams {
 
     return manager_ptr.getVideoFrame(uid, channel_id);
 }
 
-function GetVideoFrameByConfig(
+export function GetVideoFrameByConfig(
     manager_ptr: IrisVideoFrameBufferManager,
     config: IrisVideoFrameBufferConfig): VideoParams {
 

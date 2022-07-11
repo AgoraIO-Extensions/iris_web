@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
 
-    entry: "./src/app.ts",
+    entry: "./iris/app.ts",
 
 
     output: {

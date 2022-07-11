@@ -1,5 +1,4 @@
 import { ILocalAudioTrack, ILocalVideoTrack, IRemoteAudioTrack, IRemoteVideoTrack, UID } from "agora-rtc-sdk-ng";
-import { config } from "webpack";
 
 export enum VIDEO_SOURCE_TYPE {
     /** Video captured by the camera.

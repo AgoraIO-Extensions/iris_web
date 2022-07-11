@@ -1,5 +1,6 @@
-import { IAgoraRTCClient, ConnectionState, ConnectionDisconnectedReason, IAgoraRTCRemoteUser, UID, RemoteStreamType, ChannelMediaRelayState, ChannelMediaRelayError, ChannelMediaRelayEvent, NetworkQuality } from "agora-rtc-sdk-ng";
-import { IrisRtcEngine } from "../IrisRtcEngine";
+import { IAgoraRTCClient, ConnectionState, ConnectionDisconnectedReason, IAgoraRTCRemoteUser, UID, RemoteStreamType, ChannelMediaRelayState, ChannelMediaRelayError, ChannelMediaRelayEvent, NetworkQuality, AgoraRTCError } from "agora-rtc-sdk-ng";
+import { IrisRtcEngine } from "../engine/IrisRtcEngine";
+
 
 export class IrisClientEventHandler {
 
@@ -35,29 +36,29 @@ export class IrisClientEventHandler {
         this._client.on("published-user-list", this.onEventPublishedUserList.bind(this));
     }
 
-    onEventConnectionStateChange(curState: ConnectionState, revState: ConnectionState, reason?: ConnectionDisconnectedReason): void;
-    onEventUserJoined(user: IAgoraRTCRemoteUser): void;
-    onEventUserLeft(user: IAgoraRTCRemoteUser, reason: string): void;
-    onEventUserPublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): void;
-    onEventUserUnpublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): void;
-    onEventUserInfoUpdated(uid: UID, msg: "mute-audio" | "mute-video" | "enable-local-video" | "unmute-audio" | "unmute-video" | "disable-local-video"): void;
-    onEventMediaReconnectStart(uid: UID): void;
-    onEventMediaReconnectEnd(uid: UID): void;
-    onEventStreamTypeChanged(uid: UID, streamType: RemoteStreamType): void;
-    onEventStreamFallback(uid: UID, isFallbackOrRecover: "fallback" | "recover"): void;
-    onEventChannelMediaRelayState(state: ChannelMediaRelayState, code: ChannelMediaRelayError): void;
-    onEventChannelMediaRelayEvent(event: ChannelMediaRelayEvent): void;
-    onEventVolumeIndicator(result: { level: number; uid: UID; }[]): void;
-    onEventCryptError(): void;
-    onEventTokenPrivilegeWillExpire(): void;
-    onEventTokenPrivilegeDidExpire(): void;
-    onEventNetworkQuality(stats: NetworkQuality): void;
-    onEventLiveStreamingError(url: string, err: AgoraRTCError): void;
-    onEventLiveStreamingWarning(url: string, warning: AgoraRTCError): void;
-    onEventException(event: { code: number; msg: string; uid: UID; }): void;
-    onEventIsUsingCloudProxy(isUsingProxy: boolean): void;
-    onEventJoinFallbackToProxy(proxyServer: string): void;
-    onEventPublishedUserList(users: IAgoraRTCRemoteUser): void;
+    onEventConnectionStateChange(curState: ConnectionState, revState: ConnectionState, reason?: ConnectionDisconnectedReason): void { }
+    onEventUserJoined(user: IAgoraRTCRemoteUser): void { }
+    onEventUserLeft(user: IAgoraRTCRemoteUser, reason: string): void { }
+    onEventUserPublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): void { }
+    onEventUserUnpublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): void { }
+    onEventUserInfoUpdated(uid: UID, msg: "mute-audio" | "mute-video" | "enable-local-video" | "unmute-audio" | "unmute-video" | "disable-local-video"): void { }
+    onEventMediaReconnectStart(uid: UID): void { }
+    onEventMediaReconnectEnd(uid: UID): void { }
+    onEventStreamTypeChanged(uid: UID, streamType: RemoteStreamType): void { }
+    onEventStreamFallback(uid: UID, isFallbackOrRecover: "fallback" | "recover"): void { }
+    onEventChannelMediaRelayState(state: ChannelMediaRelayState, code: ChannelMediaRelayError): void { }
+    onEventChannelMediaRelayEvent(event: ChannelMediaRelayEvent): void { }
+    onEventVolumeIndicator(result: { level: number; uid: UID; }[]): void { }
+    onEventCryptError(): void { }
+    onEventTokenPrivilegeWillExpire(): void { }
+    onEventTokenPrivilegeDidExpire(): void { }
+    onEventNetworkQuality(stats: NetworkQuality): void { }
+    onEventLiveStreamingError(url: string, err: AgoraRTCError): void { }
+    onEventLiveStreamingWarning(url: string, warning: AgoraRTCError): void { }
+    onEventException(event: { code: number; msg: string; uid: UID; }): void { }
+    onEventIsUsingCloudProxy(isUsingProxy: boolean): void { }
+    onEventJoinFallbackToProxy(proxyServer: string): void { }
+    onEventPublishedUserList(users: IAgoraRTCRemoteUser): void { }
 
 
     release() {
