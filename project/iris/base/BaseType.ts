@@ -1,45 +1,5 @@
 import { ILocalAudioTrack, ILocalVideoTrack, IRemoteAudioTrack, IRemoteVideoTrack, UID } from "agora-rtc-sdk-ng";
 
-export enum VIDEO_SOURCE_TYPE {
-    /** Video captured by the camera.
-     */
-    VIDEO_SOURCE_CAMERA_PRIMARY,
-    VIDEO_SOURCE_CAMERA = VIDEO_SOURCE_CAMERA_PRIMARY,
-    /** Video captured by the secondary camera.
-     */
-    VIDEO_SOURCE_CAMERA_SECONDARY,
-    /** Video for screen sharing.
-     */
-    VIDEO_SOURCE_SCREEN_PRIMARY,
-    VIDEO_SOURCE_SCREEN = VIDEO_SOURCE_SCREEN_PRIMARY,
-    /** Video for secondary screen sharing.
-     */
-    VIDEO_SOURCE_SCREEN_SECONDARY,
-    /** Not define.
-     */
-    VIDEO_SOURCE_CUSTOM,
-    /** Video for media player sharing.
-     */
-    VIDEO_SOURCE_MEDIA_PLAYER,
-    /** Video for png image.
-     */
-    VIDEO_SOURCE_RTC_IMAGE_PNG,
-    /** Video for png image.
-     */
-    VIDEO_SOURCE_RTC_IMAGE_JPEG,
-    /** Video for png image.
-     */
-    VIDEO_SOURCE_RTC_IMAGE_GIF,
-    /** Remote video received from network.
-     */
-    VIDEO_SOURCE_REMOTE,
-    /** Video for transcoded.
-     */
-    VIDEO_SOURCE_TRANSCODED,
-
-    VIDEO_SOURCE_UNKNOWN = 100
-};
-
 export interface IrisCEventHandler {
     OnEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number);
 };
