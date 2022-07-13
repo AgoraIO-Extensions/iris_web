@@ -2,29 +2,40 @@ import { IAgoraRTCClient, IAgoraRTCRemoteUser, ILocalAudioTrack, ILocalVideoTrac
 import { IrisClientEventHandler } from "../event_handler/IrisClientEventHandler";
 import { Contaniner } from "../tool/Contanier";
 import { AudioTrackPackage, IrisEventHandler, IrisVideoFrameBufferConfig, IRIS_VIDEO_PROCESS_ERR, VideoParams, VideoTrackPackage } from "../base/BaseType";
+import { IrisRtcEnginePrepare } from "../terra/IrisRtcEnginePrepare";
+import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 
 export type CallApiType = (params: string, paramLength: number, buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any) => number;
 
-export class IrisRtcEngine {
+export class IrisRtcEngine extends IrisRtcEnginePrepare {
 
     //EventHandler
     private _eventHandler: IrisEventHandler = null;
 
     //mainClient
     private _mainClient: IAgoraRTCClient = null;
+    private _mainClientChannelName: string = null;
+    private _mainClientUid: UID = null;
     private _mainClientEventHandler: IrisClientEventHandler = null;
     private _mainClientLocalAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
-    _mainClientLocalVideoTrack: VideoTrackPackage = null;
+    private _mainClientLocalVideoTrack: VideoTrackPackage = null;
+    private _mainClientTrackEventHandlers: Array<IrisTrackEventHandler> = new Array<IrisTrackEventHandler>();
+
 
     //subClient
     private _subClients: Contaniner<IAgoraRTCClient> = new Contaniner<IAgoraRTCClient>();
     private _subClientEventHandlers: Contaniner<IrisClientEventHandler> = new Contaniner<IrisClientEventHandler>();
     private _subClientAudioTracks: Contaniner<Array<AudioTrackPackage>> = new Contaniner<Array<AudioTrackPackage>>();
     private _subClientVideoTracks: Contaniner<VideoTrackPackage> = new Contaniner<VideoTrackPackage>();
+    private _subClientTrackEventHandlers: Contaniner<Array<IrisTrackEventHandler>> = new Contaniner<Array<IrisTrackEventHandler>>();
 
     //remoteUser
     _remoteUsers: Contaniner<IAgoraRTCRemoteUser> = new Contaniner<IAgoraRTCRemoteUser>();
 
+    constructor() {
+        super();
+        this._rtcEngine.setEngine(this);
+    };
 
     public setEventHandler(event_handler: IrisEventHandler) {
         this._eventHandler = event_handler;
@@ -120,10 +131,22 @@ export class IrisRtcEngine {
 
 
     public release() {
+        //mainClient
         this._mainClientEventHandler.release();
+        this._mainClientTrackEventHandlers.forEach((trackEventHandler: IrisTrackEventHandler){
+            trackEventHandler.release();
+        })
+
+        //subClient
         this._subClientEventHandlers.walkT((channelId: string, uid: UID, t: IrisClientEventHandler) => {
             t.release();
         });
+        this._subClientTrackEventHandlers.walkT((channelId: string, uid: UID, t: Array<IrisTrackEventHandler>) => {
+            t.forEach((trackEventHandler: IrisTrackEventHandler) => {
+                trackEventHandler.release();
+            })
+        })
+
 
         //todo audioTrack, videoTrack clear
     }

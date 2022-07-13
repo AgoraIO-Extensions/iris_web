@@ -1,12 +1,20 @@
 
 import { IrisEventHandler } from "../base/BaseType";
+import { AgoraActionQueue } from "../tool/AgoraActionQueue";
+import { AgoraConsole } from "../tool/AgoraConsole";
 import { CallApiType, IrisRtcEngine } from "./IrisRtcEngine";
 import { IrisVideoFrameBufferManager } from "./IrisVideoFrameBufferManager";
 
 
 export class IrisApiEngine {
 
-    private _engine: IrisRtcEngine = new IrisRtcEngine();
+    private _engine: IrisRtcEngine;
+    private _actonQueue: AgoraActionQueue;
+
+    constructor() {
+        this._engine = new IrisRtcEngine();
+        this._actonQueue = new AgoraActionQueue(this._engine);
+    }
 
     public callIrisApi(func_name: string,
         params: string, paramLength: number,
@@ -20,7 +28,7 @@ export class IrisApiEngine {
             return callApiFun.call(this._engine, params, paramLength, buffer, bufferLength, result);
         }
         else {
-            console.warn(funName + " : not found in IrisApiEngine.ts");
+            AgoraConsole.warn(func_name + " : not found in IrisApiEngine.ts");
             return -4;
         }
     }

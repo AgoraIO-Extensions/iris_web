@@ -1,4 +1,5 @@
 import { IAgoraRTCClient, IAgoraRTCRemoteUser, ITrack, ILocalTrack, ILocalVideoTrack, IRemoteTrack, IRemoteVideoTrack, CheckVideoVisibleResult } from "agora-rtc-sdk-ng";
+import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 
 
 export type TrackType = 'ILocalTrack' | 'ILocalVideoTrack' | 'IRemoteTrack' | 'IRemoteVideoTrack';
@@ -18,12 +19,15 @@ export class IrisTrackEventHandler {
     private _track: ITrack = null;
     private _trackType: TrackType = "ILocalTrack";
 
-    constructor(params: IrisTrackEventHandlerParam) {
+    private _engine: IrisRtcEngine;
+
+    constructor(params: IrisTrackEventHandlerParam, engine: IrisRtcEngine) {
         this._channelName = params.channelName;
         this._client = params.client;
         this._remoteUser = params.remoteUser;
         this._track = params.track;
         this._trackType = params.trackType;
+        this._engine = engine;
 
         if (this._trackType == 'ILocalTrack') {
             let track = this._track as ILocalTrack;

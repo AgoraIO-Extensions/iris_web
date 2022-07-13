@@ -1339,10 +1339,16 @@ export enum ENCRYPTION_MODE {
 }
 
 //c++ Struct EncryptionConfig
-export interface EncryptionConfig {
+export class EncryptionConfig {
     encryptionMode: ENCRYPTION_MODE;
     encryptionKey: string;
-    encryptionKdfSalt: number;
+    encryptionKdfSalt: Uint8Array;
+
+    constructor() {
+        this.encryptionMode = ENCRYPTION_MODE.AES_128_GCM2;
+        this.encryptionKey = null;
+        this.encryptionKdfSalt = null;
+    }
 };
 
 //c++ enum ENCRYPTION_ERROR_TYPE

@@ -14,7 +14,7 @@ export interface IRtcEngine {
 	setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: agorartc.EXTERNAL_VIDEO_SOURCE_TYPE, encodedVideoOption: agorartc.SenderOptions): number;
 	setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, sourceNumber: number, localPlayback: boolean, publish: boolean): number;
 	setExternalAudioSink(enabled: boolean, sampleRate: number, channels: number): number;
-	enableCustomAudioLocalPlayback(sourceId: number, enabled: boolean): number;
+	// enableCustomAudioLocalPlayback(sourceId: number, enabled: boolean): number;
 	setDirectExternalAudioSource(enable: boolean, localPlayback: boolean): number;
 	pushVideoFrame(frame: agorartc.ExternalVideoFrame, videoTrackId: number): number;
 	pushEncodedVideoImage(imageBuffer: number, length: number, videoEncodedFrameInfo: agorartc.EncodedVideoFrameInfo, videoTrackId: number): number;
@@ -334,7 +334,7 @@ export interface IRtcEngine {
 	setVideoProfileEx(width: number, height: number, frameRate: number, bitrate: number): number;
 	enableDualStreamModeEx(sourceType: agorartc.VIDEO_SOURCE_TYPE, enabled: boolean, streamConfig: agorartc.SimulcastStreamConfig, connection: agorartc.RtcConnection): number;
 	setDualStreamModeEx(sourceType: agorartc.VIDEO_SOURCE_TYPE, mode: agorartc.SIMULCAST_STREAM_MODE, streamConfig: agorartc.SimulcastStreamConfig, connection: agorartc.RtcConnection): number;
-	enableWirelessAccelerate(enabled: boolean): number;
+	// enableWirelessAccelerate(enabled: boolean): number;
 	takeSnapshotEx(connection: agorartc.RtcConnection, uid: agorartc.uid_t, filePath: string): number;
 
 	//ILocalSpatialAudioEngine
