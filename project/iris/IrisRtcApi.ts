@@ -10,7 +10,7 @@ export function CreateIrisApiEngine(): IrisApiEngine {
 }
 
 export function DestroyIrisApiEngine(engine_ptr: IrisApiEngine): number {
-    engine_ptr.release();
+    engine_ptr.destruction();
     return 0;
 }
 

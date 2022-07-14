@@ -9,11 +9,10 @@ import { IrisVideoFrameBufferManager } from "./IrisVideoFrameBufferManager";
 export class IrisApiEngine {
 
     private _engine: IrisRtcEngine;
-    // private _actonQueue: AgoraActionQueue;
+
 
     constructor() {
         this._engine = new IrisRtcEngine();
-        // this._actonQueue = new AgoraActionQueue(this._engine);
     }
 
     public callIrisApi(func_name: string,
@@ -23,6 +22,7 @@ export class IrisApiEngine {
         let array = func_name.split('_');
         let className = array[0];
         let funName = array[1];
+
         let callApiFun: CallApiType = this._engine[funName] as CallApiType;
         if (callApiFun) {
             return callApiFun.call(this._engine, params, paramLength, buffer, bufferLength, result);
@@ -33,8 +33,8 @@ export class IrisApiEngine {
         }
     }
 
-    public release() {
-        this._engine.release();
+    public destruction() {
+        this._engine.destruction();
     }
 
     public setIrisRtcEngineEventHandler(event_handler: IrisEventHandler): void {

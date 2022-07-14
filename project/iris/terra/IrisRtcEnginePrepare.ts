@@ -196,15 +196,6 @@ export class IrisRtcEnginePrepare {
 		return 0;
 	}
 
-	// release(
-	// 	params: string, paramLength: number,
-	// 	buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-	// 	let obj = JSON.parse(params) as any;
-	// 	obj.result = this._rtcEngine.release();
-	// 	return 0;
-	// }
-
-
 	//IVideoDeviceManager
 	enumerateVideoDevices(
 		params: string, paramLength: number,
@@ -276,35 +267,27 @@ export class IrisRtcEnginePrepare {
 		return 0;
 	}
 
-	// release(
-	// 	params: string, paramLength: number,
-	// 	buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-	// 	let obj = JSON.parse(params) as any;
-	// 	obj.result = this._rtcEngine.release();
-	// 	return 0;
-	// }
-
 
 	//IRtcEngine
-	// release(
-	// 	params: string, paramLength: number,
-	// 	buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-	// 	let obj = JSON.parse(params) as any;
-	// 	let sync = obj.sync;
-	// 	if (sync == null) throw "sync is null";
-	// 	obj.result = this._rtcEngine.release(sync);
-	// 	return 0;
-	// }
+	release(
+		params: string, paramLength: number,
+		buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+		let obj = JSON.parse(params) as any;
+		let sync = obj.sync;
+		if (sync == null) throw "sync is null";
+		obj.result = this._rtcEngine.release(sync);
+		return 0;
+	}
 
-	// initialize(
-	// 	params: string, paramLength: number,
-	// 	buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-	// 	let obj = JSON.parse(params) as any;
-	// 	let context = obj.context;
-	// 	if (context == null) throw "context is null";
-	// 	obj.result = this._rtcEngine.initialize(context);
-	// 	return 0;
-	// }
+	initialize(
+		params: string, paramLength: number,
+		buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+		let obj = JSON.parse(params) as any;
+		let context = obj.context;
+		if (context == null) throw "context is null";
+		obj.result = this._rtcEngine.initialize(context);
+		return 0;
+	}
 
 	queryInterface(
 		params: string, paramLength: number,

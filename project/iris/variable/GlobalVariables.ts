@@ -3,6 +3,15 @@ import * as agorartc from '../terra/rtc_types/Index';
 
 export class GlobalVariables {
 
+    public appId: string = null;
+
+    //C++ SetAudioProfile() initialize()
+    public audioProfile: agorartc.AUDIO_PROFILE_TYPE;
+    public audioScenario: agorartc.AUDIO_SCENARIO_TYPE;
+
+    //initialize()
+    public areaCode: agorartc.AREA_CODE | agorartc.AREA_CODE_EX = agorartc.AREA_CODE.AREA_CODE_CN;
+
     public enabledAudio: boolean = true;
     public pausedAudio: boolean = false;
 
@@ -18,9 +27,7 @@ export class GlobalVariables {
     public enabledVideo: boolean = false;
     public pausedVideo: boolean = false;
 
-    //C++ SetAudioProfile()
-    public audioProfile: agorartc.AUDIO_PROFILE_TYPE;
-    public audioScenario: agorartc.AUDIO_SCENARIO_TYPE;
+
 
     //playback signal volume
     playbackSignalVolume: number = 100;

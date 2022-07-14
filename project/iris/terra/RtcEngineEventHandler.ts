@@ -5,6 +5,9 @@ export class RtcEngineEventHandler {
 
     _engine: IrisRtcEngine = null;
 
+    constructor(engine: IrisRtcEngine) {
+        this._engine = engine;
+    }
 
     //IRtcEngineEventHandler
     eventHandlerType(): string {
@@ -45,6 +48,16 @@ export class RtcEngineEventHandler {
         let key = 'onProxyConnected';
         this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
     };
+
+    onWarning(warn: number, msg: string) {
+        let obj = {
+            warn,
+            msg,
+        };
+        let json = JSON.stringify(obj);
+        let key = 'onWarning';
+        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+    }
 
     onError(err: number, msg: string): void {
         let obj = {
@@ -1554,7 +1567,7 @@ export class RtcEngineEventHandler {
 
 
     //todo IDirectCdnStreamingEventHandler
-    OnDirectCdnStreamingStateChanged(state: agorartc.DIRECT_CDN_STREAMING_STATE, error: agorartc.DIRECT_CDN_STREAMING_ERROR, message: string): void {
+    onDirectCdnStreamingStateChanged(state: agorartc.DIRECT_CDN_STREAMING_STATE, error: agorartc.DIRECT_CDN_STREAMING_ERROR, message: string): void {
         let obj = {
             state,
             error,
@@ -1566,7 +1579,7 @@ export class RtcEngineEventHandler {
     }
 
 
-    OnDirectCdnStreamingStats(stats: agorartc.DirectCdnStreamingStats): void {
+    onDirectCdnStreamingStats(stats: agorartc.DirectCdnStreamingStats): void {
         let obj = {
             stats,
         };
@@ -1576,7 +1589,7 @@ export class RtcEngineEventHandler {
     }
 
     //IMediaRecorderObserver
-    OnRecorderStateChanged(state: agorartc.RecorderState, error: agorartc.RecorderErrorCode): void {
+    onRecorderStateChanged(state: agorartc.RecorderState, error: agorartc.RecorderErrorCode): void {
         let obj = {
             state,
             error
@@ -1586,12 +1599,22 @@ export class RtcEngineEventHandler {
         this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
     }
 
-    OnRecorderInfoUpdated(info: agorartc.RecorderInfo): void {
+    onRecorderInfoUpdated(info: agorartc.RecorderInfo): void {
         let obj = {
             info,
         };
         let json = JSON.stringify(obj);
         let key = 'MediaRecorderObserver_onRecorderInfoUpdated';
+        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+    }
+
+    //一些特殊回调
+    onEnumeratedVideoDevices(videoDevices: agorartc.DeviceInfo[]): void {
+        let obj = {
+            videoDevices
+        };
+        let json = JSON.stringify(obj);
+        let key = 'IVideoDeviceManager_onEnumeratedVideoDevices';
         this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
     }
 }

@@ -10,7 +10,7 @@ export function CreateIrisVideoFrameBufferManager(): IrisVideoFrameBufferManager
 
 
 export function FreeIrisVideoFrameBufferManager(manager_ptr: IrisVideoFrameBufferManager) {
-    manager_ptr.release();
+    manager_ptr.destruction();
 }
 
 

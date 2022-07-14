@@ -117,19 +117,23 @@ export class IrisEntitiesContaniner {
         }
     }
 
-    release() {
-        this._mainClientEventHandler.release();
-        this._mainClientTrackEventHandlers.forEach((trackEventHandler: IrisTrackEventHandler){
-            trackEventHandler.release();
+    setMainClient(mainClient: IAgoraRTCClient) {
+        this._mainClient = mainClient;
+    }
+
+    destruction() {
+        this._mainClientEventHandler.destruction();
+        this._mainClientTrackEventHandlers.forEach((trackEventHandler: IrisTrackEventHandler) => {
+            trackEventHandler.destruction();
         })
 
         //subClient
         this._subClientEventHandlers.walkT((channelId: string, uid: UID, t: IrisClientEventHandler) => {
-            t.release();
+            t.destruction();
         });
         this._subClientTrackEventHandlers.walkT((channelId: string, uid: UID, t: Array<IrisTrackEventHandler>) => {
             t.forEach((trackEventHandler: IrisTrackEventHandler) => {
-                trackEventHandler.release();
+                trackEventHandler.destruction();
             })
         })
 

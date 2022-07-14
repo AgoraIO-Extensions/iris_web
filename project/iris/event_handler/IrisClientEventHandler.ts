@@ -61,7 +61,7 @@ export class IrisClientEventHandler {
     onEventPublishedUserList(users: IAgoraRTCRemoteUser): void { }
 
 
-    release() {
+    destruction() {
         this._client.removeAllListeners();
     }
 

@@ -62,7 +62,7 @@ export class IrisVideoFrameBufferManager {
         return this._engine.getVideoFrameByConfig(config);
     }
 
-    public release() {
+    public destruction() {
         this._configMap.clear();
         if (this._scheduleHandle != null) {
             clearInterval(this._scheduleHandle);

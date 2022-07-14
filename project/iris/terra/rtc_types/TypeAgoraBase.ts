@@ -726,9 +726,9 @@ export interface AudioVolumeInfo {
 };
 
 //c++ Struct DeviceInfo
-export interface DeviceInfo {
-    isLowLatencyAudioSupported: boolean;
-};
+// export interface DeviceInfo {
+//     isLowLatencyAudioSupported: boolean;
+// };
 
 //c++ Struct Packet
 export interface Packet {

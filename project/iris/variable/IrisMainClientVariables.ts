@@ -61,14 +61,20 @@ export class IrisMainClientVariables {
     videoEncoderConfiguration: agorartc.VideoEncoderConfiguration = null;
 
     //是否开启大小流
-    enabledDualStreamMode?: boolean;
+    enabledDualStreamMode: boolean = false;
     enabledDualStreamModes: Map<agorartc.VIDEO_SOURCE_TYPE, boolean> = new Map<agorartc.VIDEO_SOURCE_TYPE, boolean>();
 
     //远端的大小流
-    remoteVideoStreamType: Map<UID, agorartc.VIDEO_STREAM_TYPE> = new Map<UID, agorartc.VIDEO_STREAM_TYPE>();
+    remoteVideoStreamTypes: Map<UID, agorartc.VIDEO_STREAM_TYPE> = new Map<UID, agorartc.VIDEO_STREAM_TYPE>();
 
     //远端默认流
     remoteDefaultVideoStreamType: agorartc.VIDEO_STREAM_TYPE = agorartc.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH;
 
     encryptionConfig: agorartc.EncryptionConfig = new agorartc.EncryptionConfig();
+
+    //C++ enabledAudioVolumeIndication()
+    enabledAudioVolumeIndication: { interval: number, smooth: number, reportVad: boolean } = null;
+
+    //setDevice() : videoDevice
+    deviceId: string = null;
 }

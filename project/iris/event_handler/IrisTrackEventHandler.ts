@@ -70,7 +70,7 @@ export class IrisTrackEventHandler {
 
     }
 
-    release() {
+    destruction() {
         this._track.removeAllListeners();
     }
 

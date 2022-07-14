@@ -6,6 +6,10 @@ import { IrisRtcEnginePrepare } from "../terra/IrisRtcEnginePrepare";
 import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 import { IrisEntitiesContaniner } from "./IrisEntitiesContainer";
 import { RtcEngine } from "./RtcEngine";
+import { GlobalVariables } from "../variable/GlobalVariables";
+import { IrisMainClientVariables } from "../variable/IrisMainClientVariables";
+import { IrisSubClientVariables } from "../variable/IrisSubClientVariables";
+import { RtcEngineEventHandler } from "../terra/RtcEngineEventHandler";
 
 export type CallApiType = (params: string, paramLength: number, buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any) => number;
 
@@ -13,12 +17,21 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
 
     //EventHandler
     private _eventHandler: IrisEventHandler = null;
-    private _entitiesContainer: IrisEntitiesContaniner = null;
+
+    public entitiesContainer: IrisEntitiesContaniner = null;
+    public rtcEngineEventHandler: RtcEngineEventHandler = null;
+    public globalVariables: GlobalVariables = null;
+    public mainClientVariables: IrisMainClientVariables = null;
+    public subClientVariables: IrisSubClientVariables = null;
 
     constructor() {
         super();
         this._rtcEngine = new RtcEngine(this);
-        this._entitiesContainer = new IrisEntitiesContaniner(this);
+        this.rtcEngineEventHandler = new RtcEngineEventHandler(this);
+        this.entitiesContainer = new IrisEntitiesContaniner(this);
+        this.globalVariables = new GlobalVariables();
+        this.mainClientVariables = new IrisMainClientVariables();
+        this.subClientVariables = new IrisSubClientVariables();
     };
 
     public setEventHandler(event_handler: IrisEventHandler) {
@@ -29,22 +42,18 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
         return this._eventHandler;
     }
 
-    public getEntitiesContainer(): IrisEntitiesContaniner {
-        return this._entitiesContainer;
-    }
-
     public getVideoFrame(uid: UID, channel_id: string): VideoParams {
-        return this._entitiesContainer.getVideoFrame(uid, channel_id);
+        return this.entitiesContainer.getVideoFrame(uid, channel_id);
 
     }
 
     public getVideoFrameByConfig(config: IrisVideoFrameBufferConfig): VideoParams {
-        return this._entitiesContainer.getVideoFrameByConfig(config);
+        return this.entitiesContainer.getVideoFrameByConfig(config);
     }
 
-    public release() {
+    public destruction() {
 
-        this._entitiesContainer.release();
+        this.entitiesContainer.destruction();
 
     }
 

@@ -21,7 +21,7 @@ export interface IRtcEngine {
 	// release(): void;
 
 	//IVideoDeviceManager
-	enumerateVideoDevices(): agorartc.IVideoDeviceCollection[];
+	enumerateVideoDevices(): number;
 	setDevice(deviceIdUTF8: string): number;
 	getDevice(deviceIdUTF8: string): number;
 	numberOfCapabilities(deviceIdUTF8: string): number;
@@ -338,7 +338,7 @@ export interface IRtcEngine {
 	takeSnapshotEx(connection: agorartc.RtcConnection, uid: agorartc.uid_t, filePath: string): number;
 
 	//ILocalSpatialAudioEngine
-	initialize(config: agorartc.LocalSpatialAudioConfig): number;
+	// initialize(config: agorartc.LocalSpatialAudioConfig): number;
 	updateRemotePosition(uid: agorartc.uid_t, posInfo: agorartc.RemoteVoicePositionInfo): number;
 	updateRemotePositionEx(uid: agorartc.uid_t, posInfo: agorartc.RemoteVoicePositionInfo, connection: agorartc.RtcConnection): number;
 	removeRemotePosition(uid: agorartc.uid_t): number;

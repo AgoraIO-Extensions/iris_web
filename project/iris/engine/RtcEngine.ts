@@ -2,102 +2,208 @@ import * as agorartc from '../terra/rtc_types/Index';
 import { IRtcEngine } from '../terra/IRtcEngine';
 import { IrisApiEngine } from './IrisApiEngine';
 import { IrisRtcEngine } from './IrisRtcEngine';
+import { AgoraActionQueue } from '../tool/AgoraActionQueue';
+import { AgoraConsole } from '../tool/AgoraConsole';
+import AgoraRTC, { IAgoraRTCClient } from 'agora-rtc-sdk-ng';
+import { AgoraTranslate } from '../tool/AgoraTranslate';
 
 export class RtcEngine implements IRtcEngine {
 
     private _engine: IrisRtcEngine = null;
+    private _actonQueue: AgoraActionQueue;
 
     constructor(engine: IrisRtcEngine) {
         this._engine = engine;
+        this._actonQueue = new AgoraActionQueue(this);
+    }
+
+    initialize(context: agorartc.RtcEngineContext): number {
+        this._engine.globalVariables.appId = context.appId;
+        this._engine.mainClientVariables.channelProfile = context.channelProfile;
+        this._engine.globalVariables.audioScenario = context.audioScenario;
+        this._engine.globalVariables.areaCode = context.areaCode;
+
+        AgoraRTC.setArea([AgoraTranslate.AREA_CODE2AREAS(context.areaCode)]);
+
+        AgoraConsole.logLevel = context.logConfig.level;
+        let numberLevel: number = AgoraTranslate.logLevel2Number(context.logConfig.level);
+        AgoraRTC.setLogLevel(numberLevel);
+
+        let client: IAgoraRTCClient = AgoraRTC.createClient({
+            codec: 'h264',
+            mode: "rtc",
+            role: "host",
+        });
+        this._engine.entitiesContainer.setMainClient(client);
+
+        let result = AgoraRTC.checkSystemRequirements();
+        if (result) {
+            AgoraConsole.log("AgoraRTC.checkSystemRequirements return true");
+        }
+        else {
+            AgoraConsole.warn("AgoraRTC.checkSystemRequirements reutrn false");
+        }
+        return 0;
     }
 
     registerAudioFrameObserver(observer: agorartc.IAudioFrameObserver): number {
+        AgoraConsole.warn("registerAudioFrameObserver not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     registerVideoFrameObserver(observer: agorartc.IVideoFrameObserver): number {
+        AgoraConsole.warn("registerVideoFrameObserver not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     registerVideoEncodedFrameObserver(observer: agorartc.IVideoEncodedFrameObserver): number {
+        AgoraConsole.warn("registerVideoEncodedFrameObserver not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     pushAudioFrame(type: agorartc.MEDIA_SOURCE_TYPE, frame: agorartc.AudioFrame, wrap: boolean, sourceId: number): number {
+        AgoraConsole.warn("pushAudioFrame not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     pushCaptureAudioFrame(frame: agorartc.AudioFrame): number {
+        AgoraConsole.warn("pushCaptureAudioFrame not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     pushReverseAudioFrame(frame: agorartc.AudioFrame): number {
+        AgoraConsole.warn("pushReverseAudioFrame not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     pushDirectAudioFrame(frame: agorartc.AudioFrame): number {
+        AgoraConsole.warn("pushDirectAudioFrame not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     pullAudioFrame(frame: agorartc.AudioFrame): number {
+        AgoraConsole.warn("pullAudioFrame not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: agorartc.EXTERNAL_VIDEO_SOURCE_TYPE, encodedVideoOption: agorartc.SenderOptions): number {
+        AgoraConsole.warn("setExternalVideoSource not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, sourceNumber: number, localPlayback: boolean, publish: boolean): number {
+        AgoraConsole.warn("setExternalAudioSource not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     setExternalAudioSink(enabled: boolean, sampleRate: number, channels: number): number {
+        AgoraConsole.warn("setExternalAudioSink not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     enableCustomAudioLocalPlayback(sourceId: number, enabled: boolean): number {
+        AgoraConsole.warn("enableCustomAudioLocalPlayback not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     setDirectExternalAudioSource(enable: boolean, localPlayback: boolean): number {
+        AgoraConsole.warn("setDirectExternalAudioSource not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
     pushVideoFrame(frame: agorartc.ExternalVideoFrame, videoTrackId: number): number {
+        AgoraConsole.warn("pushVideoFrame not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     pushEncodedVideoImage(imageBuffer: number, length: number, videoEncodedFrameInfo: agorartc.EncodedVideoFrameInfo, videoTrackId: number): number {
+        AgoraConsole.warn("pushEncodedVideoImage not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    enumerateVideoDevices(): agorartc.IVideoDeviceCollection[] {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+
+    //todo IVideoDeviceManager
+    enumerateVideoDevices(): number {
+        AgoraRTC.getCameras()
+            .then((info: MediaDeviceInfo[]) => {
+                let deviceInfos: Array<agorartc.DeviceInfo> = new Array<agorartc.DeviceInfo>();
+                for (let i = 0; i < info.length; i++) {
+                    deviceInfos.push({
+                        deviceId: info[i].deviceId,
+                        deviceName: info[i].label
+                    });
+                }
+                this._engine.rtcEngineEventHandler.onEnumeratedVideoDevices(deviceInfos);
+            })
+            .catch((reson: any) => {
+                AgoraConsole.warn("enumerated video devices failed");
+                this._engine.rtcEngineEventHandler.onWarning(0, "enumerated video devices failed");
+                this._engine.rtcEngineEventHandler.onEnumeratedVideoDevices([]);
+            });
+        return 0;
     }
+
     setDevice(deviceIdUTF8: string): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (deviceIdUTF8: string, next) => {
+                //todo 如果当前有LocalVideoTrack， 那么调用LocalVideoTrack.setDevice 
+
+                //否则 在localVideoTrack被创建的时候，要读取下边这个电量，并且设置一下，不需要
+                this._engine.mainClientVariables.deviceId = deviceIdUTF8;
+
+                next();
+            },
+            args: [deviceIdUTF8]
+        })
+        return 0;
     }
+
+    //todo may can supported
     getDevice(deviceIdUTF8: string): number {
+        AgoraConsole.warn("getDevice not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     numberOfCapabilities(deviceIdUTF8: string): number {
+        AgoraConsole.warn("numberOfCapabilities not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     getCapability(deviceIdUTF8: string, deviceCapabilityNumber: number, capability: agorartc.VideoFormat): number {
+        AgoraConsole.warn("getCapability not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     startDeviceTest(hwnd: any): number {
+        AgoraConsole.warn("startDeviceTest not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     stopDeviceTest(): number {
+        AgoraConsole.warn("stopDeviceTest not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     release(sync: boolean): void {
-        // return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        //do nothing
     }
-    initialize(context: agorartc.RtcEngineContext): number;
-    initialize(config: agorartc.LocalSpatialAudioConfig): number;
-    initialize(config: unknown): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
+
     queryInterface(iid: agorartc.INTERFACE_ID_TYPE, inter: void): number {
+        AgoraConsole.warn("queryInterface not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     getVersion(build: number): string {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return AgoraRTC.VERSION;
     }
+
     getErrorDescription(code: number): string {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        AgoraConsole.warn("getErrorDescription not supported in this platfrom!");
+        return "getErrorDescription not supported in this platfrom!";
     }
+
     joinChannel(token: string, channelId: string, info: string, uid: number): number {
+
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+
     }
     joinChannel2(token: string, channelId: string, uid: number, options: agorartc.ChannelMediaOptions): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -186,249 +292,587 @@ export class RtcEngine implements IRtcEngine {
     setupLocalVideo(canvas: agorartc.VideoCanvas): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     enableAudio(): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._engine.globalVariables.enabledAudio = true;
+        //todo 将当前已经被停用的audio都开启 如果需要，这个操作要丢到丢列里）
+
+        return 0;
     }
     disableAudio(): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+
+        this._actonQueue.putAction({
+            fun: (next) => {
+                this._engine.globalVariables.enabledAudio = false;
+                //todo 将当前已经正在播放的的audio关闭 如果需要，这个操作要丢到丢列里）
+
+                next();
+            },
+            args: [],
+        });
+        return 0;
     }
+
     setAudioProfile(profile: agorartc.AUDIO_PROFILE_TYPE, scenario: agorartc.AUDIO_SCENARIO_TYPE): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+
+        this._actonQueue.putAction({
+            fun: (profile: agorartc.AUDIO_PROFILE_TYPE, scenario: agorartc.AUDIO_SCENARIO_TYPE, next) => {
+                this._engine.globalVariables.audioProfile = profile;
+                this._engine.globalVariables.audioScenario = scenario;
+                //todo 是否需要去设置当前所有音频属性
+
+                next();
+            },
+            args: [profile, scenario]
+        })
+
+
+        return 0;
     }
+
     setAudioProfile2(profile: agorartc.AUDIO_PROFILE_TYPE): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (profile: agorartc.AUDIO_PROFILE_TYPE, next) => {
+                this._engine.globalVariables.audioProfile = profile;
+                //todo  是否需要去设置当前所有音频属性
+
+                next();
+            },
+            args: [profile]
+        });
+        return 0;
     }
+
     setAudioScenario(scenario: agorartc.AUDIO_SCENARIO_TYPE): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (scenario: agorartc.AUDIO_SCENARIO_TYPE, next) => {
+                this._engine.globalVariables.audioScenario = scenario;
+
+                //todo  是否需要实时的改变音频属性 如果需要，这个操作要丢到丢列里）
+                next();
+            },
+            args: [scenario]
+        })
+        return 0;
     }
+
     enableLocalAudio(enabled: boolean): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (enabled: boolean, next) => {
+                this._engine.globalVariables.enabledLocalAudio = enabled;
+
+                //todo  是否需要实时的改变音频属性 如果需要，这个操作要丢到丢列里）
+                next();
+            },
+            args: [enabled]
+        });
+
+
+        return 0;
     }
+
     muteLocalAudioStream(mute: boolean): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (mute: boolean, next) => {
+                this._engine.globalVariables.mutedLocalAudioStream = mute;
+
+                //todo 是否需要实时的改变音频属性 （如果需要，这个操作要丢到丢列里）
+                next();
+            },
+            args: [mute]
+        });
+
+
+        return 0;
     }
     muteAllRemoteAudioStreams(mute: boolean): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (mute: boolean, next) => {
+                //todo, 在这里找到所有的audioStreams，并且去mute或者 un-mute
+
+
+                next();
+            },
+            args: [mute]
+        });
+
+
+        return 0;
     }
+
     setDefaultMuteAllRemoteAudioStreams(mute: boolean): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (mute: boolean, next) => {
+
+                this._engine.globalVariables.defaultMutedAllRemoteAudioStreams = mute;
+
+                //应该不需要实时的去改变订阅状态
+                next();
+            },
+            args: [mute]
+        });
+        return 0;
     }
+
     muteRemoteAudioStream(uid: number, mute: boolean): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (uid: number, mute: boolean, next) => {
+                this._engine.mainClientVariables.mutedRemoteAudioStreams.set(uid, mute);
+
+                //1.todo 去寻找到这个audio，并且设置一下
+                //2.因为因为可能没有触发 远端的pushish回到问题，可能此时还没有这个audio。
+                //3.那么需要在其发布的时候。使用通知去找到它
+
+                next();
+            },
+            args: [uid, mute]
+        });
+        return 0;
     }
     muteLocalVideoStream(mute: boolean): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (mute: boolean, next) => {
+                this._engine.globalVariables.mutedLocalVideoStream = mute;
+
+                //todo 需要实时的的去找VideoStream，并且设置一下 (这个操作要丢到丢列里）
+
+                next();
+            },
+            args: [mute]
+        });
+        return 0;
     }
+
     enableLocalVideo(enabled: boolean): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (enabled: boolean, next) => {
+                this._engine.globalVariables.enabledLocalVideo = enabled;
+                //todo 找到自己的video并且去释放
+
+                next();
+            },
+            args: [enabled]
+        })
+        return 0;
     }
+
     muteAllRemoteVideoStreams(mute: boolean): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (mute: boolean, next) => {
+                //todo, 在这里找到所有的AudioStreams，并且去mute或者 un-mute
+
+                next();
+            },
+            args: [mute]
+        });
+        return 0;
     }
+
     setDefaultMuteAllRemoteVideoStreams(mute: boolean): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (mute: boolean, next) => {
+                this._engine.globalVariables.defaultMutedAllRemoteVideoStreams = mute;
+
+                //todo 立刻停止订阅当前的所有的远端视频流
+                //将 muteRemoteVideoStream 里的所有特殊数据给清空，否则会出bug
+                //在未来将会订阅到的不管
+                next();
+            },
+            args: [mute]
+        });
+
+        return 0;
     }
+
     muteRemoteVideoStream(uid: number, mute: boolean): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (uid: number, mute: boolean, next) => {
+                this._engine.mainClientVariables.mutedRemoteVideoStreams.set(uid, mute);
+
+                //寻找到这个流，如果找到就设置一下
+
+
+                //在未来将会订阅到的不管
+                next();
+            },
+            args: [mute]
+        });
+        return 0;
     }
+
     setRemoteVideoStreamType(uid: number, streamType: agorartc.VIDEO_STREAM_TYPE): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (uid: number, streamType: agorartc.VIDEO_STREAM_TYPE, next) => {
+                this._engine.mainClientVariables.remoteVideoStreamTypes.set(uid, streamType);
+
+                //找到这个video的流并且设置一下
+
+                next();
+            },
+            args: [uid, streamType]
+        });
+        return 0;
     }
-    setRemoteVideoSubscriptionOptions(uid: number, options: agorartc.VideoSubscriptionOptions): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
+
     setRemoteDefaultVideoStreamType(streamType: agorartc.VIDEO_STREAM_TYPE): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (streamType: agorartc.VIDEO_STREAM_TYPE, next) => {
+                this._engine.mainClientVariables.remoteDefaultVideoStreamType = streamType;
+                //must clear special value after set default value;
+                this._engine.mainClientVariables.remoteVideoStreamTypes.clear();
+
+                //todo 如果当前mainClient已经被创建了，那么设置一下 mainClient.setRemoteDefaultVideoStreamType
+                //如果没有创建，那么需要在client被创建的时候设置一下
+
+                next();
+            },
+            args: [streamType]
+        });
+
+        return 0;
     }
+
+    setRemoteVideoSubscriptionOptions(uid: number, options: agorartc.VideoSubscriptionOptions): number {
+        if (options.type != null)
+            return this.setRemoteVideoStreamType(uid, options.type);
+
+        return 0;
+    }
+
+    //done
     setSubscribeAudioBlacklist(uidList: number[], uidNumber: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setSubscribeAudioWhitelist(uidList: number[], uidNumber: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setSubscribeVideoBlacklist(uidList: number[], uidNumber: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setSubscribeVideoWhitelist(uidList: number[], uidNumber: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+
     enableAudioVolumeIndication(interval: number, smooth: number, reportVad: boolean): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (interval: number, smooth: number, reportVad: boolean, next) => {
+                //如果当前有client, 那么就client.enableAudioVolumeIndicator()函数设置一下，但是不保存临时变量
+
+                //如果没有就保存到这个变量，并且在Client被创建的时候去读取一下这个值
+                this._engine.mainClientVariables.enabledAudioVolumeIndication = {
+                    interval,
+                    smooth,
+                    reportVad
+                };
+                next();
+            },
+            args: [interval, smooth, reportVad]
+        })
+
+        return 0;
     }
+
+    //done
     startAudioRecording(filePath: string, quality: agorartc.AUDIO_RECORDING_QUALITY_TYPE): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     startAudioRecording2(filePath: string, sampleRate: number, quality: agorartc.AUDIO_RECORDING_QUALITY_TYPE): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     startAudioRecording3(config: agorartc.AudioRecordingConfiguration): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     registerAudioEncodedFrameObserver(config: agorartc.AudioEncodedFrameObserverConfig, observer: agorartc.IAudioEncodedFrameObserver): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     stopAudioRecording(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     createMediaPlayer(): agorartc.IMediaPlayer {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     destroyMediaPlayer(media_player: agorartc.IMediaPlayer): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //todo 
     startAudioMixing(filePath: string, loopback: boolean, replace: boolean, cycle: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //todo 
     startAudioMixing2(filePath: string, loopback: boolean, replace: boolean, cycle: number, startPos: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //todo
     stopAudioMixing(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //todo
     pauseAudioMixing(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //todo
     resumeAudioMixing(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     selectAudioTrack(index: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     getAudioTrackCount(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     adjustAudioMixingVolume(volume: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     adjustAudioMixingPublishVolume(volume: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     getAudioMixingPublishVolume(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     adjustAudioMixingPlayoutVolume(volume: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     getAudioMixingPlayoutVolume(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     getAudioMixingDuration(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     getAudioMixingCurrentPosition(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setAudioMixingPosition(pos: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setAudioMixingDualMonoMode(mode: agorartc.AUDIO_MIXING_DUAL_MONO_MODE): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setAudioMixingPitch(pitch: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     getEffectsVolume(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setEffectsVolume(volume: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     preloadEffect(soundId: number, filePath: string, startPos: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     playEffect(soundId: number, filePath: string, loopCount: number, pitch: number, pan: number, gain: number, publish: boolean, startPos: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     playAllEffects(loopCount: number, pitch: number, pan: number, gain: number, publish: boolean): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     getVolumeOfEffect(soundId: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setVolumeOfEffect(soundId: number, volume: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     pauseEffect(soundId: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     pauseAllEffects(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     resumeEffect(soundId: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     resumeAllEffects(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     stopEffect(soundId: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     stopAllEffects(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     unloadEffect(soundId: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     unloadAllEffects(): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     getEffectDuration(filePath: string): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setEffectPosition(soundId: number, pos: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     getEffectCurrentPosition(soundId: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     enableSoundPositionIndication(enabled: boolean): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setRemoteVoicePosition(uid: number, pan: number, gain: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //todo 
     enableSpatialAudio(enabled: boolean): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //todo
     setRemoteUserSpatialAudioParams(uid: number, params: agorartc.SpatialAudioParams): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setVoiceBeautifierPreset(preset: agorartc.VOICE_BEAUTIFIER_PRESET): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setAudioEffectPreset(preset: agorartc.AUDIO_EFFECT_PRESET): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+   //done
     setVoiceConversionPreset(preset: agorartc.VOICE_CONVERSION_PRESET): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setAudioEffectParameters(preset: agorartc.AUDIO_EFFECT_PRESET, param1: number, param2: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setVoiceBeautifierParameters(preset: agorartc.VOICE_BEAUTIFIER_PRESET, param1: number, param2: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setVoiceConversionParameters(preset: agorartc.VOICE_CONVERSION_PRESET, param1: number, param2: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setLocalVoicePitch(pitch: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setLocalVoiceEqualization(bandFrequency: agorartc.AUDIO_EQUALIZATION_BAND_FREQUENCY, bandGain: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setLocalVoiceReverb(reverbKey: agorartc.AUDIO_REVERB_TYPE, value: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setLogFile(filePath: string): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setLogFilter(filter: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
+    //done
     setLogLevel(level: agorartc.LOG_LEVEL): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        AgoraConsole.logLevel = level;
+        let numberLevel: number = AgoraTranslate.logLevel2Number(level);
+        AgoraRTC.setLogLevel(numberLevel);
+        return 0;
     }
+
+    //done
     setLogFileSize(fileSizeInKBytes: number): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
