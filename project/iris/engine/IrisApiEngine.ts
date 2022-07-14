@@ -9,11 +9,11 @@ import { IrisVideoFrameBufferManager } from "./IrisVideoFrameBufferManager";
 export class IrisApiEngine {
 
     private _engine: IrisRtcEngine;
-    private _actonQueue: AgoraActionQueue;
+    // private _actonQueue: AgoraActionQueue;
 
     constructor() {
         this._engine = new IrisRtcEngine();
-        this._actonQueue = new AgoraActionQueue(this._engine);
+        // this._actonQueue = new AgoraActionQueue(this._engine);
     }
 
     public callIrisApi(func_name: string,

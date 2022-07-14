@@ -7,7 +7,7 @@ export class RtcEngine implements IRtcEngine {
 
     private _engine: IrisRtcEngine = null;
 
-    setEngine(engine: IrisRtcEngine) {
+    constructor(engine: IrisRtcEngine) {
         this._engine = engine;
     }
 

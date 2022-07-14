@@ -58,7 +58,7 @@ export class IrisTrackEventHandler {
 
     }
 
-    onEventVideoElementVisibleStatus(data?: CheckVideoVisibleResult) {
+    onEventVideoElementVisibleStatus(data?: CheckVideoVisibleResult): void {
 
     }
 

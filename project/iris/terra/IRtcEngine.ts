@@ -1,6 +1,6 @@
+import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import * as agorartc from './rtc_types/Index';
 export interface IRtcEngine {
-
 
 	//IMediaEngine
 	registerAudioFrameObserver(observer: agorartc.IAudioFrameObserver): number;

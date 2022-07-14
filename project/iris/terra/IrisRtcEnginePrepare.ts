@@ -1,10 +1,11 @@
 
 import { RtcEngine } from "../engine/RtcEngine";
+import { IRtcEngine } from "./IRtcEngine";
 import * as agorartc from "./rtc_types/Index";
 
 export class IrisRtcEnginePrepare {
 
-	protected _rtcEngine: RtcEngine = new RtcEngine();
+	protected _rtcEngine: IRtcEngine;
 
 	//IMediaEngine
 	registerAudioFrameObserver(
