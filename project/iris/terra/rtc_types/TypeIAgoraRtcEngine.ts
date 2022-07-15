@@ -336,6 +336,7 @@ export interface RtcEngineContext {
     // eventHandler: IRtcEngineEventHandler[];
     appId: string;
     context: any;
+    enableAudioDevice: boolean;
     channelProfile: CHANNEL_PROFILE_TYPE;
     audioScenario: AUDIO_SCENARIO_TYPE;
     areaCode: number;

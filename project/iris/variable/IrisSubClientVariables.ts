@@ -26,9 +26,9 @@ export class IrisSubClientVariables {
     public enableAudioRecordingOrPlayout?: boolean;
     public publishMediaPlayerId?: number;
     public clientRoleType?: agorartc.CLIENT_ROLE_TYPE;
-    public audienceLatencyLevel?: agorartc.AUDIENCE_LATENCY_LEVEL_TYPE;
-    public defaultVideoStreamType?: agorartc.VIDEO_STREAM_TYPE;
-    public channelProfile?: agorartc.CHANNEL_PROFILE_TYPE;
+    public audienceLatencyLevel: agorartc.AUDIENCE_LATENCY_LEVEL_TYPE = agorartc.AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY;
+    public defaultVideoStreamType: agorartc.VIDEO_STREAM_TYPE = agorartc.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH;
+    public channelProfile: agorartc.CHANNEL_PROFILE_TYPE = agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_GAME;
     public audioDelayMs?: number;
     public mediaPlayerAudioDelayMs?: number;
     public token?: string;

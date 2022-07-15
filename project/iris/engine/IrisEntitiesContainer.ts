@@ -121,6 +121,14 @@ export class IrisEntitiesContaniner {
         this._mainClient = mainClient;
     }
 
+    getMainClient(): IAgoraRTCClient {
+        return this._mainClient;
+    }
+
+    getSubClinets(): Contaniner<IAgoraRTCClient> {
+        return this._subClients;
+    }
+
     destruction() {
         this._mainClientEventHandler.destruction();
         this._mainClientTrackEventHandlers.forEach((trackEventHandler: IrisTrackEventHandler) => {
@@ -138,5 +146,6 @@ export class IrisEntitiesContaniner {
         })
 
     }
+
 
 }

@@ -213,7 +213,7 @@ export interface IRtcEngine {
 	setDefaultAudioRouteToSpeakerphone(defaultToSpeaker: boolean): number;
 	setEnableSpeakerphone(speakerOn: boolean): number;
 	isSpeakerphoneEnabled(): boolean;
-	getScreenCaptureSources(thumbSize: number, iconSize: number, includeScreen: boolean): agorartc.IScreenCaptureSourceList[];
+	getScreenCaptureSources(thumbSize: agorartc.VideoDimensions, iconSize: agorartc.VideoDimensions, includeScreen: boolean): agorartc.IScreenCaptureSourceList[];
 	setAudioSessionOperationRestriction(restriction: agorartc.AUDIO_SESSION_OPERATION_RESTRICTION): number;
 	startScreenCaptureByDisplayId(displayId: number, regionRect: agorartc.Rectangle, captureParams: agorartc.ScreenCaptureParameters): number;
 	startScreenCaptureByScreenRect(screenRect: agorartc.Rectangle, regionRect: agorartc.Rectangle, captureParams: agorartc.ScreenCaptureParameters): number;

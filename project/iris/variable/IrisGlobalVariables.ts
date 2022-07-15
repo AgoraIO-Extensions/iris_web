@@ -1,7 +1,8 @@
 
+import { UID } from 'agora-rtc-sdk-ng';
 import * as agorartc from '../terra/rtc_types/Index';
 
-export class GlobalVariables {
+export class IrisGlobalVariables {
 
     public appId: string = null;
 
@@ -31,6 +32,14 @@ export class GlobalVariables {
 
     //playback signal volume
     playbackSignalVolume: number = 100;
+    playbackSignalVolumes: Map<UID, number> = new Map();
+
+
+    // recording Signal Volume
+    recordingSignalVolume: number = 100;
+
+    //
+    mutedRecordingSignal: boolean = false;
 
     //设置默认 mute 选项
     defaultMutedAllRemoteAudioStreams: boolean = false;
@@ -41,4 +50,11 @@ export class GlobalVariables {
 
     //SetAdvancedAudioOptions
     audioProcessingChannels?: number;
+
+    //setVideoEncoderConfiguration
+    videoEncoderConfiguration: agorartc.VideoEncoderConfiguration = null;
+
+    cameraDirection: agorartc.CAMERA_DIRECTION = null;
+
+    fallbackOption: agorartc.STREAM_FALLBACK_OPTIONS = null;
 }

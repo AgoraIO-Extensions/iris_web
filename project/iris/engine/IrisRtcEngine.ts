@@ -6,7 +6,7 @@ import { IrisRtcEnginePrepare } from "../terra/IrisRtcEnginePrepare";
 import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 import { IrisEntitiesContaniner } from "./IrisEntitiesContainer";
 import { RtcEngine } from "./RtcEngine";
-import { GlobalVariables } from "../variable/GlobalVariables";
+import { IrisGlobalVariables } from "../variable/IrisGlobalVariables";
 import { IrisMainClientVariables } from "../variable/IrisMainClientVariables";
 import { IrisSubClientVariables } from "../variable/IrisSubClientVariables";
 import { RtcEngineEventHandler } from "../terra/RtcEngineEventHandler";
@@ -20,7 +20,7 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
 
     public entitiesContainer: IrisEntitiesContaniner = null;
     public rtcEngineEventHandler: RtcEngineEventHandler = null;
-    public globalVariables: GlobalVariables = null;
+    public globalVariables: IrisGlobalVariables = null;
     public mainClientVariables: IrisMainClientVariables = null;
     public subClientVariables: IrisSubClientVariables = null;
 
@@ -29,7 +29,7 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
         this._rtcEngine = new RtcEngine(this);
         this.rtcEngineEventHandler = new RtcEngineEventHandler(this);
         this.entitiesContainer = new IrisEntitiesContaniner(this);
-        this.globalVariables = new GlobalVariables();
+        this.globalVariables = new IrisGlobalVariables();
         this.mainClientVariables = new IrisMainClientVariables();
         this.subClientVariables = new IrisSubClientVariables();
     };

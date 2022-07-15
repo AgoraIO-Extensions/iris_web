@@ -1,5 +1,6 @@
 
-import AgoraRTC, { AREAS } from "agora-rtc-sdk-ng";
+import AgoraRTC, { AREAS, AudienceLatencyLevelType, ClientRole, ClientRoleOptions, LowStreamParameter, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
+import { Argument } from "webpack";
 import * as agorartc from "../terra/rtc_types/Index";
 import { AgoraConsole } from "./AgoraConsole";
 
@@ -19,7 +20,7 @@ export class AgoraTranslate {
     //     LOG_LEVEL_FATAL = 0x0008, 致命
     //     LOG_LEVEL_API_CALL = 0x0010,
     // }
-    public static logLevel2Number(logLevel: agorartc.LOG_LEVEL): number {
+    public static agorartcLOG_LEVEL2Number(logLevel: agorartc.LOG_LEVEL): number {
         switch (logLevel) {
             case agorartc.LOG_LEVEL.LOG_LEVEL_NONE:
                 return 4;
@@ -36,7 +37,7 @@ export class AgoraTranslate {
         }
     };
 
-    public static AREA_CODE2AREAS(areaCode: agorartc.AREA_CODE | agorartc.AREA_CODE_EX): AREAS {
+    public static agorartcAREA_CODE2AREAS(areaCode: agorartc.AREA_CODE | agorartc.AREA_CODE_EX): AREAS {
         switch (areaCode) {
             case agorartc.AREA_CODE.AREA_CODE_CN:
                 return AREAS.CHINA;
@@ -73,8 +74,63 @@ export class AgoraTranslate {
                 return AREAS.GLOBAL;
         }
 
+    };
+
+    public static agorartcCLIENT_ROLE_TYPE2ClientRole(clientRole: agorartc.CLIENT_ROLE_TYPE): ClientRole {
+        switch (clientRole) {
+            case agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER:
+                return 'host';
+            case agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE:
+                return 'audience';
+        };
+    };
+
+    public static agorartcCHANNEL_PROFILE_TYPE2SDK_MODE(channelProfile: agorartc.CHANNEL_PROFILE_TYPE): SDK_MODE {
+        switch (channelProfile) {
+            case agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION:
+                return "rtc";
+            case agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING:
+                return "live";
+            case agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_GAME:
+                return 'rtc';
+        };
+    };
+
+    public static agorartcClientRoleOptions2ClientRoleOptions(options: agorartc.ClientRoleOptions): ClientRoleOptions {
+        switch (options.audienceLatencyLevel) {
+            case agorartc.AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_LOW_LATENCY:
+                return { level: AudienceLatencyLevelType.AUDIENCE_LEVEL_LOW_LATENCY };
+            case agorartc.AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY:
+                return { level: AudienceLatencyLevelType.AUDIENCE_LEVEL_ULTRA_LOW_LATENCY };
+        }
     }
 
+    public static agorartcVideoEncoderConfiguration2VideoEncoderConfiguration(conf: agorartc.VideoEncoderConfiguration): VideoEncoderConfiguration {
+        let ret: VideoEncoderConfiguration = {
+            width: conf.dimensions.width,
+            height: conf.dimensions.height,
+            frameRate: {
+                ideal: conf.frameRate,
+                min: conf.minFrameRate,
+            },
+            bitrateMax: conf.bitrate,
+            bitrateMin: conf.minBitrate,
+        };
+        return ret;
+    }
 
+    public static agorartcSimulcastStreamConfig2LowStreamParameter(config: agorartc.SimulcastStreamConfig): LowStreamParameter {
+        let ret: LowStreamParameter = {
+            width: config.dimensions.width,
+            height: config.dimensions.height,
+            framerate: {
+                ideal: config.framerate,
+            },
+            bitrate: config.bitrate,
+        }
+        return ret;
+    }
+
+    public static agorartcSTREAM_FALLBACK_OPTIONS2
 
 }

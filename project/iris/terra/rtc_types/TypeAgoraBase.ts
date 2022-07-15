@@ -8,8 +8,8 @@ export enum CHANNEL_PROFILE_TYPE {
     CHANNEL_PROFILE_COMMUNICATION = 0,
     CHANNEL_PROFILE_LIVE_BROADCASTING = 1,
     CHANNEL_PROFILE_GAME = 2,
-    CHANNEL_PROFILE_CLOUD_GAMING = 3,
-    CHANNEL_PROFILE_COMMUNICATION_1v1 = 4,
+    // CHANNEL_PROFILE_CLOUD_GAMING = 3,
+    // CHANNEL_PROFILE_COMMUNICATION_1v1 = 4,
 }
 
 //c++ enum WARN_CODE_TYPE
@@ -359,16 +359,22 @@ export enum VIDEO_MIRROR_MODE_TYPE {
     VIDEO_MIRROR_MODE_DISABLED = 2,
 }
 
+export let STANDARD_BITRATE = 0;
+export let COMPATIBLE_BITRATE = -1;
+export let DEFAULT_MIN_BITRATE = -1;
+export let DEFAULT_MIN_BITRATE_EQUAL_TO_TARGET_BITRATE = -2;
+
 //c++ Struct VideoEncoderConfiguration
-export interface VideoEncoderConfiguration {
-    codecType: VIDEO_CODEC_TYPE;
-    dimensions: VideoDimensions;
-    frameRate: number;
-    bitrate: number;
-    minBitrate: number;
-    orientationMode: ORIENTATION_MODE;
-    degradationPreference: DEGRADATION_PREFERENCE;
-    mirrorMode: VIDEO_MIRROR_MODE_TYPE;
+export class VideoEncoderConfiguration {
+    codecType: VIDEO_CODEC_TYPE = VIDEO_CODEC_TYPE.VIDEO_CODEC_H264;
+    dimensions: VideoDimensions = { width: 640, height: 360 };
+    frameRate: number = 15;
+    minFrameRate: number = 0;
+    bitrate: number = STANDARD_BITRATE;
+    minBitrate: number = DEFAULT_MIN_BITRATE;
+    orientationMode: ORIENTATION_MODE = ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE;
+    degradationPreference: DEGRADATION_PREFERENCE = DEGRADATION_PREFERENCE.MAINTAIN_QUALITY;
+    mirrorMode: VIDEO_MIRROR_MODE_TYPE = VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_DISABLED;
 };
 
 //c++ Struct DataStreamConfig

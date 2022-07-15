@@ -33,9 +33,9 @@ export class IrisMainClientVariables {
     public enableAudioRecordingOrPlayout?: boolean;
     public publishMediaPlayerId?: number;
     public clientRoleType?: agorartc.CLIENT_ROLE_TYPE;
-    public audienceLatencyLevel?: agorartc.AUDIENCE_LATENCY_LEVEL_TYPE;
-    public defaultVideoStreamType?: agorartc.VIDEO_STREAM_TYPE;
-    public channelProfile?: agorartc.CHANNEL_PROFILE_TYPE;
+    public audienceLatencyLevel: agorartc.AUDIENCE_LATENCY_LEVEL_TYPE = agorartc.AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY;
+    public defaultVideoStreamType: agorartc.VIDEO_STREAM_TYPE = agorartc.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH;
+    public channelProfile: agorartc.CHANNEL_PROFILE_TYPE = agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_GAME;
     public audioDelayMs?: number;
     public mediaPlayerAudioDelayMs?: number;
     public token?: string;
@@ -45,6 +45,8 @@ export class IrisMainClientVariables {
     public customVideoTrackId?: agorartc.video_track_id_t;
     public isAudioFilterable?: boolean;
 
+    //setClientOptions()
+    public clientRoleOptions?: agorartc.ClientRoleOptions = null;
 
     //LeaveChannelOptions
     public stopAudioMixing: boolean = true;
@@ -62,7 +64,7 @@ export class IrisMainClientVariables {
 
     //是否开启大小流
     enabledDualStreamMode: boolean = false;
-    enabledDualStreamModes: Map<agorartc.VIDEO_SOURCE_TYPE, boolean> = new Map<agorartc.VIDEO_SOURCE_TYPE, boolean>();
+    enabledDualStreamModes: Map<agorartc.VIDEO_SOURCE_TYPE, { enabled: boolean, streamConfig?: agorartc.SimulcastStreamConfig }> = new Map<agorartc.VIDEO_SOURCE_TYPE, { enabled: boolean, streamConfig?: agorartc.SimulcastStreamConfig }>();
 
     //远端的大小流
     remoteVideoStreamTypes: Map<UID, agorartc.VIDEO_STREAM_TYPE> = new Map<UID, agorartc.VIDEO_STREAM_TYPE>();
