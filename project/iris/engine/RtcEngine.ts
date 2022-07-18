@@ -2556,6 +2556,7 @@ export class RtcEngine implements IRtcEngine {
         // return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
+    //底下的api。稍后再说
     setPlaybackDevice(deviceId: string): number {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
