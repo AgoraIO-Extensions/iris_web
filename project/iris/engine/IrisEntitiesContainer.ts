@@ -4,6 +4,7 @@ import { IrisClientEventHandler } from "../event_handler/IrisClientEventHandler"
 import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 import { Contaniner } from "../tool/Contanier";
 import { IrisRtcEngine } from "./IrisRtcEngine";
+import * as agorartc from '../terra/rtc_types/Index';
 
 //存放一堆东西的
 export class IrisEntitiesContaniner {
@@ -123,6 +124,11 @@ export class IrisEntitiesContaniner {
 
     getMainClient(): IAgoraRTCClient {
         return this._mainClient;
+    }
+
+    //todo 注意自己的mainClient可能也满足要求哦
+    getClient(connection: agorartc.RtcConnection): IAgoraRTCClient {
+        return null;
     }
 
     getSubClinets(): Contaniner<IAgoraRTCClient> {

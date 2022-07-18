@@ -1,3 +1,4 @@
+import { UID } from "agora-rtc-sdk-ng";
 import { uid_t } from "./TypeBase";
 
 
@@ -70,13 +71,25 @@ export enum CONTENT_INSPECT_TYPE {
 //c++ Struct ContentInspectModule
 export interface ContentInspectModule {
     type: CONTENT_INSPECT_TYPE;
-    interval: number;
+    frequency: number;
 };
+
+export enum CONTENT_INSPECT_DEVICE_TYPE {
+    CONTENT_INSPECT_DEVICE_INVALID = 0,
+    CONTENT_INSPECT_DEVICE_AGORA = 1,
+    CONTENT_INSPECT_DEVICE_HIVE = 2,
+    CONTENT_INSPECT_DEVICE_TUPU = 3
+};
+
 
 //c++ Struct ContentInspectConfig
 export interface ContentInspectConfig {
+    enable: boolean;
+    DeviceWork: boolean;
+    CloudWork: boolean;
+    DeviceworkType: CONTENT_INSPECT_DEVICE_TYPE;
     extraInfo: string;
-    modules: ContentInspectModule;
+    modules: ContentInspectModule[];
     moduleCount: number;
 };
 
@@ -346,4 +359,8 @@ export class IAudioSpectrumObserver {
 
 
 
-
+export interface SnapShotConfig {
+    channel: string;
+    uid: UID;
+    filePath: string;
+}

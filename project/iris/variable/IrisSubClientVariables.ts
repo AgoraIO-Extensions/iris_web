@@ -55,5 +55,5 @@ export class IrisSubClientVariables {
     remoteVideoStreamTypes: Contaniner<Map<UID, agorartc.VIDEO_STREAM_TYPE>> = new Contaniner<Map<UID, agorartc.VIDEO_STREAM_TYPE>>();
 
     //加密
-    encryptionConfigs: Contaniner<agorartc.EncryptionConfig> = new Contaniner<agorartc.EncryptionConfig>();
+    encryptionConfigs: Contaniner<{ enabled: boolean; config: agorartc.EncryptionConfig }> = new Contaniner<{ enabled: boolean; config: agorartc.EncryptionConfig }>();
 }

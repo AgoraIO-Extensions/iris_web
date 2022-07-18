@@ -1304,7 +1304,7 @@ export interface ChannelMediaInfo {
 
 //c++ Struct ChannelMediaRelayConfiguration
 export interface ChannelMediaRelayConfiguration {
-    srcInfo: ChannelMediaInfo[];
+    srcInfo: ChannelMediaInfo;
     destInfos: ChannelMediaInfo[];
     destCount: number;
 };

@@ -3072,11 +3072,9 @@ export class IrisRtcEnginePrepare {
 		params: string, paramLength: number,
 		buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
 		let obj = JSON.parse(params) as any;
-		let uid = obj.uid;
-		if (uid == null) throw "uid is null";
-		let filePath = obj.filePath;
-		if (filePath == null) throw "filePath is null";
-		obj.result = this._rtcEngine.takeSnapshot(uid, filePath);
+		let config = obj.config;
+		if (config == null) throw "config is null";
+		obj.result = this._rtcEngine.takeSnapshot(config);
 		return 0;
 	}
 

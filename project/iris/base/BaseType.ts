@@ -84,4 +84,6 @@ export interface AudioTrackPackage {
     track: ILocalAudioTrack | IRemoteAudioTrack
 };
 
+export interface EncryptionConfigPackage {
 
+}

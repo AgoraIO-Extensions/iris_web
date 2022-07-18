@@ -57,4 +57,10 @@ export class IrisGlobalVariables {
     cameraDirection: agorartc.CAMERA_DIRECTION = null;
 
     fallbackOption: agorartc.STREAM_FALLBACK_OPTIONS = null;
+
+    screenCaptureContentHint: agorartc.VIDEO_CONTENT_HINT = null;
+
+    screenCaptureParameters: agorartc.ScreenCaptureParameters = null;
+
+    cloudProxy: agorartc.CLOUD_PROXY_TYPE = null;
 }

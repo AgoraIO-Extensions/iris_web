@@ -290,8 +290,8 @@ export interface IRtcEngine {
 	startRhythmPlayer(sound1: string, sound2: string, config: agorartc.AgoraRhythmPlayerConfig): number;
 	stopRhythmPlayer(): number;
 	configRhythmPlayer(config: agorartc.AgoraRhythmPlayerConfig): number;
-	takeSnapshot(uid: agorartc.uid_t, filePath: string): number;
-	enableContentInspect(enabled: boolean, config: agorartc.ContentInspectConfig): number;
+	takeSnapshot(config: agorartc.SnapShotConfig): number;
+	setContentInspect(config: agorartc.ContentInspectConfig);
 	adjustCustomAudioPublishVolume(sourceId: number, volume: number): number;
 	adjustCustomAudioPlayoutVolume(sourceId: number, volume: number): number;
 	setCloudProxy(proxyType: agorartc.CLOUD_PROXY_TYPE): number;
@@ -347,8 +347,8 @@ export interface IRtcEngine {
 	clearRemotePositionsEx(connection: agorartc.RtcConnection): number;
 
 	//IAudioDeviceManager
-	enumeratePlaybackDevices(): agorartc.IAudioDeviceCollection;
-	enumerateRecordingDevices(): agorartc.IAudioDeviceCollection;
+	enumeratePlaybackDevices(): agorartc.DeviceInfo[];
+	enumerateRecordingDevices(): agorartc.DeviceInfo[];
 	setPlaybackDevice(deviceId: string): number;
 	getPlaybackDevice(deviceId: string): number;
 	getPlaybackDeviceInfo(deviceId: string, deviceName: string): number;

@@ -1,5 +1,5 @@
 
-import AgoraRTC, { AREAS, AudienceLatencyLevelType, ClientRole, ClientRoleOptions, LowStreamParameter, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
+import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayInfo, ClientRole, ClientRoleOptions, ConnectionState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
 import { Argument } from "webpack";
 import * as agorartc from "../terra/rtc_types/Index";
 import { AgoraConsole } from "./AgoraConsole";
@@ -131,6 +131,139 @@ export class AgoraTranslate {
         return ret;
     }
 
-    public static agorartcSTREAM_FALLBACK_OPTIONS2
+    public static agorartcCONNECTION_STATE_TYPE2ConnectionState(state: agorartc.CONNECTION_STATE_TYPE): ConnectionState {
+        switch (state) {
+            case agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED:
+                return "DISCONNECTED";
+            case agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTING:
+                return "CONNECTING";
+            case agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTED:
+                return "CONNECTED";
+            case agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_RECONNECTING:
+                return "RECONNECTING";
+            case agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_FAILED:
+                return "DISCONNECTED";
+        }
+    }
+
+    public static ConnectionState2agorartcCONNECTION_STATE_TYPE(state: ConnectionState): agorartc.CONNECTION_STATE_TYPE {
+        switch (state) {
+            case "DISCONNECTED":
+                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
+            case "CONNECTING":
+                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTING;
+            case "CONNECTED":
+                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTED;
+            case "RECONNECTING":
+                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_RECONNECTING;
+            case "DISCONNECTING":
+                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
+        }
+    }
+
+    public static string2agorartcENCRYPTION_MODE(mode: string): agorartc.ENCRYPTION_MODE {
+        switch (mode) {
+            case "aes-128-xts":
+                return agorartc.ENCRYPTION_MODE.AES_128_XTS;
+            case "aes-128-ecb":
+                return agorartc.ENCRYPTION_MODE.AES_128_ECB;
+            case "aes-256-xts":
+                return agorartc.ENCRYPTION_MODE.AES_256_XTS;
+            case "sm4-128-ecb":
+                return agorartc.ENCRYPTION_MODE.SM4_128_ECB;
+            case "aes-128-gcm":
+                return agorartc.ENCRYPTION_MODE.AES_128_GCM;
+            case "aes-256-gcm":
+                return agorartc.ENCRYPTION_MODE.AES_256_GCM;
+            case "aes-128-gcm2":
+                return agorartc.ENCRYPTION_MODE.AES_128_GCM2;
+            case "aes-256-gcm2":
+                return agorartc.ENCRYPTION_MODE.AES_256_GCM2;
+            default:
+                AgoraConsole.warn("invalid mode: " + mode);
+                return agorartc.ENCRYPTION_MODE.AES_128_GCM;
+        }
+    }
+
+    public static agorartcENCRYPTION_MODE2EncryptionMode(mode: agorartc.ENCRYPTION_MODE): EncryptionMode {
+        switch (mode) {
+            case agorartc.ENCRYPTION_MODE.AES_128_XTS:
+                return "aes-128-xts";
+            case agorartc.ENCRYPTION_MODE.AES_128_ECB:
+                return "aes-128-ecb";
+            case agorartc.ENCRYPTION_MODE.AES_256_XTS:
+                return "aes-256-xts";
+            case agorartc.ENCRYPTION_MODE.SM4_128_ECB:
+                return "sm4-128-ecb";
+            case agorartc.ENCRYPTION_MODE.AES_128_GCM:
+                return "aes-128-gcm";
+            case agorartc.ENCRYPTION_MODE.AES_256_GCM:
+                return "aes-256-gcm";
+            case agorartc.ENCRYPTION_MODE.AES_128_GCM2:
+                return "aes-128-gcm2";
+            case agorartc.ENCRYPTION_MODE.AES_256_GCM2:
+                return "aes-256-gcm2";
+        }
+    }
+
+    public static agorartcInjectStreamConfig2InjectStreamConfig(config: agorartc.InjectStreamConfig): InjectStreamConfig {
+        let ret: InjectStreamConfig = {
+            audioBitrate: config.audioBitrate,
+            audioChannels: config.audioChannels,
+            audioSampleRate: config.audioSampleRate,
+            height: config.width,
+            width: config.height,
+            videoBitrate: config.videoBitrate,
+            videoFramerate: config.videoFramerate,
+            videoGop: config.videoGop,
+        };
+        return ret;
+    }
+
+
+    public static agorartcChannelMediaRelayConfiguration2IChannelMediaRelayConfiguration(config: agorartc.ChannelMediaRelayConfiguration): IChannelMediaRelayConfiguration {
+        let ret: IChannelMediaRelayConfiguration = AgoraRTC.createChannelMediaRelayConfiguration();
+        ret.setSrcChannelInfo(AgoraTranslate.agorartcChannelMediaInfo2ChannelMediaRelayInfo(config.srcInfo));
+        for (let i = 0; i < config.destInfos.length; i++) {
+            ret.addDestChannelInfo(AgoraTranslate.agorartcChannelMediaInfo2ChannelMediaRelayInfo(config.destInfos[i]));
+        }
+        return ret;
+    }
+
+
+    public static agorartcChannelMediaInfo2ChannelMediaRelayInfo(info: agorartc.ChannelMediaInfo): ChannelMediaRelayInfo {
+        let ret: ChannelMediaRelayInfo = {
+            channelName: info.channelName,
+            token: info.token,
+            uid: info.uid
+        };
+        return ret;
+    }
+
+    public static agorartcContentInspectConfig2InspectConfiguration(config: agorartc.ContentInspectConfig): InspectConfiguration {
+        let ret: InspectConfiguration = {
+            interval: 1,
+            extraInfo: config.extraInfo,
+            inspectType: "all",
+        };
+
+        if (config.modules.length > 0) {
+            let module: agorartc.ContentInspectModule = config.modules[0];
+            ret.interval = module.frequency;
+            switch (module.type) {
+                case agorartc.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_INVALID:
+                    ret.inspectType = "all";
+                    break;
+                case agorartc.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_MODERATION:
+                    ret.inspectType = "moderation";
+                    break;
+                case agorartc.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_SUPERVISION:
+                    ret.inspectType = "supervise";
+                    break;
+            }
+        }
+
+        return ret;
+    }
 
 }

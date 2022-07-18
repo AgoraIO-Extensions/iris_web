@@ -72,11 +72,19 @@ export class IrisMainClientVariables {
     //远端默认流
     remoteDefaultVideoStreamType: agorartc.VIDEO_STREAM_TYPE = agorartc.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH;
 
-    encryptionConfig: agorartc.EncryptionConfig = new agorartc.EncryptionConfig();
+
+    encryptionConfig: { enabled: boolean; config: agorartc.EncryptionConfig } = {
+        enabled: false,
+        config: new agorartc.EncryptionConfig
+    };
+
 
     //C++ enabledAudioVolumeIndication()
     enabledAudioVolumeIndication: { interval: number, smooth: number, reportVad: boolean } = null;
 
     //setDevice() : videoDevice
     deviceId: string = null;
+
+    //SetContentInspect
+    contentInspect: agorartc.ContentInspectConfig = null;
 }
