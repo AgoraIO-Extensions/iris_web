@@ -63,4 +63,38 @@ export class IrisGlobalVariables {
     screenCaptureParameters: agorartc.ScreenCaptureParameters = null;
 
     cloudProxy: agorartc.CLOUD_PROXY_TYPE = null;
+
+
+
+    //devicesInfo
+    deviceEnumerated: boolean = false;
+    playbackDevices: agorartc.DeviceInfo[] = new Array();
+    recordingDevices: agorartc.DeviceInfo[] = new Array();
+    videoDevices: agorartc.DeviceInfo[] = new Array();
+
+    public initDevicesInfo(info: MediaDeviceInfo[]) {
+        for (let e of info) {
+            if (e.kind == 'audioinput') {
+                this.recordingDevices.push({
+                    deviceId: e.deviceId,
+                    deviceName: e.label
+                });
+            }
+            else if (e.kind == 'audiooutput') {
+                this.playbackDevices.push({
+                    deviceId: e.deviceId,
+                    deviceName: e.label
+                });
+            }
+            else if (e.kind == 'videoinput') {
+                this.videoDevices.push({
+                    deviceId: e.deviceId,
+                    deviceName: e.label
+                });
+            }
+        }
+        this.deviceEnumerated = true;
+    }
+
+
 }

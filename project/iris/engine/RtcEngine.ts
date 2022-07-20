@@ -4,7 +4,7 @@ import { IrisApiEngine } from './IrisApiEngine';
 import { IrisRtcEngine } from './IrisRtcEngine';
 import { AgoraActionQueue } from '../tool/AgoraActionQueue';
 import { AgoraConsole } from '../tool/AgoraConsole';
-import AgoraRTC, { IAgoraRTCClient, IChannelMediaRelayConfiguration, InjectStreamConfig, UID } from 'agora-rtc-sdk-ng';
+import AgoraRTC, { DeviceInfo, IAgoraRTCClient, IChannelMediaRelayConfiguration, InjectStreamConfig, UID } from 'agora-rtc-sdk-ng';
 import { AgoraTranslate } from '../tool/AgoraTranslate';
 
 export class RtcEngine implements IRtcEngine {
@@ -30,13 +30,6 @@ export class RtcEngine implements IRtcEngine {
         let numberLevel: number = AgoraTranslate.agorartcLOG_LEVEL2Number(context.logConfig.level);
         AgoraRTC.setLogLevel(numberLevel);
 
-        let client: IAgoraRTCClient = AgoraRTC.createClient({
-            codec: 'h264',
-            mode: AgoraTranslate.agorartcCHANNEL_PROFILE_TYPE2SDK_MODE(this._engine.mainClientVariables.channelProfile),
-            role: "host",
-        });
-        this._engine.entitiesContainer.setMainClient(client);
-
         let result = AgoraRTC.checkSystemRequirements();
         if (result) {
             AgoraConsole.log("AgoraRTC.checkSystemRequirements return true");
@@ -44,6 +37,22 @@ export class RtcEngine implements IRtcEngine {
         else {
             AgoraConsole.warn("AgoraRTC.checkSystemRequirements reutrn false");
         }
+
+        //enumerate divice
+        AgoraRTC.getDevices()
+            .then((info: MediaDeviceInfo[]) => {
+                AgoraConsole.log("enumerate devices success!");
+                this._engine.globalVariables.initDevicesInfo(info);
+            })
+            .catch((reason) => {
+                AgoraConsole.error("enumerate devices failed!");
+                AgoraConsole.error("reason devices failed!");
+                this._engine.globalVariables.initDevicesInfo([]);
+            })
+            .finally(() => {
+                this._engine.rtcEngineEventHandler.onDeviceEnumerated();
+            })
+
         return 0;
     }
 
@@ -122,24 +131,14 @@ export class RtcEngine implements IRtcEngine {
     }
 
     //todo IVideoDeviceManager
-    enumerateVideoDevices(): number {
-        AgoraRTC.getCameras()
-            .then((info: MediaDeviceInfo[]) => {
-                let deviceInfos: Array<agorartc.DeviceInfo> = new Array<agorartc.DeviceInfo>();
-                for (let i = 0; i < info.length; i++) {
-                    deviceInfos.push({
-                        deviceId: info[i].deviceId,
-                        deviceName: info[i].label
-                    });
-                }
-                this._engine.rtcEngineEventHandler.onEnumeratedVideoDevices(deviceInfos);
-            })
-            .catch((reson: any) => {
-                AgoraConsole.warn("enumerated video devices failed");
-                this._engine.rtcEngineEventHandler.onWarning(0, "enumerated video devices failed");
-                this._engine.rtcEngineEventHandler.onEnumeratedVideoDevices([]);
-            });
-        return 0;
+    enumerateVideoDevices(): agorartc.DeviceInfo[] {
+        if (this._engine.globalVariables.deviceEnumerated) {
+            AgoraConsole.warn("Please call this method:enumerateVideoDevices after onDeviceEnumerated triggered")
+            return [];
+        }
+        else {
+            return this._engine.globalVariables.videoDevices;
+        }
     }
 
     setDevice(deviceIdUTF8: string): number {
@@ -148,7 +147,7 @@ export class RtcEngine implements IRtcEngine {
                 //todo 如果当前有LocalVideoTrack， 那么调用LocalVideoTrack.setDevice 
 
                 //否则 在localVideoTrack被创建的时候，要读取下边这个电量，并且设置一下，不需要
-                this._engine.mainClientVariables.deviceId = deviceIdUTF8;
+                this._engine.mainClientVariables.videoDeviceId = deviceIdUTF8;
 
                 next();
             },
@@ -2545,105 +2544,181 @@ export class RtcEngine implements IRtcEngine {
     }
 
     enumeratePlaybackDevices(): agorartc.DeviceInfo[] {
-        //todo 在init里列举出所有设备列表，保存出来得了。
-        return [];
-        // return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        if (this._engine.globalVariables.deviceEnumerated) {
+            AgoraConsole.warn("Please call this method:enumeratePlaybackDevices after onDeviceEnumerated triggered")
+            return [];
+        }
+        else {
+            return this._engine.globalVariables.playbackDevices;
+        }
     }
 
     enumerateRecordingDevices(): agorartc.DeviceInfo[] {
-        //todo 在init里列举出所有设备列表，保存出来得了。
-        return [];
-        // return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        if (this._engine.globalVariables.deviceEnumerated) {
+            AgoraConsole.warn("Please call this method:enumerateRecordingDevices after onDeviceEnumerated triggered")
+            return [];
+        }
+        else {
+            return this._engine.globalVariables.recordingDevices;
+        }
     }
 
     //底下的api。稍后再说
     setPlaybackDevice(deviceId: string): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (deviceId: string, next) => {
+                this._engine.mainClientVariables.playbackDeviceId = deviceId;
+                //todo 找到所有的audio流去设置一下deviceID咯
+                next();
+            },
+            args: [deviceId]
+        })
+
+        return 0;
     }
 
-    getPlaybackDevice(deviceId: string): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    getPlaybackDevice(): string {
+        if (this._engine.mainClientVariables.playbackDeviceId) {
+            return this._engine.mainClientVariables.playbackDeviceId;
+        }
+        else if (this._engine.globalVariables.deviceEnumerated) {
+            return this._engine.globalVariables.playbackDevices[0]?.deviceId || "";
+        }
+        else {
+            return "";
+        }
     }
 
-    getPlaybackDeviceInfo(deviceId: string, deviceName: string): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    getPlaybackDeviceInfo(): agorartc.DeviceInfo {
+        if (this._engine.mainClientVariables.playbackDeviceId) {
+            for (let e of this._engine.globalVariables.playbackDevices) {
+                if (e.deviceId == this._engine.mainClientVariables.playbackDeviceId)
+                    return e;
+            }
+        }
+
+        if (this._engine.globalVariables.deviceEnumerated) {
+            return this._engine.globalVariables.playbackDevices[0] || { deviceId: "", deviceName: "" }
+        }
+        else {
+            return { deviceId: "", deviceName: "" };
+        }
     }
 
     setPlaybackDeviceVolume(volume: number): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return this.adjustPlaybackSignalVolume(volume);
     }
 
-    getPlaybackDeviceVolume(volume: number): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    getPlaybackDeviceVolume(): number {
+        return this._engine.globalVariables.playbackSignalVolume;
     }
 
     setRecordingDevice(deviceId: string): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (deviceId: string, next) => {
+                this._engine.mainClientVariables.recordingDeviceId = deviceId;
+                //todo 找到所有的麦克风 audio流去设置一下deviceID咯
+                next();
+            },
+            args: [deviceId]
+        })
+
+        return 0;
     }
 
-    getRecordingDevice(deviceId: string): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    getRecordingDevice(): string {
+        if (this._engine.mainClientVariables.recordingDeviceId) {
+            return this._engine.mainClientVariables.recordingDeviceId;
+        }
+        else if (this._engine.globalVariables.deviceEnumerated) {
+            return this._engine.globalVariables.recordingDevices[0]?.deviceId || "";
+        }
+        else {
+            return "";
+        }
     }
 
-    getRecordingDeviceInfo(deviceId: string, deviceName: string): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    getRecordingDeviceInfo(): agorartc.DeviceInfo {
+        if (this._engine.mainClientVariables.recordingDeviceId) {
+            for (let e of this._engine.globalVariables.recordingDevices) {
+                if (e.deviceId == this._engine.mainClientVariables.recordingDeviceId)
+                    return e;
+            }
+        }
+
+        if (this._engine.globalVariables.deviceEnumerated) {
+            return this._engine.globalVariables.recordingDevices[0] || { deviceId: "", deviceName: "" }
+        }
+        else {
+            return { deviceId: "", deviceName: "" };
+        }
     }
 
     setRecordingDeviceVolume(volume: number): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return this.adjustRecordingSignalVolume(volume);
     }
 
-    getRecordingDeviceVolume(volume: number): number {
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    getRecordingDeviceVolume(): number {
+        return this._engine.globalVariables.recordingSignalVolume;
     }
 
     setPlaybackDeviceMute(mute: boolean): number {
+        AgoraConsole.warn("setPlaybackDeviceMute not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     getPlaybackDeviceMute(mute: boolean): number {
+        AgoraConsole.warn("getPlaybackDeviceMute not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     setRecordingDeviceMute(mute: boolean): number {
+        AgoraConsole.warn("setRecordingDeviceMute not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     getRecordingDeviceMute(mute: boolean): number {
+        AgoraConsole.warn("getRecordingDeviceMute not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     startPlaybackDeviceTest(testAudioFilePath: string): number {
+        AgoraConsole.warn("startPlaybackDeviceTest not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     stopPlaybackDeviceTest(): number {
+        AgoraConsole.warn("stopPlaybackDeviceTest not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     startRecordingDeviceTest(indicationInterval: number): number {
+        AgoraConsole.warn("startRecordingDeviceTest not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     stopRecordingDeviceTest(): number {
+        AgoraConsole.warn("stopRecordingDeviceTest not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     startAudioDeviceLoopbackTest(indicationInterval: number): number {
+        AgoraConsole.warn("startAudioDeviceLoopbackTest not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     stopAudioDeviceLoopbackTest(): number {
+        AgoraConsole.warn("stopAudioDeviceLoopbackTest not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     followSystemPlaybackDevice(enable: boolean): number {
+        AgoraConsole.warn("followSystemPlaybackDevice not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     followSystemRecordingDevice(enable: boolean): number {
+        AgoraConsole.warn("followSystemRecordingDevice not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-
-
 }

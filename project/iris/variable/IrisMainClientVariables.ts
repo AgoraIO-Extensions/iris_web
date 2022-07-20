@@ -83,7 +83,12 @@ export class IrisMainClientVariables {
     enabledAudioVolumeIndication: { interval: number, smooth: number, reportVad: boolean } = null;
 
     //setDevice() : videoDevice
-    deviceId: string = null;
+    videoDeviceId: string = null;
+
+    //setPlaybackDevice: audiDevice
+    playbackDeviceId: string = null;
+    //setRecordingDevice: recordingDevice
+    recordingDeviceId: string = null;
 
     //SetContentInspect
     contentInspect: agorartc.ContentInspectConfig = null;

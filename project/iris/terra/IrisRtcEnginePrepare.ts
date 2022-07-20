@@ -3766,21 +3766,21 @@ export class IrisRtcEnginePrepare {
 		params: string, paramLength: number,
 		buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
 		let obj = JSON.parse(params) as any;
-		let deviceId = obj.deviceId;
-		if (deviceId == null) throw "deviceId is null";
-		obj.result = this._rtcEngine.getPlaybackDevice(deviceId);
+		// let deviceId = obj.deviceId;
+		// if (deviceId == null) throw "deviceId is null";
+		obj.result = this._rtcEngine.getPlaybackDevice();
 		return 0;
 	}
 
 	getPlaybackDeviceInfo(
 		params: string, paramLength: number,
 		buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-		let obj = JSON.parse(params) as any;
-		let deviceId = obj.deviceId;
-		if (deviceId == null) throw "deviceId is null";
-		let deviceName = obj.deviceName;
-		if (deviceName == null) throw "deviceName is null";
-		obj.result = this._rtcEngine.getPlaybackDeviceInfo(deviceId, deviceName);
+		// let obj = JSON.parse(params) as any;
+		// let deviceId = obj.deviceId;
+		// if (deviceId == null) throw "deviceId is null";
+		// let deviceName = obj.deviceName;
+		// if (deviceName == null) throw "deviceName is null";
+		obj.result = this._rtcEngine.getPlaybackDeviceInfo();
 		return 0;
 	}
 
@@ -3798,9 +3798,9 @@ export class IrisRtcEnginePrepare {
 		params: string, paramLength: number,
 		buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
 		let obj = JSON.parse(params) as any;
-		let volume = obj.volume;
-		if (volume == null) throw "volume is null";
-		obj.result = this._rtcEngine.getPlaybackDeviceVolume(volume);
+		// let volume = obj.volume;
+		// if (volume == null) throw "volume is null";
+		obj.result = this._rtcEngine.getPlaybackDeviceVolume();
 		return 0;
 	}
 
@@ -3818,9 +3818,9 @@ export class IrisRtcEnginePrepare {
 		params: string, paramLength: number,
 		buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
 		let obj = JSON.parse(params) as any;
-		let deviceId = obj.deviceId;
-		if (deviceId == null) throw "deviceId is null";
-		obj.result = this._rtcEngine.getRecordingDevice(deviceId);
+		// let deviceId = obj.deviceId;
+		// if (deviceId == null) throw "deviceId is null";
+		obj.result = this._rtcEngine.getRecordingDevice();
 		return 0;
 	}
 
@@ -3828,11 +3828,11 @@ export class IrisRtcEnginePrepare {
 		params: string, paramLength: number,
 		buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
 		let obj = JSON.parse(params) as any;
-		let deviceId = obj.deviceId;
-		if (deviceId == null) throw "deviceId is null";
-		let deviceName = obj.deviceName;
-		if (deviceName == null) throw "deviceName is null";
-		obj.result = this._rtcEngine.getRecordingDeviceInfo(deviceId, deviceName);
+		// let deviceId = obj.deviceId;
+		// if (deviceId == null) throw "deviceId is null";
+		// let deviceName = obj.deviceName;
+		// if (deviceName == null) throw "deviceName is null";
+		obj.result = this._rtcEngine.getRecordingDeviceInfo();
 		return 0;
 	}
 
@@ -3850,9 +3850,9 @@ export class IrisRtcEnginePrepare {
 		params: string, paramLength: number,
 		buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
 		let obj = JSON.parse(params) as any;
-		let volume = obj.volume;
-		if (volume == null) throw "volume is null";
-		obj.result = this._rtcEngine.getRecordingDeviceVolume(volume);
+		// let volume = obj.volume;
+		// if (volume == null) throw "volume is null";
+		obj.result = this._rtcEngine.getRecordingDeviceVolume();
 		return 0;
 	}
 

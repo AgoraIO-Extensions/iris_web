@@ -1608,13 +1608,17 @@ export class RtcEngineEventHandler {
         this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
     }
 
-    //一些特殊回调
-    onEnumeratedVideoDevices(videoDevices: agorartc.DeviceInfo[]): void {
+
+    //webgl的特殊回调
+    onDeviceEnumerated() {
         let obj = {
-            videoDevices
+
         };
         let json = JSON.stringify(obj);
-        let key = 'IVideoDeviceManager_onEnumeratedVideoDevices';
+        let key = 'Web_onDeviceEnumerated';
         this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
     }
+
+
+
 }

@@ -1,3 +1,5 @@
+import { DeviceInfo } from 'agora-rtc-sdk-ng';
+import { Argument } from 'webpack';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import * as agorartc from './rtc_types/Index';
 export interface IRtcEngine {
@@ -21,7 +23,7 @@ export interface IRtcEngine {
 	// release(): void;
 
 	//IVideoDeviceManager
-	enumerateVideoDevices(): number;
+	enumerateVideoDevices(): agorartc.DeviceInfo[];
 	setDevice(deviceIdUTF8: string): number;
 	getDevice(deviceIdUTF8: string): number;
 	numberOfCapabilities(deviceIdUTF8: string): number;
@@ -350,15 +352,15 @@ export interface IRtcEngine {
 	enumeratePlaybackDevices(): agorartc.DeviceInfo[];
 	enumerateRecordingDevices(): agorartc.DeviceInfo[];
 	setPlaybackDevice(deviceId: string): number;
-	getPlaybackDevice(deviceId: string): number;
-	getPlaybackDeviceInfo(deviceId: string, deviceName: string): number;
+	getPlaybackDevice(): string;
+	getPlaybackDeviceInfo(): agorartc.DeviceInfo;
 	setPlaybackDeviceVolume(volume: number): number;
-	getPlaybackDeviceVolume(volume: number): number;
+	getPlaybackDeviceVolume(): number;
 	setRecordingDevice(deviceId: string): number;
-	getRecordingDevice(deviceId: string): number;
-	getRecordingDeviceInfo(deviceId: string, deviceName: string): number;
+	getRecordingDevice(): string;
+	getRecordingDeviceInfo(): agorartc.DeviceInfo;
 	setRecordingDeviceVolume(volume: number): number;
-	getRecordingDeviceVolume(volume: number): number;
+	getRecordingDeviceVolume(): number;
 	setPlaybackDeviceMute(mute: boolean): number;
 	getPlaybackDeviceMute(mute: boolean): number;
 	setRecordingDeviceMute(mute: boolean): number;
