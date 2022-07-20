@@ -1,10 +1,13 @@
-import { IAgoraRTCClient, UID, IAgoraRTCRemoteUser } from "agora-rtc-sdk-ng";
-import { AudioTrackPackage, IrisVideoFrameBufferConfig, IRIS_VIDEO_PROCESS_ERR, VideoParams, VideoTrackPackage } from "../base/BaseType";
+import { IAgoraRTCClient, UID, IAgoraRTCRemoteUser, ILocalVideoTrack } from "agora-rtc-sdk-ng";
+import { AudioTrackPackage, IrisVideoFrameBufferConfig, IrisVideoSourceType, IRIS_VIDEO_PROCESS_ERR, VideoParams, VideoTrackPackage } from "../base/BaseType";
 import { IrisClientEventHandler } from "../event_handler/IrisClientEventHandler";
 import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 import { Contaniner } from "../tool/Contanier";
 import { IrisRtcEngine } from "./IrisRtcEngine";
 import * as agorartc from '../terra/rtc_types/Index';
+import { Packet } from "../terra/rtc_types/Index";
+
+export type WalkILocalVideoPackageTrackFun = (track: VideoTrackPackage) => void;
 
 //存放一堆东西的
 export class IrisEntitiesContaniner {
@@ -19,6 +22,10 @@ export class IrisEntitiesContaniner {
     private _mainClientLocalAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
     private _mainClientLocalVideoTrack: VideoTrackPackage = null;
     private _mainClientTrackEventHandlers: Array<IrisTrackEventHandler> = new Array<IrisTrackEventHandler>();
+
+    //free tracks means not publish
+    private _freeLocalAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
+    private _freeLocalVideoTracks: Array<VideoTrackPackage> = new Array<VideoTrackPackage>();
 
 
     //subClient
@@ -36,12 +43,71 @@ export class IrisEntitiesContaniner {
         this._engine = engine;
     }
 
+    addFreeLocalVideoTrack(trackPackage: VideoTrackPackage) {
+        this._freeLocalVideoTracks.push(trackPackage);
+    }
+
+    getFreeLocalVideoTrackByType(type: IrisVideoSourceType): VideoTrackPackage {
+        for (let trackPack of this._freeLocalVideoTracks) {
+            if (trackPack.type == type) {
+                return trackPack;
+            }
+        }
+        return null;
+    }
+
+    removeFreeLocalVideoTrack(trackPackage: VideoTrackPackage) {
+        for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
+            let trackPack = this._freeLocalVideoTracks[i];
+            if (trackPack == trackPackage) {
+                let track: ILocalVideoTrack = trackPack.track as ILocalVideoTrack;
+                track.close();
+                this._freeLocalVideoTracks.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    removeFreeLocalVideoTrackByType(type: IrisVideoSourceType) {
+        for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
+            let trackPack = this._freeLocalVideoTracks[i];
+            if (trackPack.type == type) {
+                let track: ILocalVideoTrack = trackPack.track as ILocalVideoTrack;
+                track.close();
+                this._freeLocalVideoTracks.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    walkAllILocalVideoTrack(fun: WalkILocalVideoPackageTrackFun) {
+        if (this._mainClientLocalVideoTrack)
+            fun(this._mainClientLocalVideoTrack);
+
+        this._subClientVideoTracks.walkT((channelId: string, uid: UID, trackPack: VideoTrackPackage) => {
+            fun(trackPack);
+        })
+
+        for (let trackPack of this._freeLocalVideoTracks) {
+            fun(trackPack);
+        }
+    }
+
+
     public getVideoFrame(uid: UID, channel_id: string): VideoParams {
         if (uid == 0) {
             if (this._mainClientLocalVideoTrack) {
                 return {
                     video_track: this._mainClientLocalVideoTrack.track,
                     video_frame: this._mainClientLocalVideoTrack.track.getCurrentFrameData(),
+                    is_new_frame: true, //todo  how to know is a new frame
+                    process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
+                }
+            }
+            if (this._freeLocalVideoTracks.length > 0) {
+                return {
+                    video_track: this._freeLocalVideoTracks[0].track,
+                    video_frame: this._freeLocalVideoTracks[0].track.getCurrentFrameData(),
                     is_new_frame: true, //todo  how to know is a new frame
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
@@ -73,7 +139,6 @@ export class IrisEntitiesContaniner {
             }
             return null;
         }
-
     }
 
     public getVideoFrameByConfig(config: IrisVideoFrameBufferConfig): VideoParams {
@@ -89,6 +154,19 @@ export class IrisEntitiesContaniner {
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
             }
+            else if (this._freeLocalVideoTracks.length > 0) {
+                for (let trackPackage of this._freeLocalVideoTracks) {
+                    if (trackPackage.type == type) {
+                        return {
+                            video_track: trackPackage.track,
+                            video_frame: trackPackage.track.getCurrentFrameData(),
+                            is_new_frame: true, //todo  how to know is a new frame
+                            process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
+                        };
+                    }
+                }
+            }
+
             else {
                 return null;
             }

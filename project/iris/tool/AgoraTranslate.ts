@@ -1,25 +1,10 @@
 
-import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayInfo, ClientRole, ClientRoleOptions, ConnectionState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
+import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayInfo, ClientRole, ClientRoleOptions, ConnectionState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, RemoteStreamType, SDK_CODEC, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
 import { Argument } from "webpack";
 import * as agorartc from "../terra/rtc_types/Index";
 import { AgoraConsole } from "./AgoraConsole";
 
 export class AgoraTranslate {
-
-    // * - 0: DEBUG. Output all API logs.
-    // * - 1: INFO. Output logs of the INFO, WARNING and ERROR level.
-    // * - 2: WARNING. Output logs of the WARNING and ERROR level.
-    // * - 3: ERROR. Output logs of the ERROR level.
-    // * - 4: NONE. Do not output any log.
-
-    // LOG_LEVEL {
-    // LOG_LEVEL_NONE = 0x0000,
-    //     LOG_LEVEL_INFO = 0x0001,
-    //     LOG_LEVEL_WARN = 0x0002,
-    //     LOG_LEVEL_ERROR = 0x0004,
-    //     LOG_LEVEL_FATAL = 0x0008, 致命
-    //     LOG_LEVEL_API_CALL = 0x0010,
-    // }
     public static agorartcLOG_LEVEL2Number(logLevel: agorartc.LOG_LEVEL): number {
         switch (logLevel) {
             case agorartc.LOG_LEVEL.LOG_LEVEL_NONE:
@@ -266,4 +251,59 @@ export class AgoraTranslate {
         return ret;
     }
 
+    public static agorartcVIDEO_CONTENT_HINT2string(hint: agorartc.VIDEO_CONTENT_HINT): "motion" | "detail" {
+        switch (hint) {
+            case agorartc.VIDEO_CONTENT_HINT.CONTENT_HINT_MOTION:
+                return "motion";
+            case agorartc.VIDEO_CONTENT_HINT.CONTENT_HINT_DETAILS:
+                return "detail";
+            default:
+                return "detail";
+        }
+    }
+
+    public static agorartcCAMERA_DIRECTION2string(direction: agorartc.CAMERA_DIRECTION): "user" | "environment" {
+        switch (direction) {
+            case agorartc.CAMERA_DIRECTION.CAMERA_FRONT:
+                return "user";
+            case agorartc.CAMERA_DIRECTION.CAMERA_REAR:
+                return "environment";
+        }
+    }
+
+    public static agorartcVIDEO_MIRROR_MODE_TYPE2boolean(mode: agorartc.VIDEO_MIRROR_MODE_TYPE): boolean {
+        switch (mode) {
+            case agorartc.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO:
+                return true;
+            case agorartc.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_DISABLED:
+                return false;
+            case agorartc.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED:
+                return true;
+        }
+    }
+
+    public static agorartcVIDEO_CODEC_TYPE2SDK_CODEC(code: agorartc.VIDEO_CODEC_TYPE): SDK_CODEC {
+        switch (code) {
+            case agorartc.VIDEO_CODEC_TYPE.VIDEO_CODEC_H264:
+                return "h264";
+            case agorartc.VIDEO_CODEC_TYPE.VIDEO_CODEC_AV1:
+                return "av1";
+            case agorartc.VIDEO_CODEC_TYPE.VIDEO_CODEC_VP8:
+                return "vp8";
+            case agorartc.VIDEO_CODEC_TYPE.VIDEO_CODEC_VP9:
+                return "vp9";
+            default:
+                return "vp8";
+        }
+    }
+
+    public static agorartcVIDEO_STREAM_TYPE2RemoteStreamType(type: agorartc.VIDEO_STREAM_TYPE): RemoteStreamType {
+        switch (type) {
+            case agorartc.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH:
+                return RemoteStreamType.HIGH_STREAM;
+            case agorartc.VIDEO_STREAM_TYPE.VIDEO_STREAM_LOW:
+                return RemoteStreamType.LOW_STREAM;
+        }
+
+    }
 }

@@ -31,10 +31,15 @@ export enum IrisVideoSourceType {
     kVideoSourceTypePreEncodeScreen,
     kVideoSourceTypePreEncodeSecondaryScreen,
     kVideoSourceTypeUnknown,
-} IrisVideoSourceType;
+};
 
 
-export type IrisAudioSourceType = IrisVideoSourceType;
+export enum IrisAudioSourceType {
+    kAudioSourceTypeMicrophone,
+    kAudioSourceTypeScreenShare,
+    kAudioSourceTypeCustom,
+    kAudioSourceTypeUnknow
+};
 
 
 export enum IrisVideoFrameType {

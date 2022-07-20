@@ -1,5 +1,6 @@
-import { UID } from 'agora-rtc-sdk-ng';
+import { ClientConfig, UID } from 'agora-rtc-sdk-ng';
 import * as agorartc from '../terra/rtc_types/Index';
+import { AgoraTranslate } from '../tool/AgoraTranslate';
 
 //Record the intermediate status of the Main client
 export class IrisMainClientVariables {
@@ -45,6 +46,28 @@ export class IrisMainClientVariables {
     public customVideoTrackId?: agorartc.video_track_id_t;
     public isAudioFilterable?: boolean;
 
+    mergeChannelMediaOptions(options: agorartc.ChannelMediaOptions) {
+        for (let key in options) {
+            this[key] = options[key];
+        }
+    }
+
+    //根据保存的中间状态，生成ClientConfig
+    generateClientConfig(): ClientConfig {
+        let config: ClientConfig = {
+            codec: this.videoEncoderConfiguration != null ? AgoraTranslate.agorartcVIDEO_CODEC_TYPE2SDK_CODEC(this.videoEncoderConfiguration.codecType) : "vp8",
+            mode: this.channelProfile != null ? AgoraTranslate.agorartcCHANNEL_PROFILE_TYPE2SDK_MODE(this.channelProfile) : "live"
+        };
+        if (this.clientRoleType != null) {
+            config.role = AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(this.clientRoleType);
+        }
+        if (this.clientRoleOptions != null) {
+            config.clientRoleOptions = AgoraTranslate.agorartcClientRoleOptions2ClientRoleOptions(this.clientRoleOptions);
+        }
+        return config;
+    }
+
+
     //setClientOptions()
     public clientRoleOptions?: agorartc.ClientRoleOptions = null;
 
@@ -70,7 +93,7 @@ export class IrisMainClientVariables {
     remoteVideoStreamTypes: Map<UID, agorartc.VIDEO_STREAM_TYPE> = new Map<UID, agorartc.VIDEO_STREAM_TYPE>();
 
     //远端默认流
-    remoteDefaultVideoStreamType: agorartc.VIDEO_STREAM_TYPE = agorartc.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH;
+    remoteDefaultVideoStreamType: agorartc.VIDEO_STREAM_TYPE = null;
 
 
     encryptionConfig: { enabled: boolean; config: agorartc.EncryptionConfig } = {
@@ -92,4 +115,10 @@ export class IrisMainClientVariables {
 
     //SetContentInspect
     contentInspect: agorartc.ContentInspectConfig = null;
+
+    startPreviewed: boolean = false;
+    joinChanneled: boolean = false;
+
+
+
 }

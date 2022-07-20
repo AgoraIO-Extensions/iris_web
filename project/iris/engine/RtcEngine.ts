@@ -4,8 +4,13 @@ import { IrisApiEngine } from './IrisApiEngine';
 import { IrisRtcEngine } from './IrisRtcEngine';
 import { AgoraActionQueue } from '../tool/AgoraActionQueue';
 import { AgoraConsole } from '../tool/AgoraConsole';
-import AgoraRTC, { DeviceInfo, IAgoraRTCClient, IChannelMediaRelayConfiguration, InjectStreamConfig, UID } from 'agora-rtc-sdk-ng';
+import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, DeviceInfo, EncryptionMode, IAgoraRTCClient, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalVideoTrack, InjectStreamConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
 import { AgoraTranslate } from '../tool/AgoraTranslate';
+import { IrisGlobalVariables } from '../variable/IrisGlobalVariables';
+import { IrisVideoSourceType, VideoParams, VideoTrackPackage } from '../base/BaseType';
+import { VideoTrackInfo } from '../terra/rtc_types/Index';
+import { IrisMainClientVariables } from '../variable/IrisMainClientVariables';
+import { Argument } from 'webpack';
 
 export class RtcEngine implements IRtcEngine {
 
@@ -39,19 +44,25 @@ export class RtcEngine implements IRtcEngine {
         }
 
         //enumerate divice
-        AgoraRTC.getDevices()
-            .then((info: MediaDeviceInfo[]) => {
-                AgoraConsole.log("enumerate devices success!");
-                this._engine.globalVariables.initDevicesInfo(info);
-            })
-            .catch((reason) => {
-                AgoraConsole.error("enumerate devices failed!");
-                AgoraConsole.error("reason devices failed!");
-                this._engine.globalVariables.initDevicesInfo([]);
-            })
-            .finally(() => {
-                this._engine.rtcEngineEventHandler.onDeviceEnumerated();
-            })
+        this._actonQueue.putAction({
+            fun: (next) => {
+                AgoraRTC.getDevices()
+                    .then((info: MediaDeviceInfo[]) => {
+                        AgoraConsole.log("enumerate devices success!");
+                        this._engine.globalVariables.initDevicesInfo(info);
+                    })
+                    .catch((reason) => {
+                        AgoraConsole.error("enumerate devices failed!");
+                        AgoraConsole.error(reason);
+                        this._engine.globalVariables.initDevicesInfo([]);
+                    })
+                    .finally(() => {
+                        this._engine.rtcEngineEventHandler.onDeviceEnumerated();
+                        next();
+                    })
+            },
+            args: []
+        })
 
         return 0;
     }
@@ -144,11 +155,24 @@ export class RtcEngine implements IRtcEngine {
     setDevice(deviceIdUTF8: string): number {
         this._actonQueue.putAction({
             fun: (deviceIdUTF8: string, next) => {
-                //todo 如果当前有LocalVideoTrack， 那么调用LocalVideoTrack.setDevice 
-
-                //否则 在localVideoTrack被创建的时候，要读取下边这个电量，并且设置一下，不需要
                 this._engine.mainClientVariables.videoDeviceId = deviceIdUTF8;
+                //todo 如果当前有LocalVideoTrack， 那么调用LocalVideoTrack.setDevice 
+                this._engine.entitiesContainer.walkAllILocalVideoTrack((trackPackage: VideoTrackPackage) => {
+                    if (trackPackage.type == IrisVideoSourceType.kVideoSourceTypeCameraPrimary || trackPackage.type == IrisVideoSourceType.kVideoSourceTypeCameraSecondary) {
+                        let track: ICameraVideoTrack = trackPackage.track as ICameraVideoTrack;
+                        track.setDevice(deviceIdUTF8)
+                            .then(() => {
+                                AgoraConsole.log("setDevice success");
+                            })
+                            .catch((reason) => {
+                                AgoraConsole.error("setDevice failed");
+                                AgoraConsole.error(reason);
+                            })
+                            .finally(() => {
 
+                            })
+                    }
+                })
                 next();
             },
             args: [deviceIdUTF8]
@@ -156,10 +180,16 @@ export class RtcEngine implements IRtcEngine {
         return 0;
     }
 
-    //todo may can supported
-    getDevice(deviceIdUTF8: string): number {
-        AgoraConsole.warn("getDevice not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    getDevice(): string {
+        if (this._engine.mainClientVariables.videoDeviceId) {
+            return this._engine.mainClientVariables.videoDeviceId;
+        }
+        else if (this._engine.globalVariables.deviceEnumerated) {
+            return this._engine.globalVariables.videoDevices[0]?.deviceId || "";
+        }
+        else {
+            return "";
+        }
     }
 
     numberOfCapabilities(deviceIdUTF8: string): number {
@@ -183,7 +213,14 @@ export class RtcEngine implements IRtcEngine {
     }
 
     release(sync: boolean): void {
-        //do nothing
+        this._actonQueue.putAction({
+            fun: (sync: boolean, next) => {
+                //todo 释放client , track, eventHandler
+                next();
+            },
+            args: [sync]
+        })
+        return 
     }
 
     queryInterface(iid: agorartc.INTERFACE_ID_TYPE, inter: void): number {
@@ -191,7 +228,7 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    getVersion(build: number): string {
+    getVersion(): string {
         return AgoraRTC.VERSION;
     }
 
@@ -213,9 +250,162 @@ export class RtcEngine implements IRtcEngine {
     }
 
     joinChannel2(token: string, channelId: string, uid: number, options: agorartc.ChannelMediaOptions): number {
-        //要在这里创建localVideo 和 localAudio了
-        //要小心处理这个 ChannelMediaOptions
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        if (this._engine.mainClientVariables.joinChanneled == true) {
+            AgoraConsole.error("already call joinChannel");
+            return -agorartc.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED;
+        }
+        else {
+            this._actonQueue.putAction({
+                fun: (token: string, channelId: string, uid: number, options: agorartc.ChannelMediaOptions) => {
+                    let mainClientVariables: IrisMainClientVariables = this._engine.mainClientVariables;
+
+                    mainClientVariables.mergeChannelMediaOptions(options);
+                    let config: ClientConfig = mainClientVariables.generateClientConfig();
+                    let mainClient: IAgoraRTCClient = AgoraRTC.createClient(config);
+
+                    //设置远端默认是 大流还是小流
+                    if (mainClientVariables.remoteDefaultVideoStreamType != null) {
+                        mainClient.setRemoteDefaultVideoStreamType(AgoraTranslate.agorartcVIDEO_STREAM_TYPE2RemoteStreamType(mainClientVariables.remoteDefaultVideoStreamType))
+                            .then(() => {
+
+                            })
+                            .catch(() => {
+
+                            })
+                            .finally(() => {
+
+                            })
+                    }
+                    //设置指定的远端uid具体是大流还是小流
+                    for (let e of mainClientVariables.remoteVideoStreamTypes) {
+                        mainClient.setRemoteVideoStreamType(e[0], AgoraTranslate.agorartcVIDEO_STREAM_TYPE2RemoteStreamType(e[1]))
+                            .then(() => {
+
+                            })
+                            .catch(() => {
+
+                            })
+                            .finally(() => {
+
+                            })
+                    }
+
+                    //
+                    let videoSourceType: agorartc.VIDEO_SOURCE_TYPE;
+                    if (mainClientVariables.publishCameraTrack == true) {
+                        videoSourceType = agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY;
+                    }
+                    else if (mainClientVariables.publishSecondaryCameraTrack == true) {
+                        videoSourceType = agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY;
+                    }
+                    else if (mainClientVariables.publishScreenCaptureVideo == true) {
+                        videoSourceType = agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
+                    }
+
+                    //如果当前轨道被特别指定了，那么就设置一下
+                    if (mainClientVariables.enabledDualStreamModes.has(videoSourceType)) {
+                        let steamMode = mainClientVariables.enabledDualStreamModes.get(videoSourceType);
+                        if (steamMode.enabled) {
+                            mainClient.enableDualStream()
+                                .then(() => {
+
+                                })
+                                .catch(() => {
+
+                                })
+                                .finally(() => {
+                                });
+
+                            if (steamMode.streamConfig != null) {
+                                mainClient.setLowStreamParameter(AgoraTranslate.agorartcSimulcastStreamConfig2LowStreamParameter(steamMode.streamConfig));
+                            }
+                        }
+                        else {
+                            mainClient.disableDualStream()
+                                .then(() => {
+
+                                })
+                                .catch(() => {
+
+                                })
+                                .finally(() => {
+                                });
+                        }
+                    }
+                    else {
+                        if (mainClientVariables.enabledDualStreamMode) {
+                            mainClient.enableDualStream()
+                                .then(() => {
+
+                                })
+                                .catch(() => {
+
+                                })
+                                .finally(() => {
+                                })
+                        }
+                    }
+
+                    //设置是否报告说话的人
+                    if (mainClientVariables.enabledAudioVolumeIndication) {
+                        mainClient.enableAudioVolumeIndicator();
+                        mainClientVariables.enabledAudioVolumeIndication = null;
+                    }
+
+
+                    //是否开启了加密
+                    if (mainClientVariables.encryptionConfig?.enabled) {
+                        let config: agorartc.EncryptionConfig = mainClientVariables.encryptionConfig.config;
+                        let encryptionMode: EncryptionMode = AgoraTranslate.agorartcENCRYPTION_MODE2EncryptionMode(config.encryptionMode);
+                        mainClient.setEncryptionConfig(encryptionMode, config.encryptionKey, config.encryptionKdfSalt);
+                    }
+
+                    //是否开启了鉴黄
+                    if (mainClientVariables.contentInspect != null) {
+                        mainClient.enableContentInspect(AgoraTranslate.agorartcContentInspectConfig2InspectConfiguration(mainClientVariables.contentInspect))
+                            .then(() => {
+
+                            })
+                            .catch(() => {
+
+                            })
+                            .finally(() => {
+
+                            })
+                    }
+
+                    let globalVariables: IrisGlobalVariables = this._engine.globalVariables;
+
+                    //是否开启了cloudProxy
+                    if (globalVariables.cloudProxy != null) {
+                        let proxyType = globalVariables.cloudProxy;
+                        if (proxyType == agorartc.CLOUD_PROXY_TYPE.UDP_PROXY) {
+                            mainClient.startProxyServer(3);
+                        }
+                        else if (proxyType == agorartc.CLOUD_PROXY_TYPE.TCP_PROXY) {
+                            mainClient.startProxyServer(5);
+                        }
+                    }
+
+                    //todo 需要在每个remote用户加入的回调里设置一下这个选项
+
+                    // if (globalVariables.fallbackOption) {
+                    //     mainClinet.setStreamFallbackOption
+                    // }
+
+
+
+
+
+
+
+
+                },
+                args: [token, channelId, uid, options]
+            })
+
+            return 0;
+        }
     }
 
     updateChannelMediaOptions(options: agorartc.ChannelMediaOptions): number {
@@ -325,23 +515,115 @@ export class RtcEngine implements IRtcEngine {
     }
 
     startPreview(): number {
-        //todo 需要
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return this.startPreview2(agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA);
     }
 
     startPreview2(sourceType: agorartc.VIDEO_SOURCE_TYPE): number {
         //todo 需要
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        if (this._engine.globalVariables.enabledVideo == false) {
+            AgoraConsole.error("call enableVideo(true) before startPreview");
+            return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
+        }
+        else {
+            if (this._engine.mainClientVariables.startPreviewed == true) {
+                AgoraConsole.error("you already call startPreview");
+                return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
+            }
+            else {
+                this._engine.mainClientVariables.startPreviewed = true;
+                this._actonQueue.putAction({
+                    fun: (sourceType: agorartc.VIDEO_SOURCE_TYPE, next) => {
+                        if (sourceType == agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY || sourceType == agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY) {
+                            //Camera Video Track
+
+                            //if we call startPreview twice. There will be a old track in there
+                            this._engine.entitiesContainer.removeFreeLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeCameraPrimary);
+
+                            let config: CameraVideoTrackInitConfig = {};
+                            if (this._engine.mainClientVariables.videoDeviceId) {
+                                config.cameraId = this._engine.mainClientVariables.videoDeviceId;
+                            }
+                            if (this._engine.globalVariables.videoEncoderConfiguration) {
+                                config.encoderConfig = AgoraTranslate.agorartcVideoEncoderConfiguration2VideoEncoderConfiguration(this._engine.globalVariables.videoEncoderConfiguration);
+                            }
+                            if (this._engine.globalVariables.cameraDirection) {
+                                config.facingMode = AgoraTranslate.agorartcCAMERA_DIRECTION2string(this._engine.globalVariables.cameraDirection);
+                            }
+                            AgoraRTC.createCameraVideoTrack(config)
+                                .then((track: ICameraVideoTrack) => {
+                                    AgoraConsole.log("start preview createCameraVideoTrack success");
+                                    let config: VideoPlayerConfig = {};
+                                    if (this._engine.globalVariables.videoEncoderConfiguration) {
+                                        config.mirror = AgoraTranslate.agorartcVIDEO_MIRROR_MODE_TYPE2boolean(this._engine.globalVariables.videoEncoderConfiguration.mirrorMode)
+                                    }
+                                    track.play("startPreview:Camera", config);
+                                    this._engine.entitiesContainer.addFreeLocalVideoTrack({ type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary, track: track });
+                                })
+                                .catch((reason) => {
+                                    AgoraConsole.error("start preview createCameraVideoTrack failed");
+                                    AgoraConsole.error(reason);
+                                })
+                                .finally(() => {
+                                    next();
+                                })
+                        }
+                        else {
+                            //Screen Share Track
+                            //if we call startPreview twice there will a track be there
+                            this._engine.entitiesContainer.removeFreeLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+
+                            let conf: ScreenVideoTrackInitConfig = {};
+                            let globalVariables: IrisGlobalVariables = this._engine.globalVariables;
+                            if (globalVariables.screenCaptureContentHint != null && globalVariables.screenCaptureContentHint != agorartc.VIDEO_CONTENT_HINT.CONTENT_HINT_NONE) {
+                                conf.optimizationMode = AgoraTranslate.agorartcVIDEO_CONTENT_HINT2string(globalVariables.screenCaptureContentHint);
+                            }
+                            AgoraRTC.createScreenVideoTrack(conf, 'disable')
+                                .then((track: ILocalVideoTrack) => {
+                                    AgoraConsole.log("start preview createScreenVideoTrack success");
+                                    track.play("startPreview:Screen");
+                                    this._engine.entitiesContainer.addFreeLocalVideoTrack({ type: IrisVideoSourceType.kVideoSourceTypeScreenPrimary, track: track });
+                                })
+                                .catch((reason) => {
+                                    AgoraConsole.error("start preview createScreenVideoTrack failed");
+                                    AgoraConsole.error(reason);
+                                })
+                                .finally(() => {
+                                    next();
+                                })
+                        }
+                    },
+                    args: [sourceType]
+                })
+                return 0;
+            }
+        }
     }
 
     stopPreview(): number {
-        //todo 
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return this.stopPreview2(agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA);
     }
 
     stopPreview2(sourceType: agorartc.VIDEO_SOURCE_TYPE): number {
-        //todo 
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        if (this._engine.mainClientVariables.startPreviewed == false) {
+            AgoraConsole.error("not call startPreview yet!");
+            return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
+        }
+        else {
+            this._engine.mainClientVariables.startPreviewed = false;
+            this._actonQueue.putAction({
+                fun: (sourceType: agorartc.VIDEO_SOURCE_TYPE, next) => {
+                    if (sourceType == agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY || sourceType == agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY) {
+                        this._engine.entitiesContainer.removeFreeLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeCameraPrimary);
+                    }
+                    else {
+                        this._engine.entitiesContainer.removeFreeLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+                    }
+                    next();
+                },
+                args: [sourceType]
+            })
+        }
+        return 0;
     }
 
     startLastmileProbeTest(config: agorartc.LastmileProbeConfig): number {
@@ -358,6 +640,7 @@ export class RtcEngine implements IRtcEngine {
         this._actonQueue.putAction({
             fun: (config: agorartc.VideoEncoderConfiguration, next) => {
                 this._engine.globalVariables.videoEncoderConfiguration = config;
+
 
                 //todo 找到所有mainClient 的 ICameraTrack。如果存在则 setEncoderConfiguration（） 一下
                 //todo 找到所有的mainClient ILocalVideoTrack。如果已经play过了，则无法设置 VideoEncoderConfiguration.mirrorMode

@@ -25,7 +25,7 @@ export interface IRtcEngine {
 	//IVideoDeviceManager
 	enumerateVideoDevices(): agorartc.DeviceInfo[];
 	setDevice(deviceIdUTF8: string): number;
-	getDevice(deviceIdUTF8: string): number;
+	getDevice(): string;
 	numberOfCapabilities(deviceIdUTF8: string): number;
 	getCapability(deviceIdUTF8: string, deviceCapabilityNumber: number, capability: agorartc.VideoFormat): number;
 	startDeviceTest(hwnd: agorartc.view_t): number;
@@ -36,7 +36,7 @@ export interface IRtcEngine {
 	release(sync: boolean): void;
 	initialize(context: agorartc.RtcEngineContext): number;
 	queryInterface(iid: agorartc.INTERFACE_ID_TYPE, inter: void): number;
-	getVersion(build: number): string;
+	getVersion(): string;
 	getErrorDescription(code: number): string;
 	joinChannel(token: string, channelId: string, info: string, uid: agorartc.uid_t): number;
 	joinChannel2(token: string, channelId: string, uid: agorartc.uid_t, options: agorartc.ChannelMediaOptions): number;
