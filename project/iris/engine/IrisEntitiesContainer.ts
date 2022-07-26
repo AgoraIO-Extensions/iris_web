@@ -23,11 +23,9 @@ export class IrisEntitiesContaniner {
     private _mainClientLocalVideoTrack: VideoTrackPackage = null;
     private _mainClientTrackEventHandlers: Array<IrisTrackEventHandler> = new Array<IrisTrackEventHandler>();
 
-    //free tracks means not publish
-    private _freeLocalAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
-    private _freeLocalVideoTracks: Array<VideoTrackPackage> = new Array<VideoTrackPackage>();
-
-
+    //all tracks
+    private _localAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
+    private _localVideoTracks: Array<VideoTrackPackage> = new Array<VideoTrackPackage>();
 
     //subClient
     private _subClients: Contaniner<IAgoraRTCClient> = new Contaniner<IAgoraRTCClient>();
@@ -44,12 +42,12 @@ export class IrisEntitiesContaniner {
         this._engine = engine;
     }
 
-    addFreeLocalVideoTrack(trackPackage: VideoTrackPackage) {
-        this._freeLocalVideoTracks.push(trackPackage);
+    addLocalVideoTrack(trackPackage: VideoTrackPackage) {
+        this._localVideoTracks.push(trackPackage);
     }
 
-    getFreeLocalVideoTrackByType(type: IrisVideoSourceType): VideoTrackPackage {
-        for (let trackPack of this._freeLocalVideoTracks) {
+    getLocalVideoTrackByType(type: IrisVideoSourceType): VideoTrackPackage {
+        for (let trackPack of this._localVideoTracks) {
             if (trackPack.type == type) {
                 return trackPack;
             }
@@ -57,56 +55,46 @@ export class IrisEntitiesContaniner {
         return null;
     }
 
-    popFreeLocalVideoTrackByType(type: IrisVideoSourceType): VideoTrackPackage {
-        for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
-            let trackPack = this._freeLocalVideoTracks[i];
-            if (trackPack.type == type) {
-                this._freeLocalVideoTracks.splice(i, 1);
-                return trackPack;
-            }
-        }
-    }
-
-    removeFreeLocalVideoTrack(trackPackage: VideoTrackPackage, closeTrack: boolean) {
-        for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
-            let trackPack = this._freeLocalVideoTracks[i];
+    removeLocalVideoTrack(trackPackage: VideoTrackPackage, closeTrack: boolean) {
+        for (let i = 0; i < this._localVideoTracks.length; i++) {
+            let trackPack = this._localVideoTracks[i];
             if (trackPack == trackPackage) {
                 let track: ILocalVideoTrack = trackPack.track as ILocalVideoTrack;
                 closeTrack && track.close();
-                this._freeLocalVideoTracks.splice(i, 1);
+                this._localVideoTracks.splice(i, 1);
                 break;
             }
         }
     }
 
-    removeFreeLocalVideoTrackByType(type: IrisVideoSourceType, closeTrack: boolean) {
-        for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
-            let trackPack = this._freeLocalVideoTracks[i];
+    removeLocalVideoTrackByType(type: IrisVideoSourceType, closeTrack: boolean) {
+        for (let i = 0; i < this._localVideoTracks.length; i++) {
+            let trackPack = this._localVideoTracks[i];
             if (trackPack.type == type) {
                 let track: ILocalVideoTrack = trackPack.track as ILocalVideoTrack;
                 closeTrack && track.close();
-                this._freeLocalVideoTracks.splice(i, 1);
+                this._localVideoTracks.splice(i, 1);
                 break;
             }
         }
     }
 
-    clearFreeLocalVideoTrack() {
-        for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
-            let trackPack = this._freeLocalVideoTracks[i];
+    clearLocalVideoTracks(closeTrack: boolean) {
+        for (let i = 0; i < this._localVideoTracks.length; i++) {
+            let trackPack = this._localVideoTracks[i];
             let track = trackPack.track as ILocalVideoTrack;
-            track.close();
+            closeTrack && track.close();
         }
-        this._freeLocalVideoTracks = [];
+        this._localVideoTracks = [];
     }
 
 
-    addFreeLocalAudioTrack(trackPackage: AudioTrackPackage) {
-        this._freeLocalAudioTracks.push(trackPackage);
+    addLocalAudioTrack(trackPackage: AudioTrackPackage) {
+        this._localAudioTracks.push(trackPackage);
     }
 
-    getFreeLocalAudioTrackByType(type: IrisAudioSourceType): AudioTrackPackage {
-        for (let trackPack of this._freeLocalAudioTracks) {
+    getLocalAudioTrackByType(type: IrisAudioSourceType): AudioTrackPackage {
+        for (let trackPack of this._localAudioTracks) {
             if (trackPack.type == type) {
                 return trackPack;
             }
@@ -114,60 +102,40 @@ export class IrisEntitiesContaniner {
         return null;
     }
 
-    removeFreeLocalAudioTrack(trackPackage: AudioTrackPackage, closeTrack: boolean) {
-        for (let i = 0; i < this._freeLocalAudioTracks.length; i++) {
-            let trackPack = this._freeLocalAudioTracks[i];
+    removeLocalAudioTrack(trackPackage: AudioTrackPackage, closeTrack: boolean) {
+        for (let i = 0; i < this._localAudioTracks.length; i++) {
+            let trackPack = this._localAudioTracks[i];
             if (trackPack == trackPackage) {
                 let track: ILocalAudioTrack = trackPack.track as ILocalAudioTrack;
                 closeTrack && track.close();
-                this._freeLocalAudioTracks.splice(i, 1);
+                this._localAudioTracks.splice(i, 1);
                 break;
             }
         }
-
     }
 
-    removeFreeLocalAudioTrackByType(type: IrisAudioSourceType, closeTrack: boolean) {
-        for (let i = 0; i < this._freeLocalAudioTracks.length; i++) {
-            let trackPack = this._freeLocalAudioTracks[i];
+    removeLocalAudioTrackByType(type: IrisAudioSourceType, closeTrack: boolean) {
+        for (let i = 0; i < this._localAudioTracks.length; i++) {
+            let trackPack = this._localAudioTracks[i];
             if (trackPack.type == type) {
                 let track: ILocalAudioTrack = trackPack.track as ILocalAudioTrack;
                 closeTrack && track.close();
-                this._freeLocalAudioTracks.splice(i, 1);
+                this._localAudioTracks.splice(i, 1);
                 break;
             }
         }
     }
 
-    popFreeLocalAudioTrackByType(type: IrisAudioSourceType): AudioTrackPackage {
-        for (let i = 0; i < this._freeLocalAudioTracks.length; i++) {
-            let trackPack = this._freeLocalAudioTracks[i];
-            if (trackPack.type == type) {
-                this._freeLocalAudioTracks.splice(i, 1);
-                return trackPack;
-            }
-        }
-    }
-
-    clearFreeLocalAudioTrack() {
-        for (let i = 0; i < this._freeLocalAudioTracks.length; i++) {
-            let trackPack = this._freeLocalAudioTracks[i];
+    clearLocalAudioTracks(closeTrack: boolean) {
+        for (let i = 0; i < this._localAudioTracks.length; i++) {
+            let trackPack = this._localAudioTracks[i];
             let track = trackPack.track as ILocalAudioTrack;
-            track.close();
+            closeTrack && track.close();
         }
-        this._freeLocalAudioTracks = [];
+        this._localAudioTracks = [];
     }
 
-    // moveFreeLocalAudoTrackToMainClientLocalAudioTracks(track: ILocalAudioTrack) {
-    //     for (let i = 0; i < this._freeLocalAudioTracks.length; i++) {
-    //         let trackPack = this._freeLocalAudioTracks[i];
-    //         if (trackPack.track == track) {
-    //             this._freeLocalAudioTracks.splice(i, 1);
-    //             this._mainClientLocalAudioTracks.push(trackPack);
-    //             break;
-    //         }
-    //     }
-    // }
+
 
     addMainClientLocalAudioTrack(trackPackage: AudioTrackPackage) {
         this._mainClientLocalAudioTracks.push(trackPackage);
@@ -182,17 +150,6 @@ export class IrisEntitiesContaniner {
             }
         }
     }
-
-    // moveFreeLocalVideoTrackToMainClientLocalVideoTrack(track: ILocalVideoTrack) {
-    //     for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
-    //         let trackPack = this._freeLocalVideoTracks[i];
-    //         if (trackPack.track == track) {
-    //             this._freeLocalVideoTracks.splice(i, 1);
-    //             this._mainClientLocalVideoTrack = trackPack;
-    //             break;
-    //         }
-    //     }
-    // }
 
     setMainClientLocalVideoTrack(trackPack: VideoTrackPackage) {
         this._mainClientLocalVideoTrack = trackPack;
@@ -214,7 +171,7 @@ export class IrisEntitiesContaniner {
             fun(trackPack);
         })
 
-        for (let trackPack of this._freeLocalVideoTracks) {
+        for (let trackPack of this._localVideoTracks) {
             fun(trackPack);
         }
     }
@@ -230,10 +187,10 @@ export class IrisEntitiesContaniner {
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
             }
-            if (this._freeLocalVideoTracks.length > 0) {
+            if (this._localVideoTracks.length > 0) {
                 return {
-                    video_track: this._freeLocalVideoTracks[0].track,
-                    video_frame: this._freeLocalVideoTracks[0].track.getCurrentFrameData(),
+                    video_track: this._localVideoTracks[0].track,
+                    video_frame: this._localVideoTracks[0].track.getCurrentFrameData(),
                     is_new_frame: true, //todo  how to know is a new frame
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
@@ -280,8 +237,8 @@ export class IrisEntitiesContaniner {
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
             }
-            else if (this._freeLocalVideoTracks.length > 0) {
-                for (let trackPackage of this._freeLocalVideoTracks) {
+            else if (this._localVideoTracks.length > 0) {
+                for (let trackPackage of this._localVideoTracks) {
                     if (trackPackage.type == type) {
                         return {
                             video_track: trackPackage.track,
@@ -405,7 +362,8 @@ export class IrisEntitiesContaniner {
                 trackEventHandler.destruction();
             })
         })
-
+        this.clearLocalAudioTracks(true);
+        this.clearLocalVideoTracks(true);
     }
 
 
