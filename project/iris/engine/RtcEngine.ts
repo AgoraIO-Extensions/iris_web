@@ -591,11 +591,9 @@ export class RtcEngine implements IRtcEngine {
                                     AgoraConsole.error(err);
                                 }
                                 else {
-                                    let audioTrack = trackArray[0];
-                                    let videoTrack = trackArray[1];
+                                    // let audioTrack = trackArray[0];
+                                    // let videoTrack = trackArray[1];
                                     AgoraConsole.log("start preview createCameraVideoTrack success");
-                                    this._engine.entitiesContainer.addFreeLocalAudioTrack({ type: audioSource, track: audioTrack });
-                                    this._engine.entitiesContainer.addFreeLocalVideoTrack({ type: videoSource, track: videoTrack });
                                 }
                                 next();
                             }
@@ -621,8 +619,8 @@ export class RtcEngine implements IRtcEngine {
             this._engine.mainClientVariables.startPreviewed = false;
             this._actonQueue.putAction({
                 fun: (sourceType: agorartc.VIDEO_SOURCE_TYPE, next) => {
-                    this._engine.entitiesContainer.clearFreeLocalAudioTrack();
-                    this._engine.entitiesContainer.clearFreeLocalVideoTrack();
+                    //todo 让音视频轨道暂停即可
+
                     next();
                 },
                 args: [sourceType]
@@ -3054,7 +3052,7 @@ export class RtcEngine implements IRtcEngine {
             })
     }
 
-    //TODO  先从已经创建的track里找，如果找不到，那么就去创建
+    //TODO  先从已经创建的track里找，如果找不到，那么就去创建. 创建成功后，还要放到列表里哦
     private getOrCreateAudioAndVideoTrack(audioType: IrisAudioSourceType, videoType: IrisVideoSourceType, fun: (any, [ILocalAudioTrack, ILocalVideoTrack]) => void) {
         if (audioType == IrisAudioSourceType.kAudioSourceTypeUnknow && videoType == IrisVideoSourceType.kVideoSourceTypeUnknown) {
             AgoraConsole.error("want do you want ???");
