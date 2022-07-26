@@ -1,5 +1,5 @@
-import { IAgoraRTCClient, UID, IAgoraRTCRemoteUser, ILocalVideoTrack } from "agora-rtc-sdk-ng";
-import { AudioTrackPackage, IrisVideoFrameBufferConfig, IrisVideoSourceType, IRIS_VIDEO_PROCESS_ERR, VideoParams, VideoTrackPackage } from "../base/BaseType";
+import { IAgoraRTCClient, UID, IAgoraRTCRemoteUser, ILocalVideoTrack, ILocalAudioTrack, ITrack } from "agora-rtc-sdk-ng";
+import { AudioTrackPackage, IrisAudioSourceType, IrisVideoFrameBufferConfig, IrisVideoSourceType, IRIS_VIDEO_PROCESS_ERR, VideoParams, VideoTrackPackage } from "../base/BaseType";
 import { IrisClientEventHandler } from "../event_handler/IrisClientEventHandler";
 import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 import { Contaniner } from "../tool/Contanier";
@@ -26,6 +26,7 @@ export class IrisEntitiesContaniner {
     //free tracks means not publish
     private _freeLocalAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
     private _freeLocalVideoTracks: Array<VideoTrackPackage> = new Array<VideoTrackPackage>();
+
 
 
     //subClient
@@ -56,28 +57,153 @@ export class IrisEntitiesContaniner {
         return null;
     }
 
-    removeFreeLocalVideoTrack(trackPackage: VideoTrackPackage) {
+    popFreeLocalVideoTrackByType(type: IrisVideoSourceType): VideoTrackPackage {
+        for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
+            let trackPack = this._freeLocalVideoTracks[i];
+            if (trackPack.type == type) {
+                this._freeLocalVideoTracks.splice(i, 1);
+                return trackPack;
+            }
+        }
+    }
+
+    removeFreeLocalVideoTrack(trackPackage: VideoTrackPackage, closeTrack: boolean) {
         for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
             let trackPack = this._freeLocalVideoTracks[i];
             if (trackPack == trackPackage) {
                 let track: ILocalVideoTrack = trackPack.track as ILocalVideoTrack;
-                track.close();
+                closeTrack && track.close();
                 this._freeLocalVideoTracks.splice(i, 1);
                 break;
             }
         }
     }
 
-    removeFreeLocalVideoTrackByType(type: IrisVideoSourceType) {
+    removeFreeLocalVideoTrackByType(type: IrisVideoSourceType, closeTrack: boolean) {
         for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
             let trackPack = this._freeLocalVideoTracks[i];
             if (trackPack.type == type) {
                 let track: ILocalVideoTrack = trackPack.track as ILocalVideoTrack;
-                track.close();
+                closeTrack && track.close();
                 this._freeLocalVideoTracks.splice(i, 1);
                 break;
             }
         }
+    }
+
+    clearFreeLocalVideoTrack() {
+        for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
+            let trackPack = this._freeLocalVideoTracks[i];
+            let track = trackPack.track as ILocalVideoTrack;
+            track.close();
+        }
+        this._freeLocalVideoTracks = [];
+    }
+
+
+    addFreeLocalAudioTrack(trackPackage: AudioTrackPackage) {
+        this._freeLocalAudioTracks.push(trackPackage);
+    }
+
+    getFreeLocalAudioTrackByType(type: IrisAudioSourceType): AudioTrackPackage {
+        for (let trackPack of this._freeLocalAudioTracks) {
+            if (trackPack.type == type) {
+                return trackPack;
+            }
+        }
+        return null;
+    }
+
+    removeFreeLocalAudioTrack(trackPackage: AudioTrackPackage, closeTrack: boolean) {
+        for (let i = 0; i < this._freeLocalAudioTracks.length; i++) {
+            let trackPack = this._freeLocalAudioTracks[i];
+            if (trackPack == trackPackage) {
+                let track: ILocalAudioTrack = trackPack.track as ILocalAudioTrack;
+                closeTrack && track.close();
+                this._freeLocalAudioTracks.splice(i, 1);
+                break;
+            }
+        }
+
+    }
+
+    removeFreeLocalAudioTrackByType(type: IrisAudioSourceType, closeTrack: boolean) {
+        for (let i = 0; i < this._freeLocalAudioTracks.length; i++) {
+            let trackPack = this._freeLocalAudioTracks[i];
+            if (trackPack.type == type) {
+                let track: ILocalAudioTrack = trackPack.track as ILocalAudioTrack;
+                closeTrack && track.close();
+                this._freeLocalAudioTracks.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    popFreeLocalAudioTrackByType(type: IrisAudioSourceType): AudioTrackPackage {
+        for (let i = 0; i < this._freeLocalAudioTracks.length; i++) {
+            let trackPack = this._freeLocalAudioTracks[i];
+            if (trackPack.type == type) {
+                this._freeLocalAudioTracks.splice(i, 1);
+                return trackPack;
+            }
+        }
+    }
+
+    clearFreeLocalAudioTrack() {
+        for (let i = 0; i < this._freeLocalAudioTracks.length; i++) {
+            let trackPack = this._freeLocalAudioTracks[i];
+            let track = trackPack.track as ILocalAudioTrack;
+            track.close();
+        }
+        this._freeLocalAudioTracks = [];
+    }
+
+    // moveFreeLocalAudoTrackToMainClientLocalAudioTracks(track: ILocalAudioTrack) {
+    //     for (let i = 0; i < this._freeLocalAudioTracks.length; i++) {
+    //         let trackPack = this._freeLocalAudioTracks[i];
+    //         if (trackPack.track == track) {
+    //             this._freeLocalAudioTracks.splice(i, 1);
+    //             this._mainClientLocalAudioTracks.push(trackPack);
+    //             break;
+    //         }
+    //     }
+    // }
+
+    addMainClientLocalAudioTrack(trackPackage: AudioTrackPackage) {
+        this._mainClientLocalAudioTracks.push(trackPackage);
+    }
+
+    removeMainClientLocalAudioTrack(track: ILocalAudioTrack, closeTrack: boolean) {
+        for (let i = 0; i < this._mainClientLocalAudioTracks.length; i++) {
+            let trackPackage = this._mainClientLocalAudioTracks[i];
+            if (trackPackage.track == track) {
+                closeTrack && trackPackage.track.close();
+                this._mainClientLocalAudioTracks.splice(i, 1);
+            }
+        }
+    }
+
+    // moveFreeLocalVideoTrackToMainClientLocalVideoTrack(track: ILocalVideoTrack) {
+    //     for (let i = 0; i < this._freeLocalVideoTracks.length; i++) {
+    //         let trackPack = this._freeLocalVideoTracks[i];
+    //         if (trackPack.track == track) {
+    //             this._freeLocalVideoTracks.splice(i, 1);
+    //             this._mainClientLocalVideoTrack = trackPack;
+    //             break;
+    //         }
+    //     }
+    // }
+
+    setMainClientLocalVideoTrack(trackPack: VideoTrackPackage) {
+        this._mainClientLocalVideoTrack = trackPack;
+    }
+
+    clearMainClientLocalVideoTrack(closeTrack: boolean) {
+        if (closeTrack) {
+            let localTrack = this._mainClientLocalVideoTrack.track as ILocalVideoTrack;
+            localTrack.close();
+        }
+        this._mainClientLocalVideoTrack = null;
     }
 
     walkAllILocalVideoTrack(fun: WalkILocalVideoPackageTrackFun) {
@@ -203,6 +329,57 @@ export class IrisEntitiesContaniner {
     getMainClient(): IAgoraRTCClient {
         return this._mainClient;
     }
+
+    setMainClientEventHandler(eventHandler: IrisClientEventHandler) {
+        this._mainClientEventHandler = eventHandler;
+    }
+
+    addMainClientTrackEventHandler(trackEventHandler: IrisTrackEventHandler) {
+        this._mainClientTrackEventHandlers.push(trackEventHandler);
+    }
+
+    removeMainClientTrackEventHandler(track: ITrack) {
+        for (let i = 0; i < this._mainClientTrackEventHandlers.length; i++) {
+            let trackEventHander = this._mainClientTrackEventHandlers[i];
+            if (trackEventHander.getTrack() == track) {
+                trackEventHander.destruction();
+                this._mainClientTrackEventHandlers.splice(i, 1);
+            }
+        }
+    }
+
+    clearMainClientAll() {
+        if (this._mainClient) {
+
+            // this._mainClient.unsubscribe
+            //todo destroy client如何 destroy呢
+            this._mainClient = null;
+        }
+
+        if (this._mainClientEventHandler) {
+            this._mainClientEventHandler.destruction();
+            this._mainClientEventHandler = null;
+        }
+
+        this._mainClientLocalAudioTracks.forEach(element => {
+            let track = element.track as ILocalAudioTrack;
+            track.close();
+        });
+        this._mainClientLocalAudioTracks = new Array<AudioTrackPackage>();
+
+        if (this._mainClientLocalVideoTrack) {
+            let track = this._mainClientLocalVideoTrack.track as ILocalVideoTrack;
+            track.close();
+        }
+        this._mainClientLocalVideoTrack = null;
+
+        this._mainClientTrackEventHandlers.forEach(element => {
+            element.destruction();
+        })
+        this._mainClientTrackEventHandlers = new Array<IrisTrackEventHandler>();
+
+    }
+
 
     //todo 注意自己的mainClient可能也满足要求哦
     getClient(connection: agorartc.RtcConnection): IAgoraRTCClient {
