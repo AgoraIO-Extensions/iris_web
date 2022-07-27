@@ -33,10 +33,16 @@ export enum IrisVideoSourceType {
     kVideoSourceTypeUnknown,
 };
 
+export enum IrisClientType {
+    kClientMian,
+    kClientSub,
+}
 
 export enum IrisAudioSourceType {
-    kAudioSourceTypeMicrophone,
-    kAudioSourceTypeScreenShare,
+    kAudioSourceTypeMicrophonePrimary,
+    kAudioSourceTypeMicrophoneSecondary,
+    kAudioSourceTypeScreenPrimary,
+    kAudioSourceTypeScreenSecondary,
     kAudioSourceTypeCustom,
     kAudioSourceTypeUnknow
 };
