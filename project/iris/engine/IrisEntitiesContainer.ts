@@ -126,6 +126,15 @@ export class IrisEntitiesContaniner {
         }
     }
 
+    getLocalVideoTracks(): Array<VideoTrackPackage> {
+        return this._localVideoTracks;
+    }
+
+
+    getLocalAudioTracks(): Array<AudioTrackPackage> {
+        return this._localAudioTracks;
+    }
+
     clearLocalAudioTracks(closeTrack: boolean) {
         for (let i = 0; i < this._localAudioTracks.length; i++) {
             let trackPack = this._localAudioTracks[i];
