@@ -32,6 +32,10 @@ export class Contaniner<T> {
         return this._contaniner[channelId]?.[uid];
     }
 
+    getTs(channelId: string): Map<UID, T> {
+        return this._contaniner[channelId];
+    }
+
     walkT(cb: walkFun<T>) {
         this._contaniner.forEach((map: Map<UID, T>, channelId: string) => {
             map.forEach((t: T, uid: UID) => {
@@ -39,5 +43,11 @@ export class Contaniner<T> {
             });
         })
     }
+
+    getContaniner(): Map<string, Map<UID, T>> {
+        return this._contaniner;
+    }
+
+
 
 }

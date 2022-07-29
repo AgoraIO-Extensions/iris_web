@@ -20,6 +20,7 @@ export class IrisGlobalVariables {
     public enabledLocalAudio: boolean = true;
     public mutedLocalAudioStream: boolean = false;
 
+
     //开启或者禁用video功能
     enabledLocalVideo: boolean = false;
     mutedLocalVideoStream: boolean = false;

@@ -16,14 +16,12 @@ export class IrisEntitiesContaniner {
 
     //mainClient
     private _mainClient: IAgoraRTCClient = null;
-    private _mainClientChannelName: string = null;
-    private _mainClientUid: UID = null;
     private _mainClientEventHandler: IrisClientEventHandler = null;
     private _mainClientLocalAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
     private _mainClientLocalVideoTrack: VideoTrackPackage = null;
     private _mainClientTrackEventHandlers: Array<IrisTrackEventHandler> = new Array<IrisTrackEventHandler>();
 
-    //all tracks
+    //all local tracks
     private _localAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
     private _localVideoTracks: Array<VideoTrackPackage> = new Array<VideoTrackPackage>();
 
@@ -41,6 +39,31 @@ export class IrisEntitiesContaniner {
     constructor(engine: IrisRtcEngine) {
         this._engine = engine;
     }
+
+    getRemoteUsers(): Contaniner<IAgoraRTCRemoteUser> {
+        return this._remoteUsers;
+    }
+
+    getRemoteUserByUid(uid: UID): IAgoraRTCRemoteUser {
+        let remoteUsers = this._remoteUsers;
+        let container = remoteUsers.getContaniner();
+        for (let v of container) {
+            let map = v[1];
+            for (let e of map) {
+                if (e[0] == uid) {
+                    return e[1];
+                }
+            }
+        }
+
+        return null;
+    }
+
+    getRemoteUserByChannelName(channelName: string): Map<UID, IAgoraRTCRemoteUser> {
+
+    }
+
+
 
     addLocalVideoTrack(trackPackage: VideoTrackPackage) {
         this._localVideoTracks.push(trackPackage);
@@ -349,12 +372,25 @@ export class IrisEntitiesContaniner {
 
     //todo 注意自己的mainClient可能也满足要求哦
     getClient(connection: agorartc.RtcConnection): IAgoraRTCClient {
-        return null;
+        if (this._mainClient?.channelName == connection.channelId)
+            return this._mainClient;
+
+        return this._subClients.getT(connection.channelId, connection.localUid); 
     }
 
-    getSubClinets(): Contaniner<IAgoraRTCClient> {
+    getClientsByChannelName(channelName: string): Map<UID, IAgoraRTCClient> {
+        return this._subClients.getTs(channelName);
+    }
+
+
+    getSubClients(): Contaniner<IAgoraRTCClient> {
         return this._subClients;
     }
+
+    getSubClientVideoTrack(channelName: string, uid: UID): VideoTrackPackage {
+        return this._subClientVideoTracks.getT(channelName, uid);
+    }
+
 
     destruction() {
         this._mainClientEventHandler.destruction();
@@ -373,6 +409,16 @@ export class IrisEntitiesContaniner {
         })
         this.clearLocalAudioTracks(true);
         this.clearLocalVideoTracks(true);
+    }
+
+    //todo  当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 记住是所有哦
+    //
+    audioTrackWillClose(audioTrack: ILocalAudioTrack) {
+
+    }
+
+    videoTrackWillClose(videoTrack: ILocalVideoTrack) {
+
     }
 
 

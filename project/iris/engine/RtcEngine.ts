@@ -4,7 +4,7 @@ import { IrisApiEngine } from './IrisApiEngine';
 import { IrisRtcEngine } from './IrisRtcEngine';
 import { AgoraActionQueue } from '../tool/AgoraActionQueue';
 import { AgoraConsole } from '../tool/AgoraConsole';
-import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, DeviceInfo, EncryptionMode, IAgoraRTCClient, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalAudioTrack, ILocalTrack, ILocalVideoTrack, IMicrophoneAudioTrack, InjectStreamConfig, MicrophoneAudioTrackInitConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
+import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, ClientRoleOptions, DeviceInfo, EncryptionMode, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalAudioTrack, ILocalTrack, ILocalVideoTrack, IMicrophoneAudioTrack, InjectStreamConfig, MicrophoneAudioTrackInitConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
 import { AgoraTranslate } from '../tool/AgoraTranslate';
 import { IrisGlobalVariables } from '../variable/IrisGlobalVariables';
 import { AudioTrackPackage, IrisAudioSourceType, IrisClientType, IrisVideoSourceType, VideoParams, VideoTrackPackage } from '../base/BaseType';
@@ -370,7 +370,7 @@ export class RtcEngine implements IRtcEngine {
                                                     entitiesContainer.clearMainClientLocalVideoTrack(true);
                                                 })
                                         }
-                                        else if (mainClientVariables.publishScreenCaptureVideo) {
+                                        else if (mainClientVariables.publishScreenTrack || mainClientVariables.publishScreenCaptureVideo) {
                                             //推送屏幕共享流
                                             let videoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
                                             if (videoTrackPackage) {
@@ -456,11 +456,11 @@ export class RtcEngine implements IRtcEngine {
                     argsPublish.push(["publishScreenCaptureAudio", IrisAudioSourceType.kAudioSourceTypeScreenPrimary, 'audio']);
                 }
 
-                if (options.publishScreenCaptureVideo == false) {
-                    argsUnpublish.push(["publishScreenCaptureVideo", IrisVideoSourceType.kVideoSourceTypeScreenPrimary, 'video']);
+                if (options.publishScreenTrack == false) {
+                    argsUnpublish.push(["publishScreenTrack", IrisVideoSourceType.kVideoSourceTypeScreenPrimary, 'video']);
                 }
-                else if (options.publishScreenCaptureVideo == true) {
-                    argsPublish.push(["publishScreenCaptureVideo", IrisVideoSourceType.kVideoSourceTypeScreenPrimary, 'video']);
+                else if (options.publishScreenTrack == true) {
+                    argsPublish.push(["publishScreenTrack", IrisVideoSourceType.kVideoSourceTypeScreenPrimary, 'video']);
                 }
 
 
@@ -568,6 +568,36 @@ export class RtcEngine implements IRtcEngine {
                         }
                     }
 
+                    //todo还要处理 
+                    /*
+                     clientRoleType?: CLIENT_ROLE_TYPE;
+                    audienceLatencyLevel?: AUDIENCE_LATENCY_LEVEL_TYPE;
+                    defaultVideoStreamType?: VIDEO_STREAM_TYPE;
+                    channelProfile?: CHANNEL_PROFILE_TYPE; 加入频道后client已经被创建了，它的 ChannelProfile（SDK_MODE）就无法改变了
+                    token?: string;
+                    */
+                    if (options.clientRoleType != null) {
+                        let roleOptions: ClientRoleOptions = null;
+                        if (options.audienceLatencyLevel != null) {
+                            roleOptions = AgoraTranslate.agorartcAUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(options.audienceLatencyLevel);
+                        }
+
+                        try {
+                            await this._engine.entitiesContainer.getMainClient()?.setClientRole(
+                                AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(options.clientRoleType),
+                                roleOptions
+                            );
+                        }
+                        catch (e) {
+                            AgoraConsole.error("setClientRole failed");
+                        }
+                    }
+
+                    if (options.token != null) {
+                        this._engine.entitiesContainer.getMainClient()?.renewToken(options.token);
+                    }
+
+
                     next();
                 }
 
@@ -629,7 +659,7 @@ export class RtcEngine implements IRtcEngine {
         this._actonQueue.putAction({
             fun: (token: string, next) => {
                 this._engine.entitiesContainer.getMainClient()?.renewToken(token);
-                this._engine.entitiesContainer.getSubClinets().walkT((channelId: string, uid: UID, t: IAgoraRTCClient) => {
+                this._engine.entitiesContainer.getSubClients().walkT((channelId: string, uid: UID, t: IAgoraRTCClient) => {
                     t.renewToken(token);
                 })
                 next();
@@ -923,6 +953,8 @@ export class RtcEngine implements IRtcEngine {
             fun: (next) => {
 
                 let processAudioTracks = async () => {
+                    this._engine.globalVariables.enabledAudio = true;
+                    //找到本地audio
                     let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
                     for (let trackPackage of trackPackages) {
                         let track = trackPackage.track as ILocalAudioTrack;
@@ -936,6 +968,20 @@ export class RtcEngine implements IRtcEngine {
                             }
                         }
                     }
+
+                    //找到远端audio
+                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
+                    let container = remoteUsers.getContaniner();
+                    for (let v of container) {
+                        let map = v[1];
+                        for (let e of map) {
+                            let remoteUser: IAgoraRTCRemoteUser = e[1];
+                            if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying == false) {
+                                remoteUser.audioTrack.play();
+                            }
+                        }
+                    }
+
                     next();
                 }
 
@@ -944,8 +990,6 @@ export class RtcEngine implements IRtcEngine {
             },
             args: []
         })
-        this._engine.globalVariables.enabledAudio = true;
-
 
         return 0;
     }
@@ -954,10 +998,42 @@ export class RtcEngine implements IRtcEngine {
 
         this._actonQueue.putAction({
             fun: (next) => {
-                this._engine.globalVariables.enabledAudio = false;
-                //todo 将当前已经正在播放的的audio关闭 如果需要，这个操作要丢到丢列里）
 
-                next();
+                let processAudioTracks = async () => {
+                    this._engine.globalVariables.enabledAudio = false;
+                    //找到本地audio
+                    let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
+                    for (let trackPackage of trackPackages) {
+                        let track = trackPackage.track as ILocalAudioTrack;
+                        if (track.enabled == true) {
+                            try {
+                                await track.setEnabled(false);
+                            }
+                            catch (e) {
+                                AgoraConsole.error('track setEnable(true) failed');
+                                AgoraConsole.error(e);
+                            }
+                        }
+                    }
+
+                    //找到远端audio
+                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
+                    let container = remoteUsers.getContaniner();
+                    for (let v of container) {
+                        let map = v[1];
+                        for (let e of map) {
+                            let remoteUser: IAgoraRTCRemoteUser = e[1];
+                            if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying) {
+                                remoteUser.audioTrack.stop();
+                            }
+                        }
+                    }
+
+                    next();
+                }
+
+                setTimeout(processAudioTracks, 0);
+
             },
             args: [],
         });
@@ -967,11 +1043,11 @@ export class RtcEngine implements IRtcEngine {
     setAudioProfile(profile: agorartc.AUDIO_PROFILE_TYPE, scenario: agorartc.AUDIO_SCENARIO_TYPE): number {
 
         this._actonQueue.putAction({
+
             fun: (profile: agorartc.AUDIO_PROFILE_TYPE, scenario: agorartc.AUDIO_SCENARIO_TYPE, next) => {
                 this._engine.globalVariables.audioProfile = profile;
                 this._engine.globalVariables.audioScenario = scenario;
                 //todo 是否需要去设置当前所有音频属性
-
                 next();
             },
             args: [profile, scenario]
@@ -983,7 +1059,7 @@ export class RtcEngine implements IRtcEngine {
         this._actonQueue.putAction({
             fun: (profile: agorartc.AUDIO_PROFILE_TYPE, next) => {
                 this._engine.globalVariables.audioProfile = profile;
-                //todo  是否需要去设置当前所有音频属性
+                //todo  是否需要去设置当前所有音频属性 目前找不到这个设置
 
                 next();
             },
@@ -997,7 +1073,7 @@ export class RtcEngine implements IRtcEngine {
             fun: (scenario: agorartc.AUDIO_SCENARIO_TYPE, next) => {
                 this._engine.globalVariables.audioScenario = scenario;
 
-                //todo  是否需要实时的改变音频属性 如果需要，这个操作要丢到丢列里）
+                //todo  是否需要实时的改变音频属性 如果需要，这个操作要丢到丢列里）目前找不到这个设置
                 next();
             },
             args: [scenario]
@@ -1008,10 +1084,26 @@ export class RtcEngine implements IRtcEngine {
     enableLocalAudio(enabled: boolean): number {
         this._actonQueue.putAction({
             fun: (enabled: boolean, next) => {
-                this._engine.globalVariables.enabledLocalAudio = enabled;
+                let processAudioTracks = async () => {
+                    this._engine.globalVariables.enabledLocalAudio = enabled;
+                    //找到本地audio
+                    let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
+                    for (let trackPackage of trackPackages) {
+                        let track = trackPackage.track as ILocalAudioTrack;
+                        if (track.enabled != enabled) {
+                            try {
+                                await track.setEnabled(enabled);
+                            }
+                            catch (e) {
+                                AgoraConsole.error('ILocalAudioTrack setEnable{' + enabled + '} failed');
+                                AgoraConsole.error(e);
+                            }
+                        }
+                    }
+                    next();
+                }
 
-                //todo  是否需要实时的改变音频属性 如果需要，这个操作要丢到丢列里）
-                next();
+                setTimeout(processAudioTracks, 0);
             },
             args: [enabled]
         });
@@ -1023,10 +1115,36 @@ export class RtcEngine implements IRtcEngine {
     muteLocalAudioStream(mute: boolean): number {
         this._actonQueue.putAction({
             fun: (mute: boolean, next) => {
-                this._engine.globalVariables.mutedLocalAudioStream = mute;
 
-                //todo 是否需要实时的改变音频属性 （如果需要，这个操作要丢到丢列里）
-                next();
+                let processAudioTracks = async () => {
+                    this._engine.globalVariables.mutedLocalAudioStream = mute;
+                    //找到本地audio
+                    let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
+                    for (let trackPackage of trackPackages) {
+                        let track = trackPackage.track as ILocalAudioTrack;
+                        if (track.muted == false && mute == true) {
+                            try {
+                                await track.setMuted(true);
+                            }
+                            catch (e) {
+                                AgoraConsole.error('track setMuted(true) failed');
+                                AgoraConsole.error(e);
+                            }
+                        }
+                        else if (track.muted == true && mute == false) {
+                            try {
+                                await track.setMuted(false);
+                            }
+                            catch (e) {
+                                AgoraConsole.error('track setMuted(false) failed');
+                                AgoraConsole.error(e);
+                            }
+                        }
+                    }
+                    next();
+                }
+
+                setTimeout(processAudioTracks, 0);
             },
             args: [mute]
         });
@@ -1034,13 +1152,30 @@ export class RtcEngine implements IRtcEngine {
 
         return 0;
     }
+
     muteAllRemoteAudioStreams(mute: boolean): number {
         this._actonQueue.putAction({
             fun: (mute: boolean, next) => {
-                //todo, 在这里找到所有的audioStreams，并且去mute或者 un-mute
 
-
+                //找到远端audio 
+                let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
+                let container = remoteUsers.getContaniner();
+                for (let v of container) {
+                    let map = v[1];
+                    for (let e of map) {
+                        let remoteUser: IAgoraRTCRemoteUser = e[1];
+                        if (remoteUser.audioTrack) {
+                            if (remoteUser.audioTrack.isPlaying == true && mute == true) {
+                                remoteUser.audioTrack.stop();
+                            }
+                            else if (remoteUser.audioTrack.isPlaying == false && mute == false) {
+                                remoteUser.audioTrack.play();
+                            }
+                        }
+                    }
+                }
                 next();
+
             },
             args: [mute]
         });
@@ -1054,7 +1189,7 @@ export class RtcEngine implements IRtcEngine {
             fun: (mute: boolean, next) => {
 
                 this._engine.globalVariables.defaultMutedAllRemoteAudioStreams = mute;
-
+                this._engine.mainClientVariables.mutedRemoteAudioStreams.clear();
                 //应该不需要实时的去改变订阅状态
                 next();
             },
@@ -1066,12 +1201,20 @@ export class RtcEngine implements IRtcEngine {
     muteRemoteAudioStream(uid: number, mute: boolean): number {
         this._actonQueue.putAction({
             fun: (uid: number, mute: boolean, next) => {
+
                 this._engine.mainClientVariables.mutedRemoteAudioStreams.set(uid, mute);
-
-                //1.todo 去寻找到这个audio，并且设置一下
-                //2.因为因为可能没有触发 远端的pushish回到问题，可能此时还没有这个audio。
-                //3.那么需要在其发布的时候。使用通知去找到它
-
+                let channelName = this._engine.entitiesContainer.getMainClient().channelName;
+                if (channelName) {
+                    let remoteUser: IAgoraRTCRemoteUser = this._engine.entitiesContainer.getRemoteUsers().getT(channelName, uid);
+                    if (remoteUser && remoteUser.audioTrack) {
+                        if (remoteUser.audioTrack.isPlaying == true && mute == true) {
+                            remoteUser.audioTrack.stop();
+                        }
+                        else if (remoteUser.audioTrack.isPlaying == false && mute == false) {
+                            remoteUser.audioTrack.play();
+                        }
+                    }
+                }
                 next();
             },
             args: [uid, mute]
@@ -1082,10 +1225,41 @@ export class RtcEngine implements IRtcEngine {
     enableVideo(): number {
         this._actonQueue.putAction({
             fun: (next) => {
-                this._engine.globalVariables.enabledVideo = true;
-                //todo 是否需要找到所有的videoTrack去恢复它
 
-                next();
+                let processVideoTrack = async () => {
+                    this._engine.globalVariables.enabledVideo = true;
+
+                    //找到本端video
+                    let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
+                    for (let trackPackage of trackPackages) {
+                        let track = trackPackage.track as ILocalVideoTrack;
+                        if (track.enabled == false) {
+                            try {
+                                await track.setEnabled(true);
+                            }
+                            catch (e) {
+                                AgoraConsole.error('ILocalVideoTrack setEnable(true) failed');
+                                AgoraConsole.error(e);
+                            }
+                        }
+                    }
+
+                    //找到远端audio
+                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
+                    let container = remoteUsers.getContaniner();
+                    for (let v of container) {
+                        let map = v[1];
+                        for (let e of map) {
+                            let remoteUser: IAgoraRTCRemoteUser = e[1];
+                            if (remoteUser.videoTrack && remoteUser.videoTrack.isPlaying == false) {
+                                remoteUser.audioTrack.play();
+                            }
+                        }
+                    }
+
+                    next();
+                };
+                setTimeout(processVideoTrack, 0);
             },
             args: []
         })
@@ -1096,24 +1270,83 @@ export class RtcEngine implements IRtcEngine {
     disableVideo(): number {
         this._actonQueue.putAction({
             fun: (next) => {
-                this._engine.globalVariables.enabledVideo = false;
-                //todo 是否需要找到所有的videoTrack去禁它
 
-                next();
+                let processVideoTrack = async () => {
+                this._engine.globalVariables.enabledVideo = false;
+
+                    //todo 一股脑的全部enable或者disable是否合理?
+                    //找到本端video
+                    let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
+                    for (let trackPackage of trackPackages) {
+                        let track = trackPackage.track as ILocalVideoTrack;
+                        if (track.enabled == true) {
+                            try {
+                                await track.setEnabled(false);
+                            }
+                            catch (e) {
+                                AgoraConsole.error('ILocalVideoTrack setEnable(false) failed');
+                                AgoraConsole.error(e);
+                            }
+                        }
+                    }
+
+                    //找到远端audio
+                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
+                    let container = remoteUsers.getContaniner();
+                    for (let v of container) {
+                        let map = v[1];
+                        for (let e of map) {
+                            let remoteUser: IAgoraRTCRemoteUser = e[1];
+                            if (remoteUser.videoTrack && remoteUser.videoTrack.isPlaying) {
+                                remoteUser.audioTrack.stop();
+                            }
+                        }
+                    }
+
+                    next();
+                };
+                setTimeout(processVideoTrack, 0);
             },
             args: []
         })
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return 0;
     }
 
     muteLocalVideoStream(mute: boolean): number {
         this._actonQueue.putAction({
             fun: (mute: boolean, next) => {
-                this._engine.globalVariables.mutedLocalVideoStream = mute;
 
-                //todo 需要实时的的去找VideoStream，并且设置一下 (这个操作要丢到丢列里）
 
-                next();
+                let processVideoTracks = async () => {
+                    this._engine.globalVariables.mutedLocalVideoStream = mute;
+
+                    //找到本地video
+                    let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
+                    for (let trackPackage of trackPackages) {
+                        let track = trackPackage.track as ILocalVideoTrack;
+                        if (track.muted == false && mute == true) {
+                            try {
+                                await track.setMuted(true);
+                            }
+                            catch (e) {
+                                AgoraConsole.error('ILocalVideoTrack setMuted(true) failed');
+                                AgoraConsole.error(e);
+                            }
+                        }
+                        else if (track.muted == true && mute == false) {
+                            try {
+                                await track.setMuted(false);
+                            }
+                            catch (e) {
+                                AgoraConsole.error('ILocalVideoTrack setMuted(false) failed');
+                                AgoraConsole.error(e);
+                            }
+                        }
+                    }
+                    next();
+                }
+
+                setTimeout(processVideoTracks, 0);
             },
             args: [mute]
         });
@@ -1123,10 +1356,28 @@ export class RtcEngine implements IRtcEngine {
     enableLocalVideo(enabled: boolean): number {
         this._actonQueue.putAction({
             fun: (enabled: boolean, next) => {
-                this._engine.globalVariables.enabledLocalVideo = enabled;
-                //todo 找到自己的video并且去释放
 
-                next();
+                let processAudioTracks = async () => {
+                    this._engine.globalVariables.enabledLocalVideo = enabled;
+                    //找到本地video
+
+                    let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
+                    for (let trackPackage of trackPackages) {
+                        let track = trackPackage.track as ILocalVideoTrack;
+                        if (track.enabled != enabled) {
+                            try {
+                                await track.setEnabled(enabled);
+                            }
+                            catch (e) {
+                                AgoraConsole.error('ILocalVideoTrack setEnable{' + enabled + '} failed');
+                                AgoraConsole.error(e);
+                            }
+                        }
+                    }
+                    next();
+                }
+
+                setTimeout(processAudioTracks, 0);
             },
             args: [enabled]
         })
@@ -1136,8 +1387,24 @@ export class RtcEngine implements IRtcEngine {
     muteAllRemoteVideoStreams(mute: boolean): number {
         this._actonQueue.putAction({
             fun: (mute: boolean, next) => {
-                //todo, 在这里找到所有的AudioStreams，并且去mute或者 un-mute
 
+                //找到远端video
+                let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
+                let container = remoteUsers.getContaniner();
+                for (let v of container) {
+                    let map = v[1];
+                    for (let e of map) {
+                        let remoteUser: IAgoraRTCRemoteUser = e[1];
+                        if (remoteUser.videoTrack) {
+                            if (remoteUser.videoTrack.isPlaying == true && mute == true) {
+                                remoteUser.videoTrack.stop();
+                            }
+                            else if (remoteUser.videoTrack.isPlaying == false && mute == false) {
+                                remoteUser.videoTrack.play("remoteVideoTrack");
+                            }
+                        }
+                    }
+                }
                 next();
             },
             args: [mute]
@@ -1149,10 +1416,8 @@ export class RtcEngine implements IRtcEngine {
         this._actonQueue.putAction({
             fun: (mute: boolean, next) => {
                 this._engine.globalVariables.defaultMutedAllRemoteVideoStreams = mute;
-
-                //todo 立刻停止订阅当前的所有的远端视频流
-                //将 muteRemoteVideoStream 里的所有特殊数据给清空，否则会出bug
-                //在未来将会订阅到的不管
+                this._engine.mainClientVariables.mutedRemoteVideoStreams.clear();
+                //应该不需要时事的设置状态
                 next();
             },
             args: [mute]
@@ -1164,12 +1429,20 @@ export class RtcEngine implements IRtcEngine {
     muteRemoteVideoStream(uid: number, mute: boolean): number {
         this._actonQueue.putAction({
             fun: (uid: number, mute: boolean, next) => {
-                this._engine.mainClientVariables.mutedRemoteVideoStreams.set(uid, mute);
 
-                //寻找到这个流，如果找到就设置一下
-
-
-                //在未来将会订阅到的不管
+                this._engine.mainClientVariables.mutedRemoteAudioStreams.set(uid, mute);
+                let channelName = this._engine.entitiesContainer.getMainClient().channelName;
+                if (channelName) {
+                    let remoteUser: IAgoraRTCRemoteUser = this._engine.entitiesContainer.getRemoteUsers().getT(channelName, uid);
+                    if (remoteUser && remoteUser.videoTrack) {
+                        if (remoteUser.videoTrack.isPlaying == true && mute == true) {
+                            remoteUser.videoTrack.stop();
+                        }
+                        else if (remoteUser.videoTrack.isPlaying == false && mute == false) {
+                            remoteUser.videoTrack.play("RemoteVideo");
+                        }
+                    }
+                }
                 next();
             },
             args: [mute]
@@ -1181,10 +1454,24 @@ export class RtcEngine implements IRtcEngine {
         this._actonQueue.putAction({
             fun: (uid: number, streamType: agorartc.VIDEO_STREAM_TYPE, next) => {
                 this._engine.mainClientVariables.remoteVideoStreamTypes.set(uid, streamType);
+                let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
+                if (mainClient) {
+                    mainClient.setRemoteVideoStreamType(uid, AgoraTranslate.agorartcVIDEO_STREAM_TYPE2RemoteStreamType(streamType))
+                        .then(() => {
+                            AgoraConsole.log("setRemoteVideoStreamType sucess");
+                        })
+                        .catch((reason) => {
+                            AgoraConsole.log("setRemoteVideoStreamType failed");
+                            AgoraConsole.log(reason);
+                        })
+                        .finally(() => {
+                            next();
+                        })
+                }
+                else {
+                    next();
+                }
 
-                //找到这个video的流并且设置一下
-
-                next();
             },
             args: [uid, streamType]
         });
@@ -1194,12 +1481,27 @@ export class RtcEngine implements IRtcEngine {
     setRemoteDefaultVideoStreamType(streamType: agorartc.VIDEO_STREAM_TYPE): number {
         this._actonQueue.putAction({
             fun: (streamType: agorartc.VIDEO_STREAM_TYPE, next) => {
+
                 this._engine.mainClientVariables.remoteDefaultVideoStreamType = streamType;
-                //must clear special value after set default value;
                 this._engine.mainClientVariables.remoteVideoStreamTypes.clear();
 
-                //todo 如果当前mainClient已经被创建了，那么设置一下 mainClient.setRemoteDefaultVideoStreamType
-                //如果没有创建，那么需要在client被创建的时候设置一下
+                let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
+                if (mainClient) {
+                    mainClient.setRemoteDefaultVideoStreamType(AgoraTranslate.agorartcVIDEO_STREAM_TYPE2RemoteStreamType(streamType))
+                        .then(() => {
+                            AgoraConsole.log("setRemoteDefaultVideoStreamType sucess");
+                        })
+                        .catch((reason) => {
+                            AgoraConsole.log("setRemoteDefaultVideoStreamType failed");
+                            AgoraConsole.log(reason);
+                        })
+                        .finally(() => {
+                            next();
+                        })
+                }
+                else {
+                    next();
+                }
 
                 next();
             },
@@ -1241,13 +1543,19 @@ export class RtcEngine implements IRtcEngine {
         this._actonQueue.putAction({
             fun: (interval: number, smooth: number, reportVad: boolean, next) => {
                 //如果当前有client, 那么就client.enableAudioVolumeIndicator()函数设置一下，但是不保存临时变量
-
+                let mainClient = this._engine.entitiesContainer.getMainClient();
+                if (mainClient) {
+                    mainClient.enableAudioVolumeIndicator();
+                }
+                else {
                 //如果没有就保存到这个变量，并且在Client被创建的时候去读取一下这个值
-                this._engine.mainClientVariables.enabledAudioVolumeIndication = {
-                    interval,
-                    smooth,
-                    reportVad
-                };
+                    this._engine.mainClientVariables.enabledAudioVolumeIndication = {
+                        interval,
+                        smooth,
+                        reportVad
+                    };
+                }
+
                 next();
             },
             args: [interval, smooth, reportVad]
@@ -1630,9 +1938,23 @@ export class RtcEngine implements IRtcEngine {
 
         this._actonQueue.putAction({
             fun: (sourceType: agorartc.VIDEO_SOURCE_TYPE, enabled: boolean, streamConfig: agorartc.SimulcastStreamConfig, next) => {
+
                 this._engine.mainClientVariables.enabledDualStreamModes.set(sourceType, { enabled: enabled, streamConfig: streamConfig });
+
+                /*当前的videoTrack正好是这个sourceType */
+                let matched = false;
                 let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
-                if (/*当前的videoTrack正好是这个sourceType &&  mainClinet!= null*/false) {
+                if (mainClient) {
+                    let trackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(sourceType as number);
+                    if (trackPackage) {
+                        let track = trackPackage.track as ILocalVideoTrack;
+                        if (mainClient.localTracks.indexOf(track) != -1) {
+                            matched = true;
+                        }
+                    }
+                }
+
+                if (matched) {
                     if (enabled) {
                         streamConfig && mainClient.setLowStreamParameter(AgoraTranslate.agorartcSimulcastStreamConfig2LowStreamParameter(streamConfig));
                         mainClient.enableDualStream()
@@ -1773,10 +2095,13 @@ export class RtcEngine implements IRtcEngine {
     adjustRecordingSignalVolume(volume: number): number {
         this._actonQueue.putAction({
             fun: (volume: number, next) => {
+
                 this._engine.globalVariables.recordingSignalVolume = volume;
-
-                //找到所有的录音的音轨， MainClinet 和 subClinet的，。设置setVolume
-
+                let trackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary);
+                if (trackPackage) {
+                    let track = trackPackage.track;
+                    track.setVolume(volume);
+                }
                 next();
             },
             args: [volume]
@@ -1789,9 +2114,30 @@ export class RtcEngine implements IRtcEngine {
         this._actonQueue.putAction({
             fun: (mute: boolean, next) => {
                 this._engine.globalVariables.mutedLocalAudioStream = mute;
-                //找到所有的录音的音轨， MainClinet 和 subClinet的，。设置 是否静音
+                let trackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary);
+                if (trackPackage) {
+                    let track = trackPackage.track as IMicrophoneAudioTrack;
+                    if (track.muted != mute) {
+                        track.setMuted(mute)
+                            .then(() => {
+                                AgoraConsole.log("muteRecordingSignal sucess");
+                            })
+                            .catch((reason) => {
+                                AgoraConsole.error("muteRecordingSignal failed");
+                                AgoraConsole.error(reason);
+                            })
+                            .finally(() => {
+                                next();
+                            })
+                    }
+                    else {
+                        next();
+                    }
 
-                next();
+                }
+                else {
+                    next();
+                }
             },
             args: [mute]
         })
@@ -1800,10 +2146,31 @@ export class RtcEngine implements IRtcEngine {
 
     adjustPlaybackSignalVolume(volume: number): number {
         this._actonQueue.putAction({
+
             fun: (volume: number, next) => {
+
                 this._engine.globalVariables.playbackSignalVolume = volume;
                 this._engine.globalVariables.playbackSignalVolumes.clear();
-                //找到所有的Remote的的音轨， MainClinet 和 subClinet的，。设置其音量
+
+                //找到本端video
+                let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
+                for (let trackPackage of trackPackages) {
+                    let track = trackPackage.track as ILocalAudioTrack;
+                    track.setVolume(volume);
+                }
+
+                //找到远端audio
+                let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
+                let container = remoteUsers.getContaniner();
+                for (let v of container) {
+                    let map = v[1];
+                    for (let e of map) {
+                        let remoteUser: IAgoraRTCRemoteUser = e[1];
+                        if (remoteUser.audioTrack) {
+                            remoteUser.audioTrack.setVolume(volume);
+                        }
+                    }
+                }
 
                 next();
             },
@@ -1815,8 +2182,12 @@ export class RtcEngine implements IRtcEngine {
     adjustUserPlaybackSignalVolume(uid: number, volume: number): number {
         this._actonQueue.putAction({
             fun: (volume: number, next) => {
+
                 this._engine.globalVariables.playbackSignalVolumes.set(uid, volume);
-                //找到当前制定的音轨，并且设置一下 其音量
+                let remoteUser = this._engine.entitiesContainer.getRemoteUserByUid(uid);
+                if (remoteUser && remoteUser.audioTrack) {
+                    remoteUser.audioTrack.setVolume(volume);
+                }
 
                 next();
             },
@@ -1827,21 +2198,52 @@ export class RtcEngine implements IRtcEngine {
     }
 
     setLocalPublishFallbackOption(option: agorartc.STREAM_FALLBACK_OPTIONS): number {
-        this.setRemoteSubscribeFallbackOption(option);
-        return 0;
+        AgoraConsole.warn("setLocalPublishFallbackOption not supported in this platfrom!");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     setRemoteSubscribeFallbackOption(option: agorartc.STREAM_FALLBACK_OPTIONS): number {
         this._actonQueue.putAction({
             fun: (option: agorartc.STREAM_FALLBACK_OPTIONS, next) => {
-                this._engine.globalVariables.fallbackOption = option;
-                //找到所有的Client 去  setStreamFallbackOption 一下
 
-                next();
+                let processAction = async () => {
+
+                    this._engine.globalVariables.fallbackOption = option;
+
+                    let fallback = AgoraTranslate.agorartcSTREAM_FALLBACK_OPTIONS2RemoteStreamFallbackType(option);
+                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
+                    let container = remoteUsers.getContaniner();
+                    for (let v of container) {
+                        let channelName = v[0];
+                        let clients: Map<UID, IAgoraRTCClient> = this._engine.entitiesContainer.getClientsByChannelName(channelName);
+                        if (clients != null) {
+                            for (let c of clients) {
+                                let client = c[1];
+                                let map = v[1];
+                                for (let m of map) {
+                                    let uid = m[0];
+                                    try {
+                                        await client.setStreamFallbackOption(uid, fallback);
+                                    }
+                                    catch (e) {
+                                        AgoraConsole.error("setRemoteSubscribeFallbackOption failed");
+                                        AgoraConsole.error(e);
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+                    next();
+                }
+
+                setTimeout(processAction, 0);
+
             },
             args: [option]
         })
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return 0;
     }
 
     enableLoopbackRecording(enabled: boolean, deviceName: string): number {
@@ -1912,10 +2314,25 @@ export class RtcEngine implements IRtcEngine {
                 if (videoEncoderConfiguration.minFrameRate > config.format.fps) {
                     videoEncoderConfiguration.minFrameRate = config.format.fps;
                 }
-
-                //todo 找到videoTrack并且调用一下 setEncoderConfiguration
-
-                next();
+                // 找到videoTrack并且调用一下 setEncoderConfiguration
+                let trackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeCameraPrimary);
+                if (trackPackage) {
+                    let track = trackPackage.track as ICameraVideoTrack;
+                    track.setEncoderConfiguration(AgoraTranslate.agorartcVideoEncoderConfiguration2VideoEncoderConfiguration(videoEncoderConfiguration))
+                        .then(() => {
+                            AgoraConsole.error("setCameraCapturerConfiguration success");
+                        })
+                        .catch((reason) => {
+                            AgoraConsole.error("setCameraCapturerConfiguration failed");
+                            AgoraConsole.error(reason);
+                        })
+                        .finally(() => {
+                            next();
+                        })
+                }
+                else {
+                    next();
+                }
             },
             args: [config]
         })
@@ -1942,8 +2359,8 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
+    // 或许通过setDeviceId 来设置就好了
     switchCamera(): number {
-        //可以通过销毁旧的视频轨道，创建新的视频轨道来做这个事情？
         AgoraConsole.warn("switchCamera not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -2048,11 +2465,33 @@ export class RtcEngine implements IRtcEngine {
 
     startScreenCaptureByDisplayId(displayId: number, regionRect: agorartc.Rectangle, captureParams: agorartc.ScreenCaptureParameters): number {
         //todo 直接创建屏幕共享的窗口
+        this._actonQueue.putAction({
+            fun: (displayId: number, regionRect: agorartc.Rectangle, captureParams: agorartc.ScreenCaptureParameters, next) => {
+                this._engine.globalVariables.screenCaptureParameters = captureParams;
+
+                this.getOrCreateAudioAndVideoTrack(
+                    IrisAudioSourceType.kAudioSourceTypeScreenPrimary,
+                    IrisVideoSourceType.kVideoSourceTypeScreenPrimary,
+                    IrisClientType.kClientMian,
+                    (err, tracks: [ILocalAudioTrack, ILocalVideoTrack]) => {
+                        if (err) {
+                            AgoraConsole.error("ScreenShare failed");
+                            AgoraConsole.error(err);
+                        }
+                        else {
+                            AgoraConsole.error("ScreenShare track create success");
+                        }
+                        next();
+                    })
+            },
+            args: [displayId, regionRect, captureParams]
+        })
+
         return 0;
     }
 
     startScreenCaptureByScreenRect(screenRect: agorartc.Rectangle, regionRect: agorartc.Rectangle, captureParams: agorartc.ScreenCaptureParameters): number {
-        return this.startScreenCaptureByDisplayId(0, null, null);
+        return this.startScreenCaptureByDisplayId(0, regionRect, captureParams);
     }
 
     getAudioDeviceInfo(deviceInfo: agorartc.DeviceInfo): number {
@@ -2061,18 +2500,34 @@ export class RtcEngine implements IRtcEngine {
     }
 
     startScreenCaptureByWindowId(windowId: any, regionRect: agorartc.Rectangle, captureParams: agorartc.ScreenCaptureParameters): number {
-        return this.startScreenCaptureByDisplayId(0, null, null);
+        return this.startScreenCaptureByDisplayId(windowId, regionRect, captureParams);
     }
 
     setScreenCaptureContentHint(contentHint: agorartc.VIDEO_CONTENT_HINT): number {
-        //todo 可以做
+
         this._actonQueue.putAction({
             fun: (contentHint: agorartc.VIDEO_CONTENT_HINT, next) => {
                 this._engine.globalVariables.screenCaptureContentHint = contentHint;
 
                 //todo 找到当前的屏幕共享的track。设置一下setOptimizationModes属性
-
-                next();
+                let trackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+                if (trackPackage) {
+                    let track = trackPackage.track as ILocalVideoTrack;
+                    track.setOptimizationMode(AgoraTranslate.agorartcVIDEO_CONTENT_HINT2string(contentHint))
+                        .then(() => {
+                            AgoraConsole.log("setScreenCaptureContentHint success");
+                        })
+                        .catch((reason) => {
+                            AgoraConsole.error("setScreenCaptureContentHint failed");
+                            AgoraConsole.error(reason);
+                        })
+                        .finally(() => {
+                            next();
+                        })
+                }
+                else {
+                    next();
+                }
             },
             args: [contentHint]
         })
@@ -2090,41 +2545,52 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
+    //或许我应该返回不支持
     updateScreenCaptureParameters(captureParams: agorartc.ScreenCaptureParameters): number {
         this._actonQueue.putAction({
             fun: (captureParams: agorartc.ScreenCaptureParameters, next) => {
                 this._engine.globalVariables.screenCaptureParameters = captureParams;
-
-                //todo 找到当前的视频轨道并且设置一下
-
                 next();
             },
             args: [captureParams]
         })
 
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return 0;
     }
+
     startScreenCapture(captureParams: agorartc.ScreenCaptureParameters2): number {
-        return this.startScreenCaptureByDisplayId(0, null, null);
+        AgoraConsole.warn("startScreenCapture not supported in this platfrom!");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     updateScreenCapture(captureParams: agorartc.ScreenCaptureParameters2): number {
+        AgoraConsole.warn("updateScreenCapture not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     stopScreenCapture(): number {
+
         this._actonQueue.putAction({
-            fun: (next) => {
+            fun: () => {
+                let entitiesContainer = this._engine.entitiesContainer;
+                let audioTrackPackage = entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
+                if (audioTrackPackage) {
+                    let track = audioTrackPackage.track as ILocalAudioTrack;
+                    entitiesContainer.audioTrackWillClose(track);
+                    track.close();
+                }
 
-
-                //todo 找到当前的屏幕共享轨道并且销毁一下
-
-                next();
+                let videoTrackPackage = entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+                if (videoTrackPackage) {
+                    let track = videoTrackPackage.track as ILocalVideoTrack;
+                    entitiesContainer.videoTrackWillClose(track);
+                    track.close();
+                }
             },
             args: []
-        })
+        });
 
-        return 0; 
+        return 0;
     }
 
     getCallId(callId: string): number {
@@ -2270,28 +2736,15 @@ export class RtcEngine implements IRtcEngine {
     enableEncryption(enabled: boolean, config: agorartc.EncryptionConfig): number {
         this._actonQueue.putAction({
             fun: (enabled: boolean, config: agorartc.EncryptionConfig, next) => {
-                this._engine.mainClientVariables.encryptionConfig.enabled = enabled;
-                this._engine.mainClientVariables.encryptionConfig.config = config;
 
-                let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
-                if (mainClient) {
-                    if (enabled) {
-                        mainClient.setEncryptionConfig(
-                            AgoraTranslate.agorartcENCRYPTION_MODE2EncryptionMode(this._engine.mainClientVariables.encryptionConfig.config.encryptionMode),
-                            this._engine.mainClientVariables.encryptionConfig.config.encryptionKey,
-                            this._engine.mainClientVariables.encryptionConfig.config.encryptionKdfSalt,
-                        );
-                    }
-                    else {
-                        //todo 怎么取消加密呢？
-                    }
-                }
+                let encryptionConfig = this._engine.mainClientVariables.encryptionConfig;
+                encryptionConfig.enabled = enabled;
+                encryptionConfig.config = config;
 
+                //在mainClient joinChannel的时候，再去读取这个值决定要不要设置加密，而不是现在设置
                 next();
-
             },
             args: [enabled, config]
-
         })
 
         return 0;
@@ -2386,24 +2839,89 @@ export class RtcEngine implements IRtcEngine {
     }
 
     pauseAudio(): number {
+
         this._actonQueue.putAction({
             fun: (next) => {
-                this._engine.globalVariables.pausedAudio = true;
-                //todo 找到所有的audio并且设置为pasue
 
-                next();
+                let processAudioTracks = async () => {
+                    this._engine.globalVariables.pausedAudio = true;
+                    //找到本地audio
+                    let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
+                    for (let trackPackage of trackPackages) {
+                        let track = trackPackage.track as ILocalAudioTrack;
+                        if (track.enabled == true) {
+                            try {
+                                await track.setEnabled(false);
+                            }
+                            catch (e) {
+                                AgoraConsole.error('track setEnable(true) failed');
+                                AgoraConsole.error(e);
+                            }
+                        }
+                    }
+
+                    //找到远端audio
+                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
+                    let container = remoteUsers.getContaniner();
+                    for (let v of container) {
+                        let map = v[1];
+                        for (let e of map) {
+                            let remoteUser: IAgoraRTCRemoteUser = e[1];
+                            if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying) {
+                                remoteUser.audioTrack.stop();
+                            }
+                        }
+                    }
+
+                    next();
+                }
+
+                setTimeout(processAudioTracks, 0);
             },
             args: []
         })
         return 0;
     }
+
     resumeAudio(): number {
         this._actonQueue.putAction({
             fun: (next) => {
-                this._engine.globalVariables.pausedAudio = false;
-                //todo 找到所有的audio并且设置为unpased
 
-                next();
+                let processAudioTracks = async () => {
+
+                    this._engine.globalVariables.pausedAudio = false;
+                    //找到本地audio
+                    let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
+                    for (let trackPackage of trackPackages) {
+                        let track = trackPackage.track as ILocalAudioTrack;
+                        if (track.enabled == false) {
+                            try {
+                                await track.setEnabled(true);
+                            }
+                            catch (e) {
+                                AgoraConsole.error('track setEnable(true) failed');
+                                AgoraConsole.error(e);
+                            }
+                        }
+                    }
+
+                    //找到远端audio
+                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
+                    let container = remoteUsers.getContaniner();
+                    for (let v of container) {
+                        let map = v[1];
+                        for (let e of map) {
+                            let remoteUser: IAgoraRTCRemoteUser = e[1];
+                            if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying == false) {
+                                remoteUser.audioTrack.play();
+                            }
+                        }
+                    }
+
+                    next();
+                }
+
+                setTimeout(processAudioTracks, 0);
             },
             args: []
         })
@@ -2686,6 +3204,7 @@ export class RtcEngine implements IRtcEngine {
     setCloudProxy(proxyType: agorartc.CLOUD_PROXY_TYPE): number {
         this._actonQueue.putAction({
             fun: (proxyType: agorartc.CLOUD_PROXY_TYPE, next) => {
+
                 this._engine.globalVariables.cloudProxy = proxyType;
                 let mainClient = this._engine.entitiesContainer.getMainClient();
                 if (mainClient) {
@@ -2697,12 +3216,23 @@ export class RtcEngine implements IRtcEngine {
                     }
                     else if (proxyType == agorartc.CLOUD_PROXY_TYPE.TCP_PROXY) {
                         mainClient.startProxyServer(5);
+                    }  
+                }
+
+                let subClients = this._engine.entitiesContainer.getSubClients();
+                subClients.walkT((channelId: string, uid: UID, client: IAgoraRTCClient) => {
+                    if (proxyType == agorartc.CLOUD_PROXY_TYPE.NONE_PROXY) {
+                        client.stopProxyServer();
                     }
-                    next();
-                }
-                else {
-                    next();
-                }
+                    else if (proxyType == agorartc.CLOUD_PROXY_TYPE.UDP_PROXY) {
+                        client.startProxyServer(3);
+                    }
+                    else if (proxyType == agorartc.CLOUD_PROXY_TYPE.TCP_PROXY) {
+                        client.startProxyServer(5);
+                    }
+                })
+
+                next();
             },
             args: [proxyType]
         })
@@ -2899,25 +3429,24 @@ export class RtcEngine implements IRtcEngine {
     enableEncryptionEx(connection: agorartc.RtcConnection, enabled: boolean, config: agorartc.EncryptionConfig): number {
         this._actonQueue.putAction({
             fun: (connection: agorartc.RtcConnection, enabled: boolean, config: agorartc.EncryptionConfig, next) => {
+
                 let encryptionConfig = {
                     enabled: enabled,
                     config: config
                 };
-                this._engine.subClientVariables.encryptionConfigs.addT(connection.channelId, connection.localUid, encryptionConfig);
 
-                let client: IAgoraRTCClient = this._engine.entitiesContainer.getClient(connection);
-                if (client) {
-                    if (enabled) {
-                        client.setEncryptionConfig(
-                            AgoraTranslate.agorartcENCRYPTION_MODE2EncryptionMode(config.encryptionMode),
-                            config.encryptionKey,
-                            config.encryptionKdfSalt,
-                        );
+                if (enabled) {
+                    let client: IAgoraRTCClient = this._engine.entitiesContainer.getClient(connection);
+                    if (client) {
+                        AgoraConsole.warn("you must call this method before you join channel");
                     }
-                    else {
-                        //todo 怎么取消加密呢？
-                    }
+
+                    this._engine.subClientVariables.encryptionConfigs.addT(connection.channelId, connection.localUid, encryptionConfig);
                 }
+                else {
+                    this._engine.subClientVariables.encryptionConfigs.removeT(connection.channelId, connection.localUid);
+                }
+
                 next();
             },
             args: [connection, enabled, config]
@@ -2981,16 +3510,19 @@ export class RtcEngine implements IRtcEngine {
 
         this._actonQueue.putAction({
             fun: (sourceType: agorartc.VIDEO_SOURCE_TYPE, enabled: boolean, streamConfig: agorartc.SimulcastStreamConfig, connection: agorartc.RtcConnection, next) => {
-                let map: Map<agorartc.VIDEO_SOURCE_TYPE, boolean> = this._engine.subClientVariables.enabledDualStreamModes.getT(connection.channelId, connection.localUid);
+
+                let map: Map<agorartc.VIDEO_SOURCE_TYPE, { enabled: boolean, streamConfig?: agorartc.SimulcastStreamConfig }> = this._engine.subClientVariables.enabledDualStreamModes.getT(connection.channelId, connection.localUid);
                 if (map == null) {
-                    map = new Map<agorartc.VIDEO_SOURCE_TYPE, boolean>();
+                    map = new Map<agorartc.VIDEO_SOURCE_TYPE, { enabled: boolean, streamConfig?: agorartc.SimulcastStreamConfig }>();
                     this._engine.subClientVariables.enabledDualStreamModes.addT(connection.channelId, connection.localUid, map);
                 }
+                map.set(sourceType, { enabled: enabled, streamConfig: streamConfig });
 
                 let client: IAgoraRTCClient = this._engine.entitiesContainer.getClient(connection);
-                if (/*当前的videoTrack正好是这个sourceType &&  mainClinet!= null*/false) {
+                let trackPackage = this._engine.entitiesContainer.getSubClientVideoTrack(connection.channelId, connection.localUid);
+                if (client && (trackPackage.type == sourceType as number)) {
                     if (enabled) {
-                        client.setLowStreamParameter(AgoraTranslate.agorartcSimulcastStreamConfig2LowStreamParameter(streamConfig));
+                        streamConfig && client.setLowStreamParameter(AgoraTranslate.agorartcSimulcastStreamConfig2LowStreamParameter(streamConfig));
                         client.enableDualStream()
                             .then(() => {
                                 AgoraConsole.log("enableDualStreamModeEx successed");
@@ -3011,7 +3543,7 @@ export class RtcEngine implements IRtcEngine {
                             })
                             .catch((reason) => {
                                 AgoraConsole.error("disableDualStreamEx failed");
-                                AgoraConsole.error("reason");
+                                AgoraConsole.error(reason);
                                 this._engine.rtcEngineEventHandler.onError(0, "disableDualStream failed");
                             })
                             .finally(() => {
@@ -3099,6 +3631,9 @@ export class RtcEngine implements IRtcEngine {
     setPlaybackDevice(deviceId: string): number {
         this._actonQueue.putAction({
             fun: (deviceId: string, next) => {
+
+
+
                 this._engine.mainClientVariables.playbackDeviceId = deviceId;
                 //todo 找到所有的audio流去设置一下deviceID咯
                 next();
@@ -3322,8 +3857,14 @@ export class RtcEngine implements IRtcEngine {
                 }
                 else {
                     //屏幕共享 audio 和 video 应该要同步创建和同步销毁
-                    this._engine.entitiesContainer.removeLocalAudioTrackByType(audioType, true);
-                    this._engine.entitiesContainer.removeLocalVideoTrackByType(videoType, true);
+                    if (audioTrackPackage) {
+                        this._engine.entitiesContainer.audioTrackWillClose(audioTrackPackage.track as ILocalAudioTrack);
+                        (audioTrackPackage.track as ILocalAudioTrack).close();
+                    }
+                    if (videoTrackPackage) {
+                        this._engine.entitiesContainer.videoTrackWillClose(videoTrackPackage.track as ILocalVideoTrack);
+                        (videoTrackPackage.track as ILocalVideoTrack).close();
+                    }
                 }
 
                 let conf: ScreenVideoTrackInitConfig = this._generateScreenVideoTrackInitConfig();
@@ -3371,10 +3912,17 @@ export class RtcEngine implements IRtcEngine {
                 }
                 else {
                     //屏幕共享 audio 和 video 应该要同步创建和同步销毁
-                    this._engine.entitiesContainer.removeLocalAudioTrackByType(audioType, true);
-                    this._engine.entitiesContainer.removeLocalVideoTrackByType(videoType, true);
+                    let audioTrackPackage: AudioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
+                    if (audioTrackPackage) {
+                        this._engine.entitiesContainer.audioTrackWillClose(audioTrackPackage.track as ILocalAudioTrack);
+                        (audioTrackPackage.track as ILocalAudioTrack).close();
+                    }
+                    if (videoTrackPackage) {
+                        this._engine.entitiesContainer.videoTrackWillClose(videoTrackPackage.track as ILocalVideoTrack);
+                        (videoTrackPackage.track as ILocalVideoTrack).close();
+                    }
 
-                let conf: ScreenVideoTrackInitConfig = this._generateScreenVideoTrackInitConfig();
+                    let conf: ScreenVideoTrackInitConfig = this._generateScreenVideoTrackInitConfig();
                     AgoraRTC.createScreenVideoTrack(conf, 'enable')
                         .then((trackArray: [ILocalVideoTrack, ILocalAudioTrack]) => {
                             let videoTrack: ILocalVideoTrack = trackArray[0];
@@ -3481,40 +4029,6 @@ export class RtcEngine implements IRtcEngine {
             }
         }
     }
-
-
-    // private _getOrCreateScreenAudioAndVideoTrack(fun: (any, [ILocalAudioTrack, ILocalVideoTrack]) => void) {
-
-    //     let audioTrackPackage: AudioTrackPackage = this._engine.entitiesContainer.getFreeLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenShare);
-    //     let videoTrackPackage: VideoTrackPackage = this._engine.entitiesContainer.getFreeLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
-
-    //     if (videoTrackPackage && audioTrackPackage) {
-    //         fun(null, [videoTrackPackage.track, audioTrackPackage.track]);
-    //         return;
-    //     }
-    //     else {
-    //         this._engine.entitiesContainer.removeFreeLocalAudioTrack(audioTrackPackage, true);
-    //         this._engine.entitiesContainer.removeFreeLocalVideoTrack(videoTrackPackage, true);
-    //     }
-
-    //     let conf: ScreenVideoTrackInitConfig = {};
-    //     let globalVariables: IrisGlobalVariables = this._engine.globalVariables;
-    //     if (globalVariables.screenCaptureContentHint != null && globalVariables.screenCaptureContentHint != agorartc.VIDEO_CONTENT_HINT.CONTENT_HINT_NONE) {
-    //         conf.optimizationMode = AgoraTranslate.agorartcVIDEO_CONTENT_HINT2string(globalVariables.screenCaptureContentHint);
-    //     }
-    //     AgoraRTC.createScreenVideoTrack(conf, 'enable')
-    //         .then((trackArray: [ILocalVideoTrack, ILocalAudioTrack]) => {
-    //             let videoTrack: ILocalVideoTrack = trackArray[0];
-    //             let audioTrack: ILocalAudioTrack = trackArray[1];
-    //             this._processSceneAuidoTrack(audioTrack);
-    //             this._processSceneVideoTrack(videoTrack);
-
-    //             fun(null, [trackArray[1], trackArray[0]]);
-    //         })
-    //         .catch((reason) => {
-    //             fun(reason, null);
-    //         })
-    // }
 
     //当一个audioTrack被创建的时候，要拆解这些参数
     private _processSceneShareAuidoTrack(audioTrack: ILocalAudioTrack, type: IrisClientType) {
@@ -3692,6 +4206,8 @@ export class RtcEngine implements IRtcEngine {
             let config: agorartc.EncryptionConfig = mainClientVariables.encryptionConfig.config;
             let encryptionMode: EncryptionMode = AgoraTranslate.agorartcENCRYPTION_MODE2EncryptionMode(config.encryptionMode);
             mainClient.setEncryptionConfig(encryptionMode, config.encryptionKey, config.encryptionKdfSalt);
+            //加密只有一次生效
+            mainClientVariables.encryptionConfig.enabled = false;
         }
 
         //是否开启了鉴黄
@@ -3752,6 +4268,13 @@ export class RtcEngine implements IRtcEngine {
         let globalVariables: IrisGlobalVariables = this._engine.globalVariables;
         if (globalVariables.screenCaptureContentHint != null && globalVariables.screenCaptureContentHint != agorartc.VIDEO_CONTENT_HINT.CONTENT_HINT_NONE) {
             conf.optimizationMode = AgoraTranslate.agorartcVIDEO_CONTENT_HINT2string(globalVariables.screenCaptureContentHint);
+        }
+
+        if (globalVariables.screenCaptureParameters != null) {
+            conf.encoderConfig = AgoraTranslate.agorartcScreenCaptureParameters2VideoEncoderConfiguration(globalVariables.screenCaptureParameters);
+        }
+        else if (globalVariables.videoEncoderConfiguration != null) {
+            conf.encoderConfig = AgoraTranslate.agorartcVideoEncoderConfiguration2VideoEncoderConfiguration(globalVariables.videoEncoderConfiguration);
         }
         return conf;
     }

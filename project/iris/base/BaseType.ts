@@ -26,11 +26,11 @@ export enum IrisVideoSourceType {
     kVideoSourceTypeRtcImageGif,
     kVideoSourceTypeRemote,
     kVideoSourceTypeTranscoded,
-    kVideoSourceTypePreEncode,
-    kVideoSourceTypePreEncodeSecondaryCamera,
-    kVideoSourceTypePreEncodeScreen,
-    kVideoSourceTypePreEncodeSecondaryScreen,
-    kVideoSourceTypeUnknown,
+    // kVideoSourceTypePreEncode,
+    // kVideoSourceTypePreEncodeSecondaryCamera,
+    // kVideoSourceTypePreEncodeScreen,
+    // kVideoSourceTypePreEncodeSecondaryScreen,
+    kVideoSourceTypeUnknown = 100,
 };
 
 export enum IrisClientType {

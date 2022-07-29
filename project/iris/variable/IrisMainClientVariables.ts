@@ -19,6 +19,8 @@ export class IrisMainClientVariables {
     public publishMicrophoneTrack?: boolean;
     public publishScreenCaptureVideo?: boolean;
     public publishScreenCaptureAudio?: boolean;
+    public publishScreenTrack: boolean;
+    public publishSecondaryScreenTrack: boolean;
     public publishCustomAudioTrack?: boolean;
     public publishCustomAudioSourceId?: number;
     public publishCustomAudioTrackEnableAec?: boolean;

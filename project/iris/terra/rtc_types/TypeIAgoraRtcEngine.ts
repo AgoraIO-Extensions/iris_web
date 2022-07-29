@@ -271,6 +271,8 @@ export interface ChannelMediaOptions {
     publishMicrophoneTrack?: boolean;
     publishScreenCaptureVideo?: boolean;
     publishScreenCaptureAudio?: boolean;
+    publishScreenTrack?: boolean;
+    publishSecondaryScreenTrack?: boolean;
     publishCustomAudioTrack?: boolean;
     publishCustomAudioSourceId?: number;
     publishCustomAudioTrackEnableAec?: boolean;

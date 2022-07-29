@@ -476,6 +476,8 @@ export enum VIDEO_SOURCE_TYPE {
     VIDEO_SOURCE_UNKNOWN = 100,
 }
 
+
+
 //c++ enum CLIENT_ROLE_TYPE
 export enum CLIENT_ROLE_TYPE {
     CLIENT_ROLE_BROADCASTER = 1,

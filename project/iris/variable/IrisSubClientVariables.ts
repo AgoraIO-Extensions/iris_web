@@ -50,7 +50,7 @@ export class IrisSubClientVariables {
     videoEncoderConfigurations: Contaniner<agorartc.VideoEncoderConfiguration> = new Contaniner<agorartc.VideoEncoderConfiguration>();
 
     //子账户设置开启大小流
-    enabledDualStreamModes: Contaniner<Map<agorartc.VIDEO_SOURCE_TYPE, boolean>> = new Contaniner<Map<agorartc.VIDEO_SOURCE_TYPE, boolean>>();
+    enabledDualStreamModes: Contaniner<Map<agorartc.VIDEO_SOURCE_TYPE, { enabled: boolean, streamConfig?: agorartc.SimulcastStreamConfig }>> = new Contaniner<Map<agorartc.VIDEO_SOURCE_TYPE, { enabled: boolean, streamConfig?: agorartc.SimulcastStreamConfig }>>();
     //子账户设置接收大小流
     remoteVideoStreamTypes: Contaniner<Map<UID, agorartc.VIDEO_STREAM_TYPE>> = new Contaniner<Map<UID, agorartc.VIDEO_STREAM_TYPE>>();
 

@@ -1,5 +1,5 @@
 
-import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayInfo, ClientRole, ClientRoleOptions, ConnectionState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, RemoteStreamType, SDK_CODEC, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
+import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayInfo, ClientRole, ClientRoleOptions, ConnectionState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, RemoteStreamFallbackType, RemoteStreamType, SDK_CODEC, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
 import { Argument } from "webpack";
 import * as agorartc from "../terra/rtc_types/Index";
 import { AgoraConsole } from "./AgoraConsole";
@@ -90,6 +90,16 @@ export class AgoraTranslate {
         }
     }
 
+    public static agorartcAUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(level: agorartc.AUDIENCE_LATENCY_LEVEL_TYPE): ClientRoleOptions {
+        switch (level) {
+            case agorartc.AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_LOW_LATENCY:
+                return { level: AudienceLatencyLevelType.AUDIENCE_LEVEL_LOW_LATENCY };
+            case agorartc.AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY:
+                return { level: AudienceLatencyLevelType.AUDIENCE_LEVEL_ULTRA_LOW_LATENCY };
+        }
+    }
+
+
     public static agorartcVideoEncoderConfiguration2VideoEncoderConfiguration(conf: agorartc.VideoEncoderConfiguration): VideoEncoderConfiguration {
         let ret: VideoEncoderConfiguration = {
             width: conf.dimensions.width,
@@ -100,6 +110,16 @@ export class AgoraTranslate {
             },
             bitrateMax: conf.bitrate,
             bitrateMin: conf.minBitrate,
+        };
+        return ret;
+    }
+
+    public static agorartcScreenCaptureParameters2VideoEncoderConfiguration(conf: agorartc.ScreenCaptureParameters): VideoEncoderConfiguration {
+        let ret: VideoEncoderConfiguration = {
+            width: conf.dimensions.width,
+            height: conf.dimensions.height,
+            frameRate: conf.frameRate,
+            bitrateMax: conf.bitrate,
         };
         return ret;
     }
@@ -305,5 +325,17 @@ export class AgoraTranslate {
                 return RemoteStreamType.LOW_STREAM;
         }
 
+    }
+
+    public static agorartcSTREAM_FALLBACK_OPTIONS2RemoteStreamFallbackType(fallback: agorartc.STREAM_FALLBACK_OPTIONS): RemoteStreamFallbackType {
+
+        switch (fallback) {
+            case agorartc.STREAM_FALLBACK_OPTIONS.STREAM_FALLBACK_OPTION_DISABLED:
+                return RemoteStreamFallbackType.DISABLE;
+            case agorartc.STREAM_FALLBACK_OPTIONS.STREAM_FALLBACK_OPTION_VIDEO_STREAM_LOW:
+                return RemoteStreamFallbackType.LOW_STREAM;
+            case agorartc.STREAM_FALLBACK_OPTIONS.STREAM_FALLBACK_OPTION_AUDIO_ONLY:
+                return RemoteStreamFallbackType.AUDIO_ONLY;
+        }
     }
 }
