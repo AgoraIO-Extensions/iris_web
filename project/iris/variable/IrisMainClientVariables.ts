@@ -54,20 +54,7 @@ export class IrisMainClientVariables {
         }
     }
 
-    //根据保存的中间状态，生成ClientConfig
-    generateClientConfig(): ClientConfig {
-        let config: ClientConfig = {
-            codec: this.videoEncoderConfiguration != null ? AgoraTranslate.agorartcVIDEO_CODEC_TYPE2SDK_CODEC(this.videoEncoderConfiguration.codecType) : "vp8",
-            mode: this.channelProfile != null ? AgoraTranslate.agorartcCHANNEL_PROFILE_TYPE2SDK_MODE(this.channelProfile) : "live"
-        };
-        if (this.clientRoleType != null) {
-            config.role = AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(this.clientRoleType);
-        }
-        if (this.clientRoleOptions != null) {
-            config.clientRoleOptions = AgoraTranslate.agorartcClientRoleOptions2ClientRoleOptions(this.clientRoleOptions);
-        }
-        return config;
-    }
+
 
 
     //setClientOptions()

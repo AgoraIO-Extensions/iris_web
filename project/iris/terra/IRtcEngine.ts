@@ -305,7 +305,7 @@ export interface IRtcEngine {
 	enableWirelessAccelerate(enabled: boolean): number;
 
 	//IRtcEngineEx
-	joinChannelEx(token: string, connection: agorartc.RtcConnection, options: agorartc.ChannelMediaOptions, eventHandler: agorartc.IRtcEngineEventHandler[]): number;
+	joinChannelEx(token: string, connection: agorartc.RtcConnection, options: agorartc.ChannelMediaOptions): number;
 	leaveChannelEx(connection: agorartc.RtcConnection): number;
 	updateChannelMediaOptionsEx(options: agorartc.ChannelMediaOptions, connection: agorartc.RtcConnection): number;
 	setVideoEncoderConfigurationEx(config: agorartc.VideoEncoderConfiguration, connection: agorartc.RtcConnection): number;

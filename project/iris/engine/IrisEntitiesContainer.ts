@@ -5,7 +5,7 @@ import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 import { Contaniner } from "../tool/Contanier";
 import { IrisRtcEngine } from "./IrisRtcEngine";
 import * as agorartc from '../terra/rtc_types/Index';
-import { Packet } from "../terra/rtc_types/Index";
+import { RtcConnection } from "../terra/rtc_types/Index";
 
 export type WalkILocalVideoPackageTrackFun = (track: VideoTrackPackage) => void;
 
@@ -59,8 +59,8 @@ export class IrisEntitiesContaniner {
         return null;
     }
 
-    getRemoteUserByChannelName(channelName: string): Map<UID, IAgoraRTCRemoteUser> {
-
+    getRemoteUserByChannelName(channelName: string): Map<UID, IAgoraRTCRemoteUser   {
+        return this._remoteUsers.getTs(channelName);
     }
 
 
@@ -208,6 +208,18 @@ export class IrisEntitiesContaniner {
         }
     }
 
+    //todo 
+    addSubClientLocalAudioTrack(connection: RtcConnection, trackPackage: AudioTrackPackage) { }
+    //todo 
+    removeSubClientLocalAudioTrack(connection: RtcConnection, track: ILocalAudioTrack, closeTrack: boolean) { }
+    //todo 
+    setSubClientLocalVideoTrack(connection: RtcConnection, trackPack: VideoTrackPackage) { }
+    //todo
+    clearSubClientLocalVideoTrack(connection: RtcConnection, closeTrack: boolean) { }
+
+
+
+
 
     public getVideoFrame(uid: UID, channel_id: string): VideoParams {
         if (uid == 0) {
@@ -337,6 +349,12 @@ export class IrisEntitiesContaniner {
         }
     }
 
+    //todo
+    addSubClientTrackEventHandler(connection: RtcConnection, eventHandler: IrisTrackEventHandler) { }
+    //todo
+    removeSubClientTrackEventHandler(connection: RtcConnection, track: ITrack) { }
+
+
     clearMainClientAll() {
         if (this._mainClient) {
 
@@ -370,7 +388,17 @@ export class IrisEntitiesContaniner {
     }
 
 
-    //todo 注意自己的mainClient可能也满足要求哦
+    addSubClient(connection: agorartc.RtcConnection, client: IAgoraRTCClient) {
+        this._subClients.addT(connection.channelId, connection.localUid, client);
+    }
+
+    //todo 
+    clearSubClientAll(connection: agorartc.RtcConnection) {
+
+    }
+
+
+    //注意自己的mainClient可能也满足要求哦
     getClient(connection: agorartc.RtcConnection): IAgoraRTCClient {
         if (this._mainClient?.channelName == connection.channelId)
             return this._mainClient;
@@ -382,15 +410,17 @@ export class IrisEntitiesContaniner {
         return this._subClients.getTs(channelName);
     }
 
+    getSubClient(connection: agorartc.RtcConnection): IAgoraRTCClient {
+        return this._subClients.getT(connection.channelId, connection.localUid);
+    }
 
     getSubClients(): Contaniner<IAgoraRTCClient> {
         return this._subClients;
     }
 
-    getSubClientVideoTrack(channelName: string, uid: UID): VideoTrackPackage {
-        return this._subClientVideoTracks.getT(channelName, uid);
+    getSubClientVideoTrack(connection: agorartc.RtcConnection): VideoTrackPackage {
+        return this._subClientVideoTracks.getT(connection.channelId, connection.localUid);
     }
-
 
     destruction() {
         this._mainClientEventHandler.destruction();
@@ -416,10 +446,32 @@ export class IrisEntitiesContaniner {
     audioTrackWillClose(audioTrack: ILocalAudioTrack) {
 
     }
-
+  //todo
     videoTrackWillClose(videoTrack: ILocalVideoTrack) {
 
     }
+
+    getLocalAudioTrackType(track: ILocalAudioTrack): IrisAudioSourceType {
+        for (let e of this._localAudioTracks) {
+            if (e.track == track) {
+                return e.type;
+            }
+        }
+        return IrisAudioSourceType.kAudioSourceTypeUnknow;
+    }
+
+    getLocalVideoTrackType(track: ILocalVideoTrack): IrisVideoSourceType {
+        for (let e of this._localVideoTracks) {
+            if (e.track == track) {
+                return e.type;
+            }
+        }
+        return IrisVideoSourceType.kVideoSourceTypeUnknown;
+    }
+
+
+
+
 
 
 }

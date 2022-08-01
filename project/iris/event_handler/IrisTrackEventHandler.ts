@@ -11,7 +11,7 @@ export interface IrisTrackEventHandlerParam {
     trackType: TrackType;
 }
 
-
+//一个track可能被多个Client发布出去，所以一个track可以同事存在多个TrackEventHandler
 export class IrisTrackEventHandler {
     private _channelName: string = null;
     private _client: IAgoraRTCClient = null;
@@ -20,6 +20,13 @@ export class IrisTrackEventHandler {
     private _trackType: TrackType = "ILocalTrack";
 
     private _engine: IrisRtcEngine;
+
+
+    private __onEventTrackEnded = null;
+    private __onEventBeautyEffectOverload = null;
+    private __onEventVideoElementVisibleStatus2 = null;
+    private __onEventFirstFrameDecoded = null;
+    private __onEventVideoElementVisibleStatus = null;
 
     constructor(params: IrisTrackEventHandlerParam, engine: IrisRtcEngine) {
         this._channelName = params.channelName;
@@ -31,22 +38,29 @@ export class IrisTrackEventHandler {
 
         if (this._trackType == 'ILocalTrack') {
             let track = this._track as ILocalTrack;
-            track.on('track-ended', this.onEventTrackEnded.bind(this));
+            this.__onEventTrackEnded = this.onEventTrackEnded.bind(this);
+            track.on('track-ended', this.__onEventTrackEnded);
         }
         else if (this._trackType == 'ILocalVideoTrack') {
             let track = this._track as ILocalVideoTrack;
-            track.on('track-ended', this.onEventTrackEnded.bind(this));
-            track.on("beauty-effect-overload", this.onEventBeautyEffectOverload.bind(this))
-            track.on("video-element-visible-status", this.onEventVideoElementVisibleStatus2.bind(this));
+            this.__onEventTrackEnded = this.onEventTrackEnded.bind(this);
+            track.on('track-ended', this.__onEventTrackEnded);
+            this.__onEventBeautyEffectOverload = this.onEventBeautyEffectOverload.bind(this);
+            track.on("beauty-effect-overload", this.__onEventBeautyEffectOverload)
+            this.__onEventVideoElementVisibleStatus2 = this.onEventVideoElementVisibleStatus2.bind(this);
+            track.on("video-element-visible-status", this.__onEventVideoElementVisibleStatus2);
         }
         else if (this._trackType == 'IRemoteTrack') {
             let track = this._track as IRemoteTrack;
-            track.on("first-frame-decoded", this.onEventFirstFrameDecoded.bind(this));
+            this.__onEventFirstFrameDecoded = this.onEventFirstFrameDecoded.bind(this);
+            track.on("first-frame-decoded", this.__onEventFirstFrameDecoded);
         }
         else if (this._trackType == 'IRemoteVideoTrack') {
             let track = this._track as IRemoteVideoTrack;
-            track.on("first-frame-decoded", this.onEventFirstFrameDecoded.bind(this));
-            track.on("video-element-visible-status", this.onEventVideoElementVisibleStatus);
+            this.__onEventFirstFrameDecoded = this.onEventFirstFrameDecoded.bind(this);
+            track.on("first-frame-decoded", this.__onEventFirstFrameDecoded);
+            this.__onEventVideoElementVisibleStatus = this.onEventVideoElementVisibleStatus.bind(this);
+            track.on("video-element-visible-status", this.__onEventVideoElementVisibleStatus);
         }
     }
 
@@ -75,7 +89,25 @@ export class IrisTrackEventHandler {
     }
 
     destruction() {
-        this._track.removeAllListeners();
+        if (this._trackType == 'ILocalTrack') {
+            let track = this._track as ILocalTrack;
+            track.off('track-ended', this.__onEventTrackEnded);
+        }
+        else if (this._trackType == 'ILocalVideoTrack') {
+            let track = this._track as ILocalVideoTrack;
+            track.off('track-ended', this.__onEventTrackEnded);
+            track.off("beauty-effect-overload", this.__onEventBeautyEffectOverload)
+            track.off("video-element-visible-status", this.__onEventVideoElementVisibleStatus2);
+        }
+        else if (this._trackType == 'IRemoteTrack') {
+            let track = this._track as IRemoteTrack;
+            track.off("first-frame-decoded", this.__onEventFirstFrameDecoded);
+        }
+        else if (this._trackType == 'IRemoteVideoTrack') {
+            let track = this._track as IRemoteVideoTrack;
+            track.off("first-frame-decoded", this.__onEventFirstFrameDecoded);
+            track.off("video-element-visible-status", this.__onEventVideoElementVisibleStatus);
+        }
     }
 
 }

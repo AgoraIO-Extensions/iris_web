@@ -1,7 +1,7 @@
 import { IAgoraRTCClient, IAgoraRTCRemoteUser, ILocalAudioTrack, ILocalVideoTrack, UID } from "agora-rtc-sdk-ng";
 import { IrisClientEventHandler } from "../event_handler/IrisClientEventHandler";
 import { Contaniner } from "../tool/Contanier";
-import { AudioTrackPackage, IrisEventHandler, IrisVideoFrameBufferConfig, IRIS_VIDEO_PROCESS_ERR, VideoParams, VideoTrackPackage } from "../base/BaseType";
+import { AudioTrackPackage, IrisEventHandler, IrisVideoFrameBufferConfig, IrisVideoSourceType, IRIS_VIDEO_PROCESS_ERR, VideoParams, VideoTrackPackage } from "../base/BaseType";
 import { IrisRtcEnginePrepare } from "../terra/IrisRtcEnginePrepare";
 import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 import { IrisEntitiesContaniner } from "./IrisEntitiesContainer";
@@ -58,7 +58,7 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
     }
 
 
-
-
-
+    public generateVideoTrackLabel(channelName: string, uid: number, type: IrisVideoSourceType): string {
+        return channelName + "_" + uid + "_" + type;
+    }
 }
