@@ -6,6 +6,8 @@ import { Contaniner } from "../tool/Contanier";
 import { IrisRtcEngine } from "./IrisRtcEngine";
 import * as agorartc from '../terra/rtc_types/Index';
 import { RtcConnection } from "../terra/rtc_types/Index";
+import { AgoraTranslate } from "../tool/AgoraTranslate";
+import { AgoraConsole } from "../tool/AgoraConsole";
 
 export type WalkILocalVideoPackageTrackFun = (track: VideoTrackPackage) => void;
 
@@ -59,11 +61,9 @@ export class IrisEntitiesContaniner {
         return null;
     }
 
-    getRemoteUserByChannelName(channelName: string): Map<UID, IAgoraRTCRemoteUser   {
+    getRemoteUserByChannelName(channelName: string): Map<UID, IAgoraRTCRemoteUser> {
         return this._remoteUsers.getTs(channelName);
     }
-
-
 
     addLocalVideoTrack(trackPackage: VideoTrackPackage) {
         this._localVideoTracks.push(trackPackage);
@@ -78,24 +78,31 @@ export class IrisEntitiesContaniner {
         return null;
     }
 
-    removeLocalVideoTrack(trackPackage: VideoTrackPackage, closeTrack: boolean) {
+    removeLocalVideoTrack(trackPackage: VideoTrackPackage) {
         for (let i = 0; i < this._localVideoTracks.length; i++) {
             let trackPack = this._localVideoTracks[i];
             if (trackPack == trackPackage) {
-                let track: ILocalVideoTrack = trackPack.track as ILocalVideoTrack;
-                closeTrack && track.close();
                 this._localVideoTracks.splice(i, 1);
                 break;
             }
         }
     }
 
-    removeLocalVideoTrackByType(type: IrisVideoSourceType, closeTrack: boolean) {
+    removeLocalVideoTrackByTrack(track: ILocalVideoTrack) {
+        for (let i = 0; i < this._localVideoTracks.length; i++) {
+            let trackPack = this._localVideoTracks[i];
+            if (trackPack.track == track) {
+                this._localVideoTracks.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    removeLocalVideoTrackByType(type: IrisVideoSourceType) {
         for (let i = 0; i < this._localVideoTracks.length; i++) {
             let trackPack = this._localVideoTracks[i];
             if (trackPack.type == type) {
                 let track: ILocalVideoTrack = trackPack.track as ILocalVideoTrack;
-                closeTrack && track.close();
                 this._localVideoTracks.splice(i, 1);
                 break;
             }
@@ -103,14 +110,15 @@ export class IrisEntitiesContaniner {
     }
 
     clearLocalVideoTracks(closeTrack: boolean) {
-        for (let i = 0; i < this._localVideoTracks.length; i++) {
-            let trackPack = this._localVideoTracks[i];
-            let track = trackPack.track as ILocalVideoTrack;
-            closeTrack && track.close();
+        if (closeTrack) {
+            for (let i = 0; i < this._localVideoTracks.length; i++) {
+                let trackPack = this._localVideoTracks[i];
+                let track = trackPack.track as ILocalVideoTrack;
+                closeTrack && track.close();
+            }
         }
         this._localVideoTracks = [];
     }
-
 
     addLocalAudioTrack(trackPackage: AudioTrackPackage) {
         this._localAudioTracks.push(trackPackage);
@@ -125,24 +133,30 @@ export class IrisEntitiesContaniner {
         return null;
     }
 
-    removeLocalAudioTrack(trackPackage: AudioTrackPackage, closeTrack: boolean) {
+    removeLocalAudioTrack(trackPackage: AudioTrackPackage) {
         for (let i = 0; i < this._localAudioTracks.length; i++) {
             let trackPack = this._localAudioTracks[i];
             if (trackPack == trackPackage) {
-                let track: ILocalAudioTrack = trackPack.track as ILocalAudioTrack;
-                closeTrack && track.close();
                 this._localAudioTracks.splice(i, 1);
                 break;
             }
         }
     }
 
-    removeLocalAudioTrackByType(type: IrisAudioSourceType, closeTrack: boolean) {
+    removeLocalAudioTrackByTrack(track: ILocalAudioTrack) {
+        for (let i = 0; i < this._localAudioTracks.length; i++) {
+            let trackPack = this._localAudioTracks[i];
+            if (trackPack.track == track) {
+                this._localAudioTracks.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    removeLocalAudioTrackByType(type: IrisAudioSourceType) {
         for (let i = 0; i < this._localAudioTracks.length; i++) {
             let trackPack = this._localAudioTracks[i];
             if (trackPack.type == type) {
-                let track: ILocalAudioTrack = trackPack.track as ILocalAudioTrack;
-                closeTrack && track.close();
                 this._localAudioTracks.splice(i, 1);
                 break;
             }
@@ -152,7 +166,6 @@ export class IrisEntitiesContaniner {
     getLocalVideoTracks(): Array<VideoTrackPackage> {
         return this._localVideoTracks;
     }
-
 
     getLocalAudioTracks(): Array<AudioTrackPackage> {
         return this._localAudioTracks;
@@ -167,18 +180,16 @@ export class IrisEntitiesContaniner {
         this._localAudioTracks = [];
     }
 
-
-
     addMainClientLocalAudioTrack(trackPackage: AudioTrackPackage) {
         this._mainClientLocalAudioTracks.push(trackPackage);
     }
 
-    removeMainClientLocalAudioTrack(track: ILocalAudioTrack, closeTrack: boolean) {
+    removeMainClientLocalAudioTrack(track: ILocalAudioTrack) {
         for (let i = 0; i < this._mainClientLocalAudioTracks.length; i++) {
             let trackPackage = this._mainClientLocalAudioTracks[i];
             if (trackPackage.track == track) {
-                closeTrack && trackPackage.track.close();
                 this._mainClientLocalAudioTracks.splice(i, 1);
+                break;
             }
         }
     }
@@ -187,11 +198,7 @@ export class IrisEntitiesContaniner {
         this._mainClientLocalVideoTrack = trackPack;
     }
 
-    clearMainClientLocalVideoTrack(closeTrack: boolean) {
-        if (closeTrack) {
-            let localTrack = this._mainClientLocalVideoTrack.track as ILocalVideoTrack;
-            localTrack.close();
-        }
+    clearMainClientLocalVideoTrack() {
         this._mainClientLocalVideoTrack = null;
     }
 
@@ -208,18 +215,40 @@ export class IrisEntitiesContaniner {
         }
     }
 
-    //todo 
-    addSubClientLocalAudioTrack(connection: RtcConnection, trackPackage: AudioTrackPackage) { }
-    //todo 
-    removeSubClientLocalAudioTrack(connection: RtcConnection, track: ILocalAudioTrack, closeTrack: boolean) { }
-    //todo 
-    setSubClientLocalVideoTrack(connection: RtcConnection, trackPack: VideoTrackPackage) { }
-    //todo
-    clearSubClientLocalVideoTrack(connection: RtcConnection, closeTrack: boolean) { }
+    addSubClientLocalAudioTrack(connection: RtcConnection, trackPackage: AudioTrackPackage) {
+        let array = this._subClientAudioTracks.getT(connection.channelId, connection.localUid);
+        if (array == null) {
+            array = [];
+            this._subClientAudioTracks.addT(connection.channelId, connection.localUid, array);
+        }
+
+        array.push(trackPackage);
+    }
+
+    removeSubClientLocalAudioTrack(connection: RtcConnection, track: ILocalAudioTrack) {
+        let array = this._subClientAudioTracks.getT(connection.channelId, connection.localUid);
+
+        if (array == null)
+            return;
+
+        for (let i = 0; i < array.length; i++) {
+            let trackPackage = array[i];
+            if (trackPackage.track == track) {
+                array.splice(i, 1);
+                break;
+            }
+        }
+    }
 
 
+    setSubClientLocalVideoTrack(connection: RtcConnection, trackPack: VideoTrackPackage) {
+        this._subClientVideoTracks.addT(connection.channelId, connection.localUid, trackPack);
 
+    }
 
+    clearSubClientLocalVideoTrack(connection: RtcConnection) {
+        this._subClientVideoTracks.removeT(connection.channelId, connection.localUid);
+    }
 
     public getVideoFrame(uid: UID, channel_id: string): VideoParams {
         if (uid == 0) {
@@ -345,21 +374,38 @@ export class IrisEntitiesContaniner {
             if (trackEventHander.getTrack() == track) {
                 trackEventHander.destruction();
                 this._mainClientTrackEventHandlers.splice(i, 1);
+                break;
             }
         }
     }
 
-    //todo
-    addSubClientTrackEventHandler(connection: RtcConnection, eventHandler: IrisTrackEventHandler) { }
-    //todo
-    removeSubClientTrackEventHandler(connection: RtcConnection, track: ITrack) { }
+
+    addSubClientTrackEventHandler(connection: RtcConnection, eventHandler: IrisTrackEventHandler) {
+        let array = this._subClientTrackEventHandlers.getT(connection.channelId, connection.localUid);
+        if (array == null) {
+            array = [];
+            this._subClientTrackEventHandlers.addT(connection.channelId, connection.localUid, array);
+        }
+        array.push(eventHandler);
+    }
+
+    removeSubClientTrackEventHandler(connection: RtcConnection, track: ITrack) {
+        let array = this._subClientTrackEventHandlers.getT(connection.channelId, connection.localUid);
+        if (array == null)
+            return;
+
+        for (let i = 0; i < array.length; i++) {
+            let event = array[i];
+            if (event.getTrack() == track) {
+                array.splice(i, 1);
+                break;
+            }
+        }
+    }
 
 
     clearMainClientAll() {
         if (this._mainClient) {
-
-            // this._mainClient.unsubscribe
-            //todo destroy client如何 destroy呢
             this._mainClient = null;
         }
 
@@ -368,23 +414,13 @@ export class IrisEntitiesContaniner {
             this._mainClientEventHandler = null;
         }
 
-        this._mainClientLocalAudioTracks.forEach(element => {
-            let track = element.track as ILocalAudioTrack;
-            track.close();
-        });
-        this._mainClientLocalAudioTracks = new Array<AudioTrackPackage>();
-
-        if (this._mainClientLocalVideoTrack) {
-            let track = this._mainClientLocalVideoTrack.track as ILocalVideoTrack;
-            track.close();
-        }
+        this._mainClientLocalAudioTracks = [];
         this._mainClientLocalVideoTrack = null;
 
         this._mainClientTrackEventHandlers.forEach(element => {
             element.destruction();
         })
-        this._mainClientTrackEventHandlers = new Array<IrisTrackEventHandler>();
-
+        this._mainClientTrackEventHandlers = [];
     }
 
 
@@ -392,19 +428,31 @@ export class IrisEntitiesContaniner {
         this._subClients.addT(connection.channelId, connection.localUid, client);
     }
 
-    //todo 
-    clearSubClientAll(connection: agorartc.RtcConnection) {
 
+    clearSubClientAll(connection: agorartc.RtcConnection) {
+        let channelId = connection.channelId;
+        let uid = connection.localUid;
+
+        this._subClients.removeT(channelId, uid);
+        this._subClientAudioTracks.removeT(channelId, uid);
+        this._subClientVideoTracks.removeT(channelId, uid);
+        let trackEventHandlers = this._subClientTrackEventHandlers.getT(channelId, uid);
+        if (trackEventHandlers) {
+            for (let event of trackEventHandlers) {
+                event.destruction();
+            }
+        }
+        this._subClientTrackEventHandlers.removeT(channelId, uid);
     }
 
 
     //注意自己的mainClient可能也满足要求哦
-    getClient(connection: agorartc.RtcConnection): IAgoraRTCClient {
-        if (this._mainClient?.channelName == connection.channelId)
-            return this._mainClient;
+    // getAllClient(connection: agorartc.RtcConnection): IAgoraRTCClient {
+    //     if (this._mainClient?.channelName == connection.channelId)
+    //         return this._mainClient;
 
-        return this._subClients.getT(connection.channelId, connection.localUid); 
-    }
+    //     return this._subClients.getT(connection.channelId, connection.localUid);
+    // }
 
     getClientsByChannelName(channelName: string): Map<UID, IAgoraRTCClient> {
         return this._subClients.getTs(channelName);
@@ -422,33 +470,73 @@ export class IrisEntitiesContaniner {
         return this._subClientVideoTracks.getT(connection.channelId, connection.localUid);
     }
 
-    destruction() {
-        this._mainClientEventHandler.destruction();
-        this._mainClientTrackEventHandlers.forEach((trackEventHandler: IrisTrackEventHandler) => {
-            trackEventHandler.destruction();
-        })
 
-        //subClient
-        this._subClientEventHandlers.walkT((channelId: string, uid: UID, t: IrisClientEventHandler) => {
-            t.destruction();
-        });
-        this._subClientTrackEventHandlers.walkT((channelId: string, uid: UID, t: Array<IrisTrackEventHandler>) => {
-            t.forEach((trackEventHandler: IrisTrackEventHandler) => {
-                trackEventHandler.destruction();
-            })
-        })
-        this.clearLocalAudioTracks(true);
-        this.clearLocalVideoTracks(true);
-    }
-
-    //todo  当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 记住是所有哦
-    //
+    //  当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 记住是所有哦
     audioTrackWillClose(audioTrack: ILocalAudioTrack) {
+        //local
+        this.removeLocalAudioTrackByTrack(audioTrack);
+
+        //main
+        this.removeMainClientLocalAudioTrack(audioTrack);
+        this.removeMainClientTrackEventHandler(audioTrack);
+
+        //sub
+        this._subClientAudioTracks.walkT((channelId: string, uid: UID, packages: AudioTrackPackage[]) => {
+            for (let i = 0; i < packages.length; i++) {
+                let pack = packages[i];
+                if (pack.track == audioTrack) {
+                    packages.splice(i, 1);
+                    break;
+                }
+            }
+        });
+
+        this._subClientTrackEventHandlers.walkT((channelId: string, uid: UID, events: IrisTrackEventHandler[]) => {
+            for (let i = 0; i < events.length; i++) {
+                let event = events[i];
+                if (event.getTrack() == audioTrack) {
+                    event.destruction();
+                    events.splice(i, 1);
+                }
+            }
+        });
 
     }
-  //todo
-    videoTrackWillClose(videoTrack: ILocalVideoTrack) {
 
+    // 当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 记住是所有哦
+    videoTrackWillClose(videoTrack: ILocalVideoTrack) {
+        //local
+        this.removeLocalVideoTrackByTrack(videoTrack);
+
+        //main
+        if (this._mainClientLocalVideoTrack.track == videoTrack) {
+            this._mainClient = null;
+        }
+        this.removeMainClientTrackEventHandler(videoTrack);
+
+
+        //sub
+        let deleteChannelId: string = null;
+        let deleteUid: UID = null;
+        this._subClientVideoTracks.walkT((channelId: string, uid: UID, pack: VideoTrackPackage) => {
+            if (pack.track == videoTrack) {
+                deleteChannelId = channelId;
+                deleteUid = uid;
+            }
+        });
+        if (deleteChannelId != null && deleteUid != null) {
+            this._subClientAudioTracks.removeT(deleteChannelId, deleteUid);
+        }
+
+        this._subClientTrackEventHandlers.walkT((channelId: string, uid: UID, events: IrisTrackEventHandler[]) => {
+            for (let i = 0; i < events.length; i++) {
+                let event = events[i];
+                if (event.getTrack() == videoTrack) {
+                    event.destruction();
+                    events.splice(i, 1);
+                }
+            }
+        });
     }
 
     getLocalAudioTrackType(track: ILocalAudioTrack): IrisAudioSourceType {
@@ -470,8 +558,59 @@ export class IrisEntitiesContaniner {
     }
 
 
+    //
+    async destruction() {
 
+        //mainEvent, mainTrackEvent
+        this._mainClientEventHandler.destruction();
+        this._mainClientEventHandler = null;
+        this._mainClientTrackEventHandlers.forEach((trackEventHandler: IrisTrackEventHandler) => {
+            trackEventHandler.destruction();
+        })
+        this._mainClientTrackEventHandlers = [];
 
+        //subEvent, subTrackEvent
+        this._subClientEventHandlers.walkT((channelId: string, uid: UID, t: IrisClientEventHandler) => {
+            t.destruction();
+        });
+        this._subClientEventHandlers = new Contaniner();
+        this._subClientTrackEventHandlers.walkT((channelId: string, uid: UID, t: Array<IrisTrackEventHandler>) => {
+            t.forEach((trackEventHandler: IrisTrackEventHandler) => {
+                trackEventHandler.destruction();
+            })
+        })
+        this._subClientTrackEventHandlers = new Contaniner();
 
+        if (this._mainClient && this._mainClient.channelName) {
+            try {
+                await this._mainClient.leave();
+                AgoraConsole.log("main client leave success");
+            }
+            catch (e) {
+                AgoraConsole.error("mainClient leave failed");
+                e && AgoraConsole.error(e);
+            }
+        }
+
+        let audioTracks = this._subClients.getContaniner();
+        for (let e of audioTracks) {
+            let map = e[1];
+            for (let m of map) {
+                let subClient = m[1];
+                try {
+                    subClient.leave();
+                }
+                catch (e) {
+                    AgoraConsole.error("subClient leave faield");
+                    e && AgoraConsole.error(e);
+                }
+            }
+        }
+
+        //leave channel
+
+        this.clearLocalAudioTracks(true);
+        this.clearLocalVideoTracks(true);
+    }
 
 }

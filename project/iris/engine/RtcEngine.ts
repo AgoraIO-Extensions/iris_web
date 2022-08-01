@@ -2,7 +2,7 @@ import * as agorartc from '../terra/rtc_types/Index';
 import { IRtcEngine } from '../terra/IRtcEngine';
 import { IrisApiEngine } from './IrisApiEngine';
 import { IrisRtcEngine } from './IrisRtcEngine';
-import { AgoraActionQueue } from '../tool/AgoraActionQueue';
+import { Action, AgoraActionQueue } from '../tool/AgoraActionQueue';
 import { AgoraConsole } from '../tool/AgoraConsole';
 import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, ClientRoleOptions, DeviceInfo, EncryptionMode, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalAudioTrack, ILocalTrack, ILocalVideoTrack, IMicrophoneAudioTrack, InjectStreamConfig, IRemoteAudioTrack, MicrophoneAudioTrackInitConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
 import { AgoraTranslate } from '../tool/AgoraTranslate';
@@ -23,6 +23,10 @@ export class RtcEngine implements IRtcEngine {
     constructor(engine: IrisRtcEngine) {
         this._engine = engine;
         this._actonQueue = new AgoraActionQueue(this);
+    }
+
+    public putAction(action: Action) {
+        this._actonQueue.putAction(action);
     }
 
     initialize(context: agorartc.RtcEngineContext): number {
@@ -252,6 +256,7 @@ export class RtcEngine implements IRtcEngine {
         return this.joinChannel2(token, channelId, uid, options);
     }
 
+    //todo 这个函数要重写
     joinChannel2(token: string, channelId: string, uid: number, options: agorartc.ChannelMediaOptions): number {
         if (this._engine.mainClientVariables.joinChanneled == true) {
             AgoraConsole.error("already call joinChannel");
@@ -262,17 +267,12 @@ export class RtcEngine implements IRtcEngine {
             this._actonQueue.putAction({
                 fun: (token: string, channelId: string, uid: number, options: agorartc.ChannelMediaOptions, next) => {
 
-
-
                     this._engine.mainClientVariables.startPreviewed = false;
                     let mainClientVariables: IrisMainClientVariables = this._engine.mainClientVariables;
                     let globalVariables = this._engine.globalVariables;
                     mainClientVariables.mergeChannelMediaOptions(options);
 
                     let mainClient: IAgoraRTCClient = this._createMainClient();
-
-
-
 
                     mainClient.join(globalVariables.appId, channelId, token ? token : null, uid)
                         .then((uid: UID) => {
@@ -319,7 +319,7 @@ export class RtcEngine implements IRtcEngine {
                                                     AgoraConsole.error("audio track publish failed");
                                                     AgoraConsole.error(reason);
                                                     entitiesContainer.removeMainClientTrackEventHandler(audioTrack);
-                                                    entitiesContainer.removeMainClientLocalAudioTrack(audioTrack, false);
+                                                    entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
                                                 })
                                         }
 
@@ -346,7 +346,7 @@ export class RtcEngine implements IRtcEngine {
                                                         AgoraConsole.error("screen share audio track publish failed");
                                                         AgoraConsole.error(reason);
                                                         entitiesContainer.removeMainClientTrackEventHandler(audioTrack);
-                                                        entitiesContainer.removeMainClientLocalAudioTrack(audioTrack, false);
+                                                        entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
                                                     })
                                             }
                                         }
@@ -372,7 +372,7 @@ export class RtcEngine implements IRtcEngine {
                                                     AgoraConsole.error("video track publish failed");
                                                     AgoraConsole.error(reason);
                                                     entitiesContainer.removeMainClientTrackEventHandler(videoTrack);
-                                                    entitiesContainer.clearMainClientLocalVideoTrack(false);
+                                                    entitiesContainer.clearMainClientLocalVideoTrack();
                                                 })
                                         }
                                         else if (mainClientVariables.publishScreenTrack || mainClientVariables.publishScreenCaptureVideo) {
@@ -398,7 +398,7 @@ export class RtcEngine implements IRtcEngine {
                                                         AgoraConsole.error("screen share video track publish failed");
                                                         AgoraConsole.error(reason);
                                                         entitiesContainer.removeMainClientTrackEventHandler(videoTrack);
-                                                        entitiesContainer.clearMainClientLocalVideoTrack(false);
+                                                        entitiesContainer.clearMainClientLocalVideoTrack();
                                                     })
                                             }
                                         }
@@ -501,7 +501,7 @@ export class RtcEngine implements IRtcEngine {
                                         await mainClient.unpublish(track)
                                         AgoraConsole.log(optionName + "(false) changed success");
                                         entitiesContainer.removeMainClientTrackEventHandler(track);
-                                        entitiesContainer.removeMainClientLocalAudioTrack(track, false);
+                                        entitiesContainer.removeMainClientLocalAudioTrack(track);
                                     }
                                     catch (reason) {
                                         AgoraConsole.error(optionName + "(false) changed failed");
@@ -2049,6 +2049,7 @@ export class RtcEngine implements IRtcEngine {
                 this.enableDualStreamMode3(sourceType, true, streamConfig);
                 break;
         }
+        return 0;
     }
 
     enableEchoCancellationExternal(enabled: boolean, audioSourceDelay: number): number {
@@ -3179,13 +3180,18 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    setContentInspect(conf: agorartc.ContentInspectConfig): number {
+    enableContentInspect(enabled: boolean, conf: agorartc.ContentInspectConfig): number {
         this._actonQueue.putAction({
             fun: (conf: agorartc.ContentInspectConfig, next) => {
-                this._engine.mainClientVariables.contentInspect = conf;
+
+                if (enabled)
+                    this._engine.mainClientVariables.contentInspect = conf;
+                else
+                    this._engine.mainClientVariables.contentInspect = null;
+
                 let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
                 if (mainClient) {
-                    if (conf.enable) {
+                    if (enabled) {
                         mainClient.enableContentInspect(AgoraTranslate.agorartcContentInspectConfig2InspectConfiguration(conf))
                             .then(() => {
                                 AgoraConsole.log("setContentInspect enable success");
@@ -3378,7 +3384,7 @@ export class RtcEngine implements IRtcEngine {
                                                 AgoraConsole.error("audio track publish failed");
                                                 AgoraConsole.error(reason);
                                                 entitiesContainer.removeSubClientTrackEventHandler(connection, audioTrack);
-                                                entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack, false);
+                                                entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack);
                                             })
                                     }
 
@@ -3405,7 +3411,7 @@ export class RtcEngine implements IRtcEngine {
                                                     AgoraConsole.error("screen share audio track publish failed");
                                                     AgoraConsole.error(reason);
                                                     entitiesContainer.removeSubClientTrackEventHandler(connection, audioTrack);
-                                                    entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack, false);
+                                                    entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack);
                                                 })
                                         }
                                     }
@@ -3431,7 +3437,7 @@ export class RtcEngine implements IRtcEngine {
                                                 AgoraConsole.error("video track publish failed");
                                                 AgoraConsole.error(reason);
                                                 entitiesContainer.removeSubClientTrackEventHandler(connection, videoTrack);
-                                                entitiesContainer.clearSubClientLocalVideoTrack(connection, false);
+                                                entitiesContainer.clearSubClientLocalVideoTrack(connection);
                                             })
                                     }
                                     else if (options.publishScreenTrack || options.publishScreenCaptureVideo) {
@@ -3457,7 +3463,7 @@ export class RtcEngine implements IRtcEngine {
                                                     AgoraConsole.error("screen share video track publish failed");
                                                     AgoraConsole.error(reason);
                                                     entitiesContainer.removeSubClientTrackEventHandler(connection, videoTrack);
-                                                    entitiesContainer.clearSubClientLocalVideoTrack(connection, false);
+                                                    entitiesContainer.clearSubClientLocalVideoTrack(connection);
                                                 })
                                         }
                                     }
@@ -3584,7 +3590,7 @@ export class RtcEngine implements IRtcEngine {
                                         await subClient.unpublish(track)
                                         AgoraConsole.log(optionName + "(false) changed success");
                                         entitiesContainer.removeSubClientTrackEventHandler(connection, track);
-                                        entitiesContainer.removeSubClientLocalAudioTrack(connection, track, false);
+                                        entitiesContainer.removeSubClientLocalAudioTrack(connection, track);
                                     }
                                     catch (reason) {
                                         AgoraConsole.error(optionName + "(false) changed failed");
@@ -3602,7 +3608,7 @@ export class RtcEngine implements IRtcEngine {
                                         await subClient.unpublish(track)
                                         AgoraConsole.log(optionName + "(false) changed success");
                                         entitiesContainer.removeSubClientTrackEventHandler(connection, track);
-                                        entitiesContainer.clearSubClientLocalVideoTrack(connection, false);
+                                        entitiesContainer.clearSubClientLocalVideoTrack(connection);
                                     }
                                     catch (reason) {
                                         AgoraConsole.error(optionName + "(false) changed failed");
@@ -4035,7 +4041,7 @@ export class RtcEngine implements IRtcEngine {
                 }
                 map.set(sourceType, { enabled: enabled, streamConfig: streamConfig });
 
-                let client: IAgoraRTCClient = this._engine.entitiesContainer.getClient(connection);
+                let client: IAgoraRTCClient = this._engine.entitiesContainer.getSubClient(connection);
                 let trackPackage = this._engine.entitiesContainer.getSubClientVideoTrack(connection);
                 if (client && (trackPackage.type == sourceType as number)) {
                     if (enabled) {

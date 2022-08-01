@@ -52,9 +52,16 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
     }
 
     public destruction() {
-
-        this.entitiesContainer.destruction();
-
+        this._rtcEngine.putAction({
+            fun: (next) => {
+                let process = async () => {
+                    await this.entitiesContainer.destruction();
+                    next();
+                }
+                setTimeout(process, 0);
+            },
+            args: []
+        })
     }
 
 

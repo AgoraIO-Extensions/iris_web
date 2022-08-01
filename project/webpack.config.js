@@ -10,13 +10,19 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist"),
         libraryTarget: "var",
-        library: "libAgoraWrapper",
+        library: "AgoraWrapper",
         filename: "lib-agora-wrapper.js",
         environment: {
             arrowFunction: false // 关闭webpack的箭头函数，可选
         },
     },
 
+    mode: "production",
+
+    devtool: "source-map",
+    optimization: {
+        minimize: false
+    },
 
     resolve: {
         extensions: [".ts", ".js"]

@@ -3202,9 +3202,7 @@ export class IrisRtcEnginePrepare {
 		if (connection == null) throw "connection is null";
 		let options = obj.options;
 		if (options == null) throw "options is null";
-		let eventHandler = obj.eventHandler;
-		if (eventHandler == null) throw "eventHandler is null";
-		result.result = this._rtcEngine.joinChannelEx(token, connection, options, eventHandler);
+		result.result = this._rtcEngine.joinChannelEx(token, connection, options);
 		return 0;
 	}
 
@@ -3969,13 +3967,4 @@ export class IrisRtcEnginePrepare {
 		result.result = this._rtcEngine.followSystemRecordingDevice(enable);
 		return 0;
 	}
-
-	// release(
-	// 	params: string, paramLength: number,
-	// 	buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-	// 	let obj = JSON.parse(params) as any;
-	// 	result.result = this._rtcEngine.release();
-	// 	return 0;
-	// }
-
 }

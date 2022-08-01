@@ -1,8 +1,11 @@
 import { DeviceInfo } from 'agora-rtc-sdk-ng';
 import { Argument } from 'webpack';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { Action } from '../tool/AgoraActionQueue';
 import * as agorartc from './rtc_types/Index';
 export interface IRtcEngine {
+
+	putAction(action: Action);
 
 	//IMediaEngine
 	registerAudioFrameObserver(observer: agorartc.IAudioFrameObserver): number;
@@ -293,7 +296,7 @@ export interface IRtcEngine {
 	stopRhythmPlayer(): number;
 	configRhythmPlayer(config: agorartc.AgoraRhythmPlayerConfig): number;
 	takeSnapshot(config: agorartc.SnapShotConfig): number;
-	setContentInspect(config: agorartc.ContentInspectConfig);
+	enableContentInspect(enabled, config: agorartc.ContentInspectConfig);
 	adjustCustomAudioPublishVolume(sourceId: number, volume: number): number;
 	adjustCustomAudioPlayoutVolume(sourceId: number, volume: number): number;
 	setCloudProxy(proxyType: agorartc.CLOUD_PROXY_TYPE): number;
