@@ -5,7 +5,6 @@ import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 import { Contaniner } from "../tool/Contanier";
 import { IrisRtcEngine } from "./IrisRtcEngine";
 import * as agorartc from '../terra/rtc_types/Index';
-import { RtcConnection } from "../terra/rtc_types/Index";
 import { AgoraTranslate } from "../tool/AgoraTranslate";
 import { AgoraConsole } from "../tool/AgoraConsole";
 
@@ -42,6 +41,14 @@ export class IrisEntitiesContaniner {
         this._engine = engine;
     }
 
+    getRemoteUser(connection: agorartc.RtcConnection): IAgoraRTCRemoteUser {
+        return this._remoteUsers.getT(connection.channelId, connection.localUid);
+    }
+
+    addRemoteUser(connection: agorartc.RtcConnection, remoteUser: IAgoraRTCRemoteUser) {
+        this._remoteUsers.addT(connection.channelId, connection.localUid, remoteUser);
+    }
+
     getRemoteUsers(): Contaniner<IAgoraRTCRemoteUser> {
         return this._remoteUsers;
     }
@@ -64,6 +71,29 @@ export class IrisEntitiesContaniner {
     getRemoteUserByChannelName(channelName: string): Map<UID, IAgoraRTCRemoteUser> {
         return this._remoteUsers.getTs(channelName);
     }
+
+    //从数组中移除远端用户，并且如果当前轨道监听中有属于这个远端用户的轨道，也一起移除掉。
+    removeRemoteUserAndClearTrackEvent(connection: agorartc.RtcConnection, user: IAgoraRTCRemoteUser) {
+        this._remoteUsers.removeT(connection.channelId, connection.localUid);
+
+        this._mainClientTrackEventHandlers.filter((trackEvent: IrisTrackEventHandler) => {
+            if (trackEvent.getRemoteUser() == user) {
+                trackEvent.destruction();
+                return false;
+            }
+            return true;
+        })
+
+        let subClientTrackEventHandlers = this._subClientTrackEventHandlers.getT(connection.channelId, connection.localUid);
+        subClientTrackEventHandlers && subClientTrackEventHandlers.filter((trackEvent: IrisTrackEventHandler) => {
+            if (trackEvent.getRemoteUser() == user) {
+                trackEvent.destruction();
+                return false;
+            }
+            return true;
+        })
+    }
+
 
     addLocalVideoTrack(trackPackage: VideoTrackPackage) {
         this._localVideoTracks.push(trackPackage);
@@ -215,7 +245,7 @@ export class IrisEntitiesContaniner {
         }
     }
 
-    addSubClientLocalAudioTrack(connection: RtcConnection, trackPackage: AudioTrackPackage) {
+    addSubClientLocalAudioTrack(connection: agorartc.RtcConnection, trackPackage: AudioTrackPackage) {
         let array = this._subClientAudioTracks.getT(connection.channelId, connection.localUid);
         if (array == null) {
             array = [];
@@ -225,7 +255,7 @@ export class IrisEntitiesContaniner {
         array.push(trackPackage);
     }
 
-    removeSubClientLocalAudioTrack(connection: RtcConnection, track: ILocalAudioTrack) {
+    removeSubClientLocalAudioTrack(connection: agorartc.RtcConnection, track: ILocalAudioTrack) {
         let array = this._subClientAudioTracks.getT(connection.channelId, connection.localUid);
 
         if (array == null)
@@ -241,12 +271,12 @@ export class IrisEntitiesContaniner {
     }
 
 
-    setSubClientLocalVideoTrack(connection: RtcConnection, trackPack: VideoTrackPackage) {
+    setSubClientLocalVideoTrack(connection: agorartc.RtcConnection, trackPack: VideoTrackPackage) {
         this._subClientVideoTracks.addT(connection.channelId, connection.localUid, trackPack);
 
     }
 
-    clearSubClientLocalVideoTrack(connection: RtcConnection) {
+    clearSubClientLocalVideoTrack(connection: agorartc.RtcConnection) {
         this._subClientVideoTracks.removeT(connection.channelId, connection.localUid);
     }
 
@@ -368,7 +398,7 @@ export class IrisEntitiesContaniner {
         this._mainClientTrackEventHandlers.push(trackEventHandler);
     }
 
-    removeMainClientTrackEventHandler(track: ITrack) {
+    removeMainClientTrackEventHandlerByTrack(track: ITrack) {
         for (let i = 0; i < this._mainClientTrackEventHandlers.length; i++) {
             let trackEventHander = this._mainClientTrackEventHandlers[i];
             if (trackEventHander.getTrack() == track) {
@@ -379,8 +409,19 @@ export class IrisEntitiesContaniner {
         }
     }
 
+    removeMainClientTrackEventHandlerByRemoteUser(user: IAgoraRTCRemoteUser) {
+        for (let i = 0; i < this._mainClientTrackEventHandlers.length; i++) {
+            let trackEventHander = this._mainClientTrackEventHandlers[i];
+            if (trackEventHander.getRemoteUser() == user) {
+                trackEventHander.destruction();
+                this._mainClientTrackEventHandlers.splice(i, 1);
+                break;
+            }
+        }
+    }
 
-    addSubClientTrackEventHandler(connection: RtcConnection, eventHandler: IrisTrackEventHandler) {
+
+    addSubClientTrackEventHandler(connection: agorartc.RtcConnection, eventHandler: IrisTrackEventHandler) {
         let array = this._subClientTrackEventHandlers.getT(connection.channelId, connection.localUid);
         if (array == null) {
             array = [];
@@ -389,7 +430,9 @@ export class IrisEntitiesContaniner {
         array.push(eventHandler);
     }
 
-    removeSubClientTrackEventHandler(connection: RtcConnection, track: ITrack) {
+
+
+    removeSubClientTrackEventHandlerByTrack(connection: agorartc.RtcConnection, track: ITrack) {
         let array = this._subClientTrackEventHandlers.getT(connection.channelId, connection.localUid);
         if (array == null)
             return;
@@ -397,6 +440,20 @@ export class IrisEntitiesContaniner {
         for (let i = 0; i < array.length; i++) {
             let event = array[i];
             if (event.getTrack() == track) {
+                array.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    removeSubClientTrackEventHandlerByRemoteUser(connection: agorartc.RtcConnection, user: IAgoraRTCRemoteUser) {
+        let array = this._subClientTrackEventHandlers.getT(connection.channelId, connection.localUid);
+        if (array == null)
+            return;
+
+        for (let i = 0; i < array.length; i++) {
+            let event = array[i];
+            if (event.getRemoteUser() == user) {
                 array.splice(i, 1);
                 break;
             }
@@ -428,14 +485,24 @@ export class IrisEntitiesContaniner {
         this._subClients.addT(connection.channelId, connection.localUid, client);
     }
 
+    addSubClientEventHandler(connection: agorartc.RtcConnection, clientEventHandler: IrisClientEventHandler) {
+        this._subClientEventHandlers.addT(connection.channelId, connection.localUid, clientEventHandler);
+    }
 
     clearSubClientAll(connection: agorartc.RtcConnection) {
         let channelId = connection.channelId;
         let uid = connection.localUid;
 
         this._subClients.removeT(channelId, uid);
+
+        let clientEventHander = this._subClientEventHandlers.getT(channelId, uid);
+        clientEventHander && clientEventHander.destruction();
+        this._subClientEventHandlers.removeT(channelId, uid);
+
         this._subClientAudioTracks.removeT(channelId, uid);
         this._subClientVideoTracks.removeT(channelId, uid);
+
+
         let trackEventHandlers = this._subClientTrackEventHandlers.getT(channelId, uid);
         if (trackEventHandlers) {
             for (let event of trackEventHandlers) {
@@ -478,7 +545,7 @@ export class IrisEntitiesContaniner {
 
         //main
         this.removeMainClientLocalAudioTrack(audioTrack);
-        this.removeMainClientTrackEventHandler(audioTrack);
+        this.removeMainClientTrackEventHandlerByTrack(audioTrack);
 
         //sub
         this._subClientAudioTracks.walkT((channelId: string, uid: UID, packages: AudioTrackPackage[]) => {
@@ -512,7 +579,7 @@ export class IrisEntitiesContaniner {
         if (this._mainClientLocalVideoTrack.track == videoTrack) {
             this._mainClient = null;
         }
-        this.removeMainClientTrackEventHandler(videoTrack);
+        this.removeMainClientTrackEventHandlerByTrack(videoTrack);
 
 
         //sub
@@ -581,6 +648,7 @@ export class IrisEntitiesContaniner {
         })
         this._subClientTrackEventHandlers = new Contaniner();
 
+        //mainClient 
         if (this._mainClient && this._mainClient.channelName) {
             try {
                 await this._mainClient.leave();
@@ -592,13 +660,15 @@ export class IrisEntitiesContaniner {
             }
         }
 
+        //subClient
         let audioTracks = this._subClients.getContaniner();
         for (let e of audioTracks) {
             let map = e[1];
             for (let m of map) {
                 let subClient = m[1];
                 try {
-                    subClient.leave();
+                    await subClient.leave();
+                    AgoraConsole.log("sub client leave success");
                 }
                 catch (e) {
                     AgoraConsole.error("subClient leave faield");

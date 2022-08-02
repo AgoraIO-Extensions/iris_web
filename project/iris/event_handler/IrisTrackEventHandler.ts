@@ -1,5 +1,6 @@
 import { IAgoraRTCClient, IAgoraRTCRemoteUser, ITrack, ILocalTrack, ILocalVideoTrack, IRemoteTrack, IRemoteVideoTrack, CheckVideoVisibleResult } from "agora-rtc-sdk-ng";
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
+import * as agorartc from "../terra/rtc_types/Index";
 
 
 export type TrackType = 'ILocalTrack' | 'ILocalVideoTrack' | 'IRemoteTrack' | 'IRemoteVideoTrack';
@@ -65,27 +66,58 @@ export class IrisTrackEventHandler {
     }
 
     onEventTrackEnded() {
-
+        //目前没有找到对应的回调
     }
 
     onEventBeautyEffectOverload() {
-
+        //目前没有找到对应的回调
     }
 
     onEventVideoElementVisibleStatus(data?: CheckVideoVisibleResult): void {
-
+        //目前没有找到对应的回调
     }
 
     onEventVideoElementVisibleStatus2(data?: CheckVideoVisibleResult): void {
-
+        //目前没有找到对应的回调
     }
 
     onEventFirstFrameDecoded() {
 
+        if (this._trackType == 'IRemoteTrack') {
+            let connection: agorartc.RtcConnection = {
+                channelId: this._client.channelName,
+                localUid: this._client.uid as number
+            };
+            let remoteUid = this._remoteUser?.uid as number || -1;
+            let elaspsed = 0;
+            this._engine.rtcEngineEventHandler.onFirstRemoteAudioDecodedEx(connection, remoteUid, elaspsed);
+            this._engine.rtcEngineEventHandler.onFirstRemoteAudioFrameEx(connection, remoteUid, elaspsed);
+        }
+        else if (this._trackType == 'IRemoteVideoTrack') {
+            let connection: agorartc.RtcConnection = {
+                channelId: this._client.channelName,
+                localUid: this._client.uid as number
+            };
+            let remoteUid = this._remoteUser?.uid as number || -1;
+            let elaspsed = 0;
+            let width = -1;
+            let height = -1;
+            if (this._remoteUser.hasVideo && this._remoteUser.videoTrack) {
+                let imageData: ImageData = this._remoteUser.videoTrack.getCurrentFrameData();
+                width = imageData?.width || -1;
+                height = imageData?.height || -1;
+            }
+            this._engine.rtcEngineEventHandler.onFirstRemoteVideoDecodedEx(connection, remoteUid, width, height, elaspsed);
+            this._engine.rtcEngineEventHandler.onFirstRemoteVideoFrameEx(connection, remoteUid, width, height, elaspsed);
+        }
     }
 
     getTrack(): ITrack {
         return this._track;
+    }
+
+    getRemoteUser(): IAgoraRTCRemoteUser {
+        return this._remoteUser;
     }
 
     destruction() {

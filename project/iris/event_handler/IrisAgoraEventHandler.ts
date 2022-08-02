@@ -4,7 +4,7 @@ import * as agorart from "../terra/rtc_types/Index";
 import { AgoraTranslate } from "../tool/AgoraTranslate";
 
 
-export class IrisAgoraCallerHandler {
+export class IrisAgoraEventHandler {
     private _engine: IrisRtcEngine;
 
     constructor(engine: IrisRtcEngine) {
@@ -46,7 +46,7 @@ export class IrisAgoraCallerHandler {
         this._engine.rtcEngineEventHandler.onMediaDeviceChanged(deviceType);
     }
 
-    release() {
+    destruction() {
         AgoraRTC.onAutoplayFailed = undefined;
         AgoraRTC.onCameraChanged = undefined;
         AgoraRTC.onMicrophoneChanged = undefined;

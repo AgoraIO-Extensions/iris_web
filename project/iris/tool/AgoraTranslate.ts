@@ -1,5 +1,5 @@
 
-import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayInfo, ClientRole, ClientRoleOptions, ConnectionState, DeviceState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, RemoteStreamFallbackType, RemoteStreamType, SDK_CODEC, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
+import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayError, ChannelMediaRelayEvent, ChannelMediaRelayInfo, ChannelMediaRelayState, ClientRole, ClientRoleOptions, ConnectionDisconnectedReason, ConnectionState, DeviceState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, RemoteStreamFallbackType, RemoteStreamType, SDK_CODEC, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
 import { Argument } from "webpack";
 import * as agorartc from "../terra/rtc_types/Index";
 import { AgoraConsole } from "./AgoraConsole";
@@ -151,44 +151,7 @@ export class AgoraTranslate {
         }
     }
 
-    public static ConnectionState2agorartcCONNECTION_STATE_TYPE(state: ConnectionState): agorartc.CONNECTION_STATE_TYPE {
-        switch (state) {
-            case "DISCONNECTED":
-                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
-            case "CONNECTING":
-                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTING;
-            case "CONNECTED":
-                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTED;
-            case "RECONNECTING":
-                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_RECONNECTING;
-            case "DISCONNECTING":
-                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
-        }
-    }
 
-    public static string2agorartcENCRYPTION_MODE(mode: string): agorartc.ENCRYPTION_MODE {
-        switch (mode) {
-            case "aes-128-xts":
-                return agorartc.ENCRYPTION_MODE.AES_128_XTS;
-            case "aes-128-ecb":
-                return agorartc.ENCRYPTION_MODE.AES_128_ECB;
-            case "aes-256-xts":
-                return agorartc.ENCRYPTION_MODE.AES_256_XTS;
-            case "sm4-128-ecb":
-                return agorartc.ENCRYPTION_MODE.SM4_128_ECB;
-            case "aes-128-gcm":
-                return agorartc.ENCRYPTION_MODE.AES_128_GCM;
-            case "aes-256-gcm":
-                return agorartc.ENCRYPTION_MODE.AES_256_GCM;
-            case "aes-128-gcm2":
-                return agorartc.ENCRYPTION_MODE.AES_128_GCM2;
-            case "aes-256-gcm2":
-                return agorartc.ENCRYPTION_MODE.AES_256_GCM2;
-            default:
-                AgoraConsole.warn("invalid mode: " + mode);
-                return agorartc.ENCRYPTION_MODE.AES_128_GCM;
-        }
-    }
 
     public static agorartcENCRYPTION_MODE2EncryptionMode(mode: agorartc.ENCRYPTION_MODE): EncryptionMode {
         switch (mode) {
@@ -348,6 +311,129 @@ export class AgoraTranslate {
                 return agorartc.MEDIA_DEVICE_STATE_TYPE.MEDIA_DEVICE_STATE_ACTIVE;
             case 'INACTIVE':
                 return agorartc.MEDIA_DEVICE_STATE_TYPE.MEDIA_DEVICE_STATE_DISABLED;
+        }
+    }
+
+    public static ConnectionState2agorartcCONNECTION_STATE_TYPE(state: ConnectionState): agorartc.CONNECTION_STATE_TYPE {
+        switch (state) {
+            case "DISCONNECTED":
+                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
+            case "CONNECTING":
+                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTING;
+            case "CONNECTED":
+                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTED;
+            case "RECONNECTING":
+                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_RECONNECTING;
+            case "DISCONNECTING":
+                throw new Error("ConnectionState2agorartcCONNECTION_STATE_TYPE failed");
+            // return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
+        }
+    }
+
+    public static string2agorartcENCRYPTION_MODE(mode: string): agorartc.ENCRYPTION_MODE {
+        switch (mode) {
+            case "aes-128-xts":
+                return agorartc.ENCRYPTION_MODE.AES_128_XTS;
+            case "aes-128-ecb":
+                return agorartc.ENCRYPTION_MODE.AES_128_ECB;
+            case "aes-256-xts":
+                return agorartc.ENCRYPTION_MODE.AES_256_XTS;
+            case "sm4-128-ecb":
+                return agorartc.ENCRYPTION_MODE.SM4_128_ECB;
+            case "aes-128-gcm":
+                return agorartc.ENCRYPTION_MODE.AES_128_GCM;
+            case "aes-256-gcm":
+                return agorartc.ENCRYPTION_MODE.AES_256_GCM;
+            case "aes-128-gcm2":
+                return agorartc.ENCRYPTION_MODE.AES_128_GCM2;
+            case "aes-256-gcm2":
+                return agorartc.ENCRYPTION_MODE.AES_256_GCM2;
+            default:
+                AgoraConsole.warn("invalid mode: " + mode);
+                return agorartc.ENCRYPTION_MODE.AES_128_GCM;
+        }
+    }
+
+    public static ConnectionDisconnectedReason2agorartcCONNECTION_CHANGED_REASON_TYPE(reason: ConnectionDisconnectedReason): agorartc.CONNECTION_CHANGED_REASON_TYPE {
+        switch (reason) {
+            case ConnectionDisconnectedReason.LEAVE:
+                return agorartc.CONNECTION_CHANGED_REASON_TYPE.CONNECTION_CHANGED_LEAVE_CHANNEL;
+            case ConnectionDisconnectedReason.NETWORK_ERROR:
+                return agorartc.CONNECTION_CHANGED_REASON_TYPE.CONNECTION_CHANGED_INTERRUPTED;
+            case ConnectionDisconnectedReason.SERVER_ERROR:
+                return agorartc.CONNECTION_CHANGED_REASON_TYPE.CONNECTION_CHANGED_INTERRUPTED;
+            case ConnectionDisconnectedReason.UID_BANNED:
+                return agorartc.CONNECTION_CHANGED_REASON_TYPE.CONNECTION_CHANGED_BANNED_BY_SERVER;
+            case ConnectionDisconnectedReason.IP_BANNED:
+                return agorartc.CONNECTION_CHANGED_REASON_TYPE.CONNECTION_CHANGED_BANNED_BY_SERVER;
+            case ConnectionDisconnectedReason.CHANNEL_BANNED:
+                return agorartc.CONNECTION_CHANGED_REASON_TYPE.CONNECTION_CHANGED_INVALID_CHANNEL_NAME;
+            case ConnectionDisconnectedReason.FALLBACK:
+                return agorartc.CONNECTION_CHANGED_REASON_TYPE.CONNECTION_CHANGED_INTERRUPTED;
+        }
+    }
+
+    public static string2agorartcUSER_OFFLINE_REASON_TYPE(reason: string): agorartc.USER_OFFLINE_REASON_TYPE {
+        switch (reason) {
+            case "Quit":
+                return agorartc.USER_OFFLINE_REASON_TYPE.USER_OFFLINE_QUIT;
+            case "ServerTimeOut":
+                return agorartc.USER_OFFLINE_REASON_TYPE.USER_OFFLINE_DROPPED;
+            case "BecomeAudience":
+                return agorartc.USER_OFFLINE_REASON_TYPE.USER_OFFLINE_BECOME_AUDIENCE;
+            default:
+                return agorartc.USER_OFFLINE_REASON_TYPE.USER_OFFLINE_QUIT;
+        }
+    }
+
+    public static ChannelMediaRelayState2agorartcCHANNEL_MEDIA_RELAY_STATE(state: ChannelMediaRelayState): agorartc.CHANNEL_MEDIA_RELAY_STATE {
+        switch (state) {
+            case ChannelMediaRelayState.RELAY_STATE_IDLE:
+                return agorartc.CHANNEL_MEDIA_RELAY_STATE.RELAY_STATE_IDLE;
+            case ChannelMediaRelayState.RELAY_STATE_CONNECTING:
+                return agorartc.CHANNEL_MEDIA_RELAY_STATE.RELAY_STATE_CONNECTING;
+            case ChannelMediaRelayState.RELAY_STATE_RUNNING:
+                return agorartc.CHANNEL_MEDIA_RELAY_STATE.RELAY_STATE_RUNNING;
+            case ChannelMediaRelayState.RELAY_STATE_FAILURE:
+                return agorartc.CHANNEL_MEDIA_RELAY_STATE.RELAY_STATE_FAILURE;
+        }
+    }
+
+    public static ChannelMediaRelayError2agorartcCHANNEL_MEDIA_RELAY_ERROR(err: ChannelMediaRelayError): agorartc.CHANNEL_MEDIA_RELAY_ERROR {
+        switch (err) {
+            case ChannelMediaRelayError.RELAY_OK:
+                return agorartc.CHANNEL_MEDIA_RELAY_ERROR.RELAY_OK;
+            case ChannelMediaRelayError.SERVER_CONNECTION_LOST:
+                return agorartc.CHANNEL_MEDIA_RELAY_ERROR.RELAY_ERROR_SERVER_CONNECTION_LOST;
+            case ChannelMediaRelayError.SRC_TOKEN_EXPIRED:
+                return agorartc.CHANNEL_MEDIA_RELAY_ERROR.RELAY_ERROR_SRC_TOKEN_EXPIRED;
+            case ChannelMediaRelayError.DEST_TOKEN_EXPIRED:
+                return agorartc.CHANNEL_MEDIA_RELAY_ERROR.RELAY_ERROR_DEST_TOKEN_EXPIRED;
+        }
+    }
+
+    public static ChannelMediaRelayEvent2agorartcCHANNEL_MEDIA_RELAY_EVENT(event: ChannelMediaRelayEvent): agorartc.CHANNEL_MEDIA_RELAY_EVENT {
+        switch (event) {
+            case ChannelMediaRelayEvent.NETWORK_DISCONNECTED:
+                return agorartc.CHANNEL_MEDIA_RELAY_EVENT.RELAY_EVENT_NETWORK_DISCONNECTED;
+            case ChannelMediaRelayEvent.NETWORK_CONNECTED:
+                return agorartc.CHANNEL_MEDIA_RELAY_EVENT.RELAY_EVENT_NETWORK_CONNECTED;
+            case ChannelMediaRelayEvent.PACKET_JOINED_SRC_CHANNEL:
+                return agorartc.CHANNEL_MEDIA_RELAY_EVENT.RELAY_EVENT_PACKET_JOINED_SRC_CHANNEL;
+            case ChannelMediaRelayEvent.PACKET_JOINED_DEST_CHANNEL:
+                return agorartc.CHANNEL_MEDIA_RELAY_EVENT.RELAY_EVENT_PACKET_JOINED_DEST_CHANNEL;
+            case ChannelMediaRelayEvent.PACKET_SENT_TO_DEST_CHANNEL:
+                return agorartc.CHANNEL_MEDIA_RELAY_EVENT.RELAY_EVENT_PACKET_SENT_TO_DEST_CHANNEL;
+            case ChannelMediaRelayEvent.PACKET_RECEIVED_VIDEO_FROM_SRC:
+                return agorartc.CHANNEL_MEDIA_RELAY_EVENT.RELAY_EVENT_PACKET_RECEIVED_VIDEO_FROM_SRC;
+            case ChannelMediaRelayEvent.PACKET_RECEIVED_AUDIO_FROM_SRC:
+                return agorartc.CHANNEL_MEDIA_RELAY_EVENT.RELAY_EVENT_PACKET_RECEIVED_AUDIO_FROM_SRC;
+            case ChannelMediaRelayEvent.PACKET_UPDATE_DEST_CHANNEL:
+                return agorartc.CHANNEL_MEDIA_RELAY_EVENT.RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL;
+            case ChannelMediaRelayEvent.PACKET_UPDATE_DEST_CHANNEL_REFUSED:
+                return agorartc.CHANNEL_MEDIA_RELAY_EVENT.RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL_REFUSED;
+            case ChannelMediaRelayEvent.PACKET_UPDATE_DEST_CHANNEL_NOT_CHANGE:
+                return agorartc.CHANNEL_MEDIA_RELAY_EVENT.RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL_NOT_CHANGE;
         }
     }
 

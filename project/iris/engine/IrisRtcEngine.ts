@@ -10,6 +10,7 @@ import { IrisGlobalVariables } from "../variable/IrisGlobalVariables";
 import { IrisMainClientVariables } from "../variable/IrisMainClientVariables";
 import { IrisSubClientVariables } from "../variable/IrisSubClientVariables";
 import { RtcEngineEventHandler } from "../terra/RtcEngineEventHandler";
+import { IrisAgoraEventHandler } from "../event_handler/IrisAgoraEventHandler";
 
 export type CallApiType = (params: string, paramLength: number, buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any) => number;
 
@@ -23,6 +24,7 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
     public globalVariables: IrisGlobalVariables = null;
     public mainClientVariables: IrisMainClientVariables = null;
     public subClientVariables: IrisSubClientVariables = null;
+    public agoraEventHandler: IrisAgoraEventHandler = null;
 
     constructor() {
         super();
@@ -32,6 +34,7 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
         this.globalVariables = new IrisGlobalVariables();
         this.mainClientVariables = new IrisMainClientVariables();
         this.subClientVariables = new IrisSubClientVariables();
+        this.agoraEventHandler = new IrisAgoraEventHandler(this);
     };
 
     public setEventHandler(event_handler: IrisEventHandler) {
@@ -52,6 +55,8 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
     }
 
     public destruction() {
+        this.agoraEventHandler.destruction();
+
         this._rtcEngine.putAction({
             fun: (next) => {
                 let process = async () => {

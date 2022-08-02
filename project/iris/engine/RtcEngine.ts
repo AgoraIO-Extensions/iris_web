@@ -296,6 +296,7 @@ export class RtcEngine implements IRtcEngine {
                                     else {
                                         let entitiesContainer = this._engine.entitiesContainer;
                                         entitiesContainer.setMainClient(mainClient);
+                                        entitiesContainer.setMainClientEventHandler(new IrisClientEventHandler(mainClient, IrisClientType.kClientMian, this._engine));
                                         let mainClientVariables = this._engine.mainClientVariables;
 
                                         //推送麦克风audio
@@ -318,7 +319,7 @@ export class RtcEngine implements IRtcEngine {
                                                 .catch((reason) => {
                                                     AgoraConsole.error("audio track publish failed");
                                                     AgoraConsole.error(reason);
-                                                    entitiesContainer.removeMainClientTrackEventHandler(audioTrack);
+                                                    entitiesContainer.removeMainClientTrackEventHandlerByTrack(audioTrack);
                                                     entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
                                                 })
                                         }
@@ -345,7 +346,7 @@ export class RtcEngine implements IRtcEngine {
                                                     .catch((reason) => {
                                                         AgoraConsole.error("screen share audio track publish failed");
                                                         AgoraConsole.error(reason);
-                                                        entitiesContainer.removeMainClientTrackEventHandler(audioTrack);
+                                                        entitiesContainer.removeMainClientTrackEventHandlerByTrack(audioTrack);
                                                         entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
                                                     })
                                             }
@@ -371,7 +372,7 @@ export class RtcEngine implements IRtcEngine {
                                                 .catch((reason) => {
                                                     AgoraConsole.error("video track publish failed");
                                                     AgoraConsole.error(reason);
-                                                    entitiesContainer.removeMainClientTrackEventHandler(videoTrack);
+                                                    entitiesContainer.removeMainClientTrackEventHandlerByTrack(videoTrack);
                                                     entitiesContainer.clearMainClientLocalVideoTrack();
                                                 })
                                         }
@@ -397,7 +398,7 @@ export class RtcEngine implements IRtcEngine {
                                                     .catch((reason) => {
                                                         AgoraConsole.error("screen share video track publish failed");
                                                         AgoraConsole.error(reason);
-                                                        entitiesContainer.removeMainClientTrackEventHandler(videoTrack);
+                                                        entitiesContainer.removeMainClientTrackEventHandlerByTrack(videoTrack);
                                                         entitiesContainer.clearMainClientLocalVideoTrack();
                                                     })
                                             }
@@ -500,7 +501,7 @@ export class RtcEngine implements IRtcEngine {
                                     try {
                                         await mainClient.unpublish(track)
                                         AgoraConsole.log(optionName + "(false) changed success");
-                                        entitiesContainer.removeMainClientTrackEventHandler(track);
+                                        entitiesContainer.removeMainClientTrackEventHandlerByTrack(track);
                                         entitiesContainer.removeMainClientLocalAudioTrack(track);
                                     }
                                     catch (reason) {
@@ -518,7 +519,7 @@ export class RtcEngine implements IRtcEngine {
                                     try {
                                         await mainClient.unpublish(track)
                                         AgoraConsole.log(optionName + "(false) changed success");
-                                        entitiesContainer.removeMainClientTrackEventHandler(track);
+                                        entitiesContainer.removeMainClientTrackEventHandlerByTrack(track);
                                         entitiesContainer.setMainClientLocalVideoTrack(null);
                                     }
                                     catch (reason) {
@@ -3362,7 +3363,7 @@ export class RtcEngine implements IRtcEngine {
                                 else {
                                     let entitiesContainer = this._engine.entitiesContainer;
                                     entitiesContainer.addSubClient(connection, subClient);
-
+                                    entitiesContainer.addSubClientEventHandler(connection, new IrisClientEventHandler(subClient, IrisClientType.kClientSub, this._engine));
                                     //推送麦克风audio
                                     let audioTrack: IMicrophoneAudioTrack = trackArray[0] as IMicrophoneAudioTrack;
                                     if (options.publishMicrophoneTrack) {
@@ -3383,7 +3384,7 @@ export class RtcEngine implements IRtcEngine {
                                             .catch((reason) => {
                                                 AgoraConsole.error("audio track publish failed");
                                                 AgoraConsole.error(reason);
-                                                entitiesContainer.removeSubClientTrackEventHandler(connection, audioTrack);
+                                                entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, audioTrack);
                                                 entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack);
                                             })
                                     }
@@ -3410,7 +3411,7 @@ export class RtcEngine implements IRtcEngine {
                                                 .catch((reason) => {
                                                     AgoraConsole.error("screen share audio track publish failed");
                                                     AgoraConsole.error(reason);
-                                                    entitiesContainer.removeSubClientTrackEventHandler(connection, audioTrack);
+                                                    entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, audioTrack);
                                                     entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack);
                                                 })
                                         }
@@ -3436,7 +3437,7 @@ export class RtcEngine implements IRtcEngine {
                                             .catch((reason) => {
                                                 AgoraConsole.error("video track publish failed");
                                                 AgoraConsole.error(reason);
-                                                entitiesContainer.removeSubClientTrackEventHandler(connection, videoTrack);
+                                                entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, videoTrack);
                                                 entitiesContainer.clearSubClientLocalVideoTrack(connection);
                                             })
                                     }
@@ -3462,7 +3463,7 @@ export class RtcEngine implements IRtcEngine {
                                                 .catch((reason) => {
                                                     AgoraConsole.error("screen share video track publish failed");
                                                     AgoraConsole.error(reason);
-                                                    entitiesContainer.removeSubClientTrackEventHandler(connection, videoTrack);
+                                                    entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, videoTrack);
                                                     entitiesContainer.clearSubClientLocalVideoTrack(connection);
                                                 })
                                         }
@@ -3589,7 +3590,7 @@ export class RtcEngine implements IRtcEngine {
                                     try {
                                         await subClient.unpublish(track)
                                         AgoraConsole.log(optionName + "(false) changed success");
-                                        entitiesContainer.removeSubClientTrackEventHandler(connection, track);
+                                        entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, track);
                                         entitiesContainer.removeSubClientLocalAudioTrack(connection, track);
                                     }
                                     catch (reason) {
@@ -3607,7 +3608,7 @@ export class RtcEngine implements IRtcEngine {
                                     try {
                                         await subClient.unpublish(track)
                                         AgoraConsole.log(optionName + "(false) changed success");
-                                        entitiesContainer.removeSubClientTrackEventHandler(connection, track);
+                                        entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, track);
                                         entitiesContainer.clearSubClientLocalVideoTrack(connection);
                                     }
                                     catch (reason) {
