@@ -1,5 +1,5 @@
 
-import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayInfo, ClientRole, ClientRoleOptions, ConnectionState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, RemoteStreamFallbackType, RemoteStreamType, SDK_CODEC, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
+import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayInfo, ClientRole, ClientRoleOptions, ConnectionState, DeviceState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, RemoteStreamFallbackType, RemoteStreamType, SDK_CODEC, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
 import { Argument } from "webpack";
 import * as agorartc from "../terra/rtc_types/Index";
 import { AgoraConsole } from "./AgoraConsole";
@@ -338,4 +338,17 @@ export class AgoraTranslate {
                 return RemoteStreamFallbackType.AUDIO_ONLY;
         }
     }
+
+
+
+    /*************************/
+    public static DeviceState2agorartcMEDIA_DEVICE_STATE_TYPE(state: DeviceState): agorartc.MEDIA_DEVICE_STATE_TYPE {
+        switch (state) {
+            case 'ACTIVE':
+                return agorartc.MEDIA_DEVICE_STATE_TYPE.MEDIA_DEVICE_STATE_ACTIVE;
+            case 'INACTIVE':
+                return agorartc.MEDIA_DEVICE_STATE_TYPE.MEDIA_DEVICE_STATE_DISABLED;
+        }
+    }
+
 }
