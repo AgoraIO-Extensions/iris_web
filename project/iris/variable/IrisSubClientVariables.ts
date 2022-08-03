@@ -8,7 +8,8 @@ export class IrisSubClientVariables {
     //ChannelMediaOptions
     channelMediaOptions: Contaniner<agorartc.ChannelMediaOptions> = new Contaniner<agorartc.ChannelMediaOptions>();
 
-    mergeChannelMediaOptions(connection: agorartc.RtcConnection, options: agorartc.ChannelMediaOptions) {
+    //返回值为合并后万好着呢个版本的ChannelMediaOptions
+    mergeChannelMediaOptions(connection: agorartc.RtcConnection, options: agorartc.ChannelMediaOptions): agorartc.ChannelMediaOptions {
         let channelMediaOptions: agorartc.ChannelMediaOptions = this.channelMediaOptions.getT(connection.channelId, connection.localUid);
         if (channelMediaOptions == null) {
             channelMediaOptions = {};
@@ -18,6 +19,8 @@ export class IrisSubClientVariables {
         for (let key in options) {
             channelMediaOptions[key] = options[key];
         }
+
+        return channelMediaOptions;
     }
 
     enabledAudioVolumeIndications: Contaniner<{ interval: number, smooth: number, reportVad: boolean }> = new Contaniner<{ interval: number, smooth: number, reportVad: boolean }>();

@@ -268,22 +268,116 @@ export class IrisClientEventHandler {
         this._engine.rtcEngineEventHandler.onChannelMediaRelayEvent(event2);
     }
 
-    onEventVolumeIndicator(result: { level: number; uid: UID; }[]): void { }
-    onEventCryptError(): void { }
-    onEventTokenPrivilegeWillExpire(): void { }
-    onEventTokenPrivilegeDidExpire(): void { }
-    onEventNetworkQuality(stats: NetworkQuality): void { }
-    onEventLiveStreamingError(url: string, err: AgoraRTCError): void { }
-    onEventLiveStreamingWarning(url: string, warning: AgoraRTCError): void { }
-    onEventException(event: { code: number; msg: string; uid: UID; }): void { }
-    onEventIsUsingCloudProxy(isUsingProxy: boolean): void { }
-    onEventJoinFallbackToProxy(proxyServer: string): void { }
-    onEventPublishedUserList(users: IAgoraRTCRemoteUser): void { }
+    onEventVolumeIndicator(result: { level: number; uid: UID; }[]): void {
+        let connection: RtcConnection = {
+            channelId: this._client.channelName,
+            localUid: this._client.uid as number
+        };
+
+        let speakers: agorartc.AudioVolumeInfo[] = [];
+        for (let i = 0; i < result.length; i++) {
+            speakers.push(AgoraTranslate.volumeIndicatorResult2agorartcAudioVolumeInfo(result[i]));
+        }
+        let speakerNumber = result.length;
+        /* todo 
+         * - In the local user's callback, `totalVolume` is the sum of the voice volume and audio-mixing volume
+         * of the local user.
+         * - In the remote users' callback, `totalVolume` is the sum of the voice volume and audio-mixing volume
+         * of all the remote speakers.
+        */
+        let totalVolume = 0;
+        this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(connection, speakers, speakerNumber, totalVolume);
+    }
+
+    onEventCryptError(): void {
+        let connection: RtcConnection = {
+            channelId: this._client.channelName,
+            localUid: this._client.uid as number
+        };
+        let errorType: agorartc.ENCRYPTION_ERROR_TYPE = agorartc.ENCRYPTION_ERROR_TYPE.ENCRYPTION_ERROR_INTERNAL_FAILURE;
+        this._engine.rtcEngineEventHandler.onEncryptionErrorEx(connection, errorType);
+    }
+
+    onEventTokenPrivilegeWillExpire(): void {
+        let connection: RtcConnection = {
+            channelId: this._client.channelName,
+            localUid: this._client.uid as number
+        };
+
+        let token: string = "";
+        if (this._clientType == IrisClientType.kClientMian) {
+            if (this._engine.mainClientVariables.token) {
+                token = this._engine.mainClientVariables.token
+            }
+        }
+        else {
+            let options = this._engine.subClientVariables.channelMediaOptions.getT(this._client.channelName, this._client.uid);
+            if (options && options.token) {
+                token = options.token;
+            }
+        }
+        this._engine.rtcEngineEventHandler.onTokenPrivilegeWillExpireEx(connection, token);
+    }
+
+
+    onEventTokenPrivilegeDidExpire(): void {
+        let connection: RtcConnection = {
+            channelId: this._client.channelName,
+            localUid: this._client.uid as number
+        };
+        this._engine.rtcEngineEventHandler.onRequestTokenEx(connection);
+    }
+
+    onEventNetworkQuality(stats: NetworkQuality): void {
+        //不能对应 onNetworkQuality, 因为这里是得到自己的网络状况，而 onNetworkQuality 是别人的网络状况
+        //暂时没有找到对应的回调
+    }
+
+    //todo 后边再做
+    onEventLiveStreamingError(url: string, err: AgoraRTCError): void {
+
+
+    }
+
+    //todo 后边再做
+    onEventLiveStreamingWarning(url: string, warning: AgoraRTCError): void {
+
+    }
+
+
+    onEventException(event: { code: number; msg: string; uid: UID; }): void {
+        //触发不了onError和onWarning， 错误吗几乎没有重合的部分
+
+    }
+
+    onEventIsUsingCloudProxy(isUsingProxy: boolean): void {
+        //todo 暂时没有找到对应的回调
+    }
+
+    onEventJoinFallbackToProxy(proxyServer: string): void {
+        //todo 暂时没有找到对应的回调
+    }
+
+    onEventPublishedUserList(users: IAgoraRTCRemoteUser): void {
+        //todo 暂时没有找到对应的回调
+    }
+
+    /*被外界主动调用的哦*/
+    onJoinChannedlSucess(elapsed: number) {
+        let connection: RtcConnection = {
+            channelId: this._client.channelName,
+            localUid: this._client.uid as number
+        };
+        this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(connection, elapsed);
+    }
+
+    //这里需要传入connection ，而不是自己内部生成，是因为这个时候已经leaveChannel，可能已经没有channelName和uid了
+    onLeaveChannel(connection: RtcConnection, stats: agorartc.RtcStats) {
+        this._engine.rtcEngineEventHandler.onLeaveChannelEx(connection, stats);
+    }
 
 
     destruction() {
         this._client.removeAllListeners();
     }
-
-
 }

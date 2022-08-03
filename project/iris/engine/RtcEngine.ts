@@ -249,6 +249,8 @@ export class RtcEngine implements IRtcEngine {
             publishCameraTrack: true,
             publishSecondaryCameraTrack: false,
             publishMicrophoneTrack: true,
+            autoSubscribeAudio: true,
+            autoSubscribeVideo: true,
             clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
             defaultVideoStreamType: agorartc.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH,
             channelProfile: agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
@@ -256,185 +258,350 @@ export class RtcEngine implements IRtcEngine {
         return this.joinChannel2(token, channelId, uid, options);
     }
 
-    //todo 这个函数要重写
     joinChannel2(token: string, channelId: string, uid: number, options: agorartc.ChannelMediaOptions): number {
         if (this._engine.mainClientVariables.joinChanneled == true) {
             AgoraConsole.error("already call joinChannel");
             return -agorartc.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED;
         }
-        else {
+  
             this._engine.mainClientVariables.joinChanneled = true;
             this._actonQueue.putAction({
                 fun: (token: string, channelId: string, uid: number, options: agorartc.ChannelMediaOptions, next) => {
 
-                    this._engine.mainClientVariables.startPreviewed = false;
-                    let mainClientVariables: IrisMainClientVariables = this._engine.mainClientVariables;
-                    let globalVariables = this._engine.globalVariables;
-                    mainClientVariables.mergeChannelMediaOptions(options);
-
-                    let mainClient: IAgoraRTCClient = this._createMainClient();
-
-                    mainClient.join(globalVariables.appId, channelId, token ? token : null, uid)
-                        .then((uid: UID) => {
+                    let processJoinChannel = async () => {
+                        this._engine.mainClientVariables.startPreviewed = false;
+                        let mainClientVariables: IrisMainClientVariables = this._engine.mainClientVariables;
+                        let globalVariables = this._engine.globalVariables;
+                        mainClientVariables.mergeChannelMediaOptions(options);
+                        let mainClient: IAgoraRTCClient = this._createMainClient();
+                        try {
+                            uid = await mainClient.join(globalVariables.appId, channelId, token ? token : null, uid) as number;
+                            this._engine.mainClientVariables.token = token;
                             let audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary;
                             let videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
                             let clientType = IrisClientType.kClientMian;
 
-                            this.getOrCreateAudioAndVideoTrack(
-                                audioSource,
-                                videoSource,
-                                clientType,
-                                (err: any, trackArray: [ILocalAudioTrack, ILocalVideoTrack]) => {
-                                    if (err) {
-                                        AgoraConsole.error("join channel failed. create audio And videoTrack failed");
-                                        AgoraConsole.error(err);
-                                        mainClient.leave().then(() => { }).catch(() => { }).finally(() => {
-                                            this._engine.entitiesContainer.clearMainClientAll();
-                                            next();
-                                        });
+                            try {
+                                let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, clientType);
+                                let entitiesContainer = this._engine.entitiesContainer;
+                                entitiesContainer.setMainClient(mainClient);
+                                let clientEventHandler = new IrisClientEventHandler(mainClient, IrisClientType.kClientMian, this._engine);
+                                entitiesContainer.setMainClientEventHandler(clientEventHandler);
+                                clientEventHandler.onJoinChannedlSucess(0);
+
+                                //joinChannel success咯
+                                let mainClientVariables = this._engine.mainClientVariables;
+                                //推送麦克风audio
+                                let audioTrack: IMicrophoneAudioTrack = trackArray[0] as IMicrophoneAudioTrack;
+                                if (mainClientVariables.publishMicrophoneTrack) {
+
+                                    entitiesContainer.addMainClientLocalAudioTrack({ type: audioSource, track: audioTrack });
+                                    let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                                        channelName: channelId,
+                                        client: mainClient,
+                                        track: audioTrack,
+                                        trackType: 'ILocalTrack',
+                                    }, this._engine);
+                                    entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+
+                                    try {
+                                        await mainClient.publish(audioTrack)
                                     }
-                                    else {
-                                        let entitiesContainer = this._engine.entitiesContainer;
-                                        entitiesContainer.setMainClient(mainClient);
-                                        entitiesContainer.setMainClientEventHandler(new IrisClientEventHandler(mainClient, IrisClientType.kClientMian, this._engine));
-                                        let mainClientVariables = this._engine.mainClientVariables;
+                                    catch (reason) {
+                                        AgoraConsole.error("audio track publish failed");
+                                        AgoraConsole.error(reason);
+                                        entitiesContainer.removeMainClientTrackEventHandlerByTrack(audioTrack);
+                                        entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
+                                    }
+                                }
 
-                                        //推送麦克风audio
-                                        let audioTrack: IMicrophoneAudioTrack = trackArray[0] as IMicrophoneAudioTrack;
-                                        if (mainClientVariables.publishMicrophoneTrack) {
+                                //推送屏幕共享audio
+                                if (mainClientVariables.publishScreenCaptureAudio) {
+                                    let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
+                                    if (audioTrackPackage) {
+                                        let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
 
-                                            entitiesContainer.addMainClientLocalAudioTrack({ type: audioSource, track: audioTrack });
-                                            let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
-                                                channelName: channelId,
-                                                client: mainClient,
-                                                track: audioTrack,
-                                                trackType: 'ILocalTrack',
-                                            }, this._engine);
-                                            entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+                                        entitiesContainer.addMainClientLocalAudioTrack({ type: IrisAudioSourceType.kAudioSourceTypeScreenPrimary, track: audioTrack });
+                                        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                                            channelName: channelId,
+                                            client: mainClient,
+                                            track: audioTrack,
+                                            trackType: 'ILocalTrack',
+                                        }, this._engine);
+                                        entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
 
-                                            mainClient.publish(audioTrack)
-                                                .then(() => {
-                                                    AgoraConsole.log("audio track publish sucess");
-                                                })
-                                                .catch((reason) => {
-                                                    AgoraConsole.error("audio track publish failed");
-                                                    AgoraConsole.error(reason);
-                                                    entitiesContainer.removeMainClientTrackEventHandlerByTrack(audioTrack);
-                                                    entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
-                                                })
+                                        try {
+                                            await mainClient.publish(audioTrack)
                                         }
 
-                                        //推送屏幕共享audio
-                                        if (mainClientVariables.publishScreenCaptureAudio) {
-                                            let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
-                                            if (audioTrackPackage) {
-                                                let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
-
-                                                entitiesContainer.addMainClientLocalAudioTrack({ type: IrisAudioSourceType.kAudioSourceTypeScreenPrimary, track: audioTrack });
-                                                let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
-                                                    channelName: channelId,
-                                                    client: mainClient,
-                                                    track: audioTrack,
-                                                    trackType: 'ILocalTrack',
-                                                }, this._engine);
-                                                entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
-
-                                                mainClient.publish(audioTrack)
-                                                    .then(() => {
-                                                        AgoraConsole.log("screen share audio track publish sucess");
-                                                    })
-                                                    .catch((reason) => {
-                                                        AgoraConsole.error("screen share audio track publish failed");
-                                                        AgoraConsole.error(reason);
-                                                        entitiesContainer.removeMainClientTrackEventHandlerByTrack(audioTrack);
-                                                        entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
-                                                    })
-                                            }
+                                        catch (reason) {
+                                            AgoraConsole.error("screen share audio track publish failed");
+                                            AgoraConsole.error(reason);
+                                            entitiesContainer.removeMainClientTrackEventHandlerByTrack(audioTrack);
+                                            entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
                                         }
+                                    }
+                                }
 
-                                        //推送摄像头video
-                                        let videoTrack: ICameraVideoTrack = trackArray[1] as ICameraVideoTrack;
-                                        if (mainClientVariables.publishCameraTrack) {
+                                //推送摄像头video
+                                let videoTrack: ICameraVideoTrack = trackArray[1] as ICameraVideoTrack;
+                                if (mainClientVariables.publishCameraTrack) {
 
-                                            entitiesContainer.setMainClientLocalVideoTrack({ type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary, track: videoTrack });
-                                            let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
-                                                channelName: channelId,
-                                                client: mainClient,
-                                                track: videoTrack,
-                                                trackType: 'ILocalVideoTrack',
-                                            }, this._engine);
-                                            entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+                                    entitiesContainer.setMainClientLocalVideoTrack({ type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary, track: videoTrack });
+                                    let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                                        channelName: channelId,
+                                        client: mainClient,
+                                        track: videoTrack,
+                                        trackType: 'ILocalVideoTrack',
+                                    }, this._engine);
+                                    entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
 
+                                    try {
+                                        await mainClient.publish(videoTrack)
+                                    }
+                                    catch (reason) {
+                                        AgoraConsole.error("video track publish failed");
+                                        AgoraConsole.error(reason);
+                                        entitiesContainer.removeMainClientTrackEventHandlerByTrack(videoTrack);
+                                        entitiesContainer.clearMainClientLocalVideoTrack();
+                                    }
+                                }
+                                else if (mainClientVariables.publishScreenTrack || mainClientVariables.publishScreenCaptureVideo) {
+                                    //推送屏幕共享流
+                                    let videoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+                                    if (videoTrackPackage) {
+                                        let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
+
+                                        entitiesContainer.setMainClientLocalVideoTrack({ type: IrisVideoSourceType.kVideoSourceTypeScreenPrimary, track: videoTrack });
+                                        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                                            channelName: channelId,
+                                            client: mainClient,
+                                            track: audioTrack,
+                                            trackType: "ILocalVideoTrack",
+                                        }, this._engine);
+                                        entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+
+                                        try {
                                             mainClient.publish(videoTrack)
-                                                .then(() => {
-                                                    AgoraConsole.log("video track publish sucess");
-                                                })
-                                                .catch((reason) => {
-                                                    AgoraConsole.error("video track publish failed");
-                                                    AgoraConsole.error(reason);
-                                                    entitiesContainer.removeMainClientTrackEventHandlerByTrack(videoTrack);
-                                                    entitiesContainer.clearMainClientLocalVideoTrack();
-                                                })
                                         }
-                                        else if (mainClientVariables.publishScreenTrack || mainClientVariables.publishScreenCaptureVideo) {
-                                            //推送屏幕共享流
-                                            let videoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
-                                            if (videoTrackPackage) {
-                                                let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
-
-                                                entitiesContainer.setMainClientLocalVideoTrack({ type: IrisVideoSourceType.kVideoSourceTypeScreenPrimary, track: videoTrack });
-                                                let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
-                                                    channelName: channelId,
-                                                    client: mainClient,
-                                                    track: audioTrack,
-                                                    trackType: "ILocalVideoTrack",
-                                                }, this._engine);
-                                                entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
-
-                                                mainClient.publish(videoTrack)
-                                                    .then(() => {
-                                                        AgoraConsole.log("screen share video track publish sucess");
-                                                    })
-                                                    .catch((reason) => {
-                                                        AgoraConsole.error("screen share video track publish failed");
-                                                        AgoraConsole.error(reason);
-                                                        entitiesContainer.removeMainClientTrackEventHandlerByTrack(videoTrack);
-                                                        entitiesContainer.clearMainClientLocalVideoTrack();
-                                                    })
-                                            }
+                                        catch (reason) {
+                                            AgoraConsole.error("screen share video track publish failed");
+                                            AgoraConsole.error(reason);
+                                            entitiesContainer.removeMainClientTrackEventHandlerByTrack(videoTrack);
+                                            entitiesContainer.clearMainClientLocalVideoTrack();
                                         }
-
-
-                                        if (options.clientRoleType != null) {
-                                            let roleOptions: ClientRoleOptions = null;
-                                            if (options.audienceLatencyLevel != null) {
-                                                roleOptions = AgoraTranslate.agorartcAUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(options.audienceLatencyLevel);
-                                            }
-
-                                            mainClient.setClientRole(
-                                                AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(options.clientRoleType),
-                                                roleOptions
-                                            ).then(() => { }).catch(() => { }).finally(() => { })
-                                        }
-
-                                        next();
                                     }
-                                },
-                            )
-                        })
-                        .catch((reason: any) => {
+                                }
+
+                                //创建mainClient的时候已经读取了这个值了，所以不需要再set一下呢
+                                // if (options.clientRoleType != null) {
+                                //     let roleOptions: ClientRoleOptions = null;
+                                //     if (options.audienceLatencyLevel != null) {
+                                //         roleOptions = AgoraTranslate.agorartcAUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(options.audienceLatencyLevel);
+                                //     }
+
+                                //     try {
+                                //         mainClient.setClientRole(
+                                //             AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(options.clientRoleType),
+                                //             roleOptions
+                                //         )
+                                //     }
+                                //     catch (e) {
+
+                                //     }
+                                // }
+                            }
+                            catch (e) {
+                                AgoraConsole.error("join channel failed. create audio And videoTrack failed");
+                                AgoraConsole.error(e);
+                                mainClient.leave().then(() => { }).catch(() => { }).finally(() => {
+                                    this._engine.entitiesContainer.clearMainClientAll();
+                                });
+                                this._engine.mainClientVariables.joinChanneled = false;
+                            }
+                        }
+                        catch (reason) {
                             AgoraConsole.error("join channel failed: join failed");
-                            AgoraConsole.error(reason);
+                            reason && AgoraConsole.error(reason);
+                            this._engine.rtcEngineEventHandler.onError(agorartc.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED, "");
                             this._engine.mainClientVariables.joinChanneled = false;
                             this._engine.entitiesContainer.clearMainClientAll();
-                            next();
-                        })
+                        }
+
+                        next();
+                    }
+
+                    setTimeout(processJoinChannel, 0);
+
+                    // this._engine.mainClientVariables.startPreviewed = false;
+                    // let mainClientVariables: IrisMainClientVariables = this._engine.mainClientVariables;
+                    // let globalVariables = this._engine.globalVariables;
+                    // mainClientVariables.mergeChannelMediaOptions(options);
+
+                    // let mainClient: IAgoraRTCClient = this._createMainClient();
+
+                    // mainClient.join(globalVariables.appId, channelId, token ? token : null, uid)
+                    //     .then((uid: UID) => {
+                    //         this._engine.mainClientVariables.token = token;
+                    //         let audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary;
+                    //         let videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
+                    //         let clientType = IrisClientType.kClientMian;
+
+                    //         this.getOrCreateAudioAndVideoTrack(
+                    //             audioSource,
+                    //             videoSource,
+                    //             clientType,
+                    //             (err: any, trackArray: [ILocalAudioTrack, ILocalVideoTrack]) => {
+                    //                 if (err) {
+                    //                     AgoraConsole.error("join channel failed. create audio And videoTrack failed");
+                    //                     AgoraConsole.error(err);
+                    //                     mainClient.leave().then(() => { }).catch(() => { }).finally(() => {
+                    //                         this._engine.entitiesContainer.clearMainClientAll();
+                    //                         next();
+                    //                     });
+                    //                 }
+                    //                 else {
+                    //                     let entitiesContainer = this._engine.entitiesContainer;
+                    //                     entitiesContainer.setMainClient(mainClient);
+                    //                     entitiesContainer.setMainClientEventHandler(new IrisClientEventHandler(mainClient, IrisClientType.kClientMian, this._engine));
+                    //                     let mainClientVariables = this._engine.mainClientVariables;
+
+                    //                     //推送麦克风audio
+                    //                     let audioTrack: IMicrophoneAudioTrack = trackArray[0] as IMicrophoneAudioTrack;
+                    //                     if (mainClientVariables.publishMicrophoneTrack) {
+
+                    //                         entitiesContainer.addMainClientLocalAudioTrack({ type: audioSource, track: audioTrack });
+                    //                         let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                    //                             channelName: channelId,
+                    //                             client: mainClient,
+                    //                             track: audioTrack,
+                    //                             trackType: 'ILocalTrack',
+                    //                         }, this._engine);
+                    //                         entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+
+                    //                         mainClient.publish(audioTrack)
+                    //                             .then(() => {
+                    //                                 AgoraConsole.log("audio track publish sucess");
+                    //                             })
+                    //                             .catch((reason) => {
+                    //                                 AgoraConsole.error("audio track publish failed");
+                    //                                 AgoraConsole.error(reason);
+                    //                                 entitiesContainer.removeMainClientTrackEventHandlerByTrack(audioTrack);
+                    //                                 entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
+                    //                             })
+                    //                     }
+
+                    //                     //推送屏幕共享audio
+                    //                     if (mainClientVariables.publishScreenCaptureAudio) {
+                    //                         let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
+                    //                         if (audioTrackPackage) {
+                    //                             let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
+
+                    //                             entitiesContainer.addMainClientLocalAudioTrack({ type: IrisAudioSourceType.kAudioSourceTypeScreenPrimary, track: audioTrack });
+                    //                             let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                    //                                 channelName: channelId,
+                    //                                 client: mainClient,
+                    //                                 track: audioTrack,
+                    //                                 trackType: 'ILocalTrack',
+                    //                             }, this._engine);
+                    //                             entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+
+                    //                             mainClient.publish(audioTrack)
+                    //                                 .then(() => {
+                    //                                     AgoraConsole.log("screen share audio track publish sucess");
+                    //                                 })
+                    //                                 .catch((reason) => {
+                    //                                     AgoraConsole.error("screen share audio track publish failed");
+                    //                                     AgoraConsole.error(reason);
+                    //                                     entitiesContainer.removeMainClientTrackEventHandlerByTrack(audioTrack);
+                    //                                     entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
+                    //                                 })
+                    //                         }
+                    //                     }
+
+                    //                     //推送摄像头video
+                    //                     let videoTrack: ICameraVideoTrack = trackArray[1] as ICameraVideoTrack;
+                    //                     if (mainClientVariables.publishCameraTrack) {
+
+                    //                         entitiesContainer.setMainClientLocalVideoTrack({ type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary, track: videoTrack });
+                    //                         let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                    //                             channelName: channelId,
+                    //                             client: mainClient,
+                    //                             track: videoTrack,
+                    //                             trackType: 'ILocalVideoTrack',
+                    //                         }, this._engine);
+                    //                         entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+
+                    //                         mainClient.publish(videoTrack)
+                    //                             .then(() => {
+                    //                                 AgoraConsole.log("video track publish sucess");
+                    //                             })
+                    //                             .catch((reason) => {
+                    //                                 AgoraConsole.error("video track publish failed");
+                    //                                 AgoraConsole.error(reason);
+                    //                                 entitiesContainer.removeMainClientTrackEventHandlerByTrack(videoTrack);
+                    //                                 entitiesContainer.clearMainClientLocalVideoTrack();
+                    //                             })
+                    //                     }
+                    //                     else if (mainClientVariables.publishScreenTrack || mainClientVariables.publishScreenCaptureVideo) {
+                    //                         //推送屏幕共享流
+                    //                         let videoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+                    //                         if (videoTrackPackage) {
+                    //                             let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
+
+                    //                             entitiesContainer.setMainClientLocalVideoTrack({ type: IrisVideoSourceType.kVideoSourceTypeScreenPrimary, track: videoTrack });
+                    //                             let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                    //                                 channelName: channelId,
+                    //                                 client: mainClient,
+                    //                                 track: audioTrack,
+                    //                                 trackType: "ILocalVideoTrack",
+                    //                             }, this._engine);
+                    //                             entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+
+                    //                             mainClient.publish(videoTrack)
+                    //                                 .then(() => {
+                    //                                     AgoraConsole.log("screen share video track publish sucess");
+                    //                                 })
+                    //                                 .catch((reason) => {
+                    //                                     AgoraConsole.error("screen share video track publish failed");
+                    //                                     AgoraConsole.error(reason);
+                    //                                     entitiesContainer.removeMainClientTrackEventHandlerByTrack(videoTrack);
+                    //                                     entitiesContainer.clearMainClientLocalVideoTrack();
+                    //                                 })
+                    //                         }
+                    //                     }
+
+
+                    //                     if (options.clientRoleType != null) {
+                    //                         let roleOptions: ClientRoleOptions = null;
+                    //                         if (options.audienceLatencyLevel != null) {
+                    //                             roleOptions = AgoraTranslate.agorartcAUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(options.audienceLatencyLevel);
+                    //                         }
+
+                    //                         mainClient.setClientRole(
+                    //                             AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(options.clientRoleType),
+                    //                             roleOptions
+                    //                         ).then(() => { }).catch(() => { }).finally(() => { })
+                    //                     }
+
+                    //                     next();
+                    //                 }
+                    //             },
+                    //         )
+                    //     })
+                    //     .catch((reason: any) => {
+                    //         AgoraConsole.error("join channel failed: join failed");
+                    //         AgoraConsole.error(reason);
+                    //         this._engine.mainClientVariables.joinChanneled = false;
+                    //         this._engine.entitiesContainer.clearMainClientAll();
+                    //         next();
+                    //     })
                 },
                 args: [token, channelId, uid, options]
             })
 
             return 0;
-        }
+        
     }
 
     updateChannelMediaOptions(options: agorartc.ChannelMediaOptions): number {
@@ -616,6 +783,7 @@ export class RtcEngine implements IRtcEngine {
                     if (options.token != null) {
                         try {
                             await mainClient.renewToken(options.token);
+                            //这里的新token已经在 fun 的第一行被保存了
                         }
                         catch (e) {
                             AgoraConsole.error("renewToken failed");
@@ -649,21 +817,28 @@ export class RtcEngine implements IRtcEngine {
             AgoraConsole.error("you must join channel before you call this method");
             return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
         }
+
         this._engine.mainClientVariables.joinChanneled = false;
         this._actonQueue.putAction({
             fun: (options: agorartc.LeaveChannelOptions, next) => {
                 let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
                 if (mainClient) {
                     //todo 读取 options
-
+                    
+                    //为了防止离开频道后丢失了channelName和uid，所以需要先保存一下
+                    let con:agorartc.RtcConnection = {
+                        channelId:mainClient.channelName,
+                        localUid:mainClient.uid as number
+                    };
                     mainClient.leave()
                         .then(() => {
+                            this._engine.entitiesContainer.getMainClientEventHandler()?.onLeaveChannel(con, new agorartc.RtcStats());
                             this._engine.entitiesContainer.clearMainClientAll();
                         })
                         .catch((reason) => {
                             AgoraConsole.error('leaveChannel failed');
-                            AgoraConsole.error(reason);
-                            this._engine.mainClientVariables.joinChanneled = true;
+                            reason&& AgoraConsole.error(reason);
+                            this._engine.rtcEngineEventHandler.onError(agorartc.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED,"");
                         })
                         .finally(() => {
                             next();
@@ -682,9 +857,36 @@ export class RtcEngine implements IRtcEngine {
     renewToken(token: string): number {
         this._actonQueue.putAction({
             fun: (token: string, next) => {
-                this._engine.entitiesContainer.getMainClient()?.renewToken(token);
+                let mainClient = this._engine.entitiesContainer.getMainClient();
+                if (mainClient) {
+                    mainClient.renewToken(token)
+                        .then(() => {
+                            AgoraConsole.log("mainClient renewToken sucess");
+                            this._engine.mainClientVariables.token = token;
+                        })
+                        .catch((reason) => {
+                            AgoraConsole.error("mainClient renewToken failed");
+                            reason && AgoraConsole.error(reason);
+                        })
+                }
+
                 this._engine.entitiesContainer.getSubClients().walkT((channelId: string, uid: UID, t: IAgoraRTCClient) => {
-                    t.renewToken(token);
+                    t.renewToken(token)
+                        .then(() => {
+                            AgoraConsole.log("subClient renewToken sucess");
+                            let connection: RtcConnection = {
+                                channelId: channelId,
+                                localUid: uid as number
+                            };
+                            let channelMediaOptions: agorartc.ChannelMediaOptions = {
+                                token: token
+                            };
+                            this._engine.subClientVariables.mergeChannelMediaOptions(connection, channelMediaOptions);
+                        })
+                        .catch((reason) => {
+                            AgoraConsole.error("subClient renewToken failed");
+                            reason && AgoraConsole.error(reason);
+                        })
                 })
                 next();
             },
@@ -3319,16 +3521,20 @@ export class RtcEngine implements IRtcEngine {
 
         this._actonQueue.putAction({
             fun: (token: string, connection: agorartc.RtcConnection, options: agorartc.ChannelMediaOptions, next) => {
-                let subClientVariables: IrisSubClientVariables = this._engine.subClientVariables;
-                let globalVariables = this._engine.globalVariables;
-                subClientVariables.mergeChannelMediaOptions(connection, options);
 
-                let subClient: IAgoraRTCClient = this._createSubClient(connection);
+                let processJoinChannel = async () => {
+                    let subClientVariables: IrisSubClientVariables = this._engine.subClientVariables;
+                    let globalVariables = this._engine.globalVariables;
+                    let fullOptions = subClientVariables.mergeChannelMediaOptions(connection, options);
+                    fullOptions.token = token;
+    
+                    let subClient: IAgoraRTCClient = this._createSubClient(connection);
+                    
+                    try{
 
-                subClient.join(globalVariables.appId, connection.channelId, token ? token : null, connection.localUid)
-                    .then((uid: UID) => {
-
+                        let uid = await subClient.join(globalVariables.appId, connection.channelId, token ? token : null, connection.localUid)
                         connection.localUid = uid as number;
+                     
                         let audioSource = IrisAudioSourceType.kAudioSourceTypeUnknow;
                         let videoSource = IrisVideoSourceType.kVideoSourceTypeUnknown;
                         let clientType = IrisClientType.kClientSub;
@@ -3347,152 +3553,313 @@ export class RtcEngine implements IRtcEngine {
                             videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
                         }
 
-                        this.getOrCreateAudioAndVideoTrack(
-                            audioSource,
-                            videoSource,
-                            clientType,
-                            (err: any, trackArray: [ILocalAudioTrack, ILocalVideoTrack]) => {
-                                if (err) {
-                                    AgoraConsole.error("join channelEx failed. create audio And videoTrack failed");
-                                    AgoraConsole.error(err);
-                                    subClient.leave().then(() => { }).catch(() => { }).finally(() => {
-                                        this._engine.entitiesContainer.clearSubClientAll(connection);
-                                        next();
-                                    });
+                        try{
+                            let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, clientType);
+                            let entitiesContainer = this._engine.entitiesContainer;
+                            entitiesContainer.addSubClient(connection, subClient);
+                            let subClientEventHandler = new IrisClientEventHandler(subClient, IrisClientType.kClientSub, this._engine);
+                            entitiesContainer.addSubClientEventHandler(connection, subClientEventHandler);
+                            subClientEventHandler.onJoinChannedlSucess(0);
+                            
+                            // 推送麦克风audio
+                            let audioTrack: IMicrophoneAudioTrack = trackArray[0] as IMicrophoneAudioTrack;
+                            if (options.publishMicrophoneTrack) {
+
+                                entitiesContainer.addSubClientLocalAudioTrack(connection, { type: audioSource, track: audioTrack });
+                                let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                                    channelName: connection.channelId,
+                                    client: subClient,
+                                    track: audioTrack,
+                                    trackType: 'ILocalTrack',
+                                }, this._engine);
+                                entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
+
+                                try{
+                                    await subClient.publish(audioTrack)
                                 }
-                                else {
-                                    let entitiesContainer = this._engine.entitiesContainer;
-                                    entitiesContainer.addSubClient(connection, subClient);
-                                    entitiesContainer.addSubClientEventHandler(connection, new IrisClientEventHandler(subClient, IrisClientType.kClientSub, this._engine));
-                                    //推送麦克风audio
-                                    let audioTrack: IMicrophoneAudioTrack = trackArray[0] as IMicrophoneAudioTrack;
-                                    if (options.publishMicrophoneTrack) {
-
-                                        entitiesContainer.addSubClientLocalAudioTrack(connection, { type: audioSource, track: audioTrack });
-                                        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
-                                            channelName: connection.channelId,
-                                            client: subClient,
-                                            track: audioTrack,
-                                            trackType: 'ILocalTrack',
-                                        }, this._engine);
-                                        entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
-
-                                        subClient.publish(audioTrack)
-                                            .then(() => {
-                                                AgoraConsole.log("audio track publish sucess");
-                                            })
-                                            .catch((reason) => {
-                                                AgoraConsole.error("audio track publish failed");
-                                                AgoraConsole.error(reason);
-                                                entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, audioTrack);
-                                                entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack);
-                                            })
-                                    }
-
-                                    //推送屏幕共享audio
-                                    if (options.publishScreenCaptureAudio) {
-                                        let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
-                                        if (audioTrackPackage) {
-                                            let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
-
-                                            entitiesContainer.addSubClientLocalAudioTrack(connection, { type: IrisAudioSourceType.kAudioSourceTypeScreenPrimary, track: audioTrack });
-                                            let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
-                                                channelName: connection.channelId,
-                                                client: subClient,
-                                                track: audioTrack,
-                                                trackType: 'ILocalTrack',
-                                            }, this._engine);
-                                            entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
-
-                                            subClient.publish(audioTrack)
-                                                .then(() => {
-                                                    AgoraConsole.log("screen share audio track publish sucess");
-                                                })
-                                                .catch((reason) => {
-                                                    AgoraConsole.error("screen share audio track publish failed");
-                                                    AgoraConsole.error(reason);
-                                                    entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, audioTrack);
-                                                    entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack);
-                                                })
-                                        }
-                                    }
-
-                                    //推送摄像头video
-                                    let videoTrack: ICameraVideoTrack = trackArray[1] as ICameraVideoTrack;
-                                    if (options.publishCameraTrack) {
-
-                                        entitiesContainer.setSubClientLocalVideoTrack(connection, { type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary, track: videoTrack });
-                                        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
-                                            channelName: connection.channelId,
-                                            client: subClient,
-                                            track: videoTrack,
-                                            trackType: 'ILocalVideoTrack',
-                                        }, this._engine);
-                                        entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
-
-                                        subClient.publish(videoTrack)
-                                            .then(() => {
-                                                AgoraConsole.log("video track publish sucess");
-                                            })
-                                            .catch((reason) => {
-                                                AgoraConsole.error("video track publish failed");
-                                                AgoraConsole.error(reason);
-                                                entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, videoTrack);
-                                                entitiesContainer.clearSubClientLocalVideoTrack(connection);
-                                            })
-                                    }
-                                    else if (options.publishScreenTrack || options.publishScreenCaptureVideo) {
-                                        //推送屏幕共享流
-                                        let videoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
-                                        if (videoTrackPackage) {
-                                            let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
-
-                                            entitiesContainer.setSubClientLocalVideoTrack(connection, { type: IrisVideoSourceType.kVideoSourceTypeScreenPrimary, track: videoTrack });
-                                            let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
-                                                channelName: connection.channelId,
-                                                client: subClient,
-                                                track: audioTrack,
-                                                trackType: "ILocalVideoTrack",
-                                            }, this._engine);
-                                            entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
-
-                                            subClient.publish(videoTrack)
-                                                .then(() => {
-                                                    AgoraConsole.log("screen share video track publish sucess");
-                                                })
-                                                .catch((reason) => {
-                                                    AgoraConsole.error("screen share video track publish failed");
-                                                    AgoraConsole.error(reason);
-                                                    entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, videoTrack);
-                                                    entitiesContainer.clearSubClientLocalVideoTrack(connection);
-                                                })
-                                        }
-                                    }
-
-                                    if (options.clientRoleType != null) {
-                                        let roleOptions: ClientRoleOptions = null;
-                                        if (options.audienceLatencyLevel != null) {
-                                            roleOptions = AgoraTranslate.agorartcAUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(options.audienceLatencyLevel);
-                                        }
-
-                                        subClient.setClientRole(
-                                            AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(options.clientRoleType),
-                                            roleOptions
-                                        ).then(() => { }).catch(() => { }).finally(() => { })
-                                    }
-
-                                    next();
+                                catch(reason) {
+                                    AgoraConsole.error("audio track publish failed");
+                                    AgoraConsole.error(reason);
+                                    entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, audioTrack);
+                                    entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack);
                                 }
-                            },
-                        )
-                    })
-                    .catch((reason: any) => {
-                        AgoraConsole.error("join channel failed: join failed");
+                            }
+
+                            // //推送屏幕共享audio
+                            if (options.publishScreenCaptureAudio) {
+                                let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
+                                if (audioTrackPackage) {
+                                    let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
+
+                                    entitiesContainer.addSubClientLocalAudioTrack(connection, { type: IrisAudioSourceType.kAudioSourceTypeScreenPrimary, track: audioTrack });
+                                    let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                                        channelName: connection.channelId,
+                                        client: subClient,
+                                        track: audioTrack,
+                                        trackType: 'ILocalTrack',
+                                    }, this._engine);
+                                    entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
+
+                                    try{
+                                        await subClient.publish(audioTrack)
+                                    }
+                                    catch(reason)  {
+                                        AgoraConsole.error("screen share audio track publish failed");
+                                        AgoraConsole.error(reason);
+                                        entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, audioTrack);
+                                        entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack);
+                                    }
+                                }
+                            }
+
+                            // //推送摄像头video
+                            let videoTrack: ICameraVideoTrack = trackArray[1] as ICameraVideoTrack;
+                            if (options.publishCameraTrack) {
+
+                                entitiesContainer.setSubClientLocalVideoTrack(connection, { type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary, track: videoTrack });
+                                let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                                    channelName: connection.channelId,
+                                    client: subClient,
+                                    track: videoTrack,
+                                    trackType: 'ILocalVideoTrack',
+                                }, this._engine);
+                                entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
+
+                                try{ 
+                                    await subClient.publish(videoTrack)
+                                }
+                                catch(reason) {
+                                    AgoraConsole.error("video track publish failed");
+                                    AgoraConsole.error(reason);
+                                    entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, videoTrack);
+                                    entitiesContainer.clearSubClientLocalVideoTrack(connection);
+                                }
+                            }
+                            else if (options.publishScreenTrack || options.publishScreenCaptureVideo) {
+                                //推送屏幕共享流
+                                let videoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+                                if (videoTrackPackage) {
+                                    let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
+
+                                    entitiesContainer.setSubClientLocalVideoTrack(connection, { type: IrisVideoSourceType.kVideoSourceTypeScreenPrimary, track: videoTrack });
+                                    let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                                        channelName: connection.channelId,
+                                        client: subClient,
+                                        track: audioTrack,
+                                        trackType: "ILocalVideoTrack",
+                                    }, this._engine);
+                                    entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
+
+                                    try{
+                                        await subClient.publish(videoTrack)
+                                    }
+                                    catch(reason)  {
+                                        AgoraConsole.error("screen share video track publish failed");
+                                        AgoraConsole.error(reason);
+                                        entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, videoTrack);
+                                        entitiesContainer.clearSubClientLocalVideoTrack(connection);
+                                    }
+                                }
+                            }
+                            
+                        }
+                        catch(err){
+                            AgoraConsole.error("join channelEx failed. create audio And videoTrack failed");
+                            AgoraConsole.error(err);
+                            subClient.leave().then(() => { }).catch(() => { }).finally(() => {
+                                this._engine.entitiesContainer.clearSubClientAll(connection)});
+                        }
+                    }
+                    catch(reason: any) {
+                        AgoraConsole.error("join channelEx failed: join failed");
                         AgoraConsole.error(reason);
-                        this._engine.mainClientVariables.joinChanneled = false;
-                        this._engine.entitiesContainer.clearMainClientAll();
-                        next();
-                    })
+                        this._engine.rtcEngineEventHandler.onError(agorartc.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED,"");
+                        this._engine.entitiesContainer.clearSubClientAll(connection);
+                    }
+                    
+                    next();
+                }
+            
+                setTimeout(processJoinChannel,0);
+
+                // let subClientVariables: IrisSubClientVariables = this._engine.subClientVariables;
+                // let globalVariables = this._engine.globalVariables;
+                // let fullOptions = subClientVariables.mergeChannelMediaOptions(connection, options);
+                // fullOptions.token = token;
+
+                // let subClient: IAgoraRTCClient = this._createSubClient(connection);
+
+             
+
+                // subClient.join(globalVariables.appId, connection.channelId, token ? token : null, connection.localUid)
+                //     .then((uid: UID) => {
+
+                //         connection.localUid = uid as number;
+                //         let audioSource = IrisAudioSourceType.kAudioSourceTypeUnknow;
+                //         let videoSource = IrisVideoSourceType.kVideoSourceTypeUnknown;
+                //         let clientType = IrisClientType.kClientSub;
+
+                //         if (options.publishMicrophoneTrack) {
+                //             audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary;
+                //         }
+                //         else if (options.publishScreenCaptureAudio) {
+                //             audioSource = IrisAudioSourceType.kAudioSourceTypeScreenPrimary;
+                //         }
+
+                //         if (options.publishCameraTrack) {
+                //             videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
+                //         }
+                //         else if (options.publishScreenTrack || options.publishScreenCaptureVideo) {
+                //             videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+                //         }
+
+                //         this.getOrCreateAudioAndVideoTrack(
+                //             audioSource,
+                //             videoSource,
+                //             clientType,
+                //             (err: any, trackArray: [ILocalAudioTrack, ILocalVideoTrack]) => {
+                //                 if (err) {
+                //                     AgoraConsole.error("join channelEx failed. create audio And videoTrack failed");
+                //                     AgoraConsole.error(err);
+                //                     subClient.leave().then(() => { }).catch(() => { }).finally(() => {
+                //                         this._engine.entitiesContainer.clearSubClientAll(connection);
+                //                         next();
+                //                     });
+                //                 }
+                //                 else {
+                //                     let entitiesContainer = this._engine.entitiesContainer;
+                //                     entitiesContainer.addSubClient(connection, subClient);
+                //                     entitiesContainer.addSubClientEventHandler(connection, new IrisClientEventHandler(subClient, IrisClientType.kClientSub, this._engine));
+                //                     //推送麦克风audio
+                //                     let audioTrack: IMicrophoneAudioTrack = trackArray[0] as IMicrophoneAudioTrack;
+                //                     if (options.publishMicrophoneTrack) {
+
+                //                         entitiesContainer.addSubClientLocalAudioTrack(connection, { type: audioSource, track: audioTrack });
+                //                         let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                //                             channelName: connection.channelId,
+                //                             client: subClient,
+                //                             track: audioTrack,
+                //                             trackType: 'ILocalTrack',
+                //                         }, this._engine);
+                //                         entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
+
+                //                         subClient.publish(audioTrack)
+                //                             .then(() => {
+                //                                 AgoraConsole.log("audio track publish sucess");
+                //                             })
+                //                             .catch((reason) => {
+                //                                 AgoraConsole.error("audio track publish failed");
+                //                                 AgoraConsole.error(reason);
+                //                                 entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, audioTrack);
+                //                                 entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack);
+                //                             })
+                //                     }
+
+                //                     //推送屏幕共享audio
+                //                     if (options.publishScreenCaptureAudio) {
+                //                         let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
+                //                         if (audioTrackPackage) {
+                //                             let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
+
+                //                             entitiesContainer.addSubClientLocalAudioTrack(connection, { type: IrisAudioSourceType.kAudioSourceTypeScreenPrimary, track: audioTrack });
+                //                             let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                //                                 channelName: connection.channelId,
+                //                                 client: subClient,
+                //                                 track: audioTrack,
+                //                                 trackType: 'ILocalTrack',
+                //                             }, this._engine);
+                //                             entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
+
+                //                             subClient.publish(audioTrack)
+                //                                 .then(() => {
+                //                                     AgoraConsole.log("screen share audio track publish sucess");
+                //                                 })
+                //                                 .catch((reason) => {
+                //                                     AgoraConsole.error("screen share audio track publish failed");
+                //                                     AgoraConsole.error(reason);
+                //                                     entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, audioTrack);
+                //                                     entitiesContainer.removeSubClientLocalAudioTrack(connection, audioTrack);
+                //                                 })
+                //                         }
+                //                     }
+
+                //                     //推送摄像头video
+                //                     let videoTrack: ICameraVideoTrack = trackArray[1] as ICameraVideoTrack;
+                //                     if (options.publishCameraTrack) {
+
+                //                         entitiesContainer.setSubClientLocalVideoTrack(connection, { type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary, track: videoTrack });
+                //                         let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                //                             channelName: connection.channelId,
+                //                             client: subClient,
+                //                             track: videoTrack,
+                //                             trackType: 'ILocalVideoTrack',
+                //                         }, this._engine);
+                //                         entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
+
+                //                         subClient.publish(videoTrack)
+                //                             .then(() => {
+                //                                 AgoraConsole.log("video track publish sucess");
+                //                             })
+                //                             .catch((reason) => {
+                //                                 AgoraConsole.error("video track publish failed");
+                //                                 AgoraConsole.error(reason);
+                //                                 entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, videoTrack);
+                //                                 entitiesContainer.clearSubClientLocalVideoTrack(connection);
+                //                             })
+                //                     }
+                //                     else if (options.publishScreenTrack || options.publishScreenCaptureVideo) {
+                //                         //推送屏幕共享流
+                //                         let videoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+                //                         if (videoTrackPackage) {
+                //                             let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
+
+                //                             entitiesContainer.setSubClientLocalVideoTrack(connection, { type: IrisVideoSourceType.kVideoSourceTypeScreenPrimary, track: videoTrack });
+                //                             let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                //                                 channelName: connection.channelId,
+                //                                 client: subClient,
+                //                                 track: audioTrack,
+                //                                 trackType: "ILocalVideoTrack",
+                //                             }, this._engine);
+                //                             entitiesContainer.addSubClientTrackEventHandler(connection, trackEventHandler);
+
+                //                             subClient.publish(videoTrack)
+                //                                 .then(() => {
+                //                                     AgoraConsole.log("screen share video track publish sucess");
+                //                                 })
+                //                                 .catch((reason) => {
+                //                                     AgoraConsole.error("screen share video track publish failed");
+                //                                     AgoraConsole.error(reason);
+                //                                     entitiesContainer.removeSubClientTrackEventHandlerByTrack(connection, videoTrack);
+                //                                     entitiesContainer.clearSubClientLocalVideoTrack(connection);
+                //                                 })
+                //                         }
+                //                     }
+
+                //                     if (options.clientRoleType != null) {
+                //                         let roleOptions: ClientRoleOptions = null;
+                //                         if (options.audienceLatencyLevel != null) {
+                //                             roleOptions = AgoraTranslate.agorartcAUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(options.audienceLatencyLevel);
+                //                         }
+
+                //                         subClient.setClientRole(
+                //                             AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(options.clientRoleType),
+                //                             roleOptions
+                //                         ).then(() => { }).catch(() => { }).finally(() => { })
+                //                     }
+
+                //                     next();
+                //                 }
+                //             },
+                //         )
+                //     })
+                //     .catch((reason: any) => {
+                //         AgoraConsole.error("join channel failed: join failed");
+                //         AgoraConsole.error(reason);
+                //         this._engine.mainClientVariables.joinChanneled = false;
+                //         this._engine.entitiesContainer.clearMainClientAll();
+                //         next();
+                //     })
+        
             },
             args: [token, connection, options]
         })
@@ -3508,6 +3875,7 @@ export class RtcEngine implements IRtcEngine {
                     //todo 读取 options
                     subClient.leave()
                         .then(() => {
+                            this._engine.entitiesContainer.getSubClientEventHandler(connection).onLeaveChannel(connection,new agorartc.RtcStats());
                             this._engine.entitiesContainer.clearSubClientAll(connection);
                         })
                         .catch((reason) => {
@@ -3704,6 +4072,7 @@ export class RtcEngine implements IRtcEngine {
                     if (options.token != null) {
                         try {
                             await subClient.renewToken(options.token)
+                            //这里的新token已经在 fun 的第一行被保存了
                         }
                         catch (e) {
                             AgoraConsole.error("renewToken failed");

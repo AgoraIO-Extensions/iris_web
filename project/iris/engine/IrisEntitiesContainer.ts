@@ -394,6 +394,11 @@ export class IrisEntitiesContaniner {
         this._mainClientEventHandler = eventHandler;
     }
 
+    getMainClientEventHandler(): IrisClientEventHandler {
+        return this._mainClientEventHandler;
+    }
+
+
     addMainClientTrackEventHandler(trackEventHandler: IrisTrackEventHandler) {
         this._mainClientTrackEventHandlers.push(trackEventHandler);
     }
@@ -487,6 +492,10 @@ export class IrisEntitiesContaniner {
 
     addSubClientEventHandler(connection: agorartc.RtcConnection, clientEventHandler: IrisClientEventHandler) {
         this._subClientEventHandlers.addT(connection.channelId, connection.localUid, clientEventHandler);
+    }
+
+    getSubClientEventHandler(connection: agorartc.RtcConnection): IrisClientEventHandler {
+        return this._subClientEventHandlers.getT(connection.channelId, connection.localUid);
     }
 
     clearSubClientAll(connection: agorartc.RtcConnection) {

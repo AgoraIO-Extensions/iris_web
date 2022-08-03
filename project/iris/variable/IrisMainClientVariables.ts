@@ -55,8 +55,6 @@ export class IrisMainClientVariables {
     }
 
 
-
-
     //setClientOptions()
     public clientRoleOptions?: agorartc.ClientRoleOptions = null;
 

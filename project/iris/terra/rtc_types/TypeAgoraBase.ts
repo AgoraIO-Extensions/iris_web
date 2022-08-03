@@ -422,40 +422,40 @@ export interface WatermarkOptions {
 };
 
 //c++ Struct RtcStats
-export interface RtcStats {
-    duration: number;
-    txBytes: number;
-    rxBytes: number;
-    txAudioBytes: number;
-    txVideoBytes: number;
-    rxAudioBytes: number;
-    rxVideoBytes: number;
-    txKBitRate: number;
-    rxKBitRate: number;
-    rxAudioKBitRate: number;
-    txAudioKBitRate: number;
-    rxVideoKBitRate: number;
-    txVideoKBitRate: number;
-    lastmileDelay: number;
-    userCount: number;
-    cpuAppUsage: number;
-    cpuTotalUsage: number;
-    gatewayRtt: number;
-    memoryAppUsageRatio: number;
-    memoryTotalUsageRatio: number;
-    memoryAppUsageInKbytes: number;
-    connectTimeMs: number;
-    firstAudioPacketDuration: number;
-    firstVideoPacketDuration: number;
-    firstVideoKeyFramePacketDuration: number;
-    packetsBeforeFirstKeyFramePacket: number;
-    firstAudioPacketDurationAfterUnmute: number;
-    firstVideoPacketDurationAfterUnmute: number;
-    firstVideoKeyFramePacketDurationAfterUnmute: number;
-    firstVideoKeyFrameDecodedDurationAfterUnmute: number;
-    firstVideoKeyFrameRenderedDurationAfterUnmute: number;
-    txPacketLossRate: number;
-    rxPacketLossRate: number;
+export class RtcStats {
+    duration: number = 0;
+    txBytes: number = 0;
+    rxBytes: number = 0;
+    txAudioBytes: number = 0;
+    txVideoBytes: number = 0;
+    rxAudioBytes: number = 0;
+    rxVideoBytes: number = 0;
+    txKBitRate: number = 0;
+    rxKBitRate: number = 0;
+    rxAudioKBitRate: number = 0;
+    txAudioKBitRate: number = 0;
+    rxVideoKBitRate: number = 0;
+    txVideoKBitRate: number = 0;
+    lastmileDelay: number = 0;
+    userCount: number = 0;
+    cpuAppUsage: number = 0;
+    cpuTotalUsage: number = 0;
+    gatewayRtt: number = 0;
+    memoryAppUsageRatio: number = 0;
+    memoryTotalUsageRatio: number = 0;
+    memoryAppUsageInKbytes: number = 0;
+    connectTimeMs: number = 0;
+    firstAudioPacketDuration: number = 0;
+    firstVideoPacketDuration: number = 0;
+    firstVideoKeyFramePacketDuration: number = 0;
+    packetsBeforeFirstKeyFramePacket: number = 0;
+    firstAudioPacketDurationAfterUnmute: number = 0;
+    firstVideoPacketDurationAfterUnmute: number = 0;
+    firstVideoKeyFramePacketDurationAfterUnmute: number = 0;
+    firstVideoKeyFrameDecodedDurationAfterUnmute: number = 0;
+    firstVideoKeyFrameRenderedDurationAfterUnmute: number = 0;
+    txPacketLossRate: number = 0;
+    rxPacketLossRate: number = 0;
 };
 
 //c++ enum VIDEO_SOURCE_TYPE

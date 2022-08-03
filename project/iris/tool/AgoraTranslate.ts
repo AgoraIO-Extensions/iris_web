@@ -1,5 +1,5 @@
 
-import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayError, ChannelMediaRelayEvent, ChannelMediaRelayInfo, ChannelMediaRelayState, ClientRole, ClientRoleOptions, ConnectionDisconnectedReason, ConnectionState, DeviceState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, RemoteStreamFallbackType, RemoteStreamType, SDK_CODEC, SDK_MODE, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
+import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayError, ChannelMediaRelayEvent, ChannelMediaRelayInfo, ChannelMediaRelayState, ClientRole, ClientRoleOptions, ConnectionDisconnectedReason, ConnectionState, DeviceState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, NetworkQuality, RemoteStreamFallbackType, RemoteStreamType, SDK_CODEC, SDK_MODE, UID, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
 import { Argument } from "webpack";
 import * as agorartc from "../terra/rtc_types/Index";
 import { AgoraConsole } from "./AgoraConsole";
@@ -435,6 +435,24 @@ export class AgoraTranslate {
             case ChannelMediaRelayEvent.PACKET_UPDATE_DEST_CHANNEL_NOT_CHANGE:
                 return agorartc.CHANNEL_MEDIA_RELAY_EVENT.RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL_NOT_CHANGE;
         }
+    }
+
+    public static volumeIndicatorResult2agorartcAudioVolumeInfo(result: { level: number; uid: UID; }): agorartc.AudioVolumeInfo {
+        //level范围是[0,100], volume范围是 0 - 255， 要做一下转换
+        let audioVolumInfo: agorartc.AudioVolumeInfo = {
+            uid: result.uid as number,
+            volume: Math.floor(result.level * 2.55),
+            vad: 0,
+            voicePitch: 0
+        };
+        return audioVolumInfo;
+    }
+
+    //webQuality
+    //webQuality:    6,5,4,3,2,1   poor=>better
+    //agortcQuality: 0,1,2,3,4,5,  poor=>better
+    public static webQuality2agorartcQuality(webQuality: number): number {
+        return 6 - webQuality;
     }
 
 }
