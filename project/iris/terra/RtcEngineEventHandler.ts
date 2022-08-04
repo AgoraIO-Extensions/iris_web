@@ -22,7 +22,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onJoinChannelSuccess';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRejoinChannelSuccess(channel: string, uid: agorartc.uid_t, elapsed: number): void {
@@ -33,7 +33,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRejoinChannelSuccess';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onProxyConnected(channel: string, uid: agorartc.uid_t, proxyType: agorartc.PROXY_TYPE, localProxyIp: string, elapsed: number): void {
@@ -46,7 +46,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onProxyConnected';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onWarning(warn: number, msg: string) {
@@ -56,7 +56,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onWarning';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     }
 
     onError(err: number, msg: string): void {
@@ -66,7 +66,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onError';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioQuality(uid: agorartc.uid_t, quality: number, delay: number, lost: number): void {
@@ -78,7 +78,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioQuality';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLastmileProbeResult(result: agorartc.LastmileProbeResult): void {
@@ -87,7 +87,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLastmileProbeResult';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioVolumeIndication(speakers: agorartc.AudioVolumeInfo[], speakerNumber: number, totalVolume: number): void {
@@ -98,7 +98,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioVolumeIndication';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLeaveChannel(stats: agorartc.RtcStats): void {
@@ -107,7 +107,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLeaveChannel';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRtcStats(stats: agorartc.RtcStats): void {
@@ -116,7 +116,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRtcStats';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioDeviceStateChanged(deviceId: string, deviceType: number, deviceState: number): void {
@@ -127,7 +127,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioDeviceStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioMixingFinished(): void {
@@ -136,7 +136,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioMixingFinished';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioEffectFinished(soundId: number): void {
@@ -145,7 +145,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioEffectFinished';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onVideoDeviceStateChanged(deviceId: string, deviceType: number, deviceState: number): void {
@@ -156,7 +156,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onVideoDeviceStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onMediaDeviceChanged(deviceType: number): void {
@@ -165,7 +165,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onMediaDeviceChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onNetworkQuality(uid: agorartc.uid_t, txQuality: number, rxQuality: number): void {
@@ -176,7 +176,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onNetworkQuality';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onIntraRequestReceived(): void {
@@ -185,7 +185,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onIntraRequestReceived';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUplinkNetworkInfoUpdated(info: agorartc.UplinkNetworkInfo): void {
@@ -194,7 +194,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUplinkNetworkInfoUpdated';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onDownlinkNetworkInfoUpdated(info: agorartc.DownlinkNetworkInfo): void {
@@ -203,7 +203,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onDownlinkNetworkInfoUpdated';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLastmileQuality(quality: number): void {
@@ -212,7 +212,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLastmileQuality';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstLocalVideoFrame(width: number, height: number, elapsed: number): void {
@@ -223,7 +223,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstLocalVideoFrame';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstLocalVideoFramePublished(elapsed: number): void {
@@ -232,7 +232,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstLocalVideoFramePublished';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onVideoSourceFrameSizeChanged(sourceType: agorartc.VIDEO_SOURCE_TYPE, width: number, height: number): void {
@@ -243,7 +243,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onVideoSourceFrameSizeChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstRemoteVideoDecoded(uid: agorartc.uid_t, width: number, height: number, elapsed: number): void {
@@ -255,7 +255,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstRemoteVideoDecoded';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onVideoSizeChanged(uid: agorartc.uid_t, width: number, height: number, rotation: number): void {
@@ -267,7 +267,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onVideoSizeChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLocalVideoStateChanged(state: agorartc.LOCAL_VIDEO_STREAM_STATE, error: agorartc.LOCAL_VIDEO_STREAM_ERROR): void {
@@ -277,7 +277,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLocalVideoStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteVideoStateChanged(uid: agorartc.uid_t, state: agorartc.REMOTE_VIDEO_STATE, reason: agorartc.REMOTE_VIDEO_STATE_REASON, elapsed: number): void {
@@ -289,7 +289,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteVideoStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstRemoteVideoFrame(userId: agorartc.uid_t, width: number, height: number, elapsed: number): void {
@@ -301,7 +301,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstRemoteVideoFrame';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserJoined(uid: agorartc.uid_t, elapsed: number): void {
@@ -311,7 +311,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserJoined';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserOffline(uid: agorartc.uid_t, reason: agorartc.USER_OFFLINE_REASON_TYPE): void {
@@ -321,7 +321,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserOffline';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserMuteAudio(uid: agorartc.uid_t, muted: boolean): void {
@@ -331,7 +331,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserMuteAudio';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserMuteVideo(userId: agorartc.uid_t, muted: boolean): void {
@@ -341,7 +341,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserMuteVideo';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserEnableVideo(uid: agorartc.uid_t, enabled: boolean): void {
@@ -351,7 +351,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserEnableVideo';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserStateChanged(uid: agorartc.uid_t, state: number): void {
@@ -361,7 +361,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserEnableLocalVideo(uid: agorartc.uid_t, enabled: boolean): void {
@@ -371,7 +371,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserEnableLocalVideo';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onApiCallExecuted(err: number, api: string, result: string): void {
@@ -382,7 +382,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onApiCallExecuted';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLocalAudioStats(stats: agorartc.LocalAudioStats): void {
@@ -391,7 +391,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLocalAudioStats';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteAudioStats(stats: agorartc.RemoteAudioStats): void {
@@ -400,7 +400,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteAudioStats';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLocalVideoStats(stats: agorartc.LocalVideoStats): void {
@@ -409,7 +409,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLocalVideoStats';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteVideoStats(stats: agorartc.RemoteVideoStats): void {
@@ -418,7 +418,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteVideoStats';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onCameraReady(): void {
@@ -427,7 +427,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onCameraReady';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onCameraFocusAreaChanged(x: number, y: number, width: number, height: number): void {
@@ -439,7 +439,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onCameraFocusAreaChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onCameraExposureAreaChanged(x: number, y: number, width: number, height: number): void {
@@ -451,7 +451,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onCameraExposureAreaChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFacePositionChanged(imageWidth: number, imageHeight: number, vecRectangle: agorartc.Rectangle[], vecDistance: number, numFaces: number): void {
@@ -464,7 +464,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFacePositionChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onVideoStopped(): void {
@@ -473,7 +473,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onVideoStopped';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioMixingStateChanged(state: agorartc.AUDIO_MIXING_STATE_TYPE, reason: agorartc.AUDIO_MIXING_REASON_TYPE): void {
@@ -483,7 +483,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioMixingStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRhythmPlayerStateChanged(state: agorartc.RHYTHM_PLAYER_STATE_TYPE, errorCode: agorartc.RHYTHM_PLAYER_ERROR_TYPE): void {
@@ -493,7 +493,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRhythmPlayerStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onConnectionLost(): void {
@@ -502,7 +502,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onConnectionLost';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onConnectionInterrupted(): void {
@@ -511,7 +511,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onConnectionInterrupted';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onConnectionBanned(): void {
@@ -520,7 +520,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onConnectionBanned';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onStreamMessage(userId: agorartc.uid_t, streamId: number, data: string, length: number, sentTs: number): void {
@@ -533,7 +533,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onStreamMessage';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onStreamMessageError(userId: agorartc.uid_t, streamId: number, code: number, missed: number, cached: number): void {
@@ -546,7 +546,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onStreamMessageError';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRequestToken(): void {
@@ -555,7 +555,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRequestToken';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onTokenPrivilegeWillExpire(token: string): void {
@@ -564,7 +564,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onTokenPrivilegeWillExpire';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstLocalAudioFramePublished(elapsed: number): void {
@@ -573,7 +573,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstLocalAudioFramePublished';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstRemoteAudioFrame(uid: agorartc.uid_t, elapsed: number): void {
@@ -583,7 +583,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstRemoteAudioFrame';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstRemoteAudioDecoded(uid: agorartc.uid_t, elapsed: number): void {
@@ -593,7 +593,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstRemoteAudioDecoded';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLocalAudioStateChanged(state: agorartc.LOCAL_AUDIO_STREAM_STATE, error: agorartc.LOCAL_AUDIO_STREAM_ERROR): void {
@@ -603,7 +603,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLocalAudioStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteAudioStateChanged(uid: agorartc.uid_t, state: agorartc.REMOTE_AUDIO_STATE, reason: agorartc.REMOTE_AUDIO_STATE_REASON, elapsed: number): void {
@@ -615,7 +615,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteAudioStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onActiveSpeaker(userId: agorartc.uid_t): void {
@@ -624,7 +624,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onActiveSpeaker';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onContentInspectResult(result: agorartc.CONTENT_INSPECT_RESULT): void {
@@ -633,7 +633,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onContentInspectResult';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onSnapshotTaken(uid: agorartc.uid_t, filePath: string, width: number, height: number, errCode: number): void {
@@ -646,7 +646,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onSnapshotTaken';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onClientRoleChanged(oldRole: agorartc.CLIENT_ROLE_TYPE, newRole: agorartc.CLIENT_ROLE_TYPE): void {
@@ -656,7 +656,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onClientRoleChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onClientRoleChangeFailed(reason: agorartc.CLIENT_ROLE_CHANGE_FAILED_REASON, currentRole: agorartc.CLIENT_ROLE_TYPE): void {
@@ -666,7 +666,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onClientRoleChangeFailed';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioDeviceVolumeChanged(deviceType: agorartc.MEDIA_DEVICE_TYPE, volume: number, muted: boolean): void {
@@ -677,7 +677,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioDeviceVolumeChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRtmpStreamingStateChanged(url: string, state: agorartc.RTMP_STREAM_PUBLISH_STATE, errCode: agorartc.RTMP_STREAM_PUBLISH_ERROR_TYPE): void {
@@ -688,7 +688,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRtmpStreamingStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRtmpStreamingEvent(url: string, eventCode: agorartc.RTMP_STREAMING_EVENT): void {
@@ -698,7 +698,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRtmpStreamingEvent';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onTranscodingUpdated(): void {
@@ -707,7 +707,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onTranscodingUpdated';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioRoutingChanged(routing: number): void {
@@ -716,7 +716,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioRoutingChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onChannelMediaRelayStateChanged(state: number, code: number): void {
@@ -726,7 +726,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onChannelMediaRelayStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onChannelMediaRelayEvent(code: number): void {
@@ -735,7 +735,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onChannelMediaRelayEvent';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLocalPublishFallbackToAudioOnly(isFallbackOrRecover: boolean): void {
@@ -744,7 +744,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLocalPublishFallbackToAudioOnly';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteSubscribeFallbackToAudioOnly(uid: agorartc.uid_t, isFallbackOrRecover: boolean): void {
@@ -754,7 +754,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteSubscribeFallbackToAudioOnly';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteAudioTransportStats(uid: agorartc.uid_t, delay: number, lost: number, rxKBitRate: number): void {
@@ -766,7 +766,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteAudioTransportStats';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteVideoTransportStats(uid: agorartc.uid_t, delay: number, lost: number, rxKBitRate: number): void {
@@ -778,7 +778,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteVideoTransportStats';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onConnectionStateChanged(state: agorartc.CONNECTION_STATE_TYPE, reason: agorartc.CONNECTION_CHANGED_REASON_TYPE): void {
@@ -788,7 +788,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onConnectionStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onWlAccMessage(reason: agorartc.WLACC_MESSAGE_REASON, action: agorartc.WLACC_SUGGEST_ACTION, wlAccMsg: string): void {
@@ -799,7 +799,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onWlAccMessage';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onWlAccStats(currentStats: agorartc.WlAccStats, averageStats: agorartc.WlAccStats): void {
@@ -809,7 +809,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onWlAccStats';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onNetworkTypeChanged(type: agorartc.NETWORK_TYPE): void {
@@ -818,7 +818,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onNetworkTypeChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onEncryptionError(errorType: agorartc.ENCRYPTION_ERROR_TYPE): void {
@@ -827,7 +827,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onEncryptionError';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onPermissionError(permissionType: agorartc.PERMISSION_TYPE): void {
@@ -836,7 +836,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onPermissionError';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLocalUserRegistered(uid: agorartc.uid_t, userAccount: string): void {
@@ -846,7 +846,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLocalUserRegistered';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserInfoUpdated(uid: agorartc.uid_t, info: agorartc.UserInfo): void {
@@ -856,7 +856,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserInfoUpdated';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUploadLogResult(requestId: string, success: boolean, reason: agorartc.UPLOAD_ERROR_REASON): void {
@@ -867,7 +867,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUploadLogResult';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioSubscribeStateChanged(channel: string, uid: agorartc.uid_t, oldState: agorartc.STREAM_SUBSCRIBE_STATE, newState: agorartc.STREAM_SUBSCRIBE_STATE, elapseSinceLastState: number): void {
@@ -880,7 +880,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioSubscribeStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onVideoSubscribeStateChanged(channel: string, uid: agorartc.uid_t, oldState: agorartc.STREAM_SUBSCRIBE_STATE, newState: agorartc.STREAM_SUBSCRIBE_STATE, elapseSinceLastState: number): void {
@@ -893,7 +893,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onVideoSubscribeStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioPublishStateChanged(channel: string, oldState: agorartc.STREAM_PUBLISH_STATE, newState: agorartc.STREAM_PUBLISH_STATE, elapseSinceLastState: number): void {
@@ -905,7 +905,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioPublishStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onVideoPublishStateChanged(channel: string, oldState: agorartc.STREAM_PUBLISH_STATE, newState: agorartc.STREAM_PUBLISH_STATE, elapseSinceLastState: number): void {
@@ -917,7 +917,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onVideoPublishStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onExtensionEvent(provider: string, extension: string, key: string, value: string): void {
@@ -929,7 +929,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key2 = 'onExtensionEvent';
-        this._engine.getEventHandler()?.OnEvent(key2, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key2, json, null, null, 0);
     };
 
     onExtensionStarted(provider: string, extension: string): void {
@@ -939,7 +939,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onExtensionStarted';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onExtensionStopped(provider: string, extension: string): void {
@@ -949,7 +949,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onExtensionStopped';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onExtensionError(provider: string, extension: string, error: number, message: string): void {
@@ -961,7 +961,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onExtensionError';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserAccountUpdated(uid: agorartc.uid_t, userAccount: string): void {
@@ -971,7 +971,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserAccountUpdated';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
 
@@ -992,7 +992,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onJoinChannelSuccessEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRejoinChannelSuccessEx(connection: agorartc.RtcConnection, elapsed: number): void {
@@ -1002,7 +1002,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRejoinChannelSuccessEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioQualityEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, quality: number, delay: number, lost: number): void {
@@ -1015,7 +1015,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioQualityEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onAudioVolumeIndicationEx(connection: agorartc.RtcConnection, speakers: agorartc.AudioVolumeInfo[], speakerNumber: number, totalVolume: number): void {
@@ -1027,7 +1027,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onAudioVolumeIndicationEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLeaveChannelEx(connection: agorartc.RtcConnection, stats: agorartc.RtcStats): void {
@@ -1037,7 +1037,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLeaveChannelEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRtcStatsEx(connection: agorartc.RtcConnection, stats: agorartc.RtcStats): void {
@@ -1047,7 +1047,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRtcStatsEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onNetworkQualityEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, txQuality: number, rxQuality: number): void {
@@ -1059,7 +1059,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onNetworkQualityEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onIntraRequestReceivedEx(connection: agorartc.RtcConnection): void {
@@ -1068,7 +1068,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onIntraRequestReceivedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstLocalVideoFrameEx(connection: agorartc.RtcConnection, width: number, height: number, elapsed: number): void {
@@ -1080,7 +1080,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstLocalVideoFrameEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstLocalVideoFramePublishedEx(connection: agorartc.RtcConnection, elapsed: number): void {
@@ -1090,7 +1090,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstLocalVideoFramePublishedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onVideoSourceFrameSizeChangedEx(connection: agorartc.RtcConnection, sourceType: agorartc.VIDEO_SOURCE_TYPE, width: number, height: number): void {
@@ -1102,7 +1102,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onVideoSourceFrameSizeChangedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstRemoteVideoDecodedEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, width: number, height: number, elapsed: number): void {
@@ -1115,7 +1115,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstRemoteVideoDecodedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onVideoSizeChangedEx(connection: agorartc.RtcConnection, uid: agorartc.uid_t, width: number, height: number, rotation: number): void {
@@ -1128,7 +1128,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onVideoSizeChangedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLocalVideoStateChangedEx(connection: agorartc.RtcConnection, state: agorartc.LOCAL_VIDEO_STREAM_STATE, errorCode: agorartc.LOCAL_VIDEO_STREAM_ERROR): void {
@@ -1139,7 +1139,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLocalVideoStateChangedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteVideoStateChangedEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, state: agorartc.REMOTE_VIDEO_STATE, reason: agorartc.REMOTE_VIDEO_STATE_REASON, elapsed: number): void {
@@ -1152,7 +1152,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteVideoStateChangedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstRemoteVideoFrameEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, width: number, height: number, elapsed: number): void {
@@ -1165,7 +1165,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstRemoteVideoFrameEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserJoinedEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, elapsed: number): void {
@@ -1176,7 +1176,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserJoinedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserOfflineEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, reason: agorartc.USER_OFFLINE_REASON_TYPE): void {
@@ -1187,7 +1187,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserOfflineEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserMuteAudioEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, muted: boolean): void {
@@ -1198,7 +1198,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserMuteAudioEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserMuteVideoEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, muted: boolean): void {
@@ -1209,7 +1209,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserMuteVideoEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserEnableVideoEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, enabled: boolean): void {
@@ -1220,7 +1220,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserEnableVideoEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserEnableLocalVideoEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, enabled: boolean): void {
@@ -1231,7 +1231,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserEnableLocalVideoEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserStateChangedEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, state: number): void {
@@ -1242,7 +1242,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserStateChangedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLocalAudioStatsEx(connection: agorartc.RtcConnection, stats: agorartc.LocalAudioStats): void {
@@ -1252,7 +1252,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLocalAudioStatsEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteAudioStatsEx(connection: agorartc.RtcConnection, stats: agorartc.RemoteAudioStats): void {
@@ -1262,7 +1262,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteAudioStatsEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLocalVideoStatsEx(connection: agorartc.RtcConnection, stats: agorartc.LocalVideoStats): void {
@@ -1272,7 +1272,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLocalVideoStatsEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteVideoStatsEx(connection: agorartc.RtcConnection, stats: agorartc.RemoteVideoStats): void {
@@ -1282,7 +1282,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteVideoStatsEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onConnectionLostEx(connection: agorartc.RtcConnection): void {
@@ -1291,7 +1291,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onConnectionLostEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onConnectionInterruptedEx(connection: agorartc.RtcConnection): void {
@@ -1300,7 +1300,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onConnectionInterruptedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onConnectionBannedEx(connection: agorartc.RtcConnection): void {
@@ -1309,7 +1309,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onConnectionBannedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onStreamMessageEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, streamId: number, data: string, length: number, sentTs: number): void {
@@ -1323,7 +1323,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onStreamMessageEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onStreamMessageErrorEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, streamId: number, code: number, missed: number, cached: number): void {
@@ -1337,7 +1337,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onStreamMessageErrorEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRequestTokenEx(connection: agorartc.RtcConnection): void {
@@ -1346,7 +1346,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRequestTokenEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onTokenPrivilegeWillExpireEx(connection: agorartc.RtcConnection, token: string): void {
@@ -1356,7 +1356,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onTokenPrivilegeWillExpireEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstLocalAudioFramePublishedEx(connection: agorartc.RtcConnection, elapsed: number): void {
@@ -1366,7 +1366,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstLocalAudioFramePublishedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstRemoteAudioFrameEx(connection: agorartc.RtcConnection, userId: agorartc.uid_t, elapsed: number): void {
@@ -1377,7 +1377,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstRemoteAudioFrameEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onFirstRemoteAudioDecodedEx(connection: agorartc.RtcConnection, uid: agorartc.uid_t, elapsed: number): void {
@@ -1388,7 +1388,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onFirstRemoteAudioDecodedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onLocalAudioStateChangedEx(connection: agorartc.RtcConnection, state: agorartc.LOCAL_AUDIO_STREAM_STATE, error: agorartc.LOCAL_AUDIO_STREAM_ERROR): void {
@@ -1399,7 +1399,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onLocalAudioStateChangedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteAudioStateChangedEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, state: agorartc.REMOTE_AUDIO_STATE, reason: agorartc.REMOTE_AUDIO_STATE_REASON, elapsed: number): void {
@@ -1412,7 +1412,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteAudioStateChangedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onActiveSpeakerEx(connection: agorartc.RtcConnection, uid: agorartc.uid_t): void {
@@ -1422,7 +1422,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onActiveSpeakerEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onClientRoleChangedEx(connection: agorartc.RtcConnection, oldRole: agorartc.CLIENT_ROLE_TYPE, newRole: agorartc.CLIENT_ROLE_TYPE): void {
@@ -1433,7 +1433,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onClientRoleChangedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onClientRoleChangeFailedEx(connection: agorartc.RtcConnection, reason: agorartc.CLIENT_ROLE_CHANGE_FAILED_REASON, currentRole: agorartc.CLIENT_ROLE_TYPE): void {
@@ -1444,7 +1444,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onClientRoleChangeFailedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteAudioTransportStatsEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, delay: number, lost: number, rxKBitRate: number): void {
@@ -1457,7 +1457,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteAudioTransportStatsEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onRemoteVideoTransportStatsEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, delay: number, lost: number, rxKBitRate: number): void {
@@ -1470,7 +1470,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onRemoteVideoTransportStatsEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onConnectionStateChangedEx(connection: agorartc.RtcConnection, state: agorartc.CONNECTION_STATE_TYPE, reason: agorartc.CONNECTION_CHANGED_REASON_TYPE): void {
@@ -1481,7 +1481,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onConnectionStateChangedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onWlAccMessageEx(connection: agorartc.RtcConnection, reason: agorartc.WLACC_MESSAGE_REASON, action: agorartc.WLACC_SUGGEST_ACTION, wlAccMsg: string): void {
@@ -1493,7 +1493,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onWlAccMessageEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onWlAccStatsEx(connection: agorartc.RtcConnection, currentStats: agorartc.WlAccStats, averageStats: agorartc.WlAccStats): void {
@@ -1504,7 +1504,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onWlAccStatsEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onNetworkTypeChangedEx(connection: agorartc.RtcConnection, type: agorartc.NETWORK_TYPE): void {
@@ -1514,7 +1514,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onNetworkTypeChangedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onEncryptionErrorEx(connection: agorartc.RtcConnection, errorType: agorartc.ENCRYPTION_ERROR_TYPE): void {
@@ -1524,7 +1524,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onEncryptionErrorEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUploadLogResultEx(connection: agorartc.RtcConnection, requestId: string, success: boolean, reason: agorartc.UPLOAD_ERROR_REASON): void {
@@ -1536,7 +1536,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUploadLogResultEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onUserAccountUpdatedEx(connection: agorartc.RtcConnection, remoteUid: agorartc.uid_t, userAccount: string): void {
@@ -1547,7 +1547,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onUserAccountUpdatedEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
     onSnapshotTakenEx(connection: agorartc.RtcConnection, uid: agorartc.uid_t, filePath: string, width: number, height: number, errCode: number): void {
@@ -1561,7 +1561,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'onSnapshotTakenEx';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
 
@@ -1575,7 +1575,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'DirectCdnStreamingEventHandler_onDirectCdnStreamingStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     }
 
 
@@ -1585,7 +1585,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'DirectCdnStreamingEventHandler_onDirectCdnStreamingStats';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     }
 
     //IMediaRecorderObserver
@@ -1596,7 +1596,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'MediaRecorderObserver_onRecorderStateChanged';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     }
 
     onRecorderInfoUpdated(info: agorartc.RecorderInfo): void {
@@ -1605,7 +1605,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'MediaRecorderObserver_onRecorderInfoUpdated';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     }
 
 
@@ -1616,7 +1616,7 @@ export class RtcEngineEventHandler {
         };
         let json = JSON.stringify(obj);
         let key = 'Web_onDeviceEnumerated';
-        this._engine.getEventHandler()?.OnEvent(key, json, null, null, 0);
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     }
 
 

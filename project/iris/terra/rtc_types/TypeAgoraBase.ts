@@ -126,7 +126,7 @@ export enum AUDIO_SESSION_OPERATION_RESTRICTION {
 }
 
 //c++ Struct UserInfo
-export interface UserInfo {
+export interface UserInfo2 {
     userId: string;
     hasAudio: boolean;
     hasVideo: boolean;

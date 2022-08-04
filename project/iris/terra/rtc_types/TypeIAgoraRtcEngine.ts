@@ -498,7 +498,44 @@ export enum VIDEO_PROFILE_TYPE {
 }
 
 
-export class IScreenCaptureSourceList {
+export class ThumbImageBufferInternal {
+    public length: number;
+    public width: number;
+    public height: number;
+    public buffer: number;
+
+    constructor() {
+        this.buffer = 0;
+        this.length = 0;
+        this.width = 0;
+        this.height = 0;
+    }
+};
+
+export class ScreenCaptureSourceInfoInternal {
+    public type: ScreenCaptureSourceType;
+    /** in Mac: pointer to NSNumber */
+    public sourceId: number;
+    public sourceName: string;
+    public thumbImage: ThumbImageBufferInternal;
+    public iconImage: ThumbImageBufferInternal;
+
+    public processPath: string;
+    public sourceTitle: string;
+    public primaryMonitor: boolean;
+    public isOccluded: boolean;
+
+    public constructor() {
+        this.type = ScreenCaptureSourceType.ScreenCaptureSourceType_Unknown;
+        this.sourceId = 0;
+        this.sourceName = "";
+        this.processPath = "";
+        this.sourceTitle = "";
+        this.primaryMonitor = false;
+        this.isOccluded = false;
+        this.thumbImage = new ThumbImageBufferInternal();
+        this.iconImage = new ThumbImageBufferInternal();
+    }
 };
 
 export class IVideoDeviceCollection {

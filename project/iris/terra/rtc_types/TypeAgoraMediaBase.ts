@@ -84,6 +84,9 @@ export enum CONTENT_INSPECT_DEVICE_TYPE {
 
 //c++ Struct ContentInspectConfig
 export interface ContentInspectConfig {
+    enable: boolean;
+    DeviceWork: boolean;
+    CloudWork: boolean;
     extraInfo: string;
     modules: ContentInspectModule[];
     moduleCount: number;
