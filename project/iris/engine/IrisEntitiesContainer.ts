@@ -33,7 +33,7 @@ export class IrisEntitiesContaniner {
     private _subClientVideoTracks: Contaniner<VideoTrackPackage> = new Contaniner<VideoTrackPackage>();
     private _subClientTrackEventHandlers: Contaniner<Array<IrisTrackEventHandler>> = new Contaniner<Array<IrisTrackEventHandler>>();
 
-    //remoteUser
+    //remoteUser //todo这个地方需要修改成 每个客户端都有一个Array才行
     _remoteUsers: Contaniner<IAgoraRTCRemoteUser> = new Contaniner<IAgoraRTCRemoteUser>();
 
 
@@ -285,7 +285,6 @@ export class IrisEntitiesContaniner {
             if (this._mainClientLocalVideoTrack) {
                 return {
                     video_track: this._mainClientLocalVideoTrack.track,
-                    video_frame: this._mainClientLocalVideoTrack.track.getCurrentFrameData(),
                     is_new_frame: true, //todo  how to know is a new frame
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
@@ -293,7 +292,6 @@ export class IrisEntitiesContaniner {
             if (this._localVideoTracks.length > 0) {
                 return {
                     video_track: this._localVideoTracks[0].track,
-                    video_frame: this._localVideoTracks[0].track.getCurrentFrameData(),
                     is_new_frame: true, //todo  how to know is a new frame
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
@@ -307,7 +305,6 @@ export class IrisEntitiesContaniner {
             if (subVideoTrack) {
                 return {
                     video_track: subVideoTrack.track,
-                    video_frame: subVideoTrack.track.getCurrentFrameData(),
                     is_new_frame: true, //todo  how to know is a new frame
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
@@ -318,7 +315,6 @@ export class IrisEntitiesContaniner {
                 let videoTrack = remoteUser.videoTrack;
                 return {
                     video_track: videoTrack,
-                    video_frame: videoTrack.getCurrentFrameData(),
                     is_new_frame: true, //todo  how to know is a new frame
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
@@ -335,7 +331,6 @@ export class IrisEntitiesContaniner {
             if (this._mainClientLocalVideoTrack && this._mainClientLocalVideoTrack.type == type) {
                 return {
                     video_track: this._mainClientLocalVideoTrack.track,
-                    video_frame: this._mainClientLocalVideoTrack.track.getCurrentFrameData(),
                     is_new_frame: true, //todo  how to know is a new frame
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
@@ -345,7 +340,6 @@ export class IrisEntitiesContaniner {
                     if (trackPackage.type == type) {
                         return {
                             video_track: trackPackage.track,
-                            video_frame: trackPackage.track.getCurrentFrameData(),
                             is_new_frame: true, //todo  how to know is a new frame
                             process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                         };
@@ -362,7 +356,6 @@ export class IrisEntitiesContaniner {
             if (subVideoTrack && subVideoTrack.type == type) {
                 return {
                     video_track: subVideoTrack.track,
-                    video_frame: subVideoTrack.track.getCurrentFrameData(),
                     is_new_frame: true, //todo  how to know is a new frame
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
@@ -373,7 +366,6 @@ export class IrisEntitiesContaniner {
                 let videoTrack = remoteUser.videoTrack;
                 return {
                     video_track: videoTrack,
-                    video_frame: videoTrack.getCurrentFrameData(),
                     is_new_frame: true, //todo  how to know is a new frame
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
@@ -675,16 +667,22 @@ export class IrisEntitiesContaniner {
             let map = e[1];
             for (let m of map) {
                 let subClient = m[1];
-                try {
-                    await subClient.leave();
-                    AgoraConsole.log("sub client leave success");
-                }
-                catch (e) {
-                    AgoraConsole.error("subClient leave faield");
-                    e && AgoraConsole.error(e);
+                if (subClient.channelName) {
+                    try {
+                        await subClient.leave();
+                        AgoraConsole.log("sub client leave success");
+                    }
+                    catch (e) {
+                        AgoraConsole.error("subClient leave faield");
+                        e && AgoraConsole.error(e);
+                    }
                 }
             }
         }
+
+
+        //todo 
+        this._remoteUsers = new Contaniner();
 
         //leave channel
 

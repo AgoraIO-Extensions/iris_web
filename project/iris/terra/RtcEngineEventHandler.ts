@@ -1615,7 +1615,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'Web_onDeviceEnumerated';
+        let key = 'WebGL_onDeviceEnumerated';
         this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     }
 

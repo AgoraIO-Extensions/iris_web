@@ -275,6 +275,11 @@ export class RtcEngine implements IRtcEngine {
                     mainClientVariables.mergeChannelMediaOptions(options);
                     let mainClient: IAgoraRTCClient = this._createMainClient();
                     try {
+                        //在JoinChannel之前就必须监听client的event，不然在Join过程中触发的回调会丢失呢
+                        let entitiesContainer = this._engine.entitiesContainer;
+                        entitiesContainer.setMainClient(mainClient);
+                        let clientEventHandler = new IrisClientEventHandler(mainClient, IrisClientType.kClientMian, this._engine);
+                        entitiesContainer.setMainClientEventHandler(clientEventHandler);
                         uid = await mainClient.join(globalVariables.appId, channelId, token ? token : null, uid) as number;
                         this._engine.mainClientVariables.token = token;
                         let audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary;
@@ -283,10 +288,6 @@ export class RtcEngine implements IRtcEngine {
 
                         try {
                             let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, clientType);
-                            let entitiesContainer = this._engine.entitiesContainer;
-                            entitiesContainer.setMainClient(mainClient);
-                            let clientEventHandler = new IrisClientEventHandler(mainClient, IrisClientType.kClientMian, this._engine);
-                            entitiesContainer.setMainClientEventHandler(clientEventHandler);
                             clientEventHandler.onJoinChannedlSucess(0);
 
                             //joinChannel success咯
@@ -3529,36 +3530,35 @@ export class RtcEngine implements IRtcEngine {
                     fullOptions.token = token;
 
                     let subClient: IAgoraRTCClient = this._createSubClient(connection);
+                    let audioSource = IrisAudioSourceType.kAudioSourceTypeUnknow;
+                    let videoSource = IrisVideoSourceType.kVideoSourceTypeUnknown;
+                    let clientType = IrisClientType.kClientSub;
+
+                    if (options.publishMicrophoneTrack) {
+                        audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary;
+                    }
+                    else if (options.publishScreenCaptureAudio) {
+                        audioSource = IrisAudioSourceType.kAudioSourceTypeScreenPrimary;
+                    }
+
+                    if (options.publishCameraTrack) {
+                        videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
+                    }
+                    else if (options.publishScreenTrack || options.publishScreenCaptureVideo) {
+                        videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+                    }
 
                     try {
-
+                        let entitiesContainer = this._engine.entitiesContainer;
+                        entitiesContainer.addSubClient(connection, subClient);
+                        let subClientEventHandler = new IrisClientEventHandler(subClient, IrisClientType.kClientSub, this._engine);
+                        entitiesContainer.addSubClientEventHandler(connection, subClientEventHandler);
                         let uid = await subClient.join(globalVariables.appId, connection.channelId, token ? token : null, connection.localUid)
                         connection.localUid = uid as number;
 
-                        let audioSource = IrisAudioSourceType.kAudioSourceTypeUnknow;
-                        let videoSource = IrisVideoSourceType.kVideoSourceTypeUnknown;
-                        let clientType = IrisClientType.kClientSub;
-
-                        if (options.publishMicrophoneTrack) {
-                            audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary;
-                        }
-                        else if (options.publishScreenCaptureAudio) {
-                            audioSource = IrisAudioSourceType.kAudioSourceTypeScreenPrimary;
-                        }
-
-                        if (options.publishCameraTrack) {
-                            videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
-                        }
-                        else if (options.publishScreenTrack || options.publishScreenCaptureVideo) {
-                            videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
-                        }
-
                         try {
                             let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, clientType);
-                            let entitiesContainer = this._engine.entitiesContainer;
-                            entitiesContainer.addSubClient(connection, subClient);
-                            let subClientEventHandler = new IrisClientEventHandler(subClient, IrisClientType.kClientSub, this._engine);
-                            entitiesContainer.addSubClientEventHandler(connection, subClientEventHandler);
+
                             subClientEventHandler.onJoinChannedlSucess(0);
 
                             // 推送麦克风audio
@@ -3671,7 +3671,7 @@ export class RtcEngine implements IRtcEngine {
                             });
                         }
                     }
-                    catch (reason: any) {
+                    catch (reason) {
                         AgoraConsole.error("join channelEx failed: join failed");
                         AgoraConsole.error(reason);
                         this._engine.rtcEngineEventHandler.onError(agorartc.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED, "");
@@ -4307,7 +4307,7 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    createDataStreamEx2(streamId: number, config: agorartc.DataStreamConfig, connection: agorartc.RtcConnection): number {
+    createDataStreamEx2(config: agorartc.DataStreamConfig, connection: agorartc.RtcConnection): number {
         AgoraConsole.warn("createDataStreamEx2 not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -4964,6 +4964,7 @@ export class RtcEngine implements IRtcEngine {
                     throw e;
                 }
             }
+            return;
         }
 
 
@@ -5016,6 +5017,10 @@ export class RtcEngine implements IRtcEngine {
                 retAudioTrack = audioTrack;
             }
             catch (e) {
+                if (retVideoTrack) {
+                    this._engine.entitiesContainer.videoTrackWillClose(retVideoTrack);
+                    retVideoTrack.close();
+                }
                 throw e;
             }
         }
@@ -5133,7 +5138,7 @@ export class RtcEngine implements IRtcEngine {
             if (this._engine.globalVariables.videoEncoderConfiguration) {
                 config.mirror = AgoraTranslate.agorartcVIDEO_MIRROR_MODE_TYPE2boolean(this._engine.globalVariables.videoEncoderConfiguration.mirrorMode)
             }
-            videoTrack.play(this._engine.generateVideoTrackLabel("", 0, IrisVideoSourceType.kVideoSourceTypeCameraPrimary), config);
+            videoTrack.play(this._engine.generateVideoTrackLabel("0", 0, IrisVideoSourceType.kVideoSourceTypeCameraPrimary), config);
         }
         if (globalVariables.pausedVideo) {
             videoTrack.setEnabled(false)

@@ -104,15 +104,21 @@ export class IrisVideoFrameBufferManager {
                 let videoParams: VideoParams = this.getVideoFrameByConfig(config);
                 if (videoParams != null) {
                     let resize = false;
+                    let curWidth = 0;
+                    let curHeight = 0;
+
                     if (this._sizeMap.has(key)) {
                         let size: Size = this._sizeMap.get(key);
-                        resize = (size.width != videoParams.video_frame.width || size.height != videoParams.video_frame.height);
+                        curWidth = (videoParams.video_track as any)._videoWidth;
+                        curHeight = (videoParams.video_track as any)._videoHeight;
+
+                        resize = (size.width != curWidth || size.height != curHeight);
                     }
                     else {
                         resize = true;
                     }
-                    val.buffer.OnVideoFrameReceived(videoParams.video_track, videoParams.video_frame, config, resize);
-                    this._sizeMap.set(key, { width: videoParams.video_frame.width, height: videoParams.video_frame.height });
+                    val.buffer.OnVideoFrameReceived(videoParams.video_track, config, resize);
+                    this._sizeMap.set(key, { width: curWidth, height: curHeight });
                 }
             }
         })

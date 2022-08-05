@@ -7,33 +7,33 @@ export class Contaniner<T> {
     private _contaniner: Map<string, Map<UID, T>> = new Map();
 
     addT(channelId: string, uid: UID, t: T) {
-        if (!this._contaniner[channelId]) {
-            this._contaniner[channelId] = new Map<UID, T>();
+        if (!this._contaniner.has(channelId)) {
+            this._contaniner.set(channelId, new Map<UID, T>());
         }
 
-        if (this._contaniner[channelId][uid] != null) {
+        if (this._contaniner.get(channelId).has(uid)) {
             console.debug("t already added!");
             console.debug("channelId: " + channelId + " uid: " + uid);
         }
         else {
-            this._contaniner[channelId][uid] = t;
+            this._contaniner.get(channelId).set(uid, t);
         }
     }
 
     removeT(channelId: string, uid: UID) {
-        if (this._contaniner[channelId] != null) {
-            if (this._contaniner[channelId][uid] != null) {
-                this._contaniner[channelId].delete(uid);
+        if (this._contaniner.has(channelId)) {
+            if (this._contaniner.get(channelId).has(uid)) {
+                this._contaniner.get(channelId).delete(uid);
             }
         }
     }
 
     getT(channelId: string, uid: UID): T {
-        return this._contaniner[channelId]?.[uid];
+        return this._contaniner.get(channelId)?.get(uid);
     }
 
     getTs(channelId: string): Map<UID, T> {
-        return this._contaniner[channelId];
+        return this._contaniner.get(channelId);
     }
 
     walkT(cb: walkFun<T>) {

@@ -6,7 +6,13 @@ import { IrisVideoFrameBufferManager } from "./engine/IrisVideoFrameBufferManage
 
 //IrisApiEngine
 export function CreateIrisApiEngine(): IrisApiEngine {
-    return new IrisApiEngine();
+    let engine = new IrisApiEngine();
+    IrisApiEngine.instance = engine;
+    return engine;
+}
+
+export function __dump() {
+    console.log(IrisApiEngine.instance);
 }
 
 export function DestroyIrisApiEngine(engine_ptr: IrisApiEngine): number {
@@ -53,6 +59,7 @@ export function Detach(engine_ptr: IrisApiEngine,
 
     engine_ptr.detach(manager_ptr);
 }
+
 
 
 

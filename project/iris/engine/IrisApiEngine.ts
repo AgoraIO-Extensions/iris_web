@@ -8,6 +8,8 @@ import { IrisVideoFrameBufferManager } from "./IrisVideoFrameBufferManager";
 
 export class IrisApiEngine {
 
+    public static instance: IrisApiEngine;
+
     private _engine: IrisRtcEngine;
 
 
@@ -18,6 +20,9 @@ export class IrisApiEngine {
     public callIrisApi(func_name: string,
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+
+        AgoraConsole.log("[callIrisApi]: " + func_name);
+        AgoraConsole.log(paramLength);
 
         let array = func_name.split('_');
         let className = array[0];

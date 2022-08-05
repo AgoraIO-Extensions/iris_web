@@ -13,6 +13,7 @@ export class IrisClientEventHandler {
     private _clientType: IrisClientType;
 
     constructor(client: IAgoraRTCClient, type: IrisClientType, engine: IrisRtcEngine) {
+        console.log("IrisClient")
         this._client = client;
         this._clientType = type;
         this._engine = engine;
@@ -78,7 +79,7 @@ export class IrisClientEventHandler {
     onEventUserJoined(user: IAgoraRTCRemoteUser): void {
         let connection: RtcConnection = {
             channelId: this._client.channelName,
-            localUid: this._client.uid as number
+            localUid: user.uid as number,
         };
         this._engine.entitiesContainer.addRemoteUser(connection, user);
 
@@ -360,6 +361,8 @@ export class IrisClientEventHandler {
 
     onEventPublishedUserList(users: IAgoraRTCRemoteUser): void {
         //todo 暂时没有找到对应的回调
+        console.log("onEventPulishedUserList");
+        console.log(users);
     }
 
     /*被外界主动调用的哦*/
