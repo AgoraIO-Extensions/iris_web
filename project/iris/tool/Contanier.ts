@@ -28,6 +28,12 @@ export class Contaniner<T> {
         }
     }
 
+    removeTs(channelId: string) {
+        if (this._contaniner.has(channelId)) {
+            this._contaniner.delete(channelId);
+        }
+    }
+
     getT(channelId: string, uid: UID): T {
         return this._contaniner.get(channelId)?.get(uid);
     }

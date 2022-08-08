@@ -1,7 +1,6 @@
 import { IAgoraRTCClient, ConnectionState, ConnectionDisconnectedReason, IAgoraRTCRemoteUser, UID, RemoteStreamType, ChannelMediaRelayState, ChannelMediaRelayError, ChannelMediaRelayEvent, NetworkQuality, AgoraRTCError } from "agora-rtc-sdk-ng";
 import { IrisClientType, IrisVideoSourceType } from "../base/BaseType";
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
-import { RtcConnection } from "../terra/rtc_types/TypeIAgoraRtcEngineEx";
 import * as agorartc from "../terra/rtc_types/Index";
 import { AgoraTranslate } from "../tool/AgoraTranslate";
 import { IrisTrackEventHandler, IrisTrackEventHandlerParam } from "./IrisTrackEventHandler";
@@ -45,7 +44,7 @@ export class IrisClientEventHandler {
 
     onEventConnectionStateChange(curState: ConnectionState, revState: ConnectionState, reason?: ConnectionDisconnectedReason): void {
 
-        let connection: RtcConnection = {
+        let connection: agorartc.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
@@ -76,34 +75,85 @@ export class IrisClientEventHandler {
 
     }
 
+    /*
+    *  假设我们主客户端A和子客户端B，同时加入频道1， 此时另外一个用户C加入了频道1
+    *  1.用户C 加入离开,开始推流,结束推流等行为会触发2次
+    *  2.主客户端A会触发 用户B加入(需要过滤掉这个值)
+    *  3.子客户端B会触发 用户A加入(需要过滤点这个值)
+    **/
     onEventUserJoined(user: IAgoraRTCRemoteUser): void {
-        let connection: RtcConnection = {
+        let connection: agorartc.RtcConnection = {
             channelId: this._client.channelName,
             localUid: user.uid as number,
         };
-        this._engine.entitiesContainer.addRemoteUser(connection, user);
-
         let remoteUid = user.uid;
         let elapsed = 0;
-
         this._engine.rtcEngineEventHandler.onUserJoinedEx(connection, remoteUid as number, elapsed);
+
+
+        let con2: agorartc.RtcConnection = {
+            channelId: this._client.channelName,
+            localUid: remoteUid as number
+        };
+
+        //过滤掉情况 2，3
+        if (this._engine.entitiesContainer.isMainClientOrSubClient(con2))
+            return;
+
+        //此时如果是情况1下的的第二次触发C加入。那么第二次的加入会被过滤掉
+        if (this._engine.entitiesContainer.getRemoteUser(con2) == null) {
+            this._engine.entitiesContainer.addRemoteUser(connection, user);
+        }
     }
 
     onEventUserLeft(user: IAgoraRTCRemoteUser, reason: string): void {
-        let connection: RtcConnection = {
+        let connection: agorartc.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
-        this._engine.entitiesContainer.removeRemoteUserAndClearTrackEvent(connection, user);
-
         let remoteUid = user.uid;
         let reason2 = AgoraTranslate.string2agorartcUSER_OFFLINE_REASON_TYPE(reason);
-
         this._engine.rtcEngineEventHandler.onUserOfflineEx(connection, remoteUid as number, reason2);
+
+
+
+
+        let con2: agorartc.RtcConnection = {
+            channelId: this._client.channelName,
+            localUid: remoteUid as number
+        };
+
+        //过滤掉情况 2，3
+        if (this._engine.entitiesContainer.isMainClientOrSubClient(con2))
+            return;
+
+        if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
+            return;
+
+
+        this._engine.entitiesContainer.removeRemoteUserAndClearTrackEvent(con2, user);
     }
 
     onEventUserPublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): void {
-        if (mediaType == 'audio') {
+
+        let con2: agorartc.RtcConnection = {
+            channelId: this._client.channelName,
+            localUid: user.uid as number
+        };
+
+        //过滤掉情况 2，3
+        if (this._engine.entitiesContainer.isMainClientOrSubClient(con2))
+            return;
+
+
+        //在情况1下。C触发了第二次发布流。但是此时的容器里存放的是前一个触发回调。所以自己不做处理了。
+        if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
+            return;
+
+        let enableAudio: boolean = this._engine.globalVariables.enabledAudio;
+        let enableVideo: boolean = this._engine.globalVariables.enabledVideo
+
+        if (mediaType == 'audio' && enableAudio) {
             let autoSubscribeAudio: boolean = false;
             if (this._clientType == IrisClientType.kClientMian) {
                 if (this._engine.mainClientVariables.autoSubscribeAudio == true)
@@ -135,7 +185,7 @@ export class IrisClientEventHandler {
                             this._engine.entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
                         }
                         else {
-                            let connection: RtcConnection = {
+                            let connection: agorartc.RtcConnection = {
                                 channelId: this._client.channelName,
                                 localUid: this._client.uid as number
                             };
@@ -143,11 +193,11 @@ export class IrisClientEventHandler {
                         }
                     })
                     .catch(() => {
-                        console.log("onEventUserPublished subcribe video failed");
+                        console.log("onEventUserPublished subcribe audio failed");
                     })
             }
         }
-        else {
+        else if (mediaType == 'video' && enableVideo) {
             //video
             let autoSubscribeVideo: boolean = false;
             if (this._clientType == IrisClientType.kClientMian) {
@@ -180,7 +230,7 @@ export class IrisClientEventHandler {
                             this._engine.entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
                         }
                         else {
-                            let connection: RtcConnection = {
+                            let connection: agorartc.RtcConnection = {
                                 channelId: this._client.channelName,
                                 localUid: this._client.uid as number
                             };
@@ -197,11 +247,25 @@ export class IrisClientEventHandler {
 
     onEventUserUnpublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): void {
 
+        let con2: agorartc.RtcConnection = {
+            channelId: this._client.channelName,
+            localUid: user.uid as number
+        };
+
+        //过滤掉情况 2，3
+        if (this._engine.entitiesContainer.isMainClientOrSubClient(con2))
+            return;
+
+
+        //在情况1下。C触发了第二次发布流。但是此时的容器里存放的是前一个触发回调的user。所以自己不做处理了。
+        if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
+            return;
+
         if (this._clientType == IrisClientType.kClientMian) {
             this._engine.entitiesContainer.removeMainClientTrackEventHandlerByRemoteUser(user);
         }
         else {
-            let connection: RtcConnection = {
+            let connection: agorartc.RtcConnection = {
                 channelId: this._client.channelName,
                 localUid: this._client.uid as number
             };
@@ -210,7 +274,7 @@ export class IrisClientEventHandler {
     }
 
     onEventUserInfoUpdated(uid: UID, msg: "mute-audio" | "mute-video" | "enable-local-video" | "unmute-audio" | "unmute-video" | "disable-local-video"): void {
-        let connection: RtcConnection = {
+        let connection: agorartc.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
@@ -270,7 +334,7 @@ export class IrisClientEventHandler {
     }
 
     onEventVolumeIndicator(result: { level: number; uid: UID; }[]): void {
-        let connection: RtcConnection = {
+        let connection: agorartc.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
@@ -291,7 +355,7 @@ export class IrisClientEventHandler {
     }
 
     onEventCryptError(): void {
-        let connection: RtcConnection = {
+        let connection: agorartc.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
@@ -300,7 +364,7 @@ export class IrisClientEventHandler {
     }
 
     onEventTokenPrivilegeWillExpire(): void {
-        let connection: RtcConnection = {
+        let connection: agorartc.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
@@ -322,7 +386,7 @@ export class IrisClientEventHandler {
 
 
     onEventTokenPrivilegeDidExpire(): void {
-        let connection: RtcConnection = {
+        let connection: agorartc.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
@@ -367,7 +431,7 @@ export class IrisClientEventHandler {
 
     /*被外界主动调用的哦*/
     onJoinChannedlSucess(elapsed: number) {
-        let connection: RtcConnection = {
+        let connection: agorartc.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
@@ -375,7 +439,7 @@ export class IrisClientEventHandler {
     }
 
     //这里需要传入connection ，而不是自己内部生成，是因为这个时候已经leaveChannel，可能已经没有channelName和uid了
-    onLeaveChannel(connection: RtcConnection, stats: agorartc.RtcStats) {
+    onLeaveChannel(connection: agorartc.RtcConnection, stats: agorartc.RtcStats) {
         this._engine.rtcEngineEventHandler.onLeaveChannelEx(connection, stats);
     }
 

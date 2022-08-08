@@ -22,7 +22,7 @@ export class IrisGlobalVariables {
 
 
     //开启或者禁用video功能
-    enabledLocalVideo: boolean = false;
+    enabledLocalVideo: boolean = true;
     mutedLocalVideoStream: boolean = false;
 
 

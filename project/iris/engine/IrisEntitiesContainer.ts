@@ -33,7 +33,7 @@ export class IrisEntitiesContaniner {
     private _subClientVideoTracks: Contaniner<VideoTrackPackage> = new Contaniner<VideoTrackPackage>();
     private _subClientTrackEventHandlers: Contaniner<Array<IrisTrackEventHandler>> = new Contaniner<Array<IrisTrackEventHandler>>();
 
-    //remoteUser //todo这个地方需要修改成 每个客户端都有一个Array才行
+    //remoteUser
     _remoteUsers: Contaniner<IAgoraRTCRemoteUser> = new Contaniner<IAgoraRTCRemoteUser>();
 
 
@@ -74,7 +74,11 @@ export class IrisEntitiesContaniner {
 
     //从数组中移除远端用户，并且如果当前轨道监听中有属于这个远端用户的轨道，也一起移除掉。
     removeRemoteUserAndClearTrackEvent(connection: agorartc.RtcConnection, user: IAgoraRTCRemoteUser) {
-        this._remoteUsers.removeT(connection.channelId, connection.localUid);
+
+        let userInContainer = this._remoteUsers.getT(connection.channelId, connection.localUid);
+        if (userInContainer == user) {
+            this._remoteUsers.removeT(connection.channelId, connection.localUid);
+        }
 
         this._mainClientTrackEventHandlers.filter((trackEvent: IrisTrackEventHandler) => {
             if (trackEvent.getRemoteUser() == user) {
@@ -458,23 +462,34 @@ export class IrisEntitiesContaniner {
     }
 
 
-    clearMainClientAll() {
+    clearMainClientAll(channelId: string) {
+
+        //client
         if (this._mainClient) {
             this._mainClient = null;
         }
 
+        //client event
         if (this._mainClientEventHandler) {
             this._mainClientEventHandler.destruction();
             this._mainClientEventHandler = null;
         }
 
+        //audio,video track
         this._mainClientLocalAudioTracks = [];
         this._mainClientLocalVideoTrack = null;
 
+        //trackEvent
         this._mainClientTrackEventHandlers.forEach(element => {
             element.destruction();
         })
         this._mainClientTrackEventHandlers = [];
+
+        //remoteUser
+        if (channelId != '' && channelId != null) {
+            this._remoteUsers.removeTs(channelId);
+        }
+
     }
 
 
@@ -494,16 +509,20 @@ export class IrisEntitiesContaniner {
         let channelId = connection.channelId;
         let uid = connection.localUid;
 
+        //client
         this._subClients.removeT(channelId, uid);
 
+        //client event
         let clientEventHander = this._subClientEventHandlers.getT(channelId, uid);
         clientEventHander && clientEventHander.destruction();
         this._subClientEventHandlers.removeT(channelId, uid);
 
+        //client audio, video track
         this._subClientAudioTracks.removeT(channelId, uid);
         this._subClientVideoTracks.removeT(channelId, uid);
 
 
+        //client track event
         let trackEventHandlers = this._subClientTrackEventHandlers.getT(channelId, uid);
         if (trackEventHandlers) {
             for (let event of trackEventHandlers) {
@@ -511,6 +530,9 @@ export class IrisEntitiesContaniner {
             }
         }
         this._subClientTrackEventHandlers.removeT(channelId, uid);
+
+        //remoteUser
+        this._remoteUsers.removeTs(connection.channelId);
     }
 
 
@@ -625,6 +647,19 @@ export class IrisEntitiesContaniner {
         return IrisVideoSourceType.kVideoSourceTypeUnknown;
     }
 
+    isMainClientOrSubClient(connection: agorartc.RtcConnection): boolean {
+        if (this._mainClient
+            && this._mainClient.channelName == connection.channelId
+            && this._mainClient.uid == connection.localUid) {
+            return true;
+        }
+
+        if (this.getSubClient(connection) != null) {
+            return true;
+        }
+
+        return false;
+    }
 
     //
     async destruction() {
@@ -689,5 +724,6 @@ export class IrisEntitiesContaniner {
         this.clearLocalAudioTracks(true);
         this.clearLocalVideoTracks(true);
     }
+
 
 }

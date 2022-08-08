@@ -282,8 +282,8 @@ export class RtcEngine implements IRtcEngine {
                         entitiesContainer.setMainClientEventHandler(clientEventHandler);
                         uid = await mainClient.join(globalVariables.appId, channelId, token ? token : null, uid) as number;
                         this._engine.mainClientVariables.token = token;
-                        let audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary;
-                        let videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
+                        let audioSource = globalVariables.enabledAudio && globalVariables.enabledLocalAudio ? IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary : IrisAudioSourceType.kAudioSourceTypeUnknow;
+                        let videoSource = globalVariables.enabledVideo && globalVariables.enabledLocalVideo ? IrisVideoSourceType.kVideoSourceTypeCameraPrimary : IrisVideoSourceType.kVideoSourceTypeUnknown;
                         let clientType = IrisClientType.kClientMian;
 
                         try {
@@ -415,8 +415,9 @@ export class RtcEngine implements IRtcEngine {
                         catch (e) {
                             AgoraConsole.error("join channel failed. create audio And videoTrack failed");
                             AgoraConsole.error(e);
+                            let channelId = mainClient.channelName;
                             mainClient.leave().then(() => { }).catch(() => { }).finally(() => {
-                                this._engine.entitiesContainer.clearMainClientAll();
+                                this._engine.entitiesContainer.clearMainClientAll(channelId);
                             });
                             this._engine.mainClientVariables.joinChanneled = false;
                         }
@@ -426,7 +427,7 @@ export class RtcEngine implements IRtcEngine {
                         reason && AgoraConsole.error(reason);
                         this._engine.rtcEngineEventHandler.onError(agorartc.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED, "");
                         this._engine.mainClientVariables.joinChanneled = false;
-                        this._engine.entitiesContainer.clearMainClientAll();
+                        this._engine.entitiesContainer.clearMainClientAll(null);
                     }
 
                     next();
@@ -831,10 +832,11 @@ export class RtcEngine implements IRtcEngine {
                         channelId: mainClient.channelName,
                         localUid: mainClient.uid as number
                     };
+                    let channelId = mainClient.channelName;
                     mainClient.leave()
                         .then(() => {
                             this._engine.entitiesContainer.getMainClientEventHandler()?.onLeaveChannel(con, new agorartc.RtcStats());
-                            this._engine.entitiesContainer.clearMainClientAll();
+                            this._engine.entitiesContainer.clearMainClientAll(channelId);
                         })
                         .catch((reason) => {
                             AgoraConsole.error('leaveChannel failed');
@@ -5106,9 +5108,10 @@ export class RtcEngine implements IRtcEngine {
 
     private _processAudioTrack(audioTrack: IMicrophoneAudioTrack, type: IrisClientType) {
         let globalVariables = this._engine.globalVariables;
-        if (globalVariables.enabledAudio) {
-            audioTrack.play();
-        }
+        //这里play的话，自己会听到自己的声音,
+        // if (globalVariables.enabledAudio) {
+        //     // audioTrack.play();
+        // }
         if (globalVariables.pausedAudio) {
             audioTrack.setEnabled(false)
                 .then(() => {
