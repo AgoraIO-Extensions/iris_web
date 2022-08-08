@@ -20,6 +20,8 @@ export class AgoraActionQueue {
         if (this._queue.length == 1) {
             let action: Action = this._queue[0];
             action.args.push(this._next);
+            console.log("action args");
+            console.log(action.args);
             action.fun.apply(this._thiz, action.args);
         }
     }
@@ -28,6 +30,8 @@ export class AgoraActionQueue {
         this._queue.shift();
         if (this._queue.length > 0) {
             let action: Action = this._queue[0];
+            console.log("action args");
+            console.log(action.args);
             action.args.push(this._next);
             action.fun.apply(this._thiz, action.args);
         }

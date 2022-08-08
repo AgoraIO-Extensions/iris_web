@@ -664,26 +664,6 @@ export class IrisEntitiesContaniner {
     //
     async destruction() {
 
-        //mainEvent, mainTrackEvent
-        this._mainClientEventHandler.destruction();
-        this._mainClientEventHandler = null;
-        this._mainClientTrackEventHandlers.forEach((trackEventHandler: IrisTrackEventHandler) => {
-            trackEventHandler.destruction();
-        })
-        this._mainClientTrackEventHandlers = [];
-
-        //subEvent, subTrackEvent
-        this._subClientEventHandlers.walkT((channelId: string, uid: UID, t: IrisClientEventHandler) => {
-            t.destruction();
-        });
-        this._subClientEventHandlers = new Contaniner();
-        this._subClientTrackEventHandlers.walkT((channelId: string, uid: UID, t: Array<IrisTrackEventHandler>) => {
-            t.forEach((trackEventHandler: IrisTrackEventHandler) => {
-                trackEventHandler.destruction();
-            })
-        })
-        this._subClientTrackEventHandlers = new Contaniner();
-
         //mainClient 
         if (this._mainClient && this._mainClient.channelName) {
             try {
@@ -695,10 +675,20 @@ export class IrisEntitiesContaniner {
                 e && AgoraConsole.error(e);
             }
         }
+        this._mainClient = null;
+
+        //mainEvent, mainTrackEvent
+        this._mainClientEventHandler.destruction();
+        this._mainClientEventHandler = null;
+
+        this._mainClientTrackEventHandlers.forEach((trackEventHandler: IrisTrackEventHandler) => {
+            trackEventHandler.destruction();
+        })
+        this._mainClientTrackEventHandlers = [];
 
         //subClient
-        let audioTracks = this._subClients.getContaniner();
-        for (let e of audioTracks) {
+        let subClients = this._subClients.getContaniner();
+        for (let e of subClients) {
             let map = e[1];
             for (let m of map) {
                 let subClient = m[1];
@@ -714,15 +704,26 @@ export class IrisEntitiesContaniner {
                 }
             }
         }
+        this._subClients = new Contaniner();
 
+        //subEvent, subTrackEvent
+        this._subClientEventHandlers.walkT((channelId: string, uid: UID, t: IrisClientEventHandler) => {
+            t.destruction();
+        });
+        this._subClientEventHandlers = new Contaniner();
+        this._subClientTrackEventHandlers.walkT((channelId: string, uid: UID, t: Array<IrisTrackEventHandler>) => {
+            t.forEach((trackEventHandler: IrisTrackEventHandler) => {
+                trackEventHandler.destruction();
+            })
+        })
+        this._subClientTrackEventHandlers = new Contaniner();
 
-        //todo 
         this._remoteUsers = new Contaniner();
 
-        //leave channel
 
         this.clearLocalAudioTracks(true);
         this.clearLocalVideoTracks(true);
+
     }
 
 

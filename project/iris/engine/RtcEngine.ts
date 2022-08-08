@@ -988,61 +988,78 @@ export class RtcEngine implements IRtcEngine {
     }
 
     startPreview2(sourceType: agorartc.VIDEO_SOURCE_TYPE): number {
+        this._actonQueue.putAction({
 
-        if (this._engine.globalVariables.enabledVideo == false) {
-            AgoraConsole.error("call enableVideo(true) before startPreview");
-            return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
-        }
-        else {
-            if (this._engine.mainClientVariables.startPreviewed == true) {
-                AgoraConsole.error("you already call startPreview");
-                return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
-            }
-            else if (sourceType >= 4) {
-                AgoraConsole.error("Invalid source type");
-                return -agorartc.ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
-            }
-            else {
+            fun: (sourceType: agorartc.VIDEO_SOURCE_TYPE, next) => {
+
+                if (this._engine.globalVariables.enabledVideo == false) {
+                    AgoraConsole.error("call enableVideo(true) before startPreview");
+                    next();
+                }
+
+                if (this._engine.mainClientVariables.startPreviewed == true) {
+                    AgoraConsole.error("you already call startPreview");
+                    next();
+                }
+
+                if (sourceType >= 4) {
+                    AgoraConsole.error("Invalid source type");
+                    next();
+                }
+
                 this._engine.mainClientVariables.startPreviewed = true;
-                this._actonQueue.putAction({
 
-                    fun: (sourceType: agorartc.VIDEO_SOURCE_TYPE, next) => {
-                        let audioSource: IrisAudioSourceType;
-                        let videoSource: IrisVideoSourceType;
-                        if (sourceType == agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY || sourceType == agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY) {
-                            audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary;
-                            videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
-                        }
-                        else {
-                            audioSource = IrisAudioSourceType.kAudioSourceTypeScreenPrimary;
-                            videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
-                        }
+                let audioSource: IrisAudioSourceType = IrisAudioSourceType.kAudioSourceTypeUnknow;
+                let videoSource: IrisVideoSourceType;
+                if (sourceType == agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY || sourceType == agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY) {
+                    videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
+                }
+                else {
+                    videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+                }
 
-                        this.getOrCreateAudioAndVideoTrack(
-                            audioSource,
-                            videoSource,
-                            IrisClientType.kClientMian,
-                            (err: any, trackArray: [ILocalAudioTrack, ILocalVideoTrack]) => {
-                                if (err) {
-                                    AgoraConsole.error("Start preview failed: create video and audio track failed");
-                                    AgoraConsole.error(err);
-                                    this._engine.mainClientVariables.startPreviewed = false;
-                                }
-                                else {
-                                    let audioTrack = trackArray[0];
-                                    let videoTrack = trackArray[1];
-                                    AgoraConsole.log("start preview createCameraVideoTrack success");
-                                }
-                                next();
-                            }
-                        )
-                    },
-                    args: [sourceType]
-                })
-                return 0;
-            }
-        }
+
+                let process = async () => {
+                    try {
+                        await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, IrisClientType.kClientMian);
+                        AgoraConsole.log("start preview createCameraVideoTrack success");
+                    }
+                    catch (err) {
+                        AgoraConsole.error("Start preview failed: create video and audio track failed");
+                        err && AgoraConsole.error(err);
+                        this._engine.mainClientVariables.startPreviewed = false;
+                    }
+                    next();
+                }
+
+                setTimeout(process, 0);
+
+
+                // this.getOrCreateAudioAndVideoTrack(
+                //     audioSource,
+                //     videoSource,
+                //     IrisClientType.kClientMian,
+                //     (err: any, trackArray: [ILocalAudioTrack, ILocalVideoTrack]) => {
+                //         if (err) {
+                //             AgoraConsole.error("Start preview failed: create video and audio track failed");
+                //             AgoraConsole.error(err);
+                //             this._engine.mainClientVariables.startPreviewed = false;
+                //         }
+                //         else {
+                //             let audioTrack = trackArray[0];
+                //             let videoTrack = trackArray[1];
+                //             AgoraConsole.log("start preview createCameraVideoTrack success");
+                //         }
+                //         next();
+                //     }
+                // )
+            },
+            args: [sourceType]
+        })
+        return 0;
     }
+
+
 
     stopPreview(): number {
         return this.stopPreview2(agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA);
@@ -2700,20 +2717,39 @@ export class RtcEngine implements IRtcEngine {
             fun: (displayId: number, regionRect: agorartc.Rectangle, captureParams: agorartc.ScreenCaptureParameters, next) => {
                 this._engine.globalVariables.screenCaptureParameters = captureParams;
 
-                this.getOrCreateAudioAndVideoTrack(
-                    IrisAudioSourceType.kAudioSourceTypeScreenPrimary,
-                    IrisVideoSourceType.kVideoSourceTypeScreenPrimary,
-                    IrisClientType.kClientMian,
-                    (err, tracks: [ILocalAudioTrack, ILocalVideoTrack]) => {
-                        if (err) {
-                            AgoraConsole.error("ScreenShare failed");
-                            AgoraConsole.error(err);
-                        }
-                        else {
-                            AgoraConsole.error("ScreenShare track create success");
-                        }
-                        next();
-                    })
+                let process = async () => {
+                    let audioType = IrisAudioSourceType.kAudioSourceTypeScreenPrimary;
+                    let videoType = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+                    let clientType = IrisClientType.kClientMian;
+                    try {
+                        await this.getOrCreateAudioAndVideoTrackAsync(audioType, videoType, clientType);
+                        AgoraConsole.error("ScreenShare track create success");
+
+                    }
+                    catch (err) {
+                        AgoraConsole.error("ScreenShare failed");
+                        err && AgoraConsole.error(err);
+                    }
+
+                    next();
+                }
+                setTimeout(process, 0);
+
+
+                // this.getOrCreateAudioAndVideoTrack(
+                //     IrisAudioSourceType.kAudioSourceTypeScreenPrimary,
+                //     IrisVideoSourceType.kVideoSourceTypeScreenPrimary,
+                //     IrisClientType.kClientMian,
+                //     (err, tracks: [ILocalAudioTrack, ILocalVideoTrack]) => {
+                //         if (err) {
+                //             AgoraConsole.error("ScreenShare failed");
+                //             AgoraConsole.error(err);
+                //         }
+                //         else {
+                //             AgoraConsole.error("ScreenShare track create success");
+                //         }
+                //         next();
+                //     })
             },
             args: [displayId, regionRect, captureParams]
         })
@@ -4728,202 +4764,202 @@ export class RtcEngine implements IRtcEngine {
     }
 
 
-    //TODO  先从已经创建的track里找，如果找不到，那么就去创建. 创建成功后，还要放到列表里哦
-    private getOrCreateAudioAndVideoTrack(audioType: IrisAudioSourceType, videoType: IrisVideoSourceType, clientType: IrisClientType, fun: (any, [ILocalAudioTrack, ILocalVideoTrack]) => void) {
-        if (audioType == IrisAudioSourceType.kAudioSourceTypeUnknow && videoType == IrisVideoSourceType.kVideoSourceTypeUnknown) {
-            AgoraConsole.error("getOrCreateAudioAndVideoTrack failed. want do you want ???");
-            fun("you cant set both audio and video unknow", [null, null]);
-            return;
-        }
+    // //TODO  先从已经创建的track里找，如果找不到，那么就去创建. 创建成功后，还要放到列表里哦
+    // private getOrCreateAudioAndVideoTrack(audioType: IrisAudioSourceType, videoType: IrisVideoSourceType, clientType: IrisClientType, fun: (any, [ILocalAudioTrack, ILocalVideoTrack]) => void) {
+    //     if (audioType == IrisAudioSourceType.kAudioSourceTypeUnknow && videoType == IrisVideoSourceType.kVideoSourceTypeUnknown) {
+    //         AgoraConsole.error("getOrCreateAudioAndVideoTrack failed. want do you want ???");
+    //         fun("you cant set both audio and video unknow", [null, null]);
+    //         return;
+    //     }
 
-        var trackArray: Array<any> = [null, null];
+    //     var trackArray: Array<any> = [null, null];
 
-        if (videoType == IrisVideoSourceType.kVideoSourceTypeScreenPrimary || videoType == IrisVideoSourceType.kVideoSourceTypeScreenSecondary) {
-            //screen video
-            if (audioType == IrisAudioSourceType.kAudioSourceTypeScreenPrimary || audioType == IrisAudioSourceType.kAudioSourceTypeScreenSecondary || audioType == IrisAudioSourceType.kAudioSourceTypeUnknow) {
+    //     if (videoType == IrisVideoSourceType.kVideoSourceTypeScreenPrimary || videoType == IrisVideoSourceType.kVideoSourceTypeScreenSecondary) {
+    //         //screen video
+    //         if (audioType == IrisAudioSourceType.kAudioSourceTypeScreenPrimary || audioType == IrisAudioSourceType.kAudioSourceTypeScreenSecondary || audioType == IrisAudioSourceType.kAudioSourceTypeUnknow) {
 
-                //屏幕视频 + 屏幕视频 or 空白
-                let audioTrackPackage: AudioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
-                let videoTrackPackage: VideoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+    //             //屏幕视频 + 屏幕视频 or 空白
+    //             let audioTrackPackage: AudioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
+    //             let videoTrackPackage: VideoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
 
-                if (audioTrackPackage && videoTrackPackage) {
-                    fun(null, [audioTrackPackage.track as ILocalAudioTrack, videoTrackPackage.track as ILocalVideoTrack]);
-                    return;
-                }
-                else {
-                    //屏幕共享 audio 和 video 应该要同步创建和同步销毁
-                    if (audioTrackPackage) {
-                        this._engine.entitiesContainer.audioTrackWillClose(audioTrackPackage.track as ILocalAudioTrack);
-                        (audioTrackPackage.track as ILocalAudioTrack).close();
-                    }
-                    if (videoTrackPackage) {
-                        this._engine.entitiesContainer.videoTrackWillClose(videoTrackPackage.track as ILocalVideoTrack);
-                        (videoTrackPackage.track as ILocalVideoTrack).close();
-                    }
-                }
+    //             if (audioTrackPackage && videoTrackPackage) {
+    //                 fun(null, [audioTrackPackage.track as ILocalAudioTrack, videoTrackPackage.track as ILocalVideoTrack]);
+    //                 return;
+    //             }
+    //             else {
+    //                 //屏幕共享 audio 和 video 应该要同步创建和同步销毁
+    //                 if (audioTrackPackage) {
+    //                     this._engine.entitiesContainer.audioTrackWillClose(audioTrackPackage.track as ILocalAudioTrack);
+    //                     (audioTrackPackage.track as ILocalAudioTrack).close();
+    //                 }
+    //                 if (videoTrackPackage) {
+    //                     this._engine.entitiesContainer.videoTrackWillClose(videoTrackPackage.track as ILocalVideoTrack);
+    //                     (videoTrackPackage.track as ILocalVideoTrack).close();
+    //                 }
+    //             }
 
-                let conf: ScreenVideoTrackInitConfig = this._generateScreenVideoTrackInitConfig();
-                AgoraRTC.createScreenVideoTrack(conf, 'enable')
-                    .then((trackArray: [ILocalVideoTrack, ILocalAudioTrack]) => {
-                        let videoTrack: ILocalVideoTrack = trackArray[0];
-                        let audioTrack: ILocalAudioTrack = trackArray[1];
-                        this._processSceneShareAuidoTrack(audioTrack, clientType);
-                        this._processSceneShareVideoTrack(videoTrack, clientType);
-                        this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
-                        this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
-                        fun(null, [trackArray[1], trackArray[0]]);
-                    })
-                    .catch((reason) => {
-                        fun(reason, null);
-                    })
-            }
-            else if (audioType == IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary || audioType == IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary) {
-                //屏幕共享视频 + 麦克风音频
-                let onGetVideoTrack = (err: any, videoTrack: ILocalVideoTrack) => {
-                    if (err) {
-                        fun(err, null);
-                    }
+    //             let conf: ScreenVideoTrackInitConfig = this._generateScreenVideoTrackInitConfig();
+    //             AgoraRTC.createScreenVideoTrack(conf, 'enable')
+    //                 .then((trackArray: [ILocalVideoTrack, ILocalAudioTrack]) => {
+    //                     let videoTrack: ILocalVideoTrack = trackArray[0];
+    //                     let audioTrack: ILocalAudioTrack = trackArray[1];
+    //                     this._processSceneShareAuidoTrack(audioTrack, clientType);
+    //                     this._processSceneShareVideoTrack(videoTrack, clientType);
+    //                     this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
+    //                     this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
+    //                     fun(null, [trackArray[1], trackArray[0]]);
+    //                 })
+    //                 .catch((reason) => {
+    //                     fun(reason, null);
+    //                 })
+    //         }
+    //         else if (audioType == IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary || audioType == IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary) {
+    //             //屏幕共享视频 + 麦克风音频
+    //             let onGetVideoTrack = (err: any, videoTrack: ILocalVideoTrack) => {
+    //                 if (err) {
+    //                     fun(err, null);
+    //                 }
 
-                    let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(audioType);
-                    if (audioTrackPackage) {
-                        fun(null, [audioTrackPackage.track as ILocalAudioTrack, videoTrack]);
-                        return;
-                    }
+    //                 let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(audioType);
+    //                 if (audioTrackPackage) {
+    //                     fun(null, [audioTrackPackage.track as ILocalAudioTrack, videoTrack]);
+    //                     return;
+    //                 }
 
-                    AgoraRTC.createMicrophoneAudioTrack()
-                        .then((audioTrack: IMicrophoneAudioTrack) => {
-                            this._processAudioTrack(audioTrack, clientType);
-                            this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
-                            fun(null, [audioTrack, videoTrack]);
-                        })
-                        .catch((reason) => {
-                            fun(err, null);
-                        })
-                }
+    //                 AgoraRTC.createMicrophoneAudioTrack()
+    //                     .then((audioTrack: IMicrophoneAudioTrack) => {
+    //                         this._processAudioTrack(audioTrack, clientType);
+    //                         this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
+    //                         fun(null, [audioTrack, videoTrack]);
+    //                     })
+    //                     .catch((reason) => {
+    //                         fun(err, null);
+    //                     })
+    //             }
 
-                let videoTrackPackage: VideoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(videoType);
-                if (videoTrackPackage) {
-                    onGetVideoTrack(null, videoTrackPackage.track as ILocalVideoTrack);
-                }
-                else {
-                    //屏幕共享 audio 和 video 应该要同步创建和同步销毁
-                    let audioTrackPackage: AudioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
-                    if (audioTrackPackage) {
-                        this._engine.entitiesContainer.audioTrackWillClose(audioTrackPackage.track as ILocalAudioTrack);
-                        (audioTrackPackage.track as ILocalAudioTrack).close();
-                    }
-                    if (videoTrackPackage) {
-                        this._engine.entitiesContainer.videoTrackWillClose(videoTrackPackage.track as ILocalVideoTrack);
-                        (videoTrackPackage.track as ILocalVideoTrack).close();
-                    }
+    //             let videoTrackPackage: VideoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(videoType);
+    //             if (videoTrackPackage) {
+    //                 onGetVideoTrack(null, videoTrackPackage.track as ILocalVideoTrack);
+    //             }
+    //             else {
+    //                 //屏幕共享 audio 和 video 应该要同步创建和同步销毁
+    //                 let audioTrackPackage: AudioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
+    //                 if (audioTrackPackage) {
+    //                     this._engine.entitiesContainer.audioTrackWillClose(audioTrackPackage.track as ILocalAudioTrack);
+    //                     (audioTrackPackage.track as ILocalAudioTrack).close();
+    //                 }
+    //                 if (videoTrackPackage) {
+    //                     this._engine.entitiesContainer.videoTrackWillClose(videoTrackPackage.track as ILocalVideoTrack);
+    //                     (videoTrackPackage.track as ILocalVideoTrack).close();
+    //                 }
 
-                    let conf: ScreenVideoTrackInitConfig = this._generateScreenVideoTrackInitConfig();
-                    AgoraRTC.createScreenVideoTrack(conf, 'enable')
-                        .then((trackArray: [ILocalVideoTrack, ILocalAudioTrack]) => {
-                            let videoTrack: ILocalVideoTrack = trackArray[0];
-                            let audioTrack: ILocalAudioTrack = trackArray[1];
-                            this._processSceneShareAuidoTrack(audioTrack, clientType);
-                            this._processSceneShareVideoTrack(videoTrack, clientType);
-                            this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
-                            this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
-                            onGetVideoTrack(null, videoTrack);
-                        })
-                        .catch((reason) => {
-                            onGetVideoTrack(reason, null);
-                        })
-                }
-            }
-            else {
-                //屏幕共享视频 + 不知道的音频
-                fun("getOrCreateAudioAndVideoTrack failed: Invalid audio type :" + audioType, null);
-            }
-        }
-        else if (videoType == IrisVideoSourceType.kVideoSourceTypeCameraPrimary || videoType == IrisVideoSourceType.kVideoSourceTypeCameraSecondary) {
-            //camera video
-            if (audioType == IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
-                || audioType == IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary
-                || audioType == IrisAudioSourceType.kAudioSourceTypeScreenPrimary
-                || audioType == IrisAudioSourceType.kAudioSourceTypeScreenSecondary
-            ) {
-                //摄像头视频 + 麦克风音频 or 屏幕共享音频
-                let onGetVideoTrack = (err: any, videoTrack: ILocalVideoTrack) => {
-                    if (err) {
-                        fun(err, null);
-                    }
+    //                 let conf: ScreenVideoTrackInitConfig = this._generateScreenVideoTrackInitConfig();
+    //                 AgoraRTC.createScreenVideoTrack(conf, 'enable')
+    //                     .then((trackArray: [ILocalVideoTrack, ILocalAudioTrack]) => {
+    //                         let videoTrack: ILocalVideoTrack = trackArray[0];
+    //                         let audioTrack: ILocalAudioTrack = trackArray[1];
+    //                         this._processSceneShareAuidoTrack(audioTrack, clientType);
+    //                         this._processSceneShareVideoTrack(videoTrack, clientType);
+    //                         this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
+    //                         this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
+    //                         onGetVideoTrack(null, videoTrack);
+    //                     })
+    //                     .catch((reason) => {
+    //                         onGetVideoTrack(reason, null);
+    //                     })
+    //             }
+    //         }
+    //         else {
+    //             //屏幕共享视频 + 不知道的音频
+    //             fun("getOrCreateAudioAndVideoTrack failed: Invalid audio type :" + audioType, null);
+    //         }
+    //     }
+    //     else if (videoType == IrisVideoSourceType.kVideoSourceTypeCameraPrimary || videoType == IrisVideoSourceType.kVideoSourceTypeCameraSecondary) {
+    //         //camera video
+    //         if (audioType == IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+    //             || audioType == IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary
+    //             || audioType == IrisAudioSourceType.kAudioSourceTypeScreenPrimary
+    //             || audioType == IrisAudioSourceType.kAudioSourceTypeScreenSecondary
+    //         ) {
+    //             //摄像头视频 + 麦克风音频 or 屏幕共享音频
+    //             let onGetVideoTrack = (err: any, videoTrack: ILocalVideoTrack) => {
+    //                 if (err) {
+    //                     fun(err, null);
+    //                 }
 
-                    let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(audioType);
-                    if (audioTrackPackage) {
-                        fun(err, [audioTrackPackage.track as ILocalAudioTrack, videoTrack]);
-                        return;
-                    }
-                    else if (audioType == IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
-                        || audioType == IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary) {
+    //                 let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(audioType);
+    //                 if (audioTrackPackage) {
+    //                     fun(err, [audioTrackPackage.track as ILocalAudioTrack, videoTrack]);
+    //                     return;
+    //                 }
+    //                 else if (audioType == IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+    //                     || audioType == IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary) {
 
-                        let audioConfig: MicrophoneAudioTrackInitConfig = this._generateMicrophoneAudioTrackInitConfig();
-                        AgoraRTC.createMicrophoneAudioTrack(audioConfig)
-                            .then((audioTrack: IMicrophoneAudioTrack) => {
-                                this._processAudioTrack(audioTrack, clientType);
-                                this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
-                                fun(null, [audioTrack, videoTrack]);
-                            })
-                            .catch((reason) => {
-                                fun(reason, null);
-                            });
-                    }
-                    else {
-                        fun("cant find screen share audio track", null);
-                    }
-                };
+    //                     let audioConfig: MicrophoneAudioTrackInitConfig = this._generateMicrophoneAudioTrackInitConfig();
+    //                     AgoraRTC.createMicrophoneAudioTrack(audioConfig)
+    //                         .then((audioTrack: IMicrophoneAudioTrack) => {
+    //                             this._processAudioTrack(audioTrack, clientType);
+    //                             this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
+    //                             fun(null, [audioTrack, videoTrack]);
+    //                         })
+    //                         .catch((reason) => {
+    //                             fun(reason, null);
+    //                         });
+    //                 }
+    //                 else {
+    //                     fun("cant find screen share audio track", null);
+    //                 }
+    //             };
 
-                let videoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(videoType);
-                if (videoTrackPackage) {
-                    onGetVideoTrack(null, videoTrackPackage.track as ILocalVideoTrack);
-                }
-                else {
-                    let videoConfig: CameraVideoTrackInitConfig = this._generateCameraVideoTrackInitConfig();
-                    AgoraRTC.createCameraVideoTrack(videoConfig)
-                        .then((videoTrack: ICameraVideoTrack) => {
-                            this._processVideoTrack(videoTrack, clientType);
-                            this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
-                            onGetVideoTrack(null, videoTrack);
-                        })
-                        .catch((reason) => {
-                            onGetVideoTrack(reason, null);
-                        })
-                }
-            }
-            else {
-                //摄像头视频 + 位置音频
-                fun("getOrCreateAudioAndVideoTrack failed: Invalid audio type :" + audioType, null);
-            }
-        }
-        else if (videoType == IrisVideoSourceType.kVideoSourceTypeUnknown) {
-            //不要视频 + 音频
-            let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(audioType);
-            if (audioTrackPackage) {
-                fun(null, [audioTrackPackage.track as ILocalAudioTrack, null]);
-            }
-            else if (audioType == IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary || audioType == IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary) {
+    //             let videoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(videoType);
+    //             if (videoTrackPackage) {
+    //                 onGetVideoTrack(null, videoTrackPackage.track as ILocalVideoTrack);
+    //             }
+    //             else {
+    //                 let videoConfig: CameraVideoTrackInitConfig = this._generateCameraVideoTrackInitConfig();
+    //                 AgoraRTC.createCameraVideoTrack(videoConfig)
+    //                     .then((videoTrack: ICameraVideoTrack) => {
+    //                         this._processVideoTrack(videoTrack, clientType);
+    //                         this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
+    //                         onGetVideoTrack(null, videoTrack);
+    //                     })
+    //                     .catch((reason) => {
+    //                         onGetVideoTrack(reason, null);
+    //                     })
+    //             }
+    //         }
+    //         else {
+    //             //摄像头视频 + 位置音频
+    //             fun("getOrCreateAudioAndVideoTrack failed: Invalid audio type :" + audioType, null);
+    //         }
+    //     }
+    //     else if (videoType == IrisVideoSourceType.kVideoSourceTypeUnknown) {
+    //         //不要视频 + 音频
+    //         let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(audioType);
+    //         if (audioTrackPackage) {
+    //             fun(null, [audioTrackPackage.track as ILocalAudioTrack, null]);
+    //         }
+    //         else if (audioType == IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary || audioType == IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary) {
 
-                let audioConfig: MicrophoneAudioTrackInitConfig = this._generateMicrophoneAudioTrackInitConfig();
-                AgoraRTC.createMicrophoneAudioTrack(audioConfig)
-                    .then((audioTrack: IMicrophoneAudioTrack) => {
-                        this._processAudioTrack(audioTrack, clientType);
-                        this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
-                        fun(null, [audioTrack, null]);
-                    })
-                    .catch((reason) => {
-                        fun(reason, null);
-                    });
-            }
-            else if (audioType == IrisAudioSourceType.kAudioSourceTypeScreenPrimary || audioType == IrisAudioSourceType.kAudioSourceTypeScreenSecondary) {
-                fun("cant find screen share audio track", null);
-            }
-            else {
-                fun("unkonw audio type", null);
-            }
-        }
-    }
+    //             let audioConfig: MicrophoneAudioTrackInitConfig = this._generateMicrophoneAudioTrackInitConfig();
+    //             AgoraRTC.createMicrophoneAudioTrack(audioConfig)
+    //                 .then((audioTrack: IMicrophoneAudioTrack) => {
+    //                     this._processAudioTrack(audioTrack, clientType);
+    //                     this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
+    //                     fun(null, [audioTrack, null]);
+    //                 })
+    //                 .catch((reason) => {
+    //                     fun(reason, null);
+    //                 });
+    //         }
+    //         else if (audioType == IrisAudioSourceType.kAudioSourceTypeScreenPrimary || audioType == IrisAudioSourceType.kAudioSourceTypeScreenSecondary) {
+    //             fun("cant find screen share audio track", null);
+    //         }
+    //         else {
+    //             fun("unkonw audio type", null);
+    //         }
+    //     }
+    // }
 
     private async getOrCreateAudioAndVideoTrackAsync(audioType: IrisAudioSourceType, videoType: IrisVideoSourceType, clientType: IrisClientType): Promise<[ILocalAudioTrack, ILocalVideoTrack]> {
 
@@ -4979,13 +5015,8 @@ export class RtcEngine implements IRtcEngine {
         else if (videoType == IrisVideoSourceType.kVideoSourceTypeScreenPrimary) {
             try {
                 let conf: ScreenVideoTrackInitConfig = this._generateScreenVideoTrackInitConfig();
-                let trackArray = await AgoraRTC.createScreenVideoTrack(conf, 'enable');
-
-                let videoTrack: ILocalVideoTrack = trackArray[0];
-                let audioTrack: ILocalAudioTrack = trackArray[1];
-                this._processSceneShareAuidoTrack(audioTrack, clientType);
+                let videoTrack: ILocalVideoTrack = await AgoraRTC.createScreenVideoTrack(conf, 'disable');
                 this._processSceneShareVideoTrack(videoTrack, clientType);
-                this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
                 this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
                 retVideoTrack = videoTrack;
             }

@@ -21,16 +21,15 @@ export class IrisApiEngine {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
 
-        AgoraConsole.log("[callIrisApi]: " + func_name);
-        AgoraConsole.log(paramLength);
-
         let array = func_name.split('_');
         let className = array[0];
         let funName = array[1];
 
         let callApiFun: CallApiType = this._engine[funName] as CallApiType;
         if (callApiFun) {
-            return callApiFun.call(this._engine, params, paramLength, buffer, bufferLength, result);
+            let ret = callApiFun.call(this._engine, params, paramLength, buffer, bufferLength, result);
+            AgoraConsole.log("[callIrisApi] " + func_name + " : " + ret);
+            return ret;
         }
         else {
             AgoraConsole.warn(func_name + " : not found in IrisApiEngine.ts");
