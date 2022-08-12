@@ -116,8 +116,6 @@ export class IrisClientEventHandler {
         this._engine.rtcEngineEventHandler.onUserOfflineEx(connection, remoteUid as number, reason2);
 
 
-
-
         let con2: agorartc.RtcConnection = {
             channelId: this._client.channelName,
             localUid: remoteUid as number
@@ -145,7 +143,10 @@ export class IrisClientEventHandler {
         if (this._engine.entitiesContainer.isMainClientOrSubClient(con2))
             return;
 
-
+        //这里有bug。 如果A(不订阅)， B（订阅先后加入频道）
+        //那么A先捕获到C，并且不订阅
+        //B加入频道好后就不能捕获C了。即使订阅也看不到人‘
+        //我认为这个情况是可以接受的，用户不要这么干最好s
         //在情况1下。C触发了第二次发布流。但是此时的容器里存放的是前一个触发回调。所以自己不做处理了。
         if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
             return;

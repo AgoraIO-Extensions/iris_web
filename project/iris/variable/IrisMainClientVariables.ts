@@ -16,7 +16,7 @@ export class IrisMainClientVariables {
     //ChannelMediaOptions
     public publishCameraTrack?: boolean;
     public publishSecondaryCameraTrack?: boolean;
-    public publishMicrophoneTrack?: boolean;
+    public publishAudioTrack?: boolean;
     public publishScreenCaptureVideo?: boolean;
     public publishScreenCaptureAudio?: boolean;
     public publishScreenTrack: boolean;
@@ -33,20 +33,53 @@ export class IrisMainClientVariables {
     public publishTrancodedVideoTrack?: boolean;
     public autoSubscribeAudio?: boolean;
     public autoSubscribeVideo?: boolean;
+    public startPreview?: boolean;
     public enableAudioRecordingOrPlayout?: boolean;
     public publishMediaPlayerId?: number;
     public clientRoleType?: agorartc.CLIENT_ROLE_TYPE;
-    public audienceLatencyLevel: agorartc.AUDIENCE_LATENCY_LEVEL_TYPE = agorartc.AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY;
-    public defaultVideoStreamType: agorartc.VIDEO_STREAM_TYPE = agorartc.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH;
-    public channelProfile: agorartc.CHANNEL_PROFILE_TYPE = agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_GAME;
+    public audienceLatencyLevel?: agorartc.AUDIENCE_LATENCY_LEVEL_TYPE;
+    public defaultVideoStreamType?: agorartc.VIDEO_STREAM_TYPE;
+    public channelProfile?: agorartc.CHANNEL_PROFILE_TYPE;
     public audioDelayMs?: number;
     public mediaPlayerAudioDelayMs?: number;
     public token?: string;
     public enableBuiltInMediaEncryption?: boolean;
     public publishRhythmPlayerTrack?: boolean;
-    public isInteractiveAudience?: boolean;
-    public customVideoTrackId?: agorartc.video_track_id_t;
-    public isAudioFilterable?: boolean;
+    // public audioOptionsExternal: AudioOptionsExternal;
+
+    clearChannelMediaOptions() {
+        this.publishCameraTrack = null;
+        this.publishSecondaryCameraTrack = null;
+        this.publishAudioTrack = null;
+        this.publishScreenCaptureVideo = null;
+        this.publishScreenCaptureAudio = null;
+        this.publishScreenTrack = null;
+        this.publishSecondaryScreenTrack = null;
+        this.publishCustomAudioTrack = null;
+        this.publishCustomAudioSourceId = null;
+        this.publishCustomAudioTrackEnableAec = null;
+        this.publishDirectCustomAudioTrack = null;
+        this.publishCustomAudioTrackAec = null;
+        this.publishCustomVideoTrack = null;
+        this.publishEncodedVideoTrack = null;
+        this.publishMediaPlayerAudioTrack = null;
+        this.publishMediaPlayerVideoTrack = null;
+        this.publishTrancodedVideoTrack = null;
+        this.autoSubscribeAudio = null;
+        this.autoSubscribeVideo = null;
+        this.startPreview = null;
+        this.enableAudioRecordingOrPlayout = null;
+        this.publishMediaPlayerId = null;
+        this.clientRoleType = null;
+        this.audienceLatencyLevel = null;
+        this.defaultVideoStreamType = null;
+        this.channelProfile = null;
+        this.audioDelayMs = null;
+        this.mediaPlayerAudioDelayMs = null;
+        this.token = null;
+        this.enableBuiltInMediaEncryption = null;
+        this.publishRhythmPlayerTrack = null;
+    }
 
     mergeChannelMediaOptions(options: agorartc.ChannelMediaOptions) {
         for (let key in options) {

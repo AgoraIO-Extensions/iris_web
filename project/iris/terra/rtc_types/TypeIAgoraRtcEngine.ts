@@ -268,7 +268,7 @@ export interface ImageTrackOptions {
 export interface ChannelMediaOptions {
     publishCameraTrack?: boolean;
     publishSecondaryCameraTrack?: boolean;
-    publishMicrophoneTrack?: boolean;
+    publishAudioTrack?: boolean;
     publishScreenCaptureVideo?: boolean;
     publishScreenCaptureAudio?: boolean;
     publishScreenTrack?: boolean;
@@ -285,6 +285,7 @@ export interface ChannelMediaOptions {
     publishTrancodedVideoTrack?: boolean;
     autoSubscribeAudio?: boolean;
     autoSubscribeVideo?: boolean;
+    startPreview?: boolean;
     enableAudioRecordingOrPlayout?: boolean;
     publishMediaPlayerId?: number;
     clientRoleType?: CLIENT_ROLE_TYPE;
