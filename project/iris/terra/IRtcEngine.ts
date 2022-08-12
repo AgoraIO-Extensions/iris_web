@@ -38,6 +38,7 @@ export interface IRtcEngine {
     //IRtcEngine
     release(sync: boolean): void;
     initialize(context: agorartc.RtcEngineContext): number;
+    setAppType(appType: number): number;
     queryInterface(iid: agorartc.INTERFACE_ID_TYPE, inter: void): number;
     getVersion(): string;
     getErrorDescription(code: number): string;

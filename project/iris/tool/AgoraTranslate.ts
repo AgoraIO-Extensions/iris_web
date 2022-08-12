@@ -114,6 +114,15 @@ export class AgoraTranslate {
         return ret;
     }
 
+    public static agorartcVideoFormat2VideoEncoderConfiguration(videoFormat: agorartc.VideoFormat): VideoEncoderConfiguration {
+        let ret: VideoEncoderConfiguration = {
+            width: videoFormat.width,
+            height: videoFormat.height,
+            frameRate: videoFormat.fps,
+        };
+        return ret;
+    }
+
     public static agorartcScreenCaptureParameters2VideoEncoderConfiguration(conf: agorartc.ScreenCaptureParameters): VideoEncoderConfiguration {
         let ret: VideoEncoderConfiguration = {
             width: conf.dimensions.width,

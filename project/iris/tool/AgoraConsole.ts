@@ -19,6 +19,8 @@ export class AgoraConsole {
     public static error(msg: any) {
         if (AgoraConsole.logLevel <= agorartc.LOG_LEVEL.LOG_LEVEL_ERROR) {
             console.error("[Iris]:" + msg);
+            let stack = (new Error()).stack;
+            console.error(stack);
         }
     };
 }

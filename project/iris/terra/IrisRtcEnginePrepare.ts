@@ -200,7 +200,7 @@ export class IrisRtcEnginePrepare {
     enumerateVideoDevices(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
+        // let obj = JSON.parse(params) as any;
         result.result = this._rtcEngine.enumerateVideoDevices();
         return 0;
     }
@@ -286,6 +286,16 @@ export class IrisRtcEnginePrepare {
         let context = obj.context;
         if (context == null) throw "context is null";
         result.result = this._rtcEngine.initialize(context);
+        return 0;
+    }
+
+    setAppType(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let appType = obj.appType;
+        if (appType == null) throw "appType is null";
+        result.result = this._rtcEngine.setAppType(appType);
         return 0;
     }
 
@@ -3730,7 +3740,7 @@ export class IrisRtcEnginePrepare {
     enumeratePlaybackDevices(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
+        // let obj = JSON.parse(params) as any;
         result.result = this._rtcEngine.enumeratePlaybackDevices();
         return 0;
     }
@@ -3738,7 +3748,7 @@ export class IrisRtcEnginePrepare {
     enumerateRecordingDevices(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
+        // let obj = JSON.parse(params) as any;
         result.result = this._rtcEngine.enumerateRecordingDevices();
         return 0;
     }

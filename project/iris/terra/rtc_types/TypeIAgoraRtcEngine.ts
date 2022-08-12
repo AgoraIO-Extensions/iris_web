@@ -211,7 +211,7 @@ export enum CLOUD_PROXY_TYPE {
 export interface CameraCapturerConfiguration {
     cameraDirection: CAMERA_DIRECTION;
     format: VideoFormat;
-    followEncodeDimensionRatio: boolean;
+    deviceId: string;
 };
 
 //c++ Struct ScreenCaptureConfiguration

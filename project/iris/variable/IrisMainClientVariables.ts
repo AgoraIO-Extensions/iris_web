@@ -106,6 +106,8 @@ export class IrisMainClientVariables {
     startPreviewed: boolean = false;
     joinChanneled: boolean = false;
 
+    //用来记录暂停或者恢复的
+    currChannelMediaRelayconfiguration: agorartc.ChannelMediaRelayConfiguration = null;
 
 
 }

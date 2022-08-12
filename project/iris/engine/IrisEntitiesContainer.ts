@@ -678,8 +678,10 @@ export class IrisEntitiesContaniner {
         this._mainClient = null;
 
         //mainEvent, mainTrackEvent
-        this._mainClientEventHandler.destruction();
-        this._mainClientEventHandler = null;
+        if (this._mainClientEventHandler) {
+            this._mainClientEventHandler.destruction();
+            this._mainClientEventHandler = null;
+        }
 
         this._mainClientTrackEventHandlers.forEach((trackEventHandler: IrisTrackEventHandler) => {
             trackEventHandler.destruction();
