@@ -303,6 +303,12 @@ export class RtcEngine implements IRtcEngine {
                             else if (options.publishSecondaryCameraTrack) {
                                 videoSource = IrisVideoSourceType.kVideoSourceTypeCameraSecondary;
                             }
+                            else if (options.publishScreenTrack) {
+                                videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+                            }
+                            else if (options.publishSecondaryScreenTrack) {
+                                videoSource = IrisVideoSourceType.kVideoSourceTypeScreenSecondary;
+                            }
                         }
 
                         let clientType = IrisClientType.kClientMian;
@@ -1224,15 +1230,10 @@ export class RtcEngine implements IRtcEngine {
                     }
 
                     //找到远端audio
-                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
-                    let container = remoteUsers.getContaniner();
-                    for (let v of container) {
-                        let map = v[1];
-                        for (let e of map) {
-                            let remoteUser: IAgoraRTCRemoteUser = e[1];
-                            if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying == false) {
-                                remoteUser.audioTrack.play();
-                            }
+                    let remoteUsers = this._engine.entitiesContainer.getAllRemoteUsers();
+                    for (let remoteUser of remoteUsers) {
+                        if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying == false) {
+                            remoteUser.audioTrack.play();
                         }
                     }
 
@@ -1271,15 +1272,10 @@ export class RtcEngine implements IRtcEngine {
                     }
 
                     //找到远端audio
-                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
-                    let container = remoteUsers.getContaniner();
-                    for (let v of container) {
-                        let map = v[1];
-                        for (let e of map) {
-                            let remoteUser: IAgoraRTCRemoteUser = e[1];
-                            if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying) {
-                                remoteUser.audioTrack.stop();
-                            }
+                    let remoteUsers = this._engine.entitiesContainer.getAllRemoteUsers();
+                    for (let remoteUser of remoteUsers) {
+                        if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying) {
+                            remoteUser.audioTrack.stop();
                         }
                     }
 
@@ -1412,19 +1408,14 @@ export class RtcEngine implements IRtcEngine {
             fun: (mute: boolean, next) => {
 
                 //找到远端audio 
-                let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
-                let container = remoteUsers.getContaniner();
-                for (let v of container) {
-                    let map = v[1];
-                    for (let e of map) {
-                        let remoteUser: IAgoraRTCRemoteUser = e[1];
-                        if (remoteUser.audioTrack) {
-                            if (remoteUser.audioTrack.isPlaying == true && mute == true) {
-                                remoteUser.audioTrack.stop();
-                            }
-                            else if (remoteUser.audioTrack.isPlaying == false && mute == false) {
-                                remoteUser.audioTrack.play();
-                            }
+                let remoteUsers = this._engine.entitiesContainer.getAllRemoteUsers();
+                for (let remoteUser of remoteUsers) {
+                    if (remoteUser.audioTrack) {
+                        if (remoteUser.audioTrack.isPlaying == true && mute == true) {
+                            remoteUser.audioTrack.stop();
+                        }
+                        else if (remoteUser.audioTrack.isPlaying == false && mute == false) {
+                            remoteUser.audioTrack.play();
                         }
                     }
                 }
@@ -1459,7 +1450,7 @@ export class RtcEngine implements IRtcEngine {
                 this._engine.mainClientVariables.mutedRemoteAudioStreams.set(uid, mute);
                 let channelName = this._engine.entitiesContainer.getMainClient().channelName;
                 if (channelName) {
-                    let remoteUser: IAgoraRTCRemoteUser = this._engine.entitiesContainer.getRemoteUsers().getT(channelName, uid);
+                    let remoteUser: IAgoraRTCRemoteUser = this._engine.entitiesContainer.getMainClientRemoteUserByUid(uid);
                     if (remoteUser && remoteUser.audioTrack) {
                         if (remoteUser.audioTrack.isPlaying == true && mute == true) {
                             remoteUser.audioTrack.stop();
@@ -1509,18 +1500,29 @@ export class RtcEngine implements IRtcEngine {
                         }
                     }
 
-                    //找到远端audio
-                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
-                    let container = remoteUsers.getContaniner();
-                    for (let v of container) {
-                        let map = v[1];
-                        for (let e of map) {
-                            let remoteUser: IAgoraRTCRemoteUser = e[1];
-                            if (remoteUser.videoTrack && remoteUser.videoTrack.isPlaying == false) {
-                                remoteUser.audioTrack.play();
+                    //找到远端video
+                    //mainClient的远端用户
+                    let entitiesContainer = this._engine.entitiesContainer;
+                    let mainClient = entitiesContainer.getMainClient();
+                    if (mainClient && mainClient.channelName) {
+                        let remoteUsers = mainClient.remoteUsers;
+                        for (let remoteUser of remoteUsers) {
+                            //todo 远端用户发流的时候。我不订阅，那么他的hasVideo为true， 但是他们的videoTrack是null
+                            if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying == false) {
+                                remoteUser.videoTrack.play(this._engine.generateVideoTrackLabel(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
                             }
                         }
                     }
+
+                    //subClient的远端用户
+                    entitiesContainer.getSubClients().walkT((channel_id, uid, subClient) => {
+                        let remoteUsers = subClient.remoteUsers;
+                        for (let remoteUser of remoteUsers) {
+                            if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying == false) {
+                                remoteUser.videoTrack.play(this._engine.generateVideoTrackLabel(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
+                            }
+                        }
+                    })
 
                     next();
                 };
@@ -1555,18 +1557,29 @@ export class RtcEngine implements IRtcEngine {
                         }
                     }
 
-                    //找到远端video
-                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
-                    let container = remoteUsers.getContaniner();
-                    for (let v of container) {
-                        let map = v[1];
-                        for (let e of map) {
-                            let remoteUser: IAgoraRTCRemoteUser = e[1];
-                            if (remoteUser.videoTrack && remoteUser.videoTrack.isPlaying) {
-                                remoteUser.videoTrack.stop();
+
+                    //mainClient的远端用户
+                    let entitiesContainer = this._engine.entitiesContainer;
+                    let mainClient = entitiesContainer.getMainClient();
+                    if (mainClient && mainClient.channelName) {
+                        let remoteUsers = mainClient.remoteUsers;
+                        for (let remoteUser of remoteUsers) {
+                            //todo 远端用户发流的时候。我不订阅，那么他的hasVideo为true， 但是他们的videoTrack是null
+                            if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying) {
+                                remoteUser.videoTrack.stop()
                             }
                         }
                     }
+
+                    //subClient的远端用户
+                    entitiesContainer.getSubClients().walkT((channel_id, uid, subClient) => {
+                        let remoteUsers = subClient.remoteUsers;
+                        for (let remoteUser of remoteUsers) {
+                            if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying) {
+                                remoteUser.videoTrack.stop();
+                            }
+                        }
+                    })
 
                     next();
                 };
@@ -1654,24 +1667,29 @@ export class RtcEngine implements IRtcEngine {
             fun: (mute: boolean, next) => {
                 //目前是找到MainClient和SubClient的远端
                 //找到远端video
-                let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
-                let container = remoteUsers.getContaniner();
-                for (let v of container) {
-                    let channelId = v[0];
-                    let map = v[1];
-                    for (let e of map) {
-                        let uid = e[0];
-                        let remoteUser: IAgoraRTCRemoteUser = e[1];
-                        if (remoteUser.videoTrack) {
-                            if (remoteUser.videoTrack.isPlaying == true && mute == true) {
-                                remoteUser.videoTrack.stop();
-                            }
-                            else if (remoteUser.videoTrack.isPlaying == false && mute == false) {
-                                remoteUser.videoTrack.play(this._engine.generateVideoTrackLabel(channelId, uid as number, IrisVideoSourceType.kVideoSourceTypeRemote));
-                            }
+                //mainClient的远端用户
+                let entitiesContainer = this._engine.entitiesContainer;
+                let mainClient = entitiesContainer.getMainClient();
+                if (mainClient && mainClient.channelName) {
+                    let remoteUsers = mainClient.remoteUsers;
+                    for (let remoteUser of remoteUsers) {
+                        //todo 远端用户发流的时候。我不订阅，那么他的hasVideo为true， 但是他们的videoTrack是null
+                        if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying) {
+                            remoteUser.videoTrack.stop()
                         }
                     }
                 }
+
+                //subClient的远端用户
+                entitiesContainer.getSubClients().walkT((channel_id, uid, subClient) => {
+                    let remoteUsers = subClient.remoteUsers;
+                    for (let remoteUser of remoteUsers) {
+                        if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying) {
+                            remoteUser.videoTrack.stop();
+                        }
+                    }
+                })
+
                 next();
             },
             args: [mute]
@@ -1697,14 +1715,16 @@ export class RtcEngine implements IRtcEngine {
             fun: (uid: number, mute: boolean, next) => {
 
                 this._engine.mainClientVariables.mutedRemoteAudioStreams.set(uid, mute);
-                let channelName = this._engine.entitiesContainer.getMainClient().channelName;
-                if (channelName) {
-                    let remoteUser: IAgoraRTCRemoteUser = this._engine.entitiesContainer.getRemoteUsers().getT(channelName, uid);
+                let mainClient = this._engine.entitiesContainer.getMainClient();
+
+                if (mainClient && mainClient.channelName) {
+                    let remoteUser: IAgoraRTCRemoteUser = this._engine.entitiesContainer.getMainClientRemoteUserByUid(uid);
                     if (remoteUser && remoteUser.videoTrack) {
                         if (remoteUser.videoTrack.isPlaying == true && mute == true) {
                             remoteUser.videoTrack.stop();
                         }
                         else if (remoteUser.videoTrack.isPlaying == false && mute == false) {
+                            let channelName = mainClient.channelName;
                             remoteUser.videoTrack.play(this._engine.generateVideoTrackLabel(channelName, uid, IrisVideoSourceType.kVideoSourceTypeRemote));
                         }
                     }
@@ -2419,7 +2439,7 @@ export class RtcEngine implements IRtcEngine {
                 this._engine.globalVariables.playbackSignalVolume = volume;
                 this._engine.globalVariables.playbackSignalVolumes.clear();
 
-                //找到本端video
+                //找到本端audio
                 let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
                 for (let trackPackage of trackPackages) {
                     let track = trackPackage.track as ILocalAudioTrack;
@@ -2427,15 +2447,10 @@ export class RtcEngine implements IRtcEngine {
                 }
 
                 //找到远端audio
-                let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
-                let container = remoteUsers.getContaniner();
-                for (let v of container) {
-                    let map = v[1];
-                    for (let e of map) {
-                        let remoteUser: IAgoraRTCRemoteUser = e[1];
-                        if (remoteUser.audioTrack) {
-                            remoteUser.audioTrack.setVolume(volume);
-                        }
+                let remoteUsers = this._engine.entitiesContainer.getAllRemoteUsers();
+                for (let remoteUser of remoteUsers) {
+                    if (remoteUser.audioTrack) {
+                        remoteUser.audioTrack.setVolume(volume);
                     }
                 }
 
@@ -2451,9 +2466,11 @@ export class RtcEngine implements IRtcEngine {
             fun: (volume: number, next) => {
 
                 this._engine.globalVariables.playbackSignalVolumes.set(uid, volume);
-                let remoteUser = this._engine.entitiesContainer.getRemoteUserByUid(uid);
-                if (remoteUser && remoteUser.audioTrack) {
-                    remoteUser.audioTrack.setVolume(volume);
+                let remoteUsers = this._engine.entitiesContainer.getAllRemoteUserByUid(uid);
+                for (let remoteUser of remoteUsers) {
+                    if (remoteUser.hasAudio && remoteUser.audioTrack) {
+                        remoteUser.audioTrack.setVolume(volume);
+                    }
                 }
 
                 next();
@@ -2478,26 +2495,40 @@ export class RtcEngine implements IRtcEngine {
                     this._engine.globalVariables.fallbackOption = option;
 
                     let fallback = AgoraTranslate.agorartcSTREAM_FALLBACK_OPTIONS2RemoteStreamFallbackType(option);
-                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
-                    let container = remoteUsers.getContaniner();
-                    for (let v of container) {
-                        let channelName = v[0];
-                        let clients: Map<UID, IAgoraRTCClient> = this._engine.entitiesContainer.getClientsByChannelName(channelName);
-                        if (clients != null) {
-                            for (let c of clients) {
-                                let client = c[1];
-                                let map = v[1];
-                                for (let m of map) {
-                                    let uid = m[0];
-                                    try {
-                                        await client.setStreamFallbackOption(uid, fallback);
-                                    }
-                                    catch (e) {
-                                        AgoraConsole.error("setRemoteSubscribeFallbackOption failed");
-                                        AgoraConsole.error(e);
-                                    }
-                                }
 
+                    let entitiesContainer = this._engine.entitiesContainer;
+                    let mainClient = entitiesContainer.getMainClient();
+                    if (mainClient && mainClient.channelName) {
+                        let remoteUsers = mainClient.remoteUsers;
+                        for (let remoteUser of remoteUsers) {
+                            let remoteUid = remoteUser.uid;
+                            try {
+                                await mainClient.setStreamFallbackOption(remoteUid, fallback);
+                            }
+                            catch (e) {
+                                AgoraConsole.error("setRemoteSubscribeFallbackOption failed");
+                                AgoraConsole.error(e);
+                            }
+                        }
+                    }
+
+                    let contaniner = entitiesContainer.getSubClients().getContaniner();
+                    for (let c of contaniner) {
+                        // let channelId = c[0];
+                        let map = c[1];
+                        for (let m of map) {
+                            // let uid = m[0];
+                            let client = m[1];
+                            let remoteUsers = client.remoteUsers;
+                            for (let remoteUser of remoteUsers) {
+                                let remoteUid = remoteUser.uid;
+                                try {
+                                    await mainClient.setStreamFallbackOption(remoteUid, fallback);
+                                }
+                                catch (e) {
+                                    AgoraConsole.error("setRemoteSubscribeFallbackOption failed");
+                                    AgoraConsole.error(e);
+                                }
                             }
                         }
                     }
@@ -2737,13 +2768,45 @@ export class RtcEngine implements IRtcEngine {
                 this._engine.globalVariables.screenCaptureParameters = captureParams;
 
                 let process = async () => {
-                    let audioType = IrisAudioSourceType.kAudioSourceTypeScreenPrimary;
+                    let audioType = IrisAudioSourceType.kAudioSourceTypeUnknow;
                     let videoType = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
                     let clientType = IrisClientType.kClientMian;
                     try {
-                        await this.getOrCreateAudioAndVideoTrackAsync(audioType, videoType, clientType);
-                        AgoraConsole.error("ScreenShare track create success");
+                        let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioType, videoType, clientType);
+                        AgoraConsole.log("ScreenShare track create success");
+                        let mainClient = this._engine.entitiesContainer.getMainClient();
+                        let publishScreenTrack = this._engine.mainClientVariables.publishScreenTrack || this._engine.mainClientVariables.publishScreenCaptureVideo;
 
+                        if (mainClient && mainClient.channelName && publishScreenTrack) {
+                            let screenShareTrack = trackArray[1] as ILocalVideoTrack;
+                            let entitiesContainer = this._engine.entitiesContainer;
+
+                            if (!entitiesContainer.isMainClientPublishedVideoTrack()) {
+                                //当前还主客户端还没有发流
+                                let videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary
+                                entitiesContainer.setMainClientLocalVideoTrack({ type: videoSource, track: screenShareTrack });
+                                let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
+                                    channelName: mainClient.channelName,
+                                    client: mainClient,
+                                    track: screenShareTrack,
+                                    trackType: 'ILocalVideoTrack',
+                                }, this._engine);
+                                entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+
+                                try {
+                                    await mainClient.publish(screenShareTrack)
+                                }
+                                catch (reason) {
+                                    AgoraConsole.error("screen video track publish failed");
+                                    AgoraConsole.error(reason);
+                                    entitiesContainer.removeMainClientTrackEventHandlerByTrack(screenShareTrack);
+                                    entitiesContainer.clearMainClientLocalVideoTrack();
+                                }
+                            }
+                            else {
+                                AgoraConsole.warn("main client already publish a video track. cant publish screen share video track again");
+                            }
+                        }
                     }
                     catch (err) {
                         AgoraConsole.error("ScreenShare failed");
@@ -2754,21 +2817,6 @@ export class RtcEngine implements IRtcEngine {
                 }
                 setTimeout(process, 0);
 
-
-                // this.getOrCreateAudioAndVideoTrack(
-                //     IrisAudioSourceType.kAudioSourceTypeScreenPrimary,
-                //     IrisVideoSourceType.kVideoSourceTypeScreenPrimary,
-                //     IrisClientType.kClientMian,
-                //     (err, tracks: [ILocalAudioTrack, ILocalVideoTrack]) => {
-                //         if (err) {
-                //             AgoraConsole.error("ScreenShare failed");
-                //             AgoraConsole.error(err);
-                //         }
-                //         else {
-                //             AgoraConsole.error("ScreenShare track create success");
-                //         }
-                //         next();
-                //     })
             },
             args: [displayId, regionRect, captureParams]
         })
@@ -2844,12 +2892,11 @@ export class RtcEngine implements IRtcEngine {
         return 0;
     }
 
-    startScreenCapture(captureParams: agorartc.ScreenCaptureParameters2): number {
-        AgoraConsole.warn("startScreenCapture not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    startScreenCapture(captureParams: agorartc.ScreenCaptureParameters): number {
+        return this.startScreenCaptureByDisplayId(0, null, captureParams);
     }
 
-    updateScreenCapture(captureParams: agorartc.ScreenCaptureParameters2): number {
+    updateScreenCapture(captureParams: agorartc.ScreenCaptureParameters): number {
         AgoraConsole.warn("updateScreenCapture not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -2857,21 +2904,29 @@ export class RtcEngine implements IRtcEngine {
     stopScreenCapture(): number {
 
         this._actonQueue.putAction({
-            fun: () => {
-                let entitiesContainer = this._engine.entitiesContainer;
-                let audioTrackPackage = entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
-                if (audioTrackPackage) {
-                    let track = audioTrackPackage.track as ILocalAudioTrack;
-                    entitiesContainer.audioTrackWillClose(track);
-                    track.close();
+            fun: (next) => {
+
+                let processStop = async () => {
+
+                    let entitiesContainer = this._engine.entitiesContainer;
+                    let audioTrackPackage = entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeScreenPrimary);
+                    if (audioTrackPackage) {
+                        let track = audioTrackPackage.track as ILocalAudioTrack;
+                        await entitiesContainer.audioTrackWillClose(track);
+                        track.close();
+                    }
+
+                    let videoTrackPackage = entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+                    if (videoTrackPackage) {
+                        let track = videoTrackPackage.track as ILocalVideoTrack;
+                        await entitiesContainer.videoTrackWillClose(track);
+                        track.close();
+                    }
+                    next();
+
                 }
 
-                let videoTrackPackage = entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
-                if (videoTrackPackage) {
-                    let track = videoTrackPackage.track as ILocalVideoTrack;
-                    entitiesContainer.videoTrackWillClose(track);
-                    track.close();
-                }
+                setTimeout(processStop, 0);
             },
             args: []
         });
@@ -3201,15 +3256,10 @@ export class RtcEngine implements IRtcEngine {
                     }
 
                     //找到远端audio
-                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
-                    let container = remoteUsers.getContaniner();
-                    for (let v of container) {
-                        let map = v[1];
-                        for (let e of map) {
-                            let remoteUser: IAgoraRTCRemoteUser = e[1];
-                            if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying) {
-                                remoteUser.audioTrack.stop();
-                            }
+                    let remoteUsers = this._engine.entitiesContainer.getAllRemoteUsers();
+                    for (let remoteUser of remoteUsers) {
+                        if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying) {
+                            remoteUser.audioTrack.stop();
                         }
                     }
 
@@ -3246,15 +3296,11 @@ export class RtcEngine implements IRtcEngine {
                     }
 
                     //找到远端audio
-                    let remoteUsers = this._engine.entitiesContainer.getRemoteUsers();
-                    let container = remoteUsers.getContaniner();
-                    for (let v of container) {
-                        let map = v[1];
-                        for (let e of map) {
-                            let remoteUser: IAgoraRTCRemoteUser = e[1];
-                            if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying == false) {
-                                remoteUser.audioTrack.play();
-                            }
+                    let remoteUsers = this._engine.entitiesContainer.getAllRemoteUsers();
+                    for (let remoteUser of remoteUsers) {
+
+                        if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying == false) {
+                            remoteUser.audioTrack.play();
                         }
                     }
 
@@ -4119,15 +4165,14 @@ export class RtcEngine implements IRtcEngine {
                 }
                 map.set(uid, mute);
 
-                let remoteUsers: Map<UID, IAgoraRTCRemoteUser> = this._engine.entitiesContainer.getRemoteUserByChannelName(connection.channelId);
-                for (let e of remoteUsers) {
-                    let user = e[1];
-                    if (user.hasAudio && user.audioTrack) {
-                        if (mute == true && user.audioTrack.isPlaying == true) {
-                            user.audioTrack.stop();
+                let remoteUser: IAgoraRTCRemoteUser = this._engine.entitiesContainer.getSubClientRemoteUserByUid(uid, connection);
+                if (remoteUser) {
+                    if (remoteUser.hasAudio && remoteUser.audioTrack) {
+                        if (mute == true && remoteUser.audioTrack.isPlaying == true) {
+                            remoteUser.audioTrack.stop();
                         }
-                        else if (mute == false && user.audioTrack.isPlaying == false) {
-                            user.audioTrack.play();
+                        else if (mute == false && remoteUser.audioTrack.isPlaying == false) {
+                            remoteUser.audioTrack.play();
                         }
                     }
                 }
@@ -4149,15 +4194,14 @@ export class RtcEngine implements IRtcEngine {
                 }
                 map.set(uid, mute);
 
-                let remoteUsers: Map<UID, IAgoraRTCRemoteUser> = this._engine.entitiesContainer.getRemoteUserByChannelName(connection.channelId);
-                for (let e of remoteUsers) {
-                    let user = e[1];
-                    if (user.hasVideo && user.videoTrack) {
-                        if (mute == true && user.videoTrack.isPlaying == true) {
-                            user.videoTrack.stop();
+                let remoteUser: IAgoraRTCRemoteUser = this._engine.entitiesContainer.getSubClientRemoteUserByUid(uid, connection);
+                if (remoteUser) {
+                    if (remoteUser.hasVideo && remoteUser.videoTrack) {
+                        if (mute == true && remoteUser.videoTrack.isPlaying == true) {
+                            remoteUser.videoTrack.stop();
                         }
-                        else if (mute == false && user.videoTrack.isPlaying == false) {
-                            user.videoTrack.play(this._engine.generateVideoTrackLabel(connection.channelId, connection.localUid, IrisVideoSourceType.kVideoSourceTypeRemote));
+                        else if (mute == false && remoteUser.videoTrack.isPlaying == false) {
+                            remoteUser.videoTrack.play(this._engine.generateVideoTrackLabel(connection.channelId, connection.localUid, IrisVideoSourceType.kVideoSourceTypeRemote));
                         }
                     }
                 }
@@ -4518,18 +4562,14 @@ export class RtcEngine implements IRtcEngine {
                         }
                     }
 
-                    let remoteUsers = entitiesContainer.getRemoteUsers().getContaniner();
-                    for (let e of remoteUsers) {
-                        let map = e[1];
-                        for (let m of map) {
-                            let user = m[1];
-                            if (user.hasAudio && user.audioTrack) {
-                                try {
-                                    user.audioTrack.setPlaybackDevice(deviceId);
-                                }
-                                catch (e) {
-                                    AgoraConsole.error("remoteAudioTrack setPlaybackDevice setFailed");
-                                }
+                    let remoteUsers = entitiesContainer.getAllRemoteUsers();
+                    for (let remoteUser of remoteUsers) {
+                        if (remoteUser.hasAudio && remoteUser.audioTrack) {
+                            try {
+                                remoteUser.audioTrack.setPlaybackDevice(deviceId);
+                            }
+                            catch (e) {
+                                AgoraConsole.error("remoteAudioTrack setPlaybackDevice setFailed");
                             }
                         }
                     }
@@ -4919,11 +4959,11 @@ export class RtcEngine implements IRtcEngine {
             else {
                 //屏幕共享 audio 和 video 应该要同步创建和同步销毁
                 if (audioPackage) {
-                    this._engine.entitiesContainer.audioTrackWillClose(audioPackage.track as ILocalAudioTrack);
+                    await this._engine.entitiesContainer.audioTrackWillClose(audioPackage.track as ILocalAudioTrack);
                     (audioPackage.track as ILocalAudioTrack).close();
                 }
                 if (videoPackage) {
-                    this._engine.entitiesContainer.videoTrackWillClose(videoPackage.track as ILocalVideoTrack);
+                    await this._engine.entitiesContainer.videoTrackWillClose(videoPackage.track as ILocalVideoTrack);
                     (videoPackage.track as ILocalVideoTrack).close();
                 }
 
@@ -4992,7 +5032,7 @@ export class RtcEngine implements IRtcEngine {
             }
             catch (e) {
                 if (retVideoTrack) {
-                    this._engine.entitiesContainer.videoTrackWillClose(retVideoTrack);
+                    await this._engine.entitiesContainer.videoTrackWillClose(retVideoTrack);
                     retVideoTrack.close();
                 }
                 throw e;

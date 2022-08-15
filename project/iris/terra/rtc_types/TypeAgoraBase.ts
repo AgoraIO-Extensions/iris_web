@@ -1188,9 +1188,9 @@ export interface ScreenCaptureParameters {
     windowFocus: boolean;
     excludeWindowList: view_t[];
     excludeWindowCount: number;
-    highLightWidth: number;
-    highLightColor: number;
-    enableHighLight: boolean;
+    // highLightWidth: number;
+    // highLightColor: number;
+    // enableHighLight: boolean;
 };
 
 //c++ enum AUDIO_RECORDING_QUALITY_TYPE

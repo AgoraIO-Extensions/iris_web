@@ -7,6 +7,7 @@ import { IrisRtcEngine } from "./IrisRtcEngine";
 import * as agorartc from '../terra/rtc_types/Index';
 import { AgoraTranslate } from "../tool/AgoraTranslate";
 import { AgoraConsole } from "../tool/AgoraConsole";
+import { AgoraTool } from "../tool/AgoraTool";
 
 export type WalkILocalVideoPackageTrackFun = (track: VideoTrackPackage) => void;
 
@@ -33,52 +34,98 @@ export class IrisEntitiesContaniner {
     private _subClientVideoTracks: Contaniner<VideoTrackPackage> = new Contaniner<VideoTrackPackage>();
     private _subClientTrackEventHandlers: Contaniner<Array<IrisTrackEventHandler>> = new Contaniner<Array<IrisTrackEventHandler>>();
 
-    //remoteUser
-    _remoteUsers: Contaniner<IAgoraRTCRemoteUser> = new Contaniner<IAgoraRTCRemoteUser>();
+    //remoteUser 这个地方有问题，不同client的remoterUser要分开存，不然会出现 
+    //A, B  先后加入频道1。然后频道中C,D,E加入。此时B离开频道了。导致A应该观察到的C,D,E被删除了。
+    //算了，自己不处理了，自己去IAgoraRTCClient里找吧
+    // _remoteUsers: Contaniner<IAgoraRTCRemoteUser> = new Contaniner<IAgoraRTCRemoteUser>();
 
 
     constructor(engine: IrisRtcEngine) {
         this._engine = engine;
     }
 
-    getRemoteUser(connection: agorartc.RtcConnection): IAgoraRTCRemoteUser {
-        return this._remoteUsers.getT(connection.channelId, connection.localUid);
+    // getRemoteUser(connection: agorartc.RtcConnection): IAgoraRTCRemoteUser {
+    //     return this._remoteUsers.getT(connection.channelId, connection.localUid);
+    // }
+
+    // addRemoteUser(connection: agorartc.RtcConnection, remoteUser: IAgoraRTCRemoteUser) {
+    //     this._remoteUsers.addT(connection.channelId, connection.localUid, remoteUser);
+    // }
+
+    getAllRemoteUsers(): Array<IAgoraRTCRemoteUser> {
+        let ret: Array<IAgoraRTCRemoteUser> = [];
+        if (this._mainClient && this._mainClient.channelName) {
+            AgoraTool.mergeArray(ret, this._mainClient.remoteUsers);
+        }
+
+        this._subClients.walkT((channel_id, uid, client) => {
+            AgoraTool.mergeArray(ret, client.remoteUsers);
+        });
+
+        return ret;
     }
 
-    addRemoteUser(connection: agorartc.RtcConnection, remoteUser: IAgoraRTCRemoteUser) {
-        this._remoteUsers.addT(connection.channelId, connection.localUid, remoteUser);
+    //这里返回一个数组，是可能我方用A,B,C 同时加入频道1，然后D,E加入。会有三个相同Uid的 remoteUser
+    getMainClientRemoteUserByUid(uid: UID): IAgoraRTCRemoteUser {
+        if (this._mainClient && this._mainClient.channelName) {
+            let remoteUsers = this._mainClient.remoteUsers;
+            for (let i = 0; i < remoteUsers.length; i++) {
+                if (remoteUsers[i].uid == uid) {
+                    return remoteUsers[i];
+                }
+            }
+        }
+        return null;
     }
 
-    getRemoteUsers(): Contaniner<IAgoraRTCRemoteUser> {
-        return this._remoteUsers;
+    getSubClientRemoteUserByUid(uid: UID, connection: agorartc.RtcConnection) {
+        let subClient = this._subClients.getT(connection.channelId, connection.localUid);
+        if (subClient) {
+            let remoteUsers = subClient.remoteUsers;
+            for (let i = 0; i < remoteUsers.length; i++) {
+                if (remoteUsers[i].uid == uid) {
+                    return remoteUsers[i];
+                }
+            }
+        }
+        return null;
     }
 
-    getRemoteUserByUid(uid: UID): IAgoraRTCRemoteUser {
-        let remoteUsers = this._remoteUsers;
-        let container = remoteUsers.getContaniner();
-        for (let v of container) {
-            let map = v[1];
-            for (let e of map) {
-                if (e[0] == uid) {
-                    return e[1];
+    getAllRemoteUserByUid(uid: UID): Array<IAgoraRTCRemoteUser> {
+        let ret: Array<IAgoraRTCRemoteUser> = [];
+
+        if (this._mainClient && this._mainClient.channelName) {
+            let remoteUsers = this._mainClient.remoteUsers;
+            for (let remoteUser of remoteUsers) {
+                if (remoteUser.uid == uid) {
+                    ret.push(remoteUser);
                 }
             }
         }
 
-        return null;
+        this._subClients.walkT((channel_id, unuseUid, subClient) => {
+            let remoteUsers = subClient.remoteUsers;
+            for (let remoteUser of remoteUsers) {
+                if (remoteUser.uid == uid) {
+                    ret.push(remoteUser);
+                }
+            }
+        })
+
+        return ret;
     }
 
-    getRemoteUserByChannelName(channelName: string): Map<UID, IAgoraRTCRemoteUser> {
-        return this._remoteUsers.getTs(channelName);
-    }
+    // getRemoteUserByChannelName(channelName: string): Map<UID, IAgoraRTCRemoteUser> {
+    //     return this._remoteUsers.getTs(channelName);
+    // }
 
     //从数组中移除远端用户，并且如果当前轨道监听中有属于这个远端用户的轨道，也一起移除掉。
     removeRemoteUserAndClearTrackEvent(connection: agorartc.RtcConnection, user: IAgoraRTCRemoteUser) {
 
-        let userInContainer = this._remoteUsers.getT(connection.channelId, connection.localUid);
-        if (userInContainer == user) {
-            this._remoteUsers.removeT(connection.channelId, connection.localUid);
-        }
+        // let userInContainer = this._remoteUsers.getT(connection.channelId, connection.localUid);
+        // if (userInContainer == user) {
+        //     this._remoteUsers.removeT(connection.channelId, connection.localUid);
+        // }
 
         this._mainClientTrackEventHandlers.filter((trackEvent: IrisTrackEventHandler) => {
             if (trackEvent.getRemoteUser() == user) {
@@ -293,18 +340,21 @@ export class IrisEntitiesContaniner {
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
             }
+
             if (this._localVideoTracks.length > 0) {
+                let frameData = this._localVideoTracks[0].track.getCurrentFrameData();
                 return {
                     video_track: this._localVideoTracks[0].track,
                     is_new_frame: true, //todo  how to know is a new frame
                     process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
                 }
             }
-            else {
-                return null;
-            }
+
+            return null;
+
         }
         else {
+            //是否是子账户的video
             let subVideoTrack = this._subClientVideoTracks.getT(channel_id, uid);
             if (subVideoTrack) {
                 return {
@@ -314,15 +364,36 @@ export class IrisEntitiesContaniner {
                 }
             }
 
-            let remoteUser = this._remoteUsers.getT(channel_id, uid);
-            if (remoteUser && remoteUser.hasVideo && remoteUser.videoTrack) {
-                let videoTrack = remoteUser.videoTrack;
-                return {
-                    video_track: videoTrack,
-                    is_new_frame: true, //todo  how to know is a new frame
-                    process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
+            //是否是主账户的远端用户
+            if (this._mainClient && this._mainClient.channelName == channel_id) {
+                for (let remoteUser of this._mainClient.remoteUsers) {
+                    if (remoteUser.uid == uid && remoteUser.hasVideo && remoteUser.videoTrack) {
+                        return {
+                            video_track: remoteUser.videoTrack,
+                            is_new_frame: true, //todo  how to know is a new frame
+                            process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
+                        }
+                    }
                 }
             }
+
+            //是否是子账户的远端用户
+            let subClients = this._subClients.getTs(channel_id);
+            if (subClients) {
+                for (let e of subClients) {
+                    let subClient = e[1];
+                    for (let remoteUser of subClient.remoteUsers) {
+                        if (remoteUser.uid == uid && remoteUser.hasVideo && remoteUser.videoTrack) {
+                            return {
+                                video_track: remoteUser.videoTrack,
+                                is_new_frame: true, //todo  how to know is a new frame
+                                process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
+                            }
+                        }
+                    }
+                }
+            }
+
             return null;
         }
     }
@@ -356,6 +427,7 @@ export class IrisEntitiesContaniner {
             }
         }
         else {
+            //是否是子账号的视频流
             let subVideoTrack = this._subClientVideoTracks.getT(channel_id, uid);
             if (subVideoTrack && subVideoTrack.type == type) {
                 return {
@@ -365,15 +437,36 @@ export class IrisEntitiesContaniner {
                 }
             }
 
-            let remoteUser = this._remoteUsers.getT(channel_id, uid);
-            if (remoteUser && remoteUser.hasVideo && remoteUser.videoTrack) {
-                let videoTrack = remoteUser.videoTrack;
-                return {
-                    video_track: videoTrack,
-                    is_new_frame: true, //todo  how to know is a new frame
-                    process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
+            //是否是主账户的远端用户
+            if (this._mainClient && this._mainClient.channelName == channel_id) {
+                for (let remoteUser of this._mainClient.remoteUsers) {
+                    if (remoteUser.uid == uid && remoteUser.hasVideo && remoteUser.videoTrack) {
+                        return {
+                            video_track: remoteUser.videoTrack,
+                            is_new_frame: true, //todo  how to know is a new frame
+                            process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
+                        }
+                    }
                 }
             }
+
+            //是否是子账户的远端用户
+            let subClients = this._subClients.getTs(channel_id);
+            if (subClients) {
+                for (let e of subClients) {
+                    let subClient = e[1];
+                    for (let remoteUser of subClient.remoteUsers) {
+                        if (remoteUser.uid == uid && remoteUser.hasVideo && remoteUser.videoTrack) {
+                            return {
+                                video_track: remoteUser.videoTrack,
+                                is_new_frame: true, //todo  how to know is a new frame
+                                process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK
+                            }
+                        }
+                    }
+                }
+            }
+
             return null;
         }
     }
@@ -410,15 +503,40 @@ export class IrisEntitiesContaniner {
         }
     }
 
-    removeMainClientTrackEventHandlerByRemoteUser(user: IAgoraRTCRemoteUser) {
-        for (let i = 0; i < this._mainClientTrackEventHandlers.length; i++) {
-            let trackEventHander = this._mainClientTrackEventHandlers[i];
-            if (trackEventHander.getRemoteUser() == user) {
+    removeMainClientTrackEventHandlerByRemoteUser(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video" | "all") {
+
+        this._mainClientTrackEventHandlers = this._mainClientTrackEventHandlers.filter((trackEventHander: IrisTrackEventHandler) => {
+            if (trackEventHander.getRemoteUser() != user)
+                return true;
+
+            if (mediaType == "all") {
                 trackEventHander.destruction();
-                this._mainClientTrackEventHandlers.splice(i, 1);
-                break;
+                return false;
+            }
+
+            if (mediaType == 'audio' && trackEventHander.getTrackType() == "IRemoteTrack") {
+                trackEventHander.destruction();
+                return false;
+            }
+
+            if (mediaType == "video" && trackEventHander.getTrackType() == "IRemoteVideoTrack") {
+                trackEventHander.destruction();
+                return false;
+            }
+
+            return true;
+        })
+    }
+
+    isMainClientPublishedVideoTrack(): boolean {
+        if (this._mainClient) {
+            for (let track of this._mainClient.localTracks) {
+                if (track.trackMediaType == 'video') {
+                    return true;
+                }
             }
         }
+        return false;
     }
 
 
@@ -441,24 +559,42 @@ export class IrisEntitiesContaniner {
         for (let i = 0; i < array.length; i++) {
             let event = array[i];
             if (event.getTrack() == track) {
+                array[i].destruction();
                 array.splice(i, 1);
                 break;
             }
         }
     }
 
-    removeSubClientTrackEventHandlerByRemoteUser(connection: agorartc.RtcConnection, user: IAgoraRTCRemoteUser) {
+    removeSubClientTrackEventHandlerByRemoteUser(connection: agorartc.RtcConnection, user: IAgoraRTCRemoteUser, mediaType: "audio" | "video" | "all") {
         let array = this._subClientTrackEventHandlers.getT(connection.channelId, connection.localUid);
         if (array == null)
             return;
 
-        for (let i = 0; i < array.length; i++) {
-            let event = array[i];
-            if (event.getRemoteUser() == user) {
-                array.splice(i, 1);
-                break;
+        array = array.filter((trackEventHander: IrisTrackEventHandler) => {
+            if (trackEventHander.getRemoteUser() != user)
+                return true;
+
+            if (mediaType == "all") {
+                trackEventHander.destruction();
+                return false;
             }
-        }
+
+            if (mediaType == 'audio' && trackEventHander.getTrackType() == "IRemoteTrack") {
+                trackEventHander.destruction();
+                return false;
+            }
+
+            if (mediaType == "video" && trackEventHander.getTrackType() == "IRemoteVideoTrack") {
+                trackEventHander.destruction();
+                return false;
+            }
+
+            return true;
+        })
+
+        this._subClientTrackEventHandlers.removeT(connection.channelId, connection.localUid);
+        this._subClientTrackEventHandlers.addT(connection.channelId, connection.localUid, array);
     }
 
 
@@ -486,9 +622,9 @@ export class IrisEntitiesContaniner {
         this._mainClientTrackEventHandlers = [];
 
         //remoteUser
-        if (channelId != '' && channelId != null) {
-            this._remoteUsers.removeTs(channelId);
-        }
+        // if (channelId != '' && channelId != null) {
+        //     this._remoteUsers.removeTs(channelId);
+        // }
 
     }
 
@@ -532,7 +668,7 @@ export class IrisEntitiesContaniner {
         this._subClientTrackEventHandlers.removeT(channelId, uid);
 
         //remoteUser
-        this._remoteUsers.removeTs(connection.channelId);
+        // this._remoteUsers.removeTs(connection.channelId);
     }
 
 
@@ -561,14 +697,23 @@ export class IrisEntitiesContaniner {
     }
 
 
-    //  当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 记住是所有哦
-    audioTrackWillClose(audioTrack: ILocalAudioTrack) {
+    //  当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 并且停止发流 记住是所有哦
+    async audioTrackWillClose(audioTrack: ILocalAudioTrack) {
         //local
         this.removeLocalAudioTrackByTrack(audioTrack);
 
         //main
         this.removeMainClientLocalAudioTrack(audioTrack);
         this.removeMainClientTrackEventHandlerByTrack(audioTrack);
+        if (this._mainClient && this._mainClient.localTracks.indexOf(audioTrack) != -1) {
+            try {
+                await this._mainClient.unpublish(audioTrack)
+                AgoraConsole.log("unpublish success");
+            }
+            catch (e) {
+                AgoraConsole.error("unpublish error");
+            }
+        }
 
         //sub
         this._subClientAudioTracks.walkT((channelId: string, uid: UID, packages: AudioTrackPackage[]) => {
@@ -591,30 +736,63 @@ export class IrisEntitiesContaniner {
             }
         });
 
+
+        let contaniner = this._subClients.getContaniner();
+        for (let e of contaniner) {
+            let channelId = e[0];
+            let clients = e[1];
+            for (let c of clients) {
+                let uid = c[0];
+                let client = c[1];
+                if (client.localTracks.indexOf(audioTrack) != -1) {
+                    try {
+                        await client.unpublish(audioTrack);
+                        AgoraConsole.log("unpublish success");
+                    }
+                    catch (e) {
+                        AgoraConsole.error("unpublish failed");
+                    }
+                }
+            }
+        }
+
+
     }
 
     // 当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 记住是所有哦
-    videoTrackWillClose(videoTrack: ILocalVideoTrack) {
+    async videoTrackWillClose(videoTrack: ILocalVideoTrack) {
         //local
         this.removeLocalVideoTrackByTrack(videoTrack);
 
         //main
         if (this._mainClientLocalVideoTrack.track == videoTrack) {
-            this._mainClient = null;
+            this._mainClientLocalVideoTrack = null;
         }
         this.removeMainClientTrackEventHandlerByTrack(videoTrack);
+        if (this._mainClient && this._mainClient.localTracks.indexOf(videoTrack) != -1) {
+            try {
+                await this._mainClient.unpublish(videoTrack)
+                AgoraConsole.log("unpublish success");
+            }
+            catch (e) {
+                AgoraConsole.error("unpublish error");
+            }
+        }
 
 
-        //sub
-        let deleteChannelId: string = null;
-        let deleteUid: UID = null;
+        //sub 
+        let deleteChannelIds: Array<string> = [];
+        let deleteUids: Array<UID> = [];
         this._subClientVideoTracks.walkT((channelId: string, uid: UID, pack: VideoTrackPackage) => {
             if (pack.track == videoTrack) {
-                deleteChannelId = channelId;
-                deleteUid = uid;
+                deleteChannelIds.push(channelId);
+                deleteUids.push(uid);
             }
         });
-        if (deleteChannelId != null && deleteUid != null) {
+
+        for (let i = 0; i < deleteChannelIds.length; i++) {
+            let deleteChannelId = deleteChannelIds[i];
+            let deleteUid = deleteUids[i];
             this._subClientAudioTracks.removeT(deleteChannelId, deleteUid);
         }
 
@@ -627,6 +805,26 @@ export class IrisEntitiesContaniner {
                 }
             }
         });
+
+        let contaniner = this._subClients.getContaniner();
+        for (let e of contaniner) {
+            let channelId = e[0];
+            let clients = e[1];
+            for (let c of clients) {
+                let uid = c[0];
+                let client = c[1];
+                if (client.localTracks.indexOf(videoTrack) != -1) {
+                    try {
+                        await client.unpublish(videoTrack);
+                        AgoraConsole.log("unpublish success");
+                    }
+                    catch (e) {
+                        AgoraConsole.error("unpublish failed");
+                    }
+                }
+            }
+        }
+
     }
 
     getLocalAudioTrackType(track: ILocalAudioTrack): IrisAudioSourceType {
@@ -720,7 +918,7 @@ export class IrisEntitiesContaniner {
         })
         this._subClientTrackEventHandlers = new Contaniner();
 
-        this._remoteUsers = new Contaniner();
+        // this._remoteUsers = new Contaniner();
 
 
         this.clearLocalAudioTracks(true);

@@ -229,8 +229,8 @@ export interface IRtcEngine {
     setScreenCaptureScenario(screenScenario: agorartc.SCREEN_SCENARIO_TYPE): number;
     updateScreenCaptureRegion(regionRect: agorartc.Rectangle): number;
     updateScreenCaptureParameters(captureParams: agorartc.ScreenCaptureParameters): number;
-    startScreenCapture(captureParams: agorartc.ScreenCaptureParameters2): number;
-    updateScreenCapture(captureParams: agorartc.ScreenCaptureParameters2): number;
+    startScreenCapture(captureParams: agorartc.ScreenCaptureParameters): number;
+    updateScreenCapture(captureParams: agorartc.ScreenCaptureParameters): number;
     stopScreenCapture(): number;
     getCallId(): string;
     rate(callId: string, rating: number, description: string): number;

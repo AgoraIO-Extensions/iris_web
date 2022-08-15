@@ -91,19 +91,19 @@ export class IrisClientEventHandler {
         this._engine.rtcEngineEventHandler.onUserJoinedEx(connection, remoteUid as number, elapsed);
 
 
-        let con2: agorartc.RtcConnection = {
-            channelId: this._client.channelName,
-            localUid: remoteUid as number
-        };
+        // let con2: agorartc.RtcConnection = {
+        //     channelId: this._client.channelName,
+        //     localUid: remoteUid as number
+        // };
 
         //过滤掉情况 2，3
-        if (this._engine.entitiesContainer.isMainClientOrSubClient(con2))
-            return;
+        // if (this._engine.entitiesContainer.isMainClientOrSubClient(con2))
+        //     return;
 
-        //此时如果是情况1下的的第二次触发C加入。那么第二次的加入会被过滤掉
-        if (this._engine.entitiesContainer.getRemoteUser(con2) == null) {
-            this._engine.entitiesContainer.addRemoteUser(connection, user);
-        }
+        // //此时如果是情况1下的的第二次触发C加入。那么第二次的加入会被过滤掉
+        // if (this._engine.entitiesContainer.getRemoteUser(con2) == null) {
+        //     this._engine.entitiesContainer.addRemoteUser(connection, user);
+        // }
     }
 
     onEventUserLeft(user: IAgoraRTCRemoteUser, reason: string): void {
@@ -125,11 +125,20 @@ export class IrisClientEventHandler {
         if (this._engine.entitiesContainer.isMainClientOrSubClient(con2))
             return;
 
-        if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
-            return;
+        // if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
+        //     return;
 
 
-        this._engine.entitiesContainer.removeRemoteUserAndClearTrackEvent(con2, user);
+        if (this._clientType == IrisClientType.kClientMian) {
+            this._engine.entitiesContainer.removeMainClientTrackEventHandlerByRemoteUser(user, "all");
+        }
+        else {
+            let connection: agorartc.RtcConnection = {
+                channelId: this._client.channelName,
+                localUid: this._client.uid as number
+            };
+            this._engine.entitiesContainer.removeSubClientTrackEventHandlerByRemoteUser(connection, user, "all");
+        }
     }
 
     onEventUserPublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): void {
@@ -148,8 +157,8 @@ export class IrisClientEventHandler {
         //B加入频道好后就不能捕获C了。即使订阅也看不到人‘
         //我认为这个情况是可以接受的，用户不要这么干最好s
         //在情况1下。C触发了第二次发布流。但是此时的容器里存放的是前一个触发回调。所以自己不做处理了。
-        if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
-            return;
+        // if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
+        //     return;
 
         let enableAudio: boolean = this._engine.globalVariables.enabledAudio;
         let enableVideo: boolean = this._engine.globalVariables.enabledVideo
@@ -259,18 +268,18 @@ export class IrisClientEventHandler {
 
 
         //在情况1下。C触发了第二次发布流。但是此时的容器里存放的是前一个触发回调的user。所以自己不做处理了。
-        if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
-            return;
+        // if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
+        //     return;
 
         if (this._clientType == IrisClientType.kClientMian) {
-            this._engine.entitiesContainer.removeMainClientTrackEventHandlerByRemoteUser(user);
+            this._engine.entitiesContainer.removeMainClientTrackEventHandlerByRemoteUser(user, mediaType);
         }
         else {
             let connection: agorartc.RtcConnection = {
                 channelId: this._client.channelName,
                 localUid: this._client.uid as number
             };
-            this._engine.entitiesContainer.removeSubClientTrackEventHandlerByRemoteUser(connection, user);
+            this._engine.entitiesContainer.removeSubClientTrackEventHandlerByRemoteUser(connection, user, mediaType);
         }
     }
 

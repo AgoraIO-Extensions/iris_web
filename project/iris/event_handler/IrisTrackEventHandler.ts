@@ -120,6 +120,10 @@ export class IrisTrackEventHandler {
         return this._remoteUser;
     }
 
+    getTrackType(): TrackType {
+        return this._trackType;
+    }
+
     destruction() {
         if (this._trackType == 'ILocalTrack') {
             let track = this._track as ILocalTrack;
