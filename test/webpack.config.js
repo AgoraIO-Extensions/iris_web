@@ -1,24 +1,21 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
 
-    entry: "./iris/app.ts",
-
+    entry: "./src/index.ts",
 
     output: {
         path: path.resolve(__dirname, "dist"),
-        libraryTarget: "this",
-        // library: "",
-        filename: "lib-agora-wrapper.js",
+        libraryTarget: "var",
+        library: "test",
+        filename: "test.js",
         environment: {
             arrowFunction: false // 关闭webpack的箭头函数，可选
         },
     },
 
     mode: "production",
-
     devtool: "source-map",
     optimization: {
         minimize: false
@@ -42,5 +39,12 @@ module.exports = {
 
     plugins: [
         new CleanWebpackPlugin(),
-    ]
+    ],
+
+    externals: {
+        "../../project/dist/dts/app": "window",
+
+        // ""
+        // "../../project/node_modules/agora-rtc-sdk-ng/rtc-sdk_en": "AgoraRTC"
+    }
 }

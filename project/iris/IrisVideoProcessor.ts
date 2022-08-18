@@ -4,6 +4,8 @@ import { IrisApiEngine } from "./engine/IrisApiEngine";
 import { IrisVideoFrameBufferManager } from "./engine/IrisVideoFrameBufferManager";
 
 
+// export namespace AgoraWrapper {
+
 export function CreateIrisVideoFrameBufferManager(): IrisVideoFrameBufferManager {
     return new IrisVideoFrameBufferManager();
 }
@@ -59,4 +61,5 @@ export function GetVideoFrameByConfig(
 
     return manager_ptr.getVideoFrameByConfig(config);
 }
+// }
 

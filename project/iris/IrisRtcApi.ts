@@ -3,6 +3,7 @@ import { IrisCEventHandler, IrisEventHandlerHandle } from "./base/BaseType";
 import { IrisApiEngine } from "./engine/IrisApiEngine";
 import { IrisVideoFrameBufferManager } from "./engine/IrisVideoFrameBufferManager";
 
+// export namespace AgoraWrapper {
 
 //IrisApiEngine
 export function CreateIrisApiEngine(): IrisApiEngine {
@@ -11,9 +12,7 @@ export function CreateIrisApiEngine(): IrisApiEngine {
     return engine;
 }
 
-export function __dump() {
-    console.log(IrisApiEngine.instance);
-}
+
 
 export function DestroyIrisApiEngine(engine_ptr: IrisApiEngine): number {
     engine_ptr.destruction();
@@ -60,9 +59,9 @@ export function Detach(engine_ptr: IrisApiEngine,
     engine_ptr.detach(manager_ptr);
 }
 
-
-
-
+export function __dump() {
+    console.log(IrisApiEngine.instance);
+}
 
 
 //audioFrame
