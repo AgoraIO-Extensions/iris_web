@@ -2657,7 +2657,6 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    // 或许通过setDeviceId 来设置就好了
     switchCamera(): number {
         this._actonQueue.putAction({
             fun: (next) => {
