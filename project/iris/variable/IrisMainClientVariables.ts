@@ -14,9 +14,9 @@ export class IrisMainClientVariables {
     public stopPreview?: boolean;
 
     //ChannelMediaOptions
-    public publishCameraTrack?: boolean;
+    public publishCameraTrack?: boolean = true;
     public publishSecondaryCameraTrack?: boolean;
-    public publishAudioTrack?: boolean;
+    public publishAudioTrack?: boolean = true;
     public publishScreenCaptureVideo?: boolean;
     public publishScreenCaptureAudio?: boolean;
     public publishScreenTrack: boolean;
@@ -31,8 +31,8 @@ export class IrisMainClientVariables {
     public publishMediaPlayerAudioTrack?: boolean;
     public publishMediaPlayerVideoTrack?: boolean;
     public publishTrancodedVideoTrack?: boolean;
-    public autoSubscribeAudio?: boolean;
-    public autoSubscribeVideo?: boolean;
+    public autoSubscribeAudio?: boolean = true;
+    public autoSubscribeVideo?: boolean = true;
     public startPreview?: boolean;
     public enableAudioRecordingOrPlayout?: boolean;
     public publishMediaPlayerId?: number;

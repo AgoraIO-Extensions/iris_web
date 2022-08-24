@@ -290,23 +290,23 @@ export class RtcEngine implements IRtcEngine {
 
                         let audioSource: IrisAudioSourceType = IrisAudioSourceType.kAudioSourceTypeUnknow;
                         if (globalVariables.enabledAudio && globalVariables.enabledLocalAudio) {
-                            if (options.publishAudioTrack) {
+                            if (mainClientVariables.publishAudioTrack) {
                                 audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary;
                             }
                         }
 
                         let videoSource: IrisVideoSourceType = IrisVideoSourceType.kVideoSourceTypeUnknown;
                         if (globalVariables.enabledVideo && globalVariables.enabledLocalVideo) {
-                            if (options.publishCameraTrack) {
+                            if (mainClientVariables.publishCameraTrack) {
                                 videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
                             }
-                            else if (options.publishSecondaryCameraTrack) {
+                            else if (mainClientVariables.publishSecondaryCameraTrack) {
                                 videoSource = IrisVideoSourceType.kVideoSourceTypeCameraSecondary;
                             }
-                            else if (options.publishScreenTrack) {
+                            else if (mainClientVariables.publishScreenTrack) {
                                 videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
                             }
-                            else if (options.publishSecondaryScreenTrack) {
+                            else if (mainClientVariables.publishSecondaryScreenTrack) {
                                 videoSource = IrisVideoSourceType.kVideoSourceTypeScreenSecondary;
                             }
                         }
@@ -2659,8 +2659,42 @@ export class RtcEngine implements IRtcEngine {
 
     // 或许通过setDeviceId 来设置就好了
     switchCamera(): number {
-        AgoraConsole.warn("switchCamera not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (next) => {
+                let trackPack = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeCameraPrimary);
+                if (trackPack) {
+                    let videoTrack: ICameraVideoTrack = trackPack.track as ICameraVideoTrack;
+                    let curDeviceName: string = (videoTrack as any)._deviceName;
+                    let allDevices = this._engine.globalVariables.videoDevices;
+                    let curIndex = -1;
+                    for (let i = 0; i < allDevices.length; i++) {
+                        if (allDevices[i].deviceName == curDeviceName) {
+                            curIndex = i;
+                            break;
+                        }
+                    }
+                    curIndex++;
+                    let nextDevice = allDevices[curIndex % allDevices.length];
+                    videoTrack.setDevice(nextDevice.deviceId)
+                        .then(() => {
+                            AgoraConsole.log("switchCamera sucess");
+                        })
+                        .catch(() => {
+                            AgoraConsole.error("switchCamera failed");
+                        })
+                        .finally(() => {
+                            next();
+                        })
+                }
+                else {
+                    next();
+                }
+            },
+            args: []
+        })
+
+
+        return 0;
     }
 
     isCameraZoomSupported(): boolean {

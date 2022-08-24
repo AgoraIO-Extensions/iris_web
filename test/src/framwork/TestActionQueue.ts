@@ -1,4 +1,4 @@
-import { renderPass, renderError } from "./render";
+import { renderPass, renderError, renderTitle, renderEnd } from "./render";
 import { waitForDebugger } from "inspector";
 
 
@@ -46,9 +46,11 @@ export class TestActionQueue {
         for (let i = 0; i < this._queue.length; i++) {
             let action: Action = this._queue[i];
             this._curTitle = action.titile;
+            renderTitle(action.titile);
             await action.cb.call(this);
             await waitForSecond(2);
         }
+        renderEnd();
         // })
     }
 
@@ -77,6 +79,15 @@ export class TestActionQueue {
         }
         else {
             renderError(this._curTitle, title);
+        }
+    }
+
+    shouldWarn(title: string, val: boolean) {
+        if (val) {
+            renderError(this._curTitle, title);
+        }
+        else {
+            renderPass(this._curTitle, title);
         }
     }
 
