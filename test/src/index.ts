@@ -337,9 +337,20 @@ test("SwitchCamera", async () => {
     AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_VIDEODEVICEMANAGER_ENUMERATEVIDEODEVICES, "{}", 2, null, 0, result);
     let deviceInfos: agorartc.DeviceInfo[] = result.result;
     shoudlWarn("camera number should more than 1", deviceInfos.length < 2);
+
     result = {};
     AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SWITCHCAMERA, "{}", 2, null, 0, result);
-    shouldEqual("switchCamera: ", result.result, 0);
+    shouldEqual("switchCamera one time: ", result.result, 0);
+    await waitForSecond(3);
+
+    result = {};
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SWITCHCAMERA, "{}", 2, null, 0, result);
+    shouldEqual("switchCamera two time: ", result.result, 0);
+    await waitForSecond(3);
+
+    result = {};
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SWITCHCAMERA, "{}", 2, null, 0, result);
+    shouldEqual("switchCamera three time: ", result.result, 0);
     await waitForSecond(3);
 
     //call leaveChannel
