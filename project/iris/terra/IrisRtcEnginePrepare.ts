@@ -1033,16 +1033,6 @@ export class IrisRtcEnginePrepare {
         return 0;
     }
 
-    selectAudioTrack(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let index = obj.index;
-        if (index == null) throw "index is null";
-        result.result = this._rtcEngine.selectAudioTrack(index);
-        return 0;
-    }
-
     getAudioTrackCount(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
@@ -3968,6 +3958,719 @@ export class IrisRtcEnginePrepare {
         let enable = obj.enable;
         if (enable == null) throw "enable is null";
         result.result = this._rtcEngine.followSystemRecordingDevice(enable);
+        return 0;
+    }
+
+    //IMediaPlayer
+    open(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let url = obj.url;
+        if (url == null) throw "url is null";
+        let startPos = obj.startPos;
+        if (startPos == null) throw "startPos is null";
+        obj.result = this._rtcEngine.open(playerId, url, startPos);
+        return 0;
+    }
+
+    openWithCustomSource(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let startPos = obj.startPos;
+        if (startPos == null) throw "startPos is null";
+        let provider = obj.provider;
+        if (provider == null) throw "provider is null";
+        obj.result = this._rtcEngine.openWithCustomSource(playerId, startPos, provider);
+        return 0;
+    }
+
+    openWithMediaSource(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let source = obj.source;
+        if (source == null) throw "source is null";
+        obj.result = this._rtcEngine.openWithMediaSource(playerId, source);
+        return 0;
+    }
+
+    play(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        obj.result = this._rtcEngine.play(playerId);
+        return 0;
+    }
+
+    pause(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        obj.result = this._rtcEngine.pause(playerId);
+        return 0;
+    }
+
+    stop(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        obj.result = this._rtcEngine.stop(playerId);
+        return 0;
+    }
+
+    resume(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        obj.result = this._rtcEngine.resume(playerId);
+        return 0;
+    }
+
+    seek(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let newPos = obj.newPos;
+        if (newPos == null) throw "newPos is null";
+        obj.result = this._rtcEngine.seek(playerId, newPos);
+        return 0;
+    }
+
+    setAudioPitch(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let pitch = obj.pitch;
+        if (pitch == null) throw "pitch is null";
+        obj.result = this._rtcEngine.setAudioPitch(playerId, pitch);
+        return 0;
+    }
+
+    getDuration(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let duration = obj.duration;
+        if (duration == null) throw "duration is null";
+        obj.result = this._rtcEngine.getDuration(playerId, duration);
+        return 0;
+    }
+
+    getPlayPosition(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let pos = obj.pos;
+        if (pos == null) throw "pos is null";
+        obj.result = this._rtcEngine.getPlayPosition(playerId, pos);
+        return 0;
+    }
+
+    getStreamCount(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let count = obj.count;
+        if (count == null) throw "count is null";
+        obj.result = this._rtcEngine.getStreamCount(playerId, count);
+        return 0;
+    }
+
+    getStreamInfo(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let index = obj.index;
+        if (index == null) throw "index is null";
+        let info = obj.info;
+        if (info == null) throw "info is null";
+        obj.result = this._rtcEngine.getStreamInfo(playerId, index, info);
+        return 0;
+    }
+
+    setLoopCount(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let loopCount = obj.loopCount;
+        if (loopCount == null) throw "loopCount is null";
+        obj.result = this._rtcEngine.setLoopCount(playerId, loopCount);
+        return 0;
+    }
+
+    muteAudio(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let audio_mute = obj.audio_mute;
+        if (audio_mute == null) throw "audio_mute is null";
+        obj.result = this._rtcEngine.muteAudio(playerId, audio_mute);
+        return 0;
+    }
+
+    isAudioMuted(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        obj.result = this._rtcEngine.isAudioMuted(playerId);
+        return 0;
+    }
+
+    muteVideo(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let video_mute = obj.video_mute;
+        if (video_mute == null) throw "video_mute is null";
+        obj.result = this._rtcEngine.muteVideo(playerId, video_mute);
+        return 0;
+    }
+
+    isVideoMuted(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        obj.result = this._rtcEngine.isVideoMuted(playerId);
+        return 0;
+    }
+
+    setPlaybackSpeed(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let speed = obj.speed;
+        if (speed == null) throw "speed is null";
+        obj.result = this._rtcEngine.setPlaybackSpeed(playerId, speed);
+        return 0;
+    }
+
+    selectAudioTrack(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let index = obj.index;
+        if (index == null) throw "index is null";
+        obj.result = this._rtcEngine.selectAudioTrack(playerId, index);
+        return 0;
+    }
+
+    setPlayerOption(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let key = obj.key;
+        if (key == null) throw "key is null";
+        let value = obj.value;
+        if (value == null) throw "value is null";
+        obj.result = this._rtcEngine.setPlayerOption(playerId, key, value);
+        return 0;
+    }
+
+    setPlayerOption2(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let key = obj.key;
+        if (key == null) throw "key is null";
+        let value = obj.value;
+        if (value == null) throw "value is null";
+        obj.result = this._rtcEngine.setPlayerOption2(playerId, key, value);
+        return 0;
+    }
+
+    takeScreenshot(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let filename = obj.filename;
+        if (filename == null) throw "filename is null";
+        obj.result = this._rtcEngine.takeScreenshot(playerId, filename);
+        return 0;
+    }
+
+    selectInternalSubtitle(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let index = obj.index;
+        if (index == null) throw "index is null";
+        obj.result = this._rtcEngine.selectInternalSubtitle(playerId, index);
+        return 0;
+    }
+
+    setExternalSubtitle(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let url = obj.url;
+        if (url == null) throw "url is null";
+        obj.result = this._rtcEngine.setExternalSubtitle(playerId, url);
+        return 0;
+    }
+
+    getState(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        obj.result = this._rtcEngine.getState(playerId);
+        return 0;
+    }
+
+    mute(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let mute = obj.mute;
+        if (mute == null) throw "mute is null";
+        obj.result = this._rtcEngine.mute(playerId, mute);
+        return 0;
+    }
+
+    getMute(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let mute = obj.mute;
+        if (mute == null) throw "mute is null";
+        obj.result = this._rtcEngine.getMute(playerId, mute);
+        return 0;
+    }
+
+    adjustPlayoutVolume(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let volume = obj.volume;
+        if (volume == null) throw "volume is null";
+        obj.result = this._rtcEngine.adjustPlayoutVolume(playerId, volume);
+        return 0;
+    }
+
+    getPlayoutVolume(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let volume = obj.volume;
+        if (volume == null) throw "volume is null";
+        obj.result = this._rtcEngine.getPlayoutVolume(playerId, volume);
+        return 0;
+    }
+
+    adjustPublishSignalVolume(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let volume = obj.volume;
+        if (volume == null) throw "volume is null";
+        obj.result = this._rtcEngine.adjustPublishSignalVolume(playerId, volume);
+        return 0;
+    }
+
+    getPublishSignalVolume(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let volume = obj.volume;
+        if (volume == null) throw "volume is null";
+        obj.result = this._rtcEngine.getPublishSignalVolume(playerId, volume);
+        return 0;
+    }
+
+    setView(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let view = obj.view;
+        if (view == null) throw "view is null";
+        obj.result = this._rtcEngine.setView(playerId, view);
+        return 0;
+    }
+
+    setRenderMode(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let renderMode = obj.renderMode;
+        if (renderMode == null) throw "renderMode is null";
+        obj.result = this._rtcEngine.setRenderMode(playerId, renderMode);
+        return 0;
+    }
+
+    registerPlayerSourceObserver(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let observer = obj.observer;
+        if (observer == null) throw "observer is null";
+        obj.result = this._rtcEngine.registerPlayerSourceObserver(playerId, observer);
+        return 0;
+    }
+
+    unregisterPlayerSourceObserver(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let observer = obj.observer;
+        if (observer == null) throw "observer is null";
+        obj.result = this._rtcEngine.unregisterPlayerSourceObserver(playerId, observer);
+        return 0;
+    }
+
+    MediaPlayer_registerAudioFrameObserver(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let observer = obj.observer;
+        if (observer == null) throw "observer is null";
+        obj.result = this._rtcEngine.MediaPlayer_registerAudioFrameObserver(playerId, observer);
+        return 0;
+    }
+
+    MediaPlayer_registerAudioFrameObserver2(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let observer = obj.observer;
+        if (observer == null) throw "observer is null";
+        let mode = obj.mode;
+        if (mode == null) throw "mode is null";
+        obj.result = this._rtcEngine.MediaPlayer_registerAudioFrameObserver2(playerId, observer, mode);
+        return 0;
+    }
+
+    MediaPlayer_unregisterAudioFrameObserver(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let observer = obj.observer;
+        if (observer == null) throw "observer is null";
+        obj.result = this._rtcEngine.MediaPlayer_unregisterAudioFrameObserver(playerId, observer);
+        return 0;
+    }
+
+    MediaPlayer_registerVideoFrameObserver(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let observer = obj.observer;
+        if (observer == null) throw "observer is null";
+        obj.result = this._rtcEngine.MediaPlayer_registerVideoFrameObserver(playerId, observer);
+        return 0;
+    }
+
+    MediaPlayer_unregisterVideoFrameObserver(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let observer = obj.observer;
+        if (observer == null) throw "observer is null";
+        obj.result = this._rtcEngine.MediaPlayer_unregisterVideoFrameObserver(playerId, observer);
+        return 0;
+    }
+
+    registerMediaPlayerAudioSpectrumObserver(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let observer = obj.observer;
+        if (observer == null) throw "observer is null";
+        let intervalInMS = obj.intervalInMS;
+        if (intervalInMS == null) throw "intervalInMS is null";
+        obj.result = this._rtcEngine.registerMediaPlayerAudioSpectrumObserver(observer, intervalInMS);
+        return 0;
+    }
+
+    unregisterMediaPlayerAudioSpectrumObserver(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let observer = obj.observer;
+        if (observer == null) throw "observer is null";
+        obj.result = this._rtcEngine.unregisterMediaPlayerAudioSpectrumObserver(playerId, observer);
+        return 0;
+    }
+
+    setAudioDualMonoMode(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let mode = obj.mode;
+        if (mode == null) throw "mode is null";
+        obj.result = this._rtcEngine.setAudioDualMonoMode(playerId, mode);
+        return 0;
+    }
+
+    getPlayerSdkVersion(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        obj.result = this._rtcEngine.getPlayerSdkVersion(playerId);
+        return 0;
+    }
+
+    getPlaySrc(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        obj.result = this._rtcEngine.getPlaySrc(playerId);
+        return 0;
+    }
+
+    openWithAgoraCDNSrc(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let src = obj.src;
+        if (src == null) throw "src is null";
+        let startPos = obj.startPos;
+        if (startPos == null) throw "startPos is null";
+        obj.result = this._rtcEngine.openWithAgoraCDNSrc(playerId, src, startPos);
+        return 0;
+    }
+
+    getAgoraCDNLineCount(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        obj.result = this._rtcEngine.getAgoraCDNLineCount(playerId);
+        return 0;
+    }
+
+    switchAgoraCDNLineByIndex(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let index = obj.index;
+        if (index == null) throw "index is null";
+        obj.result = this._rtcEngine.switchAgoraCDNLineByIndex(playerId, index);
+        return 0;
+    }
+
+    getCurrentAgoraCDNIndex(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        obj.result = this._rtcEngine.getCurrentAgoraCDNIndex(playerId);
+        return 0;
+    }
+
+    enableAutoSwitchAgoraCDN(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let enable = obj.enable;
+        if (enable == null) throw "enable is null";
+        obj.result = this._rtcEngine.enableAutoSwitchAgoraCDN(playerId, enable);
+        return 0;
+    }
+
+    renewAgoraCDNSrcToken(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let token = obj.token;
+        if (token == null) throw "token is null";
+        let ts = obj.ts;
+        if (ts == null) throw "ts is null";
+        obj.result = this._rtcEngine.renewAgoraCDNSrcToken(playerId, token, ts);
+        return 0;
+    }
+
+    switchAgoraCDNSrc(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let src = obj.src;
+        if (src == null) throw "src is null";
+        let syncPts = obj.syncPts;
+        if (syncPts == null) throw "syncPts is null";
+        obj.result = this._rtcEngine.switchAgoraCDNSrc(playerId, src, syncPts);
+        return 0;
+    }
+
+    switchSrc(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let src = obj.src;
+        if (src == null) throw "src is null";
+        let syncPts = obj.syncPts;
+        if (syncPts == null) throw "syncPts is null";
+        obj.result = this._rtcEngine.switchSrc(playerId, src, syncPts);
+        return 0;
+    }
+
+    preloadSrc(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let src = obj.src;
+        if (src == null) throw "src is null";
+        let startPos = obj.startPos;
+        if (startPos == null) throw "startPos is null";
+        obj.result = this._rtcEngine.preloadSrc(playerId, src, startPos);
+        return 0;
+    }
+
+    playPreloadedSrc(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let src = obj.src;
+        if (src == null) throw "src is null";
+        obj.result = this._rtcEngine.playPreloadedSrc(playerId, src);
+        return 0;
+    }
+
+    unloadSrc(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let src = obj.src;
+        if (src == null) throw "src is null";
+        obj.result = this._rtcEngine.unloadSrc(playerId, src);
+        return 0;
+    }
+
+    setSpatialAudioParams(
+        params1: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params1) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let params = obj.params;
+        if (params == null) throw "params is null";
+        obj.result = this._rtcEngine.setSpatialAudioParams(playerId, params);
+        return 0;
+    }
+
+    setSoundPositionParams(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let playerId = obj.playerId;
+        if (playerId == null) throw "playerId is null";
+        let pan = obj.pan;
+        if (pan == null) throw "pan is null";
+        let gain = obj.gain;
+        if (gain == null) throw "gain is null";
+        obj.result = this._rtcEngine.setSoundPositionParams(playerId, pan, gain);
         return 0;
     }
 }

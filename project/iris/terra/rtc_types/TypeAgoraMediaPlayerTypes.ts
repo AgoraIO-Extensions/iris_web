@@ -142,5 +142,9 @@ export class IMediaPlayer {
 
 }
 
+export class IMediaPlayerSourceObserver {
+
+}
+
 
 

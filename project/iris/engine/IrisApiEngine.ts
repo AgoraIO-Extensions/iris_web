@@ -25,7 +25,7 @@ export class IrisApiEngine {
         let className = array[0];
         let funName = array[1];
 
-        let callApiFun: CallApiType = this._engine[funName] as CallApiType;
+        let callApiFun: CallApiType = (this._engine[funName] || this._engine[func_name]) as CallApiType;
         if (callApiFun) {
             let ret = callApiFun.call(this._engine, params, paramLength, buffer, bufferLength, result);
             AgoraConsole.log("[callIrisApi] " + func_name + " : " + ret);
