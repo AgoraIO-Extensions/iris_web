@@ -9,6 +9,7 @@ import {
     CallIrisApi,
     Attach,
     Detach,
+    SetGenerateVideoTrackLabelOrHtmlElementCb,
     __dump,
 
 } from "./IrisRtcApi";
@@ -25,6 +26,10 @@ import {
     GetVideoFrameByConfig
 } from "./IrisVideoProcessor";
 
+
+import { IrisApiEngine } from "./engine/IrisApiEngine";
+
+
 export let AgoraWrapper = {
     CreateIrisApiEngine: CreateIrisApiEngine,
     DestroyIrisApiEngine: DestroyIrisApiEngine,
@@ -33,6 +38,7 @@ export let AgoraWrapper = {
     CallIrisApi: CallIrisApi,
     Attach: Attach,
     Detach: Detach,
+    SetGenerateVideoTrackLabelOrHtmlElementCb: SetGenerateVideoTrackLabelOrHtmlElementCb,
     __dump: __dump,
 
     CreateIrisVideoFrameBufferManager: CreateIrisVideoFrameBufferManager,
@@ -43,6 +49,7 @@ export let AgoraWrapper = {
     DisableAllVideoFrameBuffer: DisableAllVideoFrameBuffer,
     GetVideoFrame: GetVideoFrame,
     GetVideoFrameByConfig: GetVideoFrameByConfig,
+
 };
 
 

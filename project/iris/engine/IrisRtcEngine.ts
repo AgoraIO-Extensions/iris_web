@@ -13,11 +13,15 @@ import { RtcEngineEventHandler } from "../terra/RtcEngineEventHandler";
 import { IrisAgoraEventHandler } from "../event_handler/IrisAgoraEventHandler";
 
 export type CallApiType = (params: string, paramLength: number, buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any) => number;
+export type GenerateVideoTrackLabelOrHtmlElementCb = (channelName: string, uid: number, type: IrisVideoSourceType) => string | HTMLElement;
 
 export class IrisRtcEngine extends IrisRtcEnginePrepare {
 
     //EventHandler
     private _eventHandler: IrisEventHandler = null;
+
+    //
+    private _generateVideoTrackLabelOrHtmlElementCb: GenerateVideoTrackLabelOrHtmlElementCb = null;
 
     public entitiesContainer: IrisEntitiesContaniner = null;
     public rtcEngineEventHandler: RtcEngineEventHandler = null;
@@ -25,6 +29,7 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
     public mainClientVariables: IrisMainClientVariables = null;
     public subClientVariables: IrisSubClientVariables = null;
     public agoraEventHandler: IrisAgoraEventHandler = null;
+
 
     constructor() {
         super();
@@ -39,6 +44,10 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
 
     public setEventHandler(event_handler: IrisEventHandler) {
         this._eventHandler = event_handler;
+    }
+
+    public setGenerateVideoTrackLabelOrHtmlElementCb(cb: GenerateVideoTrackLabelOrHtmlElementCb) {
+        this._generateVideoTrackLabelOrHtmlElementCb = cb;
     }
 
     public getEventHandler(): IrisEventHandler {
@@ -70,7 +79,11 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
     }
 
 
-    public generateVideoTrackLabel(channelName: string, uid: number, type: IrisVideoSourceType): string {
+    public generateVideoTrackLabelOrHtmlElement(channelName: string, uid: number, type: IrisVideoSourceType): string | HTMLElement {
+        if (this._generateVideoTrackLabelOrHtmlElementCb) {
+            return this._generateVideoTrackLabelOrHtmlElementCb(channelName, uid, type);
+        }
+
         return channelName + "_" + uid + "_" + type;
     }
 }

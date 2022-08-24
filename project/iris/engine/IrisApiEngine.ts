@@ -2,7 +2,7 @@
 import { IrisEventHandler } from "../base/BaseType";
 import { AgoraActionQueue } from "../tool/AgoraActionQueue";
 import { AgoraConsole } from "../tool/AgoraConsole";
-import { CallApiType, IrisRtcEngine } from "./IrisRtcEngine";
+import { CallApiType, IrisRtcEngine, GenerateVideoTrackLabelOrHtmlElementCb } from "./IrisRtcEngine";
 import { IrisVideoFrameBufferManager } from "./IrisVideoFrameBufferManager";
 
 
@@ -55,5 +55,9 @@ export class IrisApiEngine {
 
     public detach(manager_ptr: IrisVideoFrameBufferManager) {
         manager_ptr.setEngine(null);
+    }
+
+    public setGenerateVideoTrackLabelOrHtmlElementCb(cb: GenerateVideoTrackLabelOrHtmlElementCb) {
+        this._engine.setGenerateVideoTrackLabelOrHtmlElementCb(cb);
     }
 }

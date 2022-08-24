@@ -5,14 +5,28 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | unityexample</title>
+    <style>
+        .green {
+            background-color: green;
+        }
 
-    <script src="../project/dist/lib-agora-wrapper.js"></script>
+        .red {
+            background-color: red;
+        }
+    </style>
 
 </head>
 
 <body>
     <script src="./dist/test.js"></script>
-    <script src="./dist/test.js.map"></script>
+    <script>
+
+    </script>
+    <button onclick="AgoraTest.start()">点击开始单元测试</button>
+    <div id="kVideoSourceTypeCameraPrimary" class="videoTrack"></div>
+    <div id="kVideoSourceTypeCameraSecondary" class="videoTrack"></div>
+    <div id="kVideoSourceTypeScreenPrimary" class="videoTrack"></div>
+    <div id="kVideoSourceTypeScreenSecondary" class="videoTrack"></div>
 </body>
 
 </html>

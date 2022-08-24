@@ -14,7 +14,7 @@
         // "sourceMap": true,                     /* Generates corresponding '.map' file. */
         // "outFile": "./dist/test.js", /* Concatenate and emit output to single file. */
         "outDir": "./dist", /* Redirect output structure to the directory. */
-        // "rootDir": "./",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+        // "rootDir": "../", /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
         // "composite": true,                     /* Enable project compilation */
         // "tsBuildInfoFile": "./",               /* Specify file to store incremental compilation information */
         // "removeComments": true,                /* Do not emit comments to output. */
@@ -37,7 +37,7 @@
         // "noImplicitReturns": true,             /* Report error when not all code paths in function return a value. */
         // "noFallthroughCasesInSwitch": true,    /* Report errors for fallthrough cases in switch statement. */
         /* Module Resolution Options */
-        // "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
+        "moduleResolution": "node", /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
         // "baseUrl": "./",                       /* Base directory to resolve non-absolute module names. */
         // "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
         // "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
@@ -58,15 +58,19 @@
         /* Advanced Options */
         "skipLibCheck": true, /* Skip type checking of declaration files. */
         "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
-        "typeRoots": [
-            // "../project/dist/dts",
-            // "../project/dist/dts/base",
-            // "../project/dist/dts/engine",
-            // "../project/dist/dts/event_handler",
-            // "../project/dist/dts/terra",
-            // "../project/dist/dts/tool",
-            // "../project/dist/dts/variables",
-            // "../project/node_modules/agora-rtc-sdk-ng"
-        ]
-    }
+        // "typeRoots": [
+        //     // "../project/iris",
+        //     // "./src",
+        //     "../project/node_modules/agora-rtc-sdk-ng"
+        // ]
+        // "paths": {
+        //     "agora-rtc-sdk-ng": [
+        //         "../project/node_modules/agora-rtc-sdk-ng"
+        //     ]
+        // }
+    },
+    "include": [
+        "../project/iris/**/*.ts",
+        "./src/**/*.ts"
+    ],
 }

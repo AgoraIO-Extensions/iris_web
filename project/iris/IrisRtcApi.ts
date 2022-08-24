@@ -2,6 +2,7 @@ import { ILocalVideoTrack, IRemoteVideoTrack } from "agora-rtc-sdk-ng";
 import { IrisCEventHandler, IrisEventHandlerHandle } from "./base/BaseType";
 import { IrisApiEngine } from "./engine/IrisApiEngine";
 import { IrisVideoFrameBufferManager } from "./engine/IrisVideoFrameBufferManager";
+import { GenerateVideoTrackLabelOrHtmlElementCb } from "./engine/IrisRtcEngine";
 
 // export namespace AgoraWrapper {
 
@@ -48,15 +49,25 @@ export function CallIrisApi(
 }
 
 export function Attach(engine_ptr: IrisApiEngine,
-    manager_ptr: IrisVideoFrameBufferManager) {
+    manager_ptr: IrisVideoFrameBufferManager): number {
 
     engine_ptr.attach(manager_ptr);
+    return 0;
 }
 
 export function Detach(engine_ptr: IrisApiEngine,
-    manager_ptr: IrisVideoFrameBufferManager) {
+    manager_ptr: IrisVideoFrameBufferManager): number {
 
     engine_ptr.detach(manager_ptr);
+    return 0;
+}
+
+export function SetGenerateVideoTrackLabelOrHtmlElementCb(
+    engine_ptr: IrisApiEngine,
+    cb: GenerateVideoTrackLabelOrHtmlElementCb
+): number {
+    engine_ptr.setGenerateVideoTrackLabelOrHtmlElementCb(cb);
+    return 0;
 }
 
 export function __dump() {

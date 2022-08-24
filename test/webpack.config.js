@@ -7,8 +7,7 @@ module.exports = {
 
     output: {
         path: path.resolve(__dirname, "dist"),
-        libraryTarget: "var",
-        library: "test",
+        libraryTarget: "this",
         filename: "test.js",
         environment: {
             arrowFunction: false // 关闭webpack的箭头函数，可选
@@ -42,7 +41,7 @@ module.exports = {
     ],
 
     externals: {
-        "../../project/dist/dts/app": "window",
+        // "../../project/dist/dts/app": "window",
 
         // ""
         // "../../project/node_modules/agora-rtc-sdk-ng/rtc-sdk_en": "AgoraRTC"

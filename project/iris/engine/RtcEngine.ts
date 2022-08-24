@@ -1481,7 +1481,7 @@ export class RtcEngine implements IRtcEngine {
                             let track = trackPackage.track as ILocalVideoTrack;
                             if (track.isPlaying == false) {
                                 try {
-                                    await track.play(this._engine.generateVideoTrackLabel("", 0, trackPackage.type));
+                                    await track.play(this._engine.generateVideoTrackLabelOrHtmlElement("", 0, trackPackage.type));
                                 }
                                 catch (e) {
                                     AgoraConsole.error('ILocalVideoTrack play(true) failed');
@@ -1509,7 +1509,7 @@ export class RtcEngine implements IRtcEngine {
                         for (let remoteUser of remoteUsers) {
                             //todo 远端用户发流的时候。我不订阅，那么他的hasVideo为true， 但是他们的videoTrack是null
                             if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying == false) {
-                                remoteUser.videoTrack.play(this._engine.generateVideoTrackLabel(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
+                                remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
                             }
                         }
                     }
@@ -1519,7 +1519,7 @@ export class RtcEngine implements IRtcEngine {
                         let remoteUsers = subClient.remoteUsers;
                         for (let remoteUser of remoteUsers) {
                             if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying == false) {
-                                remoteUser.videoTrack.play(this._engine.generateVideoTrackLabel(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
+                                remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
                             }
                         }
                     })
@@ -1725,7 +1725,7 @@ export class RtcEngine implements IRtcEngine {
                         }
                         else if (remoteUser.videoTrack.isPlaying == false && mute == false) {
                             let channelName = mainClient.channelName;
-                            remoteUser.videoTrack.play(this._engine.generateVideoTrackLabel(channelName, uid, IrisVideoSourceType.kVideoSourceTypeRemote));
+                            remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(channelName, uid, IrisVideoSourceType.kVideoSourceTypeRemote));
                         }
                     }
                 }
@@ -3008,7 +3008,7 @@ export class RtcEngine implements IRtcEngine {
                     try {
                         let videoTrack = await AgoraRTC.createCameraVideoTrack(videoConfig);
                         let globalVariables = this._engine.globalVariables;
-                        globalVariables.enabledVideo && videoTrack.play(this._engine.generateVideoTrackLabel("0", 0, IrisVideoSourceType.kVideoSourceTypeCameraPrimary));
+                        globalVariables.enabledVideo && videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement("0", 0, IrisVideoSourceType.kVideoSourceTypeCameraPrimary));
 
                         if (globalVariables.pausedVideo) {
                             try {
@@ -4201,7 +4201,7 @@ export class RtcEngine implements IRtcEngine {
                             remoteUser.videoTrack.stop();
                         }
                         else if (mute == false && remoteUser.videoTrack.isPlaying == false) {
-                            remoteUser.videoTrack.play(this._engine.generateVideoTrackLabel(connection.channelId, connection.localUid, IrisVideoSourceType.kVideoSourceTypeRemote));
+                            remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(connection.channelId, connection.localUid, IrisVideoSourceType.kVideoSourceTypeRemote));
                         }
                     }
                 }
@@ -5095,7 +5095,7 @@ export class RtcEngine implements IRtcEngine {
         }
 
         if (globalVariables.enabledVideo) {
-            videoTrack.play(this._engine.generateVideoTrackLabel("0", 0, videoSource));
+            videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement("0", 0, videoSource));
         }
 
         if (globalVariables.pausedVideo) {
@@ -5153,7 +5153,7 @@ export class RtcEngine implements IRtcEngine {
             if (this._engine.globalVariables.videoEncoderConfiguration) {
                 config.mirror = AgoraTranslate.agorartcVIDEO_MIRROR_MODE_TYPE2boolean(this._engine.globalVariables.videoEncoderConfiguration.mirrorMode)
             }
-            videoTrack.play(this._engine.generateVideoTrackLabel("0", 0, videoSource), config);
+            videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement("0", 0, videoSource), config);
         }
         if (globalVariables.pausedVideo) {
             videoTrack.setEnabled(false)

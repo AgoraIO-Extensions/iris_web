@@ -225,7 +225,7 @@ export class IrisClientEventHandler {
                 this._client.subscribe(user, mediaType)
                     .then(() => {
                         console.log("onEventUserPublished subcribe video success");
-                        user.videoTrack.play(this._engine.generateVideoTrackLabel(this._client.channelName, user.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote));
+                        user.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(this._client.channelName, user.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote));
 
                         let param: IrisTrackEventHandlerParam = {
                             channelName: this._client.channelName,
