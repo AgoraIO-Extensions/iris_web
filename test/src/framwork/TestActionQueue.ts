@@ -1,5 +1,6 @@
 import { renderPass, renderError, renderTitle, renderEnd } from "./render";
 import { waitForDebugger } from "inspector";
+import { title } from "process";
 
 
 export type TestCallBack = (next: any) => void;
@@ -44,11 +45,18 @@ export class TestActionQueue {
         })
 
         for (let i = 0; i < this._queue.length; i++) {
-            let action: Action = this._queue[i];
-            this._curTitle = action.titile;
-            renderTitle(action.titile);
-            await action.cb.call(this);
-            await waitForSecond(2);
+            try {
+                let action: Action = this._queue[i];
+                this._curTitle = action.titile;
+                renderTitle(action.titile);
+                await action.cb.call(this);
+                await waitForSecond(2);
+            }
+            catch (e) {
+                renderError(this._curTitle, e);
+                renderError("测试已经中止", "");
+                return;
+            }
         }
         renderEnd();
         // })
