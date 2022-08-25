@@ -18,11 +18,11 @@ export interface IRtcEngine {
     pullAudioFrame(frame: agorartc.AudioFrame): number;
     setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: agorartc.EXTERNAL_VIDEO_SOURCE_TYPE): number;
     setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, sourceNumber: number, localPlayback: boolean, publish: boolean): number;
-    setExternalAudioSink(enabled: boolean, sampleRate: number, channels: number): number;
+    setExternalAudioSink(sampleRate: number, channels: number): number;
     // enableCustomAudioLocalPlayback(sourceId: number, enabled: boolean): number;
     setDirectExternalAudioSource(enable: boolean, localPlayback: boolean): number;
-    pushVideoFrame(frame: agorartc.ExternalVideoFrame, videoTrackId: number): number;
-    pushEncodedVideoImage(imageBuffer: number, length: number, videoEncodedFrameInfo: agorartc.EncodedVideoFrameInfo, videoTrackId: number): number;
+    pushVideoFrame(frame: agorartc.ExternalVideoFrame): number;
+    pushEncodedVideoImage(imageBuffer: Uint8ClampedArray, length: number, videoEncodedFrameInfo: agorartc.EncodedVideoFrameInfo): number;
     // release(): void;
 
     //IVideoDeviceManager
@@ -68,7 +68,7 @@ export interface IRtcEngine {
     setLowlightEnhanceOptions(enabled: boolean, options: agorartc.LowlightEnhanceOptions, type: agorartc.MEDIA_SOURCE_TYPE): number;
     setVideoDenoiserOptions(enabled: boolean, options: agorartc.VideoDenoiserOptions, type: agorartc.MEDIA_SOURCE_TYPE): number;
     setColorEnhanceOptions(enabled: boolean, options: agorartc.ColorEnhanceOptions, type: agorartc.MEDIA_SOURCE_TYPE): number;
-    enableVirtualBackground(enabled: boolean, backgroundSource: agorartc.VirtualBackgroundSource, segproperty: agorartc.SegmentationProperty, type: agorartc.MEDIA_SOURCE_TYPE): number;
+    enableVirtualBackground(enabled: boolean, backgroundSource: agorartc.VirtualBackgroundSource): number;
     enableRemoteSuperResolution(userId: agorartc.uid_t, enable: boolean): number;
     setupRemoteVideo(canvas: agorartc.VideoCanvas): number;
     setupLocalVideo(canvas: agorartc.VideoCanvas): number;

@@ -129,7 +129,7 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    setExternalAudioSink(enabled: boolean, sampleRate: number, channels: number): number {
+    setExternalAudioSink(sampleRate: number, channels: number): number {
         AgoraConsole.warn("setExternalAudioSink not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -143,12 +143,12 @@ export class RtcEngine implements IRtcEngine {
         AgoraConsole.warn("setDirectExternalAudioSource not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    pushVideoFrame(frame: agorartc.ExternalVideoFrame, videoTrackId: number): number {
+    pushVideoFrame(frame: agorartc.ExternalVideoFrame): number {
         AgoraConsole.warn("pushVideoFrame not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    pushEncodedVideoImage(imageBuffer: number, length: number, videoEncodedFrameInfo: agorartc.EncodedVideoFrameInfo, videoTrackId: number): number {
+    pushEncodedVideoImage(imageBuffer: Uint8ClampedArray, length: number, videoEncodedFrameInfo: agorartc.EncodedVideoFrameInfo): number {
         AgoraConsole.warn("pushEncodedVideoImage not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -274,7 +274,7 @@ export class RtcEngine implements IRtcEngine {
             fun: (token: string, channelId: string, uid: number, options: agorartc.ChannelMediaOptions, next) => {
 
                 let processJoinChannel = async () => {
-                    this._engine.mainClientVariables.startPreviewed = false;
+                    // this._engine.mainClientVariables.startPreviewed = false;
                     let mainClientVariables: IrisMainClientVariables = this._engine.mainClientVariables;
                     let globalVariables = this._engine.globalVariables;
                     mainClientVariables.mergeChannelMediaOptions(options);
@@ -1014,11 +1014,11 @@ export class RtcEngine implements IRtcEngine {
                     return;
                 }
 
-                if (this._engine.mainClientVariables.startPreviewed == true) {
-                    AgoraConsole.error("you already call startPreview");
-                    next();
-                    return;
-                }
+                // if (this._engine.mainClientVariables.startPreviewed == true) {
+                //     AgoraConsole.error("you already call startPreview");
+                //     next();
+                //     return;
+                // }
 
                 if (sourceType >= 4) {
                     AgoraConsole.error("Invalid source type");
@@ -1026,7 +1026,7 @@ export class RtcEngine implements IRtcEngine {
                     return;
                 }
 
-                this._engine.mainClientVariables.startPreviewed = true;
+                // this._engine.mainClientVariables.startPreviewed = true;
 
                 let audioSource: IrisAudioSourceType = IrisAudioSourceType.kAudioSourceTypeUnknow;
                 let videoSource: IrisVideoSourceType = sourceType as number;
@@ -1041,7 +1041,7 @@ export class RtcEngine implements IRtcEngine {
                     catch (err) {
                         AgoraConsole.error("Start preview failed: create video and audio track failed");
                         err && AgoraConsole.error(err);
-                        this._engine.mainClientVariables.startPreviewed = false;
+                        // this._engine.mainClientVariables.startPreviewed = false;
                     }
                     next();
                 }
@@ -1080,12 +1080,12 @@ export class RtcEngine implements IRtcEngine {
     }
 
     stopPreview2(sourceType: agorartc.VIDEO_SOURCE_TYPE): number {
-        if (this._engine.mainClientVariables.startPreviewed == false) {
-            AgoraConsole.error("not call startPreview yet!");
-            return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
-        }
-        else {
-            this._engine.mainClientVariables.startPreviewed = false;
+        // if (this._engine.mainClientVariables.startPreviewed == false) {
+        //     AgoraConsole.error("not call startPreview yet!");
+        //     return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
+        // }
+        // else {
+            // this._engine.mainClientVariables.startPreviewed = false;
             this._actonQueue.putAction({
                 fun: (sourceType: agorartc.VIDEO_SOURCE_TYPE, next) => {
                     //让音视频轨道暂停即可
@@ -1122,7 +1122,7 @@ export class RtcEngine implements IRtcEngine {
                 },
                 args: [sourceType]
             })
-        }
+        // }
         return 0;
     }
 
@@ -1188,7 +1188,7 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    enableVirtualBackground(enabled: boolean, backgroundSource: agorartc.VirtualBackgroundSource, segproperty: agorartc.SegmentationProperty, type: agorartc.MEDIA_SOURCE_TYPE): number {
+    enableVirtualBackground(enabled: boolean, backgroundSource: agorartc.VirtualBackgroundSource): number {
         AgoraConsole.warn("setColorEnhanceOptions not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -1448,7 +1448,7 @@ export class RtcEngine implements IRtcEngine {
             fun: (uid: number, mute: boolean, next) => {
 
                 this._engine.mainClientVariables.mutedRemoteAudioStreams.set(uid, mute);
-                let channelName = this._engine.entitiesContainer.getMainClient().channelName;
+                let channelName = this._engine.entitiesContainer.getMainClient()?.channelName;
                 if (channelName) {
                     let remoteUser: IAgoraRTCRemoteUser = this._engine.entitiesContainer.getMainClientRemoteUserByUid(uid);
                     if (remoteUser && remoteUser.audioTrack) {

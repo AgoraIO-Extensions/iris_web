@@ -136,7 +136,8 @@ export class IrisMainClientVariables {
     //SetContentInspect
     contentInspect: agorartc.ContentInspectConfig = null;
 
-    startPreviewed: boolean = false;
+    // startPreviewed 似乎没有用处
+    // startPreviewed: boolean = false;
     joinChanneled: boolean = false;
 
     //用来记录暂停或者恢复的
