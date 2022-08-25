@@ -382,7 +382,7 @@ export interface IRtcEngine {
 
     //IMediaPlayer
     open(playerId: number, url: string, startPos: number): number;
-    openWithCustomSource(playerId: number, startPos: number, provider: agorartc.IMediaPlayerCustomDataProvider[]): number;
+    openWithCustomSource(playerId: number, startPos: number, provider: agorartc.IMediaPlayerCustomDataProvider): number;
     openWithMediaSource(playerId: number, source: agorartc.MediaSource): number;
     play(playerId: number): number;
     pause(playerId: number): number;
@@ -393,7 +393,7 @@ export interface IRtcEngine {
     getDuration(playerId: number, duration: number): number;
     getPlayPosition(playerId: number, pos: number): number;
     getStreamCount(playerId: number, count: number): number;
-    getStreamInfo(playerId: number, index: number, info: agorartc.PlayerStreamInfo[]): number;
+    getStreamInfo(playerId: number, index: number, info: agorartc.PlayerStreamInfo): number;
     setLoopCount(playerId: number, loopCount: number): number;
     muteAudio(playerId: number, audio_mute: boolean): number;
     isAudioMuted(playerId: number,): boolean;
@@ -408,22 +408,23 @@ export interface IRtcEngine {
     setExternalSubtitle(playerId: number, url: string): number;
     getState(playerId: number,): agorartc.MEDIA_PLAYER_STATE;
     mute(playerId: number, mute: boolean): number;
-    getMute(playerId: number, mute: boolean): number;
+    getMute(playerId: number, result: any): number;
     adjustPlayoutVolume(playerId: number, volume: number): number;
     getPlayoutVolume(playerId: number, volume: number): number;
     adjustPublishSignalVolume(playerId: number, volume: number): number;
     getPublishSignalVolume(playerId: number, volume: number): number;
     setView(playerId: number, view: agorartc.view_t): number;
     setRenderMode(playerId: number, renderMode: agorartc.RENDER_MODE_TYPE): number;
-    registerPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver[]): number;
-    unregisterPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver[]): number;
-    MediaPlayer_registerAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver[]): number;
-    MediaPlayer_registerAudioFrameObserver2(playerId: number, observer: agorartc.IAudioFrameObserver[], mode: agorartc.RAW_AUDIO_FRAME_OP_MODE_TYPE): number;
-    MediaPlayer_unregisterAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver[]): number;
-    MediaPlayer_registerVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver[]): number;
-    MediaPlayer_unregisterVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver[]): number;
-    registerMediaPlayerAudioSpectrumObserver(observer: agorartc.IAudioSpectrumObserver[], intervalInMS: number): number;
-    unregisterMediaPlayerAudioSpectrumObserver(playerId: number, observer: agorartc.IAudioSpectrumObserver[]): number;
+    registerPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver): number;
+    unregisterPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver): number;
+    MediaPlayer_registerAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver): number;
+    MediaPlayer_registerAudioFrameObserver2(playerId: number, observer: agorartc.IAudioFrameObserver, mode: agorartc.RAW_AUDIO_FRAME_OP_MODE_TYPE): number;
+    MediaPlayer_unregisterAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver): number;
+    MediaPlayer_registerVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver): number;
+    registerVideoEncodedImageReceiver(receiver: agorartc.IVideoEncodedImageReceiver): number;
+    MediaPlayer_unregisterVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver): number;
+    registerMediaPlayerAudioSpectrumObserver(observer: agorartc.IAudioSpectrumObserver, intervalInMS: number): number;
+    unregisterMediaPlayerAudioSpectrumObserver(playerId: number, observer: agorartc.IAudioSpectrumObserver): number;
     setAudioDualMonoMode(playerId: number, mode: agorartc.AUDIO_DUAL_MONO_MODE): number;
     getPlayerSdkVersion(playerId: number,): string;
     getPlaySrc(playerId: number,): string;

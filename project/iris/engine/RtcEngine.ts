@@ -4778,7 +4778,7 @@ export class RtcEngine implements IRtcEngine {
         AgoraConsole.warn("open not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    openWithCustomSource(playerId: number, startPos: number, provider: agorartc.IMediaPlayerCustomDataProvider[]): number {
+    openWithCustomSource(playerId: number, startPos: number, provider: agorartc.IMediaPlayerCustomDataProvider): number {
         AgoraConsole.warn("openWithCustomSource not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -4822,7 +4822,7 @@ export class RtcEngine implements IRtcEngine {
         AgoraConsole.warn("getStreamCount not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    getStreamInfo(playerId: number, index: number, info: agorartc.PlayerStreamInfo[]): number {
+    getStreamInfo(playerId: number, index: number, info: agorartc.PlayerStreamInfo): number {
         AgoraConsole.warn("getStreamInfo not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -4885,8 +4885,9 @@ export class RtcEngine implements IRtcEngine {
         AgoraConsole.warn("mute not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    getMute(playerId: number, mute: boolean): number {
+    getMute(playerId: number, result: any): number {
         AgoraConsole.warn("getMute not supported in this platfrom!");
+        result.mute = false;
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
     adjustPlayoutVolume(playerId: number, volume: number): number {
@@ -4913,39 +4914,43 @@ export class RtcEngine implements IRtcEngine {
         AgoraConsole.warn("setRenderMode not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    registerPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver[]): number {
+    registerPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver): number {
         AgoraConsole.warn("registerPlayerSourceObserver not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    unregisterPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver[]): number {
+    unregisterPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver): number {
         AgoraConsole.warn("unregisterPlayerSourceObserver not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    MediaPlayer_registerAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver[]): number {
+    MediaPlayer_registerAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver): number {
         AgoraConsole.warn("mediaPlayer_registerAudioFrameObserver not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    MediaPlayer_registerAudioFrameObserver2(playerId: number, observer: agorartc.IAudioFrameObserver[], mode: agorartc.RAW_AUDIO_FRAME_OP_MODE_TYPE): number {
+    MediaPlayer_registerAudioFrameObserver2(playerId: number, observer: agorartc.IAudioFrameObserver, mode: agorartc.RAW_AUDIO_FRAME_OP_MODE_TYPE): number {
         AgoraConsole.warn("mediaPlayer_registerAudioFrameObserver2 not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    MediaPlayer_unregisterAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver[]): number {
+    MediaPlayer_unregisterAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver): number {
         AgoraConsole.warn("mediaPlayer_unregisterAudioFrameObserver not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    MediaPlayer_registerVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver[]): number {
+    MediaPlayer_registerVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver): number {
         AgoraConsole.warn("mediaPlayer_registerVideoFrameObserver not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    MediaPlayer_unregisterVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver[]): number {
+    registerVideoEncodedImageReceiver(receiver: agorartc.IVideoEncodedImageReceiver): number {
+        AgoraConsole.warn("registerVideoEncodedImageReceiver not supported in this platfrom!");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    }
+    MediaPlayer_unregisterVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver): number {
         AgoraConsole.warn("mediaPlayer_unregisterVideoFrameObserver not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    registerMediaPlayerAudioSpectrumObserver(observer: agorartc.IAudioSpectrumObserver[], intervalInMS: number): number {
+    registerMediaPlayerAudioSpectrumObserver(observer: agorartc.IAudioSpectrumObserver, intervalInMS: number): number {
         AgoraConsole.warn("registerMediaPlayerAudioSpectrumObserver not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
-    unregisterMediaPlayerAudioSpectrumObserver(playerId: number, observer: agorartc.IAudioSpectrumObserver[]): number {
+    unregisterMediaPlayerAudioSpectrumObserver(playerId: number, observer: agorartc.IAudioSpectrumObserver): number {
         AgoraConsole.warn("unregisterMediaPlayerAudioSpectrumObserver not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }

@@ -53,8 +53,7 @@ export class TestActionQueue {
                 await waitForSecond(2);
             }
             catch (e) {
-                renderError(this._curTitle, e);
-                renderError("测试已经中止", "");
+                renderError(this._curTitle, e, "测试已经终止");
                 return;
             }
         }
@@ -72,11 +71,11 @@ export class TestActionQueue {
     // }
 
     shouldEqual(title: string, compareValue: any, expectValue: any) {
-        if (compareValue == expectValue) {
+        if (compareValue === expectValue) {
             renderPass(this._curTitle, title);
         }
         else {
-            renderError(this._curTitle, title);
+            renderError(this._curTitle, title, "comValue: " + compareValue + "   expectValue: " + expectValue);
         }
     }
 
@@ -86,13 +85,13 @@ export class TestActionQueue {
             renderPass(this._curTitle, title);
         }
         else {
-            renderError(this._curTitle, title);
+            renderError(this._curTitle, title, "");
         }
     }
 
-    shouldWarn(title: string, val: boolean) {
+    shouldWarn(title: string, val: boolean, des: string) {
         if (val) {
-            renderError(this._curTitle, title);
+            renderError(this._curTitle, title, des);
         }
         else {
             renderPass(this._curTitle, title);

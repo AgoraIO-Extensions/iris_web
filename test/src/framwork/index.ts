@@ -17,8 +17,8 @@ export let shouldReturnTrue = function (titile: string, cb: any) {
     testActionQueue.shouldReturnTrue(titile, cb);
 }
 
-export let shoudlWarn = function (titile: string, val: boolean) {
-    testActionQueue.shouldWarn(titile, val);
+export let shoudlWarn = function (titile: string, val: boolean, des: string) {
+    testActionQueue.shouldWarn(titile, val, des);
 }
 
 export let start = async function () {

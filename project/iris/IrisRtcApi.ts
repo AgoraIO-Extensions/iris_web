@@ -42,7 +42,7 @@ export function UnsetIrisRtcEngineEventHandler(
 export function CallIrisApi(
     engine_ptr: IrisApiEngine, func_name: string,
     params: string, paramLength: number,
-    buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any = {}): number {
+    buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
 
     return engine_ptr.callIrisApi(func_name, params, paramLength, buffer, bufferLength, result);
 

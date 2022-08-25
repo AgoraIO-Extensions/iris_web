@@ -3972,7 +3972,7 @@ export class IrisRtcEnginePrepare {
         if (url == null) throw "url is null";
         let startPos = obj.startPos;
         if (startPos == null) throw "startPos is null";
-        obj.result = this._rtcEngine.open(playerId, url, startPos);
+        result.result = this._rtcEngine.open(playerId, url, startPos);
         return 0;
     }
 
@@ -3986,7 +3986,7 @@ export class IrisRtcEnginePrepare {
         if (startPos == null) throw "startPos is null";
         let provider = obj.provider;
         if (provider == null) throw "provider is null";
-        obj.result = this._rtcEngine.openWithCustomSource(playerId, startPos, provider);
+        result.result = this._rtcEngine.openWithCustomSource(playerId, startPos, provider);
         return 0;
     }
 
@@ -3998,7 +3998,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let source = obj.source;
         if (source == null) throw "source is null";
-        obj.result = this._rtcEngine.openWithMediaSource(playerId, source);
+        result.result = this._rtcEngine.openWithMediaSource(playerId, source);
         return 0;
     }
 
@@ -4008,7 +4008,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        obj.result = this._rtcEngine.play(playerId);
+        result.result = this._rtcEngine.play(playerId);
         return 0;
     }
 
@@ -4018,7 +4018,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        obj.result = this._rtcEngine.pause(playerId);
+        result.result = this._rtcEngine.pause(playerId);
         return 0;
     }
 
@@ -4028,7 +4028,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        obj.result = this._rtcEngine.stop(playerId);
+        result.result = this._rtcEngine.stop(playerId);
         return 0;
     }
 
@@ -4038,7 +4038,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        obj.result = this._rtcEngine.resume(playerId);
+        result.result = this._rtcEngine.resume(playerId);
         return 0;
     }
 
@@ -4050,7 +4050,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let newPos = obj.newPos;
         if (newPos == null) throw "newPos is null";
-        obj.result = this._rtcEngine.seek(playerId, newPos);
+        result.result = this._rtcEngine.seek(playerId, newPos);
         return 0;
     }
 
@@ -4062,7 +4062,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let pitch = obj.pitch;
         if (pitch == null) throw "pitch is null";
-        obj.result = this._rtcEngine.setAudioPitch(playerId, pitch);
+        result.result = this._rtcEngine.setAudioPitch(playerId, pitch);
         return 0;
     }
 
@@ -4074,7 +4074,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let duration = obj.duration;
         if (duration == null) throw "duration is null";
-        obj.result = this._rtcEngine.getDuration(playerId, duration);
+        result.result = this._rtcEngine.getDuration(playerId, duration);
         return 0;
     }
 
@@ -4086,7 +4086,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let pos = obj.pos;
         if (pos == null) throw "pos is null";
-        obj.result = this._rtcEngine.getPlayPosition(playerId, pos);
+        result.result = this._rtcEngine.getPlayPosition(playerId, pos);
         return 0;
     }
 
@@ -4098,7 +4098,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let count = obj.count;
         if (count == null) throw "count is null";
-        obj.result = this._rtcEngine.getStreamCount(playerId, count);
+        result.result = this._rtcEngine.getStreamCount(playerId, count);
         return 0;
     }
 
@@ -4112,7 +4112,7 @@ export class IrisRtcEnginePrepare {
         if (index == null) throw "index is null";
         let info = obj.info;
         if (info == null) throw "info is null";
-        obj.result = this._rtcEngine.getStreamInfo(playerId, index, info);
+        result.result = this._rtcEngine.getStreamInfo(playerId, index, info);
         return 0;
     }
 
@@ -4124,7 +4124,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let loopCount = obj.loopCount;
         if (loopCount == null) throw "loopCount is null";
-        obj.result = this._rtcEngine.setLoopCount(playerId, loopCount);
+        result.result = this._rtcEngine.setLoopCount(playerId, loopCount);
         return 0;
     }
 
@@ -4136,7 +4136,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let audio_mute = obj.audio_mute;
         if (audio_mute == null) throw "audio_mute is null";
-        obj.result = this._rtcEngine.muteAudio(playerId, audio_mute);
+        result.result = this._rtcEngine.muteAudio(playerId, audio_mute);
         return 0;
     }
 
@@ -4146,7 +4146,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        obj.result = this._rtcEngine.isAudioMuted(playerId);
+        result.result = this._rtcEngine.isAudioMuted(playerId);
         return 0;
     }
 
@@ -4158,7 +4158,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let video_mute = obj.video_mute;
         if (video_mute == null) throw "video_mute is null";
-        obj.result = this._rtcEngine.muteVideo(playerId, video_mute);
+        result.result = this._rtcEngine.muteVideo(playerId, video_mute);
         return 0;
     }
 
@@ -4168,7 +4168,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        obj.result = this._rtcEngine.isVideoMuted(playerId);
+        result.result = this._rtcEngine.isVideoMuted(playerId);
         return 0;
     }
 
@@ -4180,7 +4180,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let speed = obj.speed;
         if (speed == null) throw "speed is null";
-        obj.result = this._rtcEngine.setPlaybackSpeed(playerId, speed);
+        result.result = this._rtcEngine.setPlaybackSpeed(playerId, speed);
         return 0;
     }
 
@@ -4192,7 +4192,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let index = obj.index;
         if (index == null) throw "index is null";
-        obj.result = this._rtcEngine.selectAudioTrack(playerId, index);
+        result.result = this._rtcEngine.selectAudioTrack(playerId, index);
         return 0;
     }
 
@@ -4206,7 +4206,7 @@ export class IrisRtcEnginePrepare {
         if (key == null) throw "key is null";
         let value = obj.value;
         if (value == null) throw "value is null";
-        obj.result = this._rtcEngine.setPlayerOption(playerId, key, value);
+        result.result = this._rtcEngine.setPlayerOption(playerId, key, value);
         return 0;
     }
 
@@ -4220,7 +4220,7 @@ export class IrisRtcEnginePrepare {
         if (key == null) throw "key is null";
         let value = obj.value;
         if (value == null) throw "value is null";
-        obj.result = this._rtcEngine.setPlayerOption2(playerId, key, value);
+        result.result = this._rtcEngine.setPlayerOption2(playerId, key, value);
         return 0;
     }
 
@@ -4232,7 +4232,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let filename = obj.filename;
         if (filename == null) throw "filename is null";
-        obj.result = this._rtcEngine.takeScreenshot(playerId, filename);
+        result.result = this._rtcEngine.takeScreenshot(playerId, filename);
         return 0;
     }
 
@@ -4244,7 +4244,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let index = obj.index;
         if (index == null) throw "index is null";
-        obj.result = this._rtcEngine.selectInternalSubtitle(playerId, index);
+        result.result = this._rtcEngine.selectInternalSubtitle(playerId, index);
         return 0;
     }
 
@@ -4256,7 +4256,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let url = obj.url;
         if (url == null) throw "url is null";
-        obj.result = this._rtcEngine.setExternalSubtitle(playerId, url);
+        result.result = this._rtcEngine.setExternalSubtitle(playerId, url);
         return 0;
     }
 
@@ -4266,7 +4266,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        obj.result = this._rtcEngine.getState(playerId);
+        result.result = this._rtcEngine.getState(playerId);
         return 0;
     }
 
@@ -4278,7 +4278,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let mute = obj.mute;
         if (mute == null) throw "mute is null";
-        obj.result = this._rtcEngine.mute(playerId, mute);
+        result.result = this._rtcEngine.mute(playerId, mute);
         return 0;
     }
 
@@ -4288,9 +4288,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        let mute = obj.mute;
-        if (mute == null) throw "mute is null";
-        obj.result = this._rtcEngine.getMute(playerId, mute);
+        result.result = this._rtcEngine.getMute(playerId, result);
         return 0;
     }
 
@@ -4302,7 +4300,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let volume = obj.volume;
         if (volume == null) throw "volume is null";
-        obj.result = this._rtcEngine.adjustPlayoutVolume(playerId, volume);
+        result.result = this._rtcEngine.adjustPlayoutVolume(playerId, volume);
         return 0;
     }
 
@@ -4314,7 +4312,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let volume = obj.volume;
         if (volume == null) throw "volume is null";
-        obj.result = this._rtcEngine.getPlayoutVolume(playerId, volume);
+        result.result = this._rtcEngine.getPlayoutVolume(playerId, volume);
         return 0;
     }
 
@@ -4326,7 +4324,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let volume = obj.volume;
         if (volume == null) throw "volume is null";
-        obj.result = this._rtcEngine.adjustPublishSignalVolume(playerId, volume);
+        result.result = this._rtcEngine.adjustPublishSignalVolume(playerId, volume);
         return 0;
     }
 
@@ -4338,7 +4336,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let volume = obj.volume;
         if (volume == null) throw "volume is null";
-        obj.result = this._rtcEngine.getPublishSignalVolume(playerId, volume);
+        result.result = this._rtcEngine.getPublishSignalVolume(playerId, volume);
         return 0;
     }
 
@@ -4350,7 +4348,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let view = obj.view;
         if (view == null) throw "view is null";
-        obj.result = this._rtcEngine.setView(playerId, view);
+        result.result = this._rtcEngine.setView(playerId, view);
         return 0;
     }
 
@@ -4362,7 +4360,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let renderMode = obj.renderMode;
         if (renderMode == null) throw "renderMode is null";
-        obj.result = this._rtcEngine.setRenderMode(playerId, renderMode);
+        result.result = this._rtcEngine.setRenderMode(playerId, renderMode);
         return 0;
     }
 
@@ -4374,7 +4372,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let observer = obj.observer;
         if (observer == null) throw "observer is null";
-        obj.result = this._rtcEngine.registerPlayerSourceObserver(playerId, observer);
+        result.result = this._rtcEngine.registerPlayerSourceObserver(playerId, observer);
         return 0;
     }
 
@@ -4386,7 +4384,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let observer = obj.observer;
         if (observer == null) throw "observer is null";
-        obj.result = this._rtcEngine.unregisterPlayerSourceObserver(playerId, observer);
+        result.result = this._rtcEngine.unregisterPlayerSourceObserver(playerId, observer);
         return 0;
     }
 
@@ -4398,7 +4396,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let observer = obj.observer;
         if (observer == null) throw "observer is null";
-        obj.result = this._rtcEngine.MediaPlayer_registerAudioFrameObserver(playerId, observer);
+        result.result = this._rtcEngine.MediaPlayer_registerAudioFrameObserver(playerId, observer);
         return 0;
     }
 
@@ -4412,7 +4410,7 @@ export class IrisRtcEnginePrepare {
         if (observer == null) throw "observer is null";
         let mode = obj.mode;
         if (mode == null) throw "mode is null";
-        obj.result = this._rtcEngine.MediaPlayer_registerAudioFrameObserver2(playerId, observer, mode);
+        result.result = this._rtcEngine.MediaPlayer_registerAudioFrameObserver2(playerId, observer, mode);
         return 0;
     }
 
@@ -4424,7 +4422,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let observer = obj.observer;
         if (observer == null) throw "observer is null";
-        obj.result = this._rtcEngine.MediaPlayer_unregisterAudioFrameObserver(playerId, observer);
+        result.result = this._rtcEngine.MediaPlayer_unregisterAudioFrameObserver(playerId, observer);
         return 0;
     }
 
@@ -4436,7 +4434,17 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let observer = obj.observer;
         if (observer == null) throw "observer is null";
-        obj.result = this._rtcEngine.MediaPlayer_registerVideoFrameObserver(playerId, observer);
+        result.result = this._rtcEngine.MediaPlayer_registerVideoFrameObserver(playerId, observer);
+        return 0;
+    }
+
+    registerVideoEncodedImageReceiver(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let receiver = obj.receiver;
+        if (receiver == null) throw "receiver is null";
+        result.result = this._rtcEngine.registerVideoEncodedImageReceiver(receiver);
         return 0;
     }
 
@@ -4448,7 +4456,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let observer = obj.observer;
         if (observer == null) throw "observer is null";
-        obj.result = this._rtcEngine.MediaPlayer_unregisterVideoFrameObserver(playerId, observer);
+        result.result = this._rtcEngine.MediaPlayer_unregisterVideoFrameObserver(playerId, observer);
         return 0;
     }
 
@@ -4462,7 +4470,7 @@ export class IrisRtcEnginePrepare {
         if (observer == null) throw "observer is null";
         let intervalInMS = obj.intervalInMS;
         if (intervalInMS == null) throw "intervalInMS is null";
-        obj.result = this._rtcEngine.registerMediaPlayerAudioSpectrumObserver(observer, intervalInMS);
+        result.result = this._rtcEngine.registerMediaPlayerAudioSpectrumObserver(observer, intervalInMS);
         return 0;
     }
 
@@ -4474,7 +4482,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let observer = obj.observer;
         if (observer == null) throw "observer is null";
-        obj.result = this._rtcEngine.unregisterMediaPlayerAudioSpectrumObserver(playerId, observer);
+        result.result = this._rtcEngine.unregisterMediaPlayerAudioSpectrumObserver(playerId, observer);
         return 0;
     }
 
@@ -4486,7 +4494,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let mode = obj.mode;
         if (mode == null) throw "mode is null";
-        obj.result = this._rtcEngine.setAudioDualMonoMode(playerId, mode);
+        result.result = this._rtcEngine.setAudioDualMonoMode(playerId, mode);
         return 0;
     }
 
@@ -4496,7 +4504,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        obj.result = this._rtcEngine.getPlayerSdkVersion(playerId);
+        result.result = this._rtcEngine.getPlayerSdkVersion(playerId);
         return 0;
     }
 
@@ -4506,7 +4514,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        obj.result = this._rtcEngine.getPlaySrc(playerId);
+        result.result = this._rtcEngine.getPlaySrc(playerId);
         return 0;
     }
 
@@ -4520,7 +4528,7 @@ export class IrisRtcEnginePrepare {
         if (src == null) throw "src is null";
         let startPos = obj.startPos;
         if (startPos == null) throw "startPos is null";
-        obj.result = this._rtcEngine.openWithAgoraCDNSrc(playerId, src, startPos);
+        result.result = this._rtcEngine.openWithAgoraCDNSrc(playerId, src, startPos);
         return 0;
     }
 
@@ -4530,7 +4538,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        obj.result = this._rtcEngine.getAgoraCDNLineCount(playerId);
+        result.result = this._rtcEngine.getAgoraCDNLineCount(playerId);
         return 0;
     }
 
@@ -4542,7 +4550,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let index = obj.index;
         if (index == null) throw "index is null";
-        obj.result = this._rtcEngine.switchAgoraCDNLineByIndex(playerId, index);
+        result.result = this._rtcEngine.switchAgoraCDNLineByIndex(playerId, index);
         return 0;
     }
 
@@ -4552,7 +4560,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let playerId = obj.playerId;
         if (playerId == null) throw "playerId is null";
-        obj.result = this._rtcEngine.getCurrentAgoraCDNIndex(playerId);
+        result.result = this._rtcEngine.getCurrentAgoraCDNIndex(playerId);
         return 0;
     }
 
@@ -4564,7 +4572,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let enable = obj.enable;
         if (enable == null) throw "enable is null";
-        obj.result = this._rtcEngine.enableAutoSwitchAgoraCDN(playerId, enable);
+        result.result = this._rtcEngine.enableAutoSwitchAgoraCDN(playerId, enable);
         return 0;
     }
 
@@ -4578,7 +4586,7 @@ export class IrisRtcEnginePrepare {
         if (token == null) throw "token is null";
         let ts = obj.ts;
         if (ts == null) throw "ts is null";
-        obj.result = this._rtcEngine.renewAgoraCDNSrcToken(playerId, token, ts);
+        result.result = this._rtcEngine.renewAgoraCDNSrcToken(playerId, token, ts);
         return 0;
     }
 
@@ -4592,7 +4600,7 @@ export class IrisRtcEnginePrepare {
         if (src == null) throw "src is null";
         let syncPts = obj.syncPts;
         if (syncPts == null) throw "syncPts is null";
-        obj.result = this._rtcEngine.switchAgoraCDNSrc(playerId, src, syncPts);
+        result.result = this._rtcEngine.switchAgoraCDNSrc(playerId, src, syncPts);
         return 0;
     }
 
@@ -4606,7 +4614,7 @@ export class IrisRtcEnginePrepare {
         if (src == null) throw "src is null";
         let syncPts = obj.syncPts;
         if (syncPts == null) throw "syncPts is null";
-        obj.result = this._rtcEngine.switchSrc(playerId, src, syncPts);
+        result.result = this._rtcEngine.switchSrc(playerId, src, syncPts);
         return 0;
     }
 
@@ -4620,7 +4628,7 @@ export class IrisRtcEnginePrepare {
         if (src == null) throw "src is null";
         let startPos = obj.startPos;
         if (startPos == null) throw "startPos is null";
-        obj.result = this._rtcEngine.preloadSrc(playerId, src, startPos);
+        result.result = this._rtcEngine.preloadSrc(playerId, src, startPos);
         return 0;
     }
 
@@ -4632,7 +4640,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let src = obj.src;
         if (src == null) throw "src is null";
-        obj.result = this._rtcEngine.playPreloadedSrc(playerId, src);
+        result.result = this._rtcEngine.playPreloadedSrc(playerId, src);
         return 0;
     }
 
@@ -4644,7 +4652,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let src = obj.src;
         if (src == null) throw "src is null";
-        obj.result = this._rtcEngine.unloadSrc(playerId, src);
+        result.result = this._rtcEngine.unloadSrc(playerId, src);
         return 0;
     }
 
@@ -4656,7 +4664,7 @@ export class IrisRtcEnginePrepare {
         if (playerId == null) throw "playerId is null";
         let params = obj.params;
         if (params == null) throw "params is null";
-        obj.result = this._rtcEngine.setSpatialAudioParams(playerId, params);
+        result.result = this._rtcEngine.setSpatialAudioParams(playerId, params);
         return 0;
     }
 
@@ -4670,7 +4678,7 @@ export class IrisRtcEnginePrepare {
         if (pan == null) throw "pan is null";
         let gain = obj.gain;
         if (gain == null) throw "gain is null";
-        obj.result = this._rtcEngine.setSoundPositionParams(playerId, pan, gain);
+        result.result = this._rtcEngine.setSoundPositionParams(playerId, pan, gain);
         return 0;
     }
 }

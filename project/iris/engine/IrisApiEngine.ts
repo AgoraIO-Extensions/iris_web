@@ -4,6 +4,7 @@ import { AgoraActionQueue } from "../tool/AgoraActionQueue";
 import { AgoraConsole } from "../tool/AgoraConsole";
 import { CallApiType, IrisRtcEngine, GenerateVideoTrackLabelOrHtmlElementCb } from "./IrisRtcEngine";
 import { IrisVideoFrameBufferManager } from "./IrisVideoFrameBufferManager";
+import * as agorartc from "../terra/rtc_types/Index";
 
 
 export class IrisApiEngine {
@@ -25,7 +26,8 @@ export class IrisApiEngine {
         let className = array[0];
         let funName = array[1];
 
-        let callApiFun: CallApiType = (this._engine[funName] || this._engine[func_name]) as CallApiType;
+        //should fast find by full name , if not found then find by split name
+        let callApiFun: CallApiType = (this._engine[func_name] || this._engine[funName]) as CallApiType;
         if (callApiFun) {
             let ret = callApiFun.call(this._engine, params, paramLength, buffer, bufferLength, result);
             AgoraConsole.log("[callIrisApi] " + func_name + " : " + ret);
@@ -33,7 +35,7 @@ export class IrisApiEngine {
         }
         else {
             AgoraConsole.warn(func_name + " : not found in IrisApiEngine.ts");
-            return -4;
+            return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
         }
     }
 

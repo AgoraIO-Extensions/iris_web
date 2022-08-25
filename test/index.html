@@ -28,6 +28,12 @@
             background: yellowgreen;
             float: right;
         }
+        .videoContainer{
+            float:right;
+            position: fixed;
+            top:0px;
+            right: 0px;
+        }
     </style>
 
 </head>
@@ -38,11 +44,13 @@
 
     </script>
     <button onclick="AgoraTest.start()">点击开始单元测试</button>
-    <div id="kVideoSourceTypeCameraPrimary" class="videoTrack"></div>
-    <div id="kVideoSourceTypeCameraSecondary" class="videoTrack"></div>
-    <div id="kVideoSourceTypeScreenPrimary" class="videoTrack"></div>
-    <div id="kVideoSourceTypeScreenSecondary" class="videoTrack"></div>
-    <div id="kVideoSourceTypeRemote" class="videoTrack"></div>
+    <div  class="videoContainer">
+        <div id="kVideoSourceTypeCameraPrimary" class="videoTrack"></div>
+        <div id="kVideoSourceTypeCameraSecondary" class="videoTrack"></div>
+        <div id="kVideoSourceTypeScreenPrimary" class="videoTrack"></div>
+        <div id="kVideoSourceTypeScreenSecondary" class="videoTrack"></div>
+        <div id="kVideoSourceTypeRemote" class="videoTrack"></div>
+    </div>
 </body>
 
 </html>
