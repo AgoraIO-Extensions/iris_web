@@ -5,6 +5,8 @@ import * as agorartc from "../../project/iris/terra/rtc_types/Index"
 import { IrisApiType } from "../../project/iris/base/IrisApiType";
 import { GenerateVideoTrackLabelOrHtmlElementCb } from "../../project/iris/engine/IrisRtcEngine";
 import { IrisVideoSourceType, IrisEventHandler } from "../../project/iris/base/BaseType";
+import { IrisApiEngine } from "../../project/iris/engine/IrisApiEngine";
+import { join } from "path";
 
 
 
@@ -353,7 +355,7 @@ test("SwitchCamera", async () => {
     await waitForSecond(3);
 
     //call leaveChannel
-    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_LEAVECHANNEL, "{}", 2, null, null);
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_LEAVECHANNEL, "{}", 2, null, null, result);
     await waitForSecond(5);
     shouldReturnTrue("onLeaveChannelEx Triggered", () => {
         return triggerEventNames.includes("onLeaveChannelEx");
@@ -362,7 +364,122 @@ test("SwitchCamera", async () => {
     //call Destroy
     let nRet = AgoraWrapper.DestroyIrisApiEngine(apiEngine);
     shouldEqual("DestroyIrisApiEngine", nRet, 0);
+});
+
+
+export let testBegine = async function (enableAudio: boolean | null, enableVideo: boolean | null, joinChannel: boolean, eventHandler: IrisEventHandler): Promise<IrisApiEngine> {
+    let apiEngine = AgoraWrapper.CreateIrisApiEngine();
+    apiEngine.setGenerateVideoTrackLabelOrHtmlElementCb(generateVideoTrackLabelOrHtmlElementCb);
+
+    AgoraWrapper.SetIrisRtcEngineEventHandler(apiEngine, eventHandler);
+
+    //call init
+    let context: agorartc.RtcEngineContext = {
+        appId: commonAppid,
+        context: null,
+        enableAudioDevice: true,
+        channelProfile: 1,
+        audioScenario: 0,
+        logConfig: {
+            filePath: "",
+            fileSizeInKB: 1024,
+            level: 0x0004,
+        },
+        areaCode: 0x00000001,
+        useExternalEglContext: false,
+    };
+    let paramsObj: any = {
+        context
+    };
+    let result: any = {};
+    let param: string = JSON.stringify(paramsObj);
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_INITIALIZE, param, param.length, null, 0, result);
+    shouldEqual("init: ", result.result, 0);
+
+    if (enableAudio === true) {
+        result = {};
+        AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ENABLEAUDIO, "{}", 2, null, null, result);
+        shouldEqual("enableAudio: ", result.result, 0);
+    }
+    else if (enableAudio === false) {
+        result = {};
+        AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_DISABLEAUDIO, "{}", 2, null, null, result);
+        shouldEqual("disableAudio: ", result.result, 0);
+    }
+
+    if (enableVideo === true) {
+        result = {};
+        AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ENABLEVIDEO, "{}", 2, null, null, result);
+        shouldEqual("enableVideo: ", result.result, 0);
+    }
+    else if (enableVideo === false) {
+        result = {};
+        AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_DISABLEVIDEO, "{}", 2, null, null, result);
+        shouldEqual("disableVideo: ", result.result, 0);
+    }
+
+    if (joinChannel) {
+        let token = "";
+        let channelId = commonChannelId;
+        let info = "";
+        let uid = 0;
+        paramsObj = {
+            token,
+            channelId,
+            info,
+            uid
+        };
+        result = {};
+        param = JSON.stringify(paramsObj);
+        AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNEL, param, param.length, null, null, result);
+        shouldEqual("joinChannel: ", result.result, 0);
+        await waitForSecond(3);
+    }
+
+    return apiEngine;
+}
+
+export let testEnd = async function (apiEngine: IrisApiEngine, leavelChannel: boolean) {
+
+    let result: any = {};
+    //call leaveChannel
+    if (leavelChannel) {
+        AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_LEAVECHANNEL, "{}", 2, null, 0, result);
+        shouldEqual("leaveChannel: ", result.result, 0);
+        await waitForSecond(2);
+    }
+
+    //call Destroy
+    let nRet = AgoraWrapper.DestroyIrisApiEngine(apiEngine);
+    shouldEqual("DestroyIrisApiEngine", nRet, 0);
+    await waitForSecond(2);
+}
+
+
+test("model", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(true, true, true, eventHandler);
+
+    //to do  call something in there
+    let isOn;
+    let paramObj = {
+        isOn,
+    };
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETCAMERATORCHON, params, params.length, null, 0, result);
+    shouldEqual("rtcEngine_setCameraTorchon: ", result.result, 0);
+    await waitForSecond(1);
+
+    await testEnd(apiEngine, true);
 }, 1);
+
 
 
 
