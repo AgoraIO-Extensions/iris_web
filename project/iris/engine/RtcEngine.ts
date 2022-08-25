@@ -119,7 +119,7 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: agorartc.EXTERNAL_VIDEO_SOURCE_TYPE, encodedVideoOption: agorartc.SenderOptions): number {
+    setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: agorartc.EXTERNAL_VIDEO_SOURCE_TYPE): number {
         AgoraConsole.warn("setExternalVideoSource not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }

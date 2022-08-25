@@ -369,6 +369,45 @@ test("SwitchCamera", async () => {
 }, -999);
 
 
+
+test("IVideoDeviceManager_enumerateVideoDevices_setDevice", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(true, true, true, eventHandler);
+
+    //call enumerateVideoDevices
+    let paramObj = {
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_VIDEODEVICEMANAGER_ENUMERATEVIDEODEVICES, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IVideoDeviceManager_enumerateVideoDevices ", ret, 0);
+    shoudlWarn("IVideoDeviceManager_enumerateVideoDevices:result ", typeof result.result.length != 'number', "result" + result.result);
+
+    //call setDeviceId
+    let devices: agorartc.DeviceInfo[] = result.result;
+    let length = devices.length;
+    let deviceIdUTF8: string = devices[length - 1].deviceId;
+    paramObj = {
+        deviceIdUTF8,
+    }
+    params = JSON.stringify(paramObj);
+    result = {};
+    ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_VIDEODEVICEMANAGER_SETDEVICE, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IVideoDeviceManager_setDevice ", ret, 0);
+    shouldEqual("IVideoDeviceManager_setDevice:result ", result.result, 0);
+
+    await waitForSecond(1);
+    await testEnd(apiEngine, true);
+});
+
 export let testBegine = async function (enableAudio: boolean | null, enableVideo: boolean | null, joinChannel: boolean, eventHandler: IrisEventHandler): Promise<IrisApiEngine> {
     let apiEngine = AgoraWrapper.CreateIrisApiEngine();
     apiEngine.setGenerateVideoTrackLabelOrHtmlElementCb(generateVideoTrackLabelOrHtmlElementCb);
@@ -2522,53 +2561,6 @@ test("IMediaPlayer_setSpatialAudioParams", async () => {
 });
 
 //IVideoDeviceManager
-
-test("IVideoDeviceManager_enumerateVideoDevices", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let paramObj = {
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_VIDEODEVICEMANAGER_ENUMERATEVIDEODEVICES, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IVideoDeviceManager_enumerateVideoDevices ", ret, 0);
-    shouldEqual("IVideoDeviceManager_enumerateVideoDevices:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IVideoDeviceManager_setDevice", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let deviceIdUTF8: string = 0;
-    let paramObj = {
-        deviceIdUTF8,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_VIDEODEVICEMANAGER_SETDEVICE, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IVideoDeviceManager_setDevice ", ret, 0);
-    shouldEqual("IVideoDeviceManager_setDevice:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
 test("IVideoDeviceManager_getDevice", async () => {
 
     let eventHandler: IrisEventHandler = {
@@ -2579,16 +2571,16 @@ test("IVideoDeviceManager_getDevice", async () => {
 
     let apiEngine = await testBegine(false, false, false, eventHandler);
 
-    let deviceIdUTF8: string = 0;
+    // let deviceIdUTF8: string = 0;
     let paramObj = {
-        deviceIdUTF8,
+        // deviceIdUTF8,
     }
     let params = JSON.stringify(paramObj);
     let result: any = {};
     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_VIDEODEVICEMANAGER_GETDEVICE, params, params.length, null, 0, result);
 
     shouldEqual("callApi:IVideoDeviceManager_getDevice ", ret, 0);
-    shouldEqual("IVideoDeviceManager_getDevice:result ", result.result, 0);
+    shoudlWarn("IVideoDeviceManager_getDevice:result ", typeof result.result != "string", "result:" + result.result);
     await waitForSecond(1);
     await testEnd(apiEngine, false);
 });
@@ -2612,7 +2604,7 @@ test("IVideoDeviceManager_startDeviceTest", async () => {
     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_VIDEODEVICEMANAGER_STARTDEVICETEST, params, params.length, null, 0, result);
 
     shouldEqual("callApi:IVideoDeviceManager_startDeviceTest ", ret, 0);
-    shouldEqual("IVideoDeviceManager_startDeviceTest:result ", result.result, 0);
+    shouldEqual("IVideoDeviceManager_startDeviceTest:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
     await waitForSecond(1);
     await testEnd(apiEngine, false);
 });
@@ -2634,109 +2626,13 @@ test("IVideoDeviceManager_stopDeviceTest", async () => {
     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_VIDEODEVICEMANAGER_STOPDEVICETEST, params, params.length, null, 0, result);
 
     shouldEqual("callApi:IVideoDeviceManager_stopDeviceTest ", ret, 0);
-    shouldEqual("IVideoDeviceManager_stopDeviceTest:result ", result.result, 0);
+    shouldEqual("IVideoDeviceManager_stopDeviceTest:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
     await waitForSecond(1);
     await testEnd(apiEngine, false);
 });
 
-test("IVideoDeviceManager_release", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let paramObj = {
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_VIDEODEVICEMANAGER_RELEASE, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IVideoDeviceManager_release ", ret, 0);
-    shouldEqual("IVideoDeviceManager_release:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
 
 //IRtcEngine
-
-test("IRtcEngine_release", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let sync: boolean = 0;
-    let paramObj = {
-        sync,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_RELEASE, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_release ", ret, 0);
-    shouldEqual("IRtcEngine_release:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_initialize", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let context: agorartc.RtcEngineContext = 0;
-    let paramObj = {
-        context,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_INITIALIZE, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_initialize ", ret, 0);
-    shouldEqual("IRtcEngine_initialize:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_queryInterface", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let iid: agorartc.INTERFACE_ID_TYPE = 0;
-    let inter: void = 0;
-    let paramObj = {
-        iid,
-        inter,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_QUERYINTERFACE, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_queryInterface ", ret, 0);
-    shouldEqual("IRtcEngine_queryInterface:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
 test("IRtcEngine_getVersion", async () => {
 
     let eventHandler: IrisEventHandler = {
@@ -2756,7 +2652,7 @@ test("IRtcEngine_getVersion", async () => {
     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_GETVERSION, params, params.length, null, 0, result);
 
     shouldEqual("callApi:IRtcEngine_getVersion ", ret, 0);
-    shouldEqual("IRtcEngine_getVersion:result ", result.result, 0);
+    shoudlWarn("IRtcEngine_getVersion:result ", typeof result.result != "string", "result" + result.result);
     await waitForSecond(1);
     await testEnd(apiEngine, false);
 });
@@ -2780,67 +2676,7 @@ test("IRtcEngine_getErrorDescription", async () => {
     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_GETERRORDESCRIPTION, params, params.length, null, 0, result);
 
     shouldEqual("callApi:IRtcEngine_getErrorDescription ", ret, 0);
-    shouldEqual("IRtcEngine_getErrorDescription:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_joinChannel", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let token: string = 0;
-    let channelId: string = 0;
-    let info: string = 0;
-    let uid: agorartc.uid_t = 0;
-    let paramObj = {
-        token,
-        channelId,
-        info,
-        uid,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNEL, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_joinChannel ", ret, 0);
-    shouldEqual("IRtcEngine_joinChannel:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_joinChannel", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let token: string = 0;
-    let channelId: string = 0;
-    let uid: agorartc.uid_t = 0;
-    let options: agorartc.ChannelMediaOptions = 0;
-    let paramObj = {
-        token,
-        channelId,
-        uid,
-        options,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNEL, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_joinChannel ", ret, 0);
-    shouldEqual("IRtcEngine_joinChannel:result ", result.result, 0);
+    shoudlWarn("IRtcEngine_getErrorDescription:result ", typeof result.result != "string", "result" + result.result);
     await waitForSecond(1);
     await testEnd(apiEngine, false);
 });

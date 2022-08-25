@@ -16,7 +16,7 @@ export interface IRtcEngine {
     pushReverseAudioFrame(frame: agorartc.AudioFrame): number;
     pushDirectAudioFrame(frame: agorartc.AudioFrame): number;
     pullAudioFrame(frame: agorartc.AudioFrame): number;
-    setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: agorartc.EXTERNAL_VIDEO_SOURCE_TYPE, encodedVideoOption: agorartc.SenderOptions): number;
+    setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: agorartc.EXTERNAL_VIDEO_SOURCE_TYPE): number;
     setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, sourceNumber: number, localPlayback: boolean, publish: boolean): number;
     setExternalAudioSink(enabled: boolean, sampleRate: number, channels: number): number;
     // enableCustomAudioLocalPlayback(sourceId: number, enabled: boolean): number;

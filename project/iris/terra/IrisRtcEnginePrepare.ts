@@ -104,9 +104,7 @@ export class IrisRtcEnginePrepare {
         if (useTexture == null) throw "useTexture is null";
         let sourceType = obj.sourceType;
         if (sourceType == null) throw "sourceType is null";
-        let encodedVideoOption = obj.encodedVideoOption;
-        if (encodedVideoOption == null) throw "encodedVideoOption is null";
-        result.result = this._rtcEngine.setExternalVideoSource(enabled, useTexture, sourceType, encodedVideoOption);
+        result.result = this._rtcEngine.setExternalVideoSource(enabled, useTexture, sourceType);
         return 0;
     }
 
