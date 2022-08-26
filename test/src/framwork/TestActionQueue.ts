@@ -10,6 +10,13 @@ interface Action {
     priority: number
 };
 
+export enum Priority {
+    Min = -1,
+    Low = 0,
+    Medium = 2,
+    High = 3
+};
+
 export function waitForSecond(second: number): Promise<void> {
     return new Promise<void>((resolve, rejcet) => {
         setTimeout(() => {
@@ -28,7 +35,7 @@ export class TestActionQueue {
 
     }
 
-    putAction(title: string, cb: TestCallBack, priority: number) {
+    putAction(title: string, cb: TestCallBack, priority: Priority) {
         this._queue.push({ titile: title, cb: cb, priority: priority });
     }
 

@@ -1,4 +1,5 @@
 
+import { IrisVideoSourceType } from "../base/BaseType";
 import { RtcEngine } from "../engine/RtcEngine";
 import { IRtcEngine } from "./IRtcEngine";
 import * as agorartc from "./rtc_types/Index";
@@ -1516,10 +1517,7 @@ export class IrisRtcEnginePrepare {
     uploadLogFile(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let requestId = "";
-        result.result = this._rtcEngine.uploadLogFile(requestId);
-        result.requestId = requestId;
+        result.result = this._rtcEngine.uploadLogFile(result);
         return 0;
     }
 
@@ -1872,13 +1870,13 @@ export class IrisRtcEnginePrepare {
         return 0;
     }
 
-    adjustLoopbackSignalVolume(
+    adjustLoopbackRecordingVolume(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustLoopbackSignalVolume(volume);
+        result.result = this._rtcEngine.adjustLoopbackRecordingVolume(volume);
         return 0;
     }
 
@@ -2266,7 +2264,6 @@ export class IrisRtcEnginePrepare {
     getAudioDeviceInfo(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
         let deviceInfo: agorartc.DeviceInfo = { deviceId: "", deviceName: "" }
         result.result = this._rtcEngine.getAudioDeviceInfo(deviceInfo);
         result.deviceInfo = deviceInfo;
@@ -2331,9 +2328,11 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
+        let mediaProjectionPermissionResultData = obj.mediaProjectionPermissionResultData;
+        if (mediaProjectionPermissionResultData === undefined) throw "mediaProjectionPermissionResultData is undfined";
         let captureParams = obj.captureParams;
         if (captureParams === undefined) throw "captureParams is undefined";
-        result.result = this._rtcEngine.startScreenCapture(captureParams);
+        result.result = this._rtcEngine.startScreenCapture(mediaProjectionPermissionResultData, captureParams);
         return 0;
     }
 
@@ -2359,7 +2358,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.getCallId();
+        result.result = this._rtcEngine.getCallId(result);
         return 0;
     }
 
@@ -2895,9 +2894,7 @@ export class IrisRtcEnginePrepare {
         if (userAccount === undefined) throw "userAccount is undefined";
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        let eventHandler = obj.eventHandler;
-        if (eventHandler === undefined) throw "eventHandler is undefined";
-        result.result = this._rtcEngine.joinChannelWithUserAccountEx(token, channelId, userAccount, options, eventHandler);
+        result.result = this._rtcEngine.joinChannelWithUserAccountEx(token, channelId, userAccount, options);
         return 0;
     }
 
@@ -4667,6 +4664,50 @@ export class IrisRtcEnginePrepare {
         let gain = obj.gain;
         if (gain === undefined) throw "gain is undefined";
         result.result = this._rtcEngine.setSoundPositionParams(playerId, pan, gain);
+        return 0;
+    }
+
+    addPublishStreamUrl(params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let url = obj.url;
+        if (url === undefined) throw "url is undefined";
+        let transcodingEnabled = obj.transcodingEnabled;
+        if (transcodingEnabled === undefined) throw "transcodingEnabled is undefined";
+        result.result = this._rtcEngine.addPublishStreamUrl(url, transcodingEnabled);
+        return 0;
+
+    }
+
+    removePublishStreamUrl(params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let url = obj.url;
+        if (url === undefined) throw "url is undefined";
+        result.result = this._rtcEngine.removePublishStreamUrl(url);
+        return 0;
+
+    }
+
+    addPublishStreamUrlEx(params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let url = obj.url;
+        if (url === undefined) throw "url is undefined";
+        let transcodingEnabled = obj.transcodingEnabled;
+        if (transcodingEnabled === undefined) throw "transcodingEnabled is undefined";
+        let connection = obj.transcodingEnabled;
+        if (connection === undefined) throw "connection is undefined";
+        result.result = this._rtcEngine.addPublishStreamUrlEx(url, transcodingEnabled, connection);
+        return 0;
+    }
+
+    setLiveTranscoding(params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let transcoding = obj.transcoding;
+        if (transcoding === undefined) throw "transcoding is undefined";
+        result.result = this._rtcEngine.setLiveTranscoding(transcoding);
         return 0;
     }
 }

@@ -1,5 +1,6 @@
 import { DeviceInfo } from 'agora-rtc-sdk-ng';
 import { Argument } from 'webpack';
+import { IrisVideoSourceType } from '../base/BaseType';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../tool/AgoraActionQueue';
 import * as agorartc from './rtc_types/Index';
@@ -153,7 +154,7 @@ export interface IRtcEngine {
     setLogFilter(filter: number): number;
     setLogLevel(level: agorartc.LOG_LEVEL): number;
     setLogFileSize(fileSizeInKBytes: number): number;
-    uploadLogFile(requestId: string): number;
+    uploadLogFile(result: any): number;
     setLocalRenderMode(renderMode: agorartc.RENDER_MODE_TYPE, mirrorMode: agorartc.VIDEO_MIRROR_MODE_TYPE): number;
     setRemoteRenderMode(uid: agorartc.uid_t, renderMode: agorartc.RENDER_MODE_TYPE, mirrorMode: agorartc.VIDEO_MIRROR_MODE_TYPE): number;
     setLocalRenderMode2(renderMode: agorartc.RENDER_MODE_TYPE): number;
@@ -185,7 +186,7 @@ export interface IRtcEngine {
     setLocalPublishFallbackOption(option: agorartc.STREAM_FALLBACK_OPTIONS): number;
     setRemoteSubscribeFallbackOption(option: agorartc.STREAM_FALLBACK_OPTIONS): number;
     enableLoopbackRecording(enabled: boolean, deviceName: string): number;
-    adjustLoopbackSignalVolume(volume: number): number;
+    adjustLoopbackRecordingVolume(volume: number): number;
     getLoopbackRecordingVolume(): number;
     enableInEarMonitoring(enabled: boolean, includeAudioFilters: number): number;
     setInEarMonitoringVolume(volume: number): number;
@@ -228,10 +229,10 @@ export interface IRtcEngine {
     setScreenCaptureScenario(screenScenario: agorartc.SCREEN_SCENARIO_TYPE): number;
     updateScreenCaptureRegion(regionRect: agorartc.Rectangle): number;
     updateScreenCaptureParameters(captureParams: agorartc.ScreenCaptureParameters): number;
-    startScreenCapture(captureParams: agorartc.ScreenCaptureParameters): number;
+    startScreenCapture(mediaProjectionPermissionResultData: Uint8ClampedArray, captureParams: agorartc.ScreenCaptureParameters): number;
     updateScreenCapture(captureParams: agorartc.ScreenCaptureParameters): number;
     stopScreenCapture(): number;
-    getCallId(): string;
+    getCallId(result: any): number;
     rate(callId: string, rating: number, description: string): number;
     complain(callId: string, description: string): number;
     startRtmpStreamWithoutTranscoding(url: string): number;
@@ -279,7 +280,7 @@ export interface IRtcEngine {
     registerLocalUserAccount(appId: string, userAccount: string): number;
     joinChannelWithUserAccount(token: string, channelId: string, userAccount: string): number;
     joinChannelWithUserAccount2(token: string, channelId: string, userAccount: string, options: agorartc.ChannelMediaOptions): number;
-    joinChannelWithUserAccountEx(token: string, channelId: string, userAccount: string, options: agorartc.ChannelMediaOptions, eventHandler: agorartc.IRtcEngineEventHandler): number;
+    joinChannelWithUserAccountEx(token: string, channelId: string, userAccount: string, options: agorartc.ChannelMediaOptions): number;
     getUserInfoByUserAccount(userAccount: string, userInfo: agorartc.UserInfo): number;
     getUserInfoByUid(uid: agorartc.uid_t, userInfo: agorartc.UserInfo): number;
     startChannelMediaRelay(configuration: agorartc.ChannelMediaRelayConfiguration): number;
@@ -306,6 +307,9 @@ export interface IRtcEngine {
     setAVSyncSource(channelId: string, uid: agorartc.uid_t): number;
     enableVideoImageSource(enable: boolean, options: agorartc.ImageTrackOptions): number;
     enableWirelessAccelerate(enabled: boolean): number;
+    addPublishStreamUrl(url: string, transcodingEnabled: boolean): number;
+    setLiveTranscoding(transcoding: agorartc.LiveTranscoding);
+    removePublishStreamUrl(url: string): number;
 
     //IRtcEngineEx
     joinChannelEx(token: string, connection: agorartc.RtcConnection, options: agorartc.ChannelMediaOptions): number;
@@ -341,6 +345,8 @@ export interface IRtcEngine {
     setDualStreamModeEx(sourceType: agorartc.VIDEO_SOURCE_TYPE, mode: agorartc.SIMULCAST_STREAM_MODE, streamConfig: agorartc.SimulcastStreamConfig, connection: agorartc.RtcConnection): number;
     // enableWirelessAccelerate(enabled: boolean): number;
     takeSnapshotEx(connection: agorartc.RtcConnection, uid: agorartc.uid_t, filePath: string): number;
+    addPublishStreamUrlEx(url: string, transcodingEnabled: boolean, connection: agorartc.RtcConnection): number;
+
 
     //ILocalSpatialAudioEngine
     // initialize(config: agorartc.LocalSpatialAudioConfig): number;

@@ -180,6 +180,12 @@ export class IrisClientEventHandler {
                 this._client.subscribe(user, mediaType)
                     .then(() => {
                         console.log("onEventUserPublished subcribe audio success");
+                        if (this._engine.globalVariables.playbackSignalVolumes.has(user.uid)) {
+                            user.audioTrack.setVolume(this._engine.globalVariables.playbackSignalVolumes.get(user.uid));
+                        }
+                        else {
+                            user.audioTrack.setVolume(this._engine.globalVariables.playbackSignalVolume);
+                        }
                         user.audioTrack.play();
 
                         let param: IrisTrackEventHandlerParam = {
@@ -204,7 +210,7 @@ export class IrisClientEventHandler {
                     })
                     .catch(() => {
                         console.log("onEventUserPublished subcribe audio failed");
-                    })
+                    });
             }
         }
         else if (mediaType == 'video' && enableVideo) {

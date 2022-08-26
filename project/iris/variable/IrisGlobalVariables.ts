@@ -31,9 +31,12 @@ export class IrisGlobalVariables {
 
 
 
-    //playback signal volume
+    //远端用户的 playback signal volume， 总设置
     playbackSignalVolume: number = 100;
+    //每个远端用户的 playback signal volume 对应uid
     playbackSignalVolumes: Map<UID, number> = new Map();
+
+
 
 
     // recording Signal Volume

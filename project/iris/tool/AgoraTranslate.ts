@@ -333,9 +333,8 @@ export class AgoraTranslate {
                 return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTED;
             case "RECONNECTING":
                 return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_RECONNECTING;
-            case "DISCONNECTING":
-                throw new Error("ConnectionState2agorartcCONNECTION_STATE_TYPE failed");
-            // return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
+            case "DISCONNECTING":  
+                return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
         }
     }
 

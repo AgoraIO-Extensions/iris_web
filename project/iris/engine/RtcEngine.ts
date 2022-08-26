@@ -25,6 +25,8 @@ export class RtcEngine implements IRtcEngine {
         this._actonQueue = new AgoraActionQueue(this);
     }
 
+
+
     public putAction(action: Action) {
         this._actonQueue.putAction(action);
     }
@@ -72,6 +74,28 @@ export class RtcEngine implements IRtcEngine {
         })
 
         return 0;
+    }
+
+    //这个接口在400被删除了
+    addPublishStreamUrl(url: string, transcodingEnabled: boolean): number {
+        AgoraConsole.warn("This method is deprecated. Use StartRtmpStreamWithoutTranscoding or StartRtmpStreamWithTranscoding instead according to your needs");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    }
+
+    removePublishStreamUrl(url: string): number {
+        AgoraConsole.warn("TThis method is deprecated. This method is deprecated. Use StopRtmpStream instead");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    }
+
+    //这个接口在400被删除了
+    addPublishStreamUrlEx(url: string, transcodingEnabled: boolean, connection: agorartc.RtcConnection): number {
+        AgoraConsole.warn("This method is deprecated. Use StartRtmpStreamWithoutTranscoding or StartRtmpStreamWithTranscoding instead according to your needs");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    }
+
+    setLiveTranscoding(transcoding: agorartc.LiveTranscoding) {
+        AgoraConsole.warn("This method is deprecated. Use StartRtmpStreamWithoutTranscoding or StartRtmpStreamWithTranscoding instead according to your needs");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     setAppType(appType: number): number {
@@ -2142,8 +2166,9 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    uploadLogFile(requestId: string): number {
+    uploadLogFile(result: any): number {
         AgoraRTC.enableLogUpload();
+        result.requestId = "";
         return 0;
     }
 
@@ -2374,6 +2399,7 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
+    //native 传入的值为[0, 400], 100: The original volume.
     adjustRecordingSignalVolume(volume: number): number {
         this._actonQueue.putAction({
             fun: (volume: number, next) => {
@@ -2382,6 +2408,7 @@ export class RtcEngine implements IRtcEngine {
                 let trackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary);
                 if (trackPackage) {
                     let track = trackPackage.track;
+                    //web 传入的值为 [0,1000], 100: The original volume. 似乎不需要转换
                     track.setVolume(volume);
                 }
                 next();
@@ -2426,7 +2453,13 @@ export class RtcEngine implements IRtcEngine {
         return 0;
     }
 
+    //native传入的值为[0,400] 100:The original volume.
     adjustPlaybackSignalVolume(volume: number): number {
+        if (volume < 0 || volume > 100) {
+            AgoraConsole.warn("the volume must be in [0,100] on web");
+            return -agorartc.ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+        }
+
         this._actonQueue.putAction({
 
             fun: (volume: number, next) => {
@@ -2434,17 +2467,11 @@ export class RtcEngine implements IRtcEngine {
                 this._engine.globalVariables.playbackSignalVolume = volume;
                 this._engine.globalVariables.playbackSignalVolumes.clear();
 
-                //找到本端audio
-                let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
-                for (let trackPackage of trackPackages) {
-                    let track = trackPackage.track as ILocalAudioTrack;
-                    track.setVolume(volume);
-                }
-
                 //找到远端audio
                 let remoteUsers = this._engine.entitiesContainer.getAllRemoteUsers();
                 for (let remoteUser of remoteUsers) {
                     if (remoteUser.audioTrack) {
+                        //web端传入值为[0,100], 100:表示原始音量
                         remoteUser.audioTrack.setVolume(volume);
                     }
                 }
@@ -2456,7 +2483,13 @@ export class RtcEngine implements IRtcEngine {
         return 0;
     }
 
+    //native 值为[0,100],  The default value is 100
     adjustUserPlaybackSignalVolume(uid: number, volume: number): number {
+        if (volume < 0 || volume > 100) {
+            AgoraConsole.warn("the volume must be in [0,100] on web");
+            return -agorartc.ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+        }
+
         this._actonQueue.putAction({
             fun: (volume: number, next) => {
 
@@ -2464,6 +2497,7 @@ export class RtcEngine implements IRtcEngine {
                 let remoteUsers = this._engine.entitiesContainer.getAllRemoteUserByUid(uid);
                 for (let remoteUser of remoteUsers) {
                     if (remoteUser.hasAudio && remoteUser.audioTrack) {
+                        //web 值为[0,100], The default value is 100 不需要转换
                         remoteUser.audioTrack.setVolume(volume);
                     }
                 }
@@ -2544,7 +2578,7 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    adjustLoopbackSignalVolume(volume: number): number {
+    adjustLoopbackRecordingVolume(volume: number): number {
         AgoraConsole.warn("adjustLoopbackSignalVolume not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -2789,15 +2823,15 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    startScreenCaptureByDisplayId(displayId: number, regionRect: agorartc.Rectangle, captureParams: agorartc.ScreenCaptureParameters): number {
+    startScreenCaptureByDisplayId(displayId: number, regionRect: agorartc.Rectangle, captureParams: agorartc.ScreenCaptureParameters, videoSourceType: IrisVideoSourceType = IrisVideoSourceType.kVideoSourceTypeScreenPrimary): number {
         //todo 直接创建屏幕共享的窗口
         this._actonQueue.putAction({
-            fun: (displayId: number, regionRect: agorartc.Rectangle, captureParams: agorartc.ScreenCaptureParameters, next) => {
+            fun: (displayId: number, regionRect: agorartc.Rectangle, captureParams: agorartc.ScreenCaptureParameters, videoSourceType: IrisVideoSourceType, next) => {
                 this._engine.globalVariables.screenCaptureParameters = captureParams;
 
                 let process = async () => {
                     let audioType = IrisAudioSourceType.kAudioSourceTypeUnknow;
-                    let videoType = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+                    let videoType = videoSourceType;
                     let clientType = IrisClientType.kClientMian;
                     try {
                         let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioType, videoType, clientType);
@@ -2846,7 +2880,7 @@ export class RtcEngine implements IRtcEngine {
                 setTimeout(process, 0);
 
             },
-            args: [displayId, regionRect, captureParams]
+            args: [displayId, regionRect, captureParams, videoSourceType]
         })
 
         return 0;
@@ -2857,6 +2891,15 @@ export class RtcEngine implements IRtcEngine {
     }
 
     getAudioDeviceInfo(deviceInfo: agorartc.DeviceInfo): number {
+        // if (!this._engine.globalVariables.deviceEnumerated) {
+        //     AgoraConsole.warn("Please call this method:getAudioDeviceInfo after onDeviceEnumerated triggered")
+        //     return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
+        // }
+        // else {
+        //     deviceInfo.deviceId = this._engine.globalVariables.videoDevices
+        //     return 0;
+        // }
+
         AgoraConsole.warn("getAudioDeviceInfo not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -2909,18 +2952,20 @@ export class RtcEngine implements IRtcEngine {
 
     //或许我应该返回不支持
     updateScreenCaptureParameters(captureParams: agorartc.ScreenCaptureParameters): number {
-        this._actonQueue.putAction({
-            fun: (captureParams: agorartc.ScreenCaptureParameters, next) => {
-                this._engine.globalVariables.screenCaptureParameters = captureParams;
-                next();
-            },
-            args: [captureParams]
-        })
+        // this._actonQueue.putAction({
+        //     fun: (captureParams: agorartc.ScreenCaptureParameters, next) => {
+        //         this._engine.globalVariables.screenCaptureParameters = captureParams;
+        //         next();
+        //     },
+        //     args: [captureParams]
+        // })
 
-        return 0;
+        // return 0;
+        AgoraConsole.warn("updateScreenCaptureParameters not supported in this platfrom!");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    startScreenCapture(captureParams: agorartc.ScreenCaptureParameters): number {
+    startScreenCapture(mediaProjectionPermissionResultData: Uint8ClampedArray, captureParams: agorartc.ScreenCaptureParameters): number {
         return this.startScreenCaptureByDisplayId(0, null, captureParams);
     }
 
@@ -2929,10 +2974,10 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    stopScreenCapture(): number {
+    stopScreenCapture(videoType: IrisVideoSourceType = IrisVideoSourceType.kVideoSourceTypeCameraPrimary): number {
 
         this._actonQueue.putAction({
-            fun: (next) => {
+            fun: (videoType: IrisVideoSourceType, next) => {
 
                 let processStop = async () => {
 
@@ -2944,7 +2989,7 @@ export class RtcEngine implements IRtcEngine {
                         track.close();
                     }
 
-                    let videoTrackPackage = entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+                    let videoTrackPackage = entitiesContainer.getLocalVideoTrackByType(videoType);
                     if (videoTrackPackage) {
                         let track = videoTrackPackage.track as ILocalVideoTrack;
                         await entitiesContainer.videoTrackWillClose(track);
@@ -2956,15 +3001,16 @@ export class RtcEngine implements IRtcEngine {
 
                 setTimeout(processStop, 0);
             },
-            args: []
+            args: [videoType]
         });
 
         return 0;
     }
 
-    getCallId(): string {
+    getCallId(result: any): number {
         AgoraConsole.warn("updateScreenCaptureRegion not supported in this platfrom!");
-        return "";
+        result.callId = "";
+        return - agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     rate(callId: string, rating: number, description: string): number {
@@ -3075,13 +3121,31 @@ export class RtcEngine implements IRtcEngine {
     }
 
     stopPrimaryCameraCapture(): number {
-        //todo 销毁视频轨道
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return this._stopCameraCapture(IrisVideoSourceType.kVideoSourceTypeCameraPrimary);
     }
 
     stopSecondaryCameraCapture(): number {
-        //todo 销毁视频轨道
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return this._stopCameraCapture(IrisVideoSourceType.kVideoSourceTypeCameraSecondary);
+    }
+
+    _stopCameraCapture(videoSourceType: IrisVideoSourceType): number {
+        this._actonQueue.putAction({
+            fun: (videoSourceType: IrisVideoSourceType, next) => {
+                let process = async () => {
+                    let entitiesContainer = this._engine.entitiesContainer;
+                    let trackPackage = entitiesContainer.getLocalVideoTrackByType(videoSourceType);
+                    if (trackPackage) {
+                        let track: ICameraVideoTrack = trackPackage.track as ICameraVideoTrack;
+                        await entitiesContainer.videoTrackWillClose(track);
+                        track.close();
+                    }
+                    next();
+                }
+                setTimeout(process, 0);
+            },
+            args: [videoSourceType]
+        });
+        return 0;
     }
 
     setCameraDeviceOrientation(type: agorartc.VIDEO_SOURCE_TYPE, orientation: agorartc.VIDEO_ORIENTATION): number {
@@ -3095,13 +3159,11 @@ export class RtcEngine implements IRtcEngine {
     }
 
     startPrimaryScreenCapture(config: agorartc.ScreenCaptureConfiguration): number {
-        AgoraConsole.warn("startPrimaryScreenCapture not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return this.startScreenCaptureByDisplayId(0, null, config.params, IrisVideoSourceType.kVideoSourceTypeCameraPrimary);
     }
 
     startSecondaryScreenCapture(config: agorartc.ScreenCaptureConfiguration): number {
-        AgoraConsole.warn("startSecondaryScreenCapture not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        return this.startScreenCaptureByDisplayId(0, null, config.params, IrisVideoSourceType.kVideoSourceTypeCameraSecondary);
     }
 
     stopPrimaryScreenCapture(): number {
@@ -3413,7 +3475,7 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    joinChannelWithUserAccountEx(token: string, channelId: string, userAccount: string, options: agorartc.ChannelMediaOptions, eventHandler: agorartc.IRtcEngineEventHandler): number {
+    joinChannelWithUserAccountEx(token: string, channelId: string, userAccount: string, options: agorartc.ChannelMediaOptions): number {
         AgoraConsole.warn("joinChannelWithUserAccountEx not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -5220,8 +5282,8 @@ export class RtcEngine implements IRtcEngine {
     private async getOrCreateAudioAndVideoTrackAsync(audioType: IrisAudioSourceType, videoType: IrisVideoSourceType, clientType: IrisClientType): Promise<[ILocalAudioTrack, ILocalVideoTrack]> {
 
         if (audioType == IrisAudioSourceType.kAudioSourceTypeUnknow && videoType == IrisVideoSourceType.kVideoSourceTypeUnknown) {
-            AgoraConsole.error("getOrCreateAudioAndVideoTrack failed. want do you want ???");
-            throw new Error("audioType, videoType cant both kVideoSourceTypeUnknown");
+            AgoraConsole.warn("getOrCreateAudioAndVideoTrack  audio and video both unknow ");
+            return [null, null];
         }
 
 

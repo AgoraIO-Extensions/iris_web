@@ -765,7 +765,7 @@ export class IrisEntitiesContaniner {
         this.removeLocalVideoTrackByTrack(videoTrack);
 
         //main
-        if (this._mainClientLocalVideoTrack.track == videoTrack) {
+        if (this._mainClientLocalVideoTrack?.track == videoTrack) {
             this._mainClientLocalVideoTrack = null;
         }
         this.removeMainClientTrackEventHandlerByTrack(videoTrack);
