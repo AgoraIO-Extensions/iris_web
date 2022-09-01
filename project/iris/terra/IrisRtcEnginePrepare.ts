@@ -3060,7 +3060,7 @@ export class IrisRtcEnginePrepare {
         return 0;
     }
 
-    setContentInspect(
+    SetContentInspect(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
@@ -3070,15 +3070,15 @@ export class IrisRtcEnginePrepare {
         return 0;
     }
 
-    adjustCustomAudioPublishVolume(
-        params: string, paramLength: number,
+    enableFishCorrection(
+        params1: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let sourceId = obj.sourceId;
-        if (sourceId === undefined) throw "sourceId is undefined";
-        let volume = obj.volume;
-        if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustCustomAudioPublishVolume(sourceId, volume);
+        let obj = JSON.parse(params1) as any;
+        let enabled = obj.enabled;
+        if (enabled === undefined) throw "enabled is undefined";
+        let params = obj.params;
+        if (params === undefined) throw "params is undefined";
+        result.result = this._rtcEngine.enableFishCorrection(enabled, params);
         return 0;
     }
 
@@ -4687,6 +4687,26 @@ export class IrisRtcEnginePrepare {
         result.result = this._rtcEngine.removePublishStreamUrl(url);
         return 0;
 
+    }
+
+    switchChannel(params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let token = obj.token;
+        if (token === undefined) throw "token is undefined";
+        let channel = obj.channel;
+        if (channel === undefined) throw "channel is undefined";
+        result.result = this._rtcEngine.switchChannel(token, channel);
+        return 0;
+    }
+
+    pushDirectCdnStreamingCustomVideoFrame(params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let frame = obj.frame;
+        if (frame === undefined) throw "frame is undefined";
+        result.result = this._rtcEngine.pushDirectCdnStreamingCustomVideoFrame(frame);
+        return 0;
     }
 
     addPublishStreamUrlEx(params: string, paramLength: number,

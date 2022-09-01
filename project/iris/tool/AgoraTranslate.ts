@@ -221,7 +221,7 @@ export class AgoraTranslate {
         let ret: InspectConfiguration = {
             interval: 1,
             extraInfo: config.extraInfo,
-            inspectType: "all",
+            inspectType: [],
         };
 
         if (config.modules.length > 0) {
@@ -229,15 +229,16 @@ export class AgoraTranslate {
             ret.interval = module.frequency;
             switch (module.type) {
                 case agorartc.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_INVALID:
-                    ret.inspectType = "all";
                     break;
                 case agorartc.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_MODERATION:
-                    ret.inspectType = "moderation";
+                    ret.inspectType.push("moderation");
                     break;
                 case agorartc.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_SUPERVISION:
-                    ret.inspectType = "supervise";
+                    ret.inspectType.push("supervise");
                     break;
             }
+            //web这里的单位是毫秒， 而native传入的间隔是秒
+            ret.interval = module.frequency * 1000;
         }
 
         return ret;

@@ -3,8 +3,8 @@
 
 //c++ Struct RemoteVoicePositionInfo
 export interface RemoteVoicePositionInfo {
-    position: number;
-    forward: number;
+    position: number[];
+    forward: number[];
 };
 
 //c++ Struct LocalSpatialAudioConfig

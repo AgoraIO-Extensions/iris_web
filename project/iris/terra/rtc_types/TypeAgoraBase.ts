@@ -1475,4 +1475,8 @@ export class IPacketObserver {
 
 }
 
+export class FishCorrectionParams {
+
+}
+
 

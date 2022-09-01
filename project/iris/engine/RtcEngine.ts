@@ -87,6 +87,21 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
+    switchChannel(token: string, channel: string): number {
+        AgoraConsole.warn("switchChannel not supported in this platfrom!");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    }
+
+    pushDirectCdnStreamingCustomVideoFrame(frame: agorartc.ExternalVideoFrame): number {
+        AgoraConsole.warn("pushDirectCdnStreamingCustomVideoFrame not supported in this platfrom!");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    }
+
+    enableFishCorrection(enabled: boolean, params: agorartc.FishCorrectionParams): number {
+        AgoraConsole.warn("enableFishCorrection not supported in this platfrom!");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    }
+
     //这个接口在400被删除了
     addPublishStreamUrlEx(url: string, transcodingEnabled: boolean, connection: agorartc.RtcConnection): number {
         AgoraConsole.warn("This method is deprecated. Use StartRtmpStreamWithoutTranscoding or StartRtmpStreamWithTranscoding instead according to your needs");
@@ -4624,7 +4639,7 @@ export class RtcEngine implements IRtcEngine {
     }
 
     setVideoProfileEx(width: number, height: number, frameRate: number, bitrate: number): number {
-        AgoraConsole.warn("getUserInfoByUserAccountEx not supported in this platfrom!");
+        AgoraConsole.warn("setVideoProfileEx not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 

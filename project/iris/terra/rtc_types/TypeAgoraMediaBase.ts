@@ -356,7 +356,9 @@ export class IAudioSpectrumObserver {
 
 };
 
+export class ISnapshotCallback {
 
+}
 
 export interface SnapShotConfig {
     channel: string;

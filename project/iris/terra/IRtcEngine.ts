@@ -310,7 +310,9 @@ export interface IRtcEngine {
     addPublishStreamUrl(url: string, transcodingEnabled: boolean): number;
     setLiveTranscoding(transcoding: agorartc.LiveTranscoding);
     removePublishStreamUrl(url: string): number;
-
+    switchChannel(token: string, channel: string): number;
+    pushDirectCdnStreamingCustomVideoFrame(frame: agorartc.ExternalVideoFrame): number;
+    enableFishCorrection(enabled: boolean, params: agorartc.FishCorrectionParams): number;
     //IRtcEngineEx
     joinChannelEx(token: string, connection: agorartc.RtcConnection, options: agorartc.ChannelMediaOptions): number;
     leaveChannelEx(connection: agorartc.RtcConnection): number;
