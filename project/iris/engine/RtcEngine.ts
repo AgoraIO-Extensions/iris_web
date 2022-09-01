@@ -338,7 +338,7 @@ export class RtcEngine implements IRtcEngine {
                         let clientType = IrisClientType.kClientMian;
 
                         try {
-                            let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, clientType);
+                            let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, clientType, null);
                             clientEventHandler.onJoinChannedlSucess(0);
 
                             //joinChannel success咯
@@ -1059,7 +1059,7 @@ export class RtcEngine implements IRtcEngine {
 
                 let process = async () => {
                     try {
-                        await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, IrisClientType.kClientMian);
+                        await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, IrisClientType.kClientMian, null);
                         AgoraConsole.log("start preview createCameraVideoTrack success");
                     }
                     catch (err) {
@@ -1164,6 +1164,7 @@ export class RtcEngine implements IRtcEngine {
         this._actonQueue.putAction({
             fun: (config: agorartc.VideoEncoderConfiguration, next) => {
                 this._engine.globalVariables.videoEncoderConfiguration = config;
+                this._engine.mainClientVariables.videoEncoderConfiguration = config;
                 //todo 找到所有mainClient 的 ICameraTrack。如果存在则 setEncoderConfiguration（） 一下
                 let videoTrack = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeCameraPrimary);
                 if (videoTrack) {
@@ -2834,7 +2835,7 @@ export class RtcEngine implements IRtcEngine {
                     let videoType = videoSourceType;
                     let clientType = IrisClientType.kClientMian;
                     try {
-                        let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioType, videoType, clientType);
+                        let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioType, videoType, clientType, null);
                         AgoraConsole.log("ScreenShare track create success");
                         let mainClient = this._engine.entitiesContainer.getMainClient();
                         let publishScreenTrack = this._engine.mainClientVariables.publishScreenTrack || this._engine.mainClientVariables.publishScreenCaptureVideo;
@@ -3032,10 +3033,11 @@ export class RtcEngine implements IRtcEngine {
                 if (mainClient) {
                     mainClient.startLiveStreaming(url, false)
                         .then(() => {
-                            AgoraConsole.log("startLiveStreaming success");
+                            AgoraConsole.log("startRtmpStreamWithoutTranscoding success");
                         })
-                        .catch(() => {
-                            AgoraConsole.error("startLiveStreaming failed");
+                        .catch((e) => {
+                            AgoraConsole.error("startRtmpStreamWithoutTranscoding failed");
+                            AgoraConsole.error(e);
                         })
                         .finally(() => {
                             next();
@@ -3065,11 +3067,11 @@ export class RtcEngine implements IRtcEngine {
                                 await mainClient.startLiveStreaming(url, true);
                             }
                             catch (e) {
-                                AgoraConsole.error("startLiveStreaming failed");
+                                AgoraConsole.error("startRtmpStreamWithTranscoding startLiveStreaming failed");
                             }
                         }
                         catch (e) {
-                            AgoraConsole.error("setLiveTranscoding failed");
+                            AgoraConsole.error("startRtmpStreamWithTranscoding setLiveTranscoding failed");
                         }
                     }
 
@@ -3090,10 +3092,10 @@ export class RtcEngine implements IRtcEngine {
                 if (mainClient) {
                     mainClient.setLiveTranscoding(AgoraTranslate.agorartcLiveTranscoding2LiveStreamingTranscodingConfig(transcoding))
                         .then(() => {
-                            AgoraConsole.log("setLiveTranscoding sucess");
+                            AgoraConsole.log("updateRtmpTranscoding sucess");
                         })
                         .catch(() => {
-                            AgoraConsole.error("setLiveTranscoding failed");
+                            AgoraConsole.error("updateRtmpTranscoding failed");
                         })
                         .finally(() => {
                             next();
@@ -3117,10 +3119,10 @@ export class RtcEngine implements IRtcEngine {
                 if (mainClient) {
                     mainClient.stopLiveStreaming(url)
                         .then(() => {
-                            AgoraConsole.log("stopLiveStreaming sucess");
+                            AgoraConsole.log("stopRtmpStream sucess");
                         })
                         .catch(() => {
-                            AgoraConsole.error("stopLiveStreaming failed");
+                            AgoraConsole.error("stopRtmpStream failed");
                         })
                         .finally(() => {
                             next();
@@ -3294,7 +3296,7 @@ export class RtcEngine implements IRtcEngine {
             return AgoraTranslate.ConnectionState2agorartcCONNECTION_STATE_TYPE(mainClient.connectionState);
         }
         else {
-            return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTING;
+            return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
         }
     }
 
@@ -3518,7 +3520,7 @@ export class RtcEngine implements IRtcEngine {
     }
 
     enableWebSdkInteroperability(enabled: boolean): number {
-        return 0;
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     sendCustomReportMessage(id: string, category: string, event: string, label: string, value: number): number {
@@ -3545,7 +3547,7 @@ export class RtcEngine implements IRtcEngine {
                         })
                 }
                 else {
-                    AgoraConsole.error("not join channel now");
+                    AgoraConsole.error("sendCustomReportMessage failed, make sure you already join channel");
                     next();
                 }
             },
@@ -3701,10 +3703,10 @@ export class RtcEngine implements IRtcEngine {
                 if (mainClient) {
                     mainClient.stopChannelMediaRelay()
                         .then(() => {
-                            AgoraConsole.log("stopChannelMediaRelay success");
+                            AgoraConsole.log("pauseAllChannelMediaRelay success");
                         })
                         .catch((reason) => {
-                            AgoraConsole.error("stopChannelMediaRelay failed");
+                            AgoraConsole.error("pauseAllChannelMediaRelay failed");
                             AgoraConsole.error(reason);
                         })
                         .finally(() => {
@@ -3713,7 +3715,7 @@ export class RtcEngine implements IRtcEngine {
                         })
                 }
                 else {
-                    AgoraConsole.error("stopChannelMediaRelay failed, Please make sure call this method after join channel!");
+                    AgoraConsole.error("pauseAllChannelMediaRelay failed, Please make sure call this method after join channel!");
                     next();
                 }
             },
@@ -3729,12 +3731,12 @@ export class RtcEngine implements IRtcEngine {
                 if (mainClient && configuration) {
                     this._pretreatmentChannelMediaRelayConfiguration(configuration);
                     let conf: IChannelMediaRelayConfiguration = AgoraTranslate.agorartcChannelMediaRelayConfiguration2IChannelMediaRelayConfiguration(configuration);
-                    mainClient.updateChannelMediaRelay(conf)
+                    mainClient.startChannelMediaRelay(conf)
                         .then(() => {
-                            AgoraConsole.log("updateChannelMediaRelay success");
+                            AgoraConsole.log("resumeAllChannelMediaRelay success");
                         })
                         .catch((reason) => {
-                            AgoraConsole.error("updateChannelMediaRelay failed");
+                            AgoraConsole.error("resumeAllChannelMediaRelay failed");
                             AgoraConsole.error(reason);
                         })
                         .finally(() => {
@@ -3742,7 +3744,7 @@ export class RtcEngine implements IRtcEngine {
                         })
                 }
                 else {
-                    AgoraConsole.error("updateChannelMediaRelay failed, Please make sure call this method after join channel or call startChannelMediaRelay");
+                    AgoraConsole.error("resumeAllChannelMediaRelay failed, Please make sure call this method after join channel or call startChannelMediaRelay");
                     next();
                 }
             },
@@ -3976,7 +3978,7 @@ export class RtcEngine implements IRtcEngine {
                         connection.localUid = uid as number;
 
                         try {
-                            let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, clientType);
+                            let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, clientType, connection);
 
                             subClientEventHandler.onJoinChannedlSucess(0);
 
@@ -4501,7 +4503,7 @@ export class RtcEngine implements IRtcEngine {
             return AgoraTranslate.ConnectionState2agorartcCONNECTION_STATE_TYPE(client.connectionState);
         }
         else {
-            return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTING;
+            return agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
         }
     }
 
@@ -5392,7 +5394,7 @@ export class RtcEngine implements IRtcEngine {
     //     }
     // }
 
-    private async getOrCreateAudioAndVideoTrackAsync(audioType: IrisAudioSourceType, videoType: IrisVideoSourceType, clientType: IrisClientType): Promise<[ILocalAudioTrack, ILocalVideoTrack]> {
+    private async getOrCreateAudioAndVideoTrackAsync(audioType: IrisAudioSourceType, videoType: IrisVideoSourceType, clientType: IrisClientType, connection: agorartc.RtcConnection): Promise<[ILocalAudioTrack, ILocalVideoTrack]> {
 
         if (audioType == IrisAudioSourceType.kAudioSourceTypeUnknow && videoType == IrisVideoSourceType.kVideoSourceTypeUnknown) {
             AgoraConsole.warn("getOrCreateAudioAndVideoTrack  audio and video both unknow ");
@@ -5459,7 +5461,7 @@ export class RtcEngine implements IRtcEngine {
             try {
                 let videoConfig: CameraVideoTrackInitConfig = this._generateCameraVideoTrackInitConfig();
                 let videoTrack = await AgoraRTC.createCameraVideoTrack(videoConfig);
-                this._processVideoTrack(videoTrack, clientType, videoType);
+                this._processVideoTrack(videoTrack, clientType, videoType, connection);
                 this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
                 retVideoTrack = videoTrack;
             }
@@ -5596,15 +5598,26 @@ export class RtcEngine implements IRtcEngine {
         }
     }
 
-    private _processVideoTrack(videoTrack: ICameraVideoTrack, type: IrisClientType, videoSource: IrisVideoSourceType) {
+    private _processVideoTrack(videoTrack: ICameraVideoTrack, type: IrisClientType, videoSource: IrisVideoSourceType, connection: agorartc.RtcConnection) {
         let globalVariables = this._engine.globalVariables;
         if (globalVariables.enabledVideo) {
             let config: VideoPlayerConfig = {};
-            if (this._engine.globalVariables.videoEncoderConfiguration) {
-                config.mirror = AgoraTranslate.agorartcVIDEO_MIRROR_MODE_TYPE2boolean(this._engine.globalVariables.videoEncoderConfiguration.mirrorMode)
+
+            let videoEncoderConfiguration: agorartc.VideoEncoderConfiguration = null;
+            if (type == IrisClientType.kClientMian) {
+                videoEncoderConfiguration = this._engine.mainClientVariables.videoEncoderConfiguration
             }
+            else {
+                videoEncoderConfiguration = this._engine.subClientVariables.videoEncoderConfigurations.getT(connection.channelId, connection.localUid);
+            }
+
+            if (videoEncoderConfiguration) {
+                config.mirror = AgoraTranslate.agorartcVIDEO_MIRROR_MODE_TYPE2boolean(videoEncoderConfiguration.mirrorMode);
+            }
+
             videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement("0", 0, videoSource), config);
         }
+
         if (globalVariables.pausedVideo) {
             videoTrack.setEnabled(false)
                 .then(() => {
