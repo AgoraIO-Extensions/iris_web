@@ -1,5 +1,5 @@
 
-import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayError, ChannelMediaRelayEvent, ChannelMediaRelayInfo, ChannelMediaRelayState, ClientRole, ClientRoleOptions, ConnectionDisconnectedReason, ConnectionState, DeviceState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LowStreamParameter, NetworkQuality, RemoteStreamFallbackType, RemoteStreamType, SDK_CODEC, SDK_MODE, UID, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
+import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayError, ChannelMediaRelayEvent, ChannelMediaRelayInfo, ChannelMediaRelayState, ClientRole, ClientRoleOptions, ConnectionDisconnectedReason, ConnectionState, DeviceState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LiveStreamingTranscodingConfig, LiveStreamingTranscodingImage, LiveStreamingTranscodingUser, LowStreamParameter, NetworkQuality, RemoteStreamFallbackType, RemoteStreamType, SDK_CODEC, SDK_MODE, UID, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
 import { Argument } from "webpack";
 import * as agorartc from "../terra/rtc_types/Index";
 import { AgoraConsole } from "./AgoraConsole";
@@ -309,6 +309,68 @@ export class AgoraTranslate {
             case agorartc.STREAM_FALLBACK_OPTIONS.STREAM_FALLBACK_OPTION_AUDIO_ONLY:
                 return RemoteStreamFallbackType.AUDIO_ONLY;
         }
+    }
+
+    public static agorartcRtcImage2LiveStreamingTranscodingImage(image: agorartc.RtcImage): LiveStreamingTranscodingImage {
+        let ret: LiveStreamingTranscodingImage = {
+            url: image.url,
+            x: image.x,
+            y: image.y,
+            width: image.width,
+            height: image.height,
+            alpha: image.alpha,
+        };
+        return ret;
+    }
+
+    public static agorartcTranscodingUser2LiveStreamingTranscodingUser(user: agorartc.TranscodingUser): LiveStreamingTranscodingUser {
+        let ret: LiveStreamingTranscodingUser = {
+            alpha: user.alpha,
+            height: user.height,
+            uid: user.uid as UID,
+            width: user.width,
+            x: user.x,
+            y: user.y,
+            zOrder: user.zOrder,
+            audioChannel: user.audioChannel,
+        }
+        return ret;
+    }
+
+
+    public static agorartcLiveTranscoding2LiveStreamingTranscodingConfig(config: agorartc.LiveTranscoding): LiveStreamingTranscodingConfig {
+
+
+        let ret: LiveStreamingTranscodingConfig = {
+            audioBitrate: config.audioBitrate,
+            audioChannels: config.audioChannels as (1 | 2 | 3 | 4 | 5),
+            audioSampleRate: config.audioSampleRate as (32000 | 44100 | 48000),
+            backgroundColor: config.backgroundColor,
+            height: config.height,
+            width: config.width,
+            lowLatency: config.lowLatency,
+            videoBitrate: config.videoBitrate,
+            videoCodecProfile: config.videoCodecProfile as (66 | 77 | 100),
+            videoFrameRate: config.videoFramerate,
+            videoGop: config.videoGop,
+            userConfigExtraInfo: config.transcodingExtraInfo,
+        }
+
+        if (config.watermarkCount >= 1) {
+            ret.watermark = AgoraTranslate.agorartcRtcImage2LiveStreamingTranscodingImage(config.watermark[0]);
+        }
+        if (config.backgroundImageCount >= 1) {
+            ret.backgroundImage = AgoraTranslate.agorartcRtcImage2LiveStreamingTranscodingImage(config.backgroundImage[0]);
+        }
+
+        ret.transcodingUsers = [];
+        if (config.userCount > 0) {
+            for (let i = 0; i < config.userCount; i++) {
+                ret.transcodingUsers.push(AgoraTranslate.agorartcTranscodingUser2LiveStreamingTranscodingUser(config.transcodingUsers[i]));
+            }
+        }
+
+        return ret;
     }
 
 

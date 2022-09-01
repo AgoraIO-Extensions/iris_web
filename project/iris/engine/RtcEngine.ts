@@ -3023,22 +3023,117 @@ export class RtcEngine implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
+    //todo 记得要触发回调啊
     startRtmpStreamWithoutTranscoding(url: string): number {
         //todo 可以实现，但是我先不实现
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (url: string, next) => {
+                let mainClient = this._engine.entitiesContainer.getMainClient();
+                if (mainClient) {
+                    mainClient.startLiveStreaming(url, false)
+                        .then(() => {
+                            AgoraConsole.log("startLiveStreaming success");
+                        })
+                        .catch(() => {
+                            AgoraConsole.error("startLiveStreaming failed");
+                        })
+                        .finally(() => {
+                            next();
+                        })
+                }
+                else {
+                    next();
+                }
+            },
+
+            args: [url]
+        })
+        return 0;
     }
 
+    //todo 记得要触发回调啊
     startRtmpStreamWithTranscoding(url: string, transcoding: agorartc.LiveTranscoding): number {
-        //todo 可以实现，但是我先不实现
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (url: string, transcoding: agorartc.LiveTranscoding, next) => {
+
+                let process = async () => {
+                    let mainClient = this._engine.entitiesContainer.getMainClient();
+                    if (mainClient) {
+                        try {
+                            await mainClient.setLiveTranscoding(AgoraTranslate.agorartcLiveTranscoding2LiveStreamingTranscodingConfig(transcoding));
+                            try {
+                                await mainClient.startLiveStreaming(url, true);
+                            }
+                            catch (e) {
+                                AgoraConsole.error("startLiveStreaming failed");
+                            }
+                        }
+                        catch (e) {
+                            AgoraConsole.error("setLiveTranscoding failed");
+                        }
+                    }
+
+                    next();
+                };
+                setTimeout(process, 0);
+
+            },
+            args: [url, transcoding]
+        })
+        return 0;
     }
+
     updateRtmpTranscoding(transcoding: agorartc.LiveTranscoding): number {
-        //todo 可以实现，但是我先不实现
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+            fun: (transcoding: agorartc.LiveTranscoding, next) => {
+                let mainClient = this._engine.entitiesContainer.getMainClient();
+                if (mainClient) {
+                    mainClient.setLiveTranscoding(AgoraTranslate.agorartcLiveTranscoding2LiveStreamingTranscodingConfig(transcoding))
+                        .then(() => {
+                            AgoraConsole.log("setLiveTranscoding sucess");
+                        })
+                        .catch(() => {
+                            AgoraConsole.error("setLiveTranscoding failed");
+                        })
+                        .finally(() => {
+                            next();
+                        })
+                }
+                else {
+                    next();
+                }
+            },
+            args: [transcoding]
+        });
+
+        return 0;
     }
+
     stopRtmpStream(url: string): number {
-        //todo 可以实现，但是我先不实现
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._actonQueue.putAction({
+
+            fun: (url: string, next) => {
+                let mainClient = this._engine.entitiesContainer.getMainClient();
+                if (mainClient) {
+                    mainClient.stopLiveStreaming(url)
+                        .then(() => {
+                            AgoraConsole.log("stopLiveStreaming sucess");
+                        })
+                        .catch(() => {
+                            AgoraConsole.error("stopLiveStreaming failed");
+                        })
+                        .finally(() => {
+                            next();
+                        })
+                }
+                else {
+                    next();
+                }
+            },
+            args: [url]
+        });
+
+        return 0;
     }
 
     startLocalVideoTranscoder(config: agorartc.LocalTranscoderConfiguration): number {
@@ -3067,6 +3162,11 @@ export class RtcEngine implements IRtcEngine {
     _startCameraCapture(videoSourceType: IrisVideoSourceType, config: agorartc.CameraCapturerConfiguration): number {
         this._actonQueue.putAction({
             fun: (videoSourceType: IrisVideoSourceType, config: agorartc.CameraCapturerConfiguration, next) => {
+                if (this._engine.globalVariables.enabledVideo == false) {
+                    AgoraConsole.error("please make enableVideo true before you start camera capture");
+                    next();
+                }
+                else {
 
                 let process = async () => {
                     let trackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(videoSourceType);
@@ -3076,13 +3176,23 @@ export class RtcEngine implements IRtcEngine {
                         return;
                     }
                     let videoConfig: CameraVideoTrackInitConfig = {};
+                    if (config.deviceId != "") {
                     videoConfig.cameraId = config.deviceId;
+                    }
+                    else {
+                        if (videoSourceType == IrisVideoSourceType.kVideoSourceTypeCameraPrimary) {
+                            videoConfig.cameraId = this._engine.globalVariables.videoDevices[0]?.deviceId;
+                        }
+                        else if (videoSourceType == IrisVideoSourceType.kVideoSourceTypeCameraSecondary) {
+                            videoConfig.cameraId = this._engine.globalVariables.videoDevices[1]?.deviceId;
+                        }
+                    }
                     videoConfig.facingMode = AgoraTranslate.agorartcCAMERA_DIRECTION2string(config.cameraDirection);
                     videoConfig.encoderConfig = AgoraTranslate.agorartcVideoFormat2VideoEncoderConfiguration(config.format);
                     try {
                         let videoTrack = await AgoraRTC.createCameraVideoTrack(videoConfig);
                         let globalVariables = this._engine.globalVariables;
-                        globalVariables.enabledVideo && videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement("0", 0, IrisVideoSourceType.kVideoSourceTypeCameraPrimary));
+                        globalVariables.enabledVideo && videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement("0", 0, videoSourceType));
 
                         if (globalVariables.pausedVideo) {
                             try {
@@ -3113,6 +3223,8 @@ export class RtcEngine implements IRtcEngine {
                 };
 
                 setTimeout(process, 0);
+                }
+
             },
             args: [videoSourceType, config]
         });
@@ -3307,8 +3419,9 @@ export class RtcEngine implements IRtcEngine {
                         .then(() => {
                             AgoraConsole.log("removeInjectStreamUrl success");
                         })
-                        .catch(() => {
+                        .catch((e) => {
                             AgoraConsole.error("removeInjectStreamUrl failed");
+                            AgoraConsole.error(e);
                         }).
                         finally(() => {
                             next();

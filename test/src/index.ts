@@ -656,7 +656,7 @@ test("IRtcEngine_startPrimary(Seconder)CameraCapture", async () => {
         }
     };
 
-    let apiEngine = await testBegine(false, false, false, eventHandler);
+    let apiEngine = await testBegine(true, true, false, eventHandler);
 
     //call startPrimaryCameraCapture 
     let config: agorartc.CameraCapturerConfiguration = {
@@ -691,11 +691,11 @@ test("IRtcEngine_startPrimary(Seconder)CameraCapture", async () => {
     shouldEqual("IRtcEngine_startSecondaryCameraCapture:result ", result.result, 0);
 
 
-    //call joinChannel
+    //call joinChannel2
     let token = "";
     let channelId = commonChannelId;
     let info = "";
-    let uid = 0;
+    let uid = 123;
     let options: agorartc.ChannelMediaOptions = {
         publishCameraTrack: true,
         publishAudioTrack: true,
@@ -716,11 +716,23 @@ test("IRtcEngine_startPrimary(Seconder)CameraCapture", async () => {
     AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNEL2, params, params.length, null, null, result);
     shouldEqual("joinChannel2 : result", result.result, 0);
 
+
     //call joinChannelEx
     options.publishCameraTrack = false;
     options.publishSecondaryCameraTrack = true;
-    result = {};
+    options.autoSubscribeAudio = false;
+    options.autoSubscribeVideo = false;
+    let connection: agorartc.RtcConnection = {
+        localUid: 456,
+        channelId: commonChannelId,
+    };
+    paramObj = {
+        token,
+        connection,
+        options,
+    }
     params = JSON.stringify(paramObj);
+    result = {};
     AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_JOINCHANNELEX, params, params.length, null, null, result);
     shouldEqual("joinChannelEx : result", result.result, 0);
     await waitForSecond(5);
@@ -748,10 +760,37 @@ test("IRtcEngine_startPrimary(Seconder)CameraCapture", async () => {
     shouldEqual("IRtcEngine_stopSecondaryCameraCapture:result ", result.result, 0);
     await waitForSecond(1);
 
+    //leaveChannel
+    paramObj = {
+    }
+    params = JSON.stringify(paramObj);
+    result = {};
+    ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_LEAVECHANNEL, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IRtcEngine_leaveChannel ", ret, 0);
+    shouldEqual("IRtcEngine_leaveChannel:result ", result.result, 0);
+    await waitForSecond(2);
 
 
-    await testEnd(apiEngine, true);
-}, Priority.High);
+    //leaveChannelEx
+    connection = {
+        channelId: commonChannelId,
+        localUid: 456
+    };
+    paramObj = {
+        connection
+    }
+    params = JSON.stringify(paramObj);
+    result = {};
+    ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_LEAVECHANNELEX, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IRtcEngine_leaveChannelEx ", ret, 0);
+    shouldEqual("IRtcEngine_leaveChanneEx:result ", result.result, 0);
+    await waitForSecond(2);
+
+
+    await testEnd(apiEngine, false);
+});
 
 
 test("IRtcEngine_start(stop)PrimaryScreenCapture", async () => {
@@ -1014,36 +1053,80 @@ test("IRtcEngine_add(remove)InjectStreamUrl", async () => {
         }
     };
 
-    let apiEngine = await testBegine(true, true, true, eventHandler);
+    let apiEngine = await testBegine(true, true, false, eventHandler);
 
-    /* 
-        Verify remote
-        1.install ffmpeg(brew install ffmpeg)
-        2.ffplay rtmp://play.alexmk.name/live/agora_rtc_unity_webgl
-     */
-    let url: string = "rtmp://push.alexmk.name/live/agora_rtc_unity_webgl";
-    let config: agorartc.InjectStreamConfig = {
-        width: 125,
-        height: 245,
-        videoGop: 1,
-        videoFramerate: 15,
-        videoBitrate: 0,
-        audioSampleRate: agorartc.AUDIO_SAMPLE_RATE_TYPE.AUDIO_SAMPLE_RATE_32000,
-        audioBitrate: 0,
-        audioChannels: 0,
+    //call  startSecondaryCameraCapture
+    let config = {
+        cameraDirection: agorartc.CAMERA_DIRECTION.CAMERA_FRONT,
+        format: { width: 960, height: 640, fps: 15 },
+        deviceId: "",
     }
     let paramObj: any = {
-        url,
         config,
     }
     let params = JSON.stringify(paramObj);
     let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ADDINJECTSTREAMURL, params, params.length, null, 0, result);
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STARTSECONDARYCAMERACAPTURE, params, params.length, null, 0, result);
+    shouldEqual("callApi:IRtcEngine_startSecondaryCameraCapture ", ret, 0);
+    shouldEqual("IRtcEngine_startSecondaryCameraCapture:result ", result.result, 0);
+
+
+    //call joinChannel2
+    let token = "";
+    let channelId = commonChannelId;
+    let info = "";
+    let uid = 0;
+    let options: agorartc.ChannelMediaOptions = {
+        publishCameraTrack: true,
+        publishSecondaryCameraTrack: false,
+        publishAudioTrack: true,
+        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+        channelProfile: agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
+        autoSubscribeAudio: true,
+        autoSubscribeVideo: true,
+    };
+    paramObj = {
+        token,
+        channelId,
+        info,
+        uid,
+        options
+    };
+    result = {};
+    params = JSON.stringify(paramObj);
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNEL2, params, params.length, null, null, result);
+    shouldEqual("joinChannel2 : result", result.result, 0);
+    await waitForSecond(5);
+    /* 
+        Verify remote
+        1.install ffmpeg(brew install ffmpeg)
+        2.ffplay rtmp://play.qatest.agoramde.agoraio.cn/live/web_iris
+     */
+    let url: string = "rtmp://push.qatest.agoramde.agoraio.cn/live/web_iris";
+    let config2: agorartc.InjectStreamConfig = {
+        width: 125,
+        height: 245,
+        videoGop: 30,
+        videoFramerate: 15,
+        videoBitrate: 400,
+        audioSampleRate: agorartc.AUDIO_SAMPLE_RATE_TYPE.AUDIO_SAMPLE_RATE_48000,
+        audioBitrate: 48,
+        audioChannels: 1,
+    }
+    paramObj = {
+        url: url,
+        config: config2,
+    }
+    params = JSON.stringify(paramObj);
+    result = {};
+    ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ADDINJECTSTREAMURL, params, params.length, null, 0, result);
 
     shouldEqual("callApi:IRtcEngine_addInjectStreamUrl ", ret, 0);
     shouldEqual("IRtcEngine_addInjectStreamUrl:result ", result.result, 0);
     await waitForSecond(7);
 
+
+    //removeInJectStream
     paramObj = {
         url,
     }
@@ -1084,9 +1167,21 @@ test("IRtcEngine_startRtmpStreamWithoutTranscoding", async () => {
 
     shouldEqual("callApi:IRtcEngine_startRtmpStreamWithoutTranscoding ", ret, 0);
     shouldEqual("IRtcEngine_startRtmpStreamWithoutTranscoding:result ", result.result, 0);
+    await waitForSecond(50);
+
+    //stop
+    paramObj = {
+        url,
+    }
+    params = JSON.stringify(paramObj);
+    result = {};
+    ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STOPRTMPSTREAM, params, params.length, null, 0, result);
+    shouldEqual("callApi:IRtcEngine_stopRtmpStream ", ret, 0);
+    shouldEqual("IRtcEngine_stopRtmpStream:result ", result.result, 0);
+
     await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
+    await testEnd(apiEngine, true);
+}, Priority.High);
 
 test("IRtcEngine_startRtmpStreamWithTranscoding_update_stop", async () => {
 
@@ -8559,7 +8654,12 @@ test("IRtcEngine_updateChannelMediaRelay", async () => {
 
     let apiEngine = await testBegine(false, false, false, eventHandler);
 
-    let configuration: agorartc.ChannelMediaRelayConfiguration = 0;
+    let configuration: agorartc.ChannelMediaRelayConfiguration = {
+        srcInfo: null,
+        destInfos: [],
+        destCount: 0,
+    }
+
     let paramObj = {
         configuration,
     }
