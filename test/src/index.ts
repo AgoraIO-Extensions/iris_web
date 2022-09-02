@@ -4389,7 +4389,7 @@ test("IRtcEngine_setClientRole", async () => {
 
     let apiEngine = await testBegine(false, false, false, eventHandler);
 
-    let role: agorartc.CLIENT_ROLE_TYPE = 0;
+    let role: agorartc.CLIENT_ROLE_TYPE = agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER;
     let paramObj = {
         role,
     }
@@ -4578,10 +4578,14 @@ test("IRtcEngine_startPreview_stopPreview", async () => {
     apiEngine.setGenerateVideoTrackLabelOrHtmlElementCb(generateVideoTrackLabelOrHtmlElementCb);
     AgoraWrapper.SetIrisRtcEngineEventHandler(apiEngine, eventHandler);
 
+    let result: any = {};
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ENABLEVIDEO, "{}", 2, null, null, result);
+    shouldEqual("enableVideo: ", result.result, 0);
+
     let paramObj = {
     }
     let params = JSON.stringify(paramObj);
-    let result: any = {};
+    result = {};
     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STARTPREVIEW, params, params.length, null, 0, result);
 
     shouldEqual("callApi:IRtcEngine_startPreview ", ret, 0);
@@ -4619,6 +4623,10 @@ test("IRtcEngine_startPreview2_stopPreview", async () => {
     let result: any = {};
     AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_DISABLEAUDIO, "{}", 2, null, null, result);
     shouldEqual("disableAudio: ", result.result, 0);
+
+    result = {};
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ENABLEVIDEO, "{}", 2, null, null, result);
+    shouldEqual("enableVideo: ", result.result, 0);
 
     let sourceType: agorartc.VIDEO_SOURCE_TYPE = 0;
     let paramObj: any = {
