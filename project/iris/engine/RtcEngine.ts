@@ -349,15 +349,17 @@ export class RtcEngine implements IRtcEngine {
 
                         try {
                             let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, clientType, null);
-                            clientEventHandler.onJoinChannedlSucess(0);
-
+                            let con: agorartc.RtcConnection = {
+                                channelId: channelId,
+                                localUid: mainClient.uid as number
+                            };
                             //joinChannel success咯
+                            this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(con, 0);
                             let mainClientVariables = this._engine.mainClientVariables;
                             //推送麦克风audio
                             let audioTrack: IMicrophoneAudioTrack = trackArray[0] as IMicrophoneAudioTrack;
                             if (audioTrack) {
                                 if (mainClientVariables.publishAudioTrack) {
-
                                     entitiesContainer.addMainClientLocalAudioTrack({ type: IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary, track: audioTrack });
                                     let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler({
                                         channelName: channelId,
@@ -885,7 +887,7 @@ export class RtcEngine implements IRtcEngine {
                     let channelId = mainClient.channelName;
                     mainClient.leave()
                         .then(() => {
-                            this._engine.entitiesContainer.getMainClientEventHandler()?.onLeaveChannel(con, new agorartc.RtcStats());
+                            this._engine.rtcEngineEventHandler.onLeaveChannelEx(con, new agorartc.RtcStats());
                             this._engine.entitiesContainer.clearMainClientAll(channelId);
                         })
                         .catch((reason) => {
@@ -2663,7 +2665,7 @@ export class RtcEngine implements IRtcEngine {
                     let track = trackPackage.track as ICameraVideoTrack;
                     track.setEncoderConfiguration(AgoraTranslate.agorartcVideoEncoderConfiguration2VideoEncoderConfiguration(videoEncoderConfiguration))
                         .then(() => {
-                            AgoraConsole.error("setCameraCapturerConfiguration success");
+                            AgoraConsole.log("setCameraCapturerConfiguration success");
                         })
                         .catch((reason) => {
                             AgoraConsole.error("setCameraCapturerConfiguration failed");
@@ -2712,7 +2714,7 @@ export class RtcEngine implements IRtcEngine {
                         let curDeviceName: string = (videoTrack as any)._deviceName;
 
                         try {
-                            let allDevices = await (await this._enumerateDevices()).videoDevices;
+                            let allDevices = (await this._enumerateDevices()).videoDevices;
                             let curIndex = -1;
                             for (let i = 0; i < allDevices.length; i++) {
                                 if (allDevices[i].deviceName == curDeviceName) {
@@ -2724,7 +2726,6 @@ export class RtcEngine implements IRtcEngine {
                             let nextDevice = allDevices[curIndex % allDevices.length];
                             try {
                                 await videoTrack.setDevice(nextDevice.deviceId)
-
                             }
                             catch (e) {
                                 AgoraConsole.error("switchCamera setDevice failed");
@@ -2735,7 +2736,7 @@ export class RtcEngine implements IRtcEngine {
                             AgoraConsole.error("switchCamera enumerateDevices failed");
                             AgoraConsole.log(e);
                         }
-
+                        next();
                     }
                     setTimeout(process, 0);
                 }
@@ -3194,8 +3195,8 @@ export class RtcEngine implements IRtcEngine {
                 }
                 else {
 
-                let process = async () => {
-                    let trackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(videoSourceType);
+                    let process = async () => {
+                        let trackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(videoSourceType);
                     if (trackPackage) {
                         AgoraConsole.warn("a camera track already created!!");
                         next();
@@ -3203,7 +3204,7 @@ export class RtcEngine implements IRtcEngine {
                     }
                     let videoConfig: CameraVideoTrackInitConfig = {};
                     if (config.deviceId != "") {
-                    videoConfig.cameraId = config.deviceId;
+                        videoConfig.cameraId = config.deviceId;
                     }
                     else {
                         try {
@@ -3252,10 +3253,10 @@ export class RtcEngine implements IRtcEngine {
                         e && AgoraConsole.error(e);
                     }
 
-                    next();
-                };
+                        next();
+                    };
 
-                setTimeout(process, 0);
+                    setTimeout(process, 0);
                 }
 
             },
@@ -3312,13 +3313,40 @@ export class RtcEngine implements IRtcEngine {
     }
 
     stopPrimaryScreenCapture(): number {
-        AgoraConsole.warn("stopPrimaryScreenCapture not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._stopScreenCapture(IrisVideoSourceType.kVideoSourceTypeScreenPrimary);
+        return 0;
     }
 
     stopSecondaryScreenCapture(): number {
-        AgoraConsole.warn("stopSecondaryScreenCapture not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        this._stopScreenCapture(IrisVideoSourceType.kVideoSourceTypeCameraSecondary);
+        return 0;
+    }
+
+    _stopScreenCapture(videoSource: IrisVideoSourceType) {
+        this._actonQueue.putAction({
+            fun: (videoSource: IrisVideoSourceType, next) => {
+                let videoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(videoSource);
+                if (videoTrackPackage) {
+                    let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
+                    this._engine.entitiesContainer.videoTrackWillClose(videoTrack)
+                        .then(() => {
+
+                        })
+                        .catch(() => {
+
+                        })
+                        .finally(() => {
+                            videoTrack.close();
+                            next();
+                        })
+
+                }
+                else {
+                    next();
+                }
+            },
+            args: [videoSource]
+        })
     }
 
     getConnectionState(): agorartc.CONNECTION_STATE_TYPE {
@@ -4050,9 +4078,7 @@ export class RtcEngine implements IRtcEngine {
 
                         try {
                             let trackArray = await this.getOrCreateAudioAndVideoTrackAsync(audioSource, videoSource, clientType, connection);
-
-                            subClientEventHandler.onJoinChannedlSucess(0);
-
+                            this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(connection, 0);
                             // 推送麦克风audio
                             if (options.publishAudioTrack) {
                                 let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary);
@@ -4160,10 +4186,9 @@ export class RtcEngine implements IRtcEngine {
             fun: (next) => {
                 let subClient: IAgoraRTCClient = this._engine.entitiesContainer.getSubClient(connection);
                 if (subClient) {
-                    //todo 读取 options
                     subClient.leave()
                         .then(() => {
-                            this._engine.entitiesContainer.getSubClientEventHandler(connection).onLeaveChannel(connection, new agorartc.RtcStats());
+                            this._engine.rtcEngineEventHandler.onLeaveChannelEx(connection, new agorartc.RtcStats());
                             this._engine.entitiesContainer.clearSubClientAll(connection);
                         })
                         .catch((reason) => {
@@ -4879,6 +4904,7 @@ export class RtcEngine implements IRtcEngine {
                         }
                         catch (e) {
                             AgoraConsole.error("localAudioTrack setPlaybackDevice setFailed");
+                            e && AgoraConsole.log(e);
                         }
                     }
 

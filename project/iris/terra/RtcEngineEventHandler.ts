@@ -1648,4 +1648,13 @@ export class RtcEngineEventHandler {
         let key = 'WebGL_onVideoDevicesEnumerated';
         this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     }
+
+    OnEngineDestroy() {
+        let obj = {
+
+        };
+        let json = JSON.stringify(obj);
+        let key = 'WebGL_onEngineDestroy';
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
+    }
 }

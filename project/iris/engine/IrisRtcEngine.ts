@@ -70,6 +70,7 @@ export class IrisRtcEngine extends IrisRtcEnginePrepare {
             fun: (next) => {
                 let process = async () => {
                     await this.entitiesContainer.destruction();
+                    this.rtcEngineEventHandler.OnEngineDestroy();
                     next();
                 }
                 setTimeout(process, 0);

@@ -61,7 +61,7 @@ export class TestActionQueue {
                 let action: Action = this._queue[i];
                 this._curTitle = action.titile;
                 renderTitle(action.titile);
-                if (action.priority < Priority.High) {
+                if (action.priority == Priority.Low) {
                     renderTitle("特殊测试已经测试完毕, 剩余的case可以挂机等待结果了");
                 }
                 await action.cb.call(this);

@@ -3094,6 +3094,18 @@ export class IrisRtcEnginePrepare {
         return 0;
     }
 
+    adjustCustomAudioPublishVolume(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let sourceId = obj.sourceId;
+        if (sourceId === undefined) throw "sourceId is undefined";
+        let volume = obj.volume;
+        if (volume === undefined) throw "volume is undefined";
+        result.result = this._rtcEngine.adjustCustomAudioPlayoutVolume(sourceId, volume);
+        return 0;
+    }
+
     setCloudProxy(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {

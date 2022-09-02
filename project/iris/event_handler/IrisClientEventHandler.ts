@@ -447,20 +447,6 @@ export class IrisClientEventHandler {
         console.log(users);
     }
 
-    /*被外界主动调用的哦*/
-    onJoinChannedlSucess(elapsed: number) {
-        let connection: agorartc.RtcConnection = {
-            channelId: this._client.channelName,
-            localUid: this._client.uid as number
-        };
-        this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(connection, elapsed);
-    }
-
-    //这里需要传入connection ，而不是自己内部生成，是因为这个时候已经leaveChannel，可能已经没有channelName和uid了
-    onLeaveChannel(connection: agorartc.RtcConnection, stats: agorartc.RtcStats) {
-        this._engine.rtcEngineEventHandler.onLeaveChannelEx(connection, stats);
-    }
-
     onEventContentInspectConnectionStateChange(preState: InspectState, newState: InspectState): void {
         //没有合适的回调
     }
