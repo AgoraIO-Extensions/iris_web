@@ -451,13 +451,8 @@ export class RtcEngine implements IRtcEngine {
                             // }
                         }
                         catch (e) {
-                            AgoraConsole.error("join channel failed. create audio And videoTrack failed");
+                            AgoraConsole.error("create audio And videoTrack failed");
                             AgoraConsole.error(e);
-                            let channelId = mainClient.channelName;
-                            mainClient.leave().then(() => { }).catch(() => { }).finally(() => {
-                                this._engine.entitiesContainer.clearMainClientAll(channelId);
-                            });
-                            this._engine.mainClientVariables.joinChanneled = false;
                         }
                     }
                     catch (reason) {
@@ -5542,7 +5537,6 @@ export class RtcEngine implements IRtcEngine {
             return [null, null];
         }
 
-
         if (videoType == IrisVideoSourceType.kVideoSourceTypeScreenPrimary && audioType == IrisAudioSourceType.kAudioSourceTypeScreenPrimary) {
             let audioPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(audioType);
             let videoPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(videoType);
@@ -5560,25 +5554,35 @@ export class RtcEngine implements IRtcEngine {
                     (videoPackage.track as ILocalVideoTrack).close();
                 }
 
+                let trackArray: [ILocalVideoTrack, ILocalAudioTrack] = null;
+                let audioTrack: ILocalAudioTrack = null;
+                let videoTrack: ILocalVideoTrack = null;
                 try {
                     let conf: ScreenVideoTrackInitConfig = this._generateScreenVideoTrackInitConfig();
-                    let trackArray = await AgoraRTC.createScreenVideoTrack(conf, 'enable');
-
-                    let videoTrack: ILocalVideoTrack = trackArray[0];
-                    let audioTrack: ILocalAudioTrack = trackArray[1];
-                    this._processSceneShareAuidoTrack(audioTrack, clientType);
-                    this._processSceneShareVideoTrack(videoTrack, clientType, videoType);
-                    this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
-                    this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
-                    return [audioTrack, videoTrack];
+                    trackArray = await AgoraRTC.createScreenVideoTrack(conf, 'enable');
                 }
                 catch (e) {
-                    throw e;
+                    AgoraConsole.error("createScreenVideoTrack with audio failed");
+                    e && AgoraConsole.log(e);
                 }
+                if (trackArray) {
+                    //每一个track都可能是null
+                    audioTrack = trackArray[1];
+                    if (audioTrack) {
+                        this._processSceneShareAuidoTrack(audioTrack, clientType);
+                        this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
+                    }
+
+                    videoTrack = trackArray[0];
+                    if (videoTrack) {
+                        this._processSceneShareVideoTrack(videoTrack, clientType, videoType);
+                        this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
+                    }
+                }
+                return [audioTrack, videoTrack];
             }
             return;
         }
-
 
         let retAudioTrack: ILocalAudioTrack = null;
         let retVideoTrack: ILocalVideoTrack = null;
@@ -5586,29 +5590,39 @@ export class RtcEngine implements IRtcEngine {
         if (this._engine.entitiesContainer.getLocalVideoTrackByType(videoType)) {
             retVideoTrack = this._engine.entitiesContainer.getLocalVideoTrackByType(videoType).track as ILocalVideoTrack;
         }
-        else if (videoType == IrisVideoSourceType.kVideoSourceTypeScreenPrimary) {
+        else if (videoType == IrisVideoSourceType.kVideoSourceTypeScreenPrimary || videoType == IrisVideoSourceType.kVideoSourceTypeScreenSecondary) {
+            let videoTrack: ILocalVideoTrack = null;
             try {
                 let conf: ScreenVideoTrackInitConfig = this._generateScreenVideoTrackInitConfig();
-                let videoTrack: ILocalVideoTrack = await AgoraRTC.createScreenVideoTrack(conf, 'disable');
+                videoTrack = await AgoraRTC.createScreenVideoTrack(conf, 'disable');
+            }
+            catch (e) {
+                AgoraConsole.error("createScreenVideoTrack failed");
+                e && AgoraConsole.log(e);
+            }
+            if (videoTrack) {
+                //这里的videoTrack有可能是null, 如果promise创建失败的话
                 this._processSceneShareVideoTrack(videoTrack, clientType, videoType);
                 this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
-                retVideoTrack = videoTrack;
             }
-            catch (e) {
-                throw e;
-            }
+            retVideoTrack = videoTrack;
         }
         else if (videoType == IrisVideoSourceType.kVideoSourceTypeCameraPrimary || videoType == IrisVideoSourceType.kVideoSourceTypeCameraSecondary) {
+            let videoTrack: ICameraVideoTrack = null;
             try {
                 let videoConfig: CameraVideoTrackInitConfig = this._generateCameraVideoTrackInitConfig();
-                let videoTrack = await AgoraRTC.createCameraVideoTrack(videoConfig);
-                this._processVideoTrack(videoTrack, clientType, videoType, connection);
-                this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
-                retVideoTrack = videoTrack;
+                videoTrack = await AgoraRTC.createCameraVideoTrack(videoConfig);
             }
             catch (e) {
-                throw e;
+                AgoraConsole.error("createCameraVideoTrack failed");
+                e && AgoraConsole.log(e);
             }
+            if (videoTrack) {
+                //video 可能为null
+                this._processVideoTrack(videoTrack, clientType, videoType, connection);
+                this._engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
+            }
+            retVideoTrack = videoTrack;
         }
 
         //audio
@@ -5616,20 +5630,21 @@ export class RtcEngine implements IRtcEngine {
             retAudioTrack = this._engine.entitiesContainer.getLocalAudioTrackByType(audioType).track as ILocalAudioTrack;
         }
         else if (audioType == IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary) {
+            let audioTrack: IMicrophoneAudioTrack = null;
             try {
                 let audioConfig: MicrophoneAudioTrackInitConfig = this._generateMicrophoneAudioTrackInitConfig();
                 let audioTrack = await AgoraRTC.createMicrophoneAudioTrack(audioConfig);
-                this._processAudioTrack(audioTrack, clientType);
-                this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
-                retAudioTrack = audioTrack;
+
             }
             catch (e) {
-                if (retVideoTrack) {
-                    await this._engine.entitiesContainer.videoTrackWillClose(retVideoTrack);
-                    retVideoTrack.close();
-                }
-                throw e;
+                AgoraConsole.error('createMicrophoneAudioTrack failed');
+                e && AgoraConsole.log(e);
             }
+            if (audioTrack) {
+                this._processAudioTrack(audioTrack, clientType);
+                this._engine.entitiesContainer.addLocalAudioTrack({ type: audioType, track: audioTrack });
+            }
+            retAudioTrack = audioTrack;
         }
 
         return [retAudioTrack, retVideoTrack];
