@@ -636,8 +636,9 @@ export class RtcEngineEventHandler {
         this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
-    onSnapshotTaken(uid: agorartc.uid_t, filePath: string, width: number, height: number, errCode: number): void {
+    onSnapshotTaken(channel: string, uid: agorartc.uid_t, filePath: string, width: number, height: number, errCode: number): void {
         let obj = {
+            channel,
             uid,
             filePath,
             width,
@@ -1550,10 +1551,9 @@ export class RtcEngineEventHandler {
         this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     };
 
-    onSnapshotTakenEx(connection: agorartc.RtcConnection, uid: agorartc.uid_t, filePath: string, width: number, height: number, errCode: number): void {
+    onSnapshotTakenEx(connection: agorartc.RtcConnection, filePath: string, width: number, height: number, errCode: number): void {
         let obj = {
             connection,
-            uid,
             filePath,
             width,
             height,
@@ -1609,16 +1609,43 @@ export class RtcEngineEventHandler {
     }
 
 
-    //webgl的特殊回调
-    onDeviceEnumerated() {
+    //webgl的特殊回调 当设备信号被枚举了
+    OnDevicesEnumerated() {
         let obj = {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'WebGL_onDeviceEnumerated';
+        let key = 'WebGL_onDevicesEnumerated';
         this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     }
 
+    //当音频设备被查找后
+    OnPlaybackDevicesEnumerated(devices: agorartc.DeviceInfo[]) {
+        let obj = {
+            devices
+        };
+        let json = JSON.stringify(obj);
+        let key = 'WebGL_onPlaybackDevicesEnumerated';
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
+    }
 
+    //当音频录音设备被查找后
+    OnRecordingDevicesEnumerated(devices: agorartc.DeviceInfo[]) {
+        let obj = {
+            devices
+        };
+        let json = JSON.stringify(obj);
+        let key = 'WebGL_onRecordingDevicesEnumerated';
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
+    }
 
+    //当摄像头设备被枚举后
+    OnVideoDevicesEnumerated(devices: agorartc.DeviceInfo[]) {
+        let obj = {
+            devices
+        };
+        let json = JSON.stringify(obj);
+        let key = 'WebGL_onVideoDevicesEnumerated';
+        this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
+    }
 }

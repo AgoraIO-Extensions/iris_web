@@ -526,4 +526,15 @@ export class AgoraTranslate {
         return 6 - webQuality;
     }
 
+    public static data2agorartcCONTENT_INSPECT_RESULT(data: "porn" | "sexy" | "neutral"): agorartc.CONTENT_INSPECT_RESULT {
+        switch (data) {
+            case "porn":
+                return agorartc.CONTENT_INSPECT_RESULT.CONTENT_INSPECT_PORN;
+            case "sexy":
+                return agorartc.CONTENT_INSPECT_RESULT.CONTENT_INSPECT_SEXY;
+            case "neutral":
+                return agorartc.CONTENT_INSPECT_RESULT.CONTENT_INSPECT_NEUTRAL;
+        }
+    }
+
 }

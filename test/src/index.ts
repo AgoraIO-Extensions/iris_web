@@ -1,5 +1,5 @@
 // import AgoraRTC from "../../project/node_modules/agora-rtc-sdk-ng/rtc-sdk_en";
-import { test, shouldEqual, start, shouldReturnTrue, waitForSecond, shoudlWarn } from "./framwork/index";
+import { test, shouldEqual, start, stop, shouldReturnTrue, waitForSecond, shoudlWarn } from "./framwork/index";
 import { AgoraWrapper } from "../../project/iris/app"
 import * as agorartc from "../../project/iris/terra/rtc_types/Index"
 import { IrisApiType } from "../../project/iris/base/IrisApiType";
@@ -7,12 +7,13 @@ import { GenerateVideoTrackLabelOrHtmlElementCb } from "../../project/iris/engin
 import { IrisVideoSourceType, IrisEventHandler } from "../../project/iris/base/BaseType";
 import { IrisApiEngine } from "../../project/iris/engine/IrisApiEngine";
 import { Priority } from "./framwork/TestActionQueue";
-import { RtcEngine } from "../../project/iris/engine/RtcEngine";
-import { argv } from "process";
+import { type } from "os";
+
 
 
 export let AgoraTest = {
-    start: start
+    start: start,
+    stop: stop,
 };
 
 const commonAppid: string = "6bb480f77c6c458696eadb61dfc6fb76";
@@ -88,8 +89,8 @@ test("special_JoinChannel", async () => {
     };
     AgoraWrapper.SetIrisRtcEngineEventHandler(apiEngine, eventHandler);
     await waitForSecond(1);
-    shouldReturnTrue("WebGL_onDeviceEnumerated Triggered", () => {
-        return triggerEventNames.includes("WebGL_onDeviceEnumerated");
+    shouldReturnTrue("WebGL_onDevicesEnumerated Triggered", () => {
+        return triggerEventNames.includes("WebGL_onDevicesEnumerated");
     });
 
 
@@ -133,7 +134,7 @@ test("special_JoinChannel", async () => {
     //call Destroy
     let nRet = AgoraWrapper.DestroyIrisApiEngine(apiEngine);
     shouldEqual("DestroyIrisApiEngine", nRet, 0);
-}, Priority.Min);
+});
 
 
 test("ScreenShare", async () => {
@@ -173,8 +174,8 @@ test("ScreenShare", async () => {
     };
     AgoraWrapper.SetIrisRtcEngineEventHandler(apiEngine, eventHandler);
     await waitForSecond(1);
-    shouldReturnTrue("WebGL_onDeviceEnumerated Triggered", () => {
-        return triggerEventNames.includes("WebGL_onDeviceEnumerated");
+    shouldReturnTrue("WebGL_onDevicesEnumerated Triggered", () => {
+        return triggerEventNames.includes("WebGL_onDevicesEnumerated");
     });
 
 
@@ -260,7 +261,7 @@ test("ScreenShare", async () => {
     //call Destroy
     let nRet = AgoraWrapper.DestroyIrisApiEngine(apiEngine);
     shouldEqual("DestroyIrisApiEngine", nRet, 0);
-}, Priority.Min);
+});
 
 test("IRtcEngine_startScreenCaptureByScreenRect", async () => {
 
@@ -311,7 +312,7 @@ test("IRtcEngine_startScreenCaptureByScreenRect", async () => {
 
     await waitForSecond(5);
     await testEnd(apiEngine, false);
-}, Priority.Min);
+});
 
 test("IRtcEngine_startScreenCapture", async () => {
 
@@ -373,7 +374,7 @@ test("IRtcEngine_startScreenCapture", async () => {
     await waitForSecond(3);
 
     await testEnd(apiEngine, true);
-}, Priority.Min);
+});
 
 test("IRtcEngine_startScreenCaptureByWindowId", async () => {
 
@@ -436,7 +437,7 @@ test("IRtcEngine_startScreenCaptureByWindowId", async () => {
     await (5);
 
     await testEnd(apiEngine, false);
-}, Priority.Min);
+});
 
 test("IRtcEngine_setScreenCaptureContentHint", async () => {
 
@@ -515,7 +516,7 @@ test("IRtcEngine_setScreenCaptureContentHint", async () => {
     await waitForSecond(5);
 
     await testEnd(apiEngine, true);
-}, Priority.Min);
+});
 
 test("IRtcEngine_updateScreenCaptureRegion", async () => {
 
@@ -539,7 +540,7 @@ test("IRtcEngine_updateScreenCaptureRegion", async () => {
     shouldEqual("IRtcEngine_updateScreenCaptureRegion:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
     await waitForSecond(5);
     await testEnd(apiEngine, false);
-}, Priority.Min);
+});
 
 test("IRtcEngine_updateScreenCaptureParameters", async () => {
 
@@ -571,7 +572,7 @@ test("IRtcEngine_updateScreenCaptureParameters", async () => {
     shouldEqual("IRtcEngine_updateScreenCaptureParameters:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
     await waitForSecond(5);
     await testEnd(apiEngine, false);
-}, Priority.Min);
+});
 
 test("IRtcEngine_stopScreenCapture", async () => {
 
@@ -646,7 +647,7 @@ test("IRtcEngine_stopScreenCapture", async () => {
     shouldEqual("IRtcEngine_stopScreenCapture:result ", result.result, 0);
     await waitForSecond(5);
     await testEnd(apiEngine, true);
-}, Priority.Min);
+});
 
 test("IRtcEngine_startPrimary(Seconder)CameraCapture", async () => {
 
@@ -790,7 +791,7 @@ test("IRtcEngine_startPrimary(Seconder)CameraCapture", async () => {
 
 
     await testEnd(apiEngine, false);
-}, Priority.Min);
+});
 
 test("IRtcEngine_start(stop)PrimaryScreenCapture", async () => {
 
@@ -842,7 +843,7 @@ test("IRtcEngine_start(stop)PrimaryScreenCapture", async () => {
     await waitForSecond(1);
 
     await testEnd(apiEngine, false);
-}, Priority.Min);
+});
 
 test("IRtcEngine_start(stop)SecondaryScreenCapture", async () => {
 
@@ -893,7 +894,7 @@ test("IRtcEngine_start(stop)SecondaryScreenCapture", async () => {
     await waitForSecond(1);
 
     await testEnd(apiEngine, false);
-}, Priority.Min);
+});
 
 test("IRtcEngine_stopPrimaryScreenCapture", async () => {
 
@@ -915,7 +916,7 @@ test("IRtcEngine_stopPrimaryScreenCapture", async () => {
     shouldEqual("IRtcEngine_stopPrimaryScreenCapture:result ", result.result, 0);
     await waitForSecond(1);
     await testEnd(apiEngine, false);
-}, Priority.Min);
+});
 
 test("IRtcEngine_stopSecondaryScreenCapture", async () => {
 
@@ -937,7 +938,7 @@ test("IRtcEngine_stopSecondaryScreenCapture", async () => {
     shouldEqual("IRtcEngine_stopSecondaryScreenCapture:result ", result.result, 0);
     await waitForSecond(1);
     await testEnd(apiEngine, false);
-}, Priority.Min);
+});
 
 test("IRtcEngine_ChannelMediaRelay_All", async () => {
 
@@ -1041,7 +1042,7 @@ test("IRtcEngine_ChannelMediaRelay_All", async () => {
 
 
     await testEnd(apiEngine, true);
-}, Priority.Min);
+});
 
 
 test("IRtcEngine_add(remove)InjectStreamUrl", async () => {
@@ -1139,7 +1140,7 @@ test("IRtcEngine_add(remove)InjectStreamUrl", async () => {
 
 
     await testEnd(apiEngine, true);
-}, Priority.Min);
+});
 
 test("IRtcEngine_startRtmpStreamWithoutTranscoding", async () => {
 
@@ -1223,7 +1224,7 @@ test("IRtcEngine_startRtmpStreamWithoutTranscoding", async () => {
 
     await waitForSecond(1);
     await testEnd(apiEngine, true);
-}, Priority.Min);
+});
 
 test("IRtcEngine_startRtmpStreamWithTranscoding_update_stop", async () => {
 
@@ -1402,7 +1403,7 @@ test("IRtcEngine_startRtmpStreamWithTranscoding_update_stop", async () => {
 
 
     await testEnd(apiEngine, true);
-}, Priority.Min);
+});
 
 test("SwitchCamera", async () => {
 
@@ -1443,8 +1444,8 @@ test("SwitchCamera", async () => {
     };
     AgoraWrapper.SetIrisRtcEngineEventHandler(apiEngine, eventHandler);
     await waitForSecond(1);
-    shouldReturnTrue("WebGL_onDeviceEnumerated Triggered", () => {
-        return triggerEventNames.includes("WebGL_onDeviceEnumerated");
+    shouldReturnTrue("WebGL_onDevicesEnumerated Triggered", () => {
+        return triggerEventNames.includes("WebGL_onDevicesEnumerated");
     });
 
 
@@ -1508,13 +1509,15 @@ test("SwitchCamera", async () => {
     //call Destroy
     let nRet = AgoraWrapper.DestroyIrisApiEngine(apiEngine);
     shouldEqual("DestroyIrisApiEngine", nRet, 0);
-}, Priority.Min);
+});
 
 test("IVideoDeviceManager_enumerateVideoDevices_setDevice", async () => {
 
+    let events: string[] = [];
     let eventHandler: IrisEventHandler = {
         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
             //do something in there
+            events.push(event);
         }
     };
 
@@ -1526,9 +1529,14 @@ test("IVideoDeviceManager_enumerateVideoDevices_setDevice", async () => {
     let params = JSON.stringify(paramObj);
     let result: any = {};
     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_VIDEODEVICEMANAGER_ENUMERATEVIDEODEVICES, params, params.length, null, 0, result);
-
     shouldEqual("callApi:IVideoDeviceManager_enumerateVideoDevices ", ret, 0);
     shoudlWarn("IVideoDeviceManager_enumerateVideoDevices:result ", typeof result.result.length != 'number', "result" + result.result);
+
+    //回调检测
+    shoudlWarn("events_ WebGL_onDevicesEnumerated", events.includes("WebGL_onDevicesEnumerated") == false, "events.length=" + events.length);
+    await waitForSecond(2);
+    shoudlWarn("events_ WebGL_onVideoDevicesEnumerated", events.includes("WebGL_onVideoDevicesEnumerated") == false, "events.length=" + events.length);
+
 
     //call setDeviceId
     let devices: agorartc.DeviceInfo[] = result.result;
@@ -1546,7 +1554,7 @@ test("IVideoDeviceManager_enumerateVideoDevices_setDevice", async () => {
 
     await waitForSecond(1);
     await testEnd(apiEngine, true);
-}, Priority.Min);
+});
 
 test("IRtcEngineEx_updateChannelMediaOptionsEx", async () => {
 
@@ -1583,7 +1591,7 @@ test("IRtcEngineEx_updateChannelMediaOptionsEx", async () => {
     shouldEqual("IRtcEngineEx_updateChannelMediaOptionsEx:result ", result.result, 0);
     await waitForSecond(5);
     await testEndEx(apiEngine, true, commonUidEx);
-}, Priority.Min);
+});
 
 
 export let testBegine = async function (enableAudio: boolean | null, enableVideo: boolean | null, joinChannel: boolean, eventHandler: IrisEventHandler): Promise<IrisApiEngine> {
@@ -8001,7 +8009,211 @@ export let testEndEx = async function (apiEngine: IrisApiEngine, leavelChannelEx
 // });
 
 
-test("IRtcEngine_startLocalVideoTranscoder", async () => {
+// test("IRtcEngine_startLocalVideoTranscoder", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let config: agorartc.LocalTranscoderConfiguration = {
+//         streamCount: 0,
+//         VideoInputStreams: [],
+//         videoOutputConfiguration: new agorartc.VideoEncoderConfiguration()
+//     }
+//     let paramObj = {
+//         config,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STARTLOCALVIDEOTRANSCODER, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_startLocalVideoTranscoder ", ret, 0);
+//     shouldEqual("IRtcEngine_startLocalVideoTranscoder:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_updateLocalTranscoderConfiguration", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let config: agorartc.LocalTranscoderConfiguration = {
+//         streamCount: 0,
+//         VideoInputStreams: [],
+//         videoOutputConfiguration: new agorartc.VideoEncoderConfiguration()
+//     }
+//     let paramObj = {
+//         config,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_UPDATELOCALTRANSCODERCONFIGURATION, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_updateLocalTranscoderConfiguration ", ret, 0);
+//     shouldEqual("IRtcEngine_updateLocalTranscoderConfiguration:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_stopLocalVideoTranscoder", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let paramObj = {
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STOPLOCALVIDEOTRANSCODER, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_stopLocalVideoTranscoder ", ret, 0);
+//     shouldEqual("IRtcEngine_stopLocalVideoTranscoder:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_setCameraDeviceOrientation", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let type: agorartc.VIDEO_SOURCE_TYPE = 0;
+//     let orientation: agorartc.VIDEO_ORIENTATION = 0;
+//     let paramObj = {
+//         type,
+//         orientation,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETCAMERADEVICEORIENTATION, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_setCameraDeviceOrientation ", ret, 0);
+//     shouldEqual("IRtcEngine_setCameraDeviceOrientation:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_setScreenCaptureOrientation", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let type: agorartc.VIDEO_SOURCE_TYPE = 0;
+//     let orientation: agorartc.VIDEO_ORIENTATION = 0;
+//     let paramObj = {
+//         type,
+//         orientation,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETSCREENCAPTUREORIENTATION, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_setScreenCaptureOrientation ", ret, 0);
+//     shouldEqual("IRtcEngine_setScreenCaptureOrientation:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+
+// test("IRtcEngine_getConnectionState", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(true, true, true, eventHandler);
+
+//     let paramObj = {
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_GETCONNECTIONSTATE, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_getConnectionState ", ret, 0);
+//     shoudlWarn("IRtcEngine_getConnectionState:result ", result.result == agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED || result.result == agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_FAILED, "result=" + result.result);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+
+// test("IRtcEngine_setRemoteUserPriority", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let uid: agorartc.uid_t = 0;
+//     let userPriority: agorartc.PRIORITY_TYPE = 0;
+//     let paramObj = {
+//         uid,
+//         userPriority,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETREMOTEUSERPRIORITY, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_setRemoteUserPriority ", ret, 0);
+//     shouldEqual("IRtcEngine_setRemoteUserPriority:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_registerPacketObserver", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let observer: agorartc.IPacketObserver = new agorartc.IPacketObserver();
+//     let paramObj = {
+//         observer,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_REGISTERPACKETOBSERVER, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_registerPacketObserver ", ret, 0);
+//     shouldEqual("IRtcEngine_registerPacketObserver:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+test("IRtcEngine_enableEncryption_setEncryptionSecret_setEncryptionMode", async () => {
 
     let eventHandler: IrisEventHandler = {
         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
@@ -8009,267 +8221,15 @@ test("IRtcEngine_startLocalVideoTranscoder", async () => {
         }
     };
 
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let config: agorartc.LocalTranscoderConfiguration = {
-        streamCount: 0,
-        VideoInputStreams: [],
-        videoOutputConfiguration: new agorartc.VideoEncoderConfiguration()
-    }
-    let paramObj = {
-        config,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STARTLOCALVIDEOTRANSCODER, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_startLocalVideoTranscoder ", ret, 0);
-    shouldEqual("IRtcEngine_startLocalVideoTranscoder:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_updateLocalTranscoderConfiguration", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let config: agorartc.LocalTranscoderConfiguration = {
-        streamCount: 0,
-        VideoInputStreams: [],
-        videoOutputConfiguration: new agorartc.VideoEncoderConfiguration()
-    }
-    let paramObj = {
-        config,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_UPDATELOCALTRANSCODERCONFIGURATION, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_updateLocalTranscoderConfiguration ", ret, 0);
-    shouldEqual("IRtcEngine_updateLocalTranscoderConfiguration:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_stopLocalVideoTranscoder", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let paramObj = {
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STOPLOCALVIDEOTRANSCODER, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_stopLocalVideoTranscoder ", ret, 0);
-    shouldEqual("IRtcEngine_stopLocalVideoTranscoder:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_setCameraDeviceOrientation", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let type: agorartc.VIDEO_SOURCE_TYPE = 0;
-    let orientation: agorartc.VIDEO_ORIENTATION = 0;
-    let paramObj = {
-        type,
-        orientation,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETCAMERADEVICEORIENTATION, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_setCameraDeviceOrientation ", ret, 0);
-    shouldEqual("IRtcEngine_setCameraDeviceOrientation:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_setScreenCaptureOrientation", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let type: agorartc.VIDEO_SOURCE_TYPE = 0;
-    let orientation: agorartc.VIDEO_ORIENTATION = 0;
-    let paramObj = {
-        type,
-        orientation,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETSCREENCAPTUREORIENTATION, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_setScreenCaptureOrientation ", ret, 0);
-    shouldEqual("IRtcEngine_setScreenCaptureOrientation:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-
-test("IRtcEngine_getConnectionState", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(true, true, true, eventHandler);
-
-    let paramObj = {
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_GETCONNECTIONSTATE, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_getConnectionState ", ret, 0);
-    shoudlWarn("IRtcEngine_getConnectionState:result ", result.result == agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED || result.result == agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_FAILED, "result=" + result.result);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-
-test("IRtcEngine_setRemoteUserPriority", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let uid: agorartc.uid_t = 0;
-    let userPriority: agorartc.PRIORITY_TYPE = 0;
-    let paramObj = {
-        uid,
-        userPriority,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETREMOTEUSERPRIORITY, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_setRemoteUserPriority ", ret, 0);
-    shouldEqual("IRtcEngine_setRemoteUserPriority:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_registerPacketObserver", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let observer: agorartc.IPacketObserver = new agorartc.IPacketObserver();
-    let paramObj = {
-        observer,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_REGISTERPACKETOBSERVER, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_registerPacketObserver ", ret, 0);
-    shouldEqual("IRtcEngine_registerPacketObserver:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-//todo 需要特殊case
-test("IRtcEngine_setEncryptionMode", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let encryptionMode: string = "aes-256-gcm";
-    let paramObj = {
-        encryptionMode,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETENCRYPTIONMODE, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_setEncryptionMode ", ret, 0);
-    shouldEqual("IRtcEngine_setEncryptionMode:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-//todo 需要特殊case
-test("IRtcEngine_setEncryptionSecret", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let secret: string = "helloworld";
-    let paramObj = {
-        secret,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETENCRYPTIONSECRET, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_setEncryptionSecret ", ret, 0);
-    shouldEqual("IRtcEngine_setEncryptionSecret:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_enableEncryption", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
+    let apiEngine = await testBegine(true, true, false, eventHandler);
 
     let enabled: boolean = true;
     let config: agorartc.EncryptionConfig = new agorartc.EncryptionConfig();
     config.encryptionKey = "heloworld";
+    let array: number[] = [69, 110, 99, 114, 121, 112, 116, 105, 111, 110, 75, 100, 102, 83, 97, 108, 116, 73, 110, 66, 97, 115, 101, 54, 52, 83, 116, 114, 105, 110, 103, 115];
+    config.encryptionKdfSalt = array;
 
-    let paramObj = {
+    let paramObj: any = {
         enabled,
         config,
     }
@@ -8279,1484 +8239,1570 @@ test("IRtcEngine_enableEncryption", async () => {
 
     shouldEqual("callApi:IRtcEngine_enableEncryption ", ret, 0);
     shouldEqual("IRtcEngine_enableEncryption:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
 
-test("IRtcEngine_createDataStream", async () => {
 
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
+    let secret: string = "Hello_Unity";
+    paramObj = {
+        secret,
+    }
+    params = JSON.stringify(paramObj);
+    result = {};
+    ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETENCRYPTIONSECRET, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IRtcEngine_setEncryptionSecret ", ret, 0);
+    shouldEqual("IRtcEngine_setEncryptionSecret:result ", result.result, 0);
+
+
+    let encryptionMode: string = "aes-128-gcm2";
+    paramObj = {
+        encryptionMode,
+    }
+    params = JSON.stringify(paramObj);
+    result = {};
+    ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETENCRYPTIONMODE, params, params.length, null, 0, result);
+    shouldEqual("callApi:IRtcEngine_setEncryptionMode ", ret, 0);
+    shouldEqual("IRtcEngine_setEncryptionMode:result ", result.result, 0);
+
+
+    let token = "";
+    let channelId = commonChannelId;
+    let info = "";
+    let uid = 0;
+    paramObj = {
+        token,
+        channelId,
+        info,
+        uid
     };
+    result = {};
+    params = JSON.stringify(paramObj);
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNEL, params, params.length, null, null, result);
+    shouldEqual("joinChannel: ", result.result, 0);
+    await waitForSecond(10);
 
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let streamId: number = 0;
-    let reliable: boolean = true;
-    let ordered: boolean = true;
-    let paramObj = {
-        streamId,
-        reliable,
-        ordered,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_CREATEDATASTREAM, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_createDataStream ", ret, 0);
-    shouldEqual("IRtcEngine_createDataStream:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_createDataStream2", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let streamId: number = 0;
-    let config: agorartc.DataStreamConfig = {
-        syncWithAudio: true,
-        ordered: true,
-    }
-    let paramObj = {
-        streamId,
-        config,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_CREATEDATASTREAM2, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_createDataStream2 ", ret, 0);
-    shouldEqual("IRtcEngine_createDataStream2:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_sendStreamMessage", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let streamId: number = 0;
-    let data: string = "";
-    let length: number = 0;
-    let paramObj = {
-        streamId,
-        data,
-        length,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SENDSTREAMMESSAGE, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_sendStreamMessage ", ret, 0);
-    shouldEqual("IRtcEngine_sendStreamMessage:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_addVideoWatermark", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let watermark: agorartc.RtcImage = {
-        url: "",
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-        zOrder: 0,
-        alpha: 0,
-    }
-    let paramObj = {
-        watermark,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ADDVIDEOWATERMARK, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_addVideoWatermark ", ret, 0);
-    shouldEqual("IRtcEngine_addVideoWatermark:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_addVideoWatermark2", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let watermarkUrl: string = "";
-    let options: agorartc.WatermarkOptions = null;
-    let paramObj = {
-        watermarkUrl,
-        options,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ADDVIDEOWATERMARK2, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_addVideoWatermark2 ", ret, 0);
-    shouldEqual("IRtcEngine_addVideoWatermark2:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_clearVideoWatermark", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let paramObj = {
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_CLEARVIDEOWATERMARK, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_clearVideoWatermark ", ret, 0);
-    shouldEqual("IRtcEngine_clearVideoWatermark:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_clearVideoWatermarks", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let paramObj = {
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_CLEARVIDEOWATERMARKS, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_clearVideoWatermarks ", ret, 0);
-    shouldEqual("IRtcEngine_clearVideoWatermarks:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-
-test("IRtcEngine_pauseAudio", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let paramObj = {
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_PAUSEAUDIO, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_pauseAudio ", ret, 0);
-    shouldEqual("IRtcEngine_pauseAudio:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_resumeAudio", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let paramObj = {
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_RESUMEAUDIO, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_resumeAudio ", ret, 0);
-    shouldEqual("IRtcEngine_resumeAudio:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_enableWebSdkInteroperability", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(true, true, true, eventHandler);
-
-    let enabled: boolean = true;
-    let paramObj = {
-        enabled,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ENABLEWEBSDKINTEROPERABILITY, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_enableWebSdkInteroperability ", ret, 0);
-    shouldEqual("IRtcEngine_enableWebSdkInteroperability:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
     await waitForSecond(1);
     await testEnd(apiEngine, true);
-});
-
-test("IRtcEngine_sendCustomReportMessage", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let id: string = "";
-    let category: string = "";
-    let event: string = "";
-    let label: string = "";
-    let value: number = 0;
-    let paramObj = {
-        id,
-        category,
-        event,
-        label,
-        value,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SENDCUSTOMREPORTMESSAGE, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_sendCustomReportMessage ", ret, 0);
-    shouldEqual("IRtcEngine_sendCustomReportMessage:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_registerMediaMetadataObserver", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let observer: agorartc.IMetadataObserver = new agorartc.IMetadataObserver();
-    let type: agorartc.METADATA_TYPE = agorartc.METADATA_TYPE.UNKNOWN_METADATA;
-    let paramObj = {
-        observer,
-        type,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_REGISTERMEDIAMETADATAOBSERVER, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_registerMediaMetadataObserver ", ret, 0);
-    shouldEqual("IRtcEngine_registerMediaMetadataObserver:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_unregisterMediaMetadataObserver", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let observer: agorartc.IMetadataObserver = new agorartc.IMetadataObserver();
-    let type: agorartc.METADATA_TYPE = agorartc.METADATA_TYPE.VIDEO_METADATA;
-    let paramObj = {
-        observer,
-        type,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_UNREGISTERMEDIAMETADATAOBSERVER, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_unregisterMediaMetadataObserver ", ret, 0);
-    shouldEqual("IRtcEngine_unregisterMediaMetadataObserver:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_startAudioFrameDump", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let channel_id: string = "";
-    let user_id: agorartc.uid_t = 0;
-    let location: string = "";
-    let uuid: string = "";
-    let passwd: string = "";
-    let duration_ms: number = 0;
-    let auto_upload: boolean = true;
-    let paramObj = {
-        channel_id,
-        user_id,
-        location,
-        uuid,
-        passwd,
-        duration_ms,
-        auto_upload,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STARTAUDIOFRAMEDUMP, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_startAudioFrameDump ", ret, 0);
-    shouldEqual("IRtcEngine_startAudioFrameDump:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_stopAudioFrameDump", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let channel_id: string = "";
-    let user_id: agorartc.uid_t = 0;
-    let location: string = "";
-    let paramObj = {
-        channel_id,
-        user_id,
-        location,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STOPAUDIOFRAMEDUMP, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_stopAudioFrameDump ", ret, 0);
-    shouldEqual("IRtcEngine_stopAudioFrameDump:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_registerLocalUserAccount", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let appId: string = "";
-    let userAccount: string = "";
-    let paramObj = {
-        appId,
-        userAccount,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_REGISTERLOCALUSERACCOUNT, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_registerLocalUserAccount ", ret, 0);
-    shouldEqual("IRtcEngine_registerLocalUserAccount:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_joinChannelWithUserAccount", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let token: string = "";
-    let channelId: string = "";
-    let userAccount: string = "";
-    let paramObj = {
-        token,
-        channelId,
-        userAccount,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNELWITHUSERACCOUNT, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_joinChannelWithUserAccount ", ret, 0);
-    shouldEqual("IRtcEngine_joinChannelWithUserAccount:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_joinChannelWithUserAccount", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let token: string = "";
-    let channelId: string = "";
-    let userAccount: string = "";
-    let options: agorartc.ChannelMediaOptions = {
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-    }
-    let paramObj = {
-        token,
-        channelId,
-        userAccount,
-        options,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNELWITHUSERACCOUNT, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_joinChannelWithUserAccount ", ret, 0);
-    shouldEqual("IRtcEngine_joinChannelWithUserAccount:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_joinChannelWithUserAccountEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let token: string = "";
-    let channelId: string = "";
-    let userAccount: string = "";
-    let options: agorartc.ChannelMediaOptions = {
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-    }
-
-    let paramObj = {
-        token,
-        channelId,
-        userAccount,
-        options,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNELWITHUSERACCOUNTEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_joinChannelWithUserAccountEx ", ret, 0);
-    shouldEqual("IRtcEngine_joinChannelWithUserAccountEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_getUserInfoByUserAccount", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let userAccount: string = "";
-
-    let paramObj = {
-        userAccount,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_GETUSERINFOBYUSERACCOUNT, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_getUserInfoByUserAccount ", ret, 0);
-    shouldEqual("IRtcEngine_getUserInfoByUserAccount:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    shoudlWarn("IRtcEngine_getUserInfoByUserAccount:userInfo ", typeof result.userInfo == 'undefined', "userInfo=" + result.userInfo);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_getUserInfoByUid", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let uid: agorartc.uid_t = 0;
-
-    let paramObj = {
-        uid,
-
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_GETUSERINFOBYUID, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_getUserInfoByUid ", ret, 0);
-    shouldEqual("IRtcEngine_getUserInfoByUid:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    shoudlWarn("IRtcEngine_getUserInfoByUserAccount:userInfo ", typeof result.userInfo == 'undefined', "userInfo=" + result.userInfo);
-
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-
-test("IRtcEngine_setDirectCdnStreamingAudioConfiguration", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let profile: agorartc.AUDIO_PROFILE_TYPE = 0;
-    let paramObj = {
-        profile,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETDIRECTCDNSTREAMINGAUDIOCONFIGURATION, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_setDirectCdnStreamingAudioConfiguration ", ret, 0);
-    shouldEqual("IRtcEngine_setDirectCdnStreamingAudioConfiguration:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_setDirectCdnStreamingVideoConfiguration", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let config: agorartc.VideoEncoderConfiguration = new agorartc.VideoEncoderConfiguration();
-    let paramObj = {
-        config,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETDIRECTCDNSTREAMINGVIDEOCONFIGURATION, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_setDirectCdnStreamingVideoConfiguration ", ret, 0);
-    shouldEqual("IRtcEngine_setDirectCdnStreamingVideoConfiguration:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_startDirectCdnStreaming", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let eventHandler2: agorartc.IDirectCdnStreamingEventHandler = null;
-    let publishUrl: string = "";
-    let options2: agorartc.DirectCdnStreamingMediaOptions = null;
-    let paramObj = {
-        eventHandler: eventHandler2,
-        publishUrl,
-        options: options2,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STARTDIRECTCDNSTREAMING, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_startDirectCdnStreaming ", ret, 0);
-    shouldEqual("IRtcEngine_startDirectCdnStreaming:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_stopDirectCdnStreaming", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let paramObj = {
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STOPDIRECTCDNSTREAMING, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_stopDirectCdnStreaming ", ret, 0);
-    shouldEqual("IRtcEngine_stopDirectCdnStreaming:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_updateDirectCdnStreamingMediaOptions", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let options2: agorartc.DirectCdnStreamingMediaOptions = null;
-    let paramObj = {
-        options: options2,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_UPDATEDIRECTCDNSTREAMINGMEDIAOPTIONS, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_updateDirectCdnStreamingMediaOptions ", ret, 0);
-    shouldEqual("IRtcEngine_updateDirectCdnStreamingMediaOptions:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_pushDirectCdnStreamingCustomVideoFrame", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let frame: agorartc.ExternalVideoFrame = null;
-    let paramObj = {
-        frame,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_PUSHDIRECTCDNSTREAMINGCUSTOMVIDEOFRAME, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_pushDirectCdnStreamingCustomVideoFrame ", ret, 0);
-    shouldEqual("IRtcEngine_pushDirectCdnStreamingCustomVideoFrame:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-}, Priority.High);
-
-test("IRtcEngine_takeSnapshot", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let config: agorartc.SnapShotConfig = {
-        channel: commonChannelId,
-        uid: 0,
-        filePath: "/Users/xiayangqun/Downloads",
-    }
-    let callback: agorartc.ISnapshotCallback = null;
-    let paramObj = {
-        config,
-        callback,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_TAKESNAPSHOT, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_takeSnapshot ", ret, 0);
-    shouldEqual("IRtcEngine_takeSnapshot:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_SetContentInspect", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let config: agorartc.ContentInspectConfig = {
-        enable: true,
-        DeviceWork: true,
-        CloudWork: true,
-        extraInfo: "",
-        modules: [
-            {
-                type: agorartc.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_MODERATION,
-                frequency: 1,
-            }
-        ],
-        moduleCount: 1,
-    }
-    let paramObj = {
-        config,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETCONTENTINSPECT, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_SetContentInspect ", ret, 0);
-    shouldEqual("IRtcEngine_SetContentInspect:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-}, Priority.High);
-
-test("IRtcEngine_switchChannel", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(true, true, true, eventHandler);
-
-    let token: string = "";
-    let channel: string = commonChannelId + "_1";
-    let paramObj = {
-        token,
-        channel,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SWITCHCHANNEL, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_switchChannel ", ret, 0);
-    shouldEqual("IRtcEngine_switchChannel:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, true);
-});
-
-test("IRtcEngine_startRhythmPlayer", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let sound1: string = "";
-    let sound2: string = "";
-    let config: agorartc.AgoraRhythmPlayerConfig = {
-        beatsPerMeasure: 10,
-        beatsPerMinute: 3,
-    };
-    let paramObj = {
-        sound1,
-        sound2,
-        config,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STARTRHYTHMPLAYER, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_startRhythmPlayer ", ret, 0);
-    shouldEqual("IRtcEngine_startRhythmPlayer:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_stopRhythmPlayer", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let paramObj = {
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STOPRHYTHMPLAYER, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_stopRhythmPlayer ", ret, 0);
-    shouldEqual("IRtcEngine_stopRhythmPlayer:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_configRhythmPlayer", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let config: agorartc.AgoraRhythmPlayerConfig = {
-        beatsPerMeasure: 10,
-        beatsPerMinute: 3,
-    };
-    let paramObj = {
-        config,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_CONFIGRHYTHMPLAYER, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_configRhythmPlayer ", ret, 0);
-    shouldEqual("IRtcEngine_configRhythmPlayer:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_adjustCustomAudioPublishVolume", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let sourceId: number = 0;
-    let volume: number = 0;
-    let paramObj = {
-        sourceId,
-        volume,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ADJUSTCUSTOMAUDIOPUBLISHVOLUME, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_adjustCustomAudioPublishVolume ", ret, 0);
-    shouldEqual("IRtcEngine_adjustCustomAudioPublishVolume:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_adjustCustomAudioPlayoutVolume", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let sourceId: number = 0;
-    let volume: number = 0;
-    let paramObj = {
-        sourceId,
-        volume,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ADJUSTCUSTOMAUDIOPLAYOUTVOLUME, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_adjustCustomAudioPlayoutVolume ", ret, 0);
-    shouldEqual("IRtcEngine_adjustCustomAudioPlayoutVolume:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_setCloudProxy", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let proxyType: agorartc.CLOUD_PROXY_TYPE = agorartc.CLOUD_PROXY_TYPE.TCP_PROXY;
-    let paramObj = {
-        proxyType,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETCLOUDPROXY, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_setCloudProxy ", ret, 0);
-    shouldEqual("IRtcEngine_setCloudProxy:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_setLocalAccessPoint", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let config: agorartc.LocalAccessPointConfiguration = null;
-    let paramObj = {
-        config,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETLOCALACCESSPOINT, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_setLocalAccessPoint ", ret, 0);
-    shouldEqual("IRtcEngine_setLocalAccessPoint:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_enableFishCorrection", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let enabled: boolean = true;
-    let params2: agorartc.FishCorrectionParams = null;
-    let paramObj = {
-        enabled,
-        params: params2,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ENABLEFISHCORRECTION, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_enableFishCorrection ", ret, 0);
-    shouldEqual("IRtcEngine_enableFishCorrection:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("IRtcEngine_setAdvancedAudioOptions", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let options: agorartc.AdvancedAudioOptions = {
-        audioProcessingChannels: 2,
-    }
-    let paramObj = {
-        options,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETADVANCEDAUDIOOPTIONS, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_setAdvancedAudioOptions ", ret, 0);
-    shouldEqual("IRtcEngine_setAdvancedAudioOptions:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-}, Priority.High);
-
-test("IRtcEngine_setAVSyncSource", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let channelId: string = "";
-    let uid: agorartc.uid_t = 0;
-    let paramObj = {
-        channelId,
-        uid,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETAVSYNCSOURCE, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngine_setAVSyncSource ", ret, 0);
-    shouldEqual("IRtcEngine_setAVSyncSource:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-//IRtcEngineEx
-
-test("IRtcEngineEx_setVideoEncoderConfigurationEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
-
-    let config: agorartc.VideoEncoderConfiguration = new agorartc.VideoEncoderConfiguration();
-    config.dimensions = { width: 1920, height: 720 };
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    };
-    let paramObj = {
-        config,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETVIDEOENCODERCONFIGURATIONEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_setVideoEncoderConfigurationEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_setVideoEncoderConfigurationEx:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, true, commonUidEx);
-});
-
-test("IRtcEngineEx_setupRemoteVideoEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-    let canvas: agorartc.VideoCanvas = null;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let paramObj = {
-        canvas,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETUPREMOTEVIDEOEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_setupRemoteVideoEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_setupRemoteVideoEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
-
-test("IRtcEngineEx_muteRemoteAudioStreamEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
-
-    let uid: agorartc.uid_t = 0;
-    let mute: boolean = true;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-    let paramObj = {
-        uid,
-        mute,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_MUTEREMOTEAUDIOSTREAMEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_muteRemoteAudioStreamEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_muteRemoteAudioStreamEx:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, true, commonUidEx);
-});
-
-test("IRtcEngineEx_muteRemoteVideoStreamEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
-
-
-    let uid: agorartc.uid_t = 0;
-    let mute: boolean = true;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-    let paramObj = {
-        uid,
-        mute,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_MUTEREMOTEVIDEOSTREAMEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_muteRemoteVideoStreamEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_muteRemoteVideoStreamEx:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, true, commonUidEx);
-});
-
-test("IRtcEngineEx_setRemoteVideoStreamTypeEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
-
-    let uid: agorartc.uid_t = 0;
-
-    let streamType: agorartc.VIDEO_STREAM_TYPE = 0;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-    let paramObj = {
-        uid,
-        streamType,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETREMOTEVIDEOSTREAMTYPEEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_setRemoteVideoStreamTypeEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_setRemoteVideoStreamTypeEx:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, true, commonUidEx);
-});
-
-test("IRtcEngineEx_setRemoteVoicePositionEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let uid: agorartc.uid_t = 0;
-    let pan: number = 0;
-    let gain: number = 0;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let paramObj = {
-        uid,
-        pan,
-        gain,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETREMOTEVOICEPOSITIONEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_setRemoteVoicePositionEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_setRemoteVoicePositionEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
-
-test("IRtcEngineEx_setRemoteUserSpatialAudioParamsEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let uid: agorartc.uid_t = 0;
-    let params2: agorartc.SpatialAudioParams = null
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-    let paramObj = {
-        uid,
-        params: params2,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETREMOTEUSERSPATIALAUDIOPARAMSEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_setRemoteUserSpatialAudioParamsEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_setRemoteUserSpatialAudioParamsEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
-
-test("IRtcEngineEx_setRemoteRenderModeEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
-
-
-    let uid: agorartc.uid_t = 0;
-    let renderMode: agorartc.RENDER_MODE_TYPE = 0;
-    let mirrorMode: agorartc.VIDEO_MIRROR_MODE_TYPE = 0;
-
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-    let paramObj = {
-        uid,
-        renderMode,
-        mirrorMode,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETREMOTERENDERMODEEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_setRemoteRenderModeEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_setRemoteRenderModeEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, true, commonUidEx);
-}, Priority.High);
-
-test("IRtcEngineEx_enableLoopbackRecordingEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let enabled: boolean = true;
-    let deviceName: string = "";
-    let paramObj = {
-        connection,
-        enabled,
-        deviceName,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_ENABLELOOPBACKRECORDINGEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_enableLoopbackRecordingEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_enableLoopbackRecordingEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
-
-test("IRtcEngineEx_getConnectionStateEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
-
-
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let paramObj = {
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_GETCONNECTIONSTATEEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_getConnectionStateEx ", ret, 0);
-    shoudlWarn("IRtcEngineEx_getConnectionStateEx:result ", result.result != agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTING && result.result != agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTED, "result=" + result.result);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, true, commonUidEx);
-});
-
-//todo 需要特殊Case
+}  );
+
+// test("IRtcEngine_createDataStream", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let streamId: number = 0;
+//     let reliable: boolean = true;
+//     let ordered: boolean = true;
+//     let paramObj = {
+//         streamId,
+//         reliable,
+//         ordered,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_CREATEDATASTREAM, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_createDataStream ", ret, 0);
+//     shouldEqual("IRtcEngine_createDataStream:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_createDataStream2", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let streamId: number = 0;
+//     let config: agorartc.DataStreamConfig = {
+//         syncWithAudio: true,
+//         ordered: true,
+//     }
+//     let paramObj = {
+//         streamId,
+//         config,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_CREATEDATASTREAM2, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_createDataStream2 ", ret, 0);
+//     shouldEqual("IRtcEngine_createDataStream2:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_sendStreamMessage", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let streamId: number = 0;
+//     let data: string = "";
+//     let length: number = 0;
+//     let paramObj = {
+//         streamId,
+//         data,
+//         length,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SENDSTREAMMESSAGE, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_sendStreamMessage ", ret, 0);
+//     shouldEqual("IRtcEngine_sendStreamMessage:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_addVideoWatermark", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let watermark: agorartc.RtcImage = {
+//         url: "",
+//         x: 0,
+//         y: 0,
+//         width: 0,
+//         height: 0,
+//         zOrder: 0,
+//         alpha: 0,
+//     }
+//     let paramObj = {
+//         watermark,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ADDVIDEOWATERMARK, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_addVideoWatermark ", ret, 0);
+//     shouldEqual("IRtcEngine_addVideoWatermark:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_addVideoWatermark2", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let watermarkUrl: string = "";
+//     let options: agorartc.WatermarkOptions = null;
+//     let paramObj = {
+//         watermarkUrl,
+//         options,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ADDVIDEOWATERMARK2, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_addVideoWatermark2 ", ret, 0);
+//     shouldEqual("IRtcEngine_addVideoWatermark2:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_clearVideoWatermark", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let paramObj = {
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_CLEARVIDEOWATERMARK, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_clearVideoWatermark ", ret, 0);
+//     shouldEqual("IRtcEngine_clearVideoWatermark:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_clearVideoWatermarks", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let paramObj = {
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_CLEARVIDEOWATERMARKS, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_clearVideoWatermarks ", ret, 0);
+//     shouldEqual("IRtcEngine_clearVideoWatermarks:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+
+// test("IRtcEngine_pauseAudio", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let paramObj = {
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_PAUSEAUDIO, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_pauseAudio ", ret, 0);
+//     shouldEqual("IRtcEngine_pauseAudio:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_resumeAudio", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let paramObj = {
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_RESUMEAUDIO, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_resumeAudio ", ret, 0);
+//     shouldEqual("IRtcEngine_resumeAudio:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_enableWebSdkInteroperability", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(true, true, true, eventHandler);
+
+//     let enabled: boolean = true;
+//     let paramObj = {
+//         enabled,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ENABLEWEBSDKINTEROPERABILITY, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_enableWebSdkInteroperability ", ret, 0);
+//     shouldEqual("IRtcEngine_enableWebSdkInteroperability:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, true);
+// });
+
+// test("IRtcEngine_sendCustomReportMessage", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let id: string = "";
+//     let category: string = "";
+//     let event: string = "";
+//     let label: string = "";
+//     let value: number = 0;
+//     let paramObj = {
+//         id,
+//         category,
+//         event,
+//         label,
+//         value,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SENDCUSTOMREPORTMESSAGE, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_sendCustomReportMessage ", ret, 0);
+//     shouldEqual("IRtcEngine_sendCustomReportMessage:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_registerMediaMetadataObserver", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let observer: agorartc.IMetadataObserver = new agorartc.IMetadataObserver();
+//     let type: agorartc.METADATA_TYPE = agorartc.METADATA_TYPE.UNKNOWN_METADATA;
+//     let paramObj = {
+//         observer,
+//         type,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_REGISTERMEDIAMETADATAOBSERVER, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_registerMediaMetadataObserver ", ret, 0);
+//     shouldEqual("IRtcEngine_registerMediaMetadataObserver:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_unregisterMediaMetadataObserver", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let observer: agorartc.IMetadataObserver = new agorartc.IMetadataObserver();
+//     let type: agorartc.METADATA_TYPE = agorartc.METADATA_TYPE.VIDEO_METADATA;
+//     let paramObj = {
+//         observer,
+//         type,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_UNREGISTERMEDIAMETADATAOBSERVER, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_unregisterMediaMetadataObserver ", ret, 0);
+//     shouldEqual("IRtcEngine_unregisterMediaMetadataObserver:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_startAudioFrameDump", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let channel_id: string = "";
+//     let user_id: agorartc.uid_t = 0;
+//     let location: string = "";
+//     let uuid: string = "";
+//     let passwd: string = "";
+//     let duration_ms: number = 0;
+//     let auto_upload: boolean = true;
+//     let paramObj = {
+//         channel_id,
+//         user_id,
+//         location,
+//         uuid,
+//         passwd,
+//         duration_ms,
+//         auto_upload,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STARTAUDIOFRAMEDUMP, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_startAudioFrameDump ", ret, 0);
+//     shouldEqual("IRtcEngine_startAudioFrameDump:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_stopAudioFrameDump", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let channel_id: string = "";
+//     let user_id: agorartc.uid_t = 0;
+//     let location: string = "";
+//     let paramObj = {
+//         channel_id,
+//         user_id,
+//         location,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STOPAUDIOFRAMEDUMP, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_stopAudioFrameDump ", ret, 0);
+//     shouldEqual("IRtcEngine_stopAudioFrameDump:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_registerLocalUserAccount", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let appId: string = "";
+//     let userAccount: string = "";
+//     let paramObj = {
+//         appId,
+//         userAccount,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_REGISTERLOCALUSERACCOUNT, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_registerLocalUserAccount ", ret, 0);
+//     shouldEqual("IRtcEngine_registerLocalUserAccount:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_joinChannelWithUserAccount", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let token: string = "";
+//     let channelId: string = "";
+//     let userAccount: string = "";
+//     let paramObj = {
+//         token,
+//         channelId,
+//         userAccount,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNELWITHUSERACCOUNT, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_joinChannelWithUserAccount ", ret, 0);
+//     shouldEqual("IRtcEngine_joinChannelWithUserAccount:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_joinChannelWithUserAccount", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let token: string = "";
+//     let channelId: string = "";
+//     let userAccount: string = "";
+//     let options: agorartc.ChannelMediaOptions = {
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//     }
+//     let paramObj = {
+//         token,
+//         channelId,
+//         userAccount,
+//         options,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNELWITHUSERACCOUNT, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_joinChannelWithUserAccount ", ret, 0);
+//     shouldEqual("IRtcEngine_joinChannelWithUserAccount:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_joinChannelWithUserAccountEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let token: string = "";
+//     let channelId: string = "";
+//     let userAccount: string = "";
+//     let options: agorartc.ChannelMediaOptions = {
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//     }
+
+//     let paramObj = {
+//         token,
+//         channelId,
+//         userAccount,
+//         options,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNELWITHUSERACCOUNTEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_joinChannelWithUserAccountEx ", ret, 0);
+//     shouldEqual("IRtcEngine_joinChannelWithUserAccountEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_getUserInfoByUserAccount", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let userAccount: string = "";
+
+//     let paramObj = {
+//         userAccount,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_GETUSERINFOBYUSERACCOUNT, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_getUserInfoByUserAccount ", ret, 0);
+//     shouldEqual("IRtcEngine_getUserInfoByUserAccount:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     shoudlWarn("IRtcEngine_getUserInfoByUserAccount:userInfo ", typeof result.userInfo == 'undefined', "userInfo=" + result.userInfo);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_getUserInfoByUid", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let uid: agorartc.uid_t = 0;
+
+//     let paramObj = {
+//         uid,
+
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_GETUSERINFOBYUID, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_getUserInfoByUid ", ret, 0);
+//     shouldEqual("IRtcEngine_getUserInfoByUid:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     shoudlWarn("IRtcEngine_getUserInfoByUserAccount:userInfo ", typeof result.userInfo == 'undefined', "userInfo=" + result.userInfo);
+
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+
+// test("IRtcEngine_setDirectCdnStreamingAudioConfiguration", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let profile: agorartc.AUDIO_PROFILE_TYPE = 0;
+//     let paramObj = {
+//         profile,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETDIRECTCDNSTREAMINGAUDIOCONFIGURATION, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_setDirectCdnStreamingAudioConfiguration ", ret, 0);
+//     shouldEqual("IRtcEngine_setDirectCdnStreamingAudioConfiguration:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_setDirectCdnStreamingVideoConfiguration", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let config: agorartc.VideoEncoderConfiguration = new agorartc.VideoEncoderConfiguration();
+//     let paramObj = {
+//         config,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETDIRECTCDNSTREAMINGVIDEOCONFIGURATION, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_setDirectCdnStreamingVideoConfiguration ", ret, 0);
+//     shouldEqual("IRtcEngine_setDirectCdnStreamingVideoConfiguration:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_startDirectCdnStreaming", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let eventHandler2: agorartc.IDirectCdnStreamingEventHandler = null;
+//     let publishUrl: string = "";
+//     let options2: agorartc.DirectCdnStreamingMediaOptions = null;
+//     let paramObj = {
+//         eventHandler: eventHandler2,
+//         publishUrl,
+//         options: options2,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STARTDIRECTCDNSTREAMING, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_startDirectCdnStreaming ", ret, 0);
+//     shouldEqual("IRtcEngine_startDirectCdnStreaming:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_stopDirectCdnStreaming", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let paramObj = {
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STOPDIRECTCDNSTREAMING, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_stopDirectCdnStreaming ", ret, 0);
+//     shouldEqual("IRtcEngine_stopDirectCdnStreaming:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_updateDirectCdnStreamingMediaOptions", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let options2: agorartc.DirectCdnStreamingMediaOptions = null;
+//     let paramObj = {
+//         options: options2,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_UPDATEDIRECTCDNSTREAMINGMEDIAOPTIONS, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_updateDirectCdnStreamingMediaOptions ", ret, 0);
+//     shouldEqual("IRtcEngine_updateDirectCdnStreamingMediaOptions:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_pushDirectCdnStreamingCustomVideoFrame", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let frame: agorartc.ExternalVideoFrame = null;
+//     let paramObj = {
+//         frame,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_PUSHDIRECTCDNSTREAMINGCUSTOMVIDEOFRAME, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_pushDirectCdnStreamingCustomVideoFrame ", ret, 0);
+//     shouldEqual("IRtcEngine_pushDirectCdnStreamingCustomVideoFrame:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_takeSnapshot", async () => {
+
+//     let remoteUid = 0;
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             if (event == "onUserJoinedEx") {
+//                 let obj = JSON.parse(data);
+//                 remoteUid = obj.remoteUid;
+//             }
+//         }
+//     };
+
+//     let apiEngine = await testBegine(true, true, true, eventHandler);
+
+//     //验证本地截图
+//     let config: agorartc.SnapShotConfig = {
+//         channel: commonChannelId,
+//         uid: 0,
+//         filePath: "/Users/xiayangqun/Downloads/Local.png",
+//     }
+//     let callback: agorartc.ISnapshotCallback = null;
+//     let paramObj = {
+//         config,
+//         callback,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_TAKESNAPSHOT, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_takeSnapshot Local ", ret, 0);
+//     shouldEqual("IRtcEngine_takeSnapshot Local :result ", result.result, 0);
+
+//     //验证远端不存在的截图
+//     config = {
+//         channel: commonChannelId,
+//         uid: 10086,
+//         filePath: "/Users/xiayangqun/Downloads/noRemote.png",
+//     }
+
+//     paramObj = {
+//         config,
+//         callback,
+//     }
+//     params = JSON.stringify(paramObj);
+//     ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_TAKESNAPSHOT, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_takeSnapshot with no remote ", ret, 0);
+//     shouldEqual("IRtcEngine_takeSnapshot  with no remote :result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY);
+//     await waitForSecond(3);
+
+//     //验证远端存在的截图
+//     if (remoteUid != 0) {
+//         config = {
+//             channel: commonChannelId,
+//             uid: remoteUid,
+//             filePath: "/Users/xiayangqun/Downloads/haveRemote.png",
+//         }
+//         paramObj = {
+//             config,
+//             callback,
+//         }
+//         params = JSON.stringify(paramObj);
+//         ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_TAKESNAPSHOT, params, params.length, null, 0, result);
+
+//         shouldEqual("callApi:IRtcEngine_takeSnapshot with had remote ", ret, 0);
+//         shouldEqual("IRtcEngine_takeSnapshot  with had remote :result ", result.result, 0);
+//     }
+//     else {
+//         shoudlWarn("callApi:IRtcEngine_takeSnapshot remote uid ", remoteUid == 0, "remoteUid" + remoteUid);
+//     }
+
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_SetContentInspect", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let config: agorartc.ContentInspectConfig = {
+//         enable: true,
+//         DeviceWork: true,
+//         CloudWork: true,
+//         extraInfo: "",
+//         modules: [
+//             {
+//                 type: agorartc.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_MODERATION,
+//                 frequency: 1,
+//             }
+//         ],
+//         moduleCount: 1,
+//     }
+//     let paramObj = {
+//         config,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETCONTENTINSPECT, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_SetContentInspect ", ret, 0);
+//     shouldEqual("IRtcEngine_SetContentInspect:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// }  );
+
+// test("IRtcEngine_switchChannel", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(true, true, true, eventHandler);
+
+//     let token: string = "";
+//     let channel: string = commonChannelId + "_1";
+//     let paramObj = {
+//         token,
+//         channel,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SWITCHCHANNEL, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_switchChannel ", ret, 0);
+//     shouldEqual("IRtcEngine_switchChannel:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, true);
+// });
+
+// test("IRtcEngine_startRhythmPlayer", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let sound1: string = "";
+//     let sound2: string = "";
+//     let config: agorartc.AgoraRhythmPlayerConfig = {
+//         beatsPerMeasure: 10,
+//         beatsPerMinute: 3,
+//     };
+//     let paramObj = {
+//         sound1,
+//         sound2,
+//         config,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STARTRHYTHMPLAYER, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_startRhythmPlayer ", ret, 0);
+//     shouldEqual("IRtcEngine_startRhythmPlayer:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_stopRhythmPlayer", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let paramObj = {
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_STOPRHYTHMPLAYER, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_stopRhythmPlayer ", ret, 0);
+//     shouldEqual("IRtcEngine_stopRhythmPlayer:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_configRhythmPlayer", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let config: agorartc.AgoraRhythmPlayerConfig = {
+//         beatsPerMeasure: 10,
+//         beatsPerMinute: 3,
+//     };
+//     let paramObj = {
+//         config,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_CONFIGRHYTHMPLAYER, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_configRhythmPlayer ", ret, 0);
+//     shouldEqual("IRtcEngine_configRhythmPlayer:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_adjustCustomAudioPublishVolume", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let sourceId: number = 0;
+//     let volume: number = 0;
+//     let paramObj = {
+//         sourceId,
+//         volume,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ADJUSTCUSTOMAUDIOPUBLISHVOLUME, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_adjustCustomAudioPublishVolume ", ret, 0);
+//     shouldEqual("IRtcEngine_adjustCustomAudioPublishVolume:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_adjustCustomAudioPlayoutVolume", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let sourceId: number = 0;
+//     let volume: number = 0;
+//     let paramObj = {
+//         sourceId,
+//         volume,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ADJUSTCUSTOMAUDIOPLAYOUTVOLUME, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_adjustCustomAudioPlayoutVolume ", ret, 0);
+//     shouldEqual("IRtcEngine_adjustCustomAudioPlayoutVolume:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_setCloudProxy", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let proxyType: agorartc.CLOUD_PROXY_TYPE = agorartc.CLOUD_PROXY_TYPE.TCP_PROXY;
+//     let paramObj = {
+//         proxyType,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETCLOUDPROXY, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_setCloudProxy ", ret, 0);
+//     shouldEqual("IRtcEngine_setCloudProxy:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_setLocalAccessPoint", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let config: agorartc.LocalAccessPointConfiguration = null;
+//     let paramObj = {
+//         config,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETLOCALACCESSPOINT, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_setLocalAccessPoint ", ret, 0);
+//     shouldEqual("IRtcEngine_setLocalAccessPoint:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_enableFishCorrection", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let enabled: boolean = true;
+//     let params2: agorartc.FishCorrectionParams = null;
+//     let paramObj = {
+//         enabled,
+//         params: params2,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ENABLEFISHCORRECTION, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_enableFishCorrection ", ret, 0);
+//     shouldEqual("IRtcEngine_enableFishCorrection:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("IRtcEngine_setAdvancedAudioOptions", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let options: agorartc.AdvancedAudioOptions = {
+//         audioProcessingChannels: 2,
+//     }
+//     let paramObj = {
+//         options,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETADVANCEDAUDIOOPTIONS, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_setAdvancedAudioOptions ", ret, 0);
+//     shouldEqual("IRtcEngine_setAdvancedAudioOptions:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// }  );
+
+// test("IRtcEngine_setAVSyncSource", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let channelId: string = "";
+//     let uid: agorartc.uid_t = 0;
+//     let paramObj = {
+//         channelId,
+//         uid,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETAVSYNCSOURCE, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngine_setAVSyncSource ", ret, 0);
+//     shouldEqual("IRtcEngine_setAVSyncSource:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// //IRtcEngineEx
+
+// test("IRtcEngineEx_setVideoEncoderConfigurationEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
+
+//     let config: agorartc.VideoEncoderConfiguration = new agorartc.VideoEncoderConfiguration();
+//     config.dimensions = { width: 1920, height: 720 };
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     };
+//     let paramObj = {
+//         config,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETVIDEOENCODERCONFIGURATIONEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_setVideoEncoderConfigurationEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_setVideoEncoderConfigurationEx:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, true, commonUidEx);
+// });
+
+// test("IRtcEngineEx_setupRemoteVideoEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+//     let canvas: agorartc.VideoCanvas = null;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let paramObj = {
+//         canvas,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETUPREMOTEVIDEOEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_setupRemoteVideoEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_setupRemoteVideoEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
+
+// test("IRtcEngineEx_muteRemoteAudioStreamEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
+
+//     let uid: agorartc.uid_t = 0;
+//     let mute: boolean = true;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+//     let paramObj = {
+//         uid,
+//         mute,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_MUTEREMOTEAUDIOSTREAMEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_muteRemoteAudioStreamEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_muteRemoteAudioStreamEx:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, true, commonUidEx);
+// });
+
+// test("IRtcEngineEx_muteRemoteVideoStreamEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
+
+
+//     let uid: agorartc.uid_t = 0;
+//     let mute: boolean = true;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+//     let paramObj = {
+//         uid,
+//         mute,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_MUTEREMOTEVIDEOSTREAMEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_muteRemoteVideoStreamEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_muteRemoteVideoStreamEx:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, true, commonUidEx);
+// });
+
+// test("IRtcEngineEx_setRemoteVideoStreamTypeEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
+
+//     let uid: agorartc.uid_t = 0;
+
+//     let streamType: agorartc.VIDEO_STREAM_TYPE = 0;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+//     let paramObj = {
+//         uid,
+//         streamType,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETREMOTEVIDEOSTREAMTYPEEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_setRemoteVideoStreamTypeEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_setRemoteVideoStreamTypeEx:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, true, commonUidEx);
+// });
+
+// test("IRtcEngineEx_setRemoteVoicePositionEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let uid: agorartc.uid_t = 0;
+//     let pan: number = 0;
+//     let gain: number = 0;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let paramObj = {
+//         uid,
+//         pan,
+//         gain,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETREMOTEVOICEPOSITIONEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_setRemoteVoicePositionEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_setRemoteVoicePositionEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
+
+// test("IRtcEngineEx_setRemoteUserSpatialAudioParamsEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let uid: agorartc.uid_t = 0;
+//     let params2: agorartc.SpatialAudioParams = null
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+//     let paramObj = {
+//         uid,
+//         params: params2,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETREMOTEUSERSPATIALAUDIOPARAMSEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_setRemoteUserSpatialAudioParamsEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_setRemoteUserSpatialAudioParamsEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
+
+// test("IRtcEngineEx_setRemoteRenderModeEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
+
+
+//     let uid: agorartc.uid_t = 0;
+//     let renderMode: agorartc.RENDER_MODE_TYPE = 0;
+//     let mirrorMode: agorartc.VIDEO_MIRROR_MODE_TYPE = 0;
+
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+//     let paramObj = {
+//         uid,
+//         renderMode,
+//         mirrorMode,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETREMOTERENDERMODEEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_setRemoteRenderModeEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_setRemoteRenderModeEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, true, commonUidEx);
+// }  );
+
+// test("IRtcEngineEx_enableLoopbackRecordingEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let enabled: boolean = true;
+//     let deviceName: string = "";
+//     let paramObj = {
+//         connection,
+//         enabled,
+//         deviceName,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_ENABLELOOPBACKRECORDINGEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_enableLoopbackRecordingEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_enableLoopbackRecordingEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
+
+// test("IRtcEngineEx_getConnectionStateEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
+
+
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let paramObj = {
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_GETCONNECTIONSTATEEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_getConnectionStateEx ", ret, 0);
+//     shoudlWarn("IRtcEngineEx_getConnectionStateEx:result ", result.result != agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTING && result.result != agorartc.CONNECTION_STATE_TYPE.CONNECTION_STATE_CONNECTED, "result=" + result.result);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, true, commonUidEx);
+// });
+
+// //todo 需要特殊Case
 test("IRtcEngineEx_enableEncryptionEx", async () => {
 
     let eventHandler: IrisEventHandler = {
@@ -9772,7 +9818,7 @@ test("IRtcEngineEx_enableEncryptionEx", async () => {
         publishAudioTrack: true,
         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
     };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+    let apiEngine = await testBegineEx(true, true, false, eventHandler, commonUidEx, options);
 
 
     let connection: agorartc.RtcConnection = {
@@ -9782,11 +9828,11 @@ test("IRtcEngineEx_enableEncryptionEx", async () => {
 
     let enabled: boolean = true;
     let config: agorartc.EncryptionConfig = {
-        encryptionMode: agorartc.ENCRYPTION_MODE.AES_128_ECB,
-        encryptionKey: "hello",
-        encryptionKdfSalt: null,
+        encryptionMode: agorartc.ENCRYPTION_MODE.AES_128_GCM2,
+        encryptionKey: "Hello_Unity",
+        encryptionKdfSalt: [69, 110, 99, 114, 121, 112, 116, 105, 111, 110, 75, 100, 102, 83, 97, 108, 116, 73, 110, 66, 97, 115, 101, 54, 52, 83, 116, 114, 105, 110, 103, 115],
     }
-    let paramObj = {
+    let paramObj: any = {
         connection,
         enabled,
         config,
@@ -9797,1248 +9843,1243 @@ test("IRtcEngineEx_enableEncryptionEx", async () => {
 
     shouldEqual("callApi:IRtcEngineEx_enableEncryptionEx ", ret, 0);
     shouldEqual("IRtcEngineEx_enableEncryptionEx:result ", result.result, 0);
-    await waitForSecond(1);
+
+
+    let token = "";
+    paramObj = {
+        token,
+        connection,
+        options,
+    };
+    result = {};
+    params = JSON.stringify(paramObj);
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_JOINCHANNELEX, params, params.length, null, null, result);
+    shouldEqual("joinChannelEx: ", result.result, 0);
+    await waitForSecond(30);
+
 
     await testEndEx(apiEngine, true, commonUidEx);
-});
-
-test("IRtcEngineEx_createDataStreamEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let streamId: number = 0;
-    let reliable: boolean = true;
-    let ordered: boolean = true;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-    let paramObj = {
-        streamId,
-        reliable,
-        ordered,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_CREATEDATASTREAMEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_createDataStreamEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_createDataStreamEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, true, commonUidEx);
-}, Priority.High);
-
-test("IRtcEngineEx_createDataStreamEx2", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let streamId: number = 0;
-    let config: agorartc.DataStreamConfig = null;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let paramObj = {
-        streamId,
-        config,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_CREATEDATASTREAMEX2, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_createDataStreamEx2 ", ret, 0);
-    shouldEqual("IRtcEngineEx_createDataStreamEx2:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
-
-test("IRtcEngineEx_sendStreamMessageEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
+}  );
+
+// test("IRtcEngineEx_createDataStreamEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let streamId: number = 0;
+//     let reliable: boolean = true;
+//     let ordered: boolean = true;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+//     let paramObj = {
+//         streamId,
+//         reliable,
+//         ordered,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_CREATEDATASTREAMEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_createDataStreamEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_createDataStreamEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, true, commonUidEx);
+// }  );
+
+// test("IRtcEngineEx_createDataStreamEx2", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let streamId: number = 0;
+//     let config: agorartc.DataStreamConfig = null;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let paramObj = {
+//         streamId,
+//         config,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_CREATEDATASTREAMEX2, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_createDataStreamEx2 ", ret, 0);
+//     shouldEqual("IRtcEngineEx_createDataStreamEx2:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
+
+// test("IRtcEngineEx_sendStreamMessageEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
 
 
-    let streamId: number = 0;
-    let data: string = "";
-    let length: number = 0;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-    let paramObj = {
-        streamId,
-        data,
-        length,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SENDSTREAMMESSAGEEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_sendStreamMessageEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_sendStreamMessageEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
-
-test("IRtcEngineEx_addVideoWatermarkEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let watermarkUrl: string = "";
-    let options2: agorartc.WatermarkOptions = null;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-    let paramObj = {
-        watermarkUrl,
-        options: options2,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_ADDVIDEOWATERMARKEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_addVideoWatermarkEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_addVideoWatermarkEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-}, Priority.High);
-
-test("IRtcEngineEx_clearVideoWatermarkEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let paramObj = {
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_CLEARVIDEOWATERMARKEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_clearVideoWatermarkEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_clearVideoWatermarkEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
-
-test("IRtcEngineEx_sendCustomReportMessageEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
-
-
-
-    let id: string = "";
-    let category: string = "";
-    let event: string = "";
-    let label: string = "";
-    let value: number = 0;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let paramObj = {
-        id,
-        category,
-        event,
-        label,
-        value,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SENDCUSTOMREPORTMESSAGEEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_sendCustomReportMessageEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_sendCustomReportMessageEx:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, true, commonUidEx);
-});
-
-test("IRtcEngineEx_enableAudioVolumeIndicationEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
-
-
-    let interval: number = 0;
-    let smooth: number = 0;
-    let reportVad: boolean = true;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let paramObj = {
-        interval,
-        smooth,
-        reportVad,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_ENABLEAUDIOVOLUMEINDICATIONEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_enableAudioVolumeIndicationEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_enableAudioVolumeIndicationEx:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, true, commonUidEx);
-});
-
-test("IRtcEngineEx_getUserInfoByUserAccountEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-
-    let userAccount: string = "";
-    let userInfo: agorartc.UserInfo = { uid: 0, userAccount: "" };
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let paramObj = {
-        userAccount,
-        userInfo,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_GETUSERINFOBYUSERACCOUNTEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_getUserInfoByUserAccountEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_getUserInfoByUserAccountEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
-
-test("IRtcEngineEx_getUserInfoByUidEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let uid: agorartc.uid_t = 0;
-    let userInfo: agorartc.UserInfo = { uid: 0, userAccount: "" };
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-    let paramObj = {
-        uid,
-        userInfo,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_GETUSERINFOBYUIDEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_getUserInfoByUidEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_getUserInfoByUidEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-}, Priority.High);
-
-test("IRtcEngineEx_setVideoProfileEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let width: number = 0;
-    let height: number = 0;
-    let frameRate: number = 0;
-    let bitrate: number = 0;
-    let paramObj = {
-        width,
-        height,
-        frameRate,
-        bitrate,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETVIDEOPROFILEEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_setVideoProfileEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_setVideoProfileEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
-
-test("IRtcEngineEx_enableDualStreamModeEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
-
-
-
-    let sourceType: agorartc.VIDEO_SOURCE_TYPE = 0;
-    let enabled: boolean = true;
-    let streamConfig: agorartc.SimulcastStreamConfig = {
-        dimensions: { width: 320, height: 240 },
-        bitrate: 130,
-        framerate: 5,
-    }
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let paramObj = {
-        sourceType,
-        enabled,
-        streamConfig,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_ENABLEDUALSTREAMMODEEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_enableDualStreamModeEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_enableDualStreamModeEx:result ", result.result, 0);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, true, commonUidEx);
-});
-
-test("IRtcEngineEx_addPublishStreamUrlEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let url: string = "";
-    let transcodingEnabled: boolean = true;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-    let paramObj = {
-        url,
-        transcodingEnabled,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_ADDPUBLISHSTREAMURLEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:IRtcEngineEx_addPublishStreamUrlEx ", ret, 0);
-    shouldEqual("IRtcEngineEx_addPublishStreamUrlEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-}, Priority.High);
-
-//ILocalSpatialAudioEngine
-
-
-
-test("ILocalSpatialAudioEngine_updateRemotePosition", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let uid: agorartc.uid_t = 0;
-    let posInfo: agorartc.RemoteVoicePositionInfo = {
-        position: [0, 0, 0],
-        forward: [0, 0, 0]
-    }
-    let paramObj = {
-        uid,
-        posInfo,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_UPDATEREMOTEPOSITION, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:ILocalSpatialAudioEngine_updateRemotePosition ", ret, 0);
-    shouldEqual("ILocalSpatialAudioEngine_updateRemotePosition:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("ILocalSpatialAudioEngine_updateRemotePositionEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-
-    let uid: agorartc.uid_t = 0;
-    let posInfo: agorartc.RemoteVoicePositionInfo = {
-        position: [0, 0, 0],
-        forward: [0, 0, 0]
-    }
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let paramObj = {
-        uid,
-        posInfo,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_UPDATEREMOTEPOSITIONEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:ILocalSpatialAudioEngine_updateRemotePositionEx ", ret, 0);
-    shouldEqual("ILocalSpatialAudioEngine_updateRemotePositionEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
-
-test("ILocalSpatialAudioEngine_removeRemotePosition", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let uid: agorartc.uid_t = 0;
-    let paramObj = {
-        uid,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_REMOVEREMOTEPOSITION, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:ILocalSpatialAudioEngine_removeRemotePosition ", ret, 0);
-    shouldEqual("ILocalSpatialAudioEngine_removeRemotePosition:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("ILocalSpatialAudioEngine_removeRemotePositionEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let uid: agorartc.uid_t = 0;
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-    let paramObj = {
-        uid,
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_REMOVEREMOTEPOSITIONEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:ILocalSpatialAudioEngine_removeRemotePositionEx ", ret, 0);
-    shouldEqual("ILocalSpatialAudioEngine_removeRemotePositionEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
-
-test("ILocalSpatialAudioEngine_clearRemotePositions", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-    let apiEngine = await testBegine(false, false, false, eventHandler);
-
-    let paramObj = {
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_CLEARREMOTEPOSITIONS, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:ILocalSpatialAudioEngine_clearRemotePositions ", ret, 0);
-    shouldEqual("ILocalSpatialAudioEngine_clearRemotePositions:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEnd(apiEngine, false);
-});
-
-test("ILocalSpatialAudioEngine_clearRemotePositionsEx", async () => {
-
-    let eventHandler: IrisEventHandler = {
-        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-            //do something in there
-        }
-    };
-
-
-    let options: agorartc.ChannelMediaOptions = {
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
-        publishCameraTrack: true,
-        publishAudioTrack: true,
-        clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-    };
-    let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
-
-
-    let connection: agorartc.RtcConnection = {
-        channelId: commonChannelId,
-        localUid: commonUidEx,
-    }
-
-    let paramObj = {
-        connection,
-    }
-    let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_CLEARREMOTEPOSITIONSEX, params, params.length, null, 0, result);
-
-    shouldEqual("callApi:ILocalSpatialAudioEngine_clearRemotePositionsEx ", ret, 0);
-    shouldEqual("ILocalSpatialAudioEngine_clearRemotePositionsEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-    await waitForSecond(1);
-    await testEndEx(apiEngine, false, commonUidEx);
-});
+//     let streamId: number = 0;
+//     let data: string = "";
+//     let length: number = 0;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+//     let paramObj = {
+//         streamId,
+//         data,
+//         length,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SENDSTREAMMESSAGEEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_sendStreamMessageEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_sendStreamMessageEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
+
+// test("IRtcEngineEx_addVideoWatermarkEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let watermarkUrl: string = "";
+//     let options2: agorartc.WatermarkOptions = null;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+//     let paramObj = {
+//         watermarkUrl,
+//         options: options2,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_ADDVIDEOWATERMARKEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_addVideoWatermarkEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_addVideoWatermarkEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// }  );
+
+// test("IRtcEngineEx_clearVideoWatermarkEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let paramObj = {
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_CLEARVIDEOWATERMARKEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_clearVideoWatermarkEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_clearVideoWatermarkEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
+
+// test("IRtcEngineEx_sendCustomReportMessageEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
+
+
+
+//     let id: string = "";
+//     let category: string = "";
+//     let event: string = "";
+//     let label: string = "";
+//     let value: number = 0;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let paramObj = {
+//         id,
+//         category,
+//         event,
+//         label,
+//         value,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SENDCUSTOMREPORTMESSAGEEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_sendCustomReportMessageEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_sendCustomReportMessageEx:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, true, commonUidEx);
+// });
+
+// test("IRtcEngineEx_enableAudioVolumeIndicationEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
+
+
+//     let interval: number = 0;
+//     let smooth: number = 0;
+//     let reportVad: boolean = true;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let paramObj = {
+//         interval,
+//         smooth,
+//         reportVad,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_ENABLEAUDIOVOLUMEINDICATIONEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_enableAudioVolumeIndicationEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_enableAudioVolumeIndicationEx:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, true, commonUidEx);
+// });
+
+// test("IRtcEngineEx_getUserInfoByUserAccountEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+
+//     let userAccount: string = "";
+//     let userInfo: agorartc.UserInfo = { uid: 0, userAccount: "" };
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let paramObj = {
+//         userAccount,
+//         userInfo,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_GETUSERINFOBYUSERACCOUNTEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_getUserInfoByUserAccountEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_getUserInfoByUserAccountEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
+
+// test("IRtcEngineEx_getUserInfoByUidEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let uid: agorartc.uid_t = 0;
+//     let userInfo: agorartc.UserInfo = { uid: 0, userAccount: "" };
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+//     let paramObj = {
+//         uid,
+//         userInfo,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_GETUSERINFOBYUIDEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_getUserInfoByUidEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_getUserInfoByUidEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// }  );
+
+// test("IRtcEngineEx_setVideoProfileEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let width: number = 0;
+//     let height: number = 0;
+//     let frameRate: number = 0;
+//     let bitrate: number = 0;
+//     let paramObj = {
+//         width,
+//         height,
+//         frameRate,
+//         bitrate,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_SETVIDEOPROFILEEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_setVideoProfileEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_setVideoProfileEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
+
+// test("IRtcEngineEx_enableDualStreamModeEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(true, true, true, eventHandler, commonUidEx, options);
+
+
+
+//     let sourceType: agorartc.VIDEO_SOURCE_TYPE = 0;
+//     let enabled: boolean = true;
+//     let streamConfig: agorartc.SimulcastStreamConfig = {
+//         dimensions: { width: 320, height: 240 },
+//         bitrate: 130,
+//         framerate: 5,
+//     }
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let paramObj = {
+//         sourceType,
+//         enabled,
+//         streamConfig,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_ENABLEDUALSTREAMMODEEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_enableDualStreamModeEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_enableDualStreamModeEx:result ", result.result, 0);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, true, commonUidEx);
+// });
+
+// test("IRtcEngineEx_addPublishStreamUrlEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let url: string = "";
+//     let transcodingEnabled: boolean = true;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+//     let paramObj = {
+//         url,
+//         transcodingEnabled,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINEEX_ADDPUBLISHSTREAMURLEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:IRtcEngineEx_addPublishStreamUrlEx ", ret, 0);
+//     shouldEqual("IRtcEngineEx_addPublishStreamUrlEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// }  );
+
+// //ILocalSpatialAudioEngine
+
+
+
+// test("ILocalSpatialAudioEngine_updateRemotePosition", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let uid: agorartc.uid_t = 0;
+//     let posInfo: agorartc.RemoteVoicePositionInfo = {
+//         position: [0, 0, 0],
+//         forward: [0, 0, 0]
+//     }
+//     let paramObj = {
+//         uid,
+//         posInfo,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_UPDATEREMOTEPOSITION, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:ILocalSpatialAudioEngine_updateRemotePosition ", ret, 0);
+//     shouldEqual("ILocalSpatialAudioEngine_updateRemotePosition:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("ILocalSpatialAudioEngine_updateRemotePositionEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+
+//     let uid: agorartc.uid_t = 0;
+//     let posInfo: agorartc.RemoteVoicePositionInfo = {
+//         position: [0, 0, 0],
+//         forward: [0, 0, 0]
+//     }
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let paramObj = {
+//         uid,
+//         posInfo,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_UPDATEREMOTEPOSITIONEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:ILocalSpatialAudioEngine_updateRemotePositionEx ", ret, 0);
+//     shouldEqual("ILocalSpatialAudioEngine_updateRemotePositionEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
+
+// test("ILocalSpatialAudioEngine_removeRemotePosition", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let uid: agorartc.uid_t = 0;
+//     let paramObj = {
+//         uid,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_REMOVEREMOTEPOSITION, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:ILocalSpatialAudioEngine_removeRemotePosition ", ret, 0);
+//     shouldEqual("ILocalSpatialAudioEngine_removeRemotePosition:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("ILocalSpatialAudioEngine_removeRemotePositionEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let uid: agorartc.uid_t = 0;
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+//     let paramObj = {
+//         uid,
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_REMOVEREMOTEPOSITIONEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:ILocalSpatialAudioEngine_removeRemotePositionEx ", ret, 0);
+//     shouldEqual("ILocalSpatialAudioEngine_removeRemotePositionEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
+
+// test("ILocalSpatialAudioEngine_clearRemotePositions", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+//     let apiEngine = await testBegine(false, false, false, eventHandler);
+
+//     let paramObj = {
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_CLEARREMOTEPOSITIONS, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:ILocalSpatialAudioEngine_clearRemotePositions ", ret, 0);
+//     shouldEqual("ILocalSpatialAudioEngine_clearRemotePositions:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEnd(apiEngine, false);
+// });
+
+// test("ILocalSpatialAudioEngine_clearRemotePositionsEx", async () => {
+
+//     let eventHandler: IrisEventHandler = {
+//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+//             //do something in there
+//         }
+//     };
+
+
+//     let options: agorartc.ChannelMediaOptions = {
+//         autoSubscribeAudio: true,
+//         autoSubscribeVideo: true,
+//         publishCameraTrack: true,
+//         publishAudioTrack: true,
+//         clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+//     };
+//     let apiEngine = await testBegineEx(false, false, false, eventHandler, commonUidEx, options);
+
+
+//     let connection: agorartc.RtcConnection = {
+//         channelId: commonChannelId,
+//         localUid: commonUidEx,
+//     }
+
+//     let paramObj = {
+//         connection,
+//     }
+//     let params = JSON.stringify(paramObj);
+//     let result: any = {};
+//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_LOCALSPATIALAUDIOENGINE_CLEARREMOTEPOSITIONSEX, params, params.length, null, 0, result);
+
+//     shouldEqual("callApi:ILocalSpatialAudioEngine_clearRemotePositionsEx ", ret, 0);
+//     shouldEqual("ILocalSpatialAudioEngine_clearRemotePositionsEx:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+//     await waitForSecond(1);
+//     await testEndEx(apiEngine, false, commonUidEx);
+// });
 
 //IAudioDeviceManager
 
-// test("IAudioDeviceManager_enumeratePlaybackDevices", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let paramObj = {
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_ENUMERATEPLAYBACKDEVICES, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_enumeratePlaybackDevices ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_enumeratePlaybackDevices:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_enumerateRecordingDevices", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let paramObj = {
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_ENUMERATERECORDINGDEVICES, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_enumerateRecordingDevices ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_enumerateRecordingDevices:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_setPlaybackDevice", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let deviceId: string = "";
-//     let paramObj = {
-//         deviceId,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETPLAYBACKDEVICE, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_setPlaybackDevice ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_setPlaybackDevice:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_getPlaybackDevice", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let deviceId: string = "";
-//     let paramObj = {
-//         deviceId,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETPLAYBACKDEVICE, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_getPlaybackDevice ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_getPlaybackDevice:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_getPlaybackDeviceInfo", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let deviceId: string = "";
-//     let deviceName: string = "";
-//     let paramObj = {
-//         deviceId,
-//         deviceName,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETPLAYBACKDEVICEINFO, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_getPlaybackDeviceInfo ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_getPlaybackDeviceInfo:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_setPlaybackDeviceVolume", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let volume: number = 0;
-//     let paramObj = {
-//         volume,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETPLAYBACKDEVICEVOLUME, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_setPlaybackDeviceVolume ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_setPlaybackDeviceVolume:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_getPlaybackDeviceVolume", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let volume: number = 0;
-//     let paramObj = {
-//         volume,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETPLAYBACKDEVICEVOLUME, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_getPlaybackDeviceVolume ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_getPlaybackDeviceVolume:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_setRecordingDevice", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let deviceId: string = "";
-//     let paramObj = {
-//         deviceId,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETRECORDINGDEVICE, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_setRecordingDevice ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_setRecordingDevice:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_getRecordingDevice", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let deviceId: string = "";
-//     let paramObj = {
-//         deviceId,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETRECORDINGDEVICE, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_getRecordingDevice ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_getRecordingDevice:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_getRecordingDeviceInfo", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let deviceId: string = "";
-//     let deviceName: string = "";
-//     let paramObj = {
-//         deviceId,
-//         deviceName,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETRECORDINGDEVICEINFO, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_getRecordingDeviceInfo ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_getRecordingDeviceInfo:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_setRecordingDeviceVolume", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let volume: number = 0;
-//     let paramObj = {
-//         volume,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETRECORDINGDEVICEVOLUME, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_setRecordingDeviceVolume ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_setRecordingDeviceVolume:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_getRecordingDeviceVolume", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let volume: number = 0;
-//     let paramObj = {
-//         volume,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETRECORDINGDEVICEVOLUME, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_getRecordingDeviceVolume ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_getRecordingDeviceVolume:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_setPlaybackDeviceMute", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let mute: boolean = true;
-//     let paramObj = {
-//         mute,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETPLAYBACKDEVICEMUTE, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_setPlaybackDeviceMute ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_setPlaybackDeviceMute:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_getPlaybackDeviceMute", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let mute: boolean = true;
-//     let paramObj = {
-//         mute,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETPLAYBACKDEVICEMUTE, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_getPlaybackDeviceMute ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_getPlaybackDeviceMute:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_setRecordingDeviceMute", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let mute: boolean = true;
-//     let paramObj = {
-//         mute,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETRECORDINGDEVICEMUTE, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_setRecordingDeviceMute ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_setRecordingDeviceMute:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_getRecordingDeviceMute", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let mute: boolean = true;
-//     let paramObj = {
-//         mute,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETRECORDINGDEVICEMUTE, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_getRecordingDeviceMute ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_getRecordingDeviceMute:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_startPlaybackDeviceTest", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let testAudioFilePath: string = "";
-//     let paramObj = {
-//         testAudioFilePath,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STARTPLAYBACKDEVICETEST, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_startPlaybackDeviceTest ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_startPlaybackDeviceTest:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_stopPlaybackDeviceTest", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let paramObj = {
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STOPPLAYBACKDEVICETEST, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_stopPlaybackDeviceTest ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_stopPlaybackDeviceTest:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_startRecordingDeviceTest", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let indicationInterval: number = 0;
-//     let paramObj = {
-//         indicationInterval,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STARTRECORDINGDEVICETEST, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_startRecordingDeviceTest ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_startRecordingDeviceTest:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_stopRecordingDeviceTest", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let paramObj = {
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STOPRECORDINGDEVICETEST, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_stopRecordingDeviceTest ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_stopRecordingDeviceTest:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_startAudioDeviceLoopbackTest", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let indicationInterval: number = 0;
-//     let paramObj = {
-//         indicationInterval,
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STARTAUDIODEVICELOOPBACKTEST, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_startAudioDeviceLoopbackTest ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_startAudioDeviceLoopbackTest:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_stopAudioDeviceLoopbackTest", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let paramObj = {
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STOPAUDIODEVICELOOPBACKTEST, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_stopAudioDeviceLoopbackTest ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_stopAudioDeviceLoopbackTest:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
-// test("IAudioDeviceManager_release", async () => {
-
-//     let eventHandler: IrisEventHandler = {
-//         onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
-//             //do something in there
-//         }
-//     };
-
-//     let apiEngine = await testBegine(false, false, false, eventHandler);
-
-//     let paramObj = {
-//     }
-//     let params = JSON.stringify(paramObj);
-//     let result: any = {};
-//     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_RELEASE, params, params.length, null, 0, result);
-
-//     shouldEqual("callApi:IAudioDeviceManager_release ", ret, 0);
-//     shouldEqual("IAudioDeviceManager_release:result ", result.result, 0);
-//     await waitForSecond(1);
-//     await testEnd(apiEngine, false);
-// });
-
+test("IAudioDeviceManager_enumeratePlaybackDevices_setPlaybackDevices", async () => {
+
+    let events: string[] = [];
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+            events.push(event);
+        }
+    };
+
+    let apiEngine = await testBegine(true, true, true, eventHandler);
+
+    let paramObj = {
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_ENUMERATEPLAYBACKDEVICES, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_enumeratePlaybackDevices ", ret, 0);
+    shoudlWarn("IAudioDeviceManager_enumeratePlaybackDevices:result ", typeof result.result.length != "number", "length=" + result.result.length);
+    await waitForSecond(2);
+    shoudlWarn("IAudioDeviceManager_enumeratePlaybackDevices WebGL_onPlaybackDevicesEnumerated", events.includes("WebGL_onPlaybackDevicesEnumerated") == false, "events.length=" + events.length);
+
+    let devices: agorartc.DeviceInfo[] = result.result;
+    let deviceId: string = devices[0].deviceId;
+    paramObj = {
+        deviceId,
+    }
+    params = JSON.stringify(paramObj);
+    result = {};
+    ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETPLAYBACKDEVICE, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_setPlaybackDevice ", ret, 0);
+    shouldEqual("IAudioDeviceManager_setPlaybackDevice:result ", result.result, 0);
+    await waitForSecond(1);
+
+    await waitForSecond(1);
+    await testEnd(apiEngine, true);
+});
+
+test("IAudioDeviceManager_enumerateRecordingDevices", async () => {
+
+    let events: string[] = [];
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+            events.push(event);
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let paramObj = {
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_ENUMERATERECORDINGDEVICES, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_enumerateRecordingDevices ", ret, 0);
+    shoudlWarn("IAudioDeviceManager_enumerateRecordingDevices:result ", typeof result.result.length != "number", "length=" + result.result.length);
+    await waitForSecond(2);
+    shoudlWarn("IAudioDeviceManager_enumeratePlaybackDevices WebGL_onRecordingDevicesEnumerated", events.includes("WebGL_onRecordingDevicesEnumerated") == false, "events.length=" + events.length);
+
+
+
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+
+
+test("IAudioDeviceManager_getPlaybackDevice", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let deviceId: string = "";
+    let paramObj = {
+        deviceId,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETPLAYBACKDEVICE, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_getPlaybackDevice ", ret, 0);
+    shoudlWarn("IAudioDeviceManager_getPlaybackDevice:result ", typeof result.result != "string", 'result=' + result.result);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_getPlaybackDeviceInfo", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let deviceId: string = "";
+    let deviceName: string = "";
+    let paramObj = {
+        deviceId,
+        deviceName,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETPLAYBACKDEVICEINFO, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_getPlaybackDeviceInfo ", ret, 0);
+    shoudlWarn("IAudioDeviceManager_getPlaybackDeviceInfo deviceId:result ", typeof result.result.deviceId != "string", "deviceId=" + result.result.deviceId);
+    shoudlWarn("IAudioDeviceManager_getPlaybackDeviceInfo deviceName:result ", typeof result.result.deviceName != "string", "deviceName=" + result.result.deviceName);
+
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_setPlaybackDeviceVolume", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let volume: number = 50;
+    let paramObj = {
+        volume,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETPLAYBACKDEVICEVOLUME, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_setPlaybackDeviceVolume ", ret, 0);
+    shouldEqual("IAudioDeviceManager_setPlaybackDeviceVolume:result ", result.result, 0);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_getPlaybackDeviceVolume", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let volume: number = 0;
+    let paramObj = {
+        volume,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETPLAYBACKDEVICEVOLUME, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_getPlaybackDeviceVolume ", ret, 0);
+    shoudlWarn("IAudioDeviceManager_getPlaybackDeviceVolume:result ", typeof result.result != "number", "result=" + result.result);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_setRecordingDevice", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let deviceId: string = "";
+    let paramObj = {
+        deviceId,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETRECORDINGDEVICE, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_setRecordingDevice ", ret, 0);
+    shouldEqual("IAudioDeviceManager_setRecordingDevice:result ", result.result, 0);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_getRecordingDevice", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let deviceId: string = "";
+    let paramObj = {
+        deviceId,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETRECORDINGDEVICE, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_getRecordingDevice ", ret, 0);
+    shoudlWarn("IAudioDeviceManager_getRecordingDevice:result ", typeof result.result != "string", "result=" + result.result);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_getRecordingDeviceInfo", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let deviceId: string = "";
+    let deviceName: string = "";
+    let paramObj = {
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETRECORDINGDEVICEINFO, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_getRecordingDeviceInfo ", ret, 0);
+    shoudlWarn("IAudioDeviceManager_getRecordingDeviceInfo deviceId:result ", typeof result.result.deviceId != "string", "deviceId=" + result.result.deviceId);
+    shoudlWarn("IAudioDeviceManager_getRecordingDeviceInfo deviceName:result ", typeof result.result.deviceName != "string", "deviceName=" + result.result.deviceName);
+
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_setRecordingDeviceVolume", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let volume: number = 50;
+    let paramObj = {
+        volume,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETRECORDINGDEVICEVOLUME, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_setRecordingDeviceVolume ", ret, 0);
+    shouldEqual("IAudioDeviceManager_setRecordingDeviceVolume:result ", result.result, 0);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_getRecordingDeviceVolume", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+
+    let paramObj = {
+
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETRECORDINGDEVICEVOLUME, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_getRecordingDeviceVolume ", ret, 0);
+    shoudlWarn("IAudioDeviceManager_getRecordingDeviceVolume:result ", typeof result.result != "number", "result=" + result.result);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_setPlaybackDeviceMute", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let mute: boolean = true;
+    let paramObj = {
+        mute,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETPLAYBACKDEVICEMUTE, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_setPlaybackDeviceMute ", ret, 0);
+    shouldEqual("IAudioDeviceManager_setPlaybackDeviceMute:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_getPlaybackDeviceMute", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let mute: boolean = true;
+    let paramObj = {
+        mute,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETPLAYBACKDEVICEMUTE, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_getPlaybackDeviceMute ", ret, 0);
+    shouldEqual("IAudioDeviceManager_getPlaybackDeviceMute:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_setRecordingDeviceMute", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let mute: boolean = true;
+    let paramObj = {
+        mute,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_SETRECORDINGDEVICEMUTE, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_setRecordingDeviceMute ", ret, 0);
+    shouldEqual("IAudioDeviceManager_setRecordingDeviceMute:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_getRecordingDeviceMute", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let mute: boolean = true;
+    let paramObj = {
+        mute,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_GETRECORDINGDEVICEMUTE, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_getRecordingDeviceMute ", ret, 0);
+    shouldEqual("IAudioDeviceManager_getRecordingDeviceMute:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_startPlaybackDeviceTest", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let testAudioFilePath: string = "";
+    let paramObj = {
+        testAudioFilePath,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STARTPLAYBACKDEVICETEST, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_startPlaybackDeviceTest ", ret, 0);
+    shouldEqual("IAudioDeviceManager_startPlaybackDeviceTest:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_stopPlaybackDeviceTest", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let paramObj = {
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STOPPLAYBACKDEVICETEST, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_stopPlaybackDeviceTest ", ret, 0);
+    shouldEqual("IAudioDeviceManager_stopPlaybackDeviceTest:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_startRecordingDeviceTest", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let indicationInterval: number = 0;
+    let paramObj = {
+        indicationInterval,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STARTRECORDINGDEVICETEST, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_startRecordingDeviceTest ", ret, 0);
+    shouldEqual("IAudioDeviceManager_startRecordingDeviceTest:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_stopRecordingDeviceTest", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let paramObj = {
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STOPRECORDINGDEVICETEST, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_stopRecordingDeviceTest ", ret, 0);
+    shouldEqual("IAudioDeviceManager_stopRecordingDeviceTest:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_startAudioDeviceLoopbackTest", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let indicationInterval: number = 0;
+    let paramObj = {
+        indicationInterval,
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STARTAUDIODEVICELOOPBACKTEST, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_startAudioDeviceLoopbackTest ", ret, 0);
+    shouldEqual("IAudioDeviceManager_startAudioDeviceLoopbackTest:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
+
+test("IAudioDeviceManager_stopAudioDeviceLoopbackTest", async () => {
+
+    let eventHandler: IrisEventHandler = {
+        onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number) {
+            //do something in there
+        }
+    };
+
+    let apiEngine = await testBegine(false, false, false, eventHandler);
+
+    let paramObj = {
+    }
+    let params = JSON.stringify(paramObj);
+    let result: any = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_AUDIODEVICEMANAGER_STOPAUDIODEVICELOOPBACKTEST, params, params.length, null, 0, result);
+
+    shouldEqual("callApi:IAudioDeviceManager_stopAudioDeviceLoopbackTest ", ret, 0);
+    shouldEqual("IAudioDeviceManager_stopAudioDeviceLoopbackTest:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    await waitForSecond(1);
+    await testEnd(apiEngine, false);
+});
 
 
 

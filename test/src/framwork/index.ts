@@ -25,6 +25,10 @@ export let start = async function () {
     await testActionQueue.start();
 };
 
+export let stop = function () {
+    testActionQueue.stop();
+};
+
 
 
 

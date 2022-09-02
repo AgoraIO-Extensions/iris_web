@@ -1350,7 +1350,7 @@ export enum ENCRYPTION_MODE {
 export class EncryptionConfig {
     encryptionMode: ENCRYPTION_MODE;
     encryptionKey: string;
-    encryptionKdfSalt: Uint8Array;
+    encryptionKdfSalt: number[];
 
     constructor() {
         this.encryptionMode = ENCRYPTION_MODE.AES_128_GCM2;

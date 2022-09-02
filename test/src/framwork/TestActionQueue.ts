@@ -30,6 +30,7 @@ export class TestActionQueue {
     private _thiz: any = null;
     private _queue: Array<Action> = new Array<Action>();
     private _curTitle: string = "";
+    private _isStop: boolean = false;
 
     constructor() {
 
@@ -52,10 +53,17 @@ export class TestActionQueue {
         })
 
         for (let i = 0; i < this._queue.length; i++) {
+            if (this._isStop) {
+                break;
+            }
+
             try {
                 let action: Action = this._queue[i];
                 this._curTitle = action.titile;
                 renderTitle(action.titile);
+                if (action.priority < Priority.High) {
+                    renderTitle("特殊测试已经测试完毕, 剩余的case可以挂机等待结果了");
+                }
                 await action.cb.call(this);
                 await waitForSecond(2);
             }
@@ -64,8 +72,12 @@ export class TestActionQueue {
                 return;
             }
         }
-        renderEnd();
-        // })
+        renderEnd(this._isStop ? "测试已经终止" : "所有测试已经完成");
+
+    }
+
+    public stop() {
+        this._isStop = true;
     }
 
     // next() {

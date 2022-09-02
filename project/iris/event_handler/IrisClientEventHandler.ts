@@ -1,4 +1,4 @@
-import { IAgoraRTCClient, ConnectionState, ConnectionDisconnectedReason, IAgoraRTCRemoteUser, UID, RemoteStreamType, ChannelMediaRelayState, ChannelMediaRelayError, ChannelMediaRelayEvent, NetworkQuality, AgoraRTCError } from "agora-rtc-sdk-ng";
+import { IAgoraRTCClient, ConnectionState, ConnectionDisconnectedReason, IAgoraRTCRemoteUser, UID, RemoteStreamType, ChannelMediaRelayState, ChannelMediaRelayError, ChannelMediaRelayEvent, NetworkQuality, AgoraRTCError, InspectState } from "agora-rtc-sdk-ng";
 import { IrisClientType, IrisVideoSourceType } from "../base/BaseType";
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 import * as agorartc from "../terra/rtc_types/Index";
@@ -40,6 +40,9 @@ export class IrisClientEventHandler {
         this._client.on("is-using-cloud-proxy", this.onEventIsUsingCloudProxy.bind(this));
         this._client.on("join-fallback-to-proxy", this.onEventJoinFallbackToProxy.bind(this));
         this._client.on("published-user-list", this.onEventPublishedUserList.bind(this));
+        this._client.on("content-inspect-connection-state-change", this.onEventContentInspectConnectionStateChange.bind(this));
+        this._client.on("content-inspect-error", this.onEventContentInspectError.bind(this));
+        this._client.on("content_inspect_result", this.onEventContentInspectResult.bind(this));
     }
 
     onEventConnectionStateChange(curState: ConnectionState, revState: ConnectionState, reason?: ConnectionDisconnectedReason): void {
@@ -322,7 +325,6 @@ export class IrisClientEventHandler {
         }
     }
 
-
     onEventMediaReconnectStart(uid: UID): void {
         //暂时没有找到对应的回调
     }
@@ -459,6 +461,20 @@ export class IrisClientEventHandler {
         this._engine.rtcEngineEventHandler.onLeaveChannelEx(connection, stats);
     }
 
+    onEventContentInspectConnectionStateChange(preState: InspectState, newState: InspectState): void {
+        //没有合适的回调
+    }
+
+    onEventContentInspectError(error?: AgoraRTCError): void {
+        this._engine.rtcEngineEventHandler.onError(-agorartc.ERROR_CODE_TYPE.ERR_FAILED, error?.message || "Content Inspect Error");
+    }
+
+    onEventContentInspectResult(data?: "porn" | "sexy" | "neutral", error?: AgoraRTCError) {
+        if (data) {
+            let result = AgoraTranslate.data2agorartcCONTENT_INSPECT_RESULT(data);
+            this._engine.rtcEngineEventHandler.onContentInspectResult(result);
+        }
+    }
 
     destruction() {
         this._client.removeAllListeners();

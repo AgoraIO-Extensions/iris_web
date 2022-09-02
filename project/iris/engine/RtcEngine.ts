@@ -8,12 +8,14 @@ import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, ClientRoleOptions, 
 import { AgoraTranslate } from '../tool/AgoraTranslate';
 import { IrisGlobalVariables } from '../variable/IrisGlobalVariables';
 import { AudioTrackPackage, IrisAudioSourceType, IrisClientType, IrisVideoSourceType, VideoParams, VideoTrackPackage } from '../base/BaseType';
-import { RtcConnection, VideoTrackInfo } from '../terra/rtc_types/Index';
+import { RtcConnection, THREAD_PRIORITY_TYPE, VideoTrackInfo } from '../terra/rtc_types/Index';
 import { IrisMainClientVariables } from '../variable/IrisMainClientVariables';
 import { Argument } from 'webpack';
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 import { IrisSubClientVariables } from '../variable/IrisSubClientVariables';
+import html2canvas from 'html2canvas';
+import { AgoraTool } from '../tool/AgoraTool';
 
 export class RtcEngine implements IRtcEngine {
 
@@ -24,8 +26,6 @@ export class RtcEngine implements IRtcEngine {
         this._engine = engine;
         this._actonQueue = new AgoraActionQueue(this);
     }
-
-
 
     public putAction(action: Action) {
         this._actonQueue.putAction(action);
@@ -53,25 +53,12 @@ export class RtcEngine implements IRtcEngine {
         }
 
         //enumerate divice
-        this._actonQueue.putAction({
-            fun: (next) => {
-                AgoraRTC.getDevices()
-                    .then((info: MediaDeviceInfo[]) => {
-                        AgoraConsole.log("enumerate devices success!");
-                        this._engine.globalVariables.initDevicesInfo(info);
-                    })
-                    .catch((reason) => {
-                        AgoraConsole.error("enumerate devices failed!");
-                        AgoraConsole.error(reason);
-                        this._engine.globalVariables.initDevicesInfo([]);
-                    })
-                    .finally(() => {
-                        this._engine.rtcEngineEventHandler.onDeviceEnumerated();
-                        next();
-                    })
-            },
-            args: []
-        })
+        this._enumerateDevices()
+            .then(() => { })
+            .catch(() => { })
+            .finally(() => {
+                this._engine.rtcEngineEventHandler.OnDevicesEnumerated();
+            });
 
         return 0;
     }
@@ -194,13 +181,21 @@ export class RtcEngine implements IRtcEngine {
 
     //todo IVideoDeviceManager
     enumerateVideoDevices(): agorartc.DeviceInfo[] {
-        if (!this._engine.globalVariables.deviceEnumerated) {
-            AgoraConsole.warn("Please call this method:enumerateVideoDevices after onDeviceEnumerated triggered")
-            return [];
-        }
-        else {
+        this._enumerateDevices()
+            .then((devices) => {
+                let videoDevices = devices.videoDevices;
+                this._engine.rtcEngineEventHandler.OnVideoDevicesEnumerated(videoDevices);
+            })
+            .catch((e) => {
+                AgoraConsole.error("enumerateVideoDevices failed");
+                AgoraConsole.log(e);
+            });
+
+        if (this._engine.globalVariables.deviceEnumerated) {
             return this._engine.globalVariables.videoDevices;
         }
+
+        return [];
     }
 
     setDevice(deviceIdUTF8: string): number {
@@ -2417,6 +2412,11 @@ export class RtcEngine implements IRtcEngine {
 
     //native 传入的值为[0, 400], 100: The original volume.
     adjustRecordingSignalVolume(volume: number): number {
+        if (volume < 0 || volume > 100) {
+            AgoraConsole.error("volume must be [0,100] in web platform");
+            return -agorartc.ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+        }
+
         this._actonQueue.putAction({
             fun: (volume: number, next) => {
 
@@ -2707,28 +2707,37 @@ export class RtcEngine implements IRtcEngine {
             fun: (next) => {
                 let trackPack = this._engine.entitiesContainer.getLocalVideoTrackByType(IrisVideoSourceType.kVideoSourceTypeCameraPrimary);
                 if (trackPack) {
-                    let videoTrack: ICameraVideoTrack = trackPack.track as ICameraVideoTrack;
-                    let curDeviceName: string = (videoTrack as any)._deviceName;
-                    let allDevices = this._engine.globalVariables.videoDevices;
-                    let curIndex = -1;
-                    for (let i = 0; i < allDevices.length; i++) {
-                        if (allDevices[i].deviceName == curDeviceName) {
-                            curIndex = i;
-                            break;
+                    let process = async () => {
+                        let videoTrack: ICameraVideoTrack = trackPack.track as ICameraVideoTrack;
+                        let curDeviceName: string = (videoTrack as any)._deviceName;
+
+                        try {
+                            let allDevices = await (await this._enumerateDevices()).videoDevices;
+                            let curIndex = -1;
+                            for (let i = 0; i < allDevices.length; i++) {
+                                if (allDevices[i].deviceName == curDeviceName) {
+                                    curIndex = i;
+                                    break;
+                                }
+                            }
+                            curIndex++;
+                            let nextDevice = allDevices[curIndex % allDevices.length];
+                            try {
+                                await videoTrack.setDevice(nextDevice.deviceId)
+
+                            }
+                            catch (e) {
+                                AgoraConsole.error("switchCamera setDevice failed");
+                                AgoraConsole.log(e);
+                            }
                         }
+                        catch (e) {
+                            AgoraConsole.error("switchCamera enumerateDevices failed");
+                            AgoraConsole.log(e);
+                        }
+
                     }
-                    curIndex++;
-                    let nextDevice = allDevices[curIndex % allDevices.length];
-                    videoTrack.setDevice(nextDevice.deviceId)
-                        .then(() => {
-                            AgoraConsole.log("switchCamera sucess");
-                        })
-                        .catch(() => {
-                            AgoraConsole.error("switchCamera failed");
-                        })
-                        .finally(() => {
-                            next();
-                        })
+                    setTimeout(process, 0);
                 }
                 else {
                     next();
@@ -3197,11 +3206,18 @@ export class RtcEngine implements IRtcEngine {
                     videoConfig.cameraId = config.deviceId;
                     }
                     else {
-                        if (videoSourceType == IrisVideoSourceType.kVideoSourceTypeCameraPrimary) {
-                            videoConfig.cameraId = this._engine.globalVariables.videoDevices[0]?.deviceId;
+                        try {
+                            let videoDevices = await this._enumerateDevices();
+                            if (videoSourceType == IrisVideoSourceType.kVideoSourceTypeCameraPrimary) {
+                                videoConfig.cameraId = videoDevices[0]?.deviceId;
+                            }
+                            else if (videoSourceType == IrisVideoSourceType.kVideoSourceTypeCameraSecondary) {
+                                videoConfig.cameraId = videoDevices[1]?.deviceId;
+                            }
                         }
-                        else if (videoSourceType == IrisVideoSourceType.kVideoSourceTypeCameraSecondary) {
-                            videoConfig.cameraId = this._engine.globalVariables.videoDevices[1]?.deviceId;
+                        catch (e) {
+                            AgoraConsole.error("startCameraCapture enumerateDevices failed");
+                            AgoraConsole.log(e);
                         }
                     }
                     videoConfig.facingMode = AgoraTranslate.agorartcCAMERA_DIRECTION2string(config.cameraDirection);
@@ -3813,8 +3829,48 @@ export class RtcEngine implements IRtcEngine {
 
     //要不，直接用ImageData渲染个jpg，然后浏览器自动下载。
     takeSnapshot(config: agorartc.SnapShotConfig): number {
-        AgoraConsole.warn("configRhythmPlayer not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+        let videoParams = this._engine.entitiesContainer.getVideoFrame(config.uid, config.channel);
+        if (videoParams) {
+            let videoTrack = videoParams.video_track;
+            if (videoTrack.isPlaying) {
+                let track = videoTrack as any;
+                if (track._player && track._player.videoElement) {
+                    let videoElement = track._player.videoElement;
+                    let fileName = AgoraTool.spliceFileName(config.filePath);
+
+                    html2canvas(videoElement)
+                        .then((canvas) => {
+                            AgoraTool.downloadCanvasAsImage(canvas, fileName);
+                            let channelId = this._engine.entitiesContainer.getMainClient()?.channelName || "";
+                            let uid = 0;
+                            let connection: agorartc.RtcConnection = {
+                                channelId: channelId,
+                                localUid: uid
+                            };
+                            this._engine.rtcEngineEventHandler.onSnapshotTakenEx(connection, fileName, canvas.width, canvas.height, 0);
+                        })
+                        .catch(() => {
+                            let channelId = this._engine.entitiesContainer.getMainClient()?.channelName || "";
+                            let uid = 0;
+                            let connection: agorartc.RtcConnection = {
+                                channelId: channelId,
+                                localUid: uid
+                            };
+                            this._engine.rtcEngineEventHandler.onSnapshotTakenEx(connection, fileName, 0, 0, -agorartc.ERROR_CODE_TYPE.ERR_FAILED);
+                        });
+                    return 0;
+                }
+                else {
+                    return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
+                }
+            }
+            else {
+                return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
+            }
+        }
+        else {
+            return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
+        }
     }
 
     setContentInspect(config: agorartc.ContentInspectConfig): number {
@@ -4710,8 +4766,36 @@ export class RtcEngine implements IRtcEngine {
     }
 
     takeSnapshotEx(connection: agorartc.RtcConnection, uid: number, filePath: string): number {
-        AgoraConsole.warn("takeSnapshotEx not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+
+        let videoParams = this._engine.entitiesContainer.getVideoFrame(connection.localUid, connection.channelId);
+        if (videoParams) {
+            let videoTrack = videoParams.video_track;
+            if (videoTrack.isPlaying) {
+                let track = videoTrack as any;
+                if (track._player && track._player.videoElement) {
+                    let videoElement = track._player.videoElement;
+                    let fileName = AgoraTool.spliceFileName(filePath);
+                    html2canvas(videoElement)
+                        .then((canvas) => {
+                            AgoraTool.downloadCanvasAsImage(canvas, fileName);
+                            this._engine.rtcEngineEventHandler.onSnapshotTakenEx(connection, fileName, canvas.width, canvas.height, 0);
+                        })
+                        .catch(() => {
+                            this._engine.rtcEngineEventHandler.onSnapshotTakenEx(connection, fileName, 0, 0, -agorartc.ERROR_CODE_TYPE.ERR_FAILED);
+                        });
+                    return 0;
+                }
+                else {
+                    return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
+                }
+            }
+            else {
+                return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
+            }
+        }
+        else {
+            return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
+        }
     }
 
     updateRemotePosition(uid: number, posInfo: agorartc.RemoteVoicePositionInfo): number {
@@ -4745,23 +4829,39 @@ export class RtcEngine implements IRtcEngine {
     }
 
     enumeratePlaybackDevices(): agorartc.DeviceInfo[] {
-        if (!this._engine.globalVariables.deviceEnumerated) {
-            AgoraConsole.warn("Please call this method:enumeratePlaybackDevices after onDeviceEnumerated triggered")
-            return [];
-        }
-        else {
+        this._enumerateDevices()
+            .then((device) => {
+                let playbackDevices = device.playbackDevices;
+                this._engine.rtcEngineEventHandler.OnPlaybackDevicesEnumerated(playbackDevices);
+            })
+            .catch((e) => {
+                AgoraConsole.error("enumeratePlaybackDevices failed");
+                AgoraConsole.log(e);
+            });
+
+        if (this._engine.globalVariables.deviceEnumerated) {
             return this._engine.globalVariables.playbackDevices;
         }
+
+        return [];
     }
 
     enumerateRecordingDevices(): agorartc.DeviceInfo[] {
-        if (!this._engine.globalVariables.deviceEnumerated) {
-            AgoraConsole.warn("Please call this method:enumerateRecordingDevices after onDeviceEnumerated triggered")
-            return [];
-        }
-        else {
+        this._enumerateDevices()
+            .then((device) => {
+                let recordingDevices = device.recordingDevices;
+                this._engine.rtcEngineEventHandler.OnRecordingDevicesEnumerated(recordingDevices);
+            })
+            .catch((e) => {
+                AgoraConsole.error("enumerateRecordingDevices failed");
+                AgoraConsole.log(e);
+            });
+
+        if (this._engine.globalVariables.deviceEnumerated) {
             return this._engine.globalVariables.recordingDevices;
         }
+
+        return [];
     }
 
     setPlaybackDevice(deviceId: string): number {
@@ -4775,7 +4875,7 @@ export class RtcEngine implements IRtcEngine {
                     for (let trackPackage of localAudioTracks) {
                         let track = trackPackage.track as ILocalAudioTrack;
                         try {
-                            track.setPlaybackDevice(deviceId)
+                            await track.setPlaybackDevice(deviceId)
                         }
                         catch (e) {
                             AgoraConsole.error("localAudioTrack setPlaybackDevice setFailed");
@@ -4786,7 +4886,7 @@ export class RtcEngine implements IRtcEngine {
                     for (let remoteUser of remoteUsers) {
                         if (remoteUser.hasAudio && remoteUser.audioTrack) {
                             try {
-                                remoteUser.audioTrack.setPlaybackDevice(deviceId);
+                                await remoteUser.audioTrack.setPlaybackDevice(deviceId);
                             }
                             catch (e) {
                                 AgoraConsole.error("remoteAudioTrack setPlaybackDevice setFailed");
@@ -5758,7 +5858,8 @@ export class RtcEngine implements IRtcEngine {
         if (mainClientVariables.encryptionConfig?.enabled) {
             let config: agorartc.EncryptionConfig = mainClientVariables.encryptionConfig.config;
             let encryptionMode: EncryptionMode = AgoraTranslate.agorartcENCRYPTION_MODE2EncryptionMode(config.encryptionMode);
-            mainClient.setEncryptionConfig(encryptionMode, config.encryptionKey, config.encryptionKdfSalt);
+            let salt: Uint8Array = new Uint8Array(config.encryptionKdfSalt);
+            mainClient.setEncryptionConfig(encryptionMode, config.encryptionKey, salt);
             //加密只有一次生效
             mainClientVariables.encryptionConfig.enabled = false;
         }
@@ -5888,7 +5989,8 @@ export class RtcEngine implements IRtcEngine {
         if (encryptionConfig?.enabled) {
             let config: agorartc.EncryptionConfig = encryptionConfig.config;
             let encryptionMode: EncryptionMode = AgoraTranslate.agorartcENCRYPTION_MODE2EncryptionMode(config.encryptionMode);
-            subClient.setEncryptionConfig(encryptionMode, config.encryptionKey, config.encryptionKdfSalt);
+            let salt: Uint8Array = new Uint8Array(config.encryptionKdfSalt);
+            subClient.setEncryptionConfig(encryptionMode, config.encryptionKey, salt);
             //加密只有一次生效
             subClientVariables.encryptionConfigs.removeT(connection.channelId, connection.localUid);
         }
@@ -6013,6 +6115,39 @@ export class RtcEngine implements IRtcEngine {
         }
     }
 
+    async _enumerateDevices(): Promise<{ playbackDevices: agorartc.DeviceInfo[], recordingDevices: agorartc.DeviceInfo[], videoDevices: agorartc.DeviceInfo[] }> {
+
+        let info: MediaDeviceInfo[] = await AgoraRTC.getDevices();
+        let playbackDevices: agorartc.DeviceInfo[] = [];
+        let recordingDevices: agorartc.DeviceInfo[] = [];
+        let videoDevices: agorartc.DeviceInfo[] = [];
+        for (let e of info) {
+            if (e.kind == 'audiooutput') {
+                playbackDevices.push({
+                    deviceId: e.deviceId,
+                    deviceName: e.label
+                });
+            }
+            else if (e.kind == 'audioinput') {
+                recordingDevices.push({
+                    deviceId: e.deviceId,
+                    deviceName: e.label
+                });
+            }
+            else if (e.kind == 'videoinput') {
+                videoDevices.push({
+                    deviceId: e.deviceId,
+                    deviceName: e.label
+                });
+            }
+        }
+
+        this._engine.globalVariables.playbackDevices = playbackDevices;
+        this._engine.globalVariables.recordingDevices = recordingDevices;
+        this._engine.globalVariables.videoDevices = videoDevices;
+        this._engine.globalVariables.deviceEnumerated = true;
+        return { playbackDevices: playbackDevices, recordingDevices: recordingDevices, videoDevices: videoDevices };
+    }
 
 
 

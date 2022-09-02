@@ -8,10 +8,10 @@ export let renderTitle = function (title1: string) {
 
 }
 
-export let renderEnd = function () {
+export let renderEnd = function (title: string) {
     let div = document.createElement("div");
     div.setAttribute("class", "blueviolet");
-    let innerText = document.createTextNode("所有测试已经完成");
+    let innerText = document.createTextNode(title);
     div.appendChild(innerText);
     document.body.appendChild(div);
 }
