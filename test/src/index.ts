@@ -7,8 +7,6 @@ import { GenerateVideoTrackLabelOrHtmlElementCb, IrisRtcEngine } from "../../pro
 import { IrisVideoSourceType, IrisEventHandler } from "../../project/iris/base/BaseType";
 import { IrisApiEngine } from "../../project/iris/engine/IrisApiEngine";
 import { Priority } from "./framwork/TestActionQueue";
-import { type } from "os";
-import { RtcEngine } from "../../project/iris/engine/RtcEngine";
 
 
 
@@ -3513,7 +3511,7 @@ test("IMediaPlayer_registerAudioFrameObserver", async () => {
     shouldEqual("WebGL_onEngineDestroy", events.includes("WebGL_onEngineDestroy"), true);
 });
 
-test("IMediaPlayer_registerAudioFrameObserver", async () => {
+test("IMediaPlayer_registerAudioFrameObserver2", async () => {
 
     let events: string[] = [];
     let eventHandler: IrisEventHandler = {
@@ -3537,8 +3535,8 @@ test("IMediaPlayer_registerAudioFrameObserver", async () => {
     let result: any = {};
     let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_MEDIAPLAYER_REGISTERAUDIOFRAMEOBSERVER, params, params.length, null, 0, result);
 
-    shouldEqual("callApi:IMediaPlayer_registerAudioFrameObserver ", ret, 0);
-    shouldEqual("IMediaPlayer_registerAudioFrameObserver:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    shouldEqual("callApi:IMediaPlayer_registerAudioFrameObserver2 ", ret, 0);
+    shouldEqual("IMediaPlayer_registerAudioFrameObserver2:result ", result.result, -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
     await waitForSecond(1);
     await testEnd(apiEngine, false);
     shouldEqual("WebGL_onEngineDestroy", events.includes("WebGL_onEngineDestroy"), true);

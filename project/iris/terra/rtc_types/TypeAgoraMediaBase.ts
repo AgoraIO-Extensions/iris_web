@@ -348,7 +348,7 @@ export class IVideoFrameObserver {
 
 };
 
-export class IVideoEncodedFrameObserver {
+export class IVideoEncodedImageReceiver {
 
 };
 

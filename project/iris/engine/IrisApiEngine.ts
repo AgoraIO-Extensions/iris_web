@@ -22,21 +22,7 @@ export class IrisApiEngine {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
 
-        let array = func_name.split('_');
-        let className = array[0];
-        let funName = array[1];
-
-        //should fast find by full name , if not found then find by split name
-        let callApiFun: CallApiType = (this._engine[func_name] || this._engine[funName]) as CallApiType;
-        if (callApiFun) {
-            let ret = callApiFun.call(this._engine, params, paramLength, buffer, bufferLength, result);
-            AgoraConsole.log("[callIrisApi] " + func_name + " : " + ret);
-            return ret;
-        }
-        else {
-            AgoraConsole.warn(func_name + " : not found in IrisApiEngine.ts");
-            return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
-        }
+        return this._engine.callIrisApi(func_name, params, paramLength, buffer, bufferLength, result);
     }
 
     public destruction() {

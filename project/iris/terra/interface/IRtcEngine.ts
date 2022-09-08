@@ -1,40 +1,10 @@
-import { DeviceInfo } from 'agora-rtc-sdk-ng';
-import { Argument } from 'webpack';
-import { IrisVideoSourceType } from '../base/BaseType';
-import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { Action } from '../tool/AgoraActionQueue';
-import * as agorartc from './rtc_types/Index';
+import { Action } from '../../tool/AgoraActionQueue';
+import * as agorartc from '../rtc_types/Index';
+
+
 export interface IRtcEngine {
 
     putAction(action: Action);
-
-    //IMediaEngine
-    registerAudioFrameObserver(observer: agorartc.IAudioFrameObserver): number;
-    registerVideoFrameObserver(observer: agorartc.IVideoFrameObserver): number;
-    registerVideoEncodedFrameObserver(observer: agorartc.IVideoEncodedFrameObserver): number;
-    pushAudioFrame(type: agorartc.MEDIA_SOURCE_TYPE, frame: agorartc.AudioFrame, wrap: boolean, sourceId: number): number;
-    pushCaptureAudioFrame(frame: agorartc.AudioFrame): number;
-    pushReverseAudioFrame(frame: agorartc.AudioFrame): number;
-    pushDirectAudioFrame(frame: agorartc.AudioFrame): number;
-    pullAudioFrame(frame: agorartc.AudioFrame): number;
-    setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: agorartc.EXTERNAL_VIDEO_SOURCE_TYPE): number;
-    setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, sourceNumber: number, localPlayback: boolean, publish: boolean): number;
-    setExternalAudioSink(sampleRate: number, channels: number): number;
-    // enableCustomAudioLocalPlayback(sourceId: number, enabled: boolean): number;
-    setDirectExternalAudioSource(enable: boolean, localPlayback: boolean): number;
-    pushVideoFrame(frame: agorartc.ExternalVideoFrame): number;
-    pushEncodedVideoImage(imageBuffer: Uint8ClampedArray, length: number, videoEncodedFrameInfo: agorartc.EncodedVideoFrameInfo): number;
-    // release(): void;
-
-    //IVideoDeviceManager
-    enumerateVideoDevices(): agorartc.DeviceInfo[];
-    setDevice(deviceIdUTF8: string): number;
-    getDevice(): string;
-    numberOfCapabilities(deviceIdUTF8: string): number;
-    getCapability(deviceIdUTF8: string, deviceCapabilityNumber: number, capability: agorartc.VideoFormat): number;
-    startDeviceTest(hwnd: agorartc.view_t): number;
-    stopDeviceTest(): number;
-    // release(): void;
 
     //IRtcEngine
     release(sync: boolean): void;
@@ -253,8 +223,6 @@ export interface IRtcEngine {
     stopPrimaryScreenCapture(): number;
     stopSecondaryScreenCapture(): number;
     getConnectionState(): agorartc.CONNECTION_STATE_TYPE;
-    // registerEventHandler(eventHandler: agorartc.IRtcEngineEventHandler[]): boolean;
-    // unregisterEventHandler(eventHandler: agorartc.IRtcEngineEventHandler[]): boolean;
     setRemoteUserPriority(uid: agorartc.uid_t, userPriority: agorartc.PRIORITY_TYPE): number;
     registerPacketObserver(observer: agorartc.IPacketObserver): number;
     setEncryptionMode(encryptionMode: string): number;
@@ -313,140 +281,13 @@ export interface IRtcEngine {
     switchChannel(token: string, channel: string): number;
     pushDirectCdnStreamingCustomVideoFrame(frame: agorartc.ExternalVideoFrame): number;
     enableFishCorrection(enabled: boolean, params: agorartc.FishCorrectionParams): number;
-    //IRtcEngineEx
-    joinChannelEx(token: string, connection: agorartc.RtcConnection, options: agorartc.ChannelMediaOptions): number;
-    leaveChannelEx(connection: agorartc.RtcConnection): number;
-    updateChannelMediaOptionsEx(options: agorartc.ChannelMediaOptions, connection: agorartc.RtcConnection): number;
-    setVideoEncoderConfigurationEx(config: agorartc.VideoEncoderConfiguration, connection: agorartc.RtcConnection): number;
-    setupRemoteVideoEx(canvas: agorartc.VideoCanvas, connection: agorartc.RtcConnection): number;
-    muteRemoteAudioStreamEx(uid: agorartc.uid_t, mute: boolean, connection: agorartc.RtcConnection): number;
-    muteRemoteVideoStreamEx(uid: agorartc.uid_t, mute: boolean, connection: agorartc.RtcConnection): number;
-    setRemoteVideoStreamTypeEx(uid: agorartc.uid_t, streamType: agorartc.VIDEO_STREAM_TYPE, connection: agorartc.RtcConnection): number;
-    setSubscribeAudioBlacklistEx(uidList: agorartc.uid_t[], uidNumber: number, connection: agorartc.RtcConnection): number;
-    setSubscribeAudioWhitelistEx(uidList: agorartc.uid_t[], uidNumber: number, connection: agorartc.RtcConnection): number;
-    setSubscribeVideoBlacklistEx(uidList: agorartc.uid_t[], uidNumber: number, connection: agorartc.RtcConnection): number;
-    setSubscribeVideoWhitelistEx(uidList: agorartc.uid_t[], uidNumber: number, connection: agorartc.RtcConnection): number;
-    setRemoteVideoSubscriptionOptionsEx(uid: agorartc.uid_t, options: agorartc.VideoSubscriptionOptions, connection: agorartc.RtcConnection): number;
-    setRemoteVoicePositionEx(uid: agorartc.uid_t, pan: number, gain: number, connection: agorartc.RtcConnection): number;
-    setRemoteUserSpatialAudioParamsEx(uid: agorartc.uid_t, params: agorartc.SpatialAudioParams, connection: agorartc.RtcConnection): number;
-    setRemoteRenderModeEx(uid: agorartc.uid_t, renderMode: agorartc.RENDER_MODE_TYPE, mirrorMode: agorartc.VIDEO_MIRROR_MODE_TYPE, connection: agorartc.RtcConnection): number;
-    enableLoopbackRecordingEx(connection: agorartc.RtcConnection, enabled: boolean, deviceName: string): number;
-    getConnectionStateEx(connection: agorartc.RtcConnection): agorartc.CONNECTION_STATE_TYPE;
-    enableEncryptionEx(connection: agorartc.RtcConnection, enabled: boolean, config: agorartc.EncryptionConfig): number;
-    createDataStreamEx(reliable: boolean, ordered: boolean, connection: agorartc.RtcConnection): number;
-    createDataStreamEx2(config: agorartc.DataStreamConfig, connection: agorartc.RtcConnection): number;
-    sendStreamMessageEx(streamId: number, data: string, length: number, connection: agorartc.RtcConnection): number;
-    addVideoWatermarkEx(watermarkUrl: string, options: agorartc.WatermarkOptions, connection: agorartc.RtcConnection): number;
-    clearVideoWatermarkEx(connection: agorartc.RtcConnection): number;
-    sendCustomReportMessageEx(id: string, category: string, event: string, label: string, value: number, connection: agorartc.RtcConnection): number;
-    enableAudioVolumeIndicationEx(interval: number, smooth: number, reportVad: boolean, connection: agorartc.RtcConnection): number;
-    getUserInfoByUserAccountEx(userAccount: string, userInfo: agorartc.UserInfo, connection: agorartc.RtcConnection): number;
-    getUserInfoByUidEx(uid: agorartc.uid_t, userInfo: agorartc.UserInfo, connection: agorartc.RtcConnection): number;
-    setVideoProfileEx(width: number, height: number, frameRate: number, bitrate: number): number;
-    enableDualStreamModeEx(sourceType: agorartc.VIDEO_SOURCE_TYPE, enabled: boolean, streamConfig: agorartc.SimulcastStreamConfig, connection: agorartc.RtcConnection): number;
-    setDualStreamModeEx(sourceType: agorartc.VIDEO_SOURCE_TYPE, mode: agorartc.SIMULCAST_STREAM_MODE, streamConfig: agorartc.SimulcastStreamConfig, connection: agorartc.RtcConnection): number;
-    // enableWirelessAccelerate(enabled: boolean): number;
-    takeSnapshotEx(connection: agorartc.RtcConnection, uid: agorartc.uid_t, filePath: string): number;
-    addPublishStreamUrlEx(url: string, transcodingEnabled: boolean, connection: agorartc.RtcConnection): number;
-
-
-    //ILocalSpatialAudioEngine
-    // initialize(config: agorartc.LocalSpatialAudioConfig): number;
-    updateRemotePosition(uid: agorartc.uid_t, posInfo: agorartc.RemoteVoicePositionInfo): number;
-    updateRemotePositionEx(uid: agorartc.uid_t, posInfo: agorartc.RemoteVoicePositionInfo, connection: agorartc.RtcConnection): number;
-    removeRemotePosition(uid: agorartc.uid_t): number;
-    removeRemotePositionEx(uid: agorartc.uid_t, connection: agorartc.RtcConnection): number;
-    clearRemotePositions(): number;
-    clearRemotePositionsEx(connection: agorartc.RtcConnection): number;
-
-    //IAudioDeviceManager
-    enumeratePlaybackDevices(): agorartc.DeviceInfo[];
-    enumerateRecordingDevices(): agorartc.DeviceInfo[];
-    setPlaybackDevice(deviceId: string): number;
-    getPlaybackDevice(): string;
-    getPlaybackDeviceInfo(): agorartc.DeviceInfo;
-    setPlaybackDeviceVolume(volume: number): number;
-    getPlaybackDeviceVolume(): number;
-    setRecordingDevice(deviceId: string): number;
-    getRecordingDevice(): string;
-    getRecordingDeviceInfo(): agorartc.DeviceInfo;
-    setRecordingDeviceVolume(volume: number): number;
-    getRecordingDeviceVolume(): number;
-    setPlaybackDeviceMute(mute: boolean): number;
-    getPlaybackDeviceMute(mute: boolean): number;
-    setRecordingDeviceMute(mute: boolean): number;
-    getRecordingDeviceMute(mute: boolean): number;
-    startPlaybackDeviceTest(testAudioFilePath: string): number;
-    stopPlaybackDeviceTest(): number;
-    startRecordingDeviceTest(indicationInterval: number): number;
-    stopRecordingDeviceTest(): number;
-    startAudioDeviceLoopbackTest(indicationInterval: number): number;
-    stopAudioDeviceLoopbackTest(): number;
-    followSystemPlaybackDevice(enable: boolean): number;
-    followSystemRecordingDevice(enable: boolean): number;
-    // release(): void;
 
 
 
-    //IMediaPlayer
-    open(playerId: number, url: string, startPos: number): number;
-    openWithCustomSource(playerId: number, startPos: number, provider: agorartc.IMediaPlayerCustomDataProvider): number;
-    openWithMediaSource(playerId: number, source: agorartc.MediaSource): number;
-    play(playerId: number): number;
-    pause(playerId: number): number;
-    stop(playerId: number): number;
-    resume(playerId: number): number;
-    seek(playerId: number, newPos: number): number;
-    setAudioPitch(playerId: number, pitch: number): number;
-    getDuration(playerId: number, duration: number): number;
-    getPlayPosition(playerId: number, pos: number): number;
-    getStreamCount(playerId: number, count: number): number;
-    getStreamInfo(playerId: number, index: number, info: agorartc.PlayerStreamInfo): number;
-    setLoopCount(playerId: number, loopCount: number): number;
-    muteAudio(playerId: number, audio_mute: boolean): number;
-    isAudioMuted(playerId: number,): boolean;
-    muteVideo(playerId: number, video_mute: boolean): number;
-    isVideoMuted(playerId: number,): boolean;
-    setPlaybackSpeed(playerId: number, speed: number): number;
-    selectAudioTrack(playerId: number, index: number): number;
-    setPlayerOption(playerId: number, key: string, value: number): number;
-    setPlayerOption2(playerId: number, key: string, value: string): number;
-    takeScreenshot(playerId: number, filename: string): number;
-    selectInternalSubtitle(playerId: number, index: number): number;
-    setExternalSubtitle(playerId: number, url: string): number;
-    getState(playerId: number,): agorartc.MEDIA_PLAYER_STATE;
-    mute(playerId: number, mute: boolean): number;
-    getMute(playerId: number, result: any): number;
-    adjustPlayoutVolume(playerId: number, volume: number): number;
-    getPlayoutVolume(playerId: number, volume: number): number;
-    adjustPublishSignalVolume(playerId: number, volume: number): number;
-    getPublishSignalVolume(playerId: number, volume: number): number;
-    setView(playerId: number, view: agorartc.view_t): number;
-    setRenderMode(playerId: number, renderMode: agorartc.RENDER_MODE_TYPE): number;
-    registerPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver): number;
-    unregisterPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver): number;
-    MediaPlayer_registerAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver): number;
-    MediaPlayer_registerAudioFrameObserver2(playerId: number, observer: agorartc.IAudioFrameObserver, mode: agorartc.RAW_AUDIO_FRAME_OP_MODE_TYPE): number;
-    MediaPlayer_unregisterAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver): number;
-    MediaPlayer_registerVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver): number;
-    registerVideoEncodedImageReceiver(receiver: agorartc.IVideoEncodedImageReceiver): number;
-    MediaPlayer_unregisterVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver): number;
-    registerMediaPlayerAudioSpectrumObserver(observer: agorartc.IAudioSpectrumObserver, intervalInMS: number): number;
-    unregisterMediaPlayerAudioSpectrumObserver(playerId: number, observer: agorartc.IAudioSpectrumObserver): number;
-    setAudioDualMonoMode(playerId: number, mode: agorartc.AUDIO_DUAL_MONO_MODE): number;
-    getPlayerSdkVersion(playerId: number,): string;
-    getPlaySrc(playerId: number,): string;
-    openWithAgoraCDNSrc(playerId: number, src: string, startPos: number): number;
-    getAgoraCDNLineCount(playerId: number,): number;
-    switchAgoraCDNLineByIndex(playerId: number, index: number): number;
-    getCurrentAgoraCDNIndex(playerId: number,): number;
-    enableAutoSwitchAgoraCDN(playerId: number, enable: boolean): number;
-    renewAgoraCDNSrcToken(playerId: number, token: string, ts: number): number;
-    switchAgoraCDNSrc(playerId: number, src: string, syncPts: boolean): number;
-    switchSrc(playerId: number, src: string, syncPts: boolean): number;
-    preloadSrc(playerId: number, src: string, startPos: number): number;
-    playPreloadedSrc(playerId: number, src: string): number;
-    unloadSrc(playerId: number, src: string): number;
-    setSpatialAudioParams(playerId: number, params: agorartc.SpatialAudioParams): number;
-    setSoundPositionParams(playerId: number, pan: number, gain: number): number;
+
+
+
+
+
+
 }

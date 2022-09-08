@@ -146,9 +146,7 @@ export class IMediaPlayerSourceObserver {
 
 }
 
-export class IVideoEncodedImageReceiver {
 
-}
 
 
 

@@ -1,265 +1,18 @@
+import { IrisRtcEngine } from '../../engine/IrisRtcEngine';
+import { RtcEngineExImpl } from '../../impl/RtcEngineExImpl';
+import { RtcEngineImpl } from '../../impl/RtcEngineImpl';
+import { Action } from '../../tool/AgoraActionQueue';
+import { IRtcEngine } from '../interface/IRtcEngine';
+import * as agorartc from '../rtc_types/Index';
 
-import { IrisVideoSourceType } from "../base/BaseType";
-import { RtcEngine } from "../engine/RtcEngine";
-import { IRtcEngine } from "./IRtcEngine";
-import * as agorartc from "./rtc_types/Index";
 
-export class IrisRtcEnginePrepare {
+export class IRtcEngineDispatch {
 
-    protected _rtcEngine: IRtcEngine;
+    private _impl: IRtcEngine;
 
-    //IMediaEngine
-    registerAudioFrameObserver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.registerAudioFrameObserver(observer);
-        return 0;
+    constructor(engine: IrisRtcEngine) {
+        this._impl = new RtcEngineImpl(engine);
     }
-
-    registerVideoFrameObserver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.registerVideoFrameObserver(observer);
-        return 0;
-    }
-
-    registerVideoEncodedFrameObserver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.registerVideoEncodedFrameObserver(observer);
-        return 0;
-    }
-
-    pushAudioFrame(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let type = obj.type;
-        if (type === undefined) throw "type is undefined";
-        let frame = obj.frame;
-        if (frame === undefined) throw "frame is undefined";
-        let wrap = obj.wrap;
-        if (wrap === undefined) throw "wrap is undefined";
-        let sourceId = obj.sourceId;
-        if (sourceId === undefined) throw "sourceId is undefined";
-        result.result = this._rtcEngine.pushAudioFrame(type, frame, wrap, sourceId);
-        return 0;
-    }
-
-    pushCaptureAudioFrame(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let frame = obj.frame;
-        if (frame === undefined) throw "frame is undefined";
-        result.result = this._rtcEngine.pushCaptureAudioFrame(frame);
-        return 0;
-    }
-
-    pushReverseAudioFrame(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let frame = obj.frame;
-        if (frame === undefined) throw "frame is undefined";
-        result.result = this._rtcEngine.pushReverseAudioFrame(frame);
-        return 0;
-    }
-
-    pushDirectAudioFrame(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let frame = obj.frame;
-        if (frame === undefined) throw "frame is undefined";
-        result.result = this._rtcEngine.pushDirectAudioFrame(frame);
-        return 0;
-    }
-
-    pullAudioFrame(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let frame = obj.frame;
-        if (frame === undefined) throw "frame is undefined";
-        result.result = this._rtcEngine.pullAudioFrame(frame);
-        return 0;
-    }
-
-    setExternalVideoSource(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let enabled = obj.enabled;
-        if (enabled === undefined) throw "enabled is undefined";
-        let useTexture = obj.useTexture;
-        if (useTexture === undefined) throw "useTexture is undefined";
-        let sourceType = obj.sourceType;
-        if (sourceType === undefined) throw "sourceType is undefined";
-        result.result = this._rtcEngine.setExternalVideoSource(enabled, useTexture, sourceType);
-        return 0;
-    }
-
-    setExternalAudioSource(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let enabled = obj.enabled;
-        if (enabled === undefined) throw "enabled is undefined";
-        let sampleRate = obj.sampleRate;
-        if (sampleRate === undefined) throw "sampleRate is undefined";
-        let channels = obj.channels;
-        if (channels === undefined) throw "channels is undefined";
-        let sourceNumber = obj.sourceNumber;
-        if (sourceNumber === undefined) throw "sourceNumber is undefined";
-        let localPlayback = obj.localPlayback;
-        if (localPlayback === undefined) throw "localPlayback is undefined";
-        let publish = obj.publish;
-        if (publish === undefined) throw "publish is undefined";
-        result.result = this._rtcEngine.setExternalAudioSource(enabled, sampleRate, channels, sourceNumber, localPlayback, publish);
-        return 0;
-    }
-
-    setExternalAudioSink(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let sampleRate = obj.sampleRate;
-        if (sampleRate === undefined) throw "sampleRate is undefined";
-        let channels = obj.channels;
-        if (channels === undefined) throw "channels is undefined";
-        result.result = this._rtcEngine.setExternalAudioSink(sampleRate, channels);
-        return 0;
-    }
-
-    enableCustomAudioLocalPlayback(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let sourceId = obj.sourceId;
-        if (sourceId === undefined) throw "sourceId is undefined";
-        let enabled = obj.enabled;
-        if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.enableCustomAudioLocalPlayback(sourceId, enabled);
-        return 0;
-    }
-
-    setDirectExternalAudioSource(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let enable = obj.enable;
-        if (enable === undefined) throw "enable is undefined";
-        let localPlayback = obj.localPlayback;
-        if (localPlayback === undefined) throw "localPlayback is undefined";
-        result.result = this._rtcEngine.setDirectExternalAudioSource(enable, localPlayback);
-        return 0;
-    }
-
-    pushVideoFrame(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let frame = obj.frame;
-        if (frame === undefined) throw "frame is undefined";
-        result.result = this._rtcEngine.pushVideoFrame(frame);
-        return 0;
-    }
-
-    pushEncodedVideoImage(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let imageBuffer = obj.imageBuffer;
-        if (imageBuffer === undefined) throw "imageBuffer is undefined";
-        let length = obj.length;
-        if (length === undefined) throw "length is undefined";
-        let videoEncodedFrameInfo = obj.videoEncodedFrameInfo;
-        if (videoEncodedFrameInfo === undefined) throw "videoEncodedFrameInfo is undefined";
-        result.result = this._rtcEngine.pushEncodedVideoImage(imageBuffer, length, videoEncodedFrameInfo);
-        return 0;
-    }
-
-    //IVideoDeviceManager
-    enumerateVideoDevices(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        // let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.enumerateVideoDevices();
-        return 0;
-    }
-
-    setDevice(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let deviceIdUTF8 = obj.deviceIdUTF8;
-        if (deviceIdUTF8 === undefined) throw "deviceIdUTF8 is undefined";
-        result.result = this._rtcEngine.setDevice(deviceIdUTF8);
-        return 0;
-    }
-
-    getDevice(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        // let obj = JSON.parse(params) as any;
-        // let deviceIdUTF8 = obj.deviceIdUTF8;
-        // if (deviceIdUTF8 === undefined) throw "deviceIdUTF8 is undefined";
-        result.result = this._rtcEngine.getDevice();
-        return 0;
-    }
-
-    numberOfCapabilities(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let deviceIdUTF8 = obj.deviceIdUTF8;
-        if (deviceIdUTF8 === undefined) throw "deviceIdUTF8 is undefined";
-        result.result = this._rtcEngine.numberOfCapabilities(deviceIdUTF8);
-        return 0;
-    }
-
-    getCapability(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let deviceIdUTF8 = obj.deviceIdUTF8;
-        if (deviceIdUTF8 === undefined) throw "deviceIdUTF8 is undefined";
-        let deviceCapabilityNumber = obj.deviceCapabilityNumber;
-        if (deviceCapabilityNumber === undefined) throw "deviceCapabilityNumber is undefined";
-        let capability = obj.capability;
-        if (capability === undefined) throw "capability is undefined";
-        result.result = this._rtcEngine.getCapability(deviceIdUTF8, deviceCapabilityNumber, capability);
-        return 0;
-    }
-
-    startDeviceTest(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let hwnd = obj.hwnd;
-        if (hwnd === undefined) throw "hwnd is undefined";
-        result.result = this._rtcEngine.startDeviceTest(hwnd);
-        return 0;
-    }
-
-    stopDeviceTest(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopDeviceTest();
-        return 0;
-    }
-
 
     //IRtcEngine
     release(
@@ -268,7 +21,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let sync = obj.sync;
         if (sync === undefined) throw "sync is undefined";
-        result.result = this._rtcEngine.release(sync);
+        result.result = this._impl.release(sync);
         return 0;
     }
 
@@ -278,7 +31,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let context = obj.context;
         if (context === undefined) throw "context is undefined";
-        result.result = this._rtcEngine.initialize(context);
+        result.result = this._impl.initialize(context);
         return 0;
     }
 
@@ -288,7 +41,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let appType = obj.appType;
         if (appType === undefined) throw "appType is undefined";
-        result.result = this._rtcEngine.setAppType(appType);
+        result.result = this._impl.setAppType(appType);
         return 0;
     }
 
@@ -300,7 +53,7 @@ export class IrisRtcEnginePrepare {
         if (iid === undefined) throw "iid is undefined";
         let inter = obj.inter;
         if (inter === undefined) throw "inter is undefined";
-        result.result = this._rtcEngine.queryInterface(iid, inter);
+        result.result = this._impl.queryInterface(iid, inter);
         return 0;
     }
 
@@ -310,7 +63,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         // let build = obj.build;
         // if (build === undefined) throw "build is undefined";
-        result.result = this._rtcEngine.getVersion();
+        result.result = this._impl.getVersion();
         return 0;
     }
 
@@ -320,7 +73,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let code = obj.code;
         if (code === undefined) throw "code is undefined";
-        result.result = this._rtcEngine.getErrorDescription(code);
+        result.result = this._impl.getErrorDescription(code);
         return 0;
     }
 
@@ -336,7 +89,7 @@ export class IrisRtcEnginePrepare {
         if (info === undefined) throw "info is undefined";
         let uid = obj.uid;
         if (uid === undefined) throw "uid is undefined";
-        result.result = this._rtcEngine.joinChannel(token, channelId, info, uid);
+        result.result = this._impl.joinChannel(token, channelId, info, uid);
         return 0;
     }
 
@@ -352,7 +105,7 @@ export class IrisRtcEnginePrepare {
         if (uid === undefined) throw "uid is undefined";
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.joinChannel2(token, channelId, uid, options);
+        result.result = this._impl.joinChannel2(token, channelId, uid, options);
         return 0;
     }
 
@@ -362,7 +115,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.updateChannelMediaOptions(options);
+        result.result = this._impl.updateChannelMediaOptions(options);
         return 0;
     }
 
@@ -370,7 +123,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.leaveChannel();
+        result.result = this._impl.leaveChannel();
         return 0;
     }
 
@@ -380,7 +133,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.leaveChannel2(options);
+        result.result = this._impl.leaveChannel2(options);
         return 0;
     }
 
@@ -390,7 +143,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let token = obj.token;
         if (token === undefined) throw "token is undefined";
-        result.result = this._rtcEngine.renewToken(token);
+        result.result = this._impl.renewToken(token);
         return 0;
     }
 
@@ -400,7 +153,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let profile = obj.profile;
         if (profile === undefined) throw "profile is undefined";
-        result.result = this._rtcEngine.setChannelProfile(profile);
+        result.result = this._impl.setChannelProfile(profile);
         return 0;
     }
 
@@ -410,7 +163,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let role = obj.role;
         if (role === undefined) throw "role is undefined";
-        result.result = this._rtcEngine.setClientRole(role);
+        result.result = this._impl.setClientRole(role);
         return 0;
     }
 
@@ -422,7 +175,7 @@ export class IrisRtcEnginePrepare {
         if (role === undefined) throw "role is undefined";
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.setClientRole2(role, options);
+        result.result = this._impl.setClientRole2(role, options);
         return 0;
     }
 
@@ -430,7 +183,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.startEchoTest();
+        result.result = this._impl.startEchoTest();
         return 0;
     }
 
@@ -440,7 +193,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let intervalInSeconds = obj.intervalInSeconds;
         if (intervalInSeconds === undefined) throw "intervalInSeconds is undefined";
-        result.result = this._rtcEngine.startEchoTest2(intervalInSeconds);
+        result.result = this._impl.startEchoTest2(intervalInSeconds);
         return 0;
     }
 
@@ -450,7 +203,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.startEchoTest3(config);
+        result.result = this._impl.startEchoTest3(config);
         return 0;
     }
 
@@ -458,7 +211,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopEchoTest();
+        result.result = this._impl.stopEchoTest();
         return 0;
     }
 
@@ -466,7 +219,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.enableVideo();
+        result.result = this._impl.enableVideo();
         return 0;
     }
 
@@ -474,7 +227,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.disableVideo();
+        result.result = this._impl.disableVideo();
         return 0;
     }
 
@@ -482,7 +235,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.startPreview();
+        result.result = this._impl.startPreview();
         return 0;
     }
 
@@ -492,7 +245,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let sourceType = obj.sourceType;
         if (sourceType === undefined) throw "sourceType is undefined";
-        result.result = this._rtcEngine.startPreview2(sourceType);
+        result.result = this._impl.startPreview2(sourceType);
         return 0;
     }
 
@@ -500,7 +253,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopPreview();
+        result.result = this._impl.stopPreview();
         return 0;
     }
 
@@ -510,7 +263,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let sourceType = obj.sourceType;
         if (sourceType === undefined) throw "sourceType is undefined";
-        result.result = this._rtcEngine.stopPreview2(sourceType);
+        result.result = this._impl.stopPreview2(sourceType);
         return 0;
     }
 
@@ -520,7 +273,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.startLastmileProbeTest(config);
+        result.result = this._impl.startLastmileProbeTest(config);
         return 0;
     }
 
@@ -528,7 +281,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopLastmileProbeTest();
+        result.result = this._impl.stopLastmileProbeTest();
         return 0;
     }
 
@@ -538,7 +291,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.setVideoEncoderConfiguration(config);
+        result.result = this._impl.setVideoEncoderConfiguration(config);
         return 0;
     }
 
@@ -552,7 +305,7 @@ export class IrisRtcEnginePrepare {
         if (options === undefined) throw "options is undefined";
         let type = obj.type;
         if (type === undefined) throw "type is undefined";
-        result.result = this._rtcEngine.setBeautyEffectOptions(enabled, options, type);
+        result.result = this._impl.setBeautyEffectOptions(enabled, options, type);
         return 0;
     }
 
@@ -566,7 +319,7 @@ export class IrisRtcEnginePrepare {
         if (options === undefined) throw "options is undefined";
         let type = obj.type;
         if (type === undefined) throw "type is undefined";
-        result.result = this._rtcEngine.setLowlightEnhanceOptions(enabled, options, type);
+        result.result = this._impl.setLowlightEnhanceOptions(enabled, options, type);
         return 0;
     }
 
@@ -580,7 +333,7 @@ export class IrisRtcEnginePrepare {
         if (options === undefined) throw "options is undefined";
         let type = obj.type;
         if (type === undefined) throw "type is undefined";
-        result.result = this._rtcEngine.setVideoDenoiserOptions(enabled, options, type);
+        result.result = this._impl.setVideoDenoiserOptions(enabled, options, type);
         return 0;
     }
 
@@ -594,7 +347,7 @@ export class IrisRtcEnginePrepare {
         if (options === undefined) throw "options is undefined";
         let type = obj.type;
         if (type === undefined) throw "type is undefined";
-        result.result = this._rtcEngine.setColorEnhanceOptions(enabled, options, type);
+        result.result = this._impl.setColorEnhanceOptions(enabled, options, type);
         return 0;
     }
 
@@ -606,7 +359,7 @@ export class IrisRtcEnginePrepare {
         if (enabled === undefined) throw "enabled is undefined";
         let backgroundSource = obj.backgroundSource;
         if (backgroundSource === undefined) throw "backgroundSource is undefined";
-        result.result = this._rtcEngine.enableVirtualBackground(enabled, backgroundSource);
+        result.result = this._impl.enableVirtualBackground(enabled, backgroundSource);
         return 0;
     }
 
@@ -618,7 +371,7 @@ export class IrisRtcEnginePrepare {
         if (userId === undefined) throw "userId is undefined";
         let enable = obj.enable;
         if (enable === undefined) throw "enable is undefined";
-        result.result = this._rtcEngine.enableRemoteSuperResolution(userId, enable);
+        result.result = this._impl.enableRemoteSuperResolution(userId, enable);
         return 0;
     }
 
@@ -628,7 +381,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let canvas = obj.canvas;
         if (canvas === undefined) throw "canvas is undefined";
-        result.result = this._rtcEngine.setupRemoteVideo(canvas);
+        result.result = this._impl.setupRemoteVideo(canvas);
         return 0;
     }
 
@@ -638,7 +391,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let canvas = obj.canvas;
         if (canvas === undefined) throw "canvas is undefined";
-        result.result = this._rtcEngine.setupLocalVideo(canvas);
+        result.result = this._impl.setupLocalVideo(canvas);
         return 0;
     }
 
@@ -646,7 +399,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.enableAudio();
+        result.result = this._impl.enableAudio();
         return 0;
     }
 
@@ -654,7 +407,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.disableAudio();
+        result.result = this._impl.disableAudio();
         return 0;
     }
 
@@ -666,7 +419,7 @@ export class IrisRtcEnginePrepare {
         if (profile === undefined) throw "profile is undefined";
         let scenario = obj.scenario;
         if (scenario === undefined) throw "scenario is undefined";
-        result.result = this._rtcEngine.setAudioProfile(profile, scenario);
+        result.result = this._impl.setAudioProfile(profile, scenario);
         return 0;
     }
 
@@ -676,7 +429,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let profile = obj.profile;
         if (profile === undefined) throw "profile is undefined";
-        result.result = this._rtcEngine.setAudioProfile2(profile);
+        result.result = this._impl.setAudioProfile2(profile);
         return 0;
     }
 
@@ -686,7 +439,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let scenario = obj.scenario;
         if (scenario === undefined) throw "scenario is undefined";
-        result.result = this._rtcEngine.setAudioScenario(scenario);
+        result.result = this._impl.setAudioScenario(scenario);
         return 0;
     }
 
@@ -696,7 +449,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let enabled = obj.enabled;
         if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.enableLocalAudio(enabled);
+        result.result = this._impl.enableLocalAudio(enabled);
         return 0;
     }
 
@@ -706,7 +459,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let mute = obj.mute;
         if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.muteLocalAudioStream(mute);
+        result.result = this._impl.muteLocalAudioStream(mute);
         return 0;
     }
 
@@ -716,7 +469,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let mute = obj.mute;
         if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.muteAllRemoteAudioStreams(mute);
+        result.result = this._impl.muteAllRemoteAudioStreams(mute);
         return 0;
     }
 
@@ -726,7 +479,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let mute = obj.mute;
         if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.setDefaultMuteAllRemoteAudioStreams(mute);
+        result.result = this._impl.setDefaultMuteAllRemoteAudioStreams(mute);
         return 0;
     }
 
@@ -738,7 +491,7 @@ export class IrisRtcEnginePrepare {
         if (uid === undefined) throw "uid is undefined";
         let mute = obj.mute;
         if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.muteRemoteAudioStream(uid, mute);
+        result.result = this._impl.muteRemoteAudioStream(uid, mute);
         return 0;
     }
 
@@ -748,7 +501,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let mute = obj.mute;
         if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.muteLocalVideoStream(mute);
+        result.result = this._impl.muteLocalVideoStream(mute);
         return 0;
     }
 
@@ -758,7 +511,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let enabled = obj.enabled;
         if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.enableLocalVideo(enabled);
+        result.result = this._impl.enableLocalVideo(enabled);
         return 0;
     }
 
@@ -768,7 +521,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let mute = obj.mute;
         if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.muteAllRemoteVideoStreams(mute);
+        result.result = this._impl.muteAllRemoteVideoStreams(mute);
         return 0;
     }
 
@@ -778,7 +531,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let mute = obj.mute;
         if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.setDefaultMuteAllRemoteVideoStreams(mute);
+        result.result = this._impl.setDefaultMuteAllRemoteVideoStreams(mute);
         return 0;
     }
 
@@ -790,7 +543,7 @@ export class IrisRtcEnginePrepare {
         if (uid === undefined) throw "uid is undefined";
         let mute = obj.mute;
         if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.muteRemoteVideoStream(uid, mute);
+        result.result = this._impl.muteRemoteVideoStream(uid, mute);
         return 0;
     }
 
@@ -802,7 +555,7 @@ export class IrisRtcEnginePrepare {
         if (uid === undefined) throw "uid is undefined";
         let streamType = obj.streamType;
         if (streamType === undefined) throw "streamType is undefined";
-        result.result = this._rtcEngine.setRemoteVideoStreamType(uid, streamType);
+        result.result = this._impl.setRemoteVideoStreamType(uid, streamType);
         return 0;
     }
 
@@ -814,7 +567,7 @@ export class IrisRtcEnginePrepare {
         if (uid === undefined) throw "uid is undefined";
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.setRemoteVideoSubscriptionOptions(uid, options);
+        result.result = this._impl.setRemoteVideoSubscriptionOptions(uid, options);
         return 0;
     }
 
@@ -824,7 +577,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let streamType = obj.streamType;
         if (streamType === undefined) throw "streamType is undefined";
-        result.result = this._rtcEngine.setRemoteDefaultVideoStreamType(streamType);
+        result.result = this._impl.setRemoteDefaultVideoStreamType(streamType);
         return 0;
     }
 
@@ -836,7 +589,7 @@ export class IrisRtcEnginePrepare {
         if (uidList === undefined) throw "uidList is undefined";
         let uidNumber = obj.uidNumber;
         if (uidNumber === undefined) throw "uidNumber is undefined";
-        result.result = this._rtcEngine.setSubscribeAudioBlacklist(uidList, uidNumber);
+        result.result = this._impl.setSubscribeAudioBlacklist(uidList, uidNumber);
         return 0;
     }
 
@@ -848,7 +601,7 @@ export class IrisRtcEnginePrepare {
         if (uidList === undefined) throw "uidList is undefined";
         let uidNumber = obj.uidNumber;
         if (uidNumber === undefined) throw "uidNumber is undefined";
-        result.result = this._rtcEngine.setSubscribeAudioWhitelist(uidList, uidNumber);
+        result.result = this._impl.setSubscribeAudioWhitelist(uidList, uidNumber);
         return 0;
     }
 
@@ -860,7 +613,7 @@ export class IrisRtcEnginePrepare {
         if (uidList === undefined) throw "uidList is undefined";
         let uidNumber = obj.uidNumber;
         if (uidNumber === undefined) throw "uidNumber is undefined";
-        result.result = this._rtcEngine.setSubscribeVideoBlacklist(uidList, uidNumber);
+        result.result = this._impl.setSubscribeVideoBlacklist(uidList, uidNumber);
         return 0;
     }
 
@@ -872,7 +625,7 @@ export class IrisRtcEnginePrepare {
         if (uidList === undefined) throw "uidList is undefined";
         let uidNumber = obj.uidNumber;
         if (uidNumber === undefined) throw "uidNumber is undefined";
-        result.result = this._rtcEngine.setSubscribeVideoWhitelist(uidList, uidNumber);
+        result.result = this._impl.setSubscribeVideoWhitelist(uidList, uidNumber);
         return 0;
     }
 
@@ -886,7 +639,7 @@ export class IrisRtcEnginePrepare {
         if (smooth === undefined) throw "smooth is undefined";
         let reportVad = obj.reportVad;
         if (reportVad === undefined) throw "reportVad is undefined";
-        result.result = this._rtcEngine.enableAudioVolumeIndication(interval, smooth, reportVad);
+        result.result = this._impl.enableAudioVolumeIndication(interval, smooth, reportVad);
         return 0;
     }
 
@@ -898,7 +651,7 @@ export class IrisRtcEnginePrepare {
         if (filePath === undefined) throw "filePath is undefined";
         let quality = obj.quality;
         if (quality === undefined) throw "quality is undefined";
-        result.result = this._rtcEngine.startAudioRecording(filePath, quality);
+        result.result = this._impl.startAudioRecording(filePath, quality);
         return 0;
     }
 
@@ -912,7 +665,7 @@ export class IrisRtcEnginePrepare {
         if (sampleRate === undefined) throw "sampleRate is undefined";
         let quality = obj.quality;
         if (quality === undefined) throw "quality is undefined";
-        result.result = this._rtcEngine.startAudioRecording2(filePath, sampleRate, quality);
+        result.result = this._impl.startAudioRecording2(filePath, sampleRate, quality);
         return 0;
     }
 
@@ -922,7 +675,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.startAudioRecording3(config);
+        result.result = this._impl.startAudioRecording3(config);
         return 0;
     }
 
@@ -934,7 +687,7 @@ export class IrisRtcEnginePrepare {
         if (config === undefined) throw "config is undefined";
         let observer = obj.observer;
         if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.registerAudioEncodedFrameObserver(config, observer);
+        result.result = this._impl.registerAudioEncodedFrameObserver(config, observer);
         return 0;
     }
 
@@ -942,7 +695,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopAudioRecording();
+        result.result = this._impl.stopAudioRecording();
         return 0;
     }
 
@@ -950,7 +703,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.createMediaPlayer();
+        result.result = this._impl.createMediaPlayer();
         return 0;
     }
 
@@ -960,7 +713,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let media_player = obj.media_player;
         if (media_player === undefined) throw "media_player is undefined";
-        result.result = this._rtcEngine.destroyMediaPlayer(media_player);
+        result.result = this._impl.destroyMediaPlayer(media_player);
         return 0;
     }
 
@@ -976,7 +729,7 @@ export class IrisRtcEnginePrepare {
         if (replace === undefined) throw "replace is undefined";
         let cycle = obj.cycle;
         if (cycle === undefined) throw "cycle is undefined";
-        result.result = this._rtcEngine.startAudioMixing(filePath, loopback, replace, cycle);
+        result.result = this._impl.startAudioMixing(filePath, loopback, replace, cycle);
         return 0;
     }
 
@@ -994,7 +747,7 @@ export class IrisRtcEnginePrepare {
         if (cycle === undefined) throw "cycle is undefined";
         let startPos = obj.startPos;
         if (startPos === undefined) throw "startPos is undefined";
-        result.result = this._rtcEngine.startAudioMixing2(filePath, loopback, replace, cycle, startPos);
+        result.result = this._impl.startAudioMixing2(filePath, loopback, replace, cycle, startPos);
         return 0;
     }
 
@@ -1002,7 +755,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopAudioMixing();
+        result.result = this._impl.stopAudioMixing();
         return 0;
     }
 
@@ -1010,7 +763,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.pauseAudioMixing();
+        result.result = this._impl.pauseAudioMixing();
         return 0;
     }
 
@@ -1018,7 +771,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.resumeAudioMixing();
+        result.result = this._impl.resumeAudioMixing();
         return 0;
     }
 
@@ -1026,7 +779,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.getAudioTrackCount();
+        result.result = this._impl.getAudioTrackCount();
         return 0;
     }
 
@@ -1036,7 +789,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustAudioMixingVolume(volume);
+        result.result = this._impl.adjustAudioMixingVolume(volume);
         return 0;
     }
 
@@ -1046,7 +799,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustAudioMixingPublishVolume(volume);
+        result.result = this._impl.adjustAudioMixingPublishVolume(volume);
         return 0;
     }
 
@@ -1054,7 +807,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.getAudioMixingPublishVolume();
+        result.result = this._impl.getAudioMixingPublishVolume();
         return 0;
     }
 
@@ -1064,7 +817,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustAudioMixingPlayoutVolume(volume);
+        result.result = this._impl.adjustAudioMixingPlayoutVolume(volume);
         return 0;
     }
 
@@ -1072,7 +825,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.getAudioMixingPlayoutVolume();
+        result.result = this._impl.getAudioMixingPlayoutVolume();
         return 0;
     }
 
@@ -1080,7 +833,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.getAudioMixingDuration();
+        result.result = this._impl.getAudioMixingDuration();
         return 0;
     }
 
@@ -1088,7 +841,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.getAudioMixingCurrentPosition();
+        result.result = this._impl.getAudioMixingCurrentPosition();
         return 0;
     }
 
@@ -1098,7 +851,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let pos = obj.pos;
         if (pos === undefined) throw "pos is undefined";
-        result.result = this._rtcEngine.setAudioMixingPosition(pos);
+        result.result = this._impl.setAudioMixingPosition(pos);
         return 0;
     }
 
@@ -1108,7 +861,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let mode = obj.mode;
         if (mode === undefined) throw "mode is undefined";
-        result.result = this._rtcEngine.setAudioMixingDualMonoMode(mode);
+        result.result = this._impl.setAudioMixingDualMonoMode(mode);
         return 0;
     }
 
@@ -1118,7 +871,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let pitch = obj.pitch;
         if (pitch === undefined) throw "pitch is undefined";
-        result.result = this._rtcEngine.setAudioMixingPitch(pitch);
+        result.result = this._impl.setAudioMixingPitch(pitch);
         return 0;
     }
 
@@ -1126,7 +879,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.getEffectsVolume();
+        result.result = this._impl.getEffectsVolume();
         return 0;
     }
 
@@ -1136,7 +889,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.setEffectsVolume(volume);
+        result.result = this._impl.setEffectsVolume(volume);
         return 0;
     }
 
@@ -1150,7 +903,7 @@ export class IrisRtcEnginePrepare {
         if (filePath === undefined) throw "filePath is undefined";
         let startPos = obj.startPos;
         if (startPos === undefined) throw "startPos is undefined";
-        result.result = this._rtcEngine.preloadEffect(soundId, filePath, startPos);
+        result.result = this._impl.preloadEffect(soundId, filePath, startPos);
         return 0;
     }
 
@@ -1174,7 +927,7 @@ export class IrisRtcEnginePrepare {
         if (publish === undefined) throw "publish is undefined";
         let startPos = obj.startPos;
         if (startPos === undefined) throw "startPos is undefined";
-        result.result = this._rtcEngine.playEffect(soundId, filePath, loopCount, pitch, pan, gain, publish, startPos);
+        result.result = this._impl.playEffect(soundId, filePath, loopCount, pitch, pan, gain, publish, startPos);
         return 0;
     }
 
@@ -1192,7 +945,7 @@ export class IrisRtcEnginePrepare {
         if (gain === undefined) throw "gain is undefined";
         let publish = obj.publish;
         if (publish === undefined) throw "publish is undefined";
-        result.result = this._rtcEngine.playAllEffects(loopCount, pitch, pan, gain, publish);
+        result.result = this._impl.playAllEffects(loopCount, pitch, pan, gain, publish);
         return 0;
     }
 
@@ -1202,7 +955,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let soundId = obj.soundId;
         if (soundId === undefined) throw "soundId is undefined";
-        result.result = this._rtcEngine.getVolumeOfEffect(soundId);
+        result.result = this._impl.getVolumeOfEffect(soundId);
         return 0;
     }
 
@@ -1214,7 +967,7 @@ export class IrisRtcEnginePrepare {
         if (soundId === undefined) throw "soundId is undefined";
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.setVolumeOfEffect(soundId, volume);
+        result.result = this._impl.setVolumeOfEffect(soundId, volume);
         return 0;
     }
 
@@ -1224,7 +977,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let soundId = obj.soundId;
         if (soundId === undefined) throw "soundId is undefined";
-        result.result = this._rtcEngine.pauseEffect(soundId);
+        result.result = this._impl.pauseEffect(soundId);
         return 0;
     }
 
@@ -1232,7 +985,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.pauseAllEffects();
+        result.result = this._impl.pauseAllEffects();
         return 0;
     }
 
@@ -1242,7 +995,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let soundId = obj.soundId;
         if (soundId === undefined) throw "soundId is undefined";
-        result.result = this._rtcEngine.resumeEffect(soundId);
+        result.result = this._impl.resumeEffect(soundId);
         return 0;
     }
 
@@ -1250,7 +1003,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.resumeAllEffects();
+        result.result = this._impl.resumeAllEffects();
         return 0;
     }
 
@@ -1260,7 +1013,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let soundId = obj.soundId;
         if (soundId === undefined) throw "soundId is undefined";
-        result.result = this._rtcEngine.stopEffect(soundId);
+        result.result = this._impl.stopEffect(soundId);
         return 0;
     }
 
@@ -1268,7 +1021,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopAllEffects();
+        result.result = this._impl.stopAllEffects();
         return 0;
     }
 
@@ -1278,7 +1031,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let soundId = obj.soundId;
         if (soundId === undefined) throw "soundId is undefined";
-        result.result = this._rtcEngine.unloadEffect(soundId);
+        result.result = this._impl.unloadEffect(soundId);
         return 0;
     }
 
@@ -1286,7 +1039,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.unloadAllEffects();
+        result.result = this._impl.unloadAllEffects();
         return 0;
     }
 
@@ -1296,7 +1049,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let filePath = obj.filePath;
         if (filePath === undefined) throw "filePath is undefined";
-        result.result = this._rtcEngine.getEffectDuration(filePath);
+        result.result = this._impl.getEffectDuration(filePath);
         return 0;
     }
 
@@ -1308,7 +1061,7 @@ export class IrisRtcEnginePrepare {
         if (soundId === undefined) throw "soundId is undefined";
         let pos = obj.pos;
         if (pos === undefined) throw "pos is undefined";
-        result.result = this._rtcEngine.setEffectPosition(soundId, pos);
+        result.result = this._impl.setEffectPosition(soundId, pos);
         return 0;
     }
 
@@ -1318,7 +1071,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let soundId = obj.soundId;
         if (soundId === undefined) throw "soundId is undefined";
-        result.result = this._rtcEngine.getEffectCurrentPosition(soundId);
+        result.result = this._impl.getEffectCurrentPosition(soundId);
         return 0;
     }
 
@@ -1328,7 +1081,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let enabled = obj.enabled;
         if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.enableSoundPositionIndication(enabled);
+        result.result = this._impl.enableSoundPositionIndication(enabled);
         return 0;
     }
 
@@ -1342,7 +1095,7 @@ export class IrisRtcEnginePrepare {
         if (pan === undefined) throw "pan is undefined";
         let gain = obj.gain;
         if (gain === undefined) throw "gain is undefined";
-        result.result = this._rtcEngine.setRemoteVoicePosition(uid, pan, gain);
+        result.result = this._impl.setRemoteVoicePosition(uid, pan, gain);
         return 0;
     }
 
@@ -1352,7 +1105,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let enabled = obj.enabled;
         if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.enableSpatialAudio(enabled);
+        result.result = this._impl.enableSpatialAudio(enabled);
         return 0;
     }
 
@@ -1364,7 +1117,7 @@ export class IrisRtcEnginePrepare {
         if (uid === undefined) throw "uid is undefined";
         let params = obj.params;
         if (params === undefined) throw "params is undefined";
-        result.result = this._rtcEngine.setRemoteUserSpatialAudioParams(uid, params);
+        result.result = this._impl.setRemoteUserSpatialAudioParams(uid, params);
         return 0;
     }
 
@@ -1374,7 +1127,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let preset = obj.preset;
         if (preset === undefined) throw "preset is undefined";
-        result.result = this._rtcEngine.setVoiceBeautifierPreset(preset);
+        result.result = this._impl.setVoiceBeautifierPreset(preset);
         return 0;
     }
 
@@ -1384,7 +1137,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let preset = obj.preset;
         if (preset === undefined) throw "preset is undefined";
-        result.result = this._rtcEngine.setAudioEffectPreset(preset);
+        result.result = this._impl.setAudioEffectPreset(preset);
         return 0;
     }
 
@@ -1394,7 +1147,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let preset = obj.preset;
         if (preset === undefined) throw "preset is undefined";
-        result.result = this._rtcEngine.setVoiceConversionPreset(preset);
+        result.result = this._impl.setVoiceConversionPreset(preset);
         return 0;
     }
 
@@ -1408,7 +1161,7 @@ export class IrisRtcEnginePrepare {
         if (param1 === undefined) throw "param1 is undefined";
         let param2 = obj.param2;
         if (param2 === undefined) throw "param2 is undefined";
-        result.result = this._rtcEngine.setAudioEffectParameters(preset, param1, param2);
+        result.result = this._impl.setAudioEffectParameters(preset, param1, param2);
         return 0;
     }
 
@@ -1422,7 +1175,7 @@ export class IrisRtcEnginePrepare {
         if (param1 === undefined) throw "param1 is undefined";
         let param2 = obj.param2;
         if (param2 === undefined) throw "param2 is undefined";
-        result.result = this._rtcEngine.setVoiceBeautifierParameters(preset, param1, param2);
+        result.result = this._impl.setVoiceBeautifierParameters(preset, param1, param2);
         return 0;
     }
 
@@ -1436,7 +1189,7 @@ export class IrisRtcEnginePrepare {
         if (param1 === undefined) throw "param1 is undefined";
         let param2 = obj.param2;
         if (param2 === undefined) throw "param2 is undefined";
-        result.result = this._rtcEngine.setVoiceConversionParameters(preset, param1, param2);
+        result.result = this._impl.setVoiceConversionParameters(preset, param1, param2);
         return 0;
     }
 
@@ -1446,7 +1199,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let pitch = obj.pitch;
         if (pitch === undefined) throw "pitch is undefined";
-        result.result = this._rtcEngine.setLocalVoicePitch(pitch);
+        result.result = this._impl.setLocalVoicePitch(pitch);
         return 0;
     }
 
@@ -1458,7 +1211,7 @@ export class IrisRtcEnginePrepare {
         if (bandFrequency === undefined) throw "bandFrequency is undefined";
         let bandGain = obj.bandGain;
         if (bandGain === undefined) throw "bandGain is undefined";
-        result.result = this._rtcEngine.setLocalVoiceEqualization(bandFrequency, bandGain);
+        result.result = this._impl.setLocalVoiceEqualization(bandFrequency, bandGain);
         return 0;
     }
 
@@ -1470,7 +1223,7 @@ export class IrisRtcEnginePrepare {
         if (reverbKey === undefined) throw "reverbKey is undefined";
         let value = obj.value;
         if (value === undefined) throw "value is undefined";
-        result.result = this._rtcEngine.setLocalVoiceReverb(reverbKey, value);
+        result.result = this._impl.setLocalVoiceReverb(reverbKey, value);
         return 0;
     }
 
@@ -1480,7 +1233,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let filePath = obj.filePath;
         if (filePath === undefined) throw "filePath is undefined";
-        result.result = this._rtcEngine.setLogFile(filePath);
+        result.result = this._impl.setLogFile(filePath);
         return 0;
     }
 
@@ -1490,7 +1243,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let filter = obj.filter;
         if (filter === undefined) throw "filter is undefined";
-        result.result = this._rtcEngine.setLogFilter(filter);
+        result.result = this._impl.setLogFilter(filter);
         return 0;
     }
 
@@ -1500,7 +1253,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let level = obj.level;
         if (level === undefined) throw "level is undefined";
-        result.result = this._rtcEngine.setLogLevel(level);
+        result.result = this._impl.setLogLevel(level);
         return 0;
     }
 
@@ -1510,14 +1263,14 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let fileSizeInKBytes = obj.fileSizeInKBytes;
         if (fileSizeInKBytes === undefined) throw "fileSizeInKBytes is undefined";
-        result.result = this._rtcEngine.setLogFileSize(fileSizeInKBytes);
+        result.result = this._impl.setLogFileSize(fileSizeInKBytes);
         return 0;
     }
 
     uploadLogFile(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        result.result = this._rtcEngine.uploadLogFile(result);
+        result.result = this._impl.uploadLogFile(result);
         return 0;
     }
 
@@ -1529,7 +1282,7 @@ export class IrisRtcEnginePrepare {
         if (renderMode === undefined) throw "renderMode is undefined";
         let mirrorMode = obj.mirrorMode;
         if (mirrorMode === undefined) throw "mirrorMode is undefined";
-        result.result = this._rtcEngine.setLocalRenderMode(renderMode, mirrorMode);
+        result.result = this._impl.setLocalRenderMode(renderMode, mirrorMode);
         return 0;
     }
 
@@ -1543,7 +1296,7 @@ export class IrisRtcEnginePrepare {
         if (renderMode === undefined) throw "renderMode is undefined";
         let mirrorMode = obj.mirrorMode;
         if (mirrorMode === undefined) throw "mirrorMode is undefined";
-        result.result = this._rtcEngine.setRemoteRenderMode(uid, renderMode, mirrorMode);
+        result.result = this._impl.setRemoteRenderMode(uid, renderMode, mirrorMode);
         return 0;
     }
 
@@ -1553,7 +1306,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let renderMode = obj.renderMode;
         if (renderMode === undefined) throw "renderMode is undefined";
-        result.result = this._rtcEngine.setLocalRenderMode2(renderMode);
+        result.result = this._impl.setLocalRenderMode2(renderMode);
         return 0;
     }
 
@@ -1563,7 +1316,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let mirrorMode = obj.mirrorMode;
         if (mirrorMode === undefined) throw "mirrorMode is undefined";
-        result.result = this._rtcEngine.setLocalVideoMirrorMode(mirrorMode);
+        result.result = this._impl.setLocalVideoMirrorMode(mirrorMode);
         return 0;
     }
 
@@ -1573,7 +1326,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let enabled = obj.enabled;
         if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.enableDualStreamMode(enabled);
+        result.result = this._impl.enableDualStreamMode(enabled);
         return 0;
     }
 
@@ -1585,7 +1338,7 @@ export class IrisRtcEnginePrepare {
         if (sourceType === undefined) throw "sourceType is undefined";
         let enabled = obj.enabled;
         if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.enableDualStreamMode2(sourceType, enabled);
+        result.result = this._impl.enableDualStreamMode2(sourceType, enabled);
         return 0;
     }
 
@@ -1599,7 +1352,7 @@ export class IrisRtcEnginePrepare {
         if (enabled === undefined) throw "enabled is undefined";
         let streamConfig = obj.streamConfig;
         if (streamConfig === undefined) throw "streamConfig is undefined";
-        result.result = this._rtcEngine.enableDualStreamMode3(sourceType, enabled, streamConfig);
+        result.result = this._impl.enableDualStreamMode3(sourceType, enabled, streamConfig);
         return 0;
     }
 
@@ -1609,7 +1362,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let mode = obj.mode;
         if (mode === undefined) throw "mode is undefined";
-        result.result = this._rtcEngine.setDualStreamMode(mode);
+        result.result = this._impl.setDualStreamMode(mode);
         return 0;
     }
 
@@ -1621,7 +1374,7 @@ export class IrisRtcEnginePrepare {
         if (sourceType === undefined) throw "sourceType is undefined";
         let mode = obj.mode;
         if (mode === undefined) throw "mode is undefined";
-        result.result = this._rtcEngine.setDualStreamMode2(sourceType, mode);
+        result.result = this._impl.setDualStreamMode2(sourceType, mode);
         return 0;
     }
 
@@ -1635,7 +1388,7 @@ export class IrisRtcEnginePrepare {
         if (mode === undefined) throw "mode is undefined";
         let streamConfig = obj.streamConfig;
         if (streamConfig === undefined) throw "streamConfig is undefined";
-        result.result = this._rtcEngine.setDualStreamMode3(sourceType, mode, streamConfig);
+        result.result = this._impl.setDualStreamMode3(sourceType, mode, streamConfig);
         return 0;
     }
 
@@ -1647,7 +1400,19 @@ export class IrisRtcEnginePrepare {
         if (enabled === undefined) throw "enabled is undefined";
         let audioSourceDelay = obj.audioSourceDelay;
         if (audioSourceDelay === undefined) throw "audioSourceDelay is undefined";
-        result.result = this._rtcEngine.enableEchoCancellationExternal(enabled, audioSourceDelay);
+        result.result = this._impl.enableEchoCancellationExternal(enabled, audioSourceDelay);
+        return 0;
+    }
+
+    enableCustomAudioLocalPlayback(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let sourceId = obj.sourceId;
+        if (sourceId === undefined) throw "sourceId is undefined";
+        let enabled = obj.enabled;
+        if (enabled === undefined) throw "enabled is undefined";
+        result.result = this._impl.enableCustomAudioLocalPlayback(sourceId, enabled);
         return 0;
     }
 
@@ -1670,7 +1435,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.startPrimaryCustomAudioTrack(config);
+        result.result = this._impl.startPrimaryCustomAudioTrack(config);
         return 0;
     }
 
@@ -1678,7 +1443,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopPrimaryCustomAudioTrack();
+        result.result = this._impl.stopPrimaryCustomAudioTrack();
         return 0;
     }
 
@@ -1688,7 +1453,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.startSecondaryCustomAudioTrack(config);
+        result.result = this._impl.startSecondaryCustomAudioTrack(config);
         return 0;
     }
 
@@ -1696,7 +1461,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopSecondaryCustomAudioTrack();
+        result.result = this._impl.stopSecondaryCustomAudioTrack();
         return 0;
     }
 
@@ -1712,7 +1477,7 @@ export class IrisRtcEnginePrepare {
         if (mode === undefined) throw "mode is undefined";
         let samplesPerCall = obj.samplesPerCall;
         if (samplesPerCall === undefined) throw "samplesPerCall is undefined";
-        result.result = this._rtcEngine.setRecordingAudioFrameParameters(sampleRate, channel, mode, samplesPerCall);
+        result.result = this._impl.setRecordingAudioFrameParameters(sampleRate, channel, mode, samplesPerCall);
         return 0;
     }
 
@@ -1728,7 +1493,7 @@ export class IrisRtcEnginePrepare {
         if (mode === undefined) throw "mode is undefined";
         let samplesPerCall = obj.samplesPerCall;
         if (samplesPerCall === undefined) throw "samplesPerCall is undefined";
-        result.result = this._rtcEngine.setPlaybackAudioFrameParameters(sampleRate, channel, mode, samplesPerCall);
+        result.result = this._impl.setPlaybackAudioFrameParameters(sampleRate, channel, mode, samplesPerCall);
         return 0;
     }
 
@@ -1742,7 +1507,7 @@ export class IrisRtcEnginePrepare {
         if (channel === undefined) throw "channel is undefined";
         let samplesPerCall = obj.samplesPerCall;
         if (samplesPerCall === undefined) throw "samplesPerCall is undefined";
-        result.result = this._rtcEngine.setMixedAudioFrameParameters(sampleRate, channel, samplesPerCall);
+        result.result = this._impl.setMixedAudioFrameParameters(sampleRate, channel, samplesPerCall);
         return 0;
     }
 
@@ -1754,7 +1519,7 @@ export class IrisRtcEnginePrepare {
         if (sampleRate === undefined) throw "sampleRate is undefined";
         let channel = obj.channel;
         if (channel === undefined) throw "channel is undefined";
-        result.result = this._rtcEngine.setPlaybackAudioFrameBeforeMixingParameters(sampleRate, channel);
+        result.result = this._impl.setPlaybackAudioFrameBeforeMixingParameters(sampleRate, channel);
         return 0;
     }
 
@@ -1764,7 +1529,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let intervalInMS = obj.intervalInMS;
         if (intervalInMS === undefined) throw "intervalInMS is undefined";
-        result.result = this._rtcEngine.enableAudioSpectrumMonitor(intervalInMS);
+        result.result = this._impl.enableAudioSpectrumMonitor(intervalInMS);
         return 0;
     }
 
@@ -1772,7 +1537,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.disableAudioSpectrumMonitor();
+        result.result = this._impl.disableAudioSpectrumMonitor();
         return 0;
     }
 
@@ -1782,7 +1547,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let observer = obj.observer;
         if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.registerAudioSpectrumObserver(observer);
+        result.result = this._impl.registerAudioSpectrumObserver(observer);
         return 0;
     }
 
@@ -1792,7 +1557,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let observer = obj.observer;
         if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.unregisterAudioSpectrumObserver(observer);
+        result.result = this._impl.unregisterAudioSpectrumObserver(observer);
         return 0;
     }
 
@@ -1802,7 +1567,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustRecordingSignalVolume(volume);
+        result.result = this._impl.adjustRecordingSignalVolume(volume);
         return 0;
     }
 
@@ -1812,7 +1577,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let mute = obj.mute;
         if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.muteRecordingSignal(mute);
+        result.result = this._impl.muteRecordingSignal(mute);
         return 0;
     }
 
@@ -1822,7 +1587,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustPlaybackSignalVolume(volume);
+        result.result = this._impl.adjustPlaybackSignalVolume(volume);
         return 0;
     }
 
@@ -1834,7 +1599,7 @@ export class IrisRtcEnginePrepare {
         if (uid === undefined) throw "uid is undefined";
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustUserPlaybackSignalVolume(uid, volume);
+        result.result = this._impl.adjustUserPlaybackSignalVolume(uid, volume);
         return 0;
     }
 
@@ -1844,7 +1609,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let option = obj.option;
         if (option === undefined) throw "option is undefined";
-        result.result = this._rtcEngine.setLocalPublishFallbackOption(option);
+        result.result = this._impl.setLocalPublishFallbackOption(option);
         return 0;
     }
 
@@ -1854,7 +1619,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let option = obj.option;
         if (option === undefined) throw "option is undefined";
-        result.result = this._rtcEngine.setRemoteSubscribeFallbackOption(option);
+        result.result = this._impl.setRemoteSubscribeFallbackOption(option);
         return 0;
     }
 
@@ -1866,7 +1631,7 @@ export class IrisRtcEnginePrepare {
         if (enabled === undefined) throw "enabled is undefined";
         let deviceName = obj.deviceName;
         if (deviceName === undefined) throw "deviceName is undefined";
-        result.result = this._rtcEngine.enableLoopbackRecording(enabled, deviceName);
+        result.result = this._impl.enableLoopbackRecording(enabled, deviceName);
         return 0;
     }
 
@@ -1876,7 +1641,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustLoopbackRecordingVolume(volume);
+        result.result = this._impl.adjustLoopbackRecordingVolume(volume);
         return 0;
     }
 
@@ -1884,7 +1649,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.getLoopbackRecordingVolume();
+        result.result = this._impl.getLoopbackRecordingVolume();
         return 0;
     }
 
@@ -1896,7 +1661,7 @@ export class IrisRtcEnginePrepare {
         if (enabled === undefined) throw "enabled is undefined";
         let includeAudioFilters = obj.includeAudioFilters;
         if (includeAudioFilters === undefined) throw "includeAudioFilters is undefined";
-        result.result = this._rtcEngine.enableInEarMonitoring(enabled, includeAudioFilters);
+        result.result = this._impl.enableInEarMonitoring(enabled, includeAudioFilters);
         return 0;
     }
 
@@ -1906,7 +1671,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.setInEarMonitoringVolume(volume);
+        result.result = this._impl.setInEarMonitoringVolume(volume);
         return 0;
     }
 
@@ -1916,7 +1681,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let path = obj.path;
         if (path === undefined) throw "path is undefined";
-        result.result = this._rtcEngine.loadExtensionProvider(path);
+        result.result = this._impl.loadExtensionProvider(path);
         return 0;
     }
 
@@ -1930,7 +1695,7 @@ export class IrisRtcEnginePrepare {
         if (key === undefined) throw "key is undefined";
         let value = obj.value;
         if (value === undefined) throw "value is undefined";
-        result.result = this._rtcEngine.setExtensionProviderProperty(provider, key, value);
+        result.result = this._impl.setExtensionProviderProperty(provider, key, value);
         return 0;
     }
 
@@ -1946,7 +1711,7 @@ export class IrisRtcEnginePrepare {
         if (enable === undefined) throw "enable is undefined";
         let type = obj.type;
         if (type === undefined) throw "type is undefined";
-        result.result = this._rtcEngine.enableExtension(provider, extension, enable, type);
+        result.result = this._impl.enableExtension(provider, extension, enable, type);
         return 0;
     }
 
@@ -1964,7 +1729,7 @@ export class IrisRtcEnginePrepare {
         if (value === undefined) throw "value is undefined";
         let type = obj.type;
         if (type === undefined) throw "type is undefined";
-        result.result = this._rtcEngine.setExtensionProperty(provider, extension, key, value, type);
+        result.result = this._impl.setExtensionProperty(provider, extension, key, value, type);
         return 0;
     }
 
@@ -1983,7 +1748,7 @@ export class IrisRtcEnginePrepare {
         if (buf_len === undefined) throw "buf_len is undefined";
         let type = obj.type;
         if (type === undefined) throw "type is undefined";
-        result.result = this._rtcEngine.getExtensionProperty(provider, extension, key, value, buf_len, type);
+        result.result = this._impl.getExtensionProperty(provider, extension, key, value, buf_len, type);
         return 0;
     }
 
@@ -1993,7 +1758,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.setCameraCapturerConfiguration(config);
+        result.result = this._impl.setCameraCapturerConfiguration(config);
         return 0;
     }
 
@@ -2001,7 +1766,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.createCustomVideoTrack();
+        result.result = this._impl.createCustomVideoTrack();
         return 0;
     }
 
@@ -2011,7 +1776,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let sender_option = obj.sender_option;
         if (sender_option === undefined) throw "sender_option is undefined";
-        result.result = this._rtcEngine.createCustomEncodedVideoTrack(sender_option);
+        result.result = this._impl.createCustomEncodedVideoTrack(sender_option);
         return 0;
     }
 
@@ -2021,7 +1786,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let video_track_id = obj.video_track_id;
         if (video_track_id === undefined) throw "video_track_id is undefined";
-        result.result = this._rtcEngine.destroyCustomVideoTrack(video_track_id);
+        result.result = this._impl.destroyCustomVideoTrack(video_track_id);
         return 0;
     }
 
@@ -2031,7 +1796,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let video_track_id = obj.video_track_id;
         if (video_track_id === undefined) throw "video_track_id is undefined";
-        result.result = this._rtcEngine.destroyCustomEncodedVideoTrack(video_track_id);
+        result.result = this._impl.destroyCustomEncodedVideoTrack(video_track_id);
         return 0;
     }
 
@@ -2039,7 +1804,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.switchCamera();
+        result.result = this._impl.switchCamera();
         return 0;
     }
 
@@ -2047,7 +1812,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.isCameraZoomSupported();
+        result.result = this._impl.isCameraZoomSupported();
         return 0;
     }
 
@@ -2055,7 +1820,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.isCameraFaceDetectSupported();
+        result.result = this._impl.isCameraFaceDetectSupported();
         return 0;
     }
 
@@ -2063,7 +1828,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.isCameraTorchSupported();
+        result.result = this._impl.isCameraTorchSupported();
         return 0;
     }
 
@@ -2071,7 +1836,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.isCameraFocusSupported();
+        result.result = this._impl.isCameraFocusSupported();
         return 0;
     }
 
@@ -2079,7 +1844,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.isCameraAutoFocusFaceModeSupported();
+        result.result = this._impl.isCameraAutoFocusFaceModeSupported();
         return 0;
     }
 
@@ -2089,7 +1854,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let factor = obj.factor;
         if (factor === undefined) throw "factor is undefined";
-        result.result = this._rtcEngine.setCameraZoomFactor(factor);
+        result.result = this._impl.setCameraZoomFactor(factor);
         return 0;
     }
 
@@ -2099,7 +1864,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let enabled = obj.enabled;
         if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.enableFaceDetection(enabled);
+        result.result = this._impl.enableFaceDetection(enabled);
         return 0;
     }
 
@@ -2107,7 +1872,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.getCameraMaxZoomFactor();
+        result.result = this._impl.getCameraMaxZoomFactor();
         return 0;
     }
 
@@ -2119,7 +1884,7 @@ export class IrisRtcEnginePrepare {
         if (positionX === undefined) throw "positionX is undefined";
         let positionY = obj.positionY;
         if (positionY === undefined) throw "positionY is undefined";
-        result.result = this._rtcEngine.setCameraFocusPositionInPreview(positionX, positionY);
+        result.result = this._impl.setCameraFocusPositionInPreview(positionX, positionY);
         return 0;
     }
 
@@ -2129,7 +1894,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let isOn = obj.isOn;
         if (isOn === undefined) throw "isOn is undefined";
-        result.result = this._rtcEngine.setCameraTorchOn(isOn);
+        result.result = this._impl.setCameraTorchOn(isOn);
         return 0;
     }
 
@@ -2139,7 +1904,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let enabled = obj.enabled;
         if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.setCameraAutoFocusFaceModeEnabled(enabled);
+        result.result = this._impl.setCameraAutoFocusFaceModeEnabled(enabled);
         return 0;
     }
 
@@ -2147,7 +1912,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.isCameraExposurePositionSupported();
+        result.result = this._impl.isCameraExposurePositionSupported();
         return 0;
     }
 
@@ -2159,7 +1924,7 @@ export class IrisRtcEnginePrepare {
         if (positionXinView === undefined) throw "positionXinView is undefined";
         let positionYinView = obj.positionYinView;
         if (positionYinView === undefined) throw "positionYinView is undefined";
-        result.result = this._rtcEngine.setCameraExposurePosition(positionXinView, positionYinView);
+        result.result = this._impl.setCameraExposurePosition(positionXinView, positionYinView);
         return 0;
     }
 
@@ -2167,7 +1932,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.isCameraAutoExposureFaceModeSupported();
+        result.result = this._impl.isCameraAutoExposureFaceModeSupported();
         return 0;
     }
 
@@ -2177,7 +1942,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let enabled = obj.enabled;
         if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.setCameraAutoExposureFaceModeEnabled(enabled);
+        result.result = this._impl.setCameraAutoExposureFaceModeEnabled(enabled);
         return 0;
     }
 
@@ -2187,7 +1952,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let defaultToSpeaker = obj.defaultToSpeaker;
         if (defaultToSpeaker === undefined) throw "defaultToSpeaker is undefined";
-        result.result = this._rtcEngine.setDefaultAudioRouteToSpeakerphone(defaultToSpeaker);
+        result.result = this._impl.setDefaultAudioRouteToSpeakerphone(defaultToSpeaker);
         return 0;
     }
 
@@ -2197,7 +1962,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let speakerOn = obj.speakerOn;
         if (speakerOn === undefined) throw "speakerOn is undefined";
-        result.result = this._rtcEngine.setEnableSpeakerphone(speakerOn);
+        result.result = this._impl.setEnableSpeakerphone(speakerOn);
         return 0;
     }
 
@@ -2205,7 +1970,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.isSpeakerphoneEnabled();
+        result.result = this._impl.isSpeakerphoneEnabled();
         return 0;
     }
 
@@ -2219,7 +1984,7 @@ export class IrisRtcEnginePrepare {
         if (iconSize === undefined) throw "iconSize is undefined";
         let includeScreen = obj.includeScreen;
         if (includeScreen === undefined) throw "includeScreen is undefined";
-        result.result = this._rtcEngine.getScreenCaptureSources(thumbSize, iconSize, includeScreen);
+        result.result = this._impl.getScreenCaptureSources(thumbSize, iconSize, includeScreen);
         return 0;
     }
 
@@ -2229,7 +1994,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let restriction = obj.restriction;
         if (restriction === undefined) throw "restriction is undefined";
-        result.result = this._rtcEngine.setAudioSessionOperationRestriction(restriction);
+        result.result = this._impl.setAudioSessionOperationRestriction(restriction);
         return 0;
     }
 
@@ -2243,7 +2008,7 @@ export class IrisRtcEnginePrepare {
         if (regionRect === undefined) throw "regionRect is undefined";
         let captureParams = obj.captureParams;
         if (captureParams === undefined) throw "captureParams is undefined";
-        result.result = this._rtcEngine.startScreenCaptureByDisplayId(displayId, regionRect, captureParams);
+        result.result = this._impl.startScreenCaptureByDisplayId(displayId, regionRect, captureParams);
         return 0;
     }
 
@@ -2257,7 +2022,7 @@ export class IrisRtcEnginePrepare {
         if (regionRect === undefined) throw "regionRect is undefined";
         let captureParams = obj.captureParams;
         if (captureParams === undefined) throw "captureParams is undefined";
-        result.result = this._rtcEngine.startScreenCaptureByScreenRect(screenRect, regionRect, captureParams);
+        result.result = this._impl.startScreenCaptureByScreenRect(screenRect, regionRect, captureParams);
         return 0;
     }
 
@@ -2265,7 +2030,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let deviceInfo: agorartc.DeviceInfo = { deviceId: "", deviceName: "" }
-        result.result = this._rtcEngine.getAudioDeviceInfo(deviceInfo);
+        result.result = this._impl.getAudioDeviceInfo(deviceInfo);
         result.deviceInfo = deviceInfo;
         return 0;
     }
@@ -2280,7 +2045,7 @@ export class IrisRtcEnginePrepare {
         if (regionRect === undefined) throw "regionRect is undefined";
         let captureParams = obj.captureParams;
         if (captureParams === undefined) throw "captureParams is undefined";
-        result.result = this._rtcEngine.startScreenCaptureByWindowId(windowId, regionRect, captureParams);
+        result.result = this._impl.startScreenCaptureByWindowId(windowId, regionRect, captureParams);
         return 0;
     }
 
@@ -2290,7 +2055,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let contentHint = obj.contentHint;
         if (contentHint === undefined) throw "contentHint is undefined";
-        result.result = this._rtcEngine.setScreenCaptureContentHint(contentHint);
+        result.result = this._impl.setScreenCaptureContentHint(contentHint);
         return 0;
     }
 
@@ -2300,7 +2065,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let screenScenario = obj.screenScenario;
         if (screenScenario === undefined) throw "screenScenario is undefined";
-        result.result = this._rtcEngine.setScreenCaptureScenario(screenScenario);
+        result.result = this._impl.setScreenCaptureScenario(screenScenario);
         return 0;
     }
 
@@ -2310,7 +2075,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let regionRect = obj.regionRect;
         if (regionRect === undefined) throw "regionRect is undefined";
-        result.result = this._rtcEngine.updateScreenCaptureRegion(regionRect);
+        result.result = this._impl.updateScreenCaptureRegion(regionRect);
         return 0;
     }
 
@@ -2320,7 +2085,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let captureParams = obj.captureParams;
         if (captureParams === undefined) throw "captureParams is undefined";
-        result.result = this._rtcEngine.updateScreenCaptureParameters(captureParams);
+        result.result = this._impl.updateScreenCaptureParameters(captureParams);
         return 0;
     }
 
@@ -2332,7 +2097,7 @@ export class IrisRtcEnginePrepare {
         if (mediaProjectionPermissionResultData === undefined) throw "mediaProjectionPermissionResultData is undfined";
         let captureParams = obj.captureParams;
         if (captureParams === undefined) throw "captureParams is undefined";
-        result.result = this._rtcEngine.startScreenCapture(mediaProjectionPermissionResultData, captureParams);
+        result.result = this._impl.startScreenCapture(mediaProjectionPermissionResultData, captureParams);
         return 0;
     }
 
@@ -2342,7 +2107,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let captureParams = obj.captureParams;
         if (captureParams === undefined) throw "captureParams is undefined";
-        result.result = this._rtcEngine.updateScreenCapture(captureParams);
+        result.result = this._impl.updateScreenCapture(captureParams);
         return 0;
     }
 
@@ -2350,7 +2115,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopScreenCapture();
+        result.result = this._impl.stopScreenCapture();
         return 0;
     }
 
@@ -2358,7 +2123,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.getCallId(result);
+        result.result = this._impl.getCallId(result);
         return 0;
     }
 
@@ -2372,7 +2137,7 @@ export class IrisRtcEnginePrepare {
         if (rating === undefined) throw "rating is undefined";
         let description = obj.description;
         if (description === undefined) throw "description is undefined";
-        result.result = this._rtcEngine.rate(callId, rating, description);
+        result.result = this._impl.rate(callId, rating, description);
         return 0;
     }
 
@@ -2384,7 +2149,7 @@ export class IrisRtcEnginePrepare {
         if (callId === undefined) throw "callId is undefined";
         let description = obj.description;
         if (description === undefined) throw "description is undefined";
-        result.result = this._rtcEngine.complain(callId, description);
+        result.result = this._impl.complain(callId, description);
         return 0;
     }
 
@@ -2394,7 +2159,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let url = obj.url;
         if (url === undefined) throw "url is undefined";
-        result.result = this._rtcEngine.startRtmpStreamWithoutTranscoding(url);
+        result.result = this._impl.startRtmpStreamWithoutTranscoding(url);
         return 0;
     }
 
@@ -2406,7 +2171,7 @@ export class IrisRtcEnginePrepare {
         if (url === undefined) throw "url is undefined";
         let transcoding = obj.transcoding;
         if (transcoding === undefined) throw "transcoding is undefined";
-        result.result = this._rtcEngine.startRtmpStreamWithTranscoding(url, transcoding);
+        result.result = this._impl.startRtmpStreamWithTranscoding(url, transcoding);
         return 0;
     }
 
@@ -2416,7 +2181,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let transcoding = obj.transcoding;
         if (transcoding === undefined) throw "transcoding is undefined";
-        result.result = this._rtcEngine.updateRtmpTranscoding(transcoding);
+        result.result = this._impl.updateRtmpTranscoding(transcoding);
         return 0;
     }
 
@@ -2426,7 +2191,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let url = obj.url;
         if (url === undefined) throw "url is undefined";
-        result.result = this._rtcEngine.stopRtmpStream(url);
+        result.result = this._impl.stopRtmpStream(url);
         return 0;
     }
 
@@ -2436,7 +2201,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.startLocalVideoTranscoder(config);
+        result.result = this._impl.startLocalVideoTranscoder(config);
         return 0;
     }
 
@@ -2446,7 +2211,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.updateLocalTranscoderConfiguration(config);
+        result.result = this._impl.updateLocalTranscoderConfiguration(config);
         return 0;
     }
 
@@ -2454,7 +2219,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopLocalVideoTranscoder();
+        result.result = this._impl.stopLocalVideoTranscoder();
         return 0;
     }
 
@@ -2464,7 +2229,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.startPrimaryCameraCapture(config);
+        result.result = this._impl.startPrimaryCameraCapture(config);
         return 0;
     }
 
@@ -2474,7 +2239,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.startSecondaryCameraCapture(config);
+        result.result = this._impl.startSecondaryCameraCapture(config);
         return 0;
     }
 
@@ -2482,7 +2247,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopPrimaryCameraCapture();
+        result.result = this._impl.stopPrimaryCameraCapture();
         return 0;
     }
 
@@ -2490,7 +2255,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopSecondaryCameraCapture();
+        result.result = this._impl.stopSecondaryCameraCapture();
         return 0;
     }
 
@@ -2502,7 +2267,7 @@ export class IrisRtcEnginePrepare {
         if (type === undefined) throw "type is undefined";
         let orientation = obj.orientation;
         if (orientation === undefined) throw "orientation is undefined";
-        result.result = this._rtcEngine.setCameraDeviceOrientation(type, orientation);
+        result.result = this._impl.setCameraDeviceOrientation(type, orientation);
         return 0;
     }
 
@@ -2514,7 +2279,7 @@ export class IrisRtcEnginePrepare {
         if (type === undefined) throw "type is undefined";
         let orientation = obj.orientation;
         if (orientation === undefined) throw "orientation is undefined";
-        result.result = this._rtcEngine.setScreenCaptureOrientation(type, orientation);
+        result.result = this._impl.setScreenCaptureOrientation(type, orientation);
         return 0;
     }
 
@@ -2524,7 +2289,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.startPrimaryScreenCapture(config);
+        result.result = this._impl.startPrimaryScreenCapture(config);
         return 0;
     }
 
@@ -2534,7 +2299,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.startSecondaryScreenCapture(config);
+        result.result = this._impl.startSecondaryScreenCapture(config);
         return 0;
     }
 
@@ -2542,7 +2307,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopPrimaryScreenCapture();
+        result.result = this._impl.stopPrimaryScreenCapture();
         return 0;
     }
 
@@ -2550,7 +2315,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopSecondaryScreenCapture();
+        result.result = this._impl.stopSecondaryScreenCapture();
         return 0;
     }
 
@@ -2558,7 +2323,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.getConnectionState();
+        result.result = this._impl.getConnectionState();
         return 0;
     }
 
@@ -2590,7 +2355,7 @@ export class IrisRtcEnginePrepare {
         if (uid === undefined) throw "uid is undefined";
         let userPriority = obj.userPriority;
         if (userPriority === undefined) throw "userPriority is undefined";
-        result.result = this._rtcEngine.setRemoteUserPriority(uid, userPriority);
+        result.result = this._impl.setRemoteUserPriority(uid, userPriority);
         return 0;
     }
 
@@ -2600,7 +2365,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let observer = obj.observer;
         if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.registerPacketObserver(observer);
+        result.result = this._impl.registerPacketObserver(observer);
         return 0;
     }
 
@@ -2610,7 +2375,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let encryptionMode = obj.encryptionMode;
         if (encryptionMode === undefined) throw "encryptionMode is undefined";
-        result.result = this._rtcEngine.setEncryptionMode(encryptionMode);
+        result.result = this._impl.setEncryptionMode(encryptionMode);
         return 0;
     }
 
@@ -2620,7 +2385,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let secret = obj.secret;
         if (secret === undefined) throw "secret is undefined";
-        result.result = this._rtcEngine.setEncryptionSecret(secret);
+        result.result = this._impl.setEncryptionSecret(secret);
         return 0;
     }
 
@@ -2632,7 +2397,7 @@ export class IrisRtcEnginePrepare {
         if (enabled === undefined) throw "enabled is undefined";
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.enableEncryption(enabled, config);
+        result.result = this._impl.enableEncryption(enabled, config);
         return 0;
     }
 
@@ -2646,7 +2411,7 @@ export class IrisRtcEnginePrepare {
         if (reliable === undefined) throw "reliable is undefined";
         let ordered = obj.ordered;
         if (ordered === undefined) throw "ordered is undefined";
-        result.result = this._rtcEngine.createDataStream(streamId, reliable, ordered);
+        result.result = this._impl.createDataStream(streamId, reliable, ordered);
         return 0;
     }
 
@@ -2658,7 +2423,7 @@ export class IrisRtcEnginePrepare {
         if (streamId === undefined) throw "streamId is undefined";
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.createDataStream2(streamId, config);
+        result.result = this._impl.createDataStream2(streamId, config);
         return 0;
     }
 
@@ -2672,7 +2437,7 @@ export class IrisRtcEnginePrepare {
         if (data === undefined) throw "data is undefined";
         let length = obj.length;
         if (length === undefined) throw "length is undefined";
-        result.result = this._rtcEngine.sendStreamMessage(streamId, data, length);
+        result.result = this._impl.sendStreamMessage(streamId, data, length);
         return 0;
     }
 
@@ -2682,7 +2447,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let watermark = obj.watermark;
         if (watermark === undefined) throw "watermark is undefined";
-        result.result = this._rtcEngine.addVideoWatermark(watermark);
+        result.result = this._impl.addVideoWatermark(watermark);
         return 0;
     }
 
@@ -2694,7 +2459,7 @@ export class IrisRtcEnginePrepare {
         if (watermarkUrl === undefined) throw "watermarkUrl is undefined";
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.addVideoWatermark2(watermarkUrl, options);
+        result.result = this._impl.addVideoWatermark2(watermarkUrl, options);
         return 0;
     }
 
@@ -2702,7 +2467,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.clearVideoWatermark();
+        result.result = this._impl.clearVideoWatermark();
         return 0;
     }
 
@@ -2710,7 +2475,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.clearVideoWatermarks();
+        result.result = this._impl.clearVideoWatermarks();
         return 0;
     }
 
@@ -2722,7 +2487,7 @@ export class IrisRtcEnginePrepare {
         if (url === undefined) throw "url is undefined";
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.addInjectStreamUrl(url, config);
+        result.result = this._impl.addInjectStreamUrl(url, config);
         return 0;
     }
 
@@ -2732,7 +2497,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let url = obj.url;
         if (url === undefined) throw "url is undefined";
-        result.result = this._rtcEngine.removeInjectStreamUrl(url);
+        result.result = this._impl.removeInjectStreamUrl(url);
         return 0;
     }
 
@@ -2740,7 +2505,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.pauseAudio();
+        result.result = this._impl.pauseAudio();
         return 0;
     }
 
@@ -2748,7 +2513,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.resumeAudio();
+        result.result = this._impl.resumeAudio();
         return 0;
     }
 
@@ -2758,7 +2523,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let enabled = obj.enabled;
         if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.enableWebSdkInteroperability(enabled);
+        result.result = this._impl.enableWebSdkInteroperability(enabled);
         return 0;
     }
 
@@ -2776,7 +2541,7 @@ export class IrisRtcEnginePrepare {
         if (label === undefined) throw "label is undefined";
         let value = obj.value;
         if (value === undefined) throw "value is undefined";
-        result.result = this._rtcEngine.sendCustomReportMessage(id, category, event, label, value);
+        result.result = this._impl.sendCustomReportMessage(id, category, event, label, value);
         return 0;
     }
 
@@ -2788,7 +2553,7 @@ export class IrisRtcEnginePrepare {
         if (observer === undefined) throw "observer is undefined";
         let type = obj.type;
         if (type === undefined) throw "type is undefined";
-        result.result = this._rtcEngine.registerMediaMetadataObserver(observer, type);
+        result.result = this._impl.registerMediaMetadataObserver(observer, type);
         return 0;
     }
 
@@ -2800,7 +2565,7 @@ export class IrisRtcEnginePrepare {
         if (observer === undefined) throw "observer is undefined";
         let type = obj.type;
         if (type === undefined) throw "type is undefined";
-        result.result = this._rtcEngine.unregisterMediaMetadataObserver(observer, type);
+        result.result = this._impl.unregisterMediaMetadataObserver(observer, type);
         return 0;
     }
 
@@ -2822,7 +2587,7 @@ export class IrisRtcEnginePrepare {
         if (duration_ms === undefined) throw "duration_ms is undefined";
         let auto_upload = obj.auto_upload;
         if (auto_upload === undefined) throw "auto_upload is undefined";
-        result.result = this._rtcEngine.startAudioFrameDump(channel_id, user_id, location, uuid, passwd, duration_ms, auto_upload);
+        result.result = this._impl.startAudioFrameDump(channel_id, user_id, location, uuid, passwd, duration_ms, auto_upload);
         return 0;
     }
 
@@ -2836,7 +2601,7 @@ export class IrisRtcEnginePrepare {
         if (user_id === undefined) throw "user_id is undefined";
         let location = obj.location;
         if (location === undefined) throw "location is undefined";
-        result.result = this._rtcEngine.stopAudioFrameDump(channel_id, user_id, location);
+        result.result = this._impl.stopAudioFrameDump(channel_id, user_id, location);
         return 0;
     }
 
@@ -2848,7 +2613,7 @@ export class IrisRtcEnginePrepare {
         if (appId === undefined) throw "appId is undefined";
         let userAccount = obj.userAccount;
         if (userAccount === undefined) throw "userAccount is undefined";
-        result.result = this._rtcEngine.registerLocalUserAccount(appId, userAccount);
+        result.result = this._impl.registerLocalUserAccount(appId, userAccount);
         return 0;
     }
 
@@ -2862,7 +2627,7 @@ export class IrisRtcEnginePrepare {
         if (channelId === undefined) throw "channelId is undefined";
         let userAccount = obj.userAccount;
         if (userAccount === undefined) throw "userAccount is undefined";
-        result.result = this._rtcEngine.joinChannelWithUserAccount(token, channelId, userAccount);
+        result.result = this._impl.joinChannelWithUserAccount(token, channelId, userAccount);
         return 0;
     }
 
@@ -2878,7 +2643,7 @@ export class IrisRtcEnginePrepare {
         if (userAccount === undefined) throw "userAccount is undefined";
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.joinChannelWithUserAccount2(token, channelId, userAccount, options);
+        result.result = this._impl.joinChannelWithUserAccount2(token, channelId, userAccount, options);
         return 0;
     }
 
@@ -2894,7 +2659,7 @@ export class IrisRtcEnginePrepare {
         if (userAccount === undefined) throw "userAccount is undefined";
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.joinChannelWithUserAccountEx(token, channelId, userAccount, options);
+        result.result = this._impl.joinChannelWithUserAccountEx(token, channelId, userAccount, options);
         return 0;
     }
 
@@ -2905,7 +2670,7 @@ export class IrisRtcEnginePrepare {
         let userAccount = obj.userAccount;
         if (userAccount === undefined) throw "userAccount is undefined";
         let userInfo: agorartc.UserInfo = { uid: 0, userAccount: "" };
-        result.result = this._rtcEngine.getUserInfoByUserAccount(userAccount, userInfo);
+        result.result = this._impl.getUserInfoByUserAccount(userAccount, userInfo);
         result.userInfo = userInfo;
         return 0;
     }
@@ -2917,7 +2682,7 @@ export class IrisRtcEnginePrepare {
         let uid = obj.uid;
         if (uid === undefined) throw "uid is undefined";
         let userInfo: agorartc.UserInfo = { uid: 0, userAccount: "" }
-        result.result = this._rtcEngine.getUserInfoByUid(uid, userInfo);
+        result.result = this._impl.getUserInfoByUid(uid, userInfo);
         result.userInfo = userInfo;
         return 0;
     }
@@ -2928,7 +2693,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let configuration = obj.configuration;
         if (configuration === undefined) throw "configuration is undefined";
-        result.result = this._rtcEngine.startChannelMediaRelay(configuration);
+        result.result = this._impl.startChannelMediaRelay(configuration);
         return 0;
     }
 
@@ -2938,7 +2703,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let configuration = obj.configuration;
         if (configuration === undefined) throw "configuration is undefined";
-        result.result = this._rtcEngine.updateChannelMediaRelay(configuration);
+        result.result = this._impl.updateChannelMediaRelay(configuration);
         return 0;
     }
 
@@ -2946,7 +2711,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopChannelMediaRelay();
+        result.result = this._impl.stopChannelMediaRelay();
         return 0;
     }
 
@@ -2954,7 +2719,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.pauseAllChannelMediaRelay();
+        result.result = this._impl.pauseAllChannelMediaRelay();
         return 0;
     }
 
@@ -2962,7 +2727,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.resumeAllChannelMediaRelay();
+        result.result = this._impl.resumeAllChannelMediaRelay();
         return 0;
     }
 
@@ -2972,7 +2737,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let profile = obj.profile;
         if (profile === undefined) throw "profile is undefined";
-        result.result = this._rtcEngine.setDirectCdnStreamingAudioConfiguration(profile);
+        result.result = this._impl.setDirectCdnStreamingAudioConfiguration(profile);
         return 0;
     }
 
@@ -2982,7 +2747,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.setDirectCdnStreamingVideoConfiguration(config);
+        result.result = this._impl.setDirectCdnStreamingVideoConfiguration(config);
         return 0;
     }
 
@@ -2996,7 +2761,7 @@ export class IrisRtcEnginePrepare {
         if (publishUrl === undefined) throw "publishUrl is undefined";
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.startDirectCdnStreaming(eventHandler, publishUrl, options);
+        result.result = this._impl.startDirectCdnStreaming(eventHandler, publishUrl, options);
         return 0;
     }
 
@@ -3004,7 +2769,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopDirectCdnStreaming();
+        result.result = this._impl.stopDirectCdnStreaming();
         return 0;
     }
 
@@ -3014,7 +2779,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.updateDirectCdnStreamingMediaOptions(options);
+        result.result = this._impl.updateDirectCdnStreamingMediaOptions(options);
         return 0;
     }
 
@@ -3028,7 +2793,7 @@ export class IrisRtcEnginePrepare {
         if (sound2 === undefined) throw "sound2 is undefined";
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.startRhythmPlayer(sound1, sound2, config);
+        result.result = this._impl.startRhythmPlayer(sound1, sound2, config);
         return 0;
     }
 
@@ -3036,7 +2801,7 @@ export class IrisRtcEnginePrepare {
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
         let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopRhythmPlayer();
+        result.result = this._impl.stopRhythmPlayer();
         return 0;
     }
 
@@ -3046,7 +2811,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.configRhythmPlayer(config);
+        result.result = this._impl.configRhythmPlayer(config);
         return 0;
     }
 
@@ -3056,7 +2821,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.takeSnapshot(config);
+        result.result = this._impl.takeSnapshot(config);
         return 0;
     }
 
@@ -3066,7 +2831,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.setContentInspect(config);
+        result.result = this._impl.setContentInspect(config);
         return 0;
     }
 
@@ -3078,7 +2843,7 @@ export class IrisRtcEnginePrepare {
         if (enabled === undefined) throw "enabled is undefined";
         let params = obj.params;
         if (params === undefined) throw "params is undefined";
-        result.result = this._rtcEngine.enableFishCorrection(enabled, params);
+        result.result = this._impl.enableFishCorrection(enabled, params);
         return 0;
     }
 
@@ -3090,7 +2855,7 @@ export class IrisRtcEnginePrepare {
         if (sourceId === undefined) throw "sourceId is undefined";
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustCustomAudioPlayoutVolume(sourceId, volume);
+        result.result = this._impl.adjustCustomAudioPlayoutVolume(sourceId, volume);
         return 0;
     }
 
@@ -3102,7 +2867,7 @@ export class IrisRtcEnginePrepare {
         if (sourceId === undefined) throw "sourceId is undefined";
         let volume = obj.volume;
         if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustCustomAudioPlayoutVolume(sourceId, volume);
+        result.result = this._impl.adjustCustomAudioPlayoutVolume(sourceId, volume);
         return 0;
     }
 
@@ -3112,7 +2877,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let proxyType = obj.proxyType;
         if (proxyType === undefined) throw "proxyType is undefined";
-        result.result = this._rtcEngine.setCloudProxy(proxyType);
+        result.result = this._impl.setCloudProxy(proxyType);
         return 0;
     }
 
@@ -3122,7 +2887,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let config = obj.config;
         if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.setLocalAccessPoint(config);
+        result.result = this._impl.setLocalAccessPoint(config);
         return 0;
     }
 
@@ -3134,7 +2899,7 @@ export class IrisRtcEnginePrepare {
         if (enabled === undefined) throw "enabled is undefined";
         let params = obj.params;
         if (params === undefined) throw "params is undefined";
-        result.result = this._rtcEngine.enableFishEyeCorrection(enabled, params);
+        result.result = this._impl.enableFishEyeCorrection(enabled, params);
         return 0;
     }
 
@@ -3144,7 +2909,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.setAdvancedAudioOptions(options);
+        result.result = this._impl.setAdvancedAudioOptions(options);
         return 0;
     }
 
@@ -3156,7 +2921,7 @@ export class IrisRtcEnginePrepare {
         if (channelId === undefined) throw "channelId is undefined";
         let uid = obj.uid;
         if (uid === undefined) throw "uid is undefined";
-        result.result = this._rtcEngine.setAVSyncSource(channelId, uid);
+        result.result = this._impl.setAVSyncSource(channelId, uid);
         return 0;
     }
 
@@ -3168,7 +2933,7 @@ export class IrisRtcEnginePrepare {
         if (enable === undefined) throw "enable is undefined";
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.enableVideoImageSource(enable, options);
+        result.result = this._impl.enableVideoImageSource(enable, options);
         return 0;
     }
 
@@ -3178,1504 +2943,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let enabled = obj.enabled;
         if (enabled === undefined) throw "enabled is undefined";
-        result.result = this._rtcEngine.enableWirelessAccelerate(enabled);
-        return 0;
-    }
-
-
-    //IRtcEngineEx
-    joinChannelEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let token = obj.token;
-        if (token === undefined) throw "token is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        let options = obj.options;
-        if (options === undefined) throw "options is undefined";
-        result.result = this._rtcEngine.joinChannelEx(token, connection, options);
-        return 0;
-    }
-
-    leaveChannelEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.leaveChannelEx(connection);
-        return 0;
-    }
-
-    updateChannelMediaOptionsEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let options = obj.options;
-        if (options === undefined) throw "options is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.updateChannelMediaOptionsEx(options, connection);
-        return 0;
-    }
-
-    setVideoEncoderConfigurationEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let config = obj.config;
-        if (config === undefined) throw "config is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setVideoEncoderConfigurationEx(config, connection);
-        return 0;
-    }
-
-    setupRemoteVideoEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let canvas = obj.canvas;
-        if (canvas === undefined) throw "canvas is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setupRemoteVideoEx(canvas, connection);
-        return 0;
-    }
-
-    muteRemoteAudioStreamEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let mute = obj.mute;
-        if (mute === undefined) throw "mute is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.muteRemoteAudioStreamEx(uid, mute, connection);
-        return 0;
-    }
-
-    muteRemoteVideoStreamEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let mute = obj.mute;
-        if (mute === undefined) throw "mute is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.muteRemoteVideoStreamEx(uid, mute, connection);
-        return 0;
-    }
-
-    setRemoteVideoStreamTypeEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let streamType = obj.streamType;
-        if (streamType === undefined) throw "streamType is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setRemoteVideoStreamTypeEx(uid, streamType, connection);
-        return 0;
-    }
-
-    setSubscribeAudioBlacklistEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uidList = obj.uidList;
-        if (uidList === undefined) throw "uidList is undefined";
-        let uidNumber = obj.uidNumber;
-        if (uidNumber === undefined) throw "uidNumber is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setSubscribeAudioBlacklistEx(uidList, uidNumber, connection);
-        return 0;
-    }
-
-    setSubscribeAudioWhitelistEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uidList = obj.uidList;
-        if (uidList === undefined) throw "uidList is undefined";
-        let uidNumber = obj.uidNumber;
-        if (uidNumber === undefined) throw "uidNumber is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setSubscribeAudioWhitelistEx(uidList, uidNumber, connection);
-        return 0;
-    }
-
-    setSubscribeVideoBlacklistEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uidList = obj.uidList;
-        if (uidList === undefined) throw "uidList is undefined";
-        let uidNumber = obj.uidNumber;
-        if (uidNumber === undefined) throw "uidNumber is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setSubscribeVideoBlacklistEx(uidList, uidNumber, connection);
-        return 0;
-    }
-
-    setSubscribeVideoWhitelistEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uidList = obj.uidList;
-        if (uidList === undefined) throw "uidList is undefined";
-        let uidNumber = obj.uidNumber;
-        if (uidNumber === undefined) throw "uidNumber is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setSubscribeVideoWhitelistEx(uidList, uidNumber, connection);
-        return 0;
-    }
-
-    setRemoteVideoSubscriptionOptionsEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let options = obj.options;
-        if (options === undefined) throw "options is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setRemoteVideoSubscriptionOptionsEx(uid, options, connection);
-        return 0;
-    }
-
-    setRemoteVoicePositionEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let pan = obj.pan;
-        if (pan === undefined) throw "pan is undefined";
-        let gain = obj.gain;
-        if (gain === undefined) throw "gain is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setRemoteVoicePositionEx(uid, pan, gain, connection);
-        return 0;
-    }
-
-    setRemoteUserSpatialAudioParamsEx(
-        params1: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params1) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let params = obj.params;
-        if (params === undefined) throw "params is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setRemoteUserSpatialAudioParamsEx(uid, params, connection);
-        return 0;
-    }
-
-    setRemoteRenderModeEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let renderMode = obj.renderMode;
-        if (renderMode === undefined) throw "renderMode is undefined";
-        let mirrorMode = obj.mirrorMode;
-        if (mirrorMode === undefined) throw "mirrorMode is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setRemoteRenderModeEx(uid, renderMode, mirrorMode, connection);
-        return 0;
-    }
-
-    enableLoopbackRecordingEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        let enabled = obj.enabled;
-        if (enabled === undefined) throw "enabled is undefined";
-        let deviceName = obj.deviceName;
-        if (deviceName === undefined) throw "deviceName is undefined";
-        result.result = this._rtcEngine.enableLoopbackRecordingEx(connection, enabled, deviceName);
-        return 0;
-    }
-
-    getConnectionStateEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.getConnectionStateEx(connection);
-        return 0;
-    }
-
-    enableEncryptionEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        let enabled = obj.enabled;
-        if (enabled === undefined) throw "enabled is undefined";
-        let config = obj.config;
-        if (config === undefined) throw "config is undefined";
-        result.result = this._rtcEngine.enableEncryptionEx(connection, enabled, config);
-        return 0;
-    }
-
-    createDataStreamEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let reliable = obj.reliable;
-        if (reliable === undefined) throw "reliable is undefined";
-        let ordered = obj.ordered;
-        if (ordered === undefined) throw "ordered is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.createDataStreamEx(reliable, ordered, connection);
-        result.streamId = 0;
-        return 0;
-    }
-
-    createDataStreamEx2(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let config = obj.config;
-        if (config === undefined) throw "config is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.createDataStreamEx2(config, connection);
-        result.streamId = 0;
-        return 0;
-    }
-
-    sendStreamMessageEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let streamId = obj.streamId;
-        if (streamId === undefined) throw "streamId is undefined";
-        let data = obj.data;
-        if (data === undefined) throw "data is undefined";
-        let length = obj.length;
-        if (length === undefined) throw "length is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.sendStreamMessageEx(streamId, data, length, connection);
-        return 0;
-    }
-
-    addVideoWatermarkEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let watermarkUrl = obj.watermarkUrl;
-        if (watermarkUrl === undefined) throw "watermarkUrl is undefined";
-        let options = obj.options;
-        if (options === undefined) throw "options is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.addVideoWatermarkEx(watermarkUrl, options, connection);
-        return 0;
-    }
-
-    clearVideoWatermarkEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.clearVideoWatermarkEx(connection);
-        return 0;
-    }
-
-    sendCustomReportMessageEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let id = obj.id;
-        if (id === undefined) throw "id is undefined";
-        let category = obj.category;
-        if (category === undefined) throw "category is undefined";
-        let event = obj.event;
-        if (event === undefined) throw "event is undefined";
-        let label = obj.label;
-        if (label === undefined) throw "label is undefined";
-        let value = obj.value;
-        if (value === undefined) throw "value is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.sendCustomReportMessageEx(id, category, event, label, value, connection);
-        return 0;
-    }
-
-    enableAudioVolumeIndicationEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let interval = obj.interval;
-        if (interval === undefined) throw "interval is undefined";
-        let smooth = obj.smooth;
-        if (smooth === undefined) throw "smooth is undefined";
-        let reportVad = obj.reportVad;
-        if (reportVad === undefined) throw "reportVad is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.enableAudioVolumeIndicationEx(interval, smooth, reportVad, connection);
-        return 0;
-    }
-
-    getUserInfoByUserAccountEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let userAccount = obj.userAccount;
-        if (userAccount === undefined) throw "userAccount is undefined";
-        let userInfo: agorartc.UserInfo = { userAccount: "", uid: 0 };
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.getUserInfoByUserAccountEx(userAccount, userInfo, connection);
-        result.userInfo = userInfo;
-        return 0;
-    }
-
-    getUserInfoByUidEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let userInfo: agorartc.UserInfo = { userAccount: "", uid: 0 };
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.getUserInfoByUidEx(uid, userInfo, connection);
-        result.userInfo = userInfo;
-        return 0;
-    }
-
-    setVideoProfileEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let width = obj.width;
-        if (width === undefined) throw "width is undefined";
-        let height = obj.height;
-        if (height === undefined) throw "height is undefined";
-        let frameRate = obj.frameRate;
-        if (frameRate === undefined) throw "frameRate is undefined";
-        let bitrate = obj.bitrate;
-        if (bitrate === undefined) throw "bitrate is undefined";
-        result.result = this._rtcEngine.setVideoProfileEx(width, height, frameRate, bitrate);
-        return 0;
-    }
-
-    enableDualStreamModeEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let sourceType = obj.sourceType;
-        if (sourceType === undefined) throw "sourceType is undefined";
-        let enabled = obj.enabled;
-        if (enabled === undefined) throw "enabled is undefined";
-        let streamConfig = obj.streamConfig;
-        if (streamConfig === undefined) throw "streamConfig is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.enableDualStreamModeEx(sourceType, enabled, streamConfig, connection);
-        return 0;
-    }
-
-    setDualStreamModeEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let sourceType = obj.sourceType;
-        if (sourceType === undefined) throw "sourceType is undefined";
-        let mode = obj.mode;
-        if (mode === undefined) throw "mode is undefined";
-        let streamConfig = obj.streamConfig;
-        if (streamConfig === undefined) throw "streamConfig is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.setDualStreamModeEx(sourceType, mode, streamConfig, connection);
-        return 0;
-    }
-
-    // enableWirelessAccelerate(
-    // 	params: string, paramLength: number,
-    // 	buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-    // 	let obj = JSON.parse(params) as any;
-    // 	let enabled = obj.enabled;
-    // 	if (enabled === undefined) throw "enabled is undefined";
-    // 	result.result = this._rtcEngine.enableWirelessAccelerate(enabled);
-    // 	return 0;
-    // }
-
-    takeSnapshotEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let filePath = obj.filePath;
-        if (filePath === undefined) throw "filePath is undefined";
-        result.result = this._rtcEngine.takeSnapshotEx(connection, uid, filePath);
-        return 0;
-    }
-
-
-    //ILocalSpatialAudioEngine
-    // initialize(
-    // 	params: string, paramLength: number,
-    // 	buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-    // 	let obj = JSON.parse(params) as any;
-    // 	let config = obj.config;
-    // 	if (config === undefined) throw "config is undefined";
-    // 	result.result = this._rtcEngine.initialize(config);
-    // 	return 0;
-    // }
-
-    updateRemotePosition(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let posInfo = obj.posInfo;
-        if (posInfo === undefined) throw "posInfo is undefined";
-        result.result = this._rtcEngine.updateRemotePosition(uid, posInfo);
-        return 0;
-    }
-
-    updateRemotePositionEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let posInfo = obj.posInfo;
-        if (posInfo === undefined) throw "posInfo is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.updateRemotePositionEx(uid, posInfo, connection);
-        return 0;
-    }
-
-    removeRemotePosition(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        result.result = this._rtcEngine.removeRemotePosition(uid);
-        return 0;
-    }
-
-    removeRemotePositionEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let uid = obj.uid;
-        if (uid === undefined) throw "uid is undefined";
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.removeRemotePositionEx(uid, connection);
-        return 0;
-    }
-
-    clearRemotePositions(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.clearRemotePositions();
-        return 0;
-    }
-
-    clearRemotePositionsEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let connection = obj.connection;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.clearRemotePositionsEx(connection);
-        return 0;
-    }
-
-
-    //IAudioDeviceManager
-    enumeratePlaybackDevices(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        // let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.enumeratePlaybackDevices();
-        return 0;
-    }
-
-    enumerateRecordingDevices(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        // let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.enumerateRecordingDevices();
-        return 0;
-    }
-
-    setPlaybackDevice(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let deviceId = obj.deviceId;
-        if (deviceId === undefined) throw "deviceId is undefined";
-        result.result = this._rtcEngine.setPlaybackDevice(deviceId);
-        return 0;
-    }
-
-    getPlaybackDevice(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        // let deviceId = obj.deviceId;
-        // if (deviceId === undefined) throw "deviceId is undefined";
-        result.result = this._rtcEngine.getPlaybackDevice();
-        return 0;
-    }
-
-    getPlaybackDeviceInfo(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        // let obj = JSON.parse(params) as any;
-        // let deviceId = obj.deviceId;
-        // if (deviceId === undefined) throw "deviceId is undefined";
-        // let deviceName = obj.deviceName;
-        // if (deviceName === undefined) throw "deviceName is undefined";
-        result.result = this._rtcEngine.getPlaybackDeviceInfo();
-        return 0;
-    }
-
-    setPlaybackDeviceVolume(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let volume = obj.volume;
-        if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.setPlaybackDeviceVolume(volume);
-        return 0;
-    }
-
-    getPlaybackDeviceVolume(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        // let volume = obj.volume;
-        // if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.getPlaybackDeviceVolume();
-        return 0;
-    }
-
-    setRecordingDevice(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let deviceId = obj.deviceId;
-        if (deviceId === undefined) throw "deviceId is undefined";
-        result.result = this._rtcEngine.setRecordingDevice(deviceId);
-        return 0;
-    }
-
-    getRecordingDevice(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        // let deviceId = obj.deviceId;
-        // if (deviceId === undefined) throw "deviceId is undefined";
-        result.result = this._rtcEngine.getRecordingDevice();
-        return 0;
-    }
-
-    getRecordingDeviceInfo(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        // let deviceId = obj.deviceId;
-        // if (deviceId === undefined) throw "deviceId is undefined";
-        // let deviceName = obj.deviceName;
-        // if (deviceName === undefined) throw "deviceName is undefined";
-        result.result = this._rtcEngine.getRecordingDeviceInfo();
-        return 0;
-    }
-
-    setRecordingDeviceVolume(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let volume = obj.volume;
-        if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.setRecordingDeviceVolume(volume);
-        return 0;
-    }
-
-    getRecordingDeviceVolume(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        // let volume = obj.volume;
-        // if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.getRecordingDeviceVolume();
-        return 0;
-    }
-
-    setPlaybackDeviceMute(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let mute = obj.mute;
-        if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.setPlaybackDeviceMute(mute);
-        return 0;
-    }
-
-    getPlaybackDeviceMute(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let mute = obj.mute;
-        if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.getPlaybackDeviceMute(mute);
-        return 0;
-    }
-
-    setRecordingDeviceMute(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let mute = obj.mute;
-        if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.setRecordingDeviceMute(mute);
-        return 0;
-    }
-
-    getRecordingDeviceMute(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let mute = obj.mute;
-        if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.getRecordingDeviceMute(mute);
-        return 0;
-    }
-
-    startPlaybackDeviceTest(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let testAudioFilePath = obj.testAudioFilePath;
-        if (testAudioFilePath === undefined) throw "testAudioFilePath is undefined";
-        result.result = this._rtcEngine.startPlaybackDeviceTest(testAudioFilePath);
-        return 0;
-    }
-
-    stopPlaybackDeviceTest(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopPlaybackDeviceTest();
-        return 0;
-    }
-
-    startRecordingDeviceTest(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let indicationInterval = obj.indicationInterval;
-        if (indicationInterval === undefined) throw "indicationInterval is undefined";
-        result.result = this._rtcEngine.startRecordingDeviceTest(indicationInterval);
-        return 0;
-    }
-
-    stopRecordingDeviceTest(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopRecordingDeviceTest();
-        return 0;
-    }
-
-    startAudioDeviceLoopbackTest(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let indicationInterval = obj.indicationInterval;
-        if (indicationInterval === undefined) throw "indicationInterval is undefined";
-        result.result = this._rtcEngine.startAudioDeviceLoopbackTest(indicationInterval);
-        return 0;
-    }
-
-    stopAudioDeviceLoopbackTest(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        result.result = this._rtcEngine.stopAudioDeviceLoopbackTest();
-        return 0;
-    }
-
-    followSystemPlaybackDevice(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let enable = obj.enable;
-        if (enable === undefined) throw "enable is undefined";
-        result.result = this._rtcEngine.followSystemPlaybackDevice(enable);
-        return 0;
-    }
-
-    followSystemRecordingDevice(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let enable = obj.enable;
-        if (enable === undefined) throw "enable is undefined";
-        result.result = this._rtcEngine.followSystemRecordingDevice(enable);
-        return 0;
-    }
-
-    //IMediaPlayer
-    open(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let url = obj.url;
-        if (url === undefined) throw "url is undefined";
-        let startPos = obj.startPos;
-        if (startPos === undefined) throw "startPos is undefined";
-        result.result = this._rtcEngine.open(playerId, url, startPos);
-        return 0;
-    }
-
-    openWithCustomSource(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let startPos = obj.startPos;
-        if (startPos === undefined) throw "startPos is undefined";
-        let provider = obj.provider;
-        if (provider === undefined) throw "provider is undefined";
-        result.result = this._rtcEngine.openWithCustomSource(playerId, startPos, provider);
-        return 0;
-    }
-
-    openWithMediaSource(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let source = obj.source;
-        if (source === undefined) throw "source is undefined";
-        result.result = this._rtcEngine.openWithMediaSource(playerId, source);
-        return 0;
-    }
-
-    play(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.play(playerId);
-        return 0;
-    }
-
-    pause(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.pause(playerId);
-        return 0;
-    }
-
-    stop(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.stop(playerId);
-        return 0;
-    }
-
-    resume(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.resume(playerId);
-        return 0;
-    }
-
-    seek(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let newPos = obj.newPos;
-        if (newPos === undefined) throw "newPos is undefined";
-        result.result = this._rtcEngine.seek(playerId, newPos);
-        return 0;
-    }
-
-    setAudioPitch(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let pitch = obj.pitch;
-        if (pitch === undefined) throw "pitch is undefined";
-        result.result = this._rtcEngine.setAudioPitch(playerId, pitch);
-        return 0;
-    }
-
-    getDuration(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let duration = obj.duration;
-        if (duration === undefined) throw "duration is undefined";
-        result.result = this._rtcEngine.getDuration(playerId, duration);
-        return 0;
-    }
-
-    getPlayPosition(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let pos = obj.pos;
-        if (pos === undefined) throw "pos is undefined";
-        result.result = this._rtcEngine.getPlayPosition(playerId, pos);
-        return 0;
-    }
-
-    getStreamCount(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let count = obj.count;
-        if (count === undefined) throw "count is undefined";
-        result.result = this._rtcEngine.getStreamCount(playerId, count);
-        return 0;
-    }
-
-    getStreamInfo(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let index = obj.index;
-        if (index === undefined) throw "index is undefined";
-        let info = obj.info;
-        if (info === undefined) throw "info is undefined";
-        result.result = this._rtcEngine.getStreamInfo(playerId, index, info);
-        return 0;
-    }
-
-    setLoopCount(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let loopCount = obj.loopCount;
-        if (loopCount === undefined) throw "loopCount is undefined";
-        result.result = this._rtcEngine.setLoopCount(playerId, loopCount);
-        return 0;
-    }
-
-    muteAudio(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let audio_mute = obj.audio_mute;
-        if (audio_mute === undefined) throw "audio_mute is undefined";
-        result.result = this._rtcEngine.muteAudio(playerId, audio_mute);
-        return 0;
-    }
-
-    isAudioMuted(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.isAudioMuted(playerId);
-        return 0;
-    }
-
-    muteVideo(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let video_mute = obj.video_mute;
-        if (video_mute === undefined) throw "video_mute is undefined";
-        result.result = this._rtcEngine.muteVideo(playerId, video_mute);
-        return 0;
-    }
-
-    isVideoMuted(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.isVideoMuted(playerId);
-        return 0;
-    }
-
-    setPlaybackSpeed(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let speed = obj.speed;
-        if (speed === undefined) throw "speed is undefined";
-        result.result = this._rtcEngine.setPlaybackSpeed(playerId, speed);
-        return 0;
-    }
-
-    selectAudioTrack(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let index = obj.index;
-        if (index === undefined) throw "index is undefined";
-        result.result = this._rtcEngine.selectAudioTrack(playerId, index);
-        return 0;
-    }
-
-    setPlayerOption(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let key = obj.key;
-        if (key === undefined) throw "key is undefined";
-        let value = obj.value;
-        if (value === undefined) throw "value is undefined";
-        result.result = this._rtcEngine.setPlayerOption(playerId, key, value);
-        return 0;
-    }
-
-    setPlayerOption2(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let key = obj.key;
-        if (key === undefined) throw "key is undefined";
-        let value = obj.value;
-        if (value === undefined) throw "value is undefined";
-        result.result = this._rtcEngine.setPlayerOption2(playerId, key, value);
-        return 0;
-    }
-
-    takeScreenshot(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let filename = obj.filename;
-        if (filename === undefined) throw "filename is undefined";
-        result.result = this._rtcEngine.takeScreenshot(playerId, filename);
-        return 0;
-    }
-
-    selectInternalSubtitle(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let index = obj.index;
-        if (index === undefined) throw "index is undefined";
-        result.result = this._rtcEngine.selectInternalSubtitle(playerId, index);
-        return 0;
-    }
-
-    setExternalSubtitle(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let url = obj.url;
-        if (url === undefined) throw "url is undefined";
-        result.result = this._rtcEngine.setExternalSubtitle(playerId, url);
-        return 0;
-    }
-
-    getState(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.getState(playerId);
-        return 0;
-    }
-
-    mute(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let mute = obj.mute;
-        if (mute === undefined) throw "mute is undefined";
-        result.result = this._rtcEngine.mute(playerId, mute);
-        return 0;
-    }
-
-    getMute(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.getMute(playerId, result);
-        return 0;
-    }
-
-    adjustPlayoutVolume(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let volume = obj.volume;
-        if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustPlayoutVolume(playerId, volume);
-        return 0;
-    }
-
-    getPlayoutVolume(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let volume = obj.volume;
-        if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.getPlayoutVolume(playerId, volume);
-        return 0;
-    }
-
-    adjustPublishSignalVolume(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let volume = obj.volume;
-        if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.adjustPublishSignalVolume(playerId, volume);
-        return 0;
-    }
-
-    getPublishSignalVolume(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let volume = obj.volume;
-        if (volume === undefined) throw "volume is undefined";
-        result.result = this._rtcEngine.getPublishSignalVolume(playerId, volume);
-        return 0;
-    }
-
-    setView(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let view = obj.view;
-        if (view === undefined) throw "view is undefined";
-        result.result = this._rtcEngine.setView(playerId, view);
-        return 0;
-    }
-
-    setRenderMode(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let renderMode = obj.renderMode;
-        if (renderMode === undefined) throw "renderMode is undefined";
-        result.result = this._rtcEngine.setRenderMode(playerId, renderMode);
-        return 0;
-    }
-
-    registerPlayerSourceObserver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.registerPlayerSourceObserver(playerId, observer);
-        return 0;
-    }
-
-    unregisterPlayerSourceObserver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.unregisterPlayerSourceObserver(playerId, observer);
-        return 0;
-    }
-
-    MediaPlayer_registerAudioFrameObserver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.MediaPlayer_registerAudioFrameObserver(playerId, observer);
-        return 0;
-    }
-
-    MediaPlayer_registerAudioFrameObserver2(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        let mode = obj.mode;
-        if (mode === undefined) throw "mode is undefined";
-        result.result = this._rtcEngine.MediaPlayer_registerAudioFrameObserver2(playerId, observer, mode);
-        return 0;
-    }
-
-    MediaPlayer_unregisterAudioFrameObserver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.MediaPlayer_unregisterAudioFrameObserver(playerId, observer);
-        return 0;
-    }
-
-    MediaPlayer_registerVideoFrameObserver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.MediaPlayer_registerVideoFrameObserver(playerId, observer);
-        return 0;
-    }
-
-    registerVideoEncodedImageReceiver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let receiver = obj.receiver;
-        if (receiver === undefined) throw "receiver is undefined";
-        result.result = this._rtcEngine.registerVideoEncodedImageReceiver(receiver);
-        return 0;
-    }
-
-    MediaPlayer_unregisterVideoFrameObserver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.MediaPlayer_unregisterVideoFrameObserver(playerId, observer);
-        return 0;
-    }
-
-    registerMediaPlayerAudioSpectrumObserver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        let intervalInMS = obj.intervalInMS;
-        if (intervalInMS === undefined) throw "intervalInMS is undefined";
-        result.result = this._rtcEngine.registerMediaPlayerAudioSpectrumObserver(observer, intervalInMS);
-        return 0;
-    }
-
-    unregisterMediaPlayerAudioSpectrumObserver(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let observer = obj.observer;
-        if (observer === undefined) throw "observer is undefined";
-        result.result = this._rtcEngine.unregisterMediaPlayerAudioSpectrumObserver(playerId, observer);
-        return 0;
-    }
-
-    setAudioDualMonoMode(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let mode = obj.mode;
-        if (mode === undefined) throw "mode is undefined";
-        result.result = this._rtcEngine.setAudioDualMonoMode(playerId, mode);
-        return 0;
-    }
-
-    getPlayerSdkVersion(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.getPlayerSdkVersion(playerId);
-        return 0;
-    }
-
-    getPlaySrc(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.getPlaySrc(playerId);
-        return 0;
-    }
-
-    openWithAgoraCDNSrc(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let src = obj.src;
-        if (src === undefined) throw "src is undefined";
-        let startPos = obj.startPos;
-        if (startPos === undefined) throw "startPos is undefined";
-        result.result = this._rtcEngine.openWithAgoraCDNSrc(playerId, src, startPos);
-        return 0;
-    }
-
-    getAgoraCDNLineCount(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.getAgoraCDNLineCount(playerId);
-        return 0;
-    }
-
-    switchAgoraCDNLineByIndex(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let index = obj.index;
-        if (index === undefined) throw "index is undefined";
-        result.result = this._rtcEngine.switchAgoraCDNLineByIndex(playerId, index);
-        return 0;
-    }
-
-    getCurrentAgoraCDNIndex(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        result.result = this._rtcEngine.getCurrentAgoraCDNIndex(playerId);
-        return 0;
-    }
-
-    enableAutoSwitchAgoraCDN(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let enable = obj.enable;
-        if (enable === undefined) throw "enable is undefined";
-        result.result = this._rtcEngine.enableAutoSwitchAgoraCDN(playerId, enable);
-        return 0;
-    }
-
-    renewAgoraCDNSrcToken(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let token = obj.token;
-        if (token === undefined) throw "token is undefined";
-        let ts = obj.ts;
-        if (ts === undefined) throw "ts is undefined";
-        result.result = this._rtcEngine.renewAgoraCDNSrcToken(playerId, token, ts);
-        return 0;
-    }
-
-    switchAgoraCDNSrc(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let src = obj.src;
-        if (src === undefined) throw "src is undefined";
-        let syncPts = obj.syncPts;
-        if (syncPts === undefined) throw "syncPts is undefined";
-        result.result = this._rtcEngine.switchAgoraCDNSrc(playerId, src, syncPts);
-        return 0;
-    }
-
-    switchSrc(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let src = obj.src;
-        if (src === undefined) throw "src is undefined";
-        let syncPts = obj.syncPts;
-        if (syncPts === undefined) throw "syncPts is undefined";
-        result.result = this._rtcEngine.switchSrc(playerId, src, syncPts);
-        return 0;
-    }
-
-    preloadSrc(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let src = obj.src;
-        if (src === undefined) throw "src is undefined";
-        let startPos = obj.startPos;
-        if (startPos === undefined) throw "startPos is undefined";
-        result.result = this._rtcEngine.preloadSrc(playerId, src, startPos);
-        return 0;
-    }
-
-    playPreloadedSrc(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let src = obj.src;
-        if (src === undefined) throw "src is undefined";
-        result.result = this._rtcEngine.playPreloadedSrc(playerId, src);
-        return 0;
-    }
-
-    unloadSrc(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let src = obj.src;
-        if (src === undefined) throw "src is undefined";
-        result.result = this._rtcEngine.unloadSrc(playerId, src);
-        return 0;
-    }
-
-    setSpatialAudioParams(
-        params1: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params1) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let params = obj.params;
-        if (params === undefined) throw "params is undefined";
-        result.result = this._rtcEngine.setSpatialAudioParams(playerId, params);
-        return 0;
-    }
-
-    setSoundPositionParams(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let playerId = obj.playerId;
-        if (playerId === undefined) throw "playerId is undefined";
-        let pan = obj.pan;
-        if (pan === undefined) throw "pan is undefined";
-        let gain = obj.gain;
-        if (gain === undefined) throw "gain is undefined";
-        result.result = this._rtcEngine.setSoundPositionParams(playerId, pan, gain);
+        result.result = this._impl.enableWirelessAccelerate(enabled);
         return 0;
     }
 
@@ -4686,7 +2954,7 @@ export class IrisRtcEnginePrepare {
         if (url === undefined) throw "url is undefined";
         let transcodingEnabled = obj.transcodingEnabled;
         if (transcodingEnabled === undefined) throw "transcodingEnabled is undefined";
-        result.result = this._rtcEngine.addPublishStreamUrl(url, transcodingEnabled);
+        result.result = this._impl.addPublishStreamUrl(url, transcodingEnabled);
         return 0;
 
     }
@@ -4696,7 +2964,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let url = obj.url;
         if (url === undefined) throw "url is undefined";
-        result.result = this._rtcEngine.removePublishStreamUrl(url);
+        result.result = this._impl.removePublishStreamUrl(url);
         return 0;
 
     }
@@ -4708,7 +2976,7 @@ export class IrisRtcEnginePrepare {
         if (token === undefined) throw "token is undefined";
         let channel = obj.channel;
         if (channel === undefined) throw "channel is undefined";
-        result.result = this._rtcEngine.switchChannel(token, channel);
+        result.result = this._impl.switchChannel(token, channel);
         return 0;
     }
 
@@ -4717,20 +2985,7 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let frame = obj.frame;
         if (frame === undefined) throw "frame is undefined";
-        result.result = this._rtcEngine.pushDirectCdnStreamingCustomVideoFrame(frame);
-        return 0;
-    }
-
-    addPublishStreamUrlEx(params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
-        let url = obj.url;
-        if (url === undefined) throw "url is undefined";
-        let transcodingEnabled = obj.transcodingEnabled;
-        if (transcodingEnabled === undefined) throw "transcodingEnabled is undefined";
-        let connection = obj.transcodingEnabled;
-        if (connection === undefined) throw "connection is undefined";
-        result.result = this._rtcEngine.addPublishStreamUrlEx(url, transcodingEnabled, connection);
+        result.result = this._impl.pushDirectCdnStreamingCustomVideoFrame(frame);
         return 0;
     }
 
@@ -4739,7 +2994,8 @@ export class IrisRtcEnginePrepare {
         let obj = JSON.parse(params) as any;
         let transcoding = obj.transcoding;
         if (transcoding === undefined) throw "transcoding is undefined";
-        result.result = this._rtcEngine.setLiveTranscoding(transcoding);
+        result.result = this._impl.setLiveTranscoding(transcoding);
         return 0;
     }
+
 }
