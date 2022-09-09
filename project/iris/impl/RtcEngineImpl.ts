@@ -28,6 +28,7 @@ export class RtcEngineImpl implements IRtcEngine {
 
     }
 
+
     public putAction(action: Action) {
         this._engine.actionQueue.putAction(action);
     }
@@ -64,6 +65,11 @@ export class RtcEngineImpl implements IRtcEngine {
         return 0;
     }
 
+    setAppType(appType: number): number {
+        AgoraRTC.setAppType(appType);
+        return 0;
+    }
+
     //这个接口在400被删除了
     addPublishStreamUrl(url: string, transcodingEnabled: boolean): number {
         AgoraConsole.warn("This method is deprecated. Use StartRtmpStreamWithoutTranscoding or StartRtmpStreamWithTranscoding instead according to your needs");
@@ -95,15 +101,12 @@ export class RtcEngineImpl implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    setAppType(appType: number): number {
-        AgoraRTC.setAppType(appType);
-        return 0;
-    }
+
 
     release(sync: boolean): void {
         this.putAction({
             fun: (sync: boolean, next) => {
-                //todo 释放client , track, eventHandler
+                //client , track, eventHandler 已经在IrisRtcEngine里被释放了。，这里不需要释放
                 next();
             },
             args: [sync]
@@ -113,6 +116,11 @@ export class RtcEngineImpl implements IRtcEngine {
 
     queryInterface(iid: agorartc.INTERFACE_ID_TYPE, inter: void): number {
         AgoraConsole.warn("queryInterface not supported in this platfrom!");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    }
+
+    releaseScreenCaptureSources(): number {
+        AgoraConsole.warn("releaseScreenCaptureSources not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 

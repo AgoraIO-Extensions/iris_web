@@ -12,6 +12,8 @@ export class MediaEngineImpl implements IMediaEngine {
     }
 
 
+
+
     putAction(action: Action) {
         this._engine.actionQueue.putAction(action);
     }
@@ -56,6 +58,8 @@ export class MediaEngineImpl implements IMediaEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
+
+
     setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: agorartc.EXTERNAL_VIDEO_SOURCE_TYPE): number {
         AgoraConsole.warn("setExternalVideoSource not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -80,8 +84,14 @@ export class MediaEngineImpl implements IMediaEngine {
         AgoraConsole.warn("setDirectExternalAudioSource not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
+
     pushVideoFrame(frame: agorartc.ExternalVideoFrame): number {
         AgoraConsole.warn("pushVideoFrame not supported in this platfrom!");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    }
+
+    pushVideoFrame2(frame: agorartc.ExternalVideoFrame, connection: agorartc.RtcConnection): number {
+        AgoraConsole.warn("pushVideoFrame2 not supported in this platfrom!");
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 

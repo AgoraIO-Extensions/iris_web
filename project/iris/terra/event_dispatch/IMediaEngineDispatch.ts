@@ -180,6 +180,18 @@ export class IMediaEngineDispatch {
         return 0;
     }
 
+    pushVideoFrame2(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        let obj = JSON.parse(params) as any;
+        let frame = obj.frame;
+        if (frame === undefined) throw "frame is undefined";
+        let connection = obj.connection;
+        if (connection === undefined) throw "connection is undefined";
+        result.result = this._impl.pushVideoFrame2(frame, connection);
+        return 0;
+    }
+
     pushEncodedVideoImage(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {

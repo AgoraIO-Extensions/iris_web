@@ -25,6 +25,13 @@ export class IRtcEngineDispatch {
         return 0;
     }
 
+    releaseScreenCaptureSources(
+        params: string, paramLength: number,
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        result.result = this._impl.releaseScreenCaptureSources();
+        return 0;
+    }
+
     initialize(
         params: string, paramLength: number,
         buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
