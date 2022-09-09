@@ -1610,7 +1610,7 @@ export class RtcEngineEventHandler {
 
 
     //webgl的特殊回调 当设备信号被枚举了
-    OnDevicesEnumerated() {
+    onDevicesEnumerated() {
         let obj = {
 
         };
@@ -1620,7 +1620,7 @@ export class RtcEngineEventHandler {
     }
 
     //当音频设备被查找后
-    OnPlaybackDevicesEnumerated(devices: agorartc.DeviceInfo[]) {
+    onPlaybackDevicesEnumerated(devices: agorartc.DeviceInfo[]) {
         let obj = {
             devices
         };
@@ -1630,7 +1630,7 @@ export class RtcEngineEventHandler {
     }
 
     //当音频录音设备被查找后
-    OnRecordingDevicesEnumerated(devices: agorartc.DeviceInfo[]) {
+    onRecordingDevicesEnumerated(devices: agorartc.DeviceInfo[]) {
         let obj = {
             devices
         };
@@ -1640,7 +1640,7 @@ export class RtcEngineEventHandler {
     }
 
     //当摄像头设备被枚举后
-    OnVideoDevicesEnumerated(devices: agorartc.DeviceInfo[]) {
+    onVideoDevicesEnumerated(devices: agorartc.DeviceInfo[]) {
         let obj = {
             devices
         };
@@ -1649,7 +1649,7 @@ export class RtcEngineEventHandler {
         this._engine.getEventHandler()?.onEvent(key, json, null, null, 0);
     }
 
-    OnEngineDestroy() {
+    onEngineDestroy() {
         let obj = {
 
         };

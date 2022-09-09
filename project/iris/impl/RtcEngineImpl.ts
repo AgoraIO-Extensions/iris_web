@@ -58,7 +58,7 @@ export class RtcEngineImpl implements IRtcEngine {
             .then(() => { })
             .catch(() => { })
             .finally(() => {
-                this._engine.rtcEngineEventHandler.OnDevicesEnumerated();
+                this._engine.rtcEngineEventHandler.onDevicesEnumerated();
             });
 
         return 0;

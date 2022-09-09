@@ -111,7 +111,7 @@ export class IrisRtcEngine {
             fun: (next) => {
                 let process = async () => {
                     await this.entitiesContainer.destruction();
-                    this.rtcEngineEventHandler.OnEngineDestroy();
+                    this.rtcEngineEventHandler.onEngineDestroy();
                     next();
                 }
                 setTimeout(process, 0);

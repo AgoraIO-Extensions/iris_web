@@ -24,7 +24,7 @@ export class VideoDeviceManagerImpl implements IVideoDeviceManager {
         ImplHelper.enumerateDevices(this._engine)
             .then((devices) => {
                 let videoDevices = devices.videoDevices;
-                this._engine.rtcEngineEventHandler.OnVideoDevicesEnumerated(videoDevices);
+                this._engine.rtcEngineEventHandler.onVideoDevicesEnumerated(videoDevices);
             })
             .catch((e) => {
                 AgoraConsole.error("enumerateVideoDevices failed");

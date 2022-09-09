@@ -22,7 +22,7 @@ export class AudioDeviceManagerImpl implements IAudioDeviceManager {
         ImplHelper.enumerateDevices(this._engine)
             .then((device) => {
                 let playbackDevices = device.playbackDevices;
-                this._engine.rtcEngineEventHandler.OnPlaybackDevicesEnumerated(playbackDevices);
+                this._engine.rtcEngineEventHandler.onPlaybackDevicesEnumerated(playbackDevices);
             })
             .catch((e) => {
                 AgoraConsole.error("enumeratePlaybackDevices failed");
@@ -40,7 +40,7 @@ export class AudioDeviceManagerImpl implements IAudioDeviceManager {
         ImplHelper.enumerateDevices(this._engine)
             .then((device) => {
                 let recordingDevices = device.recordingDevices;
-                this._engine.rtcEngineEventHandler.OnRecordingDevicesEnumerated(recordingDevices);
+                this._engine.rtcEngineEventHandler.onRecordingDevicesEnumerated(recordingDevices);
             })
             .catch((e) => {
                 AgoraConsole.error("enumerateRecordingDevices failed");
