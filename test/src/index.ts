@@ -4402,7 +4402,7 @@ test("IRtcEngine_setClientRole", async () => {
     shouldEqual("WebGL_onEngineDestroy", events.includes("WebGL_onEngineDestroy"), true);
 });
 
-test("IRtcEngine_setClientRole", async () => {
+test("IRtcEngine_setClientRole2", async () => {
 
     let events: string[] = [];
     let eventHandler: IrisEventHandler = {
@@ -4412,9 +4412,59 @@ test("IRtcEngine_setClientRole", async () => {
         }
     };
 
-    let apiEngine = await testBegine(true, true, true, eventHandler);
+    let apiEngine = AgoraWrapper.CreateIrisApiEngine();
+    apiEngine.setGenerateVideoTrackLabelOrHtmlElementCb(generateVideoTrackLabelOrHtmlElementCb);
 
-    let role: agorartc.CLIENT_ROLE_TYPE = 0;
+    AgoraWrapper.SetIrisRtcEngineEventHandler(apiEngine, eventHandler);
+
+    //call init
+    let context: agorartc.RtcEngineContext = {
+        appId: commonAppid,
+        context: null,
+        enableAudioDevice: true,
+        channelProfile: agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+        audioScenario: 0,
+        logConfig: {
+            filePath: "",
+            fileSizeInKB: 1024,
+            level: 0x0004,
+        },
+        areaCode: 0x00000001,
+        useExternalEglContext: false,
+    };
+    let paramsObj: any = {
+        context
+    };
+    let result: any = {};
+    let param: string = JSON.stringify(paramsObj);
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_INITIALIZE, param, param.length, null, 0, result);
+    shouldEqual("init: ", result.result, 0);
+
+
+
+    result = {};
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_ENABLEVIDEO, "{}", 2, null, null, result);
+    shouldEqual("enableVideo: ", result.result, 0);
+
+
+    let token = "";
+    let channelId = commonChannelId;
+    let info = "";
+    let uid = 0;
+    paramsObj = {
+        token,
+        channelId,
+        info,
+        uid
+    };
+    result = {};
+    param = JSON.stringify(paramsObj);
+    AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_JOINCHANNEL, param, param.length, null, null, result);
+    shouldEqual("joinChannel: ", result.result, 0);
+    await waitForSecond(3);
+
+
+    let role: agorartc.CLIENT_ROLE_TYPE = agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER;
     let options: agorartc.ClientRoleOptions = {
         audienceLatencyLevel: agorartc.AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_LOW_LATENCY,
         stopMicrophoneRecording: true,
@@ -4425,8 +4475,8 @@ test("IRtcEngine_setClientRole", async () => {
         options,
     }
     let params = JSON.stringify(paramObj);
-    let result: any = {};
-    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETCLIENTROLE, params, params.length, null, 0, result);
+    result = {};
+    let ret = AgoraWrapper.CallIrisApi(apiEngine, IrisApiType.FUNC_RTCENGINE_SETCLIENTROLE2, params, params.length, null, 0, result);
 
     shouldEqual("callApi:IRtcEngine_setClientRole ", ret, 0);
     shouldEqual("IRtcEngine_setClientRole:result ", result.result, 0);

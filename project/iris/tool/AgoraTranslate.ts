@@ -72,11 +72,9 @@ export class AgoraTranslate {
 
     public static agorartcCHANNEL_PROFILE_TYPE2SDK_MODE(channelProfile: agorartc.CHANNEL_PROFILE_TYPE): SDK_MODE {
         switch (channelProfile) {
-            case agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION:
-                return "rtc";
             case agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING:
                 return "live";
-            case agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_GAME:
+            default:
                 return 'rtc';
         };
     };

@@ -583,7 +583,7 @@ export class ImplHelper {
         let mainClientVariables = engine.mainClientVariables;
         let config: ClientConfig = {
             codec: mainClientVariables.videoEncoderConfiguration != null ? AgoraTranslate.agorartcVIDEO_CODEC_TYPE2SDK_CODEC(mainClientVariables.videoEncoderConfiguration.codecType) : "vp8",
-            mode: mainClientVariables.channelProfile != null ? AgoraTranslate.agorartcCHANNEL_PROFILE_TYPE2SDK_MODE(mainClientVariables.channelProfile) : "live"
+            mode: mainClientVariables.channelProfile != null ? AgoraTranslate.agorartcCHANNEL_PROFILE_TYPE2SDK_MODE(mainClientVariables.channelProfile) : "rtc"
         };
         if (mainClientVariables.clientRoleType != null) {
             config.role = AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(mainClientVariables.clientRoleType);
@@ -602,7 +602,7 @@ export class ImplHelper {
         let clientRoleType = options?.clientRoleType;
         let config: ClientConfig = {
             codec: videoEncoderConfiguration != null ? AgoraTranslate.agorartcVIDEO_CODEC_TYPE2SDK_CODEC(videoEncoderConfiguration.codecType) : "vp8",
-            mode: channelProfile != null ? AgoraTranslate.agorartcCHANNEL_PROFILE_TYPE2SDK_MODE(channelProfile) : "live"
+            mode: channelProfile != null ? AgoraTranslate.agorartcCHANNEL_PROFILE_TYPE2SDK_MODE(channelProfile) : "rtc"
         };
         if (clientRoleType != null) {
             config.role = AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(clientRoleType);

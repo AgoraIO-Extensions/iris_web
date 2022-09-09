@@ -4,7 +4,7 @@ import { IrisApiEngine } from '../engine/IrisApiEngine';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action, AgoraActionQueue } from '../tool/AgoraActionQueue';
 import { AgoraConsole } from '../tool/AgoraConsole';
-import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, ClientRoleOptions, DeviceInfo, EncryptionMode, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalAudioTrack, ILocalTrack, ILocalVideoTrack, IMicrophoneAudioTrack, InjectStreamConfig, IRemoteAudioTrack, MicrophoneAudioTrackInitConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
+import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, ClientRole, ClientRoleOptions, DeviceInfo, EncryptionMode, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalAudioTrack, ILocalTrack, ILocalVideoTrack, IMicrophoneAudioTrack, InjectStreamConfig, IRemoteAudioTrack, MicrophoneAudioTrackInitConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
 import { AgoraTranslate } from '../tool/AgoraTranslate';
 import { IrisGlobalVariables } from '../variable/IrisGlobalVariables';
 import { AudioTrackPackage, IrisAudioSourceType, IrisClientType, IrisVideoSourceType, VideoParams, VideoTrackPackage } from '../base/BaseType';
@@ -126,15 +126,17 @@ export class RtcEngineImpl implements IRtcEngine {
     }
 
     joinChannel(token: string, channelId: string, info: string, uid: number): number {
+
+        let mvs = this._engine.mainClientVariables;
         let options: agorartc.ChannelMediaOptions = {
-            publishCameraTrack: true,
-            publishSecondaryCameraTrack: false,
-            publishAudioTrack: true,
-            autoSubscribeAudio: true,
-            autoSubscribeVideo: true,
-            clientRoleType: agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-            defaultVideoStreamType: agorartc.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH,
-            channelProfile: agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
+            publishCameraTrack: mvs.publishCameraTrack != null ? mvs.publishCameraTrack : true,
+            publishSecondaryCameraTrack: mvs.publishSecondaryCameraTrack != null ? mvs.publishSecondaryCameraTrack : false,
+            publishAudioTrack: mvs.publishAudioTrack != null ? mvs.publishAudioTrack : true,
+            autoSubscribeAudio: mvs.autoSubscribeAudio != null ? mvs.autoSubscribeAudio : true,
+            autoSubscribeVideo: mvs.autoSubscribeVideo != null ? mvs.autoSubscribeVideo : true,
+            clientRoleType: mvs.clientRoleType != null ? mvs.clientRoleType : agorartc.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+            defaultVideoStreamType: mvs.defaultVideoStreamType != null ? mvs.defaultVideoStreamType : agorartc.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH,
+            channelProfile: mvs.channelProfile != null ? mvs.channelProfile : agorartc.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
         };
         return this.joinChannel2(token, channelId, uid, options);
     }
@@ -637,13 +639,18 @@ export class RtcEngineImpl implements IRtcEngine {
     }
 
     setClientRole2(role: agorartc.CLIENT_ROLE_TYPE, options: agorartc.ClientRoleOptions): number {
+
+
         this.putAction({
             fun: (role: agorartc.CLIENT_ROLE_TYPE, options: agorartc.ClientRoleOptions, next) => {
                 this._engine.mainClientVariables.clientRoleType = role;
 
+                let webRole: ClientRole = AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(role);
+                let webRoleOptions: ClientRoleOptions = AgoraTranslate.agorartcClientRoleOptions2ClientRoleOptions(options);
+                //只有观众才能设置 第二个参数。主播不能设置第二个参数
                 this._engine.entitiesContainer.getMainClient()?.setClientRole(
-                    AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(role),
-                    AgoraTranslate.agorartcClientRoleOptions2ClientRoleOptions(options)
+                    webRole,
+                    webRole == "audience" ? webRoleOptions : null
                 );
 
                 let audioTrack = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary);
