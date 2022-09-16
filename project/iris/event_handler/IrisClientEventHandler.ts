@@ -1,6 +1,9 @@
-import { IAgoraRTCClient, ConnectionState, ConnectionDisconnectedReason, IAgoraRTCRemoteUser, UID, RemoteStreamType, ChannelMediaRelayState, ChannelMediaRelayError, ChannelMediaRelayEvent, NetworkQuality, AgoraRTCError, InspectState } from "agora-rtc-sdk-ng";
+import { IAgoraRTCClient, ConnectionState, ConnectionDisconnectedReason, IAgoraRTCRemoteUser, UID, RemoteStreamType, ChannelMediaRelayState, ChannelMediaRelayError, ChannelMediaRelayEvent, NetworkQuality } from "agora-rtc-sdk-ng";
+
+
 import { IrisClientType, IrisVideoSourceType } from "../base/BaseType";
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
+import { AgoraRTCError, InspectState } from "../mock";
 import * as agorartc from "../terra/rtc_types/Index";
 import { AgoraTranslate } from "../tool/AgoraTranslate";
 import { IrisTrackEventHandler, IrisTrackEventHandlerParam } from "./IrisTrackEventHandler";
