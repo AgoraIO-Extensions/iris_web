@@ -11,18 +11,17 @@ module.exports = {
         path: path.resolve(__dirname, "dist"),
         libraryTarget: "this",
         // library: "",
-        filename: "lib-agora-wrapper.js",
+        filename: "lib-iris-web.js",
         environment: {
             arrowFunction: false // 关闭webpack的箭头函数，可选
         },
     },
 
-    mode: "production",
 
     devtool: "source-map",
-    optimization: {
-        minimize: true
-    },
+    // optimization: {
+    //     minimize: true
+    // },
 
     resolve: {
         extensions: [".ts", ".js"]
@@ -42,5 +41,12 @@ module.exports = {
 
     plugins: [
         new CleanWebpackPlugin(),
-    ]
+    ],
+    devServer: {
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+            "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+        }
+    }
 }

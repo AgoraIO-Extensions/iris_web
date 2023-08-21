@@ -6,6 +6,42 @@ import { CallApiType, IrisRtcEngine, GenerateVideoTrackLabelOrHtmlElementCb } fr
 import { IrisVideoFrameBufferManager } from "./IrisVideoFrameBufferManager";
 import * as agorartc from "../terra/rtc_types/Index";
 
+// export class CallApiResult {
+//     result: string;
+//     code: 
+// }
+
+export class EventParam {
+    constructor(
+        event: string,
+        data: string,
+        data_size: number,
+        result: string,
+        buffer: Array<any>,
+        length: Array<number>,
+        buffer_count: number
+
+    ) {
+        this.event = event;
+        this.data = data;
+        this.data_size = data_size;
+        this.result = result;
+        this.buffer = buffer;
+        this.length = length;
+        this.buffer_count = buffer_count;
+    }
+
+    event: string;
+    data: string;
+    data_size: number;
+    result: string;
+    buffer: Array<any>;
+    length: Array<number>;
+    buffer_count: number;
+}
+
+export type ApiParam = EventParam;
+
 
 export class IrisApiEngine {
 
@@ -18,11 +54,9 @@ export class IrisApiEngine {
         this._engine = new IrisRtcEngine();
     }
 
-    public callIrisApi(func_name: string,
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+    public callIrisApi(apiParam: ApiParam): number {
 
-        return this._engine.callIrisApi(func_name, params, paramLength, buffer, bufferLength, result);
+        return this._engine.callIrisApi(apiParam);
     }
 
     public destruction() {

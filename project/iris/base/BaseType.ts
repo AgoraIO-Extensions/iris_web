@@ -1,11 +1,31 @@
 import { ILocalAudioTrack, ILocalVideoTrack, IRemoteAudioTrack, IRemoteVideoTrack, UID } from "agora-rtc-sdk-ng";
+import { EventParam } from "../engine/IrisApiEngine";
 
 export interface IrisCEventHandler {
-    onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number);
+    // onEvent(event: string, data: string, buffer: Array<Uint8ClampedArray>, length: Array<number>, buffer_count: number);
+    onEvent(param: EventParam);
 };
 
-export type IrisEventHandlerHandle = IrisCEventHandler;
-export type IrisEventHandler = IrisCEventHandler;
+// export type IrisEventHandlerHandle = IrisCEventHandler;
+// export type IrisEventHandler = IrisCEventHandler;
+
+export class IrisEventHandler implements IrisCEventHandler {
+    private _eventHandler: IrisCEventHandler;
+
+    constructor(eventHandler: IrisCEventHandler) {
+        this._eventHandler = eventHandler;
+    }
+
+    public onEvent(param: EventParam) {
+        console.log(`IrisEventHandler111 ${JSON.stringify(param)}`);
+        if (this._eventHandler) {
+            console.log(`IrisEventHandler222 ${JSON.stringify(param)}`);
+            this._eventHandler.onEvent(param);
+        }
+    }
+}
+
+export type IrisEventHandlerHandle = IrisEventHandler;
 
 export enum IRIS_VIDEO_PROCESS_ERR {
     ERR_OK = 0,

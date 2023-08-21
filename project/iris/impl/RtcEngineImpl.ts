@@ -42,9 +42,11 @@ export class RtcEngineImpl implements IRtcEngine {
 
         AgoraRTC.setArea([AgoraTranslate.agorartcAREA_CODE2AREAS(context.areaCode)]);
 
-        AgoraConsole.logLevel = context.logConfig.level;
-        let numberLevel: number = AgoraTranslate.agorartcLOG_LEVEL2Number(context.logConfig.level);
-        AgoraRTC.setLogLevel(numberLevel);
+        if (context.logConfig && context.logConfig.level) {
+            AgoraConsole.logLevel = context.logConfig.level;
+            let numberLevel: number = AgoraTranslate.agorartcLOG_LEVEL2Number(context.logConfig.level);
+            AgoraRTC.setLogLevel(numberLevel);
+        }
 
         let result = AgoraRTC.checkSystemRequirements();
         if (result) {

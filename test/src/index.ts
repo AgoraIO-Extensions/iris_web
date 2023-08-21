@@ -15,8 +15,8 @@ export let AgoraTest = {
     stop: stop,
 };
 
-const commonAppid: string = "6bb480f77c6c458696eadb61dfc6fb76";
-const commonChannelId: string = "xiayangqun";
+const commonAppid: string = "<APP_ID>";
+const commonChannelId: string = "<CHANNEL_ID>";
 const commonUidEx: number = 123;
 let generateVideoTrackLabelOrHtmlElementCb = function (channelName: string, uid: number, type: IrisVideoSourceType): string | HTMLElement {
     let id: string;

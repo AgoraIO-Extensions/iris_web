@@ -1,11 +1,13 @@
 {
-    "name": "com.agora.unitywebglrtc",
+    "name": "com.agora.irisweb",
     "version": "1.0.0",
     "description": "wait",
-    "main": "index.js",
+    "main": "./iris/app.ts",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "webpack"
+        "build": "webpack",
+        "watch": "webpack --watch",
+        "start": "webpack serve --open"
     },
     "author": "",
     "license": "ISC",

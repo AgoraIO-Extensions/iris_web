@@ -1,6 +1,6 @@
 import { ILocalVideoTrack, IRemoteVideoTrack } from "agora-rtc-sdk-ng";
-import { IrisCEventHandler, IrisEventHandlerHandle } from "./base/BaseType";
-import { IrisApiEngine } from "./engine/IrisApiEngine";
+import { IrisCEventHandler, IrisEventHandler, IrisEventHandlerHandle } from "./base/BaseType";
+import { ApiParam, IrisApiEngine } from "./engine/IrisApiEngine";
 import { IrisVideoFrameBufferManager } from "./engine/IrisVideoFrameBufferManager";
 import { GenerateVideoTrackLabelOrHtmlElementCb } from "./engine/IrisRtcEngine";
 
@@ -20,11 +20,16 @@ export function DestroyIrisApiEngine(engine_ptr: IrisApiEngine): number {
     return 0;
 }
 
+export function CreateIrisEventHandler(event_handler: IrisCEventHandler): IrisEventHandlerHandle {
+    return new IrisEventHandler(event_handler);
+}
+
 //eventHandler
 export function SetIrisRtcEngineEventHandler(
     engine_ptr: IrisApiEngine,
-    event_handler: IrisCEventHandler): IrisEventHandlerHandle {
-
+    event_handler: IrisEventHandlerHandle): IrisEventHandlerHandle {
+    
+        console.log(`SetIrisRtcEngineEventHandler ${engine_ptr}, ${event_handler}`);
     engine_ptr.setIrisRtcEngineEventHandler(event_handler);
     let handle: IrisEventHandlerHandle = event_handler;
     return handle;
@@ -34,17 +39,15 @@ export function UnsetIrisRtcEngineEventHandler(
     engine_ptr: IrisApiEngine,
     handle: IrisEventHandlerHandle): number {
 
-    let event_handler: IrisCEventHandler = handle
+    let event_handler: IrisEventHandlerHandle = handle
     engine_ptr.unsetIrisRtcEngineEventHandler(event_handler);
     return 0;
 }
 
 export function CallIrisApi(
-    engine_ptr: IrisApiEngine, func_name: string,
-    params: string, paramLength: number,
-    buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+    engine_ptr: IrisApiEngine, apiParam: ApiParam): number {
 
-    return engine_ptr.callIrisApi(func_name, params, paramLength, buffer, bufferLength, result);
+    return engine_ptr.callIrisApi(apiParam);
 
 }
 

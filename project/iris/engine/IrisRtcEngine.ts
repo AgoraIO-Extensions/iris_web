@@ -17,6 +17,7 @@ import { IAudioDeviceManagerDispatch } from "../terra/event_dispatch/IAudioDevic
 import { IMediaPlayerDispatch } from "../terra/event_dispatch/IMediaPlayerDispatch";
 import { AgoraConsole } from "../tool/AgoraConsole";
 import * as agorartc from "../terra/rtc_types/Index";
+import { ApiParam } from "./IrisApiEngine";
 
 export type CallApiType = (params: string, paramLength: number, buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any) => number;
 export type GenerateVideoTrackLabelOrHtmlElementCb = (channelName: string, uid: number, type: IrisVideoSourceType) => string | HTMLElement;
@@ -56,19 +57,27 @@ export class IrisRtcEngine {
         this.agoraEventHandler = new IrisAgoraEventHandler(this);
     };
 
-    public callIrisApi(func_name: string,
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+    public callIrisApi(apiParam: ApiParam): number {
+        let func_name = apiParam.event;
+        let params: string = apiParam.data;
+        let paramLength: number = apiParam.data_size;
+        let buffer: Array<any> = apiParam.buffer;
+        let bufferLength: Array<any> = apiParam.length;
+        let buffer_count = apiParam.buffer_count;
+        let result: any = apiParam.result;
+        let resultObj: any = {};
 
         let array = func_name.split('_');
         let className = array[0];
         let funName = array[1];
 
+        console.log(`[iris_web] callIrisApi apiParam: ${JSON.stringify(apiParam)}`);
+
         let obj = this._implDispatchsMap.get(className);
         if (obj) {
             let callApiFun: CallApiType = obj[funName];
             if (callApiFun) {
-                let ret = callApiFun.call(obj, params, paramLength, buffer, bufferLength, result);
+                let ret = callApiFun.call(obj, params, paramLength, buffer, bufferLength, resultObj);
                 AgoraConsole.log(`[callIrisApi] ${func_name} ret ${ret}`);
                 return ret;
             }
@@ -81,9 +90,15 @@ export class IrisRtcEngine {
             AgoraConsole.error(`${className} not found in DispatchsMap`);
             return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
         }
+
+        
+
+        return 0;
     }
 
     public setEventHandler(event_handler: IrisEventHandler) {
+        console.log(`IrisRtcEngine setEventHandler ${event_handler}`);
+        console.log(`IrisRtcEngine setEventHandler 3333 ${event_handler}`);
         this._eventHandler = event_handler;
     }
 
