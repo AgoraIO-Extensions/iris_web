@@ -18,7 +18,7 @@ module.exports = {
     },
 
 
-    devtool: "source-map",
+    devtool: "inline-source-map",
     // optimization: {
     //     minimize: true
     // },
@@ -43,6 +43,7 @@ module.exports = {
         new CleanWebpackPlugin(),
     ],
     devServer: {
+        static: path.resolve(__dirname, './iris'),
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
