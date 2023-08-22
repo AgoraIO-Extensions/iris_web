@@ -1,7 +1,7 @@
 import { IrisRtcEngine } from '../../engine/IrisRtcEngine';
 import { RtcEngineExImpl } from '../../impl/RtcEngineExImpl';
 import { RtcEngineImpl } from '../../impl/RtcEngineImpl';
-import { Action } from '../../tool/AgoraActionQueue';
+import { Action, CallApiReturnType } from '../../tool/AgoraActionQueue';
 import { IRtcEngine } from '../interface/IRtcEngine';
 import * as agorartc from '../rtc_types/Index';
 
@@ -86,7 +86,7 @@ export class IRtcEngineDispatch {
 
     joinChannel(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let token = obj.token;
         if (token === undefined) throw "token is undefined";
@@ -96,13 +96,15 @@ export class IRtcEngineDispatch {
         if (info === undefined) throw "info is undefined";
         let uid = obj.uid;
         if (uid === undefined) throw "uid is undefined";
-        result.result = this._impl.joinChannel(token, channelId, info, uid);
-        return 0;
+        // result.result = this._impl.joinChannel(token, channelId, info, uid);
+        // return 0;
+
+        return this._impl.joinChannel(token, channelId, info, uid);
     }
 
     joinChannel2(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let token = obj.token;
         if (token === undefined) throw "token is undefined";
@@ -112,8 +114,10 @@ export class IRtcEngineDispatch {
         if (uid === undefined) throw "uid is undefined";
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._impl.joinChannel2(token, channelId, uid, options);
-        return 0;
+        // result.result = this._impl.joinChannel2(token, channelId, uid, options);
+        // return 0;
+
+        return this._impl.joinChannel2(token, channelId, uid, options);
     }
 
     updateChannelMediaOptions(

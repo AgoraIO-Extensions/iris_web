@@ -1,6 +1,6 @@
 
 import { IrisEventHandler } from "../base/BaseType";
-import { AgoraActionQueue } from "../tool/AgoraActionQueue";
+import { AgoraActionQueue, CallApiResult } from "../tool/AgoraActionQueue";
 import { AgoraConsole } from "../tool/AgoraConsole";
 import { CallApiType, IrisRtcEngine, GenerateVideoTrackLabelOrHtmlElementCb } from "./IrisRtcEngine";
 import { IrisVideoFrameBufferManager } from "./IrisVideoFrameBufferManager";
@@ -57,6 +57,11 @@ export class IrisApiEngine {
     public callIrisApi(apiParam: ApiParam): number {
 
         return this._engine.callIrisApi(apiParam);
+    }
+
+    public callIrisApiAsync(apiParam: ApiParam): Promise<CallApiResult> {
+
+        return this._engine.callIrisApiAsync(apiParam);
     }
 
     public destruction() {

@@ -7,7 +7,7 @@ import { IrisMainClientVariables } from "../variable/IrisMainClientVariables";
 import { IrisSubClientVariables } from "../variable/IrisSubClientVariables";
 import { RtcEngineEventHandler } from "../terra/RtcEngineEventHandler";
 import { IrisAgoraEventHandler } from "../event_handler/IrisAgoraEventHandler";
-import { AgoraActionQueue } from "../tool/AgoraActionQueue";
+import { AgoraActionQueue, CallApiExecutor, CallApiResult } from "../tool/AgoraActionQueue";
 import { IMediaEngineDispatch } from "../terra/event_dispatch/IMediaEngineDispatch";
 import { IVideoDeviceManagerDispatch } from "../terra/event_dispatch/IVideoDeviceManagerDispatch";
 import { IRtcEngineDispatch } from "../terra/event_dispatch/IRtcEngineDispatch";
@@ -37,6 +37,7 @@ export class IrisRtcEngine {
     public subClientVariables: IrisSubClientVariables = null;
     public agoraEventHandler: IrisAgoraEventHandler = null;
     public actionQueue: AgoraActionQueue = null;
+    public executor: CallApiExecutor = null;
 
     constructor() {
         this._implDispatchsMap = new Map();
@@ -55,6 +56,8 @@ export class IrisRtcEngine {
         this.mainClientVariables = new IrisMainClientVariables();
         this.subClientVariables = new IrisSubClientVariables();
         this.agoraEventHandler = new IrisAgoraEventHandler(this);
+
+        this.executor = new CallApiExecutor(true);
     };
 
     public callIrisApi(apiParam: ApiParam): number {
@@ -94,6 +97,41 @@ export class IrisRtcEngine {
         
 
         return 0;
+    }
+
+    public async callIrisApiAsync(apiParam: ApiParam): Promise<CallApiResult> {
+        let func_name = apiParam.event;
+        let params: string = apiParam.data;
+        let paramLength: number = apiParam.data_size;
+        let buffer: Array<any> = apiParam.buffer;
+        let bufferLength: Array<any> = apiParam.length;
+        let buffer_count = apiParam.buffer_count;
+        let result: any = apiParam.result;
+        let resultObj: any = {};
+
+        let array = func_name.split('_');
+        let className = array[0];
+        let funName = array[1];
+
+        console.log(`[iris_web] callIrisApi apiParam: ${JSON.stringify(apiParam)}`);
+
+        let obj = this._implDispatchsMap.get(className);
+        if (obj) {
+            let callApiFun: CallApiType = obj[funName];
+            if (callApiFun) {
+                let ret = callApiFun.call(obj, params, paramLength, buffer, bufferLength, resultObj);
+                AgoraConsole.log(`[callIrisApi] ${func_name} ret ${ret}`);
+                return ret;
+            }
+            else {
+                AgoraConsole.error(`${func_name} not found in ${className}Dispatch`);
+                return new CallApiResult(-agorartc.ERROR_CODE_TYPE.ERR_FAILED, "");
+            }
+        }
+        else {
+            AgoraConsole.error(`${className} not found in DispatchsMap`);
+            return new CallApiResult( -agorartc.ERROR_CODE_TYPE.ERR_FAILED, "");
+        }
     }
 
     public setEventHandler(event_handler: IrisEventHandler) {

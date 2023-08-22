@@ -1,4 +1,4 @@
-import { Action } from '../../tool/AgoraActionQueue';
+import { Action, CallApiReturnType } from '../../tool/AgoraActionQueue';
 import * as agorartc from '../rtc_types/Index';
 
 
@@ -9,13 +9,13 @@ export interface IRtcEngine {
     //IRtcEngine
     release(sync: boolean): void;
     releaseScreenCaptureSources(): number;
-    initialize(context: agorartc.RtcEngineContext): number;
+    initialize(context: agorartc.RtcEngineContext): CallApiReturnType;
     setAppType(appType: number): number;
     queryInterface(iid: agorartc.INTERFACE_ID_TYPE, inter: void): number;
     getVersion(): string;
     getErrorDescription(code: number): string;
-    joinChannel(token: string, channelId: string, info: string, uid: agorartc.uid_t): number;
-    joinChannel2(token: string, channelId: string, uid: agorartc.uid_t, options: agorartc.ChannelMediaOptions): number;
+    joinChannel(token: string, channelId: string, info: string, uid: agorartc.uid_t): CallApiReturnType;
+    joinChannel2(token: string, channelId: string, uid: agorartc.uid_t, options: agorartc.ChannelMediaOptions): CallApiReturnType;
     updateChannelMediaOptions(options: agorartc.ChannelMediaOptions): number;
     leaveChannel(): number;
     leaveChannel2(options: agorartc.LeaveChannelOptions): number;
