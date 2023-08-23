@@ -7,7 +7,7 @@ import { IrisMainClientVariables } from "../variable/IrisMainClientVariables";
 import { IrisSubClientVariables } from "../variable/IrisSubClientVariables";
 import { RtcEngineEventHandler } from "../terra/RtcEngineEventHandler";
 import { IrisAgoraEventHandler } from "../event_handler/IrisAgoraEventHandler";
-import { AgoraActionQueue, CallApiExecutor, CallApiResult } from "../tool/AgoraActionQueue";
+import { AgoraActionQueue } from "../tool/AgoraActionQueue";
 import { IMediaEngineDispatch } from "../terra/event_dispatch/IMediaEngineDispatch";
 import { IVideoDeviceManagerDispatch } from "../terra/event_dispatch/IVideoDeviceManagerDispatch";
 import { IRtcEngineDispatch } from "../terra/event_dispatch/IRtcEngineDispatch";
@@ -18,8 +18,10 @@ import { IMediaPlayerDispatch } from "../terra/event_dispatch/IMediaPlayerDispat
 import { AgoraConsole } from "../tool/AgoraConsole";
 import * as agorartc from "../terra/rtc_types/Index";
 import { ApiParam } from "./IrisApiEngine";
+import { CallApiExecutor, CallIrisApiResult, isPromise } from "../base/call_api_executor";
 
 export type CallApiType = (params: string, paramLength: number, buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any) => number;
+export type CallApiAsyncType = (params: string, paramLength: number, buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any) => Promise<CallIrisApiResult>;
 export type GenerateVideoTrackLabelOrHtmlElementCb = (channelName: string, uid: number, type: IrisVideoSourceType) => string | HTMLElement;
 
 export class IrisRtcEngine {
@@ -99,7 +101,7 @@ export class IrisRtcEngine {
         return 0;
     }
 
-    public async callIrisApiAsync(apiParam: ApiParam): Promise<CallApiResult> {
+    public async callIrisApiAsync(apiParam: ApiParam): Promise<CallIrisApiResult> {
         let func_name = apiParam.event;
         let params: string = apiParam.data;
         let paramLength: number = apiParam.data_size;
@@ -113,24 +115,29 @@ export class IrisRtcEngine {
         let className = array[0];
         let funName = array[1];
 
-        console.log(`[iris_web] callIrisApi apiParam: ${JSON.stringify(apiParam)}`);
+        console.log(`[iris_web] callIrisApiAsync apiParam: ${JSON.stringify(apiParam)}`);
 
         let obj = this._implDispatchsMap.get(className);
         if (obj) {
-            let callApiFun: CallApiType = obj[funName];
+            let callApiFun: CallApiAsyncType = obj[funName];
             if (callApiFun) {
-                let ret = callApiFun.call(obj, params, paramLength, buffer, bufferLength, resultObj);
-                AgoraConsole.log(`[callIrisApi] ${func_name} ret ${ret}`);
+                let ret = await callApiFun.call(obj, params, paramLength, buffer, bufferLength, resultObj);
+                console.assert(function () {
+                    if (ret === undefined || ret.code === undefined ||  ret.data === undefined)  {
+                        throw `[callIrisApiAsync] ${func_name} ret ${ret} not CallIrisApiResult`;
+                    }
+                }());
+                AgoraConsole.log(`[callIrisApiAsync] ${func_name} ret ${ret.code}`);
                 return ret;
             }
             else {
-                AgoraConsole.error(`${func_name} not found in ${className}Dispatch`);
-                return new CallApiResult(-agorartc.ERROR_CODE_TYPE.ERR_FAILED, "");
+                AgoraConsole.error(`[callIrisApiAsync] ${func_name} not found in ${className}Dispatch`);
+                return new CallIrisApiResult(-agorartc.ERROR_CODE_TYPE.ERR_FAILED, "");
             }
         }
         else {
-            AgoraConsole.error(`${className} not found in DispatchsMap`);
-            return new CallApiResult( -agorartc.ERROR_CODE_TYPE.ERR_FAILED, "");
+            AgoraConsole.error(`[callIrisApiAsync] ${className} not found in DispatchsMap`);
+            return new CallIrisApiResult( -agorartc.ERROR_CODE_TYPE.ERR_FAILED, "");
         }
     }
 

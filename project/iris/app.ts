@@ -27,6 +27,7 @@ import {
     GetVideoFrame,
     GetVideoFrameByConfig
 } from "./IrisVideoProcessor";
+import { CallIrisApiResult } from "./base/call_api_executor";
 
 
 import { IrisApiEngine, EventParam, ApiParam } from "./engine/IrisApiEngine";
@@ -56,6 +57,7 @@ export let AgoraWrapper = {
 
     IrisApiEngine: IrisApiEngine,
     EventParam: EventParam,
+    CallIrisApiResult: CallIrisApiResult,
 
 };
 

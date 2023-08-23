@@ -1,7 +1,8 @@
+import { CallApiReturnType } from '../../base/call_api_executor';
 import { IrisRtcEngine } from '../../engine/IrisRtcEngine';
 import { RtcEngineExImpl } from '../../impl/RtcEngineExImpl';
 import { RtcEngineImpl } from '../../impl/RtcEngineImpl';
-import { Action, CallApiReturnType } from '../../tool/AgoraActionQueue';
+import { Action } from '../../tool/AgoraActionQueue';
 import { IRtcEngine } from '../interface/IRtcEngine';
 import * as agorartc from '../rtc_types/Index';
 
@@ -34,22 +35,26 @@ export class IRtcEngineDispatch {
 
     initialize(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let context = obj.context;
         if (context === undefined) throw "context is undefined";
-        result.result = this._impl.initialize(context);
-        return 0;
+        // result.result = this._impl.initialize(context);
+        // return 0;
+
+        return this._impl.initialize(context);
     }
 
     setAppType(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let appType = obj.appType;
         if (appType === undefined) throw "appType is undefined";
-        result.result = this._impl.setAppType(appType);
-        return 0;
+        // result.result = this._impl.setAppType(appType);
+        // return 0;
+
+        return this._impl.setAppType(appType);
     }
 
     queryInterface(
@@ -170,24 +175,28 @@ export class IRtcEngineDispatch {
 
     setClientRole(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let role = obj.role;
         if (role === undefined) throw "role is undefined";
-        result.result = this._impl.setClientRole(role);
-        return 0;
+        // result.result = this._impl.setClientRole(role);
+        // return 0;
+
+        return this._impl.setClientRole(role);
     }
 
     setClientRole2(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let role = obj.role;
         if (role === undefined) throw "role is undefined";
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._impl.setClientRole2(role, options);
-        return 0;
+        // result.result = this._impl.setClientRole2(role, options);
+        // return 0;
+
+        return this._impl.setClientRole2(role, options);
     }
 
     startEchoTest(
@@ -408,10 +417,12 @@ export class IRtcEngineDispatch {
 
     enableAudio(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
-        result.result = this._impl.enableAudio();
-        return 0;
+        // result.result = this._impl.enableAudio();
+        // return 0;
+
+        return this._impl.enableAudio();
     }
 
     disableAudio(
@@ -424,24 +435,28 @@ export class IRtcEngineDispatch {
 
     setAudioProfile(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let profile = obj.profile;
         if (profile === undefined) throw "profile is undefined";
         let scenario = obj.scenario;
         if (scenario === undefined) throw "scenario is undefined";
-        result.result = this._impl.setAudioProfile(profile, scenario);
-        return 0;
+        // result.result = this._impl.setAudioProfile(profile, scenario);
+        // return 0;
+
+        return this._impl.setAudioProfile(profile, scenario);
     }
 
     setAudioProfile2(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let profile = obj.profile;
         if (profile === undefined) throw "profile is undefined";
-        result.result = this._impl.setAudioProfile2(profile);
-        return 0;
+        // result.result = this._impl.setAudioProfile2(profile);
+        // return 0;
+
+        return this._impl.setAudioProfile2(profile);
     }
 
     setAudioScenario(

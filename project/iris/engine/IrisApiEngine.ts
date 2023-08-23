@@ -1,10 +1,11 @@
 
 import { IrisEventHandler } from "../base/BaseType";
-import { AgoraActionQueue, CallApiResult } from "../tool/AgoraActionQueue";
+import { AgoraActionQueue } from "../tool/AgoraActionQueue";
 import { AgoraConsole } from "../tool/AgoraConsole";
 import { CallApiType, IrisRtcEngine, GenerateVideoTrackLabelOrHtmlElementCb } from "./IrisRtcEngine";
 import { IrisVideoFrameBufferManager } from "./IrisVideoFrameBufferManager";
 import * as agorartc from "../terra/rtc_types/Index";
+import { CallIrisApiResult } from "../base/call_api_executor";
 
 // export class CallApiResult {
 //     result: string;
@@ -59,7 +60,7 @@ export class IrisApiEngine {
         return this._engine.callIrisApi(apiParam);
     }
 
-    public callIrisApiAsync(apiParam: ApiParam): Promise<CallApiResult> {
+    public callIrisApiAsync(apiParam: ApiParam): Promise<CallIrisApiResult> {
 
         return this._engine.callIrisApiAsync(apiParam);
     }

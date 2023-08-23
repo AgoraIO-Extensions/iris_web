@@ -3,7 +3,7 @@ import { IrisCEventHandler, IrisEventHandler, IrisEventHandlerHandle } from "./b
 import { ApiParam, IrisApiEngine } from "./engine/IrisApiEngine";
 import { IrisVideoFrameBufferManager } from "./engine/IrisVideoFrameBufferManager";
 import { GenerateVideoTrackLabelOrHtmlElementCb } from "./engine/IrisRtcEngine";
-import { CallApiResult } from "./tool/AgoraActionQueue";
+import { CallIrisApiResult } from "./base/call_api_executor";
 
 // export namespace AgoraWrapper {
 
@@ -53,7 +53,7 @@ export function CallIrisApi(
 }
 
 export function CallIrisApiAsync(
-    engine_ptr: IrisApiEngine, apiParam: ApiParam): Promise<CallApiResult> {
+    engine_ptr: IrisApiEngine, apiParam: ApiParam): Promise<CallIrisApiResult> {
 
     return engine_ptr.callIrisApiAsync(apiParam);
 

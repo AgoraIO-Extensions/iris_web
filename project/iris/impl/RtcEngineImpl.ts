@@ -2,7 +2,7 @@ import * as agorartc from '../terra/rtc_types/Index';
 import { IRtcEngine } from '../terra/interface/IRtcEngine';
 import { IrisApiEngine } from '../engine/IrisApiEngine';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { Action, AgoraActionQueue, CallApiResult, CallApiReturnType } from '../tool/AgoraActionQueue';
+import { Action, AgoraActionQueue } from '../tool/AgoraActionQueue';
 import { AgoraConsole } from '../tool/AgoraConsole';
 import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, ClientRole, ClientRoleOptions, DeviceInfo, EncryptionMode, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalAudioTrack, ILocalTrack, ILocalVideoTrack, IMicrophoneAudioTrack, InjectStreamConfig, IRemoteAudioTrack, MicrophoneAudioTrackInitConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
 import { AgoraTranslate } from '../tool/AgoraTranslate';
@@ -17,6 +17,7 @@ import { IrisSubClientVariables } from '../variable/IrisSubClientVariables';
 import html2canvas from 'html2canvas';
 import { AgoraTool } from '../tool/AgoraTool';
 import { ImplHelper } from './ImplHelper';
+import { AsyncTaskType, CallApiReturnType, CallIrisApiResult } from '../base/call_api_executor';
 
 export class RtcEngineImpl implements IRtcEngine {
 
@@ -33,26 +34,33 @@ export class RtcEngineImpl implements IRtcEngine {
         this._engine.actionQueue.putAction(action);
     }
 
-    private execute(task: Function): number | Promise<CallApiResult> {
+    private execute(task: AsyncTaskType): CallApiReturnType {
         return this._engine.executor.execute(task);
     }
 
+    private returnResult(code: number = 0,
+        data: string = '{"result": 0}',): Promise<CallIrisApiResult> {
+        return Promise.resolve(new CallIrisApiResult(code, data));
+    }
+
     initialize(context: agorartc.RtcEngineContext): CallApiReturnType {
-        let processFunc = async () => {
+
+        let processFunc = async (): Promise<CallIrisApiResult> => {
+            console.log('RtcEngineImpl initialize');
             this._engine.globalVariables.appId = context.appId;
             this._engine.mainClientVariables.channelProfile = context.channelProfile;
             this._engine.globalVariables.audioScenario = context.audioScenario;
             this._engine.globalVariables.areaCode = context.areaCode;
             this._engine.globalVariables.enabledLocalVideo = context.enableAudioDevice;
-    
+
             AgoraRTC.setArea([AgoraTranslate.agorartcAREA_CODE2AREAS(context.areaCode)]);
-    
+
             if (context.logConfig && context.logConfig.level) {
                 AgoraConsole.logLevel = context.logConfig.level;
                 let numberLevel: number = AgoraTranslate.agorartcLOG_LEVEL2Number(context.logConfig.level);
                 AgoraRTC.setLogLevel(numberLevel);
             }
-    
+
             let result = AgoraRTC.checkSystemRequirements();
             if (result) {
                 AgoraConsole.log("AgoraRTC.checkSystemRequirements return true");
@@ -60,7 +68,7 @@ export class RtcEngineImpl implements IRtcEngine {
             else {
                 AgoraConsole.warn("AgoraRTC.checkSystemRequirements reutrn false");
             }
-    
+
             //enumerate divice
             ImplHelper.enumerateDevices(this._engine)
                 .then(() => { })
@@ -68,15 +76,25 @@ export class RtcEngineImpl implements IRtcEngine {
                 .finally(() => {
                     this._engine.rtcEngineEventHandler.onDevicesEnumerated();
                 });
+
+            console.log('RtcEngineImpl initialize 22222');
+            return Promise.resolve(new CallIrisApiResult(0, '{"result": 0, "other": 111}'));
         }
 
 
         return this.execute(processFunc);
     }
 
-    setAppType(appType: number): number {
-        AgoraRTC.setAppType(appType);
-        return 0;
+    setAppType(appType: number): CallApiReturnType {
+
+
+        let processFunc = async (): Promise<CallIrisApiResult> => {
+            AgoraRTC.setAppType(appType);
+            return Promise.resolve(new CallIrisApiResult(0, '{"result": 0}'));
+        }
+
+
+        return this.execute(processFunc);
     }
 
     //这个接口在400被删除了
@@ -169,7 +187,7 @@ export class RtcEngineImpl implements IRtcEngine {
         // this.putAction({
         //     fun: (token: string, channelId: string, uid: number, options: agorartc.ChannelMediaOptions, next) => {
 
-                
+
 
         //         setTimeout(processJoinChannel, 0);
         //     },
@@ -178,7 +196,7 @@ export class RtcEngineImpl implements IRtcEngine {
 
         // return 0;
 
-        let processJoinChannel = async () => {
+        let processJoinChannel = async (): Promise<CallIrisApiResult> => {
             // this._engine.mainClientVariables.startPreviewed = false;
             let mainClientVariables: IrisMainClientVariables = this._engine.mainClientVariables;
             let globalVariables = this._engine.globalVariables;
@@ -322,6 +340,8 @@ export class RtcEngineImpl implements IRtcEngine {
                     entitiesContainer.clearMainClientLocalVideoTrack();
                 }
             }
+
+            return this.returnResult();
 
             // next();
         }
@@ -652,7 +672,7 @@ export class RtcEngineImpl implements IRtcEngine {
     }
 
     //可以在加入频道前后调用
-    setClientRole(role: agorartc.CLIENT_ROLE_TYPE): number {
+    setClientRole(role: agorartc.CLIENT_ROLE_TYPE): CallApiReturnType {
         let options: agorartc.ClientRoleOptions = {
             audienceLatencyLevel: agorartc.AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY,
             stopMicrophoneRecording: false,
@@ -661,49 +681,57 @@ export class RtcEngineImpl implements IRtcEngine {
         return this.setClientRole2(role, options);
     }
 
-    setClientRole2(role: agorartc.CLIENT_ROLE_TYPE, options: agorartc.ClientRoleOptions): number {
+    setClientRole2(role: agorartc.CLIENT_ROLE_TYPE, options: agorartc.ClientRoleOptions): CallApiReturnType {
 
 
-        this.putAction({
-            fun: (role: agorartc.CLIENT_ROLE_TYPE, options: agorartc.ClientRoleOptions, next) => {
-                this._engine.mainClientVariables.clientRoleType = role;
+        // this.putAction({
+        //     fun: (role: agorartc.CLIENT_ROLE_TYPE, options: agorartc.ClientRoleOptions, next) => {
 
-                let webRole: ClientRole = AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(role);
-                let webRoleOptions: ClientRoleOptions = AgoraTranslate.agorartcClientRoleOptions2ClientRoleOptions(options);
-                //只有观众才能设置 第二个参数。主播不能设置第二个参数
-                this._engine.entitiesContainer.getMainClient()?.setClientRole(
-                    webRole,
-                    webRole == "audience" ? webRoleOptions : null
-                );
+        //     },
+        //     args: [role, options]
+        // })
+        // return 0;
 
-                let audioTrack = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary);
-                if (audioTrack) {
-                    let track = audioTrack.track as IMicrophoneAudioTrack;
-                    if (options.stopMicrophoneRecording == true && track.muted == false) {
-                        track.setMuted(true)
-                            .then(() => { })
-                            .catch(() => {
-                                AgoraConsole.error(" track.setMuted(true) failed");
-                            })
-                    }
-                    else if (options.stopMicrophoneRecording == false && track.muted == true) {
-                        track.setMuted(false)
-                            .then(() => { })
-                            .catch(() => {
-                                AgoraConsole.error(" track.setMuted(false) failed");
-                            })
-                    }
+        let processFunc = async (): Promise<CallIrisApiResult> => {
+            this._engine.mainClientVariables.clientRoleType = role;
+
+            let webRole: ClientRole = AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(role);
+            let webRoleOptions: ClientRoleOptions = AgoraTranslate.agorartcClientRoleOptions2ClientRoleOptions(options);
+            //只有观众才能设置 第二个参数。主播不能设置第二个参数
+            this._engine.entitiesContainer.getMainClient()?.setClientRole(
+                webRole,
+                webRole == "audience" ? webRoleOptions : null
+            );
+
+            let audioTrack = this._engine.entitiesContainer.getLocalAudioTrackByType(IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary);
+            if (audioTrack) {
+                let track = audioTrack.track as IMicrophoneAudioTrack;
+                if (options.stopMicrophoneRecording == true && track.muted == false) {
+                    track.setMuted(true)
+                        .then(() => { })
+                        .catch(() => {
+                            AgoraConsole.error(" track.setMuted(true) failed");
+                        })
                 }
-
-                if (options.stopPreview) {
-                    //todo 停止预览 暂时不支持
+                else if (options.stopMicrophoneRecording == false && track.muted == true) {
+                    track.setMuted(false)
+                        .then(() => { })
+                        .catch(() => {
+                            AgoraConsole.error(" track.setMuted(false) failed");
+                        })
                 }
+            }
 
-                next();
-            },
-            args: [role, options]
-        })
-        return 0;
+            if (options.stopPreview) {
+                //todo 停止预览 暂时不支持
+            }
+
+            // next();
+
+            return this.returnResult();
+        }
+            
+        return this.execute(processFunc);
     }
 
 
@@ -937,45 +965,51 @@ export class RtcEngineImpl implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    enableAudio(): number {
-        this.putAction({
-            fun: (next) => {
+    enableAudio(): CallApiReturnType {
+        // this.putAction({
+        //     fun: (next) => {
 
-                let processAudioTracks = async () => {
-                    this._engine.globalVariables.enabledAudio = true;
-                    //找到本地audio
-                    let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
-                    for (let trackPackage of trackPackages) {
-                        let track = trackPackage.track as ILocalAudioTrack;
-                        if (track.enabled == false) {
-                            try {
-                                await track.setEnabled(true);
-                            }
-                            catch (e) {
-                                AgoraConsole.error('track setEnable(true) failed');
-                                AgoraConsole.error(e);
-                            }
-                        }
+
+
+        //         setTimeout(processAudioTracks, 0);
+
+        //     },
+        //     args: []
+        // })
+
+        // return 0;
+
+        let processAudioTracks = async (): Promise<CallIrisApiResult> => {
+            this._engine.globalVariables.enabledAudio = true;
+            //找到本地audio
+            let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
+            for (let trackPackage of trackPackages) {
+                let track = trackPackage.track as ILocalAudioTrack;
+                if (track.enabled == false) {
+                    try {
+                        await track.setEnabled(true);
                     }
-
-                    //找到远端audio
-                    let remoteUsers = this._engine.entitiesContainer.getAllRemoteUsers();
-                    for (let remoteUser of remoteUsers) {
-                        if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying == false) {
-                            remoteUser.audioTrack.play();
-                        }
+                    catch (e) {
+                        AgoraConsole.error('track setEnable(true) failed');
+                        AgoraConsole.error(e);
                     }
-
-                    next();
                 }
+            }
 
-                setTimeout(processAudioTracks, 0);
+            //找到远端audio
+            let remoteUsers = this._engine.entitiesContainer.getAllRemoteUsers();
+            for (let remoteUser of remoteUsers) {
+                if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying == false) {
+                    remoteUser.audioTrack.play();
+                }
+            }
 
-            },
-            args: []
-        })
+            return this.returnResult();
 
-        return 0;
+            // next();
+        }
+
+        return this.execute(processAudioTracks);
     }
 
     disableAudio(): number {
@@ -1019,32 +1053,50 @@ export class RtcEngineImpl implements IRtcEngine {
         return 0;
     }
 
-    setAudioProfile(profile: agorartc.AUDIO_PROFILE_TYPE, scenario: agorartc.AUDIO_SCENARIO_TYPE): number {
+    setAudioProfile(profile: agorartc.AUDIO_PROFILE_TYPE, scenario: agorartc.AUDIO_SCENARIO_TYPE): CallApiReturnType {
 
-        this.putAction({
+        // this.putAction({
 
-            fun: (profile: agorartc.AUDIO_PROFILE_TYPE, scenario: agorartc.AUDIO_SCENARIO_TYPE, next) => {
-                this._engine.globalVariables.audioProfile = profile;
-                this._engine.globalVariables.audioScenario = scenario;
-                //todo 是否需要去设置当前所有音频属性
-                next();
-            },
-            args: [profile, scenario]
-        })
-        return 0;
+        //     fun: (profile: agorartc.AUDIO_PROFILE_TYPE, scenario: agorartc.AUDIO_SCENARIO_TYPE, next) => {
+        //         this._engine.globalVariables.audioProfile = profile;
+        //         this._engine.globalVariables.audioScenario = scenario;
+        //         //todo 是否需要去设置当前所有音频属性
+        //         next();
+        //     },
+        //     args: [profile, scenario]
+        // })
+        // return 0;
+
+        let processFunc = async (): Promise<CallIrisApiResult> => {
+            this._engine.globalVariables.audioProfile = profile;
+            this._engine.globalVariables.audioScenario = scenario;
+
+            return this.returnResult();
+        };
+
+        return this.execute(processFunc);
     }
 
-    setAudioProfile2(profile: agorartc.AUDIO_PROFILE_TYPE): number {
-        this.putAction({
-            fun: (profile: agorartc.AUDIO_PROFILE_TYPE, next) => {
-                this._engine.globalVariables.audioProfile = profile;
-                //todo  是否需要去设置当前所有音频属性 目前找不到这个设置
+    setAudioProfile2(profile: agorartc.AUDIO_PROFILE_TYPE): CallApiReturnType {
+        // this.putAction({
+        //     fun: (profile: agorartc.AUDIO_PROFILE_TYPE, next) => {
+        //         this._engine.globalVariables.audioProfile = profile;
+        //         //todo  是否需要去设置当前所有音频属性 目前找不到这个设置
 
-                next();
-            },
-            args: [profile]
-        });
-        return 0;
+        //         next();
+        //     },
+        //     args: [profile]
+        // });
+        // return 0;
+
+        let processFunc = async (): Promise<CallIrisApiResult> => {
+            this._engine.globalVariables.audioProfile = profile;
+            //todo  是否需要去设置当前所有音频属性 目前找不到这个设置
+
+            return this.returnResult();
+        };
+
+        return this.execute(processFunc);
     }
 
     setAudioScenario(scenario: agorartc.AUDIO_SCENARIO_TYPE): number {

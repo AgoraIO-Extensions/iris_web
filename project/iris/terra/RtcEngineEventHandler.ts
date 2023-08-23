@@ -4,6 +4,8 @@ import { EventParam } from '../engine/IrisApiEngine';
 
 export class RtcEngineEventHandler {
 
+    classPrefix: string = "RtcEngineEventHandler_";
+
     _engine: IrisRtcEngine = null;
 
     constructor(engine: IrisRtcEngine) {
@@ -15,6 +17,10 @@ export class RtcEngineEventHandler {
         return "IRtcEngineEventHandlerEx";
     };
 
+    private eventKey(event: string): string {
+        return `${this.classPrefix}${event}`;
+    }
+
     onJoinChannelSuccess(channel: string, uid: agorartc.uid_t, elapsed: number): void {
         let obj = {
             channel,
@@ -22,7 +28,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onJoinChannelSuccess';
+        let key = this.eventKey("onJoinChannelSuccess");
 
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         console.log(`onJoinChannelSuccess eventParam ${JSON.stringify(eventParam)}`);
@@ -1089,7 +1095,8 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onJoinChannelSuccessEx';
+        // let key = 'onJoinChannelSuccessEx';
+        let key = this.eventKey('onJoinChannelSuccessEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };

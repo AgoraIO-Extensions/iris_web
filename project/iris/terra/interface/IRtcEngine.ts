@@ -1,4 +1,5 @@
-import { Action, CallApiReturnType } from '../../tool/AgoraActionQueue';
+import { CallApiReturnType } from '../../base/call_api_executor';
+import { Action } from '../../tool/AgoraActionQueue';
 import * as agorartc from '../rtc_types/Index';
 
 
@@ -10,7 +11,7 @@ export interface IRtcEngine {
     release(sync: boolean): void;
     releaseScreenCaptureSources(): number;
     initialize(context: agorartc.RtcEngineContext): CallApiReturnType;
-    setAppType(appType: number): number;
+    setAppType(appType: number): CallApiReturnType;
     queryInterface(iid: agorartc.INTERFACE_ID_TYPE, inter: void): number;
     getVersion(): string;
     getErrorDescription(code: number): string;
@@ -21,8 +22,8 @@ export interface IRtcEngine {
     leaveChannel2(options: agorartc.LeaveChannelOptions): number;
     renewToken(token: string): number;
     setChannelProfile(profile: agorartc.CHANNEL_PROFILE_TYPE): number;
-    setClientRole(role: agorartc.CLIENT_ROLE_TYPE): number;
-    setClientRole2(role: agorartc.CLIENT_ROLE_TYPE, options: agorartc.ClientRoleOptions): number;
+    setClientRole(role: agorartc.CLIENT_ROLE_TYPE): CallApiReturnType;
+    setClientRole2(role: agorartc.CLIENT_ROLE_TYPE, options: agorartc.ClientRoleOptions): CallApiReturnType;
     startEchoTest(): number;
     startEchoTest2(intervalInSeconds: number): number;
     startEchoTest3(config: agorartc.EchoTestConfiguration): number;
@@ -44,10 +45,10 @@ export interface IRtcEngine {
     enableRemoteSuperResolution(userId: agorartc.uid_t, enable: boolean): number;
     setupRemoteVideo(canvas: agorartc.VideoCanvas): number;
     setupLocalVideo(canvas: agorartc.VideoCanvas): number;
-    enableAudio(): number;
+    enableAudio(): CallApiReturnType;
     disableAudio(): number;
-    setAudioProfile(profile: agorartc.AUDIO_PROFILE_TYPE, scenario: agorartc.AUDIO_SCENARIO_TYPE): number;
-    setAudioProfile2(profile: agorartc.AUDIO_PROFILE_TYPE): number;
+    setAudioProfile(profile: agorartc.AUDIO_PROFILE_TYPE, scenario: agorartc.AUDIO_SCENARIO_TYPE): CallApiReturnType;
+    setAudioProfile2(profile: agorartc.AUDIO_PROFILE_TYPE): CallApiReturnType;
     setAudioScenario(scenario: agorartc.AUDIO_SCENARIO_TYPE): number;
     enableLocalAudio(enabled: boolean): number;
     muteLocalAudioStream(mute: boolean): number;
