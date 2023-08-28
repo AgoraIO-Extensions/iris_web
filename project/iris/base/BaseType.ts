@@ -102,8 +102,9 @@ export interface Size {
 };
 
 export interface VideoTrackPackage {
-    type: IrisVideoSourceType,
-    track: ILocalVideoTrack | IRemoteVideoTrack
+    element?: string,
+    type?: IrisVideoSourceType,
+    track?: ILocalVideoTrack | IRemoteVideoTrack
 };
 
 export interface AudioTrackPackage {

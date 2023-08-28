@@ -28,10 +28,10 @@ export interface IRtcEngine {
     startEchoTest2(intervalInSeconds: number): number;
     startEchoTest3(config: agorartc.EchoTestConfiguration): number;
     stopEchoTest(): number;
-    enableVideo(): number;
+    enableVideo(): CallApiReturnType;
     disableVideo(): number;
-    startPreview(): number;
-    startPreview2(sourceType: agorartc.VIDEO_SOURCE_TYPE): number;
+    startPreview(): CallApiReturnType;
+    startPreview2(sourceType: agorartc.VIDEO_SOURCE_TYPE): CallApiReturnType;
     stopPreview(): number;
     stopPreview2(sourceType: agorartc.VIDEO_SOURCE_TYPE): number;
     startLastmileProbeTest(config: agorartc.LastmileProbeConfig): number;
@@ -44,7 +44,7 @@ export interface IRtcEngine {
     enableVirtualBackground(enabled: boolean, backgroundSource: agorartc.VirtualBackgroundSource): number;
     enableRemoteSuperResolution(userId: agorartc.uid_t, enable: boolean): number;
     setupRemoteVideo(canvas: agorartc.VideoCanvas): number;
-    setupLocalVideo(canvas: agorartc.VideoCanvas): number;
+    setupLocalVideo(canvas: agorartc.VideoCanvas): CallApiReturnType;
     enableAudio(): CallApiReturnType;
     disableAudio(): number;
     setAudioProfile(profile: agorartc.AUDIO_PROFILE_TYPE, scenario: agorartc.AUDIO_SCENARIO_TYPE): CallApiReturnType;

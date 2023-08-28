@@ -90,12 +90,15 @@ export class ImplHelper {
             try {
                 let videoConfig: CameraVideoTrackInitConfig = this.generateCameraVideoTrackInitConfig(engine);
                 videoTrack = await AgoraRTC.createCameraVideoTrack(videoConfig);
+
+                console.log(`createCameraVideoTrack 11111111 ${videoType}`);
             }
             catch (e) {
                 AgoraConsole.error("createCameraVideoTrack failed");
                 e && AgoraConsole.log(e);
             }
             if (videoTrack) {
+                console.log(`createCameraVideoTrack 2222222 ${videoType}`);
                 //video 可能为null
                 this.processVideoTrack(engine, videoTrack, clientType, videoType, connection);
                 engine.entitiesContainer.addLocalVideoTrack({ type: videoType, track: videoTrack });
@@ -246,7 +249,7 @@ export class ImplHelper {
                 config.mirror = AgoraTranslate.agorartcVIDEO_MIRROR_MODE_TYPE2boolean(videoEncoderConfiguration.mirrorMode);
             }
 
-            videoTrack.play(engine.generateVideoTrackLabelOrHtmlElement("0", 0, videoSource), config);
+            // videoTrack.play(engine.generateVideoTrackLabelOrHtmlElement("0", 0, videoSource), config);
         }
 
         if (globalVariables.pausedVideo) {

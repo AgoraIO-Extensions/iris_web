@@ -237,10 +237,12 @@ export class IRtcEngineDispatch {
 
     enableVideo(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
-        result.result = this._impl.enableVideo();
-        return 0;
+        // result.result = this._impl.enableVideo();
+        // return 0;
+
+        return this._impl.enableVideo();
     }
 
     disableVideo(
@@ -253,20 +255,24 @@ export class IRtcEngineDispatch {
 
     startPreview(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
-        result.result = this._impl.startPreview();
-        return 0;
+        // result.result = this._impl.startPreview();
+        // return 0;
+
+        return this._impl.startPreview();
     }
 
     startPreview2(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let sourceType = obj.sourceType;
         if (sourceType === undefined) throw "sourceType is undefined";
-        result.result = this._impl.startPreview2(sourceType);
-        return 0;
+        // result.result = this._impl.startPreview2(sourceType);
+        // return 0;
+
+        return this._impl.startPreview2(sourceType);
     }
 
     stopPreview(
@@ -407,12 +413,14 @@ export class IRtcEngineDispatch {
 
     setupLocalVideo(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let canvas = obj.canvas;
         if (canvas === undefined) throw "canvas is undefined";
-        result.result = this._impl.setupLocalVideo(canvas);
-        return 0;
+        // result.result = this._impl.setupLocalVideo(canvas);
+        // return 0;
+
+        return this._impl.setupLocalVideo(canvas);
     }
 
     enableAudio(

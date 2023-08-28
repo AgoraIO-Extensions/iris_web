@@ -147,12 +147,35 @@ export class IrisEntitiesContaniner {
 
 
     addLocalVideoTrack(trackPackage: VideoTrackPackage) {
+        let item = this._localVideoTracks.find((value) => {
+            return value.type == trackPackage.type;
+        });
+
+        // Update the exist one
+        if (item) {
+            console.log(`addLocalVideoTrack add to item: ${JSON.stringify(item)}`);
+            if (trackPackage.element) {
+                item.element = trackPackage.element;
+            }
+            if (trackPackage.track) {
+                item.track = trackPackage.track;
+            }
+            if (trackPackage.type) {
+                item.type = trackPackage.type;
+            }
+
+            return;
+        }
+
+        console.log(`addLocalVideoTrack add new: ${JSON.stringify(trackPackage)}`);
+
+
         this._localVideoTracks.push(trackPackage);
     }
 
     getLocalVideoTrackByType(type: IrisVideoSourceType): VideoTrackPackage {
         for (let trackPack of this._localVideoTracks) {
-            if (trackPack.type == type) {
+            if (trackPack.type == type && trackPack.track) {
                 return trackPack;
             }
         }

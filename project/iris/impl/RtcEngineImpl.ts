@@ -70,12 +70,13 @@ export class RtcEngineImpl implements IRtcEngine {
             }
 
             //enumerate divice
-            ImplHelper.enumerateDevices(this._engine)
-                .then(() => { })
-                .catch(() => { })
-                .finally(() => {
-                    this._engine.rtcEngineEventHandler.onDevicesEnumerated();
-                });
+            // TODO(littlegnal): This is a WebGL specific requirement
+            // ImplHelper.enumerateDevices(this._engine)
+            //     .then(() => { })
+            //     .catch(() => { })
+            //     .finally(() => {
+            //         this._engine.rtcEngineEventHandler.onDevicesEnumerated();
+            //     });
 
             console.log('RtcEngineImpl initialize 22222');
             return Promise.resolve(new CallIrisApiResult(0, '{"result": 0, "other": 111}'));
@@ -730,7 +731,7 @@ export class RtcEngineImpl implements IRtcEngine {
 
             return this.returnResult();
         }
-            
+
         return this.execute(processFunc);
     }
 
@@ -755,78 +756,115 @@ export class RtcEngineImpl implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    startPreview(): number {
+    startPreview(): CallApiReturnType {
         return this.startPreview2(agorartc.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA);
     }
 
-    startPreview2(sourceType: agorartc.VIDEO_SOURCE_TYPE): number {
-        this.putAction({
+    startPreview2(sourceType: agorartc.VIDEO_SOURCE_TYPE): CallApiReturnType {
+        // this.putAction({
 
-            fun: (sourceType: agorartc.VIDEO_SOURCE_TYPE, next) => {
-
-                if (this._engine.globalVariables.enabledVideo == false) {
-                    AgoraConsole.error("call enableVideo(true) before startPreview");
-                    next();
-                    return;
-                }
-
-                // if (this._engine.mainClientVariables.startPreviewed == true) {
-                //     AgoraConsole.error("you already call startPreview");
-                //     next();
-                //     return;
-                // }
-
-                if (sourceType >= 4) {
-                    AgoraConsole.error("Invalid source type");
-                    next();
-                    return;
-                }
-
-                // this._engine.mainClientVariables.startPreviewed = true;
-
-                let audioSource: IrisAudioSourceType = IrisAudioSourceType.kAudioSourceTypeUnknow;
-                let videoSource: IrisVideoSourceType = sourceType as number;
+        //     fun: (sourceType: agorartc.VIDEO_SOURCE_TYPE, next) => {
 
 
 
-                let process = async () => {
-                    try {
-                        await ImplHelper.getOrCreateAudioAndVideoTrackAsync(this._engine, audioSource, videoSource, IrisClientType.kClientMian, null);
-                        AgoraConsole.log("start preview createCameraVideoTrack success");
+        //         setTimeout(process, 0);
+
+
+        //         // this.getOrCreateAudioAndVideoTrack(
+        //         //     audioSource,
+        //         //     videoSource,
+        //         //     IrisClientType.kClientMian,
+        //         //     (err: any, trackArray: [ILocalAudioTrack, ILocalVideoTrack]) => {
+        //         //         if (err) {
+        //         //             AgoraConsole.error("Start preview failed: create video and audio track failed");
+        //         //             AgoraConsole.error(err);
+        //         //             this._engine.mainClientVariables.startPreviewed = false;
+        //         //         }
+        //         //         else {
+        //         //             let audioTrack = trackArray[0];
+        //         //             let videoTrack = trackArray[1];
+        //         //             AgoraConsole.log("start preview createCameraVideoTrack success");
+        //         //         }
+        //         //         next();
+        //         //     }
+        //         // )
+        //     },
+        //     args: [sourceType]
+        // })
+        // return 0;
+
+
+
+
+
+        let process = async (): Promise<CallIrisApiResult> => {
+            if (this._engine.globalVariables.enabledVideo == false) {
+                AgoraConsole.error("call enableVideo(true) before startPreview");
+                // next();
+                return;
+            }
+
+            // if (this._engine.mainClientVariables.startPreviewed == true) {
+            //     AgoraConsole.error("you already call startPreview");
+            //     next();
+            //     return;
+            // }
+
+            if (sourceType >= 4) {
+                AgoraConsole.error("Invalid source type");
+                // next();
+                return;
+            }
+
+            // this._engine.mainClientVariables.startPreviewed = true;
+
+            let audioSource: IrisAudioSourceType = IrisAudioSourceType.kAudioSourceTypeUnknow;
+            let videoSource: IrisVideoSourceType = sourceType as number;
+
+            console.log(`startPreview2 videoSource: ${videoSource}`);
+
+            try {
+                await ImplHelper.getOrCreateAudioAndVideoTrackAsync(this._engine, audioSource, videoSource, IrisClientType.kClientMian, null);
+
+                let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
+                for (let trackPackage of trackPackages) {
+                    let track = trackPackage.track as ILocalVideoTrack;
+                    if (!track) {
+                        continue;
                     }
-                    catch (err) {
-                        AgoraConsole.error("Start preview failed: create video and audio track failed");
-                        err && AgoraConsole.error(err);
-                        // this._engine.mainClientVariables.startPreviewed = false;
+
+                    if (track.enabled == false) {
+                        try {
+                            await track.setEnabled(true);
+                        }
+                        catch (e) {
+                            AgoraConsole.error('ILocalVideoTrack setEnable(true) failed');
+                            AgoraConsole.error(e);
+                        }
                     }
-                    next();
+
+                    if (track.isPlaying) {
+                        track.stop();
+                    }
+
+                    if (trackPackage.element) {
+                        track.play(trackPackage.element);
+                    }
                 }
 
-                setTimeout(process, 0);
+                AgoraConsole.log("start preview createCameraVideoTrack success");
+            }
+            catch (err) {
+                AgoraConsole.error("Start preview failed: create video and audio track failed");
+                err && AgoraConsole.error(err);
+                // this._engine.mainClientVariables.startPreviewed = false;
+            }
+            // next();
 
+            return this.returnResult();
+        }
 
-                // this.getOrCreateAudioAndVideoTrack(
-                //     audioSource,
-                //     videoSource,
-                //     IrisClientType.kClientMian,
-                //     (err: any, trackArray: [ILocalAudioTrack, ILocalVideoTrack]) => {
-                //         if (err) {
-                //             AgoraConsole.error("Start preview failed: create video and audio track failed");
-                //             AgoraConsole.error(err);
-                //             this._engine.mainClientVariables.startPreviewed = false;
-                //         }
-                //         else {
-                //             let audioTrack = trackArray[0];
-                //             let videoTrack = trackArray[1];
-                //             AgoraConsole.log("start preview createCameraVideoTrack success");
-                //         }
-                //         next();
-                //     }
-                // )
-            },
-            args: [sourceType]
-        })
-        return 0;
+        return this.execute(process);
     }
 
 
@@ -960,9 +998,50 @@ export class RtcEngineImpl implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    setupLocalVideo(canvas: agorartc.VideoCanvas): number {
-        AgoraConsole.warn("setupLocalVideo not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    setupLocalVideo(canvas: agorartc.VideoCanvas): CallApiReturnType {
+        // AgoraConsole.warn("setupLocalVideo not supported in this platfrom!");
+        // return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+
+        let processVideoTrack = async (): Promise<CallIrisApiResult> => {
+            //找到本端video
+            // if (this._engine.globalVariables.enabledVideo) {
+
+
+                
+            // }
+
+            this._engine.entitiesContainer.addLocalVideoTrack({element: canvas.view, type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary});
+
+            let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
+            for (let trackPackage of trackPackages) {
+                let track = trackPackage.track as ILocalVideoTrack;
+                if (!track) {
+                    continue;
+                }
+
+                if (track.enabled == false) {
+                    try {
+                        await track.setEnabled(true);
+                    }
+                    catch (e) {
+                        AgoraConsole.error('ILocalVideoTrack setEnable(true) failed');
+                        AgoraConsole.error(e);
+                    }
+                }
+
+                if (track.isPlaying) {
+                    track.stop();
+                }
+
+                track.play(trackPackage.element);
+        
+            }
+
+            return this.returnResult();
+        };
+
+        return this.execute(processVideoTrack);
+
     }
 
     enableAudio(): CallApiReturnType {
@@ -1248,71 +1327,85 @@ export class RtcEngineImpl implements IRtcEngine {
         return 0;
     }
 
-    enableVideo(): number {
-        this.putAction({
-            fun: (next) => {
+    enableVideo(): CallApiReturnType {
+        // this.putAction({
+        //     fun: (next) => {
 
-                let processVideoTrack = async () => {
-                    this._engine.globalVariables.enabledVideo = true;
 
-                    //找到本端video
-                    if (this._engine.globalVariables.enabledLocalVideo) {
-                        let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
-                        for (let trackPackage of trackPackages) {
-                            let track = trackPackage.track as ILocalVideoTrack;
-                            if (track.isPlaying == false) {
-                                try {
-                                    await track.play(this._engine.generateVideoTrackLabelOrHtmlElement("", 0, trackPackage.type));
-                                }
-                                catch (e) {
-                                    AgoraConsole.error('ILocalVideoTrack play(true) failed');
-                                    AgoraConsole.error(e);
-                                }
-                            }
-                            if (track.enabled == false) {
-                                try {
-                                    await track.setEnabled(true);
-                                }
-                                catch (e) {
-                                    AgoraConsole.error('ILocalVideoTrack setEnable(true) failed');
-                                    AgoraConsole.error(e);
-                                }
-                            }
-                        }
+        //         setTimeout(processVideoTrack, 0);
+        //     },
+        //     args: []
+        // })
+
+        // return 0;
+
+        let processVideoTrack = async (): Promise<CallIrisApiResult> => {
+            this._engine.globalVariables.enabledVideo = true;
+
+            //找到本端video
+            if (this._engine.globalVariables.enabledLocalVideo) {
+                let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
+                for (let trackPackage of trackPackages) {
+
+                    if (!trackPackage.track) {
+                        continue;
                     }
 
-                    //找到远端video
-                    //mainClient的远端用户
-                    let entitiesContainer = this._engine.entitiesContainer;
-                    let mainClient = entitiesContainer.getMainClient();
-                    if (mainClient && mainClient.channelName) {
-                        let remoteUsers = mainClient.remoteUsers;
-                        for (let remoteUser of remoteUsers) {
-                            //todo 远端用户发流的时候。我不订阅，那么他的hasVideo为true， 但是他们的videoTrack是null
-                            if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying == false) {
-                                remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
-                            }
+                    let track = trackPackage.track as ILocalVideoTrack;
+                    if (track.isPlaying == false) {
+                        try {
+                            // TODO(littlegnal): This is a WebGL specific requirement
+                            // await track.play(this._engine.generateVideoTrackLabelOrHtmlElement("", 0, trackPackage.type));
+                        }
+                        catch (e) {
+                            AgoraConsole.error('ILocalVideoTrack play(true) failed');
+                            AgoraConsole.error(e);
                         }
                     }
-
-                    //subClient的远端用户
-                    entitiesContainer.getSubClients().walkT((channel_id, uid, subClient) => {
-                        let remoteUsers = subClient.remoteUsers;
-                        for (let remoteUser of remoteUsers) {
-                            if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying == false) {
-                                remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
-                            }
+                    if (track.enabled == false) {
+                        try {
+                            await track.setEnabled(true);
                         }
-                    })
+                        catch (e) {
+                            AgoraConsole.error('ILocalVideoTrack setEnable(true) failed');
+                            AgoraConsole.error(e);
+                        }
+                    }
+                }
+            }
 
-                    next();
-                };
-                setTimeout(processVideoTrack, 0);
-            },
-            args: []
-        })
+            //找到远端video
+            //mainClient的远端用户
+            let entitiesContainer = this._engine.entitiesContainer;
+            let mainClient = entitiesContainer.getMainClient();
+            if (mainClient && mainClient.channelName) {
+                let remoteUsers = mainClient.remoteUsers;
+                for (let remoteUser of remoteUsers) {
+                    //todo 远端用户发流的时候。我不订阅，那么他的hasVideo为true， 但是他们的videoTrack是null
+                    if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying == false) {
+                        // TODO(littlegnal): This is a WebGL specific requirement
+                        // remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
+                    }
+                }
+            }
 
-        return 0;
+            //subClient的远端用户
+            entitiesContainer.getSubClients().walkT((channel_id, uid, subClient) => {
+                let remoteUsers = subClient.remoteUsers;
+                for (let remoteUser of remoteUsers) {
+                    if (remoteUser.hasVideo && remoteUser.videoTrack && remoteUser.videoTrack.isPlaying == false) {
+                        // TODO(littlegnal): This is a WebGL specific requirement
+                        // remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
+                    }
+                }
+            })
+
+            // next();
+
+            return this.returnResult();
+        };
+
+        return this.execute(processVideoTrack);
     }
 
     disableVideo(): number {
