@@ -1145,7 +1145,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLeaveChannelEx';
+        let key = this.eventKey('onLeaveChannelEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1296,7 +1296,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserJoinedEx';
+        let key = this.eventKey('onUserJoinedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };

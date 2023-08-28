@@ -12,6 +12,7 @@ import { AgoraTool } from "../tool/AgoraTool";
 import { AgoraTranslate } from "../tool/AgoraTranslate";
 import { IrisSubClientVariables } from "../variable/IrisSubClientVariables";
 import { ImplHelper } from "./ImplHelper";
+import { AsyncTaskType, CallApiReturnType, CallIrisApiResult } from "../base/call_api_executor";
 
 export class RtcEngineExImpl implements IRtcEngineEx {
     private _engine: IrisRtcEngine;
@@ -22,6 +23,10 @@ export class RtcEngineExImpl implements IRtcEngineEx {
 
     putAction(action: Action) {
         this._engine.actionQueue.putAction(action);
+    }
+
+    private execute(task: AsyncTaskType): CallApiReturnType {
+        return this._engine.executor.execute(task);
     }
 
     joinChannelEx(token: string, connection: agorartc.RtcConnection, options: agorartc.ChannelMediaOptions): number {
@@ -446,9 +451,48 @@ export class RtcEngineExImpl implements IRtcEngineEx {
         return 0;
     }
 
-    setupRemoteVideoEx(canvas: agorartc.VideoCanvas, connection: agorartc.RtcConnection): number {
-        AgoraConsole.warn("enableWirelessAccelerate not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    setupRemoteVideoEx(canvas: agorartc.VideoCanvas, connection: agorartc.RtcConnection): CallApiReturnType {
+        let processVideoTrack = async (): Promise<CallIrisApiResult> => {
+            let holder = { element: canvas.view, channelId: connection.channelId, uid: canvas.uid, type: IrisVideoSourceType.kVideoSourceTypeRemote };
+            this._engine.entitiesContainer.addOrUpdateRemoteVideoViewHolder(holder);
+
+            let mainClient = this._engine.entitiesContainer.getMainClient();
+            if (mainClient && mainClient.channelName == holder.channelId) {
+                for (let remoteUser of mainClient.remoteUsers) {
+                    if (remoteUser.uid == holder.uid) {
+                        if (remoteUser.videoTrack?.isPlaying == true) {
+                            remoteUser.videoTrack.stop();
+                        }
+                        if (holder.element) {
+                            remoteUser.videoTrack?.play(holder.element);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            let subClients = this._engine.entitiesContainer.getSubClients();
+            subClients?.walkT((channel_id, unuseUid, subClient) => {
+                if (channel_id == connection.channelId && unuseUid == connection.localUid) {
+                    let remoteUsers = subClient.remoteUsers;
+                    for (let remoteUser of remoteUsers) {
+                        if (remoteUser.uid == holder.uid) {
+                            if (remoteUser.videoTrack?.isPlaying == true) {
+                                remoteUser.videoTrack.stop();
+                            }
+                            if (holder.element) {
+                                remoteUser.videoTrack?.play(holder.element);
+                            }
+                        }
+                    }
+                }
+                
+            })
+
+            return CallIrisApiResult.success();
+        };
+
+        return this.execute(processVideoTrack);
     }
 
     muteRemoteAudioStreamEx(uid: number, mute: boolean, connection: agorartc.RtcConnection): number {

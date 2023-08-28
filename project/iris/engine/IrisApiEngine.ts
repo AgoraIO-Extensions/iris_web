@@ -66,6 +66,7 @@ export class IrisApiEngine {
     }
 
     public destruction() {
+        console.log('IrisApiEngine JS destruction');
         this._engine.destruction();
     }
 
@@ -74,6 +75,7 @@ export class IrisApiEngine {
     }
 
     public unsetIrisRtcEngineEventHandler(event_handler: IrisEventHandler): void {
+        console.log('IrisApiEngine JS unsetIrisRtcEngineEventHandler');
         this._engine.setEventHandler(null);
     }
 

@@ -18,12 +18,14 @@ export class IRtcEngineDispatch {
     //IRtcEngine
     release(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let sync = obj.sync;
         if (sync === undefined) throw "sync is undefined";
-        result.result = this._impl.release(sync);
-        return 0;
+        // result.result = this._impl.release(sync);
+        // return 0;
+
+        return this._impl.release(sync);
     }
 
     releaseScreenCaptureSources(
@@ -137,20 +139,24 @@ export class IRtcEngineDispatch {
 
     leaveChannel(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
-        result.result = this._impl.leaveChannel();
-        return 0;
+        // result.result = this._impl.leaveChannel();
+        // return 0;
+
+        return this._impl.leaveChannel();
     }
 
     leaveChannel2(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let options = obj.options;
         if (options === undefined) throw "options is undefined";
-        result.result = this._impl.leaveChannel2(options);
-        return 0;
+        // result.result = this._impl.leaveChannel2(options);
+        // return 0;
+
+        return this._impl.leaveChannel2(options);
     }
 
     renewToken(

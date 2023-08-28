@@ -1,3 +1,4 @@
+import { CallApiReturnType } from "../../base/call_api_executor";
 import { Action } from "../../tool/AgoraActionQueue";
 import * as agorartc from '../rtc_types/Index';
 
@@ -8,7 +9,7 @@ export interface IRtcEngineEx {
     leaveChannelEx(connection: agorartc.RtcConnection): number;
     updateChannelMediaOptionsEx(options: agorartc.ChannelMediaOptions, connection: agorartc.RtcConnection): number;
     setVideoEncoderConfigurationEx(config: agorartc.VideoEncoderConfiguration, connection: agorartc.RtcConnection): number;
-    setupRemoteVideoEx(canvas: agorartc.VideoCanvas, connection: agorartc.RtcConnection): number;
+    setupRemoteVideoEx(canvas: agorartc.VideoCanvas, connection: agorartc.RtcConnection): CallApiReturnType;
     muteRemoteAudioStreamEx(uid: agorartc.uid_t, mute: boolean, connection: agorartc.RtcConnection): number;
     muteRemoteVideoStreamEx(uid: agorartc.uid_t, mute: boolean, connection: agorartc.RtcConnection): number;
     setRemoteVideoStreamTypeEx(uid: agorartc.uid_t, streamType: agorartc.VIDEO_STREAM_TYPE, connection: agorartc.RtcConnection): number;

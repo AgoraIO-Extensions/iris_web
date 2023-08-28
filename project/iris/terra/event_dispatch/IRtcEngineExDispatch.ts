@@ -1,4 +1,5 @@
 
+import { CallApiReturnType } from "../../base/call_api_executor";
 import { IrisRtcEngine } from "../../engine/IrisRtcEngine";
 import { RtcEngineExImpl } from "../../impl/RtcEngineExImpl";
 import { IRtcEngineEx } from "../interface/IRtcEngineEx";
@@ -62,14 +63,16 @@ export class IRtcEngineExDispatch {
 
     setupRemoteVideoEx(
         params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
+        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
         let obj = JSON.parse(params) as any;
         let canvas = obj.canvas;
         if (canvas === undefined) throw "canvas is undefined";
         let connection = obj.connection;
         if (connection === undefined) throw "connection is undefined";
-        result.result = this._impl.setupRemoteVideoEx(canvas, connection);
-        return 0;
+        // result.result = this._impl.setupRemoteVideoEx(canvas, connection);
+        // return 0;
+
+        return this._impl.setupRemoteVideoEx(canvas, connection);
     }
 
     muteRemoteAudioStreamEx(

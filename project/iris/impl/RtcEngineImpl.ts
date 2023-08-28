@@ -131,15 +131,21 @@ export class RtcEngineImpl implements IRtcEngine {
 
 
 
-    release(sync: boolean): void {
-        this.putAction({
-            fun: (sync: boolean, next) => {
-                //client , track, eventHandler 已经在IrisRtcEngine里被释放了。，这里不需要释放
-                next();
-            },
-            args: [sync]
-        })
-        return
+    release(sync: boolean): CallApiReturnType {
+        // this.putAction({
+        //     fun: (sync: boolean, next) => {
+        //         //client , track, eventHandler 已经在IrisRtcEngine里被释放了。，这里不需要释放
+        //         next();
+        //     },
+        //     args: [sync]
+        // })
+        // return
+
+        let processFunc = async (): Promise<CallIrisApiResult> => {
+            return CallIrisApiResult.success();
+        }
+
+        return this.execute(processFunc);
     }
 
     queryInterface(iid: agorartc.INTERFACE_ID_TYPE, inter: void): number {
@@ -564,7 +570,7 @@ export class RtcEngineImpl implements IRtcEngine {
         return 0;
     }
 
-    leaveChannel(): number {
+    leaveChannel(): CallApiReturnType {
         let options: agorartc.LeaveChannelOptions = {
             stopAudioMixing: true,
             stopAllEffect: true,
@@ -573,47 +579,83 @@ export class RtcEngineImpl implements IRtcEngine {
         return this.leaveChannel2(options);
     }
 
-    leaveChannel2(options: agorartc.LeaveChannelOptions): number {
-        //离开频道啦 稍后处理
-        if (this._engine.mainClientVariables.joinChanneled == false) {
-            AgoraConsole.error("you must join channel before you call this method");
-            return -agorartc.ERROR_CODE_TYPE.ERR_FAILED;
+    leaveChannel2(options: agorartc.LeaveChannelOptions): CallApiReturnType {
+
+        // this.putAction({
+        //     fun: (options: agorartc.LeaveChannelOptions, next) => {
+        //         let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
+        //         if (mainClient) {
+        //             //todo 读取 options
+
+        //             //为了防止离开频道后丢失了channelName和uid，所以需要先保存一下
+        //             let con: agorartc.RtcConnection = {
+        //                 channelId: mainClient.channelName,
+        //                 localUid: mainClient.uid as number
+        //             };
+        //             let channelId = mainClient.channelName;
+        //             mainClient.leave()
+        //                 .then(() => {
+        //                     this._engine.rtcEngineEventHandler.onLeaveChannelEx(con, new agorartc.RtcStats());
+        //                     this._engine.entitiesContainer.clearMainClientAll(channelId);
+        //                 })
+        //                 .catch((reason) => {
+        //                     AgoraConsole.error('leaveChannel failed');
+        //                     reason && AgoraConsole.error(reason);
+        //                     this._engine.rtcEngineEventHandler.onError(agorartc.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED, "");
+        //                 })
+        //                 .finally(() => {
+        //                     next();
+        //                 })
+        //         }
+        //         else {
+        //             next();
+        //         }
+        //     },
+        //     args: [options]
+        // })
+        // return 0;
+
+        let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
+            //离开频道啦 稍后处理
+            if (this._engine.mainClientVariables.joinChanneled == false) {
+                AgoraConsole.error("you must join channel before you call this method");
+                return CallIrisApiResult.failed(0, -agorartc.ERROR_CODE_TYPE.ERR_FAILED);
+            }
+
+            this._engine.mainClientVariables.joinChanneled = false;
+
+            let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
+            if (mainClient) {
+                //todo 读取 options
+
+                //为了防止离开频道后丢失了channelName和uid，所以需要先保存一下
+                let con: agorartc.RtcConnection = {
+                    channelId: mainClient.channelName,
+                    localUid: mainClient.uid as number
+                };
+                let channelId = mainClient.channelName;
+                mainClient.leave()
+                    .then(() => {
+                        this._engine.rtcEngineEventHandler.onLeaveChannelEx(con, new agorartc.RtcStats());
+                        this._engine.entitiesContainer.clearMainClientAll(channelId);
+                    })
+                    .catch((reason) => {
+                        AgoraConsole.error('leaveChannel failed');
+                        reason && AgoraConsole.error(reason);
+                        this._engine.rtcEngineEventHandler.onError(agorartc.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED, "");
+                    })
+                    .finally(() => {
+                        // next();
+                    })
+            }
+            else {
+                // next();
+            }
+
+            return CallIrisApiResult.success();
         }
 
-        this._engine.mainClientVariables.joinChanneled = false;
-        this.putAction({
-            fun: (options: agorartc.LeaveChannelOptions, next) => {
-                let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
-                if (mainClient) {
-                    //todo 读取 options
-
-                    //为了防止离开频道后丢失了channelName和uid，所以需要先保存一下
-                    let con: agorartc.RtcConnection = {
-                        channelId: mainClient.channelName,
-                        localUid: mainClient.uid as number
-                    };
-                    let channelId = mainClient.channelName;
-                    mainClient.leave()
-                        .then(() => {
-                            this._engine.rtcEngineEventHandler.onLeaveChannelEx(con, new agorartc.RtcStats());
-                            this._engine.entitiesContainer.clearMainClientAll(channelId);
-                        })
-                        .catch((reason) => {
-                            AgoraConsole.error('leaveChannel failed');
-                            reason && AgoraConsole.error(reason);
-                            this._engine.rtcEngineEventHandler.onError(agorartc.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED, "");
-                        })
-                        .finally(() => {
-                            next();
-                        })
-                }
-                else {
-                    next();
-                }
-            },
-            args: [options]
-        })
-        return 0;
+        return this.execute(processFunc);
 
     }
 
@@ -1007,10 +1049,10 @@ export class RtcEngineImpl implements IRtcEngine {
             // if (this._engine.globalVariables.enabledVideo) {
 
 
-                
+
             // }
 
-            this._engine.entitiesContainer.addLocalVideoTrack({element: canvas.view, type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary});
+            this._engine.entitiesContainer.addLocalVideoTrack({ element: canvas.view, type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary });
 
             let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
             for (let trackPackage of trackPackages) {
@@ -1034,7 +1076,7 @@ export class RtcEngineImpl implements IRtcEngine {
                 }
 
                 track.play(trackPackage.element);
-        
+
             }
 
             return this.returnResult();

@@ -237,7 +237,15 @@ export class IrisClientEventHandler {
                 this._client.subscribe(user, mediaType)
                     .then(() => {
                         console.log("onEventUserPublished subcribe video success");
-                        user.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(this._client.channelName, user.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote));
+                        // user.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(this._client.channelName, user.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote));
+
+                        this._engine.entitiesContainer.addOrUpdateRemoteVideoViewHolder({ channelId: this._client.channelName, uid: user.uid, type: IrisVideoSourceType.kVideoSourceTypeRemote });
+                        for (let holder of this._engine.entitiesContainer.getRemoteVideoViewHolders()) {
+                            if (holder.element && holder.channelId == this._client.channelName && holder.uid == user.uid) {
+                                user.videoTrack.play(holder.element);
+                                break;
+                            }
+                        }
 
                         let param: IrisTrackEventHandlerParam = {
                             channelName: this._client.channelName,

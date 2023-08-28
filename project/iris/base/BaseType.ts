@@ -107,6 +107,13 @@ export interface VideoTrackPackage {
     track?: ILocalVideoTrack | IRemoteVideoTrack
 };
 
+export interface VideoViewHolder {
+    element?: string,
+    channelId?: string,
+    uid?: UID,
+    type?: IrisVideoSourceType,
+}
+
 export interface AudioTrackPackage {
     type: IrisAudioSourceType,
     track: ILocalAudioTrack | IRemoteAudioTrack

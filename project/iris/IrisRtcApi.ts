@@ -18,6 +18,7 @@ export function CreateIrisApiEngine(): IrisApiEngine {
 
 export function DestroyIrisApiEngine(engine_ptr: IrisApiEngine): number {
     engine_ptr.destruction();
+    IrisApiEngine.instance = null;
     return 0;
 }
 

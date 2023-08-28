@@ -1,5 +1,5 @@
 import { IAgoraRTCClient, UID, IAgoraRTCRemoteUser, ILocalVideoTrack, ILocalAudioTrack, ITrack } from "agora-rtc-sdk-ng";
-import { AudioTrackPackage, IrisAudioSourceType, IrisVideoFrameBufferConfig, IrisVideoSourceType, IRIS_VIDEO_PROCESS_ERR, VideoParams, VideoTrackPackage } from "../base/BaseType";
+import { AudioTrackPackage, IrisAudioSourceType, IrisVideoFrameBufferConfig, IrisVideoSourceType, IRIS_VIDEO_PROCESS_ERR, VideoParams, VideoTrackPackage, VideoViewHolder } from "../base/BaseType";
 import { IrisClientEventHandler } from "../event_handler/IrisClientEventHandler";
 import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 import { Contaniner } from "../tool/Contanier";
@@ -26,6 +26,7 @@ export class IrisEntitiesContaniner {
     //all local tracks
     private _localAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
     private _localVideoTracks: Array<VideoTrackPackage> = new Array<VideoTrackPackage>();
+    private _remoteVideoViewHolders: Array<VideoViewHolder> = new Array<VideoViewHolder>();
 
     //subClient
     private _subClients: Contaniner<IAgoraRTCClient> = new Contaniner<IAgoraRTCClient>();
@@ -269,6 +270,42 @@ export class IrisEntitiesContaniner {
 
     getLocalVideoTracks(): Array<VideoTrackPackage> {
         return this._localVideoTracks;
+    }
+
+    getRemoteVideoViewHolders(): Array<VideoViewHolder> {
+        return this._remoteVideoViewHolders;
+    }
+
+    addOrUpdateRemoteVideoViewHolder(viewHolder: VideoViewHolder) {
+        let item = this._remoteVideoViewHolders.find((value) => {
+            return value.uid == viewHolder.uid && value.channelId == viewHolder.channelId && value.type == viewHolder.type;
+        });
+
+        // Update the exist one
+        if (item) {
+            console.log(`addOrUpdateRemoteVideoViewHolder add to item: ${JSON.stringify(item)}`);
+            if (viewHolder.element) {
+                item.element = viewHolder.element;
+            }
+
+            if (viewHolder.type) {
+                item.type = viewHolder.type;
+            }
+
+            if (viewHolder.channelId) {
+                item.channelId = viewHolder.channelId;
+            }
+
+            if (viewHolder.uid) {
+                item.uid = viewHolder.uid;
+            }
+
+            return;
+        }
+
+        console.log(`addOrUpdateRemoteVideoViewHolder add to item new: ${JSON.stringify(viewHolder)}`);
+
+        this._remoteVideoViewHolders.push(viewHolder);
     }
 
     getLocalAudioTracks(): Array<AudioTrackPackage> {

@@ -8,7 +8,7 @@ export interface IRtcEngine {
     putAction(action: Action);
 
     //IRtcEngine
-    release(sync: boolean): void;
+    release(sync: boolean): CallApiReturnType;
     releaseScreenCaptureSources(): number;
     initialize(context: agorartc.RtcEngineContext): CallApiReturnType;
     setAppType(appType: number): CallApiReturnType;
@@ -18,8 +18,8 @@ export interface IRtcEngine {
     joinChannel(token: string, channelId: string, info: string, uid: agorartc.uid_t): CallApiReturnType;
     joinChannel2(token: string, channelId: string, uid: agorartc.uid_t, options: agorartc.ChannelMediaOptions): CallApiReturnType;
     updateChannelMediaOptions(options: agorartc.ChannelMediaOptions): number;
-    leaveChannel(): number;
-    leaveChannel2(options: agorartc.LeaveChannelOptions): number;
+    leaveChannel(): CallApiReturnType;
+    leaveChannel2(options: agorartc.LeaveChannelOptions): CallApiReturnType;
     renewToken(token: string): number;
     setChannelProfile(profile: agorartc.CHANNEL_PROFILE_TYPE): number;
     setClientRole(role: agorartc.CLIENT_ROLE_TYPE): CallApiReturnType;
