@@ -1,9 +1,9 @@
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
-import { IMediaEngine } from "../terra/interface/IMediaEngine";
+import { IMediaEngine } from "../binding/interface/IMediaEngine";
 import { Action } from "../util/AgoraActionQueue";
 import { AgoraConsole } from "../util/AgoraConsole";
-import * as agorartc from "../terra/rtc_types/Index";
-import { IVideoDeviceManager } from "../terra/interface/IVideoDeviceManager";
+import * as agorartc from "../binding/rtc_types/Index";
+import { IVideoDeviceManager } from "../binding/interface/IVideoDeviceManager";
 import { ImplHelper } from "./ImplHelper";
 import { IrisVideoSourceType, VideoTrackPackage } from "../base/BaseType";
 import { ICameraVideoTrack } from "agora-rtc-sdk-ng";

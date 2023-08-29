@@ -1,4 +1,4 @@
-import * as agorartc from '../terra/rtc_types/Index';
+import * as agorartc from '../binding/rtc_types/Index';
 
 export class AgoraConsole {
 

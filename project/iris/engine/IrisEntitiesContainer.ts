@@ -4,7 +4,7 @@ import { IrisClientEventHandler } from "../event_handler/IrisClientEventHandler"
 import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 import { Contaniner } from "../util/Contanier";
 import { IrisRtcEngine } from "./IrisRtcEngine";
-import * as agorartc from '../terra/rtc_types/Index';
+import * as agorartc from '../binding/rtc_types/Index';
 import { AgoraTranslate } from "../util/AgoraTranslate";
 import { AgoraConsole } from "../util/AgoraConsole";
 import { AgoraTool } from "../util/AgoraTool";

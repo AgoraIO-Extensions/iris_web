@@ -1,8 +1,8 @@
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
-import { IMediaEngine } from "../terra/interface/IMediaEngine";
+import { IMediaEngine } from "../binding/interface/IMediaEngine";
 import { Action } from "../util/AgoraActionQueue";
 import { AgoraConsole } from "../util/AgoraConsole";
-import * as agorartc from "../terra/rtc_types/Index";
+import * as agorartc from "../binding/rtc_types/Index";
 
 export class MediaEngineImpl implements IMediaEngine {
     private _engine: IrisRtcEngine;

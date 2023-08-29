@@ -4,7 +4,7 @@ import { AgoraActionQueue } from "../util/AgoraActionQueue";
 import { AgoraConsole } from "../util/AgoraConsole";
 import { CallApiType, IrisRtcEngine, GenerateVideoTrackLabelOrHtmlElementCb } from "./IrisRtcEngine";
 import { IrisVideoFrameBufferManager } from "./IrisVideoFrameBufferManager";
-import * as agorartc from "../terra/rtc_types/Index";
+import * as agorartc from "../binding/rtc_types/Index";
 import { CallIrisApiResult } from "../base/call_api_executor";
 
 // export class CallApiResult {

@@ -1,8 +1,6 @@
 import { CallApiReturnType } from '../../base/call_api_executor';
 import { IrisRtcEngine } from '../../engine/IrisRtcEngine';
-import { RtcEngineExImpl } from '../../impl/RtcEngineExImpl';
 import { RtcEngineImpl } from '../../impl/RtcEngineImpl';
-import { Action } from '../../util/AgoraActionQueue';
 import { IRtcEngine } from '../interface/IRtcEngine';
 import * as agorartc from '../rtc_types/Index';
 

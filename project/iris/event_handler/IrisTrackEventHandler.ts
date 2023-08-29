@@ -1,7 +1,7 @@
 import { IAgoraRTCClient, IAgoraRTCRemoteUser, ITrack, ILocalTrack, ILocalVideoTrack, IRemoteTrack, IRemoteVideoTrack } from "agora-rtc-sdk-ng";
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 import { CheckVideoVisibleResult } from "../mock";
-import * as agorartc from "../terra/rtc_types/Index";
+import * as agorartc from "../binding/rtc_types/Index";
 
 
 export type TrackType = 'ILocalTrack' | 'ILocalVideoTrack' | 'IRemoteTrack' | 'IRemoteVideoTrack';

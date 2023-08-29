@@ -4,8 +4,8 @@ import { IrisAudioSourceType, IrisClientType, IrisVideoSourceType } from "../bas
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 import { IrisClientEventHandler } from "../event_handler/IrisClientEventHandler";
 import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
-import { IRtcEngineEx } from "../terra/interface/IRtcEngineEx";
-import * as agorartc from '../terra/rtc_types/Index';
+import { IRtcEngineEx } from "../binding/interface/IRtcEngineEx";
+import * as agorartc from '../binding/rtc_types/Index';
 import { Action } from "../util/AgoraActionQueue";
 import { AgoraConsole } from "../util/AgoraConsole";
 import { AgoraTool } from "../util/AgoraTool";

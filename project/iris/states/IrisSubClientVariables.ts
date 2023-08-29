@@ -1,6 +1,6 @@
 
 import { UID } from 'agora-rtc-sdk-ng';
-import * as agorartc from '../terra/rtc_types/Index';
+import * as agorartc from '../binding/rtc_types/Index';
 import { Contaniner } from '../util/Contanier';
 //Record the intermediate status of the Main client
 export class IrisSubClientVariables {

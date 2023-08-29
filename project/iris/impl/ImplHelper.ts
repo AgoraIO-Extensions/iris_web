@@ -3,7 +3,7 @@ import { IrisAudioSourceType, IrisClientType, IrisVideoSourceType } from "../bas
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 import { AgoraConsole } from "../util/AgoraConsole";
 import { AgoraTranslate } from '../util/AgoraTranslate';
-import * as agorartc from "../terra/rtc_types/Index";
+import * as agorartc from "../binding/rtc_types/Index";
 import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
 
 export class ImplHelper {

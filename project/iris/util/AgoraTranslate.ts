@@ -1,7 +1,7 @@
 
 import AgoraRTC, { AREAS, AudienceLatencyLevelType, ChannelMediaRelayError, ChannelMediaRelayEvent, ChannelMediaRelayInfo, ChannelMediaRelayState, ClientRole, ClientRoleOptions, ConnectionDisconnectedReason, ConnectionState, DeviceState, EncryptionMode, IChannelMediaRelayConfiguration, InjectStreamConfig, InspectConfiguration, LiveStreamingTranscodingConfig, LiveStreamingTranscodingImage, LiveStreamingTranscodingUser, LowStreamParameter, NetworkQuality, RemoteStreamFallbackType, RemoteStreamType, SDK_CODEC, SDK_MODE, UID, VideoEncoderConfiguration } from "agora-rtc-sdk-ng";
 import { Argument } from "webpack";
-import * as agorartc from "../terra/rtc_types/Index";
+import * as agorartc from "../binding/rtc_types/Index";
 import { AgoraConsole } from "./AgoraConsole";
 
 export class AgoraTranslate {

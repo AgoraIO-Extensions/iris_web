@@ -1,8 +1,6 @@
 import { IrisRtcEngine } from "../../engine/IrisRtcEngine";
 import { MediaPlayerImpl } from "../../impl/MediaPlayerImpl";
-import { Action } from "../../util/AgoraActionQueue";
 import { IMediaPlayer } from "../interface/IMediaPlayer";
-import * as agorartc from '../rtc_types/Index';
 
 
 export class IMediaPlayerDispatch {

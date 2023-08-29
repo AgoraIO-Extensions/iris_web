@@ -1,5 +1,5 @@
-import * as agorartc from '../terra/rtc_types/Index';
-import { IRtcEngine } from '../terra/interface/IRtcEngine';
+import * as agorartc from '../binding/rtc_types/Index';
+import { IRtcEngine } from '../binding/interface/IRtcEngine';
 import { IrisApiEngine } from '../engine/IrisApiEngine';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action, AgoraActionQueue } from '../util/AgoraActionQueue';
@@ -8,7 +8,7 @@ import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, ClientRole, ClientR
 import { AgoraTranslate } from '../util/AgoraTranslate';
 import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
 import { AudioTrackPackage, IrisAudioSourceType, IrisClientType, IrisVideoSourceType, VideoParams, VideoTrackPackage } from '../base/BaseType';
-import { RtcConnection, THREAD_PRIORITY_TYPE, VideoTrackInfo } from '../terra/rtc_types/Index';
+import { RtcConnection, THREAD_PRIORITY_TYPE, VideoTrackInfo } from '../binding/rtc_types/Index';
 import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
 import { Argument } from 'webpack';
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
