@@ -4,7 +4,7 @@ import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 import { AgoraConsole } from "../util/AgoraConsole";
 import { AgoraTranslate } from '../util/AgoraTranslate';
 import * as agorartc from "../terra/rtc_types/Index";
-import { IrisGlobalVariables } from '../variable/IrisGlobalVariables';
+import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
 
 export class ImplHelper {
 

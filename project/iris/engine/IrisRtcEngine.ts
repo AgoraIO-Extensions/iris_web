@@ -2,9 +2,9 @@ import { IAgoraRTCClient, IAgoraRTCRemoteUser, ILocalAudioTrack, ILocalVideoTrac
 import { AudioTrackPackage, IrisEventHandler, IrisVideoFrameBufferConfig, IrisVideoSourceType, IRIS_VIDEO_PROCESS_ERR, VideoParams, VideoTrackPackage } from "../base/BaseType";
 import { IrisEntitiesContaniner } from "./IrisEntitiesContainer";
 
-import { IrisGlobalVariables } from "../variable/IrisGlobalVariables";
-import { IrisMainClientVariables } from "../variable/IrisMainClientVariables";
-import { IrisSubClientVariables } from "../variable/IrisSubClientVariables";
+import { IrisGlobalVariables } from "../states/IrisGlobalVariables";
+import { IrisMainClientVariables } from "../states/IrisMainClientVariables";
+import { IrisSubClientVariables } from "../states/IrisSubClientVariables";
 import { RtcEngineEventHandler } from "../terra/RtcEngineEventHandler";
 import { IrisAgoraEventHandler } from "../event_handler/IrisAgoraEventHandler";
 import { AgoraActionQueue } from "../util/AgoraActionQueue";

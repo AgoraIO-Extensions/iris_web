@@ -10,7 +10,7 @@ import { Action } from "../util/AgoraActionQueue";
 import { AgoraConsole } from "../util/AgoraConsole";
 import { AgoraTool } from "../util/AgoraTool";
 import { AgoraTranslate } from "../util/AgoraTranslate";
-import { IrisSubClientVariables } from "../variable/IrisSubClientVariables";
+import { IrisSubClientVariables } from "../states/IrisSubClientVariables";
 import { ImplHelper } from "./ImplHelper";
 import { AsyncTaskType, CallApiReturnType, CallIrisApiResult } from "../base/call_api_executor";
 
