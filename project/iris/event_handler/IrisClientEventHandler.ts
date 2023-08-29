@@ -5,7 +5,7 @@ import { IrisClientType, IrisVideoSourceType } from "../base/BaseType";
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 import { AgoraRTCError, InspectState } from "../mock";
 import * as agorartc from "../terra/rtc_types/Index";
-import { AgoraTranslate } from "../tool/AgoraTranslate";
+import { AgoraTranslate } from "../util/AgoraTranslate";
 import { IrisTrackEventHandler, IrisTrackEventHandlerParam } from "./IrisTrackEventHandler";
 
 export class IrisClientEventHandler {

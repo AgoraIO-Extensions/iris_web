@@ -1,4 +1,4 @@
-import { Action } from "../../tool/AgoraActionQueue";
+import { Action } from "../../util/AgoraActionQueue";
 import * as agorartc from '../rtc_types/Index';
 
 export interface ILocalSpatialAudioEngine {

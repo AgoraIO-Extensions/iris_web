@@ -1,5 +1,5 @@
 import { CallApiReturnType } from "../../base/call_api_executor";
-import { Action } from "../../tool/AgoraActionQueue";
+import { Action } from "../../util/AgoraActionQueue";
 import * as agorartc from '../rtc_types/Index';
 
 export interface IRtcEngineEx {

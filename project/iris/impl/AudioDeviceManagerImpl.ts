@@ -1,9 +1,9 @@
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 import { IAudioDeviceManager } from "../terra/interface/IAudioDeviceManager";
-import { Action } from "../tool/AgoraActionQueue";
+import { Action } from "../util/AgoraActionQueue";
 import * as agorartc from "../terra/rtc_types/Index";
 import { ImplHelper } from "./ImplHelper";
-import { AgoraConsole } from "../tool/AgoraConsole";
+import { AgoraConsole } from "../util/AgoraConsole";
 import { ILocalAudioTrack, IMicrophoneAudioTrack } from "agora-rtc-sdk-ng";
 import { IrisAudioSourceType } from "../base/BaseType";
 

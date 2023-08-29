@@ -1,6 +1,6 @@
 import { ClientConfig, UID } from 'agora-rtc-sdk-ng';
 import * as agorartc from '../terra/rtc_types/Index';
-import { AgoraTranslate } from '../tool/AgoraTranslate';
+import { AgoraTranslate } from '../util/AgoraTranslate';
 
 //Record the intermediate status of the Main client
 export class IrisMainClientVariables {

@@ -1,6 +1,6 @@
 import { IrisRtcEngine } from "../../engine/IrisRtcEngine";
 import { LocalSpatialAudioEngineImpl } from "../../impl/LocalSpatialAudioEngineImpl";
-import { Action } from "../../tool/AgoraActionQueue";
+import { Action } from "../../util/AgoraActionQueue";
 import { ILocalSpatialAudioEngine } from "../interface/ILocalSpatialAudioEngine";
 import * as agorartc from '../rtc_types/Index';
 

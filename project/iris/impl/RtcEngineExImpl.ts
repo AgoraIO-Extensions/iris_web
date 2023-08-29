@@ -6,10 +6,10 @@ import { IrisClientEventHandler } from "../event_handler/IrisClientEventHandler"
 import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
 import { IRtcEngineEx } from "../terra/interface/IRtcEngineEx";
 import * as agorartc from '../terra/rtc_types/Index';
-import { Action } from "../tool/AgoraActionQueue";
-import { AgoraConsole } from "../tool/AgoraConsole";
-import { AgoraTool } from "../tool/AgoraTool";
-import { AgoraTranslate } from "../tool/AgoraTranslate";
+import { Action } from "../util/AgoraActionQueue";
+import { AgoraConsole } from "../util/AgoraConsole";
+import { AgoraTool } from "../util/AgoraTool";
+import { AgoraTranslate } from "../util/AgoraTranslate";
 import { IrisSubClientVariables } from "../variable/IrisSubClientVariables";
 import { ImplHelper } from "./ImplHelper";
 import { AsyncTaskType, CallApiReturnType, CallIrisApiResult } from "../base/call_api_executor";

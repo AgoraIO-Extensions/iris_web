@@ -1,8 +1,8 @@
 import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, ClientRoleOptions, DeviceInfo, EncryptionMode, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalAudioTrack, ILocalTrack, ILocalVideoTrack, IMicrophoneAudioTrack, InjectStreamConfig, IRemoteAudioTrack, MicrophoneAudioTrackInitConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
 import { IrisAudioSourceType, IrisClientType, IrisVideoSourceType } from "../base/BaseType";
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
-import { AgoraConsole } from "../tool/AgoraConsole";
-import { AgoraTranslate } from '../tool/AgoraTranslate';
+import { AgoraConsole } from "../util/AgoraConsole";
+import { AgoraTranslate } from '../util/AgoraTranslate';
 import * as agorartc from "../terra/rtc_types/Index";
 import { IrisGlobalVariables } from '../variable/IrisGlobalVariables';
 

@@ -1,7 +1,7 @@
 
 import { IrisEventHandler } from "../base/BaseType";
-import { AgoraActionQueue } from "../tool/AgoraActionQueue";
-import { AgoraConsole } from "../tool/AgoraConsole";
+import { AgoraActionQueue } from "../util/AgoraActionQueue";
+import { AgoraConsole } from "../util/AgoraConsole";
 import { CallApiType, IrisRtcEngine, GenerateVideoTrackLabelOrHtmlElementCb } from "./IrisRtcEngine";
 import { IrisVideoFrameBufferManager } from "./IrisVideoFrameBufferManager";
 import * as agorartc from "../terra/rtc_types/Index";

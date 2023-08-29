@@ -7,7 +7,7 @@ import { IrisMainClientVariables } from "../variable/IrisMainClientVariables";
 import { IrisSubClientVariables } from "../variable/IrisSubClientVariables";
 import { RtcEngineEventHandler } from "../terra/RtcEngineEventHandler";
 import { IrisAgoraEventHandler } from "../event_handler/IrisAgoraEventHandler";
-import { AgoraActionQueue } from "../tool/AgoraActionQueue";
+import { AgoraActionQueue } from "../util/AgoraActionQueue";
 import { IMediaEngineDispatch } from "../terra/event_dispatch/IMediaEngineDispatch";
 import { IVideoDeviceManagerDispatch } from "../terra/event_dispatch/IVideoDeviceManagerDispatch";
 import { IRtcEngineDispatch } from "../terra/event_dispatch/IRtcEngineDispatch";
@@ -15,7 +15,7 @@ import { IRtcEngineExDispatch } from "../terra/event_dispatch/IRtcEngineExDispat
 import { ILocalSpatialAudioEngineDispatch } from "../terra/event_dispatch/ILocalSpatialAudioEngineDispatch";
 import { IAudioDeviceManagerDispatch } from "../terra/event_dispatch/IAudioDeviceManagerDispatch";
 import { IMediaPlayerDispatch } from "../terra/event_dispatch/IMediaPlayerDispatch";
-import { AgoraConsole } from "../tool/AgoraConsole";
+import { AgoraConsole } from "../util/AgoraConsole";
 import * as agorartc from "../terra/rtc_types/Index";
 import { ApiParam } from "./IrisApiEngine";
 import { CallApiExecutor, CallIrisApiResult, isPromise } from "../base/call_api_executor";

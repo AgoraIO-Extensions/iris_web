@@ -1,6 +1,6 @@
 import { IrisRtcEngine } from "../../engine/IrisRtcEngine";
 import { VideoDeviceManagerImpl } from "../../impl/VideoDeviceManagerImpl";
-import { Action } from "../../tool/AgoraActionQueue";
+import { Action } from "../../util/AgoraActionQueue";
 import { IVideoDeviceManager } from "../interface/IVideoDeviceManager";
 import * as agorartc from '../rtc_types/Index';
 

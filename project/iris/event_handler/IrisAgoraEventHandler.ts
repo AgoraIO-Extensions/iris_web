@@ -1,7 +1,7 @@
 import AgoraRTC, { DeviceInfo } from "agora-rtc-sdk-ng";
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 import * as agorart from "../terra/rtc_types/Index";
-import { AgoraTranslate } from "../tool/AgoraTranslate";
+import { AgoraTranslate } from "../util/AgoraTranslate";
 
 
 export class IrisAgoraEventHandler {

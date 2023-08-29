@@ -1,7 +1,7 @@
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 import { ILocalSpatialAudioEngine } from "../terra/interface/ILocalSpatialAudioEngine";
-import { Action } from "../tool/AgoraActionQueue";
-import { AgoraConsole } from "../tool/AgoraConsole";
+import { Action } from "../util/AgoraActionQueue";
+import { AgoraConsole } from "../util/AgoraConsole";
 import * as agorartc from "../terra/rtc_types/Index";
 
 export class LocalSpatialAudioEngineImpl implements ILocalSpatialAudioEngine {

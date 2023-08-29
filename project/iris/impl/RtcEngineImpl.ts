@@ -2,10 +2,10 @@ import * as agorartc from '../terra/rtc_types/Index';
 import { IRtcEngine } from '../terra/interface/IRtcEngine';
 import { IrisApiEngine } from '../engine/IrisApiEngine';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { Action, AgoraActionQueue } from '../tool/AgoraActionQueue';
-import { AgoraConsole } from '../tool/AgoraConsole';
+import { Action, AgoraActionQueue } from '../util/AgoraActionQueue';
+import { AgoraConsole } from '../util/AgoraConsole';
 import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, ClientRole, ClientRoleOptions, DeviceInfo, EncryptionMode, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalAudioTrack, ILocalTrack, ILocalVideoTrack, IMicrophoneAudioTrack, InjectStreamConfig, IRemoteAudioTrack, MicrophoneAudioTrackInitConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
-import { AgoraTranslate } from '../tool/AgoraTranslate';
+import { AgoraTranslate } from '../util/AgoraTranslate';
 import { IrisGlobalVariables } from '../variable/IrisGlobalVariables';
 import { AudioTrackPackage, IrisAudioSourceType, IrisClientType, IrisVideoSourceType, VideoParams, VideoTrackPackage } from '../base/BaseType';
 import { RtcConnection, THREAD_PRIORITY_TYPE, VideoTrackInfo } from '../terra/rtc_types/Index';
@@ -15,7 +15,7 @@ import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler'
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 import { IrisSubClientVariables } from '../variable/IrisSubClientVariables';
 import html2canvas from 'html2canvas';
-import { AgoraTool } from '../tool/AgoraTool';
+import { AgoraTool } from '../util/AgoraTool';
 import { ImplHelper } from './ImplHelper';
 import { AsyncTaskType, CallApiReturnType, CallIrisApiResult } from '../base/call_api_executor';
 

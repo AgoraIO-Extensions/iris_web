@@ -2,12 +2,12 @@ import { IAgoraRTCClient, UID, IAgoraRTCRemoteUser, ILocalVideoTrack, ILocalAudi
 import { AudioTrackPackage, IrisAudioSourceType, IrisVideoFrameBufferConfig, IrisVideoSourceType, IRIS_VIDEO_PROCESS_ERR, VideoParams, VideoTrackPackage, VideoViewHolder } from "../base/BaseType";
 import { IrisClientEventHandler } from "../event_handler/IrisClientEventHandler";
 import { IrisTrackEventHandler } from "../event_handler/IrisTrackEventHandler";
-import { Contaniner } from "../tool/Contanier";
+import { Contaniner } from "../util/Contanier";
 import { IrisRtcEngine } from "./IrisRtcEngine";
 import * as agorartc from '../terra/rtc_types/Index';
-import { AgoraTranslate } from "../tool/AgoraTranslate";
-import { AgoraConsole } from "../tool/AgoraConsole";
-import { AgoraTool } from "../tool/AgoraTool";
+import { AgoraTranslate } from "../util/AgoraTranslate";
+import { AgoraConsole } from "../util/AgoraConsole";
+import { AgoraTool } from "../util/AgoraTool";
 
 export type WalkILocalVideoPackageTrackFun = (track: VideoTrackPackage) => void;
 

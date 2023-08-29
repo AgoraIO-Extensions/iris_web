@@ -1,6 +1,6 @@
 import { IrisRtcEngine } from "../../engine/IrisRtcEngine";
 import { AudioDeviceManagerImpl } from "../../impl/AudioDeviceManagerImpl";
-import { Action } from "../../tool/AgoraActionQueue";
+import { Action } from "../../util/AgoraActionQueue";
 import { IAudioDeviceManager } from "../interface/IAudioDeviceManager";
 import * as agorartc from '../rtc_types/Index';
 
