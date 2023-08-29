@@ -214,12 +214,15 @@ export class IrisEntitiesContaniner {
         }
     }
 
-    clearLocalVideoTracks(closeTrack: boolean) {
+    async clearLocalVideoTracks(closeTrack: boolean) {
         if (closeTrack) {
             for (let i = 0; i < this._localVideoTracks.length; i++) {
                 let trackPack = this._localVideoTracks[i];
                 let track = trackPack.track as ILocalVideoTrack;
-                closeTrack && track.close();
+                console.log('clearLocalVideoTracks clearLocalVideoTracks clearLocalVideoTracks');
+                track.stop();
+                await track.setEnabled(false);
+                track.close();
             }
         }
         this._localVideoTracks = [];
@@ -312,11 +315,12 @@ export class IrisEntitiesContaniner {
         return this._localAudioTracks;
     }
 
-    clearLocalAudioTracks(closeTrack: boolean) {
+    async clearLocalAudioTracks(closeTrack: boolean) {
         for (let i = 0; i < this._localAudioTracks.length; i++) {
             let trackPack = this._localAudioTracks[i];
             let track = trackPack.track as ILocalAudioTrack;
-            closeTrack && track.close();
+            await track.setEnabled(false);
+            track.close();
         }
         this._localAudioTracks = [];
     }
@@ -921,9 +925,13 @@ export class IrisEntitiesContaniner {
 
     //
     async destruction() {
+        await this.clearLocalAudioTracks(true);
+        await this.clearLocalVideoTracks(true);
 
+        console.log('main client leave 1111111');
         //mainClient 
         if (this._mainClient && this._mainClient.channelName) {
+            console.log('main client leave 22222');
             try {
                 await this._mainClient.leave();
                 AgoraConsole.log("main client leave success");
@@ -979,11 +987,6 @@ export class IrisEntitiesContaniner {
         this._subClientTrackEventHandlers = new Contaniner();
 
         // this._remoteUsers = new Contaniner();
-
-
-        this.clearLocalAudioTracks(true);
-        this.clearLocalVideoTracks(true);
-
     }
 
 

@@ -141,7 +141,11 @@ export class RtcEngineImpl implements IRtcEngine {
         // })
         // return
 
+        console.log('RtcEngineImpl release');
+
         let processFunc = async (): Promise<CallIrisApiResult> => {
+            await this._engine.entitiesContainer.destruction();
+
             return CallIrisApiResult.success();
         }
 
@@ -618,8 +622,9 @@ export class RtcEngineImpl implements IRtcEngine {
         let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
             //离开频道啦 稍后处理
             if (this._engine.mainClientVariables.joinChanneled == false) {
-                AgoraConsole.error("you must join channel before you call this method");
-                return CallIrisApiResult.failed(0, -agorartc.ERROR_CODE_TYPE.ERR_FAILED);
+                // AgoraConsole.error("you must join channel before you call this method");
+                // return CallIrisApiResult.failed(0, -agorartc.ERROR_CODE_TYPE.ERR_FAILED);
+                return CallIrisApiResult.success();
             }
 
             this._engine.mainClientVariables.joinChanneled = false;

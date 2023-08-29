@@ -126,6 +126,8 @@ export class IrisRtcEngine {
                     if (ret === undefined || ret.code === undefined ||  ret.data === undefined)  {
                         throw `[callIrisApiAsync] ${func_name} ret ${ret} not CallIrisApiResult`;
                     }
+
+                    return true;
                 }());
                 AgoraConsole.log(`[callIrisApiAsync] ${func_name} ret ${ret.code}`);
                 return ret;
