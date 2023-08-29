@@ -103,13 +103,13 @@ export class IrisRtcEngine {
 
     public async callIrisApiAsync(apiParam: ApiParam): Promise<CallIrisApiResult> {
         let func_name = apiParam.event;
-        let params: string = apiParam.data;
-        let paramLength: number = apiParam.data_size;
-        let buffer: Array<any> = apiParam.buffer;
-        let bufferLength: Array<any> = apiParam.length;
-        let buffer_count = apiParam.buffer_count;
-        let result: any = apiParam.result;
-        let resultObj: any = {};
+        // let params: string = apiParam.data;
+        // let paramLength: number = apiParam.data_size;
+        // let buffer: Array<any> = apiParam.buffer;
+        // let bufferLength: Array<any> = apiParam.length;
+        // let buffer_count = apiParam.buffer_count;
+        // let result: any = apiParam.result;
+        // let resultObj: any = {};
 
         let array = func_name.split('_');
         let className = array[0];
@@ -121,7 +121,7 @@ export class IrisRtcEngine {
         if (obj) {
             let callApiFun: CallApiAsyncType = obj[funName];
             if (callApiFun) {
-                let ret = await callApiFun.call(obj, params, paramLength, buffer, bufferLength, resultObj);
+                let ret = await callApiFun.call(obj, apiParam);
                 console.assert(function () {
                     if (ret === undefined || ret.code === undefined ||  ret.data === undefined)  {
                         throw `[callIrisApiAsync] ${func_name} ret ${ret} not CallIrisApiResult`;

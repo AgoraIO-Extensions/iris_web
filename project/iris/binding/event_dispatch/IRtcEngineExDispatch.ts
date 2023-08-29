@@ -1,5 +1,6 @@
 
 import { CallApiReturnType } from "../../base/call_api_executor";
+import { ApiParam } from "../../engine/IrisApiEngine";
 import { IrisRtcEngine } from "../../engine/IrisRtcEngine";
 import { RtcEngineExImpl } from "../../impl/RtcEngineExImpl";
 import { IRtcEngineEx } from "../interface/IRtcEngineEx";
@@ -62,9 +63,8 @@ export class IRtcEngineExDispatch {
     }
 
     setupRemoteVideoEx(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): CallApiReturnType {
-        let obj = JSON.parse(params) as any;
+        apiParam: ApiParam): CallApiReturnType {
+        let obj = JSON.parse(apiParam.data) as any;
         let canvas = obj.canvas;
         if (canvas === undefined) throw "canvas is undefined";
         let connection = obj.connection;
