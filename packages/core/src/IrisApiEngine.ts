@@ -1,13 +1,40 @@
 
-import { IrisEventHandler } from "../../project/iris/base/BaseType";
-import { CallApiType, IrisRtcEngine, GenerateVideoTrackLabelOrHtmlElementCb } from "../../project/iris/engine/IrisRtcEngine";
-import { IrisVideoFrameBufferManager } from "../../project/iris/engine/IrisVideoFrameBufferManager";
-import { CallIrisApiResult } from "./call_api_executor";
+export class CallIrisApiResult {
 
-// export class CallApiResult {
-//     result: string;
-//     code: 
-// }
+    public constructor(
+        public readonly code: number,
+        public readonly data: string,
+    ) { }
+
+    public static success(irisReturnCode: number = 0, resultCode: number = 0, rawResult?: string,): CallIrisApiResult {
+        let result: string;
+        if (rawResult) {
+            result = rawResult;
+        } else {
+            result = `{"result": ${resultCode}}`;
+        }
+        return new CallIrisApiResult(irisReturnCode, result);
+    }
+
+    public static failed(irisReturnCode: number, resultCode: number, rawResult?: string,): CallIrisApiResult {
+        let result: string;
+        if (rawResult) {
+            result = rawResult;
+        } else {
+            result = `{"result": ${resultCode}}`;
+        }
+        return new CallIrisApiResult(irisReturnCode, result);
+    }
+}
+
+export type CallApiReturnType = number | Promise<CallIrisApiResult>;
+
+export type AsyncTaskType = () => Promise<CallIrisApiResult>;
+
+
+export interface ApiInterceptor {
+    intercept(apiParam: ApiParam): Promise<CallIrisApiResult> | undefined;
+}
 
 export class EventParam {
     constructor(
@@ -41,50 +68,8 @@ export class EventParam {
 export type ApiParam = EventParam;
 
 
-export class IrisApiEngine {
+export interface IrisApiEngine {
+    callIrisApi(apiParam: ApiParam): Promise<CallIrisApiResult>;
 
-    public static instance: IrisApiEngine;
-
-    private _engine: IrisRtcEngine;
-
-
-    constructor() {
-        this._engine = new IrisRtcEngine();
-    }
-
-    public callIrisApi(apiParam: ApiParam): number {
-
-        return this._engine.callIrisApi(apiParam);
-    }
-
-    public callIrisApiAsync(apiParam: ApiParam): Promise<CallIrisApiResult> {
-
-        return this._engine.callIrisApiAsync(apiParam);
-    }
-
-    public destruction() {
-        console.log('IrisApiEngine JS destruction');
-        this._engine.destruction();
-    }
-
-    public setIrisRtcEngineEventHandler(event_handler: IrisEventHandler): void {
-        this._engine.setEventHandler(event_handler);
-    }
-
-    public unsetIrisRtcEngineEventHandler(event_handler: IrisEventHandler): void {
-        console.log('IrisApiEngine JS unsetIrisRtcEngineEventHandler');
-        this._engine.setEventHandler(null);
-    }
-
-    public attach(manager_ptr: IrisVideoFrameBufferManager) {
-        manager_ptr.setEngine(this._engine);
-    }
-
-    public detach(manager_ptr: IrisVideoFrameBufferManager) {
-        manager_ptr.setEngine(null);
-    }
-
-    public setGenerateVideoTrackLabelOrHtmlElementCb(cb: GenerateVideoTrackLabelOrHtmlElementCb) {
-        this._engine.setGenerateVideoTrackLabelOrHtmlElementCb(cb);
-    }
+    dispose(): Promise<void>;
 }
