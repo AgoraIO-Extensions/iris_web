@@ -1,0 +1,68 @@
+import { Action } from "../../util/AgoraActionQueue";
+import * as agorartc from '../rtc_types/Index';
+
+export interface IMediaPlayer {
+    putAction(action: Action);
+
+    //IMediaPlayer
+    open(playerId: number, url: string, startPos: number): number;
+    openWithCustomSource(playerId: number, startPos: number, provider: agorartc.IMediaPlayerCustomDataProvider): number;
+    openWithMediaSource(playerId: number, source: agorartc.MediaSource): number;
+    play(playerId: number): number;
+    pause(playerId: number): number;
+    stop(playerId: number): number;
+    resume(playerId: number): number;
+    seek(playerId: number, newPos: number): number;
+    setAudioPitch(playerId: number, pitch: number): number;
+    getDuration(playerId: number, duration: number): number;
+    getPlayPosition(playerId: number, pos: number): number;
+    getStreamCount(playerId: number, count: number): number;
+    getStreamInfo(playerId: number, index: number, info: agorartc.PlayerStreamInfo): number;
+    setLoopCount(playerId: number, loopCount: number): number;
+    muteAudio(playerId: number, audio_mute: boolean): number;
+    isAudioMuted(playerId: number,): boolean;
+    muteVideo(playerId: number, video_mute: boolean): number;
+    isVideoMuted(playerId: number,): boolean;
+    setPlaybackSpeed(playerId: number, speed: number): number;
+    selectAudioTrack(playerId: number, index: number): number;
+    setPlayerOption(playerId: number, key: string, value: number): number;
+    setPlayerOption2(playerId: number, key: string, value: string): number;
+    takeScreenshot(playerId: number, filename: string): number;
+    selectInternalSubtitle(playerId: number, index: number): number;
+    setExternalSubtitle(playerId: number, url: string): number;
+    getState(playerId: number,): agorartc.MEDIA_PLAYER_STATE;
+    mute(playerId: number, mute: boolean): number;
+    getMute(playerId: number, result: any): number;
+    adjustPlayoutVolume(playerId: number, volume: number): number;
+    getPlayoutVolume(playerId: number, volume: number): number;
+    adjustPublishSignalVolume(playerId: number, volume: number): number;
+    getPublishSignalVolume(playerId: number, volume: number): number;
+    setView(playerId: number, view: agorartc.view_t): number;
+    setRenderMode(playerId: number, renderMode: agorartc.RENDER_MODE_TYPE): number;
+    registerPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver): number;
+    unregisterPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver): number;
+    registerAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver): number;
+    registerAudioFrameObserver2(playerId: number, observer: agorartc.IAudioFrameObserver, mode: agorartc.RAW_AUDIO_FRAME_OP_MODE_TYPE): number;
+    unregisterAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver): number;
+    registerVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver): number;
+    registerVideoEncodedImageReceiver(receiver: agorartc.IVideoEncodedImageReceiver): number;
+    unregisterVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver): number;
+    registerMediaPlayerAudioSpectrumObserver(observer: agorartc.IAudioSpectrumObserver, intervalInMS: number): number;
+    unregisterMediaPlayerAudioSpectrumObserver(playerId: number, observer: agorartc.IAudioSpectrumObserver): number;
+    setAudioDualMonoMode(playerId: number, mode: agorartc.AUDIO_DUAL_MONO_MODE): number;
+    getPlayerSdkVersion(playerId: number,): string;
+    getPlaySrc(playerId: number,): string;
+    openWithAgoraCDNSrc(playerId: number, src: string, startPos: number): number;
+    getAgoraCDNLineCount(playerId: number,): number;
+    switchAgoraCDNLineByIndex(playerId: number, index: number): number;
+    getCurrentAgoraCDNIndex(playerId: number,): number;
+    enableAutoSwitchAgoraCDN(playerId: number, enable: boolean): number;
+    renewAgoraCDNSrcToken(playerId: number, token: string, ts: number): number;
+    switchAgoraCDNSrc(playerId: number, src: string, syncPts: boolean): number;
+    switchSrc(playerId: number, src: string, syncPts: boolean): number;
+    preloadSrc(playerId: number, src: string, startPos: number): number;
+    playPreloadedSrc(playerId: number, src: string): number;
+    unloadSrc(playerId: number, src: string): number;
+    setSpatialAudioParams(playerId: number, params: agorartc.SpatialAudioParams): number;
+    setSoundPositionParams(playerId: number, pan: number, gain: number): number;
+}

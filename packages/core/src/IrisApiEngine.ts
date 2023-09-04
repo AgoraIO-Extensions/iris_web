@@ -1,3 +1,4 @@
+import { IrisApiEngineImpl, IrisEventHandlerImpl } from "./IrisApiEngineImpl";
 
 export class CallIrisApiResult {
 
@@ -31,9 +32,30 @@ export type CallApiReturnType = number | Promise<CallIrisApiResult>;
 
 export type AsyncTaskType = () => Promise<CallIrisApiResult>;
 
+export type ApiInterceptorReturnType = Promise<CallIrisApiResult> | undefined;
+
+// export interface IrisEventHandlerHandle {
+//     id: number;
+//     eventHandler: IrisEventHandler;
+// }
+
+export type IrisEventHandlerFunc = (param: EventParam) => void;
+
+export interface IrisEventHandler {
+    onEvent(param: EventParam): void;
+}
+
+export interface IrisEventHandlerManager {
+    notifyEvent(key: string, param: EventParam): void;
+
+    addEventHandler(key: string, eventHandler: IrisEventHandler): void;
+
+    removeEventHandler(key: string, eventHandler: IrisEventHandler): void;
+}
+
 
 export interface ApiInterceptor {
-    intercept(apiParam: ApiParam): Promise<CallIrisApiResult> | undefined;
+    intercept(apiParam: ApiParam): ApiInterceptorReturnType;
 }
 
 export class EventParam {
@@ -44,8 +66,8 @@ export class EventParam {
         result: string,
         buffer: Array<any>,
         length: Array<number>,
-        buffer_count: number
-
+        buffer_count: number,
+        eventHandle: string = "0",
     ) {
         this.event = event;
         this.data = data;
@@ -54,6 +76,7 @@ export class EventParam {
         this.buffer = buffer;
         this.length = length;
         this.buffer_count = buffer_count;
+        this.eventHandle = eventHandle;
     }
 
     event: string;
@@ -63,13 +86,35 @@ export class EventParam {
     buffer: Array<any>;
     length: Array<number>;
     buffer_count: number;
+    eventHandle: string;
 }
 
 export type ApiParam = EventParam;
 
 
 export interface IrisApiEngine {
+    getIrisEventHandlerManager(): IrisEventHandlerManager;
+
     callIrisApi(apiParam: ApiParam): Promise<CallIrisApiResult>;
+
+    addApiInterceptor(interceptor: ApiInterceptor): void;
+
+    removeApiInterceptor(interceptor: ApiInterceptor): void;
 
     dispose(): Promise<void>;
 }
+
+export function createIrisApiEngine(): IrisApiEngine {
+    return new IrisApiEngineImpl();
+}
+
+export function disposeIrisApiEngine(engine_ptr: IrisApiEngine): number {
+    engine_ptr.dispose();
+    // IrisApiEngine.instance = null;
+    return 0;
+}
+
+export function createIrisEventHandler(event_handler: IrisEventHandlerFunc): IrisEventHandler {
+    return IrisEventHandlerImpl.create(event_handler);
+}
+

@@ -15,7 +15,7 @@
         "agora-rtc-sdk-ng": "^4.14.0",
         "html-webpack-plugin": "^5.5.0",
         "html2canvas": "^1.4.1",
-        "iris-web-core": "../packages/core"
+        "iris-web-core": "../core"
     },
     "devDependencies": {
         "clean-webpack-plugin": "^4.0.0",
