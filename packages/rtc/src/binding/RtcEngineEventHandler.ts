@@ -1,6 +1,6 @@
 import * as agorartc from './rtc_types/Index';
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
-import { EventParam } from '../engine/IrisApiEngine';
+import { EventParam } from 'iris-web-core';
 
 export class RtcEngineEventHandler {
 
@@ -28,7 +28,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = this.eventKey("onJoinChannelSuccess");
+        let key = this.eventKey('onJoinChannelSuccess');
 
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         console.log(`onJoinChannelSuccess eventParam ${JSON.stringify(eventParam)}`);
@@ -42,7 +42,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRejoinChannelSuccess';
+        let key = this.eventKey('onRejoinChannelSuccess');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -56,7 +56,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onProxyConnected';
+        let key = this.eventKey('onProxyConnected');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -67,7 +67,7 @@ export class RtcEngineEventHandler {
             msg,
         };
         let json = JSON.stringify(obj);
-        let key = 'onWarning';
+        let key = this.eventKey('onWarning');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     }
@@ -78,7 +78,7 @@ export class RtcEngineEventHandler {
             msg,
         };
         let json = JSON.stringify(obj);
-        let key = 'onError';
+        let key = this.eventKey('onError');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -91,7 +91,7 @@ export class RtcEngineEventHandler {
             lost,
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioQuality';
+        let key = this.eventKey('onAudioQuality');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -101,7 +101,7 @@ export class RtcEngineEventHandler {
             result,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLastmileProbeResult';
+        let key = this.eventKey('onLastmileProbeResult');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -113,7 +113,7 @@ export class RtcEngineEventHandler {
             totalVolume,
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioVolumeIndication';
+        let key = this.eventKey('onAudioVolumeIndication');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -123,7 +123,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLeaveChannel';
+        let key = this.eventKey('onLeaveChannel');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -133,7 +133,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRtcStats';
+        let key = this.eventKey('onRtcStats');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -145,7 +145,7 @@ export class RtcEngineEventHandler {
             deviceState,
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioDeviceStateChanged';
+        let key = this.eventKey('onAudioDeviceStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -155,7 +155,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioMixingFinished';
+        let key = this.eventKey('onAudioMixingFinished');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -165,7 +165,7 @@ export class RtcEngineEventHandler {
             soundId,
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioEffectFinished';
+        let key = this.eventKey('onAudioEffectFinished');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -177,7 +177,7 @@ export class RtcEngineEventHandler {
             deviceState,
         };
         let json = JSON.stringify(obj);
-        let key = 'onVideoDeviceStateChanged';
+        let key = this.eventKey('onVideoDeviceStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -187,7 +187,7 @@ export class RtcEngineEventHandler {
             deviceType,
         };
         let json = JSON.stringify(obj);
-        let key = 'onMediaDeviceChanged';
+        let key = this.eventKey('onMediaDeviceChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -199,7 +199,7 @@ export class RtcEngineEventHandler {
             rxQuality,
         };
         let json = JSON.stringify(obj);
-        let key = 'onNetworkQuality';
+        let key = this.eventKey('onNetworkQuality');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -209,7 +209,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'onIntraRequestReceived';
+        let key = this.eventKey('onIntraRequestReceived');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -219,7 +219,7 @@ export class RtcEngineEventHandler {
             info,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUplinkNetworkInfoUpdated';
+        let key = this.eventKey('onUplinkNetworkInfoUpdated');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -229,7 +229,7 @@ export class RtcEngineEventHandler {
             info,
         };
         let json = JSON.stringify(obj);
-        let key = 'onDownlinkNetworkInfoUpdated';
+        let key = this.eventKey('onDownlinkNetworkInfoUpdated');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -239,7 +239,7 @@ export class RtcEngineEventHandler {
             quality,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLastmileQuality';
+        let key = this.eventKey('onLastmileQuality');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -251,7 +251,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstLocalVideoFrame';
+        let key = this.eventKey('onFirstLocalVideoFrame');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -261,7 +261,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstLocalVideoFramePublished';
+        let key = this.eventKey('onFirstLocalVideoFramePublished');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -273,7 +273,7 @@ export class RtcEngineEventHandler {
             height,
         };
         let json = JSON.stringify(obj);
-        let key = 'onVideoSourceFrameSizeChanged';
+        let key = this.eventKey('onVideoSourceFrameSizeChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -286,7 +286,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstRemoteVideoDecoded';
+        let key = this.eventKey('onFirstRemoteVideoDecoded');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -299,7 +299,7 @@ export class RtcEngineEventHandler {
             rotation,
         };
         let json = JSON.stringify(obj);
-        let key = 'onVideoSizeChanged';
+        let key = this.eventKey('onVideoSizeChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -310,7 +310,7 @@ export class RtcEngineEventHandler {
             error,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLocalVideoStateChanged';
+        let key = this.eventKey('onLocalVideoStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -323,7 +323,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteVideoStateChanged';
+        let key = this.eventKey('onRemoteVideoStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -336,7 +336,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstRemoteVideoFrame';
+        let key = this.eventKey('onFirstRemoteVideoFrame');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -347,7 +347,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserJoined';
+        let key = this.eventKey('onUserJoined');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -358,7 +358,7 @@ export class RtcEngineEventHandler {
             reason,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserOffline';
+        let key = this.eventKey('onUserOffline');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -369,7 +369,7 @@ export class RtcEngineEventHandler {
             muted,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserMuteAudio';
+        let key = this.eventKey('onUserMuteAudio');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -380,7 +380,7 @@ export class RtcEngineEventHandler {
             muted,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserMuteVideo';
+        let key = this.eventKey('onUserMuteVideo');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -391,7 +391,7 @@ export class RtcEngineEventHandler {
             enabled,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserEnableVideo';
+        let key = this.eventKey('onUserEnableVideo');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -402,7 +402,7 @@ export class RtcEngineEventHandler {
             state,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserStateChanged';
+        let key = this.eventKey('onUserStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -413,7 +413,7 @@ export class RtcEngineEventHandler {
             enabled,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserEnableLocalVideo';
+        let key = this.eventKey('onUserEnableLocalVideo');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -425,7 +425,7 @@ export class RtcEngineEventHandler {
             result,
         };
         let json = JSON.stringify(obj);
-        let key = 'onApiCallExecuted';
+        let key = this.eventKey('onApiCallExecuted');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -435,7 +435,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLocalAudioStats';
+        let key = this.eventKey('onLocalAudioStats');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -445,7 +445,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteAudioStats';
+        let key = this.eventKey('onRemoteAudioStats');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -455,7 +455,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLocalVideoStats';
+        let key = this.eventKey('onLocalVideoStats');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -465,7 +465,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteVideoStats';
+        let key = this.eventKey('onRemoteVideoStats');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -475,7 +475,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'onCameraReady';
+        let key = this.eventKey('onCameraReady');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -488,7 +488,7 @@ export class RtcEngineEventHandler {
             height,
         };
         let json = JSON.stringify(obj);
-        let key = 'onCameraFocusAreaChanged';
+        let key = this.eventKey('onCameraFocusAreaChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -501,7 +501,7 @@ export class RtcEngineEventHandler {
             height,
         };
         let json = JSON.stringify(obj);
-        let key = 'onCameraExposureAreaChanged';
+        let key = this.eventKey('onCameraExposureAreaChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -515,7 +515,7 @@ export class RtcEngineEventHandler {
             numFaces,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFacePositionChanged';
+        let key = this.eventKey('onFacePositionChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -525,7 +525,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'onVideoStopped';
+        let key = this.eventKey('onVideoStopped');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -536,7 +536,7 @@ export class RtcEngineEventHandler {
             reason,
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioMixingStateChanged';
+        let key = this.eventKey('onAudioMixingStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -547,7 +547,7 @@ export class RtcEngineEventHandler {
             errorCode,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRhythmPlayerStateChanged';
+        let key = this.eventKey('onRhythmPlayerStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -557,7 +557,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'onConnectionLost';
+        let key = this.eventKey('onConnectionLost');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -567,7 +567,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'onConnectionInterrupted';
+        let key = this.eventKey('onConnectionInterrupted');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -577,7 +577,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'onConnectionBanned';
+        let key = this.eventKey('onConnectionBanned');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -591,7 +591,7 @@ export class RtcEngineEventHandler {
             sentTs,
         };
         let json = JSON.stringify(obj);
-        let key = 'onStreamMessage';
+        let key = this.eventKey('onStreamMessage');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -605,7 +605,7 @@ export class RtcEngineEventHandler {
             cached,
         };
         let json = JSON.stringify(obj);
-        let key = 'onStreamMessageError';
+        let key = this.eventKey('onStreamMessageError');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -615,7 +615,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'onRequestToken';
+        let key = this.eventKey('onRequestToken');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -625,7 +625,7 @@ export class RtcEngineEventHandler {
             token,
         };
         let json = JSON.stringify(obj);
-        let key = 'onTokenPrivilegeWillExpire';
+        let key = this.eventKey('onTokenPrivilegeWillExpire');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -635,7 +635,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstLocalAudioFramePublished';
+        let key = this.eventKey('onFirstLocalAudioFramePublished');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -646,7 +646,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstRemoteAudioFrame';
+        let key = this.eventKey('onFirstRemoteAudioFrame');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -657,7 +657,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstRemoteAudioDecoded';
+        let key = this.eventKey('onFirstRemoteAudioDecoded');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -668,7 +668,7 @@ export class RtcEngineEventHandler {
             error,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLocalAudioStateChanged';
+        let key = this.eventKey('onLocalAudioStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -681,7 +681,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteAudioStateChanged';
+        let key = this.eventKey('onRemoteAudioStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -691,7 +691,7 @@ export class RtcEngineEventHandler {
             userId,
         };
         let json = JSON.stringify(obj);
-        let key = 'onActiveSpeaker';
+        let key = this.eventKey('onActiveSpeaker');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -701,7 +701,7 @@ export class RtcEngineEventHandler {
             result,
         };
         let json = JSON.stringify(obj);
-        let key = 'onContentInspectResult';
+        let key = this.eventKey('onContentInspectResult');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -716,7 +716,7 @@ export class RtcEngineEventHandler {
             errCode,
         };
         let json = JSON.stringify(obj);
-        let key = 'onSnapshotTaken';
+        let key = this.eventKey('onSnapshotTaken');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -727,7 +727,7 @@ export class RtcEngineEventHandler {
             newRole,
         };
         let json = JSON.stringify(obj);
-        let key = 'onClientRoleChanged';
+        let key = this.eventKey('onClientRoleChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -738,7 +738,7 @@ export class RtcEngineEventHandler {
             currentRole,
         };
         let json = JSON.stringify(obj);
-        let key = 'onClientRoleChangeFailed';
+        let key = this.eventKey('onClientRoleChangeFailed');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -750,7 +750,7 @@ export class RtcEngineEventHandler {
             muted,
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioDeviceVolumeChanged';
+        let key = this.eventKey('onAudioDeviceVolumeChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -762,7 +762,7 @@ export class RtcEngineEventHandler {
             errCode,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRtmpStreamingStateChanged';
+        let key = this.eventKey('onRtmpStreamingStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -773,7 +773,7 @@ export class RtcEngineEventHandler {
             eventCode,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRtmpStreamingEvent';
+        let key = this.eventKey('onRtmpStreamingEvent');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -783,7 +783,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'onTranscodingUpdated';
+        let key = this.eventKey('onTranscodingUpdated');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -793,7 +793,7 @@ export class RtcEngineEventHandler {
             routing,
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioRoutingChanged';
+        let key = this.eventKey('onAudioRoutingChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -804,7 +804,7 @@ export class RtcEngineEventHandler {
             code,
         };
         let json = JSON.stringify(obj);
-        let key = 'onChannelMediaRelayStateChanged';
+        let key = this.eventKey('onChannelMediaRelayStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -814,7 +814,7 @@ export class RtcEngineEventHandler {
             code,
         };
         let json = JSON.stringify(obj);
-        let key = 'onChannelMediaRelayEvent';
+        let key = this.eventKey('onChannelMediaRelayEvent');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -824,7 +824,7 @@ export class RtcEngineEventHandler {
             isFallbackOrRecover,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLocalPublishFallbackToAudioOnly';
+        let key = this.eventKey('onLocalPublishFallbackToAudioOnly');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -835,7 +835,7 @@ export class RtcEngineEventHandler {
             isFallbackOrRecover,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteSubscribeFallbackToAudioOnly';
+        let key = this.eventKey('onRemoteSubscribeFallbackToAudioOnly');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -848,7 +848,7 @@ export class RtcEngineEventHandler {
             rxKBitRate,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteAudioTransportStats';
+        let key = this.eventKey('onRemoteAudioTransportStats');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -861,7 +861,7 @@ export class RtcEngineEventHandler {
             rxKBitRate,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteVideoTransportStats';
+        let key = this.eventKey('onRemoteVideoTransportStats');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -872,7 +872,7 @@ export class RtcEngineEventHandler {
             reason,
         };
         let json = JSON.stringify(obj);
-        let key = 'onConnectionStateChanged';
+        let key = this.eventKey('onConnectionStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -884,7 +884,7 @@ export class RtcEngineEventHandler {
             wlAccMsg,
         };
         let json = JSON.stringify(obj);
-        let key = 'onWlAccMessage';
+        let key = this.eventKey('onWlAccMessage');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -895,7 +895,7 @@ export class RtcEngineEventHandler {
             averageStats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onWlAccStats';
+        let key = this.eventKey('onWlAccStats');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -905,7 +905,7 @@ export class RtcEngineEventHandler {
             type,
         };
         let json = JSON.stringify(obj);
-        let key = 'onNetworkTypeChanged';
+        let key = this.eventKey('onNetworkTypeChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -915,7 +915,7 @@ export class RtcEngineEventHandler {
             errorType,
         };
         let json = JSON.stringify(obj);
-        let key = 'onEncryptionError';
+        let key = this.eventKey('onEncryptionError');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -925,7 +925,7 @@ export class RtcEngineEventHandler {
             permissionType,
         };
         let json = JSON.stringify(obj);
-        let key = 'onPermissionError';
+        let key = this.eventKey('onPermissionError');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -936,7 +936,7 @@ export class RtcEngineEventHandler {
             userAccount,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLocalUserRegistered';
+        let key = this.eventKey('onLocalUserRegistered');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -947,7 +947,7 @@ export class RtcEngineEventHandler {
             info,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserInfoUpdated';
+        let key = this.eventKey('onUserInfoUpdated');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -959,7 +959,7 @@ export class RtcEngineEventHandler {
             reason,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUploadLogResult';
+        let key = this.eventKey('onUploadLogResult');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -973,7 +973,7 @@ export class RtcEngineEventHandler {
             elapseSinceLastState,
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioSubscribeStateChanged';
+        let key = this.eventKey('onAudioSubscribeStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -987,7 +987,7 @@ export class RtcEngineEventHandler {
             elapseSinceLastState,
         };
         let json = JSON.stringify(obj);
-        let key = 'onVideoSubscribeStateChanged';
+        let key = this.eventKey('onVideoSubscribeStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1000,7 +1000,7 @@ export class RtcEngineEventHandler {
             elapseSinceLastState,
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioPublishStateChanged';
+        let key = this.eventKey('onAudioPublishStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1013,7 +1013,7 @@ export class RtcEngineEventHandler {
             elapseSinceLastState,
         };
         let json = JSON.stringify(obj);
-        let key = 'onVideoPublishStateChanged';
+        let key = this.eventKey('onVideoPublishStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1026,7 +1026,7 @@ export class RtcEngineEventHandler {
             value,
         };
         let json = JSON.stringify(obj);
-        let key2 = 'onExtensionEvent';
+        let key2 = this.eventKey('onExtensionEvent');
         let eventParam = new EventParam(key2, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1037,7 +1037,7 @@ export class RtcEngineEventHandler {
             extension,
         };
         let json = JSON.stringify(obj);
-        let key = 'onExtensionStarted';
+        let key = this.eventKey('onExtensionStarted');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1048,7 +1048,7 @@ export class RtcEngineEventHandler {
             extension,
         };
         let json = JSON.stringify(obj);
-        let key = 'onExtensionStopped';
+        let key = this.eventKey('onExtensionStopped');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1061,7 +1061,7 @@ export class RtcEngineEventHandler {
             message,
         };
         let json = JSON.stringify(obj);
-        let key = 'onExtensionError';
+        let key = this.eventKey('onExtensionError');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1072,7 +1072,7 @@ export class RtcEngineEventHandler {
             userAccount,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserAccountUpdated';
+        let key = this.eventKey('onUserAccountUpdated');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1107,7 +1107,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRejoinChannelSuccessEx';
+        let key = this.eventKey('onRejoinChannelSuccessEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1121,7 +1121,7 @@ export class RtcEngineEventHandler {
             lost,
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioQualityEx';
+        let key = this.eventKey('onAudioQualityEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1134,7 +1134,7 @@ export class RtcEngineEventHandler {
             totalVolume,
         };
         let json = JSON.stringify(obj);
-        let key = 'onAudioVolumeIndicationEx';
+        let key = this.eventKey('onAudioVolumeIndicationEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1156,7 +1156,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRtcStatsEx';
+        let key = this.eventKey('onRtcStatsEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1169,7 +1169,7 @@ export class RtcEngineEventHandler {
             rxQuality,
         };
         let json = JSON.stringify(obj);
-        let key = 'onNetworkQualityEx';
+        let key = this.eventKey('onNetworkQualityEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1179,7 +1179,7 @@ export class RtcEngineEventHandler {
             connection,
         };
         let json = JSON.stringify(obj);
-        let key = 'onIntraRequestReceivedEx';
+        let key = this.eventKey('onIntraRequestReceivedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1192,7 +1192,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstLocalVideoFrameEx';
+        let key = this.eventKey('onFirstLocalVideoFrameEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1203,7 +1203,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstLocalVideoFramePublishedEx';
+        let key = this.eventKey('onFirstLocalVideoFramePublishedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1216,7 +1216,7 @@ export class RtcEngineEventHandler {
             height,
         };
         let json = JSON.stringify(obj);
-        let key = 'onVideoSourceFrameSizeChangedEx';
+        let key = this.eventKey('onVideoSourceFrameSizeChangedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1230,7 +1230,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstRemoteVideoDecodedEx';
+        let key = this.eventKey('onFirstRemoteVideoDecodedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1244,7 +1244,7 @@ export class RtcEngineEventHandler {
             rotation,
         };
         let json = JSON.stringify(obj);
-        let key = 'onVideoSizeChangedEx';
+        let key = this.eventKey('onVideoSizeChangedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1256,7 +1256,7 @@ export class RtcEngineEventHandler {
             errorCode,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLocalVideoStateChangedEx';
+        let key = this.eventKey('onLocalVideoStateChangedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1270,7 +1270,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteVideoStateChangedEx';
+        let key = this.eventKey('onRemoteVideoStateChangedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1284,7 +1284,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstRemoteVideoFrameEx';
+        let key = this.eventKey('onFirstRemoteVideoFrameEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1308,7 +1308,7 @@ export class RtcEngineEventHandler {
             reason,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserOfflineEx';
+        let key = this.eventKey('onUserOfflineEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1320,7 +1320,7 @@ export class RtcEngineEventHandler {
             muted,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserMuteAudioEx';
+        let key = this.eventKey('onUserMuteAudioEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1332,7 +1332,7 @@ export class RtcEngineEventHandler {
             muted,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserMuteVideoEx';
+        let key = this.eventKey('onUserMuteVideoEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1344,7 +1344,7 @@ export class RtcEngineEventHandler {
             enabled,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserEnableVideoEx';
+        let key = this.eventKey('onUserEnableVideoEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1356,7 +1356,7 @@ export class RtcEngineEventHandler {
             enabled,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserEnableLocalVideoEx';
+        let key = this.eventKey('onUserEnableLocalVideoEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1368,7 +1368,7 @@ export class RtcEngineEventHandler {
             state,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserStateChangedEx';
+        let key = this.eventKey('onUserStateChangedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1379,7 +1379,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLocalAudioStatsEx';
+        let key = this.eventKey('onLocalAudioStatsEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1390,7 +1390,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteAudioStatsEx';
+        let key = this.eventKey('onRemoteAudioStatsEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1401,7 +1401,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLocalVideoStatsEx';
+        let key = this.eventKey('onLocalVideoStatsEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1412,7 +1412,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteVideoStatsEx';
+        let key = this.eventKey('onRemoteVideoStatsEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1422,7 +1422,7 @@ export class RtcEngineEventHandler {
             connection,
         };
         let json = JSON.stringify(obj);
-        let key = 'onConnectionLostEx';
+        let key = this.eventKey('onConnectionLostEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1432,7 +1432,7 @@ export class RtcEngineEventHandler {
             connection,
         };
         let json = JSON.stringify(obj);
-        let key = 'onConnectionInterruptedEx';
+        let key = this.eventKey('onConnectionInterruptedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1442,7 +1442,7 @@ export class RtcEngineEventHandler {
             connection,
         };
         let json = JSON.stringify(obj);
-        let key = 'onConnectionBannedEx';
+        let key = this.eventKey('onConnectionBannedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1457,7 +1457,7 @@ export class RtcEngineEventHandler {
             sentTs,
         };
         let json = JSON.stringify(obj);
-        let key = 'onStreamMessageEx';
+        let key = this.eventKey('onStreamMessageEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1472,7 +1472,7 @@ export class RtcEngineEventHandler {
             cached,
         };
         let json = JSON.stringify(obj);
-        let key = 'onStreamMessageErrorEx';
+        let key = this.eventKey('onStreamMessageErrorEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1482,7 +1482,7 @@ export class RtcEngineEventHandler {
             connection,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRequestTokenEx';
+        let key = this.eventKey('onRequestTokenEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1493,7 +1493,7 @@ export class RtcEngineEventHandler {
             token,
         };
         let json = JSON.stringify(obj);
-        let key = 'onTokenPrivilegeWillExpireEx';
+        let key = this.eventKey('onTokenPrivilegeWillExpireEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1504,7 +1504,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstLocalAudioFramePublishedEx';
+        let key = this.eventKey('onFirstLocalAudioFramePublishedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1516,7 +1516,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstRemoteAudioFrameEx';
+        let key = this.eventKey('onFirstRemoteAudioFrameEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1528,7 +1528,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onFirstRemoteAudioDecodedEx';
+        let key = this.eventKey('onFirstRemoteAudioDecodedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1540,7 +1540,7 @@ export class RtcEngineEventHandler {
             error,
         };
         let json = JSON.stringify(obj);
-        let key = 'onLocalAudioStateChangedEx';
+        let key = this.eventKey('onLocalAudioStateChangedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1554,7 +1554,7 @@ export class RtcEngineEventHandler {
             elapsed,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteAudioStateChangedEx';
+        let key = this.eventKey('onRemoteAudioStateChangedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1565,7 +1565,7 @@ export class RtcEngineEventHandler {
             uid,
         };
         let json = JSON.stringify(obj);
-        let key = 'onActiveSpeakerEx';
+        let key = this.eventKey('onActiveSpeakerEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1577,7 +1577,7 @@ export class RtcEngineEventHandler {
             newRole,
         };
         let json = JSON.stringify(obj);
-        let key = 'onClientRoleChangedEx';
+        let key = this.eventKey('onClientRoleChangedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1589,7 +1589,7 @@ export class RtcEngineEventHandler {
             currentRole,
         };
         let json = JSON.stringify(obj);
-        let key = 'onClientRoleChangeFailedEx';
+        let key = this.eventKey('onClientRoleChangeFailedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1603,7 +1603,7 @@ export class RtcEngineEventHandler {
             rxKBitRate,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteAudioTransportStatsEx';
+        let key = this.eventKey('onRemoteAudioTransportStatsEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1617,7 +1617,7 @@ export class RtcEngineEventHandler {
             rxKBitRate,
         };
         let json = JSON.stringify(obj);
-        let key = 'onRemoteVideoTransportStatsEx';
+        let key = this.eventKey('onRemoteVideoTransportStatsEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1629,7 +1629,7 @@ export class RtcEngineEventHandler {
             reason,
         };
         let json = JSON.stringify(obj);
-        let key = 'onConnectionStateChangedEx';
+        let key = this.eventKey('onConnectionStateChangedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1642,7 +1642,7 @@ export class RtcEngineEventHandler {
             wlAccMsg,
         };
         let json = JSON.stringify(obj);
-        let key = 'onWlAccMessageEx';
+        let key = this.eventKey('onWlAccMessageEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1654,7 +1654,7 @@ export class RtcEngineEventHandler {
             averageStats,
         };
         let json = JSON.stringify(obj);
-        let key = 'onWlAccStatsEx';
+        let key = this.eventKey('onWlAccStatsEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1665,7 +1665,7 @@ export class RtcEngineEventHandler {
             type,
         };
         let json = JSON.stringify(obj);
-        let key = 'onNetworkTypeChangedEx';
+        let key = this.eventKey('onNetworkTypeChangedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1676,7 +1676,7 @@ export class RtcEngineEventHandler {
             errorType,
         };
         let json = JSON.stringify(obj);
-        let key = 'onEncryptionErrorEx';
+        let key = this.eventKey('onEncryptionErrorEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1689,7 +1689,7 @@ export class RtcEngineEventHandler {
             reason,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUploadLogResultEx';
+        let key = this.eventKey('onUploadLogResultEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1701,7 +1701,7 @@ export class RtcEngineEventHandler {
             userAccount,
         };
         let json = JSON.stringify(obj);
-        let key = 'onUserAccountUpdatedEx';
+        let key = this.eventKey('onUserAccountUpdatedEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1715,7 +1715,7 @@ export class RtcEngineEventHandler {
             errCode,
         };
         let json = JSON.stringify(obj);
-        let key = 'onSnapshotTakenEx';
+        let key = this.eventKey('onSnapshotTakenEx');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     };
@@ -1730,7 +1730,7 @@ export class RtcEngineEventHandler {
             message,
         };
         let json = JSON.stringify(obj);
-        let key = 'DirectCdnStreamingEventHandler_onDirectCdnStreamingStateChanged';
+        let key = this.eventKey('DirectCdnStreamingEventHandler_onDirectCdnStreamingStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     }
@@ -1741,7 +1741,7 @@ export class RtcEngineEventHandler {
             stats,
         };
         let json = JSON.stringify(obj);
-        let key = 'DirectCdnStreamingEventHandler_onDirectCdnStreamingStats';
+        let key = this.eventKey('DirectCdnStreamingEventHandler_onDirectCdnStreamingStats');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     }
@@ -1753,7 +1753,7 @@ export class RtcEngineEventHandler {
             error
         };
         let json = JSON.stringify(obj);
-        let key = 'MediaRecorderObserver_onRecorderStateChanged';
+        let key = this.eventKey('MediaRecorderObserver_onRecorderStateChanged');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     }
@@ -1763,7 +1763,7 @@ export class RtcEngineEventHandler {
             info,
         };
         let json = JSON.stringify(obj);
-        let key = 'MediaRecorderObserver_onRecorderInfoUpdated';
+        let key = this.eventKey('MediaRecorderObserver_onRecorderInfoUpdated');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     }
@@ -1775,7 +1775,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'WebGL_onDevicesEnumerated';
+        let key = this.eventKey('WebGL_onDevicesEnumerated');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     }
@@ -1786,7 +1786,7 @@ export class RtcEngineEventHandler {
             devices
         };
         let json = JSON.stringify(obj);
-        let key = 'WebGL_onPlaybackDevicesEnumerated';
+        let key = this.eventKey('WebGL_onPlaybackDevicesEnumerated');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     }
@@ -1797,7 +1797,7 @@ export class RtcEngineEventHandler {
             devices
         };
         let json = JSON.stringify(obj);
-        let key = 'WebGL_onRecordingDevicesEnumerated';
+        let key = this.eventKey('WebGL_onRecordingDevicesEnumerated');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     }
@@ -1808,7 +1808,7 @@ export class RtcEngineEventHandler {
             devices
         };
         let json = JSON.stringify(obj);
-        let key = 'WebGL_onVideoDevicesEnumerated';
+        let key = this.eventKey('WebGL_onVideoDevicesEnumerated');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     }
@@ -1818,7 +1818,7 @@ export class RtcEngineEventHandler {
 
         };
         let json = JSON.stringify(obj);
-        let key = 'WebGL_onEngineDestroy';
+        let key = this.eventKey('WebGL_onEngineDestroy');
         let eventParam = new EventParam(key, json, 0, '', [], [], 0);
         this._engine.getEventHandler()?.onEvent(eventParam);
     }
