@@ -19,7 +19,7 @@ import { AgoraTool } from '../util/AgoraTool';
 import { ImplHelper } from './ImplHelper';
 import { AsyncTaskType, CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
-const RTCENGINE_KEY = "RtcEngine";
+export const RTCENGINE_KEY = "RtcEngine";
 
 export class RtcEngineImpl implements IRtcEngine {
 
