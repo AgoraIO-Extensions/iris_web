@@ -1,8 +1,10 @@
 import { ILocalVideoTrack, IRemoteVideoTrack } from "agora-rtc-sdk-ng";
 import { IrisCEventHandler, IrisEventHandler, IrisEventHandlerHandle } from "./base/BaseType";
 import { IrisVideoFrameBufferManager } from "./engine/IrisVideoFrameBufferManager";
-import { GenerateVideoTrackLabelOrHtmlElementCb } from "./engine/IrisRtcEngine";
-import { ApiParam, CallIrisApiResult, IrisApiEngine } from "iris-web-core";
+import { GenerateVideoTrackLabelOrHtmlElementCb, IrisRtcEngine } from "./engine/IrisRtcEngine";
+import { IrisApiEngine } from "iris-web-core";
+// import { ApiParam, CallIrisApiResult, IrisApiEngine } from "iris-web-core";
+// import { IrisApiEngine } from "iris-web-core/src/IrisApiEngine";
 
 // export namespace AgoraWrapper {
 
@@ -15,49 +17,49 @@ import { ApiParam, CallIrisApiResult, IrisApiEngine } from "iris-web-core";
 
 
 
-export function DestroyIrisApiEngine(engine_ptr: IrisApiEngine): number {
-    engine_ptr.dispose();
-    // IrisApiEngine.instance = null;
-    return 0;
-}
+// export function DestroyIrisApiEngine(engine_ptr: IrisApiEngine): number {
+//     engine_ptr.dispose();
+//     // IrisApiEngine.instance = null;
+//     return 0;
+// }
 
-export function CreateIrisEventHandler(event_handler: IrisCEventHandler): IrisEventHandlerHandle {
-    return new IrisEventHandler(event_handler);
-}
+// export function CreateIrisEventHandler(event_handler: IrisCEventHandler): IrisEventHandlerHandle {
+//     return new IrisEventHandler(event_handler);
+// }
 
-//eventHandler
-export function SetIrisRtcEngineEventHandler(
-    engine_ptr: IrisApiEngine,
-    event_handler: IrisEventHandlerHandle): IrisEventHandlerHandle {
-    
-        console.log(`SetIrisRtcEngineEventHandler ${engine_ptr}, ${event_handler}`);
-    engine_ptr.setIrisRtcEngineEventHandler(event_handler);
-    let handle: IrisEventHandlerHandle = event_handler;
-    return handle;
-}
+// //eventHandler
+// export function SetIrisRtcEngineEventHandler(
+//     engine_ptr: IrisApiEngine,
+//     event_handler: IrisEventHandlerHandle): IrisEventHandlerHandle {
 
-export function UnsetIrisRtcEngineEventHandler(
-    engine_ptr: IrisApiEngine,
-    handle: IrisEventHandlerHandle): number {
+//         console.log(`SetIrisRtcEngineEventHandler ${engine_ptr}, ${event_handler}`);
+//     engine_ptr.setIrisRtcEngineEventHandler(event_handler);
+//     let handle: IrisEventHandlerHandle = event_handler;
+//     return handle;
+// }
 
-    let event_handler: IrisEventHandlerHandle = handle
-    engine_ptr.unsetIrisRtcEngineEventHandler(event_handler);
-    return 0;
-}
+// export function UnsetIrisRtcEngineEventHandler(
+//     engine_ptr: IrisApiEngine,
+//     handle: IrisEventHandlerHandle): number {
 
-export function CallIrisApi(
-    engine_ptr: IrisApiEngine, apiParam: ApiParam): number {
+//     let event_handler: IrisEventHandlerHandle = handle
+//     engine_ptr.unsetIrisRtcEngineEventHandler(event_handler);
+//     return 0;
+// }
 
-    return engine_ptr.callIrisApi(apiParam);
+// export function CallIrisApi(
+//     engine_ptr: IrisApiEngine, apiParam: ApiParam): number {
 
-}
+//     return engine_ptr.callIrisApi(apiParam);
 
-export function CallIrisApiAsync(
-    engine_ptr: IrisApiEngine, apiParam: ApiParam): Promise<CallIrisApiResult> {
+// }
 
-    return engine_ptr.callIrisApi(apiParam);
+// export function CallIrisApiAsync(
+//     engine_ptr: IrisApiEngine, apiParam: ApiParam): Promise<CallIrisApiResult> {
 
-}
+//     return engine_ptr.callIrisApi(apiParam);
+
+// }
 
 // export function Attach(engine_ptr: IrisApiEngine,
 //     manager_ptr: IrisVideoFrameBufferManager): number {
@@ -144,3 +146,6 @@ export function CallIrisApiAsync(
 //
 
 
+export function initIrisRtc(irisApiEngine: IrisApiEngine) {
+    irisApiEngine.addApiInterceptor(new IrisRtcEngine(irisApiEngine.getIrisEventHandlerManager()));
+}

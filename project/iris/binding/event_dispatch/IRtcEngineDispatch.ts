@@ -260,7 +260,7 @@ export class IRtcEngineDispatch {
     startPreview2(
         apiParam: ApiParam): CallApiReturnType {
         let obj = JSON.parse(apiParam.data) as any;
-        let sourceType = obj.sourceType;
+        let sourceType = obj.sourceType ;
         if (sourceType === undefined) throw "sourceType is undefined";
         // result.result = this._impl.startPreview2(sourceType);
         // return 0;

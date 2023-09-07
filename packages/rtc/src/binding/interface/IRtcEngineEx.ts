@@ -1,4 +1,4 @@
-import { CallApiReturnType } from "../../base/call_api_executor";
+import { CallApiReturnType } from "iris-web-core";
 import { Action } from "../../util/AgoraActionQueue";
 import * as agorartc from '../rtc_types/Index';
 

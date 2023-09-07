@@ -1,6 +1,5 @@
 
-import { CallApiReturnType } from "../../base/call_api_executor";
-import { ApiParam } from "../../engine/IrisApiEngine";
+import { ApiParam, CallApiReturnType } from "iris-web-core";
 import { IrisRtcEngine } from "../../engine/IrisRtcEngine";
 import { RtcEngineExImpl } from "../../impl/RtcEngineExImpl";
 import { IRtcEngineEx } from "../interface/IRtcEngineEx";

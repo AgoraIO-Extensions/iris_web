@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
 
-    entry: "./iris/app.ts",
+    entry: "./src/app.ts",
 
 
     output: {
@@ -43,7 +43,7 @@ module.exports = {
         new CleanWebpackPlugin(),
     ],
     devServer: {
-        static: path.resolve(__dirname, './iris'),
+        static: path.resolve(__dirname, './src'),
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",

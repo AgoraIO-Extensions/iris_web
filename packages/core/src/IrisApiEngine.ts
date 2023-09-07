@@ -17,7 +17,7 @@ export class CallIrisApiResult {
         return new CallIrisApiResult(irisReturnCode, result);
     }
 
-    public static failed(irisReturnCode: number, resultCode: number, rawResult?: string,): CallIrisApiResult {
+    public static failed(irisReturnCode: number, resultCode: number = 0, rawResult?: string,): CallIrisApiResult {
         let result: string;
         if (rawResult) {
             result = rawResult;
@@ -56,6 +56,8 @@ export interface IrisEventHandlerManager {
 
 export interface ApiInterceptor {
     intercept(apiParam: ApiParam): ApiInterceptorReturnType;
+
+    dispose(): Promise<void>;
 }
 
 export class EventParam {
@@ -91,7 +93,6 @@ export class EventParam {
 
 export type ApiParam = EventParam;
 
-
 export interface IrisApiEngine {
     getIrisEventHandlerManager(): IrisEventHandlerManager;
 
@@ -112,6 +113,10 @@ export function disposeIrisApiEngine(engine_ptr: IrisApiEngine): number {
     engine_ptr.dispose();
     // IrisApiEngine.instance = null;
     return 0;
+}
+
+export function callIrisApi(apiEngine: IrisApiEngine, apiParam: ApiParam): Promise<CallIrisApiResult> {
+    return apiEngine.callIrisApi(apiParam);
 }
 
 export function createIrisEventHandler(event_handler: IrisEventHandlerFunc): IrisEventHandler {

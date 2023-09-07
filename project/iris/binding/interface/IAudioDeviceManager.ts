@@ -1,3 +1,4 @@
+import { CallApiReturnType } from "../../base/call_api_executor";
 import { Action } from "../../util/AgoraActionQueue";
 import * as agorartc from '../rtc_types/Index';
 
@@ -6,7 +7,7 @@ export interface IAudioDeviceManager {
 
     enumeratePlaybackDevices(): agorartc.DeviceInfo[];
     enumerateRecordingDevices(): agorartc.DeviceInfo[];
-    setPlaybackDevice(deviceId: string): number;
+    setPlaybackDevice(deviceId: string): CallApiReturnType;
     getPlaybackDevice(): string;
     getPlaybackDeviceInfo(): agorartc.DeviceInfo;
     setPlaybackDeviceVolume(volume: number): number;

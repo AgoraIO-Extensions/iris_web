@@ -1,6 +1,5 @@
 import * as agorartc from '../binding/rtc_types/Index';
 import { IRtcEngine } from '../binding/interface/IRtcEngine';
-import { IrisApiEngine } from '../engine/IrisApiEngine';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action, AgoraActionQueue } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';

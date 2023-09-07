@@ -18,6 +18,10 @@ export class IrisEventHandlerManagerImpl implements IrisEventHandlerManager {
     addEventHandler(key: string, eventHandler: IrisEventHandler): void {
         let eventHandlers = this.eventHandlersMap.get(key);
         if (!eventHandlers) {
+            eventHandlers = [];
+            eventHandlers.push(eventHandler);
+
+            this.eventHandlersMap.set(key, eventHandlers);
             return;
         }
 

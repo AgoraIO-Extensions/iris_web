@@ -1,7 +1,7 @@
 import { ApiInterceptor, ApiParam, CallIrisApiResult, EventParam, IrisApiEngine, IrisEventHandler, IrisEventHandlerFunc, IrisEventHandlerManager } from "./IrisApiEngine";
 import { IrisEventHandlerManagerImpl } from "./IrisEventHandlerManagerImpl";
 
-const DO_NOT_HANDLE = -1000;
+const DO_NOT_HANDLE = -10000;
 
 
 

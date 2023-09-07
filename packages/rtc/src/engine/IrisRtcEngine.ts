@@ -199,4 +199,9 @@ export class IrisRtcEngine implements ApiInterceptor {
 
         return channelName + "_" + uid + "_" + type;
     }
+
+    dispose(): Promise<void> {
+        this.destruction();
+        return Promise.resolve();
+    }
 }

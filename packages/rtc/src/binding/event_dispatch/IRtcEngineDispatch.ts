@@ -2363,7 +2363,7 @@ export class IRtcEngineDispatch {
 
     unregisterEventHandler(
     	apiParam: ApiParam): CallApiReturnType {
-    	let obj = JSON.parse(apiParam.data) as any;
+    	// let obj = JSON.parse(apiParam.data) as any;
     	let eventHandler = apiParam.buffer[0];
     	if (eventHandler === undefined) throw "eventHandler is undefined";
     	// result.result = this._impl.unregisterEventHandler(eventHandler);

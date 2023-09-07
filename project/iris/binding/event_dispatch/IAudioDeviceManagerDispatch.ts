@@ -1,4 +1,6 @@
-import { IrisRtcEngine } from "../../engine/IrisRtcEngine";
+import { CallApiReturnType } from "../../base/call_api_executor";
+import { ApiParam } from "../../engine/IrisApiEngine";
+import { CallApiAsyncType, IrisRtcEngine } from "../../engine/IrisRtcEngine";
 import { AudioDeviceManagerImpl } from "../../impl/AudioDeviceManagerImpl";
 import { IAudioDeviceManager } from "../interface/IAudioDeviceManager";
 
@@ -27,13 +29,14 @@ export class IAudioDeviceManagerDispatch {
     }
 
     setPlaybackDevice(
-        params: string, paramLength: number,
-        buffer: Array<Uint8ClampedArray>, bufferLength: number, result: any): number {
-        let obj = JSON.parse(params) as any;
+        apiParam: ApiParam): CallApiReturnType {
+        let obj = JSON.parse(apiParam.data) as any;
         let deviceId = obj.deviceId;
         if (deviceId === undefined) throw "deviceId is undefined";
-        result.result = this._impl.setPlaybackDevice(deviceId);
-        return 0;
+        // result.result = this._impl.setPlaybackDevice(deviceId);
+        // return 0;
+
+        return this._impl.setPlaybackDevice(deviceId);
     }
 
     getPlaybackDevice(

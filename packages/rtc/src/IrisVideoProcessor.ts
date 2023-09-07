@@ -1,6 +1,5 @@
 import { ILocalVideoTrack, IRemoteVideoTrack, UID } from "agora-rtc-sdk-ng";
 import { IrisCVideoFrameBuffer, IrisVideoFrameBufferConfig, IrisVideoFrameBufferDelegateHandle, VideoParams } from "./base/BaseType";
-import { IrisApiEngine } from "./engine/IrisApiEngine";
 import { IrisVideoFrameBufferManager } from "./engine/IrisVideoFrameBufferManager";
 
 

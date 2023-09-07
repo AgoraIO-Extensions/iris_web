@@ -12,7 +12,7 @@ import { AgoraTool } from "../util/AgoraTool";
 import { AgoraTranslate } from "../util/AgoraTranslate";
 import { IrisSubClientVariables } from "../states/IrisSubClientVariables";
 import { ImplHelper } from "./ImplHelper";
-import { AsyncTaskType, CallApiReturnType, CallIrisApiResult } from "../base/call_api_executor";
+import { AsyncTaskType, CallApiReturnType, CallIrisApiResult } from "iris-web-core";
 
 export class RtcEngineExImpl implements IRtcEngineEx {
     private _engine: IrisRtcEngine;
