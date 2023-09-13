@@ -1,0 +1,4 @@
+packages:
+  - packages/core
+  - packages/@types/rtc
+  - scripts/terra

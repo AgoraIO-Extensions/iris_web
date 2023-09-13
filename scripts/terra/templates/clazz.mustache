@@ -1,0 +1,17 @@
+
+{{#user_data.isCallback}}
+export interface {{name}} {
+{{#methods}}
+  {{name}}{{^user_data.isImpl}}?{{/user_data.isImpl}}({{#parameters}}{{name}}: {{type.name}},{{/parameters}}): {{#return_type}}{{name}}{{/return_type}};
+
+{{/methods}}
+}
+{{/user_data.isCallback}}
+{{^user_data.isCallback}}
+export interface {{name}}{
+{{#methods}}
+  {{name}}{{^user_data.isImpl}}?{{/user_data.isImpl}}({{#parameters}}{{name}}: {{type.name}},{{/parameters}}): CallApiReturnType;
+  
+{{/methods}}
+}
+{{/user_data.isCallback}}

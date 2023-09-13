@@ -13,7 +13,6 @@ import { Argument } from 'webpack';
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 import { IrisSubClientVariables } from '../states/IrisSubClientVariables';
-import html2canvas from 'html2canvas';
 import { AgoraTool } from '../util/AgoraTool';
 import { IMediaPlayer } from '../binding/interface/IMediaPlayer';
 

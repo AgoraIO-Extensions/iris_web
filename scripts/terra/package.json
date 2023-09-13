@@ -1,0 +1,20 @@
+{
+  "name": "terra-generate",
+  "version": "1.0.0",
+  "description": "generate code by terra",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "build": "terra-cli",
+    "lint": "eslint -c ../../packages/@types/rtc/.eslintrc --ext ../../packages/@types/rtc/generate && prettier --check ../../packages/@types/rtc/generate",
+    "lint:fix": "eslint -c ../../packages/@types/rtc/.eslintrc --fix --ext ../../packages/@types/rtc/generate && prettier --write ../../packages/@types/rtc/generate",
+    "postinstall": "pnpm link terra/terra-cli"
+  },
+  "devDependencies": {
+    "terra": "../../../terra",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}

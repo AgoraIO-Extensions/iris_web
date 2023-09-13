@@ -1,5 +1,4 @@
 import { ClientRoleOptions, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, ILocalAudioTrack, ILocalVideoTrack, UID } from "agora-rtc-sdk-ng";
-import html2canvas from "html2canvas";
 import { IrisAudioSourceType, IrisClientType, IrisVideoSourceType } from "../base/BaseType";
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 import { IrisClientEventHandler } from "../event_handler/IrisClientEventHandler";
@@ -830,36 +829,8 @@ export class RtcEngineExImpl implements IRtcEngineEx {
     }
 
     takeSnapshotEx(connection: agorartc.RtcConnection, uid: number, filePath: string): number {
-
-        let videoParams = this._engine.entitiesContainer.getVideoFrame(connection.localUid, connection.channelId);
-        if (videoParams) {
-            let videoTrack = videoParams.video_track;
-            if (videoTrack.isPlaying) {
-                let track = videoTrack as any;
-                if (track._player && track._player.videoElement) {
-                    let videoElement = track._player.videoElement;
-                    let fileName = AgoraTool.spliceFileName(filePath);
-                    html2canvas(videoElement)
-                        .then((canvas) => {
-                            AgoraTool.downloadCanvasAsImage(canvas, fileName);
-                            this._engine.rtcEngineEventHandler.onSnapshotTakenEx(connection, fileName, canvas.width, canvas.height, 0);
-                        })
-                        .catch(() => {
-                            this._engine.rtcEngineEventHandler.onSnapshotTakenEx(connection, fileName, 0, 0, -agorartc.ERROR_CODE_TYPE.ERR_FAILED);
-                        });
-                    return 0;
-                }
-                else {
-                    return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
-                }
-            }
-            else {
-                return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
-            }
-        }
-        else {
-            return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
-        }
+        AgoraConsole.warn("takeSnapshot not supported in this platfrom!");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     //这个接口在400被删除了

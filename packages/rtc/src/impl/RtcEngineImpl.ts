@@ -2,20 +2,15 @@ import * as agorartc from '../binding/rtc_types/Index';
 import { IRtcEngine } from '../binding/interface/IRtcEngine';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { Action, AgoraActionQueue } from '../util/AgoraActionQueue';
+import { Action } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
-import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, ClientRole, ClientRoleOptions, DeviceInfo, EncryptionMode, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalAudioTrack, ILocalTrack, ILocalVideoTrack, IMicrophoneAudioTrack, InjectStreamConfig, IRemoteAudioTrack, MicrophoneAudioTrackInitConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
+import AgoraRTC, { CameraVideoTrackInitConfig, ClientRole, ClientRoleOptions, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalAudioTrack, ILocalTrack, ILocalVideoTrack, IMicrophoneAudioTrack, InjectStreamConfig, IRemoteAudioTrack, MicrophoneAudioTrackInitConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
 import { AgoraTranslate } from '../util/AgoraTranslate';
-import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
-import { AudioTrackPackage, IrisAudioSourceType, IrisClientType, IrisVideoSourceType, VideoParams, VideoTrackPackage } from '../base/BaseType';
-import { RtcConnection, THREAD_PRIORITY_TYPE, VideoTrackInfo } from '../binding/rtc_types/Index';
+import { AudioTrackPackage, IrisAudioSourceType, IrisClientType, IrisVideoSourceType } from '../base/BaseType';
+import { RtcConnection } from '../binding/rtc_types/Index';
 import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
-import { Argument } from 'webpack';
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
-import { IrisSubClientVariables } from '../states/IrisSubClientVariables';
-import html2canvas from 'html2canvas';
-import { AgoraTool } from '../util/AgoraTool';
 import { ImplHelper } from './ImplHelper';
 import { AsyncTaskType, CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
@@ -545,7 +540,7 @@ export class RtcEngineImpl implements IRtcEngine {
 
                         try {
                             await mainClient.setClientRole(
-                                AgoraTranslate.agorartcCLIENT_ROLE_TYPE2ClientRole(options.clientRoleType),
+                                AgoraTranslate.agorartcCLIENT_ROLE_TYPE2CliefntRole(options.clientRoleType),
                                 roleOptions
                             );
                         }
@@ -731,7 +726,7 @@ export class RtcEngineImpl implements IRtcEngine {
         return this.setClientRole2(role, options);
     }
 
-    setClientRole2(role: agorartc.CLIENT_ROLE_TYPE, options: agorartc.ClientRoleOptions): CallApiReturnType {
+    setClientRole(role: agorartc.CLIENT_ROLE_TYPE, options: agorartc.ClientRoleOptions): CallApiReturnType {
 
 
         // this.putAction({
@@ -3770,50 +3765,9 @@ export class RtcEngineImpl implements IRtcEngine {
         return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    //要不，直接用ImageData渲染个jpg，然后浏览器自动下载。
     takeSnapshot(config: agorartc.SnapShotConfig): number {
-        let videoParams = this._engine.entitiesContainer.getVideoFrame(config.uid, config.channel);
-        if (videoParams) {
-            let videoTrack = videoParams.video_track;
-            if (videoTrack.isPlaying) {
-                let track = videoTrack as any;
-                if (track._player && track._player.videoElement) {
-                    let videoElement = track._player.videoElement;
-                    let fileName = AgoraTool.spliceFileName(config.filePath);
-
-                    html2canvas(videoElement)
-                        .then((canvas) => {
-                            AgoraTool.downloadCanvasAsImage(canvas, fileName);
-                            let channelId = this._engine.entitiesContainer.getMainClient()?.channelName || "";
-                            let uid = 0;
-                            let connection: agorartc.RtcConnection = {
-                                channelId: channelId,
-                                localUid: uid
-                            };
-                            this._engine.rtcEngineEventHandler.onSnapshotTakenEx(connection, fileName, canvas.width, canvas.height, 0);
-                        })
-                        .catch(() => {
-                            let channelId = this._engine.entitiesContainer.getMainClient()?.channelName || "";
-                            let uid = 0;
-                            let connection: agorartc.RtcConnection = {
-                                channelId: channelId,
-                                localUid: uid
-                            };
-                            this._engine.rtcEngineEventHandler.onSnapshotTakenEx(connection, fileName, 0, 0, -agorartc.ERROR_CODE_TYPE.ERR_FAILED);
-                        });
-                    return 0;
-                }
-                else {
-                    return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
-                }
-            }
-            else {
-                return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
-            }
-        }
-        else {
-            return -agorartc.ERROR_CODE_TYPE.ERR_NOT_READY;
-        }
+        AgoraConsole.warn("takeSnapshot not supported in this platfrom!");
+        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     setContentInspect(config: agorartc.ContentInspectConfig): number {

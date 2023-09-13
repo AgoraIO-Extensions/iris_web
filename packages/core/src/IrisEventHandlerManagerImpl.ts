@@ -1,47 +1,49 @@
-import { EventParam, IrisEventHandler, IrisEventHandlerManager } from "./IrisApiEngine";
+import {
+  EventParam,
+  IrisEventHandler,
+  IrisEventHandlerManager,
+} from './IrisApiEngine';
 
 export class IrisEventHandlerManagerImpl implements IrisEventHandlerManager {
+  private eventHandlersMap: Map<string, Array<IrisEventHandler>> = new Map();
 
-    private eventHandlersMap: Map<string, Array<IrisEventHandler>> = new Map();
-
-    notifyEvent(key: string, param: EventParam): void {
-        let eventHandlers = this.eventHandlersMap.get(key);
-        if (!eventHandlers) {
-            return;
-        }
-
-        eventHandlers.forEach((eventHandler) => {
-            eventHandler.onEvent(param);
-        });
+  notifyEvent(key: string, param: EventParam): void {
+    let eventHandlers = this.eventHandlersMap.get(key);
+    if (!eventHandlers) {
+      return;
     }
 
-    addEventHandler(key: string, eventHandler: IrisEventHandler): void {
-        let eventHandlers = this.eventHandlersMap.get(key);
-        if (!eventHandlers) {
-            eventHandlers = [];
-            eventHandlers.push(eventHandler);
+    eventHandlers.forEach((eventHandler) => {
+      eventHandler.onEvent(param);
+    });
+  }
 
-            this.eventHandlersMap.set(key, eventHandlers);
-            return;
-        }
+  addEventHandler(key: string, eventHandler: IrisEventHandler): void {
+    let eventHandlers = this.eventHandlersMap.get(key);
+    if (!eventHandlers) {
+      eventHandlers = [];
+      eventHandlers.push(eventHandler);
 
-        let item = eventHandlers.find((value) => {
-            return value === eventHandler;
-        });
-        if (!item) {
-            eventHandlers.push(eventHandler);
-        }
+      this.eventHandlersMap.set(key, eventHandlers);
+      return;
     }
 
-    removeEventHandler(key: string, eventHandler: IrisEventHandler): void {
-        let eventHandlers = this.eventHandlersMap.get(key);
-        if (!eventHandlers) {
-            return;
-        }
+    let item = eventHandlers.find((value) => {
+      return value === eventHandler;
+    });
+    if (!item) {
+      eventHandlers.push(eventHandler);
+    }
+  }
 
-        eventHandlers.forEach((item, index) => {
-            if (item === eventHandler) eventHandlers?.splice(index, 1);
-        });
+  removeEventHandler(key: string, eventHandler: IrisEventHandler): void {
+    let eventHandlers = this.eventHandlersMap.get(key);
+    if (!eventHandlers) {
+      return;
     }
 
+    eventHandlers.forEach((item, index) => {
+      if (item === eventHandler) eventHandlers?.splice(index, 1);
+    });
+  }
 }
