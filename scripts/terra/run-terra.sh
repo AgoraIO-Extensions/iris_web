@@ -3,8 +3,8 @@ set -e
 set -x
 
 MY_PATH=$(realpath $(dirname "$0"))
-OUTPUT_DIR=$(realpath ${MY_PATH}/../../packages/@types/rtc/generate)
-EXPORT_FILE_PATH=${MY_PATH}/../../packages/@types/rtc/AgoraSdk.ts
+OUTPUT_DIR=$(realpath ${MY_PATH}/../../packages/@iris/rtc/generate)
+EXPORT_FILE_PATH=${MY_PATH}/../../packages/@iris/rtc/AgoraSdk.ts
 
 find ${OUTPUT_DIR} -type f -delete
 
@@ -18,4 +18,7 @@ npm run build -- render \
     --cache=true \
 
 cd ${OUTPUT_DIR}/..    
+
+node ../../../scripts/export-file-generate.js output-path=$PWD/index.d.ts
+
 npm run lint:fix

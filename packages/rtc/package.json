@@ -2,7 +2,7 @@
   "name": "iris-web-rtc",
   "version": "1.0.0",
   "description": "wait",
-  "main": "./iris/app.ts",
+  "main": "./src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
@@ -12,9 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "agora-rtc-sdk-ng": "^4.14.0",
-    "iris-web-core": "../core",
-    "@types/iris-web-rtc": "workspace: *"
+    "agora-rtc-sdk-ng": "^4.18.2",
+    "iris-web-core": "workspace: *",
+    "@iris/rtc": "workspace: *"
   },
   "devDependencies": {
     "html-webpack-plugin": "^5.5.0",

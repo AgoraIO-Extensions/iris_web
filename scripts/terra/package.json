@@ -8,9 +8,10 @@
   },
   "scripts": {
     "build": "terra-cli",
-    "lint": "eslint -c ../../packages/@types/rtc/.eslintrc --ext ../../packages/@types/rtc/generate && prettier --check ../../packages/@types/rtc/generate",
-    "lint:fix": "eslint -c ../../packages/@types/rtc/.eslintrc --fix --ext ../../packages/@types/rtc/generate && prettier --write ../../packages/@types/rtc/generate",
-    "postinstall": "pnpm link terra/terra-cli"
+    "lint": "eslint -c ../../packages/@iris/rtc/.eslintrc --ext ../../packages/@iris/rtc/generate && prettier --check ../../packages/@iris/rtc/generate",
+    "lint:fix": "eslint -c ../../packages/@iris/rtc/.eslintrc --fix --ext ../../packages/@iris/rtc/generate && prettier --write ../../packages/@iris/rtc/generate",
+    "postinstall": "pnpm link terra/terra-cli",
+    "terra": "sh run-terra.sh"
   },
   "devDependencies": {
     "terra": "../../../terra",

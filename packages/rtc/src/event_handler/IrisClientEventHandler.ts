@@ -1,11 +1,13 @@
-import { IAgoraRTCClient, ConnectionState, ConnectionDisconnectedReason, IAgoraRTCRemoteUser, UID, RemoteStreamType, ChannelMediaRelayState, ChannelMediaRelayError, ChannelMediaRelayEvent, NetworkQuality } from "agora-rtc-sdk-ng";
+import * as NATIVE_RTC from "@iris/rtc";
+import { ChannelMediaRelayError, ChannelMediaRelayEvent, ChannelMediaRelayState, ConnectionDisconnectedReason, ConnectionState, IAgoraRTCClient, IAgoraRTCError, IAgoraRTCRemoteUser, NetworkQuality, RemoteStreamType, UID } from "agora-rtc-sdk-ng";
+
 
 
 import { IrisClientType, IrisVideoSourceType } from "../base/BaseType";
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
-import { AgoraRTCError, InspectState } from "../mock";
-import * as agorartc from "../binding/rtc_types/Index";
 import { AgoraTranslate } from "../util/AgoraTranslate";
+import { InspectState } from "../web_sdk";
+
 import { IrisTrackEventHandler, IrisTrackEventHandlerParam } from "./IrisTrackEventHandler";
 
 export class IrisClientEventHandler {
@@ -50,33 +52,34 @@ export class IrisClientEventHandler {
 
     onEventConnectionStateChange(curState: ConnectionState, revState: ConnectionState, reason?: ConnectionDisconnectedReason): void {
 
-        let connection: agorartc.RtcConnection = {
+        let connection: NATIVE_RTC.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
 
         if (curState == 'DISCONNECTED')
-            this._engine.rtcEngineEventHandler.onConnectionLostEx(connection);
+            console.log(1);
+            // this._engine.rtcEngineEventHandler.onConnectionLostEx(connection);
         else if (reason == ConnectionDisconnectedReason.CHANNEL_BANNED
             || reason == ConnectionDisconnectedReason.IP_BANNED
             || reason == ConnectionDisconnectedReason.UID_BANNED
         ) {
-            this._engine.rtcEngineEventHandler.onConnectionBannedEx(connection);
+            // this._engine.rtcEngineEventHandler.onConnectionBannedEx(connection);
         }
         else if (reason == ConnectionDisconnectedReason.NETWORK_ERROR
             || reason == ConnectionDisconnectedReason.SERVER_ERROR
         ) {
-            this._engine.rtcEngineEventHandler.onConnectionInterruptedEx(connection);
+            // this._engine.rtcEngineEventHandler.onConnectionInterruptedEx(connection);
         }
 
 
         if (curState != "DISCONNECTING") {
-            let state = AgoraTranslate.ConnectionState2agorartcCONNECTION_STATE_TYPE(curState);
-            let reason2: agorartc.CONNECTION_CHANGED_REASON_TYPE = agorartc.CONNECTION_CHANGED_REASON_TYPE.CONNECTION_CHANGED_INTERRUPTED;
+            let state = AgoraTranslate.ConnectionState2NATIVE_RTCCONNECTION_STATE_TYPE(curState);
+            let reason2: NATIVE_RTC.CONNECTION_CHANGED_REASON_TYPE = NATIVE_RTC.CONNECTION_CHANGED_REASON_TYPE.CONNECTION_CHANGED_INTERRUPTED;
             if (reason != null) {
-                reason2 = AgoraTranslate.ConnectionDisconnectedReason2agorartcCONNECTION_CHANGED_REASON_TYPE(reason);
+                reason2 = AgoraTranslate.ConnectionDisconnectedReason2NATIVE_RTCCONNECTION_CHANGED_REASON_TYPE(reason);
             }
-            this._engine.rtcEngineEventHandler.onConnectionStateChangedEx(connection, state, reason2);
+            // this._engine.rtcEngineEventHandler.onConnectionStateChangedEx(connection, state, reason2);
         }
 
     }
@@ -88,16 +91,16 @@ export class IrisClientEventHandler {
     *  3.子客户端B会触发 用户A加入(需要过滤点这个值)
     **/
     onEventUserJoined(user: IAgoraRTCRemoteUser): void {
-        let connection: agorartc.RtcConnection = {
+        let connection: NATIVE_RTC.RtcConnection = {
             channelId: this._client.channelName,
             localUid: user.uid as number,
         };
         let remoteUid = user.uid;
         let elapsed = 0;
-        this._engine.rtcEngineEventHandler.onUserJoinedEx(connection, remoteUid as number, elapsed);
+        // this._engine.rtcEngineEventHandler.onUserJoinedEx(connection, remoteUid as number, elapsed);
 
 
-        // let con2: agorartc.RtcConnection = {
+        // let con2: NATIVE_RTC.RtcConnection = {
         //     channelId: this._client.channelName,
         //     localUid: remoteUid as number
         // };
@@ -113,16 +116,16 @@ export class IrisClientEventHandler {
     }
 
     onEventUserLeft(user: IAgoraRTCRemoteUser, reason: string): void {
-        let connection: agorartc.RtcConnection = {
+        let connection: NATIVE_RTC.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
         let remoteUid = user.uid;
-        let reason2 = AgoraTranslate.string2agorartcUSER_OFFLINE_REASON_TYPE(reason);
-        this._engine.rtcEngineEventHandler.onUserOfflineEx(connection, remoteUid as number, reason2);
+        let reason2 = AgoraTranslate.string2NATIVE_RTCUSER_OFFLINE_REASON_TYPE(reason);
+        // this._engine.rtcEngineEventHandler.onUserOfflineEx(connection, remoteUid as number, reason2);
 
 
-        let con2: agorartc.RtcConnection = {
+        let con2: NATIVE_RTC.RtcConnection = {
             channelId: this._client.channelName,
             localUid: remoteUid as number
         };
@@ -139,7 +142,7 @@ export class IrisClientEventHandler {
             this._engine.entitiesContainer.removeMainClientTrackEventHandlerByRemoteUser(user, "all");
         }
         else {
-            let connection: agorartc.RtcConnection = {
+            let connection: NATIVE_RTC.RtcConnection = {
                 channelId: this._client.channelName,
                 localUid: this._client.uid as number
             };
@@ -149,7 +152,7 @@ export class IrisClientEventHandler {
 
     onEventUserPublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): void {
 
-        let con2: agorartc.RtcConnection = {
+        let con2: NATIVE_RTC.RtcConnection = {
             channelId: this._client.channelName,
             localUid: user.uid as number
         };
@@ -207,7 +210,7 @@ export class IrisClientEventHandler {
                             this._engine.entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
                         }
                         else {
-                            let connection: agorartc.RtcConnection = {
+                            let connection: NATIVE_RTC.RtcConnection = {
                                 channelId: this._client.channelName,
                                 localUid: this._client.uid as number
                             };
@@ -260,7 +263,7 @@ export class IrisClientEventHandler {
                             this._engine.entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
                         }
                         else {
-                            let connection: agorartc.RtcConnection = {
+                            let connection: NATIVE_RTC.RtcConnection = {
                                 channelId: this._client.channelName,
                                 localUid: this._client.uid as number
                             };
@@ -277,7 +280,7 @@ export class IrisClientEventHandler {
 
     onEventUserUnpublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): void {
 
-        let con2: agorartc.RtcConnection = {
+        let con2: NATIVE_RTC.RtcConnection = {
             channelId: this._client.channelName,
             localUid: user.uid as number
         };
@@ -295,7 +298,7 @@ export class IrisClientEventHandler {
             this._engine.entitiesContainer.removeMainClientTrackEventHandlerByRemoteUser(user, mediaType);
         }
         else {
-            let connection: agorartc.RtcConnection = {
+            let connection: NATIVE_RTC.RtcConnection = {
                 channelId: this._client.channelName,
                 localUid: this._client.uid as number
             };
@@ -304,7 +307,7 @@ export class IrisClientEventHandler {
     }
 
     onEventUserInfoUpdated(uid: UID, msg: "mute-audio" | "mute-video" | "enable-local-video" | "unmute-audio" | "unmute-video" | "disable-local-video"): void {
-        let connection: agorartc.RtcConnection = {
+        let connection: NATIVE_RTC.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
@@ -312,26 +315,26 @@ export class IrisClientEventHandler {
 
         switch (msg) {
             case 'mute-audio':
-                this._engine.rtcEngineEventHandler.onUserMuteAudioEx(connection, remoteUid, true);
-                this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, agorartc.REMOTE_USER_STATE.USER_STATE_MUTE_AUDIO);
+                // this._engine.rtcEngineEventHandler.onUserMuteAudioEx(connection, remoteUid, true);
+                // this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_AUDIO);
                 break;
             case 'mute-video':
-                this._engine.rtcEngineEventHandler.onUserMuteVideoEx(connection, remoteUid, true);
-                this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, agorartc.REMOTE_USER_STATE.USER_STATE_MUTE_VIDEO);
+                // this._engine.rtcEngineEventHandler.onUserMuteVideoEx(connection, remoteUid, true);
+                // this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_VIDEO);
 
                 break;
             case 'unmute-audio':
-                this._engine.rtcEngineEventHandler.onUserMuteAudioEx(connection, remoteUid, false);
+                // this._engine.rtcEngineEventHandler.onUserMuteAudioEx(connection, remoteUid, false);
                 break;
             case 'unmute-video':
-                this._engine.rtcEngineEventHandler.onUserMuteVideoEx(connection, remoteUid, false);
+                // this._engine.rtcEngineEventHandler.onUserMuteVideoEx(connection, remoteUid, false);
                 break;
             case 'enable-local-video':
-                this._engine.rtcEngineEventHandler.onUserEnableLocalVideoEx(connection, remoteUid, true);
-                this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, agorartc.REMOTE_USER_STATE.USER_STATE_ENABLE_LOCAL_VIDEO);
+                // this._engine.rtcEngineEventHandler.onUserEnableLocalVideoEx(connection, remoteUid, true);
+                // this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_ENABLE_LOCAL_VIDEO);
                 break;
             case 'disable-local-video':
-                this._engine.rtcEngineEventHandler.onUserEnableLocalVideoEx(connection, remoteUid, false);
+                // this._engine.rtcEngineEventHandler.onUserEnableLocalVideoEx(connection, remoteUid, false);
                 break;
         }
     }
@@ -352,25 +355,25 @@ export class IrisClientEventHandler {
     }
 
     onEventChannelMediaRelayState(state: ChannelMediaRelayState, code: ChannelMediaRelayError): void {
-        let state2 = AgoraTranslate.ChannelMediaRelayState2agorartcCHANNEL_MEDIA_RELAY_STATE(state);
-        let code2 = AgoraTranslate.ChannelMediaRelayError2agorartcCHANNEL_MEDIA_RELAY_ERROR(code);
+        let state2 = AgoraTranslate.ChannelMediaRelayState2NATIVE_RTCCHANNEL_MEDIA_RELAY_STATE(state);
+        let code2 = AgoraTranslate.ChannelMediaRelayError2NATIVE_RTCCHANNEL_MEDIA_RELAY_ERROR(code);
         this._engine.rtcEngineEventHandler.onChannelMediaRelayStateChanged(state2, code2);
     }
 
     onEventChannelMediaRelayEvent(event: ChannelMediaRelayEvent): void {
-        let event2 = AgoraTranslate.ChannelMediaRelayEvent2agorartcCHANNEL_MEDIA_RELAY_EVENT(event);
+        let event2 = AgoraTranslate.ChannelMediaRelayEvent2NATIVE_RTCCHANNEL_MEDIA_RELAY_EVENT(event);
         this._engine.rtcEngineEventHandler.onChannelMediaRelayEvent(event2);
     }
 
     onEventVolumeIndicator(result: { level: number; uid: UID; }[]): void {
-        let connection: agorartc.RtcConnection = {
+        let connection: NATIVE_RTC.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
 
-        let speakers: agorartc.AudioVolumeInfo[] = [];
+        let speakers: NATIVE_RTC.AudioVolumeInfo[] = [];
         for (let i = 0; i < result.length; i++) {
-            speakers.push(AgoraTranslate.volumeIndicatorResult2agorartcAudioVolumeInfo(result[i]));
+            speakers.push(AgoraTranslate.volumeIndicatorResult2NATIVE_RTCAudioVolumeInfo(result[i]));
         }
         let speakerNumber = result.length;
         /* todo 
@@ -380,20 +383,20 @@ export class IrisClientEventHandler {
          * of all the remote speakers.
         */
         let totalVolume = 0;
-        this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(connection, speakers, speakerNumber, totalVolume);
+        // this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(connection, speakers, speakerNumber, totalVolume);
     }
 
     onEventCryptError(): void {
-        let connection: agorartc.RtcConnection = {
+        let connection: NATIVE_RTC.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
-        let errorType: agorartc.ENCRYPTION_ERROR_TYPE = agorartc.ENCRYPTION_ERROR_TYPE.ENCRYPTION_ERROR_INTERNAL_FAILURE;
-        this._engine.rtcEngineEventHandler.onEncryptionErrorEx(connection, errorType);
+        let errorType: NATIVE_RTC.ENCRYPTION_ERROR_TYPE = NATIVE_RTC.ENCRYPTION_ERROR_TYPE.ENCRYPTION_ERROR_INTERNAL_FAILURE;
+        // this._engine.rtcEngineEventHandler.onEncryptionErrorEx(connection, errorType);
     }
 
     onEventTokenPrivilegeWillExpire(): void {
-        let connection: agorartc.RtcConnection = {
+        let connection: NATIVE_RTC.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
@@ -410,16 +413,16 @@ export class IrisClientEventHandler {
                 token = options.token;
             }
         }
-        this._engine.rtcEngineEventHandler.onTokenPrivilegeWillExpireEx(connection, token);
+        // this._engine.rtcEngineEventHandler.onTokenPrivilegeWillExpireEx(connection, token);
     }
 
 
     onEventTokenPrivilegeDidExpire(): void {
-        let connection: agorartc.RtcConnection = {
+        let connection: NATIVE_RTC.RtcConnection = {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
-        this._engine.rtcEngineEventHandler.onRequestTokenEx(connection);
+        // this._engine.rtcEngineEventHandler.onRequestTokenEx(connection);
     }
 
     onEventNetworkQuality(stats: NetworkQuality): void {
@@ -428,13 +431,13 @@ export class IrisClientEventHandler {
     }
 
     //todo 后边再做
-    onEventLiveStreamingError(url: string, err: AgoraRTCError): void {
+    onEventLiveStreamingError(url: string, err: IAgoraRTCError): void {
 
 
     }
 
     //todo 后边再做
-    onEventLiveStreamingWarning(url: string, warning: AgoraRTCError): void {
+    onEventLiveStreamingWarning(url: string, warning: IAgoraRTCError): void {
 
     }
 
@@ -458,17 +461,17 @@ export class IrisClientEventHandler {
         console.log(users);
     }
 
-    onEventContentInspectConnectionStateChange(preState: InspectState, newState: InspectState): void {
+    onEventContentInspectConnectionStateChange(preState: `${InspectState}`, newState: `${InspectState}`): void {
         //没有合适的回调
     }
 
-    onEventContentInspectError(error?: AgoraRTCError): void {
-        this._engine.rtcEngineEventHandler.onError(-agorartc.ERROR_CODE_TYPE.ERR_FAILED, error?.message || "Content Inspect Error");
+    onEventContentInspectError(error?: IAgoraRTCError): void {
+        this._engine.rtcEngineEventHandler.onError(NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, error?.message || "Content Inspect Error");
     }
 
-    onEventContentInspectResult(data?: "porn" | "sexy" | "neutral", error?: AgoraRTCError) {
+    onEventContentInspectResult(data?: "porn" | "sexy" | "neutral", error?: IAgoraRTCError) {
         if (data) {
-            let result = AgoraTranslate.data2agorartcCONTENT_INSPECT_RESULT(data);
+            let result = AgoraTranslate.data2NATIVE_RTCCONTENT_INSPECT_RESULT(data);
             this._engine.rtcEngineEventHandler.onContentInspectResult(result);
         }
     }

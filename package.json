@@ -7,7 +7,8 @@
     "test": "pnpm -r run test",
     "lint": "eslint --ext .ts,.tsx . && prettier --check .",
     "lint:fix": "eslint --fix --ext .ts,.tsx . && prettier --write .",
-    "terra": "sh scripts/terra/run-terra.sh"
+    "terra": "pnpm -F terra-generate run terra",
+    "start": "sh ./build_local_dev.sh"
   },
   "pnpm": {
     "peerDependencyRules": {

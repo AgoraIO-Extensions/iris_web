@@ -3,6 +3,8 @@
 import { ApiParam, CallApiReturnType, EventParam } from 'iris-web-core';
 
 {{#nodes}}
+import { IrisRtcEngine } from '../../../../rtc/src/engine/IrisRtcEngine';
+import { {{user_data._name}}Impl } from '../../../../rtc/src/impl/{{user_data._name}}Impl';
 {{#user_data.isCallback}}
 export class {{user_data._name}} {
   classPrefix: string = "{{user_data._name}}_";

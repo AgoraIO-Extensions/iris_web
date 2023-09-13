@@ -1,102 +1,138 @@
-import { IrisRtcEngine } from "../engine/IrisRtcEngine";
-import { IMediaEngine } from "../binding/interface/IMediaEngine";
-import { Action } from "../util/AgoraActionQueue";
-import { AgoraConsole } from "../util/AgoraConsole";
-import * as agorartc from "../binding/rtc_types/Index";
+import * as NATIVE_RTC from '@iris/rtc';
 
-export class MediaEngineImpl implements IMediaEngine {
-    private _engine: IrisRtcEngine;
+import { CallApiReturnType } from 'iris-web-core';
 
-    public constructor(engine: IrisRtcEngine) {
-        this._engine = engine;
-    }
+import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { Action } from '../util/AgoraActionQueue';
+import { AgoraConsole } from '../util/AgoraConsole';
 
+export class MediaEngineImpl implements NATIVE_RTC.IMediaEngine {
+  private _engine: IrisRtcEngine;
 
+  public constructor(engine: IrisRtcEngine) {
+    this._engine = engine;
+  }
+  registerVideoEncodedFrameObserver(
+    observer: NATIVE_RTC.IVideoEncodedFrameObserver
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  pushAudioFrame(
+    frame: NATIVE_RTC.AudioFrame,
+    trackId: number
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setExternalAudioSource(
+    enabled: boolean,
+    sampleRate: number,
+    channels: number,
+    localPlayback: boolean,
+    publish: boolean
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  createCustomAudioTrack(
+    trackType: NATIVE_RTC.AUDIO_TRACK_TYPE,
+    config: NATIVE_RTC.AudioTrackConfig
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  destroyCustomAudioTrack(trackId: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setExternalAudioSink(
+    enabled: boolean,
+    sampleRate: number,
+    channels: number
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  enableCustomAudioLocalPlayback(
+    trackId: number,
+    enabled: boolean
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  pushEncodedVideoImage(
+    imageBuffer: number,
+    length: number,
+    videoEncodedFrameInfo: NATIVE_RTC.EncodedVideoFrameInfo,
+    videoTrackId: number
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  release(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
 
+  putAction(action: Action) {
+    this._engine.actionQueue.putAction(action);
+  }
 
-    putAction(action: Action) {
-        this._engine.actionQueue.putAction(action);
-    }
+  registerAudioFrameObserver(observer: NATIVE_RTC.IAudioFrameObserver): number {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
 
-    registerAudioFrameObserver(observer: agorartc.IAudioFrameObserver): number {
-        AgoraConsole.warn("registerAudioFrameObserver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
+  registerVideoFrameObserver(observer: NATIVE_RTC.IVideoFrameObserver): number {
+    AgoraConsole.warn(
+      'registerVideoFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
 
-    registerVideoFrameObserver(observer: agorartc.IVideoFrameObserver): number {
-        AgoraConsole.warn("registerVideoFrameObserver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
+  pushCaptureAudioFrame(frame: NATIVE_RTC.AudioFrame): number {
+    AgoraConsole.warn('pushCaptureAudioFrame not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
 
-    registerVideoEncodedImageReceiver(receiver: agorartc.IVideoEncodedImageReceiver): number {
-        AgoraConsole.warn("registerVideoEncodedImageReceiver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
+  pushReverseAudioFrame(frame: NATIVE_RTC.AudioFrame): number {
+    AgoraConsole.warn('pushReverseAudioFrame not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
 
-    pushAudioFrame(type: agorartc.MEDIA_SOURCE_TYPE, frame: agorartc.AudioFrame, wrap: boolean, sourceId: number): number {
-        AgoraConsole.warn("pushAudioFrame not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
+  pushDirectAudioFrame(frame: NATIVE_RTC.AudioFrame): number {
+    AgoraConsole.warn('pushDirectAudioFrame not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
 
-    pushCaptureAudioFrame(frame: agorartc.AudioFrame): number {
-        AgoraConsole.warn("pushCaptureAudioFrame not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
+  pullAudioFrame(frame: NATIVE_RTC.AudioFrame): number {
+    AgoraConsole.warn('pullAudioFrame not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
 
-    pushReverseAudioFrame(frame: agorartc.AudioFrame): number {
-        AgoraConsole.warn("pushReverseAudioFrame not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
+  setExternalVideoSource(
+    enabled: boolean,
+    useTexture: boolean,
+    sourceType: NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
+  ): number {
+    AgoraConsole.warn('setExternalVideoSource not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
 
-    pushDirectAudioFrame(frame: agorartc.AudioFrame): number {
-        AgoraConsole.warn("pushDirectAudioFrame not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
+  setDirectExternalAudioSource(
+    enable: boolean,
+    localPlayback: boolean
+  ): number {
+    AgoraConsole.warn(
+      'setDirectExternalAudioSource not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
 
-    pullAudioFrame(frame: agorartc.AudioFrame): number {
-        AgoraConsole.warn("pullAudioFrame not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
+  pushVideoFrame(frame: NATIVE_RTC.ExternalVideoFrame): number {
+    AgoraConsole.warn('pushVideoFrame not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
 
-
-
-    setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: agorartc.EXTERNAL_VIDEO_SOURCE_TYPE): number {
-        AgoraConsole.warn("setExternalVideoSource not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, sourceNumber: number, localPlayback: boolean, publish: boolean): number {
-        AgoraConsole.warn("setExternalAudioSource not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    setExternalAudioSink(sampleRate: number, channels: number): number {
-        AgoraConsole.warn("setExternalAudioSink not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    enableCustomAudioLocalPlayback(sourceId: number, enabled: number): number {
-        AgoraConsole.warn("enableCustomAudioLocalPlayback not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    setDirectExternalAudioSource(enable: boolean, localPlayback: boolean): number {
-        AgoraConsole.warn("setDirectExternalAudioSource not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    pushVideoFrame(frame: agorartc.ExternalVideoFrame): number {
-        AgoraConsole.warn("pushVideoFrame not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    pushVideoFrame2(frame: agorartc.ExternalVideoFrame, connection: agorartc.RtcConnection): number {
-        AgoraConsole.warn("pushVideoFrame2 not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    pushEncodedVideoImage(imageBuffer: Uint8ClampedArray, length: number, videoEncodedFrameInfo: agorartc.EncodedVideoFrameInfo): number {
-        AgoraConsole.warn("pushEncodedVideoImage not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
+  pushVideoFrame2(
+    frame: NATIVE_RTC.ExternalVideoFrame,
+    connection: NATIVE_RTC.RtcConnection
+  ): number {
+    AgoraConsole.warn('pushVideoFrame2 not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
 }

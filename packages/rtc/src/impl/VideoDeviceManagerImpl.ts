@@ -1,101 +1,51 @@
-import { IrisRtcEngine } from "../engine/IrisRtcEngine";
-import { IMediaEngine } from "../binding/interface/IMediaEngine";
-import { Action } from "../util/AgoraActionQueue";
-import { AgoraConsole } from "../util/AgoraConsole";
-import * as agorartc from "../binding/rtc_types/Index";
-import { IVideoDeviceManager } from "../binding/interface/IVideoDeviceManager";
-import { ImplHelper } from "./ImplHelper";
-import { IrisVideoSourceType, VideoTrackPackage } from "../base/BaseType";
-import { ICameraVideoTrack } from "agora-rtc-sdk-ng";
+import * as NATIVE_RTC from '@iris/rtc';
+import { ICameraVideoTrack } from 'agora-rtc-sdk-ng';
 
-export class VideoDeviceManagerImpl implements IVideoDeviceManager {
-    private _engine: IrisRtcEngine;
+import { CallApiReturnType } from 'iris-web-core';
 
-    public constructor(engine: IrisRtcEngine) {
-        this._engine = engine;
-    }
+import { IrisVideoSourceType, VideoTrackPackage } from '../base/BaseType';
+import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { Action } from '../util/AgoraActionQueue';
+import { AgoraConsole } from '../util/AgoraConsole';
 
-    putAction(action: Action) {
-        this._engine.actionQueue.putAction(action);
-    }
+import { ImplHelper } from './ImplHelper';
 
-    //todo IVideoDeviceManager
-    enumerateVideoDevices(): agorartc.DeviceInfo[] {
-        ImplHelper.enumerateDevices(this._engine)
-            .then((devices) => {
-                let videoDevices = devices.videoDevices;
-                this._engine.rtcEngineEventHandler.onVideoDevicesEnumerated(videoDevices);
-            })
-            .catch((e) => {
-                AgoraConsole.error("enumerateVideoDevices failed");
-                AgoraConsole.log(e);
-            });
+export class VideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
+  private _engine: IrisRtcEngine;
 
-        if (this._engine.globalVariables.deviceEnumerated) {
-            return this._engine.globalVariables.videoDevices;
-        }
+  public constructor(engine: IrisRtcEngine) {
+    this._engine = engine;
+  }
+  enumerateVideoDevices(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setDevice(deviceIdUTF8: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getDevice(deviceIdUTF8: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  numberOfCapabilities(deviceIdUTF8: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getCapability(
+    deviceIdUTF8: string,
+    deviceCapabilityNumber: number,
+    capability: NATIVE_RTC.VideoFormat
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  startDeviceTest(hwnd: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  stopDeviceTest(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  release(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
 
-        return [];
-    }
-
-    setDevice(deviceIdUTF8: string): number {
-        this.putAction({
-            fun: (deviceIdUTF8: string, next) => {
-                this._engine.mainClientVariables.videoDeviceId = deviceIdUTF8;
-                //todo 如果当前有LocalVideoTrack， 那么调用LocalVideoTrack.setDevice 
-                this._engine.entitiesContainer.walkAllILocalVideoTrack((trackPackage: VideoTrackPackage) => {
-                    if (trackPackage.type == IrisVideoSourceType.kVideoSourceTypeCameraPrimary || trackPackage.type == IrisVideoSourceType.kVideoSourceTypeCameraSecondary) {
-                        let track: ICameraVideoTrack = trackPackage.track as ICameraVideoTrack;
-                        track.setDevice(deviceIdUTF8)
-                            .then(() => {
-                                AgoraConsole.log("setDevice success");
-                            })
-                            .catch((reason) => {
-                                AgoraConsole.error("setDevice failed");
-                                AgoraConsole.error(reason);
-                            })
-                            .finally(() => {
-
-                            })
-                    }
-                })
-                next();
-            },
-            args: [deviceIdUTF8]
-        })
-        return 0;
-    }
-
-    getDevice(): string {
-        if (this._engine.mainClientVariables.videoDeviceId) {
-            return this._engine.mainClientVariables.videoDeviceId;
-        }
-        else if (this._engine.globalVariables.deviceEnumerated) {
-            return this._engine.globalVariables.videoDevices[0]?.deviceId || "";
-        }
-        else {
-            return "";
-        }
-    }
-
-    numberOfCapabilities(deviceIdUTF8: string): number {
-        AgoraConsole.warn("numberOfCapabilities not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    getCapability(deviceIdUTF8: string, deviceCapabilityNumber: number, capability: agorartc.VideoFormat): number {
-        AgoraConsole.warn("getCapability not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    startDeviceTest(hwnd: any): number {
-        AgoraConsole.warn("startDeviceTest not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    stopDeviceTest(): number {
-        AgoraConsole.warn("stopDeviceTest not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
+  putAction(action: Action) {
+    this._engine.actionQueue.putAction(action);
+  }
 }

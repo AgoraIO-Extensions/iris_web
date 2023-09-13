@@ -1,278 +1,218 @@
-import * as agorartc from '../binding/rtc_types/Index';
-import { IRtcEngine } from '../binding/interface/IRtcEngine';
+import {
+  AUDIO_DUAL_MONO_MODE,
+  IAudioPcmFrameSink,
+  IAudioSpectrumObserver,
+  IMediaPlayer,
+  IMediaPlayerSourceObserver,
+  IVideoFrameObserver,
+  MediaSource,
+  PlayerStreamInfo,
+  RAW_AUDIO_FRAME_OP_MODE_TYPE,
+  RENDER_MODE_TYPE,
+  SpatialAudioParams,
+} from '@iris/rtc';
+
+import { CallApiReturnType } from 'iris-web-core';
+
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { Action, AgoraActionQueue } from '../util/AgoraActionQueue';
+import { Action } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
-import AgoraRTC, { CameraVideoTrackInitConfig, ClientConfig, ClientRoleOptions, DeviceInfo, EncryptionMode, IAgoraRTCClient, IAgoraRTCRemoteUser, ICameraVideoTrack, IChannelMediaRelayConfiguration, ILocalAudioTrack, ILocalTrack, ILocalVideoTrack, IMicrophoneAudioTrack, InjectStreamConfig, IRemoteAudioTrack, MicrophoneAudioTrackInitConfig, ScreenVideoTrackInitConfig, UID, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
-import { AgoraTranslate } from '../util/AgoraTranslate';
-import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
-import { AudioTrackPackage, IrisAudioSourceType, IrisClientType, IrisVideoSourceType, VideoParams, VideoTrackPackage } from '../base/BaseType';
-import { RtcConnection, THREAD_PRIORITY_TYPE, VideoTrackInfo } from '../binding/rtc_types/Index';
-import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
-import { Argument } from 'webpack';
-import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
-import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
-import { IrisSubClientVariables } from '../states/IrisSubClientVariables';
-import { AgoraTool } from '../util/AgoraTool';
-import { IMediaPlayer } from '../binding/interface/IMediaPlayer';
 
 export class MediaPlayerImpl implements IMediaPlayer {
+  private _engine: IrisRtcEngine;
 
-    private _engine: IrisRtcEngine;
+  public constructor(engine: IrisRtcEngine) {
+    this._engine = engine;
+  }
+  getMediaPlayerId(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  open(url: string, startPos: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  openWithMediaSource(source: MediaSource): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  play(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  pause(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  stop(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  resume(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  seek(newPos: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setAudioPitch(pitch: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getDuration(duration: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getPlayPosition(pos: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getStreamCount(count: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getStreamInfo(index: number, info: PlayerStreamInfo): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setLoopCount(loopCount: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setPlaybackSpeed(speed: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  selectAudioTrack(index: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setPlayerOption(key: string, value: number): CallApiReturnType;
+  setPlayerOption(key: string, value: string): CallApiReturnType;
+  setPlayerOption(
+    key: unknown,
+    value: unknown
+  ): import('iris-web-core').CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  takeScreenshot(filename: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  selectInternalSubtitle(index: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setExternalSubtitle(url: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getState(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  mute(muted: boolean): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getMute(muted: boolean): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  adjustPlayoutVolume(volume: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getPlayoutVolume(volume: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  adjustPublishSignalVolume(volume: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getPublishSignalVolume(volume: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setView(view: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setRenderMode(renderMode: RENDER_MODE_TYPE): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  registerPlayerSourceObserver(
+    observer: IMediaPlayerSourceObserver
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  unregisterPlayerSourceObserver(
+    observer: IMediaPlayerSourceObserver
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  registerAudioFrameObserver(observer: IAudioPcmFrameSink): CallApiReturnType;
+  registerAudioFrameObserver(
+    observer: IAudioPcmFrameSink,
+    mode: RAW_AUDIO_FRAME_OP_MODE_TYPE
+  ): CallApiReturnType;
+  registerAudioFrameObserver(
+    observer: unknown,
+    mode?: unknown
+  ): import('iris-web-core').CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  unregisterAudioFrameObserver(
+    observer: IAudioPcmFrameSink
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  unregisterVideoFrameObserver(
+    observer: IVideoFrameObserver
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  registerMediaPlayerAudioSpectrumObserver(
+    observer: IAudioSpectrumObserver,
+    intervalInMS: number
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  unregisterMediaPlayerAudioSpectrumObserver(
+    observer: IAudioSpectrumObserver
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setAudioDualMonoMode(mode: AUDIO_DUAL_MONO_MODE): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getPlayerSdkVersion(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getPlaySrc(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  openWithAgoraCDNSrc(src: string, startPos: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getAgoraCDNLineCount(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  switchAgoraCDNLineByIndex(index: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getCurrentAgoraCDNIndex(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  enableAutoSwitchAgoraCDN(enable: boolean): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  renewAgoraCDNSrcToken(token: string, ts: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  switchAgoraCDNSrc(src: string, syncPts: boolean): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  switchSrc(src: string, syncPts: boolean): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  preloadSrc(src: string, startPos: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  playPreloadedSrc(src: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  unloadSrc(src: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setSpatialAudioParams(params: SpatialAudioParams): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setSoundPositionParams(pan: number, gain: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
 
-    public constructor(engine: IrisRtcEngine) {
-        this._engine = engine;
-    }
+  putAction(action: Action) {
+    this._engine.actionQueue.putAction(action);
+  }
 
-    putAction(action: Action) {
-        this._engine.actionQueue.putAction(action);
-    }
-
-    //IMediaPlayer
-    open(playerId: number, url: string, startPos: number): number {
-        AgoraConsole.warn("open not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    openWithCustomSource(playerId: number, startPos: number, provider: agorartc.IMediaPlayerCustomDataProvider): number {
-        AgoraConsole.warn("openWithCustomSource not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    openWithMediaSource(playerId: number, source: agorartc.MediaSource): number {
-        AgoraConsole.warn("openWithMediaSource not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    play(playerId: number): number {
-        AgoraConsole.warn("play not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    pause(playerId: number): number {
-        AgoraConsole.warn("pause not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    stop(playerId: number): number {
-        AgoraConsole.warn("stop not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    resume(playerId: number): number {
-        AgoraConsole.warn("resume not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    seek(playerId: number, newPos: number): number {
-        AgoraConsole.warn("seek not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    setAudioPitch(playerId: number, pitch: number): number {
-        AgoraConsole.warn("setAudioPitch not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    getDuration(playerId: number, duration: number): number {
-        AgoraConsole.warn("getDuration not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    getPlayPosition(playerId: number, pos: number): number {
-        AgoraConsole.warn("getPlayPosition not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    getStreamCount(playerId: number, count: number): number {
-        AgoraConsole.warn("getStreamCount not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    getStreamInfo(playerId: number, index: number, info: agorartc.PlayerStreamInfo): number {
-        AgoraConsole.warn("getStreamInfo not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    setLoopCount(playerId: number, loopCount: number): number {
-        AgoraConsole.warn("setLoopCount not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    muteAudio(playerId: number, audio_mute: boolean): number {
-        AgoraConsole.warn("muteAudio not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    isAudioMuted(playerId: number): boolean {
-        AgoraConsole.warn("isAudioMuted not supported in this platfrom!");
-        return false;
-    }
-    muteVideo(playerId: number, video_mute: boolean): number {
-        AgoraConsole.warn("muteVideo not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    isVideoMuted(playerId: number): boolean {
-        AgoraConsole.warn("isVideoMuted not supported in this platfrom!");
-        return false;
-    }
-    setPlaybackSpeed(playerId: number, speed: number): number {
-        AgoraConsole.warn("setPlaybackSpeed not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    selectAudioTrack(playerId: number, index: number): number {
-        AgoraConsole.warn("selectAudioTrack not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    setPlayerOption(playerId: number, key: string, value: number): number {
-        AgoraConsole.warn("setPlayerOption not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    setPlayerOption2(playerId: number, key: string, value: string): number {
-        AgoraConsole.warn("setPlayerOption2 not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    takeScreenshot(playerId: number, filename: string): number {
-        AgoraConsole.warn("takeScreenshot not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    selectInternalSubtitle(playerId: number, index: number): number {
-        AgoraConsole.warn("selectInternalSubtitle not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    setExternalSubtitle(playerId: number, url: string): number {
-        AgoraConsole.warn("setExternalSubtitle not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    getState(playerId: number): agorartc.MEDIA_PLAYER_STATE {
-        AgoraConsole.warn("getState not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    mute(playerId: number, mute: boolean): number {
-        AgoraConsole.warn("mute not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    getMute(playerId: number, result: any): number {
-        AgoraConsole.warn("getMute not supported in this platfrom!");
-        result.mute = false;
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    adjustPlayoutVolume(playerId: number, volume: number): number {
-        AgoraConsole.warn("adjustPlayoutVolume not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    getPlayoutVolume(playerId: number, volume: number): number {
-        AgoraConsole.warn("getPlayoutVolume not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    adjustPublishSignalVolume(playerId: number, volume: number): number {
-        AgoraConsole.warn("adjustPublishSignalVolume not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    getPublishSignalVolume(playerId: number, volume: number): number {
-        AgoraConsole.warn("getPublishSignalVolume not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    setView(playerId: number, view: any): number {
-        AgoraConsole.warn("setView not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    setRenderMode(playerId: number, renderMode: agorartc.RENDER_MODE_TYPE): number {
-        AgoraConsole.warn("setRenderMode not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    registerPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver): number {
-        AgoraConsole.warn("registerPlayerSourceObserver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    unregisterPlayerSourceObserver(playerId: number, observer: agorartc.IMediaPlayerSourceObserver): number {
-        AgoraConsole.warn("unregisterPlayerSourceObserver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    registerAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver): number {
-        AgoraConsole.warn("mediaPlayer_registerAudioFrameObserver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    registerAudioFrameObserver2(playerId: number, observer: agorartc.IAudioFrameObserver, mode: agorartc.RAW_AUDIO_FRAME_OP_MODE_TYPE): number {
-        AgoraConsole.warn("mediaPlayer_registerAudioFrameObserver2 not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    unregisterAudioFrameObserver(playerId: number, observer: agorartc.IAudioFrameObserver): number {
-        AgoraConsole.warn("mediaPlayer_unregisterAudioFrameObserver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    registerVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver): number {
-        AgoraConsole.warn("mediaPlayer_registerVideoFrameObserver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    registerVideoEncodedImageReceiver(receiver: agorartc.IVideoEncodedImageReceiver): number {
-        AgoraConsole.warn("registerVideoEncodedImageReceiver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    unregisterVideoFrameObserver(playerId: number, observer: agorartc.IVideoFrameObserver): number {
-        AgoraConsole.warn("mediaPlayer_unregisterVideoFrameObserver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    registerMediaPlayerAudioSpectrumObserver(observer: agorartc.IAudioSpectrumObserver, intervalInMS: number): number {
-        AgoraConsole.warn("registerMediaPlayerAudioSpectrumObserver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    unregisterMediaPlayerAudioSpectrumObserver(playerId: number, observer: agorartc.IAudioSpectrumObserver): number {
-        AgoraConsole.warn("unregisterMediaPlayerAudioSpectrumObserver not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    setAudioDualMonoMode(playerId: number, mode: agorartc.AUDIO_DUAL_MONO_MODE): number {
-        AgoraConsole.warn("setAudioDualMonoMode not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    getPlayerSdkVersion(playerId: number): string {
-        AgoraConsole.warn("getPlayerSdkVersion not supported in this platfrom!");
-        return "";
-    }
-    getPlaySrc(playerId: number): string {
-        AgoraConsole.warn("getPlaySrc not supported in this platfrom!");
-        return "";
-    }
-    openWithAgoraCDNSrc(playerId: number, src: string, startPos: number): number {
-        AgoraConsole.warn("openWithAgoraCDNSrc not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    getAgoraCDNLineCount(playerId: number): number {
-        AgoraConsole.warn("getAgoraCDNLineCount not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    switchAgoraCDNLineByIndex(playerId: number, index: number): number {
-        AgoraConsole.warn("switchAgoraCDNLineByIndex not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    getCurrentAgoraCDNIndex(playerId: number): number {
-        AgoraConsole.warn("getCurrentAgoraCDNIndex not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    enableAutoSwitchAgoraCDN(playerId: number, enable: boolean): number {
-        AgoraConsole.warn("enableAutoSwitchAgoraCDN not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    renewAgoraCDNSrcToken(playerId: number, token: string, ts: number): number {
-        AgoraConsole.warn("renewAgoraCDNSrcToken not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    switchAgoraCDNSrc(playerId: number, src: string, syncPts: boolean): number {
-        AgoraConsole.warn("switchAgoraCDNSrc not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    switchSrc(playerId: number, src: string, syncPts: boolean): number {
-        AgoraConsole.warn("switchSrc not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    preloadSrc(playerId: number, src: string, startPos: number): number {
-        AgoraConsole.warn("preloadSrc not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    playPreloadedSrc(playerId: number, src: string): number {
-        AgoraConsole.warn("playPreloadedSrc not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    unloadSrc(playerId: number, src: string): number {
-        AgoraConsole.warn("startRecordingDeviceTest not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    setSpatialAudioParams(playerId: number, params: agorartc.SpatialAudioParams): number {
-        AgoraConsole.warn("setSpatialAudioParams not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-    setSoundPositionParams(playerId: number, pan: number, gain: number): number {
-        AgoraConsole.warn("setSoundPositionParams not supported in this platfrom!");
-        return -agorartc.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-
+  //IMediaPlayer
 }

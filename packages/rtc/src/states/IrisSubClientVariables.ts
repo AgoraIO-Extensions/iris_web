@@ -1,45 +1,88 @@
-
+import * as NATIVE_RTC from '@iris/rtc';
 import { UID } from 'agora-rtc-sdk-ng';
-import * as agorartc from '../binding/rtc_types/Index';
-import { Contaniner } from '../util/Contanier';
+
+import { Container } from '../util/Container';
 //Record the intermediate status of the Main client
 export class IrisSubClientVariables {
+  //ChannelMediaOptions
+  channelMediaOptions: Container<
+    NATIVE_RTC.ChannelMediaOptions
+  > = new Container<NATIVE_RTC.ChannelMediaOptions>();
 
-    //ChannelMediaOptions
-    channelMediaOptions: Contaniner<agorartc.ChannelMediaOptions> = new Contaniner<agorartc.ChannelMediaOptions>();
-
-    //返回值为合并后万好着呢个版本的ChannelMediaOptions
-    mergeChannelMediaOptions(connection: agorartc.RtcConnection, options: agorartc.ChannelMediaOptions): agorartc.ChannelMediaOptions {
-        let channelMediaOptions: agorartc.ChannelMediaOptions = this.channelMediaOptions.getT(connection.channelId, connection.localUid);
-        if (channelMediaOptions == null) {
-            channelMediaOptions = {};
-            this.channelMediaOptions.addT(connection.channelId, connection.localUid, channelMediaOptions);
-        }
-
-        for (let key in options) {
-            channelMediaOptions[key] = options[key];
-        }
-
-        return channelMediaOptions;
+  //返回值为合并后万好着呢个版本的ChannelMediaOptions
+  mergeChannelMediaOptions(
+    connection: NATIVE_RTC.RtcConnection,
+    options: NATIVE_RTC.ChannelMediaOptions
+  ): NATIVE_RTC.ChannelMediaOptions {
+    let channelMediaOptions: NATIVE_RTC.ChannelMediaOptions = this.channelMediaOptions.getT(
+      connection.channelId,
+      connection.localUid
+    );
+    if (channelMediaOptions == null) {
+      channelMediaOptions = {};
+      this.channelMediaOptions.addT(
+        connection.channelId,
+        connection.localUid,
+        channelMediaOptions
+      );
     }
 
-    enabledAudioVolumeIndications: Contaniner<{ interval: number, smooth: number, reportVad: boolean }> = new Contaniner<{ interval: number, smooth: number, reportVad: boolean }>();
-    //C++ AdjustUserPlaybackSignalVolume
-    //each user playback signal volume
-    playbackSignalVolumes: Map<UID, number> = new Map<UID, number>();
+    for (let key in options) {
+      channelMediaOptions[key] = options[key];
+    }
 
-    //mute 远端用户流
-    mutedRemoteAudioStreams: Contaniner<Map<UID, boolean>> = new Contaniner<Map<UID, boolean>>();
-    mutedRemoteVideoStreams: Contaniner<Map<UID, boolean>> = new Contaniner<Map<UID, boolean>>();
+    return channelMediaOptions;
+  }
 
-    //SetVideoEncoderConfigurationEx
-    videoEncoderConfigurations: Contaniner<agorartc.VideoEncoderConfiguration> = new Contaniner<agorartc.VideoEncoderConfiguration>();
+  enabledAudioVolumeIndications: Container<{
+    interval: number;
+    smooth: number;
+    reportVad: boolean;
+  }> = new Container<{
+    interval: number;
+    smooth: number;
+    reportVad: boolean;
+  }>();
+  //C++ AdjustUserPlaybackSignalVolume
+  //each user playback signal volume
+  playbackSignalVolumes: Map<UID, number> = new Map<UID, number>();
 
-    //子账户设置开启大小流
-    enabledDualStreamModes: Contaniner<Map<agorartc.VIDEO_SOURCE_TYPE, { enabled: boolean, streamConfig?: agorartc.SimulcastStreamConfig }>> = new Contaniner<Map<agorartc.VIDEO_SOURCE_TYPE, { enabled: boolean, streamConfig?: agorartc.SimulcastStreamConfig }>>();
-    //子账户设置接收大小流
-    remoteVideoStreamTypes: Contaniner<Map<UID, agorartc.VIDEO_STREAM_TYPE>> = new Contaniner<Map<UID, agorartc.VIDEO_STREAM_TYPE>>();
+  //mute 远端用户流
+  mutedRemoteAudioStreams: Container<Map<UID, boolean>> = new Container<
+    Map<UID, boolean>
+  >();
+  mutedRemoteVideoStreams: Container<Map<UID, boolean>> = new Container<
+    Map<UID, boolean>
+  >();
 
-    //加密
-    encryptionConfigs: Contaniner<{ enabled: boolean; config: agorartc.EncryptionConfig }> = new Contaniner<{ enabled: boolean; config: agorartc.EncryptionConfig }>();
+  //SetVideoEncoderConfigurationEx
+  videoEncoderConfigurations: Container<
+    NATIVE_RTC.VideoEncoderConfiguration
+  > = new Container<NATIVE_RTC.VideoEncoderConfiguration>();
+
+  //子账户设置开启大小流
+  enabledDualStreamModes: Container<
+    Map<
+      NATIVE_RTC.VIDEO_SOURCE_TYPE,
+      { enabled: boolean; streamConfig?: NATIVE_RTC.SimulcastStreamConfig }
+    >
+  > = new Container<
+    Map<
+      NATIVE_RTC.VIDEO_SOURCE_TYPE,
+      { enabled: boolean; streamConfig?: NATIVE_RTC.SimulcastStreamConfig }
+    >
+  >();
+  //子账户设置接收大小流
+  remoteVideoStreamTypes: Container<
+    Map<UID, NATIVE_RTC.VIDEO_STREAM_TYPE>
+  > = new Container<Map<UID, NATIVE_RTC.VIDEO_STREAM_TYPE>>();
+
+  //加密
+  encryptionConfigs: Container<{
+    enabled: boolean;
+    config: NATIVE_RTC.EncryptionConfig;
+  }> = new Container<{
+    enabled: boolean;
+    config: NATIVE_RTC.EncryptionConfig;
+  }>();
 }

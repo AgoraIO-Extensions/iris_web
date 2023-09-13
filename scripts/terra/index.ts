@@ -34,6 +34,9 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
 
     cxxfile.nodes = cxxfile.nodes.map((node: TerraNode) => {
       let isCallback = isMatch(node.name, 'isCallback');
+      if (node.name === 'ContentInspectConfig') {
+        debugger;
+      }
 
       if (node.__TYPE === CXXTYPE.Clazz) {
         node.asClazz().methods = node.asClazz().methods.map((method) => {

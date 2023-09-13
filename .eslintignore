@@ -1,8 +1,4 @@
 build/
 **/dist/*
 **/node_modules/*
-**/storybook-static/*
-project
 test/
-packages/rtc/*
-integration_test/

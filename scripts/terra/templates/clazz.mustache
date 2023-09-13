@@ -2,7 +2,7 @@
 {{#user_data.isCallback}}
 export interface {{name}} {
 {{#methods}}
-  {{name}}{{^user_data.isImpl}}?{{/user_data.isImpl}}({{#parameters}}{{name}}: {{type.name}},{{/parameters}}): {{#return_type}}{{name}}{{/return_type}};
+  {{name}}({{#parameters}}{{name}}: {{type.name}},{{/parameters}}): {{#return_type}}{{name}}{{/return_type}};
 
 {{/methods}}
 }
@@ -10,7 +10,7 @@ export interface {{name}} {
 {{^user_data.isCallback}}
 export interface {{name}}{
 {{#methods}}
-  {{name}}{{^user_data.isImpl}}?{{/user_data.isImpl}}({{#parameters}}{{name}}: {{type.name}},{{/parameters}}): CallApiReturnType;
+  {{name}}({{#parameters}}{{name}}: {{type.name}},{{/parameters}}): CallApiReturnType;
   
 {{/methods}}
 }
