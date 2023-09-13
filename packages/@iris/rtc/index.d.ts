@@ -13,4 +13,3 @@ export * from './generate/IAgoraRtcEngine';
 export * from './generate/IAgoraRtcEngineEx';
 export * from './generate/IAgoraSpatialAudio';
 export * from './generate/IAudioDeviceManager';
-export * from './generate/binding';
