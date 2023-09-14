@@ -1,3 +1,4 @@
+import * as NATIVE_RTC from '@iris/web-rtc';
 import AgoraRTC, {
   CameraVideoTrackInitConfig,
   ClientConfig,
@@ -11,7 +12,6 @@ import AgoraRTC, {
   ScreenVideoTrackInitConfig,
   VideoPlayerConfig,
 } from 'agora-rtc-sdk-ng';
-import * as NATIVE_RTC from 'iris-web-rtc';
 
 import {
   IrisAudioSourceType,

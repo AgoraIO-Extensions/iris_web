@@ -3,11 +3,11 @@ set -e
 set -x
 
 MY_PATH=$(realpath $(dirname "$0"))
-OUTPUT_DIR=$(realpath ${MY_PATH}/../../packages/@types/rtc/generate)
+OUTPUT_DIR=$(realpath ${MY_PATH}/../../packages/@iris/rtc/generate)
 
 find ${OUTPUT_DIR} -type f -delete
 
-# packages/@types/rtc/generate
+# packages/@iris/rtc/generate
 npm run build -- render \
     --config ${MY_PATH}/config/types_configs.yaml \
     --output-dir=${OUTPUT_DIR} \

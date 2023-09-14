@@ -45,7 +45,7 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
         node.asClazz().methods = appendNumberToDuplicateMemberFunction(
           node.asClazz().methods
         );
-        if (node.name === 'IRtcEngine') {
+        if (node.name === 'ILocalSpatialAudioEngine') {
           // debugger;
         }
         node.asClazz().methods = node.asClazz().methods.map((method) => {

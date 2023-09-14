@@ -1,3 +1,4 @@
+import * as NATIVE_RTC from '@iris/web-rtc';
 import {
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
@@ -6,7 +7,6 @@ import {
   ITrack,
   UID,
 } from 'agora-rtc-sdk-ng';
-import * as NATIVE_RTC from 'iris-web-rtc';
 
 import {
   AudioTrackPackage,

@@ -1,5 +1,5 @@
+import * as NATIVE_RTC from '@iris/web-rtc';
 import { UID } from 'agora-rtc-sdk-ng';
-import * as NATIVE_RTC from 'iris-web-rtc';
 
 export class IrisGlobalVariables {
   public appId: string = null;

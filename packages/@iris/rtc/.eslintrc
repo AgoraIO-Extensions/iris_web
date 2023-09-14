@@ -5,7 +5,7 @@
     "auto-import/auto-import": [
       "error",
       {
-        "rootPath": "../../../packages/@types/rtc/generate"
+        "rootPath": "../../../packages/@iris/rtc/generate"
       }
     ]
   }

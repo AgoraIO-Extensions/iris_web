@@ -1,3 +1,4 @@
+import * as NATIVE_RTC from '@iris/web-rtc';
 import {
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
@@ -7,7 +8,8 @@ import {
   IRemoteVideoTrack,
   ITrack,
 } from 'agora-rtc-sdk-ng';
-import * as NATIVE_RTC from 'iris-web-rtc';
+
+import { ImageData } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { CheckVideoVisibleResult } from '../web_sdk';

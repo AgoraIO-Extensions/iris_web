@@ -52,7 +52,7 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0(typescript@5.1.6)
 
-  packages/@types/rtc:
+  packages/@iris/rtc:
     dependencies:
       iris-web-core:
         specifier: workspace:*
@@ -66,9 +66,9 @@ importers:
 
   packages/rtc:
     dependencies:
-      '@types/iris-web-rtc':
+      '@iris/web-rtc':
         specifier: 'workspace: *'
-        version: link:../@types/rtc
+        version: link:../@iris/rtc
       agora-rtc-sdk-ng:
         specifier: ^4.18.2
         version: 4.18.2

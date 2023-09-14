@@ -1,3 +1,4 @@
+import * as NATIVE_RTC from '@iris/web-rtc';
 import { UID } from 'agora-rtc-sdk-ng';
 
 import {
@@ -8,9 +9,10 @@ import {
   CallIrisApiResult,
   IrisEventHandlerManager,
 } from 'iris-web-core';
-import * as NATIVE_RTC from 'iris-web-rtc';
 
 // import { IAudioDeviceManagerDispatch } from 'iris-web-rtc/generate/binding/IAudioDeviceManagerDispatch';
+
+import { HTMLElement } from 'iris-web-rtc';
 
 import {
   IrisEventHandler,
