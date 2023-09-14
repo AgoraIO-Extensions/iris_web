@@ -1609,6 +1609,7 @@ export class IRtcEngineEventHandler {
     this.notifyEvent(eventParam);
   }
 }
+
 export class IVideoDeviceManagerDispatch {
   private _impl: IVideoDeviceManager;
 
@@ -1676,6 +1677,7 @@ export class IVideoDeviceManagerDispatch {
     return this._impl.release();
   }
 }
+
 export class IMetadataObserver {
   classPrefix: string = 'IMetadataObserver_';
 
@@ -1705,6 +1707,7 @@ export class IMetadataObserver {
     this.notifyEvent(eventParam);
   }
 }
+
 export class IDirectCdnStreamingEventHandler {
   classPrefix: string = 'IDirectCdnStreamingEventHandler_';
 
@@ -1758,6 +1761,7 @@ export class IDirectCdnStreamingEventHandler {
     this.notifyEvent(eventParam);
   }
 }
+
 export class IRtcEngineDispatch {
   private _impl: IRtcEngine;
 

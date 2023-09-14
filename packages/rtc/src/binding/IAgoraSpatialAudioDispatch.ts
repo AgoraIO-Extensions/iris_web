@@ -153,6 +153,7 @@ export class IBaseSpatialAudioEngineDispatch {
     return this._impl.muteRemoteAudioStream(uid, mute);
   }
 }
+
 export class ILocalSpatialAudioEngineDispatch {
   private _impl: ILocalSpatialAudioEngine;
 

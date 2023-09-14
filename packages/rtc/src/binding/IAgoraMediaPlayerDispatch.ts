@@ -446,6 +446,7 @@ export class IMediaPlayerDispatch {
     return this._impl.setSoundPositionParams(pan, gain);
   }
 }
+
 export class IMediaPlayerCacheManagerDispatch {
   private _impl: IMediaPlayerCacheManager;
 

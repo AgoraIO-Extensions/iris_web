@@ -962,6 +962,7 @@ export class IRtcEngineEventHandlerEx {
     this.notifyEvent(eventParam);
   }
 }
+
 export class IRtcEngineExDispatch {
   private _impl: IRtcEngineEx;
 

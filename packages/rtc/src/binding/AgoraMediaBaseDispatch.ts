@@ -46,6 +46,7 @@ export class IAudioPcmFrameSink {
     this.notifyEvent(eventParam);
   }
 }
+
 export class IAudioFrameObserverBase {
   classPrefix: string = 'IAudioFrameObserverBase_';
 
@@ -118,6 +119,7 @@ export class IAudioFrameObserverBase {
     this.notifyEvent(eventParam);
   }
 }
+
 export class IAudioFrameObserver {
   classPrefix: string = 'IAudioFrameObserver_';
 
@@ -157,6 +159,7 @@ export class IAudioFrameObserver {
     this.notifyEvent(eventParam);
   }
 }
+
 export class IAudioSpectrumObserver {
   classPrefix: string = 'IAudioSpectrumObserver_';
 
@@ -206,6 +209,7 @@ export class IAudioSpectrumObserver {
     this.notifyEvent(eventParam);
   }
 }
+
 export class IVideoEncodedFrameObserver {
   classPrefix: string = 'IVideoEncodedFrameObserver_';
 
@@ -245,6 +249,7 @@ export class IVideoEncodedFrameObserver {
     this.notifyEvent(eventParam);
   }
 }
+
 export class IVideoFrameObserver {
   classPrefix: string = 'IVideoFrameObserver_';
 
@@ -343,6 +348,7 @@ export class IVideoFrameObserver {
     this.notifyEvent(eventParam);
   }
 }
+
 export class IMediaRecorderObserver {
   classPrefix: string = 'IMediaRecorderObserver_';
 

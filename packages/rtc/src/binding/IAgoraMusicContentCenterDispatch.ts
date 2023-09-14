@@ -36,6 +36,7 @@ export class MusicChartCollectionDispatch {
     return this._impl.get(index);
   }
 }
+
 export class MusicCollectionDispatch {
   private _impl: MusicCollection;
 
@@ -66,6 +67,7 @@ export class MusicCollectionDispatch {
     return this._impl.getMusic(index);
   }
 }
+
 export class IMusicContentCenterEventHandler {
   classPrefix: string = 'IMusicContentCenterEventHandler_';
 
@@ -187,6 +189,7 @@ export class IMusicContentCenterEventHandler {
     this.notifyEvent(eventParam);
   }
 }
+
 export class IMusicPlayerDispatch {
   private _impl: IMusicPlayer;
 
@@ -194,6 +197,7 @@ export class IMusicPlayerDispatch {
     this._impl = new IMusicPlayerImpl(engine);
   }
 }
+
 export class IMusicContentCenterDispatch {
   private _impl: IMusicContentCenter;
 
