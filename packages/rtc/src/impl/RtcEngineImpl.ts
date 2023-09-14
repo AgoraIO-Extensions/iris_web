@@ -1,27 +1,9 @@
-import * as NATIVE_RTC from '@iris/rtc';
-import { IRtcEngine } from '@iris/rtc';
-import {
-  AsyncTaskType,
-  CallApiReturnType,
-  CallIrisApiResult,
-} from 'iris-web-core';
-
-import {
-  AudioTrackPackage,
-  IrisAudioSourceType,
-  IrisClientType,
-  IrisVideoSourceType,
-} from '../base/BaseType';
+import { CallApiReturnType } from 'iris-web-core';
+import * as NATIVE_RTC from 'iris-web-rtc';
+import { IRtcEngine } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
-import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
-import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
 import { Action } from '../util/AgoraActionQueue';
-import { AgoraConsole } from '../util/AgoraConsole';
-import { AgoraTranslate } from '../util/AgoraTranslate';
-
-import { ImplHelper } from './ImplHelper';
 
 export const RTCENGINE_KEY = 'RtcEngine';
 

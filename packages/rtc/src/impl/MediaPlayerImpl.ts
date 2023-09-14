@@ -1,3 +1,4 @@
+import { CallApiReturnType } from 'iris-web-core';
 import {
   AUDIO_DUAL_MONO_MODE,
   IAudioPcmFrameSink,
@@ -10,13 +11,10 @@ import {
   RAW_AUDIO_FRAME_OP_MODE_TYPE,
   RENDER_MODE_TYPE,
   SpatialAudioParams,
-} from '@iris/rtc';
-
-import { CallApiReturnType } from 'iris-web-core';
+} from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
-import { AgoraConsole } from '../util/AgoraConsole';
 
 export class MediaPlayerImpl implements IMediaPlayer {
   private _engine: IrisRtcEngine;

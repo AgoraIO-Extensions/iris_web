@@ -23,6 +23,7 @@ export default defineConfig([
         js: banner,
       };
     },
+    outDir: '.dist',
     format: ['cjs', 'esm'],
     splitting: false,
     sourcemap: false,

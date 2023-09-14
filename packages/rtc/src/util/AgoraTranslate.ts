@@ -1,5 +1,3 @@
-import * as NATIVE_RTC from '@iris/rtc';
-
 import AgoraRTC, {
   AREAS,
   AudienceLatencyLevelType,
@@ -27,6 +25,7 @@ import AgoraRTC, {
   UID,
   VideoEncoderConfiguration,
 } from 'agora-rtc-sdk-ng';
+import * as NATIVE_RTC from 'iris-web-rtc';
 
 import { AgoraConsole } from './AgoraConsole';
 

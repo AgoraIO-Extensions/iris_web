@@ -1,4 +1,3 @@
-import * as NATIVE_RTC from '@iris/rtc';
 import {
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
@@ -7,6 +6,7 @@ import {
   ITrack,
   UID,
 } from 'agora-rtc-sdk-ng';
+import * as NATIVE_RTC from 'iris-web-rtc';
 
 import {
   AudioTrackPackage,
@@ -22,7 +22,6 @@ import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler'
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { AgoraTool } from '../util/AgoraTool';
-import { AgoraTranslate } from '../util/AgoraTranslate';
 import { Container } from '../util/Container';
 
 import { IrisRtcEngine } from './IrisRtcEngine';

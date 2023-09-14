@@ -1,5 +1,5 @@
 packages:
   - packages/rtc
   - packages/core
-  - packages/@iris/rtc
+  - packages/@types/rtc
   - scripts/terra

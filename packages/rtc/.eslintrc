@@ -90,7 +90,7 @@
       "error",
       {
         "rootPath": "../../../packages/rtc/src",
-        "external": "@iris/rtc"
+        "external": "iris-web-rtc"
       }
     ],
     "import/order": [

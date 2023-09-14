@@ -34,8 +34,8 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
 
     cxxfile.nodes = cxxfile.nodes.map((node: TerraNode) => {
       let isCallback = isMatch(node.name, 'isCallback');
-      if (node.name === 'ContentInspectConfig') {
-        debugger;
+      if (node.name === 'IVideoDeviceManager') {
+        // debugger;
       }
 
       if (node.__TYPE === CXXTYPE.Clazz) {

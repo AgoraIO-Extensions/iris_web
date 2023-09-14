@@ -1,7 +1,5 @@
-import * as NATIVE_RTC from '@iris/rtc';
-import { ClientConfig, UID } from 'agora-rtc-sdk-ng';
-
-import { AgoraTranslate } from '../util/AgoraTranslate';
+import { UID } from 'agora-rtc-sdk-ng';
+import * as NATIVE_RTC from 'iris-web-rtc';
 
 //Record the intermediate status of the Main client
 export class IrisMainClientVariables {

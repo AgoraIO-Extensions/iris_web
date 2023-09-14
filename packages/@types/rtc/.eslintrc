@@ -89,7 +89,7 @@
     "auto-import/auto-import": [
       "error",
       {
-        "rootPath": "../../../packages/@iris/rtc/generate"
+        "rootPath": "../../../packages/@types/rtc/generate"
       }
     ],
     "import/order": [

@@ -16,7 +16,7 @@
   "dependencies": {
     "agora-rtc-sdk-ng": "^4.18.2",
     "iris-web-core": "workspace: *",
-    "@iris/rtc": "workspace: *"
+    "@types/iris-web-rtc": "workspace: *"
   },
   "devDependencies": {
     "html-webpack-plugin": "^5.5.0",

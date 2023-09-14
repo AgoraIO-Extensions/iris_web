@@ -1,36 +1,10 @@
-import * as NATIVE_RTC from '@iris/rtc';
-import {
-  ClientRoleOptions,
-  IAgoraRTCClient,
-  IAgoraRTCRemoteUser,
-  ICameraVideoTrack,
-  ILocalAudioTrack,
-  ILocalVideoTrack,
-  UID,
-  VideoEncoderConfiguration,
-} from 'agora-rtc-sdk-ng';
+import { VideoEncoderConfiguration } from 'agora-rtc-sdk-ng';
 
-import {
-  AsyncTaskType,
-  CallApiReturnType,
-  CallIrisApiResult,
-} from 'iris-web-core';
+import { AsyncTaskType, CallApiReturnType } from 'iris-web-core';
+import * as NATIVE_RTC from 'iris-web-rtc';
 
-import {
-  IrisAudioSourceType,
-  IrisClientType,
-  IrisVideoSourceType,
-} from '../base/BaseType';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
-import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
-import { IrisSubClientVariables } from '../states/IrisSubClientVariables';
 import { Action } from '../util/AgoraActionQueue';
-import { AgoraConsole } from '../util/AgoraConsole';
-import { AgoraTool } from '../util/AgoraTool';
-import { AgoraTranslate } from '../util/AgoraTranslate';
-
-import { ImplHelper } from './ImplHelper';
 
 export class RtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   private _engine: IrisRtcEngine;

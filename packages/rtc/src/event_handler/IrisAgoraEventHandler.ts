@@ -1,5 +1,5 @@
-import * as NATIVE_RTC from '@iris/rtc';
 import AgoraRTC, { DeviceInfo } from 'agora-rtc-sdk-ng';
+import * as NATIVE_RTC from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraTranslate } from '../util/AgoraTranslate';

@@ -1,11 +1,4 @@
-import * as NATIVE_RTC from '@iris/rtc';
-import {
-  IAgoraRTCClient,
-  IAgoraRTCRemoteUser,
-  ILocalAudioTrack,
-  ILocalVideoTrack,
-  UID,
-} from 'agora-rtc-sdk-ng';
+import { UID } from 'agora-rtc-sdk-ng';
 
 import {
   ApiInterceptor,
@@ -13,20 +6,17 @@ import {
   ApiParam,
   CallApiExecutor,
   CallIrisApiResult,
-  EventParam,
   IrisEventHandlerManager,
 } from 'iris-web-core';
+import * as NATIVE_RTC from 'iris-web-rtc';
 
 // import { IAudioDeviceManagerDispatch } from 'iris-web-rtc/generate/binding/IAudioDeviceManagerDispatch';
 
 import {
-  AudioTrackPackage,
-  IRIS_VIDEO_PROCESS_ERR,
   IrisEventHandler,
   IrisVideoFrameBufferConfig,
   IrisVideoSourceType,
   VideoParams,
-  VideoTrackPackage,
 } from '../base/BaseType';
 
 // import { ILocalSpatialAudioEngineDispatch } from '../binding/event_dispatch/ILocalSpatialAudioEngineDispatch';

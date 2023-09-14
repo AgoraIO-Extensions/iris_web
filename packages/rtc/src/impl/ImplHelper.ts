@@ -1,25 +1,17 @@
-import * as NATIVE_RTC from '@iris/rtc';
 import AgoraRTC, {
   CameraVideoTrackInitConfig,
   ClientConfig,
-  ClientRoleOptions,
-  DeviceInfo,
   EncryptionMode,
   IAgoraRTCClient,
-  IAgoraRTCRemoteUser,
   ICameraVideoTrack,
-  IChannelMediaRelayConfiguration,
   ILocalAudioTrack,
-  ILocalTrack,
   ILocalVideoTrack,
   IMicrophoneAudioTrack,
-  IRemoteAudioTrack,
-  InjectStreamConfig,
   MicrophoneAudioTrackInitConfig,
   ScreenVideoTrackInitConfig,
-  UID,
   VideoPlayerConfig,
 } from 'agora-rtc-sdk-ng';
+import * as NATIVE_RTC from 'iris-web-rtc';
 
 import {
   IrisAudioSourceType,

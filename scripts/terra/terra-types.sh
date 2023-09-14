@@ -3,11 +3,11 @@ set -e
 set -x
 
 MY_PATH=$(realpath $(dirname "$0"))
-OUTPUT_DIR=$(realpath ${MY_PATH}/../../packages/@iris/rtc/generate)
+OUTPUT_DIR=$(realpath ${MY_PATH}/../../packages/@types/rtc/generate)
 
 find ${OUTPUT_DIR} -type f -delete
 
-# packages/@iris/rtc/generate
+# packages/@types/rtc/generate
 npm run build -- render \
     --config ${MY_PATH}/config/types_configs.yaml \
     --output-dir=${OUTPUT_DIR} \
@@ -18,3 +18,4 @@ cd ${OUTPUT_DIR}/..
 node ../../../scripts/export-types-file-generate.js output-path=$PWD/index.d.ts
 
 npm run lint:fix
+npm run build

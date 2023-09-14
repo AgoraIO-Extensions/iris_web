@@ -1,6 +1,5 @@
-import * as NATIVE_RTC from '@iris/rtc';
-
 import { CallApiReturnType } from 'iris-web-core';
+import * as NATIVE_RTC from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';

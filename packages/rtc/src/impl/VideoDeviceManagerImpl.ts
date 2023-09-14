@@ -1,14 +1,8 @@
-import * as NATIVE_RTC from '@iris/rtc';
-import { ICameraVideoTrack } from 'agora-rtc-sdk-ng';
-
 import { CallApiReturnType } from 'iris-web-core';
+import * as NATIVE_RTC from 'iris-web-rtc';
 
-import { IrisVideoSourceType, VideoTrackPackage } from '../base/BaseType';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
-import { AgoraConsole } from '../util/AgoraConsole';
-
-import { ImplHelper } from './ImplHelper';
 
 export class VideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
   private _engine: IrisRtcEngine;
