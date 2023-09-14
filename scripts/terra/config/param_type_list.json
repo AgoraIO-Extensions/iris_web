@@ -1,5 +1,4 @@
 {
-  "agora::rtc::IRtcEngineEventHandler.onError.err@type": "ERROR_CODE_TYPE",
   "^agora::media::(.*)": "$1",
   "^Optional<(.*)>": "$1",
   "^util::(.*)": "$1",

@@ -53,7 +53,7 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
           node.asClazz().methods
         );
         if (node.name === 'IRtcEngineEventHandler') {
-          debugger;
+          // debugger;
         }
         node.asClazz().methods = node.asClazz().methods.map((method) => {
           const clazzMethodUserData: ClazzMethodUserData = {
