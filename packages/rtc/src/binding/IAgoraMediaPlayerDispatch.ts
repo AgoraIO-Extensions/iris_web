@@ -137,14 +137,14 @@ export class IMediaPlayerDispatch {
     return this._impl.setPlayerOption(key, value);
   }
 
-  setPlayerOption(apiParam: ApiParam): CallApiReturnType {
+  setPlayerOption2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let key = obj.key;
     if (key === undefined) throw 'key is undefined';
     let value = obj.value;
     if (value === undefined) throw 'value is undefined';
 
-    return this._impl.setPlayerOption(key, value);
+    return this._impl.setPlayerOption2(key, value);
   }
 
   takeScreenshot(apiParam: ApiParam): CallApiReturnType {
@@ -263,14 +263,14 @@ export class IMediaPlayerDispatch {
     return this._impl.registerAudioFrameObserver(observer);
   }
 
-  registerAudioFrameObserver(apiParam: ApiParam): CallApiReturnType {
+  registerAudioFrameObserver2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let observer = obj.observer;
     if (observer === undefined) throw 'observer is undefined';
     let mode = obj.mode;
     if (mode === undefined) throw 'mode is undefined';
 
-    return this._impl.registerAudioFrameObserver(observer, mode);
+    return this._impl.registerAudioFrameObserver2(observer, mode);
   }
 
   unregisterAudioFrameObserver(apiParam: ApiParam): CallApiReturnType {

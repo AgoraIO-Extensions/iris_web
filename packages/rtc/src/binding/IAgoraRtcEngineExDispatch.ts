@@ -989,14 +989,14 @@ export class IRtcEngineExDispatch {
     return this._impl.leaveChannelEx(connection);
   }
 
-  leaveChannelEx(apiParam: ApiParam): CallApiReturnType {
+  leaveChannelEx2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let connection = obj.connection;
     if (connection === undefined) throw 'connection is undefined';
     let options = obj.options;
     if (options === undefined) throw 'options is undefined';
 
-    return this._impl.leaveChannelEx(connection, options);
+    return this._impl.leaveChannelEx2(connection, options);
   }
 
   updateChannelMediaOptionsEx(apiParam: ApiParam): CallApiReturnType {
@@ -1321,7 +1321,7 @@ export class IRtcEngineExDispatch {
     );
   }
 
-  createDataStreamEx(apiParam: ApiParam): CallApiReturnType {
+  createDataStreamEx2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let streamId = obj.streamId;
     if (streamId === undefined) throw 'streamId is undefined';
@@ -1330,7 +1330,7 @@ export class IRtcEngineExDispatch {
     let connection = obj.connection;
     if (connection === undefined) throw 'connection is undefined';
 
-    return this._impl.createDataStreamEx(streamId, config, connection);
+    return this._impl.createDataStreamEx2(streamId, config, connection);
   }
 
   sendStreamMessageEx(apiParam: ApiParam): CallApiReturnType {

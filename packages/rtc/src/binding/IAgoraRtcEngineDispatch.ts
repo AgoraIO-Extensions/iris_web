@@ -1818,7 +1818,7 @@ export class IRtcEngineDispatch {
     return this._impl.preloadChannel(token, channelId, uid);
   }
 
-  preloadChannel(apiParam: ApiParam): CallApiReturnType {
+  preloadChannel2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let token = obj.token;
     if (token === undefined) throw 'token is undefined';
@@ -1827,7 +1827,7 @@ export class IRtcEngineDispatch {
     let userAccount = obj.userAccount;
     if (userAccount === undefined) throw 'userAccount is undefined';
 
-    return this._impl.preloadChannel(token, channelId, userAccount);
+    return this._impl.preloadChannel2(token, channelId, userAccount);
   }
 
   updatePreloadChannelToken(apiParam: ApiParam): CallApiReturnType {
@@ -1852,7 +1852,7 @@ export class IRtcEngineDispatch {
     return this._impl.joinChannel(token, channelId, info, uid);
   }
 
-  joinChannel(apiParam: ApiParam): CallApiReturnType {
+  joinChannel2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let token = obj.token;
     if (token === undefined) throw 'token is undefined';
@@ -1863,7 +1863,7 @@ export class IRtcEngineDispatch {
     let options = obj.options;
     if (options === undefined) throw 'options is undefined';
 
-    return this._impl.joinChannel(token, channelId, uid, options);
+    return this._impl.joinChannel2(token, channelId, uid, options);
   }
 
   updateChannelMediaOptions(apiParam: ApiParam): CallApiReturnType {
@@ -1878,12 +1878,12 @@ export class IRtcEngineDispatch {
     return this._impl.leaveChannel();
   }
 
-  leaveChannel(apiParam: ApiParam): CallApiReturnType {
+  leaveChannel2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let options = obj.options;
     if (options === undefined) throw 'options is undefined';
 
-    return this._impl.leaveChannel(options);
+    return this._impl.leaveChannel2(options);
   }
 
   renewToken(apiParam: ApiParam): CallApiReturnType {
@@ -1910,34 +1910,34 @@ export class IRtcEngineDispatch {
     return this._impl.setClientRole(role);
   }
 
-  setClientRole(apiParam: ApiParam): CallApiReturnType {
+  setClientRole2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let role = obj.role;
     if (role === undefined) throw 'role is undefined';
     let options = obj.options;
     if (options === undefined) throw 'options is undefined';
 
-    return this._impl.setClientRole(role, options);
+    return this._impl.setClientRole2(role, options);
   }
 
   startEchoTest(): CallApiReturnType {
     return this._impl.startEchoTest();
   }
 
-  startEchoTest(apiParam: ApiParam): CallApiReturnType {
+  startEchoTest2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let intervalInSeconds = obj.intervalInSeconds;
     if (intervalInSeconds === undefined) throw 'intervalInSeconds is undefined';
 
-    return this._impl.startEchoTest(intervalInSeconds);
+    return this._impl.startEchoTest2(intervalInSeconds);
   }
 
-  startEchoTest(apiParam: ApiParam): CallApiReturnType {
+  startEchoTest3(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let config = obj.config;
     if (config === undefined) throw 'config is undefined';
 
-    return this._impl.startEchoTest(config);
+    return this._impl.startEchoTest3(config);
   }
 
   stopEchoTest(): CallApiReturnType {
@@ -1966,24 +1966,24 @@ export class IRtcEngineDispatch {
     return this._impl.startPreview();
   }
 
-  startPreview(apiParam: ApiParam): CallApiReturnType {
+  startPreview2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let sourceType = obj.sourceType;
     if (sourceType === undefined) throw 'sourceType is undefined';
 
-    return this._impl.startPreview(sourceType);
+    return this._impl.startPreview2(sourceType);
   }
 
   stopPreview(): CallApiReturnType {
     return this._impl.stopPreview();
   }
 
-  stopPreview(apiParam: ApiParam): CallApiReturnType {
+  stopPreview2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let sourceType = obj.sourceType;
     if (sourceType === undefined) throw 'sourceType is undefined';
 
-    return this._impl.stopPreview(sourceType);
+    return this._impl.stopPreview2(sourceType);
   }
 
   startLastmileProbeTest(apiParam: ApiParam): CallApiReturnType {
@@ -2115,12 +2115,12 @@ export class IRtcEngineDispatch {
     return this._impl.setAudioProfile(profile, scenario);
   }
 
-  setAudioProfile(apiParam: ApiParam): CallApiReturnType {
+  setAudioProfile2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let profile = obj.profile;
     if (profile === undefined) throw 'profile is undefined';
 
-    return this._impl.setAudioProfile(profile);
+    return this._impl.setAudioProfile2(profile);
   }
 
   setAudioScenario(apiParam: ApiParam): CallApiReturnType {
@@ -2305,7 +2305,7 @@ export class IRtcEngineDispatch {
     return this._impl.startAudioRecording(filePath, quality);
   }
 
-  startAudioRecording(apiParam: ApiParam): CallApiReturnType {
+  startAudioRecording2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let filePath = obj.filePath;
     if (filePath === undefined) throw 'filePath is undefined';
@@ -2314,15 +2314,15 @@ export class IRtcEngineDispatch {
     let quality = obj.quality;
     if (quality === undefined) throw 'quality is undefined';
 
-    return this._impl.startAudioRecording(filePath, sampleRate, quality);
+    return this._impl.startAudioRecording2(filePath, sampleRate, quality);
   }
 
-  startAudioRecording(apiParam: ApiParam): CallApiReturnType {
+  startAudioRecording3(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let config = obj.config;
     if (config === undefined) throw 'config is undefined';
 
-    return this._impl.startAudioRecording(config);
+    return this._impl.startAudioRecording3(config);
   }
 
   registerAudioEncodedFrameObserver(apiParam: ApiParam): CallApiReturnType {
@@ -2379,7 +2379,7 @@ export class IRtcEngineDispatch {
     return this._impl.startAudioMixing(filePath, loopback, cycle);
   }
 
-  startAudioMixing(apiParam: ApiParam): CallApiReturnType {
+  startAudioMixing2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let filePath = obj.filePath;
     if (filePath === undefined) throw 'filePath is undefined';
@@ -2390,7 +2390,7 @@ export class IRtcEngineDispatch {
     let startPos = obj.startPos;
     if (startPos === undefined) throw 'startPos is undefined';
 
-    return this._impl.startAudioMixing(filePath, loopback, cycle, startPos);
+    return this._impl.startAudioMixing2(filePath, loopback, cycle, startPos);
   }
 
   stopAudioMixing(): CallApiReturnType {
@@ -2858,12 +2858,12 @@ export class IRtcEngineDispatch {
     return this._impl.setRemoteRenderMode(uid, renderMode, mirrorMode);
   }
 
-  setLocalRenderMode(apiParam: ApiParam): CallApiReturnType {
+  setLocalRenderMode2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let renderMode = obj.renderMode;
     if (renderMode === undefined) throw 'renderMode is undefined';
 
-    return this._impl.setLocalRenderMode(renderMode);
+    return this._impl.setLocalRenderMode2(renderMode);
   }
 
   setLocalVideoMirrorMode(apiParam: ApiParam): CallApiReturnType {
@@ -2882,14 +2882,14 @@ export class IRtcEngineDispatch {
     return this._impl.enableDualStreamMode(enabled);
   }
 
-  enableDualStreamMode(apiParam: ApiParam): CallApiReturnType {
+  enableDualStreamMode2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let enabled = obj.enabled;
     if (enabled === undefined) throw 'enabled is undefined';
     let streamConfig = obj.streamConfig;
     if (streamConfig === undefined) throw 'streamConfig is undefined';
 
-    return this._impl.enableDualStreamMode(enabled, streamConfig);
+    return this._impl.enableDualStreamMode2(enabled, streamConfig);
   }
 
   setDualStreamMode(apiParam: ApiParam): CallApiReturnType {
@@ -2900,14 +2900,14 @@ export class IRtcEngineDispatch {
     return this._impl.setDualStreamMode(mode);
   }
 
-  setDualStreamMode(apiParam: ApiParam): CallApiReturnType {
+  setDualStreamMode2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let mode = obj.mode;
     if (mode === undefined) throw 'mode is undefined';
     let streamConfig = obj.streamConfig;
     if (streamConfig === undefined) throw 'streamConfig is undefined';
 
-    return this._impl.setDualStreamMode(mode, streamConfig);
+    return this._impl.setDualStreamMode2(mode, streamConfig);
   }
 
   enableCustomAudioLocalPlayback(apiParam: ApiParam): CallApiReturnType {
@@ -3187,7 +3187,7 @@ export class IRtcEngineDispatch {
     return this._impl.enableExtension(provider, extension, enable, type);
   }
 
-  enableExtension(apiParam: ApiParam): CallApiReturnType {
+  enableExtension2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let provider = obj.provider;
     if (provider === undefined) throw 'provider is undefined';
@@ -3198,7 +3198,7 @@ export class IRtcEngineDispatch {
     let enable = obj.enable;
     if (enable === undefined) throw 'enable is undefined';
 
-    return this._impl.enableExtension(
+    return this._impl.enableExtension2(
       provider,
       extension,
       extensionInfo,
@@ -3253,7 +3253,7 @@ export class IRtcEngineDispatch {
     );
   }
 
-  setExtensionProperty(apiParam: ApiParam): CallApiReturnType {
+  setExtensionProperty2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let provider = obj.provider;
     if (provider === undefined) throw 'provider is undefined';
@@ -3266,7 +3266,7 @@ export class IRtcEngineDispatch {
     let value = obj.value;
     if (value === undefined) throw 'value is undefined';
 
-    return this._impl.setExtensionProperty(
+    return this._impl.setExtensionProperty2(
       provider,
       extension,
       extensionInfo,
@@ -3275,7 +3275,7 @@ export class IRtcEngineDispatch {
     );
   }
 
-  getExtensionProperty(apiParam: ApiParam): CallApiReturnType {
+  getExtensionProperty2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let provider = obj.provider;
     if (provider === undefined) throw 'provider is undefined';
@@ -3290,7 +3290,7 @@ export class IRtcEngineDispatch {
     let buf_len = obj.buf_len;
     if (buf_len === undefined) throw 'buf_len is undefined';
 
-    return this._impl.getExtensionProperty(
+    return this._impl.getExtensionProperty2(
       provider,
       extension,
       extensionInfo,
@@ -3733,22 +3733,22 @@ export class IRtcEngineDispatch {
     return this._impl.setScreenCaptureOrientation(type, orientation);
   }
 
-  startScreenCapture(apiParam: ApiParam): CallApiReturnType {
+  startScreenCapture2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let sourceType = obj.sourceType;
     if (sourceType === undefined) throw 'sourceType is undefined';
     let config = obj.config;
     if (config === undefined) throw 'config is undefined';
 
-    return this._impl.startScreenCapture(sourceType, config);
+    return this._impl.startScreenCapture2(sourceType, config);
   }
 
-  stopScreenCapture(apiParam: ApiParam): CallApiReturnType {
+  stopScreenCapture2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let sourceType = obj.sourceType;
     if (sourceType === undefined) throw 'sourceType is undefined';
 
-    return this._impl.stopScreenCapture(sourceType);
+    return this._impl.stopScreenCapture2(sourceType);
   }
 
   getConnectionState(): CallApiReturnType {
@@ -3819,14 +3819,14 @@ export class IRtcEngineDispatch {
     return this._impl.createDataStream(streamId, reliable, ordered);
   }
 
-  createDataStream(apiParam: ApiParam): CallApiReturnType {
+  createDataStream2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let streamId = obj.streamId;
     if (streamId === undefined) throw 'streamId is undefined';
     let config = obj.config;
     if (config === undefined) throw 'config is undefined';
 
-    return this._impl.createDataStream(streamId, config);
+    return this._impl.createDataStream2(streamId, config);
   }
 
   sendStreamMessage(apiParam: ApiParam): CallApiReturnType {
@@ -3849,14 +3849,14 @@ export class IRtcEngineDispatch {
     return this._impl.addVideoWatermark(watermark);
   }
 
-  addVideoWatermark(apiParam: ApiParam): CallApiReturnType {
+  addVideoWatermark2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let watermarkUrl = obj.watermarkUrl;
     if (watermarkUrl === undefined) throw 'watermarkUrl is undefined';
     let options = obj.options;
     if (options === undefined) throw 'options is undefined';
 
-    return this._impl.addVideoWatermark(watermarkUrl, options);
+    return this._impl.addVideoWatermark2(watermarkUrl, options);
   }
 
   clearVideoWatermarks(): CallApiReturnType {
@@ -3993,7 +3993,7 @@ export class IRtcEngineDispatch {
     return this._impl.joinChannelWithUserAccount(token, channelId, userAccount);
   }
 
-  joinChannelWithUserAccount(apiParam: ApiParam): CallApiReturnType {
+  joinChannelWithUserAccount2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let token = obj.token;
     if (token === undefined) throw 'token is undefined';
@@ -4004,7 +4004,7 @@ export class IRtcEngineDispatch {
     let options = obj.options;
     if (options === undefined) throw 'options is undefined';
 
-    return this._impl.joinChannelWithUserAccount(
+    return this._impl.joinChannelWithUserAccount2(
       token,
       channelId,
       userAccount,

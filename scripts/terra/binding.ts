@@ -3,7 +3,11 @@ import * as path from 'path';
 import { CXXFile, RenderContext, TerraNode } from 'terra-cli';
 import { CXXTYPE } from 'terra-cli';
 
-import { filterFile, isMatch } from './utils';
+import {
+  appendNumberToDuplicateMemberFunction,
+  filterFile,
+  isMatch,
+} from './utils';
 
 interface CXXFileUserData {
   fileName: string;
@@ -37,6 +41,11 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
     });
 
     cxxfile.nodes = nodes.map((node: TerraNode) => {
+      //重载函数重命名, 自动末尾+数字
+      //['joinChannel', 'joinChannel'] => ['joinChannel', 'joinChannel2']
+      node.asClazz().methods = appendNumberToDuplicateMemberFunction(
+        node.asClazz().methods
+      );
       node.asClazz().methods.map((method) => {
         const clazzMethodUserData: ClazzMethodUserData = {
           hasParameters: method.parameters.length > 0,

@@ -40,6 +40,8 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
       let isCallback = isMatch(node.name, 'isCallback');
 
       if (node.__TYPE === CXXTYPE.Clazz) {
+        //重载函数重命名, 自动末尾+数字
+        //['joinChannel', 'joinChannel'] => ['joinChannel', 'joinChannel2']
         node.asClazz().methods = appendNumberToDuplicateMemberFunction(
           node.asClazz().methods
         );

@@ -302,14 +302,14 @@ export class IMusicContentCenterDispatch {
     return this._impl.preload(songCode, jsonOption);
   }
 
-  preload(apiParam: ApiParam): CallApiReturnType {
+  preload2(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let requestId = obj.requestId;
     if (requestId === undefined) throw 'requestId is undefined';
     let songCode = obj.songCode;
     if (songCode === undefined) throw 'songCode is undefined';
 
-    return this._impl.preload(requestId, songCode);
+    return this._impl.preload2(requestId, songCode);
   }
 
   removeCache(apiParam: ApiParam): CallApiReturnType {
