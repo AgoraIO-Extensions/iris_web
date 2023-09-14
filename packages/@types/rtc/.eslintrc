@@ -47,23 +47,6 @@
       }
     }
   ],
-  "globals": {
-    "define": false,
-    "obj_attrib": false,
-    "info": false,
-    "NodeJS": false,
-    "window": false,
-    "alert": false,
-    "document": false,
-    "HTMLElement": false,
-    "HTMLDivElement": false,
-    "WebGL2RenderingContext": false,
-    "WebGLTexture": false,
-    "HTMLCanvasElement": false,
-    "ResizeObserver": false,
-    "name": false,
-    "Element": false
-  },
   "rules": {
     "import/newline-after-import": "error",
     "prettier/prettier": [
