@@ -49,7 +49,7 @@ export interface IMediaPlayer {
 
   setPlayerOption(key: string, value: number): CallApiReturnType;
 
-  setPlayerOption(key: string, value: string): CallApiReturnType;
+  setPlayerOption2(key: string, value: string): CallApiReturnType;
 
   takeScreenshot(filename: string): CallApiReturnType;
 
@@ -85,7 +85,7 @@ export interface IMediaPlayer {
 
   registerAudioFrameObserver(observer: IAudioPcmFrameSink): CallApiReturnType;
 
-  registerAudioFrameObserver(
+  registerAudioFrameObserver2(
     observer: IAudioPcmFrameSink,
     mode: RAW_AUDIO_FRAME_OP_MODE_TYPE
   ): CallApiReturnType;

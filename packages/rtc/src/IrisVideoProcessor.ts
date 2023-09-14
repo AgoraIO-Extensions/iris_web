@@ -1,4 +1,4 @@
-import { ILocalVideoTrack, IRemoteVideoTrack, UID } from 'agora-rtc-sdk-ng';
+import { UID } from 'agora-rtc-sdk-ng';
 
 import {
   IrisCVideoFrameBuffer,

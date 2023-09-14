@@ -1,6 +1,12 @@
 import path = require('path');
 
-import { CXXFile } from 'terra-cli';
+import {
+  CXXFile,
+  Clazz,
+  MemberFunction,
+  MemberFunction,
+  MemberFunction,
+} from 'terra-cli';
 
 let regMap = {
   isCallback: '.*(Observer|Handler|Callback|Receiver|Sink).*',
@@ -23,4 +29,22 @@ export function isMatch(str: string, type: string): boolean {
     result = new RegExp(regMap[type]).test(str);
   }
   return result;
+}
+
+export function appendNumberToDuplicateMemberFunction(
+  arr: MemberFunction[]
+): MemberFunction[] {
+  const count = {};
+  arr.forEach((item: MemberFunction) => {
+    if (count[item.name] === undefined) {
+      count[item.name] = 1;
+    } else {
+      count[item.name]++;
+    }
+
+    if (count[item.name] > 1) {
+      item.name += count[item.name];
+    }
+  });
+  return arr;
 }

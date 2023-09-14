@@ -1108,7 +1108,7 @@ export interface IRtcEngine {
     uid: number
   ): CallApiReturnType;
 
-  preloadChannel(
+  preloadChannel2(
     token: string,
     channelId: string,
     userAccount: string
@@ -1123,7 +1123,7 @@ export interface IRtcEngine {
     uid: number
   ): CallApiReturnType;
 
-  joinChannel(
+  joinChannel2(
     token: string,
     channelId: string,
     uid: number,
@@ -1134,7 +1134,7 @@ export interface IRtcEngine {
 
   leaveChannel(): CallApiReturnType;
 
-  leaveChannel(options: LeaveChannelOptions): CallApiReturnType;
+  leaveChannel2(options: LeaveChannelOptions): CallApiReturnType;
 
   renewToken(token: string): CallApiReturnType;
 
@@ -1142,16 +1142,16 @@ export interface IRtcEngine {
 
   setClientRole(role: CLIENT_ROLE_TYPE): CallApiReturnType;
 
-  setClientRole(
+  setClientRole2(
     role: CLIENT_ROLE_TYPE,
     options: ClientRoleOptions
   ): CallApiReturnType;
 
   startEchoTest(): CallApiReturnType;
 
-  startEchoTest(intervalInSeconds: number): CallApiReturnType;
+  startEchoTest2(intervalInSeconds: number): CallApiReturnType;
 
-  startEchoTest(config: EchoTestConfiguration): CallApiReturnType;
+  startEchoTest3(config: EchoTestConfiguration): CallApiReturnType;
 
   stopEchoTest(): CallApiReturnType;
 
@@ -1166,11 +1166,11 @@ export interface IRtcEngine {
 
   startPreview(): CallApiReturnType;
 
-  startPreview(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
+  startPreview2(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
 
   stopPreview(): CallApiReturnType;
 
-  stopPreview(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
+  stopPreview2(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
 
   startLastmileProbeTest(config: LastmileProbeConfig): CallApiReturnType;
 
@@ -1228,7 +1228,7 @@ export interface IRtcEngine {
     scenario: AUDIO_SCENARIO_TYPE
   ): CallApiReturnType;
 
-  setAudioProfile(profile: AUDIO_PROFILE_TYPE): CallApiReturnType;
+  setAudioProfile2(profile: AUDIO_PROFILE_TYPE): CallApiReturnType;
 
   setAudioScenario(scenario: AUDIO_SCENARIO_TYPE): CallApiReturnType;
 
@@ -1297,13 +1297,13 @@ export interface IRtcEngine {
     quality: AUDIO_RECORDING_QUALITY_TYPE
   ): CallApiReturnType;
 
-  startAudioRecording(
+  startAudioRecording2(
     filePath: string,
     sampleRate: number,
     quality: AUDIO_RECORDING_QUALITY_TYPE
   ): CallApiReturnType;
 
-  startAudioRecording(config: AudioRecordingConfiguration): CallApiReturnType;
+  startAudioRecording3(config: AudioRecordingConfiguration): CallApiReturnType;
 
   registerAudioEncodedFrameObserver(
     config: AudioEncodedFrameObserverConfig,
@@ -1326,7 +1326,7 @@ export interface IRtcEngine {
     cycle: number
   ): CallApiReturnType;
 
-  startAudioMixing(
+  startAudioMixing2(
     filePath: string,
     loopback: boolean,
     cycle: number,
@@ -1501,7 +1501,7 @@ export interface IRtcEngine {
     mirrorMode: VIDEO_MIRROR_MODE_TYPE
   ): CallApiReturnType;
 
-  setLocalRenderMode(renderMode: RENDER_MODE_TYPE): CallApiReturnType;
+  setLocalRenderMode2(renderMode: RENDER_MODE_TYPE): CallApiReturnType;
 
   setLocalVideoMirrorMode(
     mirrorMode: VIDEO_MIRROR_MODE_TYPE
@@ -1509,14 +1509,14 @@ export interface IRtcEngine {
 
   enableDualStreamMode(enabled: boolean): CallApiReturnType;
 
-  enableDualStreamMode(
+  enableDualStreamMode2(
     enabled: boolean,
     streamConfig: SimulcastStreamConfig
   ): CallApiReturnType;
 
   setDualStreamMode(mode: SIMULCAST_STREAM_MODE): CallApiReturnType;
 
-  setDualStreamMode(
+  setDualStreamMode2(
     mode: SIMULCAST_STREAM_MODE,
     streamConfig: SimulcastStreamConfig
   ): CallApiReturnType;
@@ -1635,7 +1635,7 @@ export interface IRtcEngine {
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  enableExtension(
+  enableExtension2(
     provider: string,
     extension: string,
     extensionInfo: ExtensionInfo,
@@ -1659,7 +1659,7 @@ export interface IRtcEngine {
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  setExtensionProperty(
+  setExtensionProperty2(
     provider: string,
     extension: string,
     extensionInfo: ExtensionInfo,
@@ -1667,7 +1667,7 @@ export interface IRtcEngine {
     value: string
   ): CallApiReturnType;
 
-  getExtensionProperty(
+  getExtensionProperty2(
     provider: string,
     extension: string,
     extensionInfo: ExtensionInfo,
@@ -1842,12 +1842,12 @@ export interface IRtcEngine {
     orientation: VIDEO_ORIENTATION
   ): CallApiReturnType;
 
-  startScreenCapture(
+  startScreenCapture2(
     sourceType: VIDEO_SOURCE_TYPE,
     config: ScreenCaptureConfiguration
   ): CallApiReturnType;
 
-  stopScreenCapture(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
+  stopScreenCapture2(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
 
   getConnectionState(): CallApiReturnType;
 
@@ -1877,7 +1877,7 @@ export interface IRtcEngine {
     ordered: boolean
   ): CallApiReturnType;
 
-  createDataStream(
+  createDataStream2(
     streamId: number,
     config: DataStreamConfig
   ): CallApiReturnType;
@@ -1890,7 +1890,7 @@ export interface IRtcEngine {
 
   addVideoWatermark(watermark: RtcImage): CallApiReturnType;
 
-  addVideoWatermark(
+  addVideoWatermark2(
     watermarkUrl: string,
     options: WatermarkOptions
   ): CallApiReturnType;
@@ -1950,7 +1950,7 @@ export interface IRtcEngine {
     userAccount: string
   ): CallApiReturnType;
 
-  joinChannelWithUserAccount(
+  joinChannelWithUserAccount2(
     token: string,
     channelId: string,
     userAccount: string,

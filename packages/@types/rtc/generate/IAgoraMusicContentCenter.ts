@@ -180,7 +180,7 @@ export interface IMusicContentCenter {
 
   preload(songCode: number, jsonOption: string): CallApiReturnType;
 
-  preload(requestId: string, songCode: number): CallApiReturnType;
+  preload2(requestId: string, songCode: number): CallApiReturnType;
 
   removeCache(songCode: number): CallApiReturnType;
 

@@ -4,7 +4,11 @@ import { CXXFile, CXXTYPE, RenderContext, TerraNode } from 'terra-cli';
 
 import supportList = require('./config/support_list.json');
 
-import { filterFile, isMatch } from './utils';
+import {
+  appendNumberToDuplicateMemberFunction,
+  filterFile,
+  isMatch,
+} from './utils';
 
 interface CXXFileUserData {
   fileName: string;
@@ -34,11 +38,14 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
 
     cxxfile.nodes = cxxfile.nodes.map((node: TerraNode) => {
       let isCallback = isMatch(node.name, 'isCallback');
-      if (node.name === 'IVideoDeviceManager') {
-        // debugger;
-      }
 
       if (node.__TYPE === CXXTYPE.Clazz) {
+        node.asClazz().methods = appendNumberToDuplicateMemberFunction(
+          node.asClazz().methods
+        );
+        if (node.name === 'IRtcEngine') {
+          // debugger;
+        }
         node.asClazz().methods = node.asClazz().methods.map((method) => {
           const clazzMethodUserData: ClazzMethodUserData = {
             isImpl:

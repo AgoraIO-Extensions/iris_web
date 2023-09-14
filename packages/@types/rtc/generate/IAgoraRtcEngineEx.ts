@@ -331,7 +331,7 @@ export interface IRtcEngineEx {
 
   leaveChannelEx(connection: RtcConnection): CallApiReturnType;
 
-  leaveChannelEx(
+  leaveChannelEx2(
     connection: RtcConnection,
     options: LeaveChannelOptions
   ): CallApiReturnType;
@@ -476,7 +476,7 @@ export interface IRtcEngineEx {
     connection: RtcConnection
   ): CallApiReturnType;
 
-  createDataStreamEx(
+  createDataStreamEx2(
     streamId: number,
     config: DataStreamConfig,
     connection: RtcConnection
