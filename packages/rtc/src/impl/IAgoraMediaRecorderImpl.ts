@@ -20,18 +20,18 @@ export class IMediaRecorderImpl implements NATIVE_RTC.IMediaRecorder {
     callback: NATIVE_RTC.IMediaRecorderObserver
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'setMediaRecorderObserver not supported in this platfrom!'
+      'setMediaRecorderObserver not supported in this platform!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   startRecording(
     config: NATIVE_RTC.MediaRecorderConfiguration
   ): CallApiReturnType {
-    AgoraConsole.warn('startRecording not supported in this platfrom!');
+    AgoraConsole.warn('startRecording not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   stopRecording(): CallApiReturnType {
-    AgoraConsole.warn('stopRecording not supported in this platfrom!');
+    AgoraConsole.warn('stopRecording not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 }

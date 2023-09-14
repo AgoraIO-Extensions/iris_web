@@ -22,14 +22,6 @@
       "parser": "@typescript-eslint/parser",
       "plugins": ["@typescript-eslint/eslint-plugin"],
       "rules": {
-        "@typescript-eslint/no-unused-vars": [
-          "warn",
-          {
-            "argsIgnorePattern": "^_",
-            "destructuredArrayIgnorePattern": "^_"
-          }
-        ],
-        "no-unused-vars": "off",
         "no-shadow": "off",
         "@typescript-eslint/no-shadow": 1,
         "no-undef": "off",
@@ -84,7 +76,6 @@
       }
     ],
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "warn",
     "unused-imports/no-unused-imports": "error",
     "auto-import/auto-import": [
       "error",
