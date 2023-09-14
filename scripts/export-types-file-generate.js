@@ -26,6 +26,6 @@ fs.readdir(typesDir, (err, files) => {
     file = file.replace('.ts', '');
     return `export * from '.${generateCodePath}/${file}';`;
   });
-  files = files.join('\n');
+  files = files.join('\n') + '\n';
   fs.writeFile(outputPath, files, (err) => {});
 });

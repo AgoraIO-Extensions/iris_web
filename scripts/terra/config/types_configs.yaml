@@ -4,7 +4,6 @@ language: ts
 
 renderers:
   - ../index.ts
-  - ../binding.ts
 parsers:
   - OrderNodeParser
   - FixEnumConstantParser

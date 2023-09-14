@@ -11,7 +11,9 @@
     "lint": "eslint -c ../../packages/@iris/rtc/.eslintrc --ext ../../packages/@iris/rtc/generate && prettier --check ../../packages/@iris/rtc/generate",
     "lint:fix": "eslint -c ../../packages/@iris/rtc/.eslintrc --fix --ext ../../packages/@iris/rtc/generate && prettier --write ../../packages/@iris/rtc/generate",
     "postinstall": "pnpm link terra/terra-cli",
-    "terra": "sh run-terra.sh"
+    "terra": "pnpm terra-types && pnpm terra-binding",
+    "terra-types": "sh terra-types.sh",
+    "terra-binding": "sh terra-binding.sh"
   },
   "devDependencies": {
     "terra": "../../../terra",

@@ -31,6 +31,7 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.4.1",
+    "tsup": "^7.1.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-auto-import": "^0.1.1",
     "eslint-plugin-import": "^2.27.5",

@@ -26,7 +26,7 @@ diff --git a/lib/rules/auto-const.js b/lib/rules/auto-const.js
 deleted file mode 100644
 index 307bae3924df63dcedf6c00406e0eff19f5b5f2e..0000000000000000000000000000000000000000
 diff --git a/lib/rules/auto-import.js b/lib/rules/auto-import.js
-index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..942f7f80f8872eed53de249a455a70bb6d6882d4 100644
+index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..96792813b1a793af067ebe400332e2fea4aaae1b 100644
 --- a/lib/rules/auto-import.js
 +++ b/lib/rules/auto-import.js
 @@ -13,20 +13,20 @@ var fs = require('fs')
@@ -147,7 +147,7 @@ index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..942f7f80f8872eed53de249a455a70bb
  }
  
  //------------------------------------------------------------------------------
-@@ -83,148 +105,146 @@ function searchDirectory(path, name, except) {
+@@ -83,148 +105,153 @@ function searchDirectory(path, name, except) {
  //------------------------------------------------------------------------------
  
  module.exports = {
@@ -171,34 +171,51 @@ index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..942f7f80f8872eed53de249a455a70bb
 +            type: "boolean"
 +          }
          },
--
++        additionalProperties: true
++      }
++    ]
++  },
+ 
 -        schema: [
 -            {
 -                type: "object",
 -                properties: {
 -                    typeof: {
 -                        type: "boolean"
-+        additionalProperties: true
-+      }
-+    ]
-+  },
-+
+-                    }
+-                },
+-                additionalProperties: false
+-            }
+-        ]
+-    },
 +  create: function (context) {
 +    var options = context.options[0];
 +    var considerTypeOf = options && options.typeof === true || false;
 +    const dependencies = new Set() // keep track of dependencies
 +    let lastNode // keep track of the last node to report on
-+
+ 
+-    create: function(context) {
+-        var options = context.options[0];
+-        var considerTypeOf = options && options.typeof === true || false;
+-      const dependencies = new Set() // keep track of dependencies
+-      let lastNode // keep track of the last node to report on
 +    return {
 +      ImportDeclaration(node) {
 +        dependencies.add(node.source.value)
 +        lastNode = node.source
 +      },
-+
+ 
+-        return {
+-          ImportDeclaration(node) {
+-            dependencies.add(node.source.value)
+-            lastNode = node.source
+-          },
 +      MemberExpression: function (node) {
-+
+ 
+-          MemberExpression: function (node) {
 +      },
-+
+ 
+-          },
 +      CallExpression(node) {
 +        if (isStaticRequire(node)) {
 +          const [requirePath] = node.arguments
@@ -212,7 +229,25 @@ index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..942f7f80f8872eed53de249a455a70bb
 +        var fixed = {}
 +        globalScope.through.forEach(function (ref) {
 +          var identifier = ref.identifier;
-+
+ 
+-          CallExpression(node) {
+-            if (isStaticRequire(node)) {
+-              const [ requirePath ] = node.arguments
+-              dependencies.add(requirePath.value)
+-              lastNode = node
+-            }
+-          },
+-            "Program:exit": function(/* node */) {
+-                var globalScope = context.getScope()
+-                var options = context.options[0]
+-//                console.log(context.eslint)
+-                var fixed = {}
+-//                console.log(globalScope.block.body[0].specifiers[0])
+-                globalScope.through.forEach(function(ref) {
+-                    var identifier = ref.identifier;
+-
+-                    if (!considerTypeOf && hasTypeOfOperator(identifier)) {
+-                        return;
 +          if (!considerTypeOf && hasTypeOfOperator(identifier)) {
 +            return;
 +          }
@@ -264,29 +299,16 @@ index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..942f7f80f8872eed53de249a455a70bb
 +                    foundModule = searchDirectory(pathModule.resolve(__dirname, '../../../..', pckg.modulesIn), undefinedIndentifier, false)
 +                    if (foundModule) {
 +                      foundModule = packageName + '/' + foundModule
-                     }
--                },
--                additionalProperties: false
--            }
--        ]
--    },
--
--    create: function(context) {
--        var options = context.options[0];
--        var considerTypeOf = options && options.typeof === true || false;
--      const dependencies = new Set() // keep track of dependencies
--      let lastNode // keep track of the last node to report on
--
--        return {
--          ImportDeclaration(node) {
--            dependencies.add(node.source.value)
--            lastNode = node.source
--          },
++                    }
 +                  }
 +                  if (foundModule) {
 +                    break
 +                  }
 +                }
++              }
++
++              if(!foundModule && options.external){
++                foundModule = options.external
 +              }
 +
 +              if (foundModule) {
@@ -301,37 +323,7 @@ index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..942f7f80f8872eed53de249a455a70bb
 +                    } else {
 +                      console.log(foundModule, 'already imported')
 +                      return
-+                    }
-+                  }
-+                }
- 
--          MemberExpression: function (node) {
-+                isNotDefaultExport = !isDefaultlyExported(pathModule.resolve(pathModule.dirname(filename), foundModule + '.ts'))
- 
--          },
-+                var importStatement = (isNotDefaultExport ?
-+                  'import { ' + undefinedIndentifier + ' }' :
-+                  'import ' + undefinedIndentifier) + " from '" + foundModule + "';\n"
- 
--          CallExpression(node) {
--            if (isStaticRequire(node)) {
--              const [ requirePath ] = node.arguments
--              dependencies.add(requirePath.value)
--              lastNode = node
--            }
--          },
--            "Program:exit": function(/* node */) {
--                var globalScope = context.getScope()
--                var options = context.options[0]
--//                console.log(context.eslint)
--                var fixed = {}
--//                console.log(globalScope.block.body[0].specifiers[0])
--                globalScope.through.forEach(function(ref) {
--                    var identifier = ref.identifier;
--
--                    if (!considerTypeOf && hasTypeOfOperator(identifier)) {
--                        return;
--                    }
+                     }
 -                    var undefinedIndentifier = identifier.name
 -                    context.report({
 -                        node: identifier,
@@ -418,6 +410,18 @@ index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..942f7f80f8872eed53de249a455a70bb
 -                        }
 -                    });
 -                });
++                  }
++                }
++                if(!options.external){
++                  isNotDefaultExport = !isDefaultlyExported(pathModule.resolve(pathModule.dirname(filename), foundModule + '.ts'))
++                } else {
++                  isNotDefaultExport = true;
++                }
++
++                var importStatement = (isNotDefaultExport ?
++                  'import { ' + undefinedIndentifier + ' }' :
++                  'import ' + undefinedIndentifier) + " from '" + foundModule + "';\n"
++
 +                if (importDeclaration) {
 +                  return fixer.insertTextAfter(importDeclaration, '\n' + importStatement)
 +                }

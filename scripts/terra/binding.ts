@@ -25,9 +25,9 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
   //移除不需要的文件
   let view = filterFile(cxxfiles).map((cxxfile: CXXFile) => {
     const cxxUserData: CXXFileUserData = {
-      fileName: path.join(
-        'binding/',
-        path.basename(cxxfile.file_path, path.extname(cxxfile.file_path))
+      fileName: path.basename(
+        cxxfile.file_path,
+        path.extname(cxxfile.file_path)
       ),
     };
     cxxfile.user_data = cxxUserData;
