@@ -26,7 +26,7 @@ diff --git a/lib/rules/auto-const.js b/lib/rules/auto-const.js
 deleted file mode 100644
 index 307bae3924df63dcedf6c00406e0eff19f5b5f2e..0000000000000000000000000000000000000000
 diff --git a/lib/rules/auto-import.js b/lib/rules/auto-import.js
-index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..96792813b1a793af067ebe400332e2fea4aaae1b 100644
+index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..1934d085c21383cb12225a0c5c8f78e1fc176841 100644
 --- a/lib/rules/auto-import.js
 +++ b/lib/rules/auto-import.js
 @@ -13,20 +13,20 @@ var fs = require('fs')
@@ -139,7 +139,7 @@ index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..96792813b1a793af067ebe400332e2fe
 -        }
 +  for (var i = 0, l = directories.length; i < l; i++) {
 +    var directory = directories[i]
-+    var foundModule = searchDirectory(pathModule.join(path, directory), name)
++    var foundModule = searchDirectory(pathModule.join(path, directory), name, except, isNotDefaultExport)
 +    if (foundModule) {
 +      return directory + '/' + foundModule
      }
@@ -147,7 +147,7 @@ index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..96792813b1a793af067ebe400332e2fe
  }
  
  //------------------------------------------------------------------------------
-@@ -83,148 +105,153 @@ function searchDirectory(path, name, except) {
+@@ -83,148 +105,152 @@ function searchDirectory(path, name, except) {
  //------------------------------------------------------------------------------
  
  module.exports = {
@@ -306,7 +306,6 @@ index 4b4bb2220b98bc9f860b426bac5ae0eb65d90a5d..96792813b1a793af067ebe400332e2fe
 +                  }
 +                }
 +              }
-+
 +              if(!foundModule && options.external){
 +                foundModule = options.external
 +              }
