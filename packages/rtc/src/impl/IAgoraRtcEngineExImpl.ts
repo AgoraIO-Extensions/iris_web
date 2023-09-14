@@ -11,6 +11,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   public constructor(engine: IrisRtcEngine) {
     this._engine = engine;
   }
+  enableContentInspectEx(
+    enabled: boolean,
+    config: NATIVE_RTC.ContentInspectConfig,
+    connection: NATIVE_RTC.RtcConnection
+  ): CallApiReturnType {
+    AgoraConsole.warn('enableContentInspectEx not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
 
   putAction(action: Action) {
     this._engine.actionQueue.putAction(action);
