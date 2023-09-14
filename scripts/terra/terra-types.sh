@@ -15,7 +15,7 @@ npm run build -- render \
 
 cd ${OUTPUT_DIR}/..    
 
-node ../../../scripts/export-types-file-generate.js output-path=$PWD/index.d.ts
+node ../../../scripts/export-types-file-generate.js output-path=$PWD/index.ts
 
 npm run lint:fix
 npm run build

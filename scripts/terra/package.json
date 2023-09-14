@@ -8,8 +8,6 @@
   },
   "scripts": {
     "build": "terra-cli",
-    "lint": "eslint -c ../../packages/@types/rtc/.eslintrc --ext ../../packages/@types/rtc/generate && prettier --check ../../packages/@types/rtc/generate",
-    "lint:fix": "eslint -c ../../packages/@types/rtc/.eslintrc --fix --ext ../../packages/@types/rtc/generate && prettier --write ../../packages/@types/rtc/generate",
     "postinstall": "pnpm link terra/terra-cli",
     "terra": "pnpm terra-types && pnpm terra-binding",
     "terra-types": "sh terra-types.sh",
