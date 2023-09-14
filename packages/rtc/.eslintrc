@@ -1,87 +1,12 @@
 {
-  "root": true,
-  "env": {
-    "es6": true,
-    "node": true,
-    "shared-node-browser": true
-  },
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "sourceType": "module"
-  },
-  "extends": ["plugin:prettier/recommended", "prettier"],
-  "plugins": [
-    "@typescript-eslint/eslint-plugin",
-    "import",
-    "auto-import",
-    "unused-imports"
-  ],
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "parser": "@typescript-eslint/parser",
-      "plugins": ["@typescript-eslint/eslint-plugin"],
-      "rules": {
-        "no-shadow": "off",
-        "@typescript-eslint/no-shadow": 1,
-        "no-undef": "off",
-        "func-call-spacing": "off",
-        "@typescript-eslint/func-call-spacing": 1
-      }
-    },
-    {
-      "files": [
-        "*.{spec,test}.{js,ts,tsx}",
-        "**/__{mocks,tests}__/**/*.{js,ts,tsx}"
-      ],
-      "rules": {
-        "quotes": [
-          1,
-          "single",
-          {
-            "avoidEscape": true,
-            "allowTemplateLiterals": true
-          }
-        ]
-      }
-    }
-  ],
+  "plugins": ["auto-import", "unused-imports"],
   "rules": {
-    "import/newline-after-import": "error",
-    "prettier/prettier": [
-      "error",
-      {
-        "quoteProps": "consistent",
-        "singleQuote": true,
-        "tabWidth": 2,
-        "trailingComma": "es5",
-        "useTabs": false
-      }
-    ],
-    "no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
     "auto-import/auto-import": [
       "error",
       {
         "rootPath": "../../../packages/rtc/src",
         "external": "iris-web-rtc"
-      }
-    ],
-    "import/order": [
-      "error",
-      {
-        "newlines-between": "always-and-inside-groups",
-        "alphabetize": {
-          "order": "asc",
-          "orderImportKind": "asc"
-        }
-      }
-    ],
-    "sort-imports": [
-      "error",
-      {
-        "ignoreDeclarationSort": true,
-        "ignoreMemberSort": false
       }
     ]
   }
