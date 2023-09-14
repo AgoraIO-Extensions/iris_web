@@ -34,13 +34,13 @@ export class IAudioPcmFrameSink {
   }
 
   onFrame(frame: AudioPcmFrame): void {
-    let obj = {
+    let _obj = {
       frame,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onFrame eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -64,27 +64,27 @@ export class IAudioFrameObserverBase {
   }
 
   onRecordAudioFrame(channelId: string, audioFrame: AudioFrame): void {
-    let obj = {
+    let _obj = {
       channelId,
       audioFrame,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRecordAudioFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRecordAudioFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onRecordAudioFrame eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onPlaybackAudioFrame(channelId: string, audioFrame: AudioFrame): void {
-    let obj = {
+    let _obj = {
       channelId,
       audioFrame,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPlaybackAudioFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPlaybackAudioFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onPlaybackAudioFrame eventParam ${JSON.stringify(eventParam)}`
     );
@@ -92,26 +92,26 @@ export class IAudioFrameObserverBase {
   }
 
   onMixedAudioFrame(channelId: string, audioFrame: AudioFrame): void {
-    let obj = {
+    let _obj = {
       channelId,
       audioFrame,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onMixedAudioFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onMixedAudioFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onMixedAudioFrame eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onEarMonitoringAudioFrame(audioFrame: AudioFrame): void {
-    let obj = {
+    let _obj = {
       audioFrame,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onEarMonitoringAudioFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onEarMonitoringAudioFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onEarMonitoringAudioFrame eventParam ${JSON.stringify(eventParam)}`
     );
@@ -141,15 +141,15 @@ export class IAudioFrameObserver {
     uid: number,
     audioFrame: AudioFrame
   ): void {
-    let obj = {
+    let _obj = {
       channelId,
       uid,
       audioFrame,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPlaybackAudioFrameBeforeMixing');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPlaybackAudioFrameBeforeMixing');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onPlaybackAudioFrameBeforeMixing eventParam ${JSON.stringify(
         eventParam
@@ -177,13 +177,13 @@ export class IAudioSpectrumObserver {
   }
 
   onLocalAudioSpectrum(data: AudioSpectrumData): void {
-    let obj = {
+    let _obj = {
       data,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLocalAudioSpectrum');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLocalAudioSpectrum');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onLocalAudioSpectrum eventParam ${JSON.stringify(eventParam)}`
     );
@@ -194,14 +194,14 @@ export class IAudioSpectrumObserver {
     spectrums: UserAudioSpectrumInfo,
     spectrumNumber: number
   ): void {
-    let obj = {
+    let _obj = {
       spectrums,
       spectrumNumber,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRemoteAudioSpectrum');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteAudioSpectrum');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRemoteAudioSpectrum eventParam ${JSON.stringify(eventParam)}`
     );
@@ -232,16 +232,16 @@ export class IVideoEncodedFrameObserver {
     length: number,
     videoEncodedFrameInfo: EncodedVideoFrameInfo
   ): void {
-    let obj = {
+    let _obj = {
       uid,
       imageBuffer,
       length,
       videoEncodedFrameInfo,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onEncodedVideoFrameReceived');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onEncodedVideoFrameReceived');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onEncodedVideoFrameReceived eventParam ${JSON.stringify(eventParam)}`
     );
@@ -270,14 +270,14 @@ export class IVideoFrameObserver {
     sourceType: VIDEO_SOURCE_TYPE,
     videoFrame: VideoFrame
   ): void {
-    let obj = {
+    let _obj = {
       sourceType,
       videoFrame,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onCaptureVideoFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onCaptureVideoFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onCaptureVideoFrame eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -286,14 +286,14 @@ export class IVideoFrameObserver {
     sourceType: VIDEO_SOURCE_TYPE,
     videoFrame: VideoFrame
   ): void {
-    let obj = {
+    let _obj = {
       sourceType,
       videoFrame,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPreEncodeVideoFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPreEncodeVideoFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onPreEncodeVideoFrame eventParam ${JSON.stringify(eventParam)}`
     );
@@ -301,14 +301,14 @@ export class IVideoFrameObserver {
   }
 
   onMediaPlayerVideoFrame(videoFrame: VideoFrame, mediaPlayerId: number): void {
-    let obj = {
+    let _obj = {
       videoFrame,
       mediaPlayerId,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onMediaPlayerVideoFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onMediaPlayerVideoFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onMediaPlayerVideoFrame eventParam ${JSON.stringify(eventParam)}`
     );
@@ -320,27 +320,27 @@ export class IVideoFrameObserver {
     remoteUid: number,
     videoFrame: VideoFrame
   ): void {
-    let obj = {
+    let _obj = {
       channelId,
       remoteUid,
       videoFrame,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRenderVideoFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRenderVideoFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onRenderVideoFrame eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onTranscodedVideoFrame(videoFrame: VideoFrame): void {
-    let obj = {
+    let _obj = {
       videoFrame,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onTranscodedVideoFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onTranscodedVideoFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onTranscodedVideoFrame eventParam ${JSON.stringify(eventParam)}`
     );
@@ -371,16 +371,16 @@ export class IMediaRecorderObserver {
     state: RecorderState,
     error: RecorderErrorCode
   ): void {
-    let obj = {
+    let _obj = {
       channelId,
       uid,
       state,
       error,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRecorderStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRecorderStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRecorderStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -392,15 +392,15 @@ export class IMediaRecorderObserver {
     uid: number,
     info: RecorderInfo
   ): void {
-    let obj = {
+    let _obj = {
       channelId,
       uid,
       info,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRecorderInfoUpdated');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRecorderInfoUpdated');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRecorderInfoUpdated eventParam ${JSON.stringify(eventParam)}`
     );

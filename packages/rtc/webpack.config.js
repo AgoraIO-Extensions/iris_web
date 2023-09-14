@@ -2,8 +2,6 @@ const path = require('path');
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-console.log(path.resolve(__dirname, '..', '..', 'tsconfig.json'));
-
 module.exports = {
   entry: './src/index.ts',
 

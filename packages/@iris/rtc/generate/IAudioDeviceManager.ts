@@ -11,9 +11,9 @@ export interface IAudioDeviceManager {
 
   enumerateRecordingDevices(): CallApiReturnType;
 
-  setPlaybackDevice(deviceId: string): CallApiReturnType;
+  setPlaybackDevice(deviceId: string[]): CallApiReturnType;
 
-  getPlaybackDevice(deviceId: string): CallApiReturnType;
+  getPlaybackDevice(deviceId: string[]): CallApiReturnType;
 
   getPlaybackDeviceInfo(): CallApiReturnType;
 
@@ -21,9 +21,9 @@ export interface IAudioDeviceManager {
 
   getPlaybackDeviceVolume(volume: number): CallApiReturnType;
 
-  setRecordingDevice(deviceId: string): CallApiReturnType;
+  setRecordingDevice(deviceId: string[]): CallApiReturnType;
 
-  getRecordingDevice(deviceId: string): CallApiReturnType;
+  getRecordingDevice(deviceId: string[]): CallApiReturnType;
 
   getRecordingDeviceInfo(): CallApiReturnType;
 
@@ -31,9 +31,9 @@ export interface IAudioDeviceManager {
 
   getRecordingDeviceVolume(volume: number): CallApiReturnType;
 
-  setLoopbackDevice(deviceId: string): CallApiReturnType;
+  setLoopbackDevice(deviceId: string[]): CallApiReturnType;
 
-  getLoopbackDevice(deviceId: string): CallApiReturnType;
+  getLoopbackDevice(deviceId: string[]): CallApiReturnType;
 
   setPlaybackDeviceMute(mute: boolean): CallApiReturnType;
 

@@ -9,7 +9,6 @@ import {
   ITrack,
 } from 'agora-rtc-sdk-ng';
 
-import { ImageData } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { CheckVideoVisibleResult } from '../web_sdk';
@@ -135,7 +134,7 @@ export class IrisTrackEventHandler {
       let width = -1;
       let height = -1;
       if (this._remoteUser.hasVideo && this._remoteUser.videoTrack) {
-        let imageData: ImageData = this._remoteUser.videoTrack.getCurrentFrameData();
+        let imageData = this._remoteUser.videoTrack.getCurrentFrameData();
         width = imageData?.width || -1;
         height = imageData?.height || -1;
       }

@@ -40,17 +40,17 @@ export interface IBaseSpatialAudioEngine {
   setDistanceUnit(unit: number): CallApiReturnType;
 
   updateSelfPosition(
-    position: number,
-    axisForward: number,
-    axisRight: number,
-    axisUp: number
+    position: number[],
+    axisForward: number[],
+    axisRight: number[],
+    axisUp: number[]
   ): CallApiReturnType;
 
   updateSelfPositionEx(
-    position: number,
-    axisForward: number,
-    axisRight: number,
-    axisUp: number,
+    position: number[],
+    axisForward: number[],
+    axisRight: number[],
+    axisUp: number[],
     connection: RtcConnection
   ): CallApiReturnType;
 
@@ -65,7 +65,7 @@ export interface IBaseSpatialAudioEngine {
 
   muteAllRemoteAudioStreams(mute: boolean): CallApiReturnType;
 
-  setZones(zones: SpatialAudioZone, zoneCount: number): CallApiReturnType;
+  setZones(zones: SpatialAudioZone[], zoneCount: number): CallApiReturnType;
 
   setPlayerAttenuation(
     playerId: number,

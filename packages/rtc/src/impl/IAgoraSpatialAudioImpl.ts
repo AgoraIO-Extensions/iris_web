@@ -140,6 +140,30 @@ export class IBaseSpatialAudioEngineImpl
     this._engine.actionQueue.putAction(action);
   }
 
+  release(): CallApiReturnType {
+    AgoraConsole.warn('release not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  setZones(
+    zones: NATIVE_RTC.SpatialAudioZone,
+    zoneCount: number
+  ): CallApiReturnType {
+    AgoraConsole.warn('setZones not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  setPlayerAttenuation(
+    playerId: number,
+    attenuation: number,
+    forceSet: boolean
+  ): CallApiReturnType {
+    AgoraConsole.warn('setPlayerAttenuation not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  muteRemoteAudioStream(uid: number, mute: boolean): CallApiReturnType {
+    AgoraConsole.warn('muteRemoteAudioStream not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+
   initialize(): CallApiReturnType {
     AgoraConsole.warn('initialize not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -168,19 +192,19 @@ export class IBaseSpatialAudioEngineImpl
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   updateSelfPosition(
-    position: number[],
-    axisForward: number[],
-    axisRight: number[],
-    axisUp: number[]
+    position: number,
+    axisForward: number,
+    axisRight: number,
+    axisUp: number
   ): number {
     AgoraConsole.warn('updateSelfPosition not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   updateSelfPositionEx(
-    position: number[],
-    axisForward: number[],
-    axisRight: number[],
-    axisUp: number[],
+    position: number,
+    axisForward: number,
+    axisRight: number,
+    axisUp: number,
     connection: NATIVE_RTC.RtcConnection
   ): number {
     AgoraConsole.warn('updateSelfPositionEx not supported in this platform!');

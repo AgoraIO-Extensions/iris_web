@@ -10,9 +10,7 @@ import {
   IrisEventHandlerManager,
 } from 'iris-web-core';
 
-// import { IAudioDeviceManagerDispatch } from 'iris-web-rtc/generate/binding/IAudioDeviceManagerDispatch';
-
-import { HTMLElement } from 'iris-web-rtc';
+// import { IAudioDeviceManagerDispatch } from '/generate/binding/IAudioDeviceManagerDispatch';
 
 import {
   IrisEventHandler,
@@ -58,7 +56,7 @@ export type GenerateVideoTrackLabelOrHtmlElementCb = (
   channelName: string,
   uid: number,
   type: IrisVideoSourceType
-) => string | HTMLElement;
+) => string;
 
 export class IrisRtcEngine implements ApiInterceptor {
   //EventHandler
@@ -162,7 +160,7 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   public async callIrisApiAsync(
     apiParam: ApiParam
-  ): Promise<CallIrisApiResult> | undefined {
+  ): Promise<CallIrisApiResult> {
     let func_name = apiParam.event;
     // let params: string = apiParam.data;
     // let paramLength: number = apiParam.data_size;
@@ -263,7 +261,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     channelName: string,
     uid: number,
     type: IrisVideoSourceType
-  ): string | HTMLElement {
+  ): string {
     if (this._generateVideoTrackLabelOrHtmlElementCb) {
       return this._generateVideoTrackLabelOrHtmlElementCb(
         channelName,

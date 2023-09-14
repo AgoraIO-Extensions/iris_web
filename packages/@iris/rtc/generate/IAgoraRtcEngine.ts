@@ -575,6 +575,11 @@ export enum PROXY_TYPE {
   HTTPS_PROXY_TYPE = 6,
 }
 
+export enum FeatureType {
+  VIDEO_VIRTUAL_BACKGROUND = 1,
+  VIDEO_BEAUTY_EFFECT = 2,
+}
+
 export class LeaveChannelOptions {
   stopAudioMixing?: boolean;
 
@@ -957,9 +962,9 @@ export interface IRtcEngineEventHandler {
 export interface IVideoDeviceManager {
   enumerateVideoDevices(): CallApiReturnType;
 
-  setDevice(deviceIdUTF8: string): CallApiReturnType;
+  setDevice(deviceIdUTF8: string[]): CallApiReturnType;
 
-  getDevice(deviceIdUTF8: string): CallApiReturnType;
+  getDevice(deviceIdUTF8: string[]): CallApiReturnType;
 
   numberOfCapabilities(deviceIdUTF8: string): CallApiReturnType;
 
@@ -2065,6 +2070,8 @@ export interface IRtcEngine {
   enableInstantMediaRendering(): CallApiReturnType;
 
   getNtpWallTimeInMs(): CallApiReturnType;
+
+  isFeatureAvailableOnDevice(type: FeatureType): CallApiReturnType;
 }
 
 export enum QUALITY_REPORT_FORMAT_TYPE {

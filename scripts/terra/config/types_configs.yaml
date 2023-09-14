@@ -5,6 +5,8 @@ language: ts
 renderers:
   - ../index.ts
 parsers:
+  - PointerToArrayParser:
+      configJsonFilePath: /Users/guoxianzhe/agora/iris_web/scripts/terra/config/pointer_to_array.json
   - OrderNodeParser
   - FixEnumConstantParser
   - UpdateSimpleTypeParser:

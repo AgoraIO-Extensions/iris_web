@@ -84,15 +84,15 @@ export class IRtcEngineEventHandler {
   }
 
   onJoinChannelSuccess(channel: string, uid: number, elapsed: number): void {
-    let obj = {
+    let _obj = {
       channel,
       uid,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onJoinChannelSuccess');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onJoinChannelSuccess');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onJoinChannelSuccess eventParam ${JSON.stringify(eventParam)}`
     );
@@ -100,15 +100,15 @@ export class IRtcEngineEventHandler {
   }
 
   onRejoinChannelSuccess(channel: string, uid: number, elapsed: number): void {
-    let obj = {
+    let _obj = {
       channel,
       uid,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRejoinChannelSuccess');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRejoinChannelSuccess');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRejoinChannelSuccess eventParam ${JSON.stringify(eventParam)}`
     );
@@ -122,30 +122,30 @@ export class IRtcEngineEventHandler {
     localProxyIp: string,
     elapsed: number
   ): void {
-    let obj = {
+    let _obj = {
       channel,
       uid,
       proxyType,
       localProxyIp,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onProxyConnected');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onProxyConnected');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onProxyConnected eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onError(err: number, msg: string): void {
-    let obj = {
+    let _obj = {
       err,
       msg,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onError');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onError');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onError eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -156,28 +156,28 @@ export class IRtcEngineEventHandler {
     delay: number,
     lost: number
   ): void {
-    let obj = {
+    let _obj = {
       uid,
       quality,
       delay,
       lost,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioQuality');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioQuality');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onAudioQuality eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onLastmileProbeResult(result: LastmileProbeResult): void {
-    let obj = {
+    let _obj = {
       result,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLastmileProbeResult');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLastmileProbeResult');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onLastmileProbeResult eventParam ${JSON.stringify(eventParam)}`
     );
@@ -189,15 +189,15 @@ export class IRtcEngineEventHandler {
     speakerNumber: number,
     totalVolume: number
   ): void {
-    let obj = {
+    let _obj = {
       speakers,
       speakerNumber,
       totalVolume,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioVolumeIndication');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioVolumeIndication');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAudioVolumeIndication eventParam ${JSON.stringify(eventParam)}`
     );
@@ -205,25 +205,25 @@ export class IRtcEngineEventHandler {
   }
 
   onLeaveChannel(stats: RtcStats): void {
-    let obj = {
+    let _obj = {
       stats,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLeaveChannel');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLeaveChannel');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onLeaveChannel eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onRtcStats(stats: RtcStats): void {
-    let obj = {
+    let _obj = {
       stats,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRtcStats');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRtcStats');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onRtcStats eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -233,15 +233,15 @@ export class IRtcEngineEventHandler {
     deviceType: number,
     deviceState: number
   ): void {
-    let obj = {
+    let _obj = {
       deviceId,
       deviceType,
       deviceState,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioDeviceStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioDeviceStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAudioDeviceStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -249,13 +249,13 @@ export class IRtcEngineEventHandler {
   }
 
   onAudioMixingPositionChanged(position: number): void {
-    let obj = {
+    let _obj = {
       position,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioMixingPositionChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioMixingPositionChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAudioMixingPositionChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -263,11 +263,11 @@ export class IRtcEngineEventHandler {
   }
 
   onAudioMixingFinished(): void {
-    let obj = {};
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioMixingFinished');
+    let _obj = {};
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioMixingFinished');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAudioMixingFinished eventParam ${JSON.stringify(eventParam)}`
     );
@@ -275,13 +275,13 @@ export class IRtcEngineEventHandler {
   }
 
   onAudioEffectFinished(soundId: number): void {
-    let obj = {
+    let _obj = {
       soundId,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioEffectFinished');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioEffectFinished');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAudioEffectFinished eventParam ${JSON.stringify(eventParam)}`
     );
@@ -293,15 +293,15 @@ export class IRtcEngineEventHandler {
     deviceType: number,
     deviceState: number
   ): void {
-    let obj = {
+    let _obj = {
       deviceId,
       deviceType,
       deviceState,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onVideoDeviceStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onVideoDeviceStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onVideoDeviceStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -309,25 +309,25 @@ export class IRtcEngineEventHandler {
   }
 
   onNetworkQuality(uid: number, txQuality: number, rxQuality: number): void {
-    let obj = {
+    let _obj = {
       uid,
       txQuality,
       rxQuality,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onNetworkQuality');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onNetworkQuality');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onNetworkQuality eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onIntraRequestReceived(): void {
-    let obj = {};
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onIntraRequestReceived');
+    let _obj = {};
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onIntraRequestReceived');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onIntraRequestReceived eventParam ${JSON.stringify(eventParam)}`
     );
@@ -335,13 +335,13 @@ export class IRtcEngineEventHandler {
   }
 
   onUplinkNetworkInfoUpdated(info: UplinkNetworkInfo): void {
-    let obj = {
+    let _obj = {
       info,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onUplinkNetworkInfoUpdated');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUplinkNetworkInfoUpdated');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onUplinkNetworkInfoUpdated eventParam ${JSON.stringify(eventParam)}`
     );
@@ -349,13 +349,13 @@ export class IRtcEngineEventHandler {
   }
 
   onDownlinkNetworkInfoUpdated(info: DownlinkNetworkInfo): void {
-    let obj = {
+    let _obj = {
       info,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onDownlinkNetworkInfoUpdated');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onDownlinkNetworkInfoUpdated');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onDownlinkNetworkInfoUpdated eventParam ${JSON.stringify(eventParam)}`
     );
@@ -363,13 +363,13 @@ export class IRtcEngineEventHandler {
   }
 
   onLastmileQuality(quality: number): void {
-    let obj = {
+    let _obj = {
       quality,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLastmileQuality');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLastmileQuality');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onLastmileQuality eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -380,16 +380,16 @@ export class IRtcEngineEventHandler {
     height: number,
     elapsed: number
   ): void {
-    let obj = {
+    let _obj = {
       source,
       width,
       height,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onFirstLocalVideoFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstLocalVideoFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onFirstLocalVideoFrame eventParam ${JSON.stringify(eventParam)}`
     );
@@ -400,14 +400,14 @@ export class IRtcEngineEventHandler {
     source: VIDEO_SOURCE_TYPE,
     elapsed: number
   ): void {
-    let obj = {
+    let _obj = {
       source,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onFirstLocalVideoFramePublished');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstLocalVideoFramePublished');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onFirstLocalVideoFramePublished eventParam ${JSON.stringify(eventParam)}`
     );
@@ -420,16 +420,16 @@ export class IRtcEngineEventHandler {
     height: number,
     elapsed: number
   ): void {
-    let obj = {
+    let _obj = {
       uid,
       width,
       height,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onFirstRemoteVideoDecoded');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstRemoteVideoDecoded');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onFirstRemoteVideoDecoded eventParam ${JSON.stringify(eventParam)}`
     );
@@ -443,17 +443,17 @@ export class IRtcEngineEventHandler {
     height: number,
     rotation: number
   ): void {
-    let obj = {
+    let _obj = {
       sourceType,
       uid,
       width,
       height,
       rotation,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onVideoSizeChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onVideoSizeChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onVideoSizeChanged eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -463,15 +463,15 @@ export class IRtcEngineEventHandler {
     state: LOCAL_VIDEO_STREAM_STATE,
     error: LOCAL_VIDEO_STREAM_ERROR
   ): void {
-    let obj = {
+    let _obj = {
       source,
       state,
       error,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLocalVideoStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLocalVideoStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onLocalVideoStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -484,16 +484,16 @@ export class IRtcEngineEventHandler {
     reason: REMOTE_VIDEO_STATE_REASON,
     elapsed: number
   ): void {
-    let obj = {
+    let _obj = {
       uid,
       state,
       reason,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRemoteVideoStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteVideoStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRemoteVideoStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -506,16 +506,16 @@ export class IRtcEngineEventHandler {
     height: number,
     elapsed: number
   ): void {
-    let obj = {
+    let _obj = {
       userId,
       width,
       height,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onFirstRemoteVideoFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstRemoteVideoFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onFirstRemoteVideoFrame eventParam ${JSON.stringify(eventParam)}`
     );
@@ -523,92 +523,92 @@ export class IRtcEngineEventHandler {
   }
 
   onUserJoined(uid: number, elapsed: number): void {
-    let obj = {
+    let _obj = {
       uid,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onUserJoined');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserJoined');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onUserJoined eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onUserOffline(uid: number, reason: USER_OFFLINE_REASON_TYPE): void {
-    let obj = {
+    let _obj = {
       uid,
       reason,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onUserOffline');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserOffline');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onUserOffline eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onUserMuteAudio(uid: number, muted: boolean): void {
-    let obj = {
+    let _obj = {
       uid,
       muted,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onUserMuteAudio');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserMuteAudio');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onUserMuteAudio eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onUserMuteVideo(userId: number, muted: boolean): void {
-    let obj = {
+    let _obj = {
       userId,
       muted,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onUserMuteVideo');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserMuteVideo');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onUserMuteVideo eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onUserEnableVideo(uid: number, enabled: boolean): void {
-    let obj = {
+    let _obj = {
       uid,
       enabled,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onUserEnableVideo');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserEnableVideo');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onUserEnableVideo eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onUserStateChanged(uid: number, state: number): void {
-    let obj = {
+    let _obj = {
       uid,
       state,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onUserStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onUserStateChanged eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onUserEnableLocalVideo(uid: number, enabled: boolean): void {
-    let obj = {
+    let _obj = {
       uid,
       enabled,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onUserEnableLocalVideo');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserEnableLocalVideo');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onUserEnableLocalVideo eventParam ${JSON.stringify(eventParam)}`
     );
@@ -616,60 +616,60 @@ export class IRtcEngineEventHandler {
   }
 
   onLocalAudioStats(stats: LocalAudioStats): void {
-    let obj = {
+    let _obj = {
       stats,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLocalAudioStats');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLocalAudioStats');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onLocalAudioStats eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onRemoteAudioStats(stats: RemoteAudioStats): void {
-    let obj = {
+    let _obj = {
       stats,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRemoteAudioStats');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteAudioStats');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onRemoteAudioStats eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onLocalVideoStats(source: VIDEO_SOURCE_TYPE, stats: LocalVideoStats): void {
-    let obj = {
+    let _obj = {
       source,
       stats,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLocalVideoStats');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLocalVideoStats');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onLocalVideoStats eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onRemoteVideoStats(stats: RemoteVideoStats): void {
-    let obj = {
+    let _obj = {
       stats,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRemoteVideoStats');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteVideoStats');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onRemoteVideoStats eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onCameraReady(): void {
-    let obj = {};
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onCameraReady');
+    let _obj = {};
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onCameraReady');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onCameraReady eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -680,16 +680,16 @@ export class IRtcEngineEventHandler {
     width: number,
     height: number
   ): void {
-    let obj = {
+    let _obj = {
       x,
       y,
       width,
       height,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onCameraFocusAreaChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onCameraFocusAreaChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onCameraFocusAreaChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -702,16 +702,16 @@ export class IRtcEngineEventHandler {
     width: number,
     height: number
   ): void {
-    let obj = {
+    let _obj = {
       x,
       y,
       width,
       height,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onCameraExposureAreaChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onCameraExposureAreaChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onCameraExposureAreaChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -725,17 +725,17 @@ export class IRtcEngineEventHandler {
     vecDistance: number,
     numFaces: number
   ): void {
-    let obj = {
+    let _obj = {
       imageWidth,
       imageHeight,
       vecRectangle,
       vecDistance,
       numFaces,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onFacePositionChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFacePositionChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onFacePositionChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -743,11 +743,11 @@ export class IRtcEngineEventHandler {
   }
 
   onVideoStopped(): void {
-    let obj = {};
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onVideoStopped');
+    let _obj = {};
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onVideoStopped');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onVideoStopped eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -756,14 +756,14 @@ export class IRtcEngineEventHandler {
     state: AUDIO_MIXING_STATE_TYPE,
     reason: AUDIO_MIXING_REASON_TYPE
   ): void {
-    let obj = {
+    let _obj = {
       state,
       reason,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioMixingStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioMixingStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAudioMixingStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -774,14 +774,14 @@ export class IRtcEngineEventHandler {
     state: RHYTHM_PLAYER_STATE_TYPE,
     errorCode: RHYTHM_PLAYER_ERROR_TYPE
   ): void {
-    let obj = {
+    let _obj = {
       state,
       errorCode,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRhythmPlayerStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRhythmPlayerStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRhythmPlayerStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -789,21 +789,21 @@ export class IRtcEngineEventHandler {
   }
 
   onConnectionLost(): void {
-    let obj = {};
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onConnectionLost');
+    let _obj = {};
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onConnectionLost');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onConnectionLost eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onConnectionInterrupted(): void {
-    let obj = {};
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onConnectionInterrupted');
+    let _obj = {};
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onConnectionInterrupted');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onConnectionInterrupted eventParam ${JSON.stringify(eventParam)}`
     );
@@ -811,11 +811,11 @@ export class IRtcEngineEventHandler {
   }
 
   onConnectionBanned(): void {
-    let obj = {};
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onConnectionBanned');
+    let _obj = {};
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onConnectionBanned');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onConnectionBanned eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -827,17 +827,17 @@ export class IRtcEngineEventHandler {
     length: number,
     sentTs: number
   ): void {
-    let obj = {
+    let _obj = {
       userId,
       streamId,
       data,
       length,
       sentTs,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onStreamMessage');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onStreamMessage');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onStreamMessage eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -849,17 +849,17 @@ export class IRtcEngineEventHandler {
     missed: number,
     cached: number
   ): void {
-    let obj = {
+    let _obj = {
       userId,
       streamId,
       code,
       missed,
       cached,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onStreamMessageError');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onStreamMessageError');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onStreamMessageError eventParam ${JSON.stringify(eventParam)}`
     );
@@ -867,23 +867,23 @@ export class IRtcEngineEventHandler {
   }
 
   onRequestToken(): void {
-    let obj = {};
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRequestToken');
+    let _obj = {};
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRequestToken');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onRequestToken eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onTokenPrivilegeWillExpire(token: string): void {
-    let obj = {
+    let _obj = {
       token,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onTokenPrivilegeWillExpire');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onTokenPrivilegeWillExpire');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onTokenPrivilegeWillExpire eventParam ${JSON.stringify(eventParam)}`
     );
@@ -891,13 +891,13 @@ export class IRtcEngineEventHandler {
   }
 
   onLicenseValidationFailure(error: LICENSE_ERROR_TYPE): void {
-    let obj = {
+    let _obj = {
       error,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLicenseValidationFailure');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLicenseValidationFailure');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onLicenseValidationFailure eventParam ${JSON.stringify(eventParam)}`
     );
@@ -905,13 +905,13 @@ export class IRtcEngineEventHandler {
   }
 
   onFirstLocalAudioFramePublished(elapsed: number): void {
-    let obj = {
+    let _obj = {
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onFirstLocalAudioFramePublished');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstLocalAudioFramePublished');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onFirstLocalAudioFramePublished eventParam ${JSON.stringify(eventParam)}`
     );
@@ -919,14 +919,14 @@ export class IRtcEngineEventHandler {
   }
 
   onFirstRemoteAudioFrame(uid: number, elapsed: number): void {
-    let obj = {
+    let _obj = {
       uid,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onFirstRemoteAudioFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstRemoteAudioFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onFirstRemoteAudioFrame eventParam ${JSON.stringify(eventParam)}`
     );
@@ -934,14 +934,14 @@ export class IRtcEngineEventHandler {
   }
 
   onFirstRemoteAudioDecoded(uid: number, elapsed: number): void {
-    let obj = {
+    let _obj = {
       uid,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onFirstRemoteAudioDecoded');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstRemoteAudioDecoded');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onFirstRemoteAudioDecoded eventParam ${JSON.stringify(eventParam)}`
     );
@@ -952,14 +952,14 @@ export class IRtcEngineEventHandler {
     state: LOCAL_AUDIO_STREAM_STATE,
     error: LOCAL_AUDIO_STREAM_ERROR
   ): void {
-    let obj = {
+    let _obj = {
       state,
       error,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLocalAudioStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLocalAudioStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onLocalAudioStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -972,16 +972,16 @@ export class IRtcEngineEventHandler {
     reason: REMOTE_AUDIO_STATE_REASON,
     elapsed: number
   ): void {
-    let obj = {
+    let _obj = {
       uid,
       state,
       reason,
       elapsed,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRemoteAudioStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteAudioStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRemoteAudioStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -989,25 +989,25 @@ export class IRtcEngineEventHandler {
   }
 
   onActiveSpeaker(userId: number): void {
-    let obj = {
+    let _obj = {
       userId,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onActiveSpeaker');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onActiveSpeaker');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onActiveSpeaker eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onContentInspectResult(result: CONTENT_INSPECT_RESULT): void {
-    let obj = {
+    let _obj = {
       result,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onContentInspectResult');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onContentInspectResult');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onContentInspectResult eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1021,17 +1021,17 @@ export class IRtcEngineEventHandler {
     height: number,
     errCode: number
   ): void {
-    let obj = {
+    let _obj = {
       uid,
       filePath,
       width,
       height,
       errCode,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onSnapshotTaken');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onSnapshotTaken');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onSnapshotTaken eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -1041,15 +1041,15 @@ export class IRtcEngineEventHandler {
     newRole: CLIENT_ROLE_TYPE,
     newRoleOptions: ClientRoleOptions
   ): void {
-    let obj = {
+    let _obj = {
       oldRole,
       newRole,
       newRoleOptions,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onClientRoleChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onClientRoleChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onClientRoleChanged eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -1058,14 +1058,14 @@ export class IRtcEngineEventHandler {
     reason: CLIENT_ROLE_CHANGE_FAILED_REASON,
     currentRole: CLIENT_ROLE_TYPE
   ): void {
-    let obj = {
+    let _obj = {
       reason,
       currentRole,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onClientRoleChangeFailed');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onClientRoleChangeFailed');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onClientRoleChangeFailed eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1077,15 +1077,15 @@ export class IRtcEngineEventHandler {
     volume: number,
     muted: boolean
   ): void {
-    let obj = {
+    let _obj = {
       deviceType,
       volume,
       muted,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioDeviceVolumeChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioDeviceVolumeChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAudioDeviceVolumeChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1097,15 +1097,15 @@ export class IRtcEngineEventHandler {
     state: RTMP_STREAM_PUBLISH_STATE,
     errCode: RTMP_STREAM_PUBLISH_ERROR_TYPE
   ): void {
-    let obj = {
+    let _obj = {
       url,
       state,
       errCode,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRtmpStreamingStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRtmpStreamingStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRtmpStreamingStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1113,14 +1113,14 @@ export class IRtcEngineEventHandler {
   }
 
   onRtmpStreamingEvent(url: string, eventCode: RTMP_STREAMING_EVENT): void {
-    let obj = {
+    let _obj = {
       url,
       eventCode,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRtmpStreamingEvent');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRtmpStreamingEvent');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRtmpStreamingEvent eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1128,11 +1128,11 @@ export class IRtcEngineEventHandler {
   }
 
   onTranscodingUpdated(): void {
-    let obj = {};
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onTranscodingUpdated');
+    let _obj = {};
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onTranscodingUpdated');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onTranscodingUpdated eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1140,13 +1140,13 @@ export class IRtcEngineEventHandler {
   }
 
   onAudioRoutingChanged(routing: number): void {
-    let obj = {
+    let _obj = {
       routing,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioRoutingChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioRoutingChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAudioRoutingChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1154,14 +1154,14 @@ export class IRtcEngineEventHandler {
   }
 
   onChannelMediaRelayStateChanged(state: number, code: number): void {
-    let obj = {
+    let _obj = {
       state,
       code,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onChannelMediaRelayStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onChannelMediaRelayStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onChannelMediaRelayStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1169,13 +1169,13 @@ export class IRtcEngineEventHandler {
   }
 
   onChannelMediaRelayEvent(code: number): void {
-    let obj = {
+    let _obj = {
       code,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onChannelMediaRelayEvent');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onChannelMediaRelayEvent');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onChannelMediaRelayEvent eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1183,13 +1183,13 @@ export class IRtcEngineEventHandler {
   }
 
   onLocalPublishFallbackToAudioOnly(isFallbackOrRecover: boolean): void {
-    let obj = {
+    let _obj = {
       isFallbackOrRecover,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLocalPublishFallbackToAudioOnly');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLocalPublishFallbackToAudioOnly');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onLocalPublishFallbackToAudioOnly eventParam ${JSON.stringify(
         eventParam
@@ -1202,14 +1202,14 @@ export class IRtcEngineEventHandler {
     uid: number,
     isFallbackOrRecover: boolean
   ): void {
-    let obj = {
+    let _obj = {
       uid,
       isFallbackOrRecover,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRemoteSubscribeFallbackToAudioOnly');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteSubscribeFallbackToAudioOnly');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRemoteSubscribeFallbackToAudioOnly eventParam ${JSON.stringify(
         eventParam
@@ -1224,16 +1224,16 @@ export class IRtcEngineEventHandler {
     lost: number,
     rxKBitRate: number
   ): void {
-    let obj = {
+    let _obj = {
       uid,
       delay,
       lost,
       rxKBitRate,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRemoteAudioTransportStats');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteAudioTransportStats');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRemoteAudioTransportStats eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1246,16 +1246,16 @@ export class IRtcEngineEventHandler {
     lost: number,
     rxKBitRate: number
   ): void {
-    let obj = {
+    let _obj = {
       uid,
       delay,
       lost,
       rxKBitRate,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRemoteVideoTransportStats');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteVideoTransportStats');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRemoteVideoTransportStats eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1266,14 +1266,14 @@ export class IRtcEngineEventHandler {
     state: CONNECTION_STATE_TYPE,
     reason: CONNECTION_CHANGED_REASON_TYPE
   ): void {
-    let obj = {
+    let _obj = {
       state,
       reason,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onConnectionStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onConnectionStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onConnectionStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1285,40 +1285,40 @@ export class IRtcEngineEventHandler {
     action: WLACC_SUGGEST_ACTION,
     wlAccMsg: string
   ): void {
-    let obj = {
+    let _obj = {
       reason,
       action,
       wlAccMsg,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onWlAccMessage');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onWlAccMessage');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onWlAccMessage eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onWlAccStats(currentStats: WlAccStats, averageStats: WlAccStats): void {
-    let obj = {
+    let _obj = {
       currentStats,
       averageStats,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onWlAccStats');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onWlAccStats');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onWlAccStats eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onNetworkTypeChanged(type: NETWORK_TYPE): void {
-    let obj = {
+    let _obj = {
       type,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onNetworkTypeChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onNetworkTypeChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onNetworkTypeChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1326,38 +1326,38 @@ export class IRtcEngineEventHandler {
   }
 
   onEncryptionError(errorType: ENCRYPTION_ERROR_TYPE): void {
-    let obj = {
+    let _obj = {
       errorType,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onEncryptionError');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onEncryptionError');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onEncryptionError eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onPermissionError(permissionType: PERMISSION_TYPE): void {
-    let obj = {
+    let _obj = {
       permissionType,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPermissionError');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPermissionError');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onPermissionError eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onLocalUserRegistered(uid: number, userAccount: string): void {
-    let obj = {
+    let _obj = {
       uid,
       userAccount,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLocalUserRegistered');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLocalUserRegistered');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onLocalUserRegistered eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1365,14 +1365,14 @@ export class IRtcEngineEventHandler {
   }
 
   onUserInfoUpdated(uid: number, info: UserInfo): void {
-    let obj = {
+    let _obj = {
       uid,
       info,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onUserInfoUpdated');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserInfoUpdated');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onUserInfoUpdated eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -1382,15 +1382,15 @@ export class IRtcEngineEventHandler {
     success: boolean,
     reason: UPLOAD_ERROR_REASON
   ): void {
-    let obj = {
+    let _obj = {
       requestId,
       success,
       reason,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onUploadLogResult');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUploadLogResult');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onUploadLogResult eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -1402,17 +1402,17 @@ export class IRtcEngineEventHandler {
     newState: STREAM_SUBSCRIBE_STATE,
     elapseSinceLastState: number
   ): void {
-    let obj = {
+    let _obj = {
       channel,
       uid,
       oldState,
       newState,
       elapseSinceLastState,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioSubscribeStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioSubscribeStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAudioSubscribeStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1426,17 +1426,17 @@ export class IRtcEngineEventHandler {
     newState: STREAM_SUBSCRIBE_STATE,
     elapseSinceLastState: number
   ): void {
-    let obj = {
+    let _obj = {
       channel,
       uid,
       oldState,
       newState,
       elapseSinceLastState,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onVideoSubscribeStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onVideoSubscribeStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onVideoSubscribeStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1449,16 +1449,16 @@ export class IRtcEngineEventHandler {
     newState: STREAM_PUBLISH_STATE,
     elapseSinceLastState: number
   ): void {
-    let obj = {
+    let _obj = {
       channel,
       oldState,
       newState,
       elapseSinceLastState,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioPublishStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioPublishStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAudioPublishStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1472,17 +1472,17 @@ export class IRtcEngineEventHandler {
     newState: STREAM_PUBLISH_STATE,
     elapseSinceLastState: number
   ): void {
-    let obj = {
+    let _obj = {
       source,
       channel,
       oldState,
       newState,
       elapseSinceLastState,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onVideoPublishStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onVideoPublishStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onVideoPublishStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1495,42 +1495,42 @@ export class IRtcEngineEventHandler {
     key: string,
     value: string
   ): void {
-    let obj = {
+    let _obj = {
       provider,
       extension,
       key,
       value,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onExtensionEvent');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onExtensionEvent');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onExtensionEvent eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onExtensionStarted(provider: string, extension: string): void {
-    let obj = {
+    let _obj = {
       provider,
       extension,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onExtensionStarted');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onExtensionStarted');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onExtensionStarted eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onExtensionStopped(provider: string, extension: string): void {
-    let obj = {
+    let _obj = {
       provider,
       extension,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onExtensionStopped');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onExtensionStopped');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onExtensionStopped eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -1541,29 +1541,29 @@ export class IRtcEngineEventHandler {
     error: number,
     message: string
   ): void {
-    let obj = {
+    let _obj = {
       provider,
       extension,
       error,
       message,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onExtensionError');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onExtensionError');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onExtensionError eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onUserAccountUpdated(uid: number, userAccount: string): void {
-    let obj = {
+    let _obj = {
       uid,
       userAccount,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onUserAccountUpdated');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserAccountUpdated');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onUserAccountUpdated eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1574,14 +1574,14 @@ export class IRtcEngineEventHandler {
     stream: TranscodingVideoStream,
     error: VIDEO_TRANSCODER_ERROR
   ): void {
-    let obj = {
+    let _obj = {
       stream,
       error,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLocalVideoTranscoderError');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLocalVideoTranscoderError');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onLocalVideoTranscoderError eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1593,15 +1593,15 @@ export class IRtcEngineEventHandler {
     currentEvent: MEDIA_TRACE_EVENT,
     tracingInfo: VideoRenderingTracingInfo
   ): void {
-    let obj = {
+    let _obj = {
       uid,
       currentEvent,
       tracingInfo,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onVideoRenderingTracingResult');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onVideoRenderingTracingResult');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onVideoRenderingTracingResult eventParam ${JSON.stringify(eventParam)}`
     );
@@ -1695,13 +1695,13 @@ export class IMetadataObserver {
   }
 
   onMetadataReceived(metadata: Metadata): void {
-    let obj = {
+    let _obj = {
       metadata,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onMetadataReceived');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onMetadataReceived');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onMetadataReceived eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -1729,15 +1729,15 @@ export class IDirectCdnStreamingEventHandler {
     error: DIRECT_CDN_STREAMING_ERROR,
     message: string
   ): void {
-    let obj = {
+    let _obj = {
       state,
       error,
       message,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onDirectCdnStreamingStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onDirectCdnStreamingStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onDirectCdnStreamingStateChanged eventParam ${JSON.stringify(
         eventParam
@@ -1747,13 +1747,13 @@ export class IDirectCdnStreamingEventHandler {
   }
 
   onDirectCdnStreamingStats(stats: DirectCdnStreamingStats): void {
-    let obj = {
+    let _obj = {
       stats,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onDirectCdnStreamingStats');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onDirectCdnStreamingStats');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onDirectCdnStreamingStats eventParam ${JSON.stringify(eventParam)}`
     );

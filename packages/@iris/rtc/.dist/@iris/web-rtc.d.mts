@@ -69,7 +69,8 @@ declare enum CONTENT_INSPECT_RESULT {
 declare enum CONTENT_INSPECT_TYPE {
     CONTENT_INSPECT_INVALID = 0,
     CONTENT_INSPECT_MODERATION = 1,
-    CONTENT_INSPECT_SUPERVISION = 2
+    CONTENT_INSPECT_SUPERVISION = 2,
+    CONTENT_INSPECT_IMAGE_MODERATION = 3
 }
 declare class ContentInspectModule {
     type?: CONTENT_INSPECT_TYPE;
@@ -77,6 +78,7 @@ declare class ContentInspectModule {
 }
 declare class ContentInspectConfig {
     extraInfo?: string;
+    serverConfig?: string;
     modules?: ContentInspectModule[];
     moduleCount?: number;
 }
@@ -114,7 +116,8 @@ declare enum VIDEO_PIXEL_FORMAT {
     VIDEO_CVPIXEL_NV12 = 12,
     VIDEO_CVPIXEL_I420 = 13,
     VIDEO_CVPIXEL_BGRA = 14,
-    VIDEO_PIXEL_I422 = 16
+    VIDEO_PIXEL_I422 = 16,
+    VIDEO_TEXTURE_ID3D11TEXTURE2D = 17
 }
 declare enum RENDER_MODE_TYPE {
     RENDER_MODE_HIDDEN = 1,
@@ -153,6 +156,7 @@ declare class ExternalVideoFrame {
     metadata_buffer?: number;
     metadata_size?: number;
     alphaBuffer?: number;
+    texture_slice_index?: number;
 }
 declare class VideoFrame {
     type?: VIDEO_PIXEL_FORMAT;
@@ -234,7 +238,7 @@ declare class UserAudioSpectrumInfo {
 }
 interface IAudioSpectrumObserver {
     onLocalAudioSpectrum(data: AudioSpectrumData): boolean;
-    onRemoteAudioSpectrum(spectrums: UserAudioSpectrumInfo, spectrumNumber: number): boolean;
+    onRemoteAudioSpectrum(spectrums: UserAudioSpectrumInfo[], spectrumNumber: number): boolean;
 }
 interface IVideoEncodedFrameObserver {
     onEncodedVideoFrameReceived(uid: number, imageBuffer: number, length: number, videoEncodedFrameInfo: EncodedVideoFrameInfo): boolean;
@@ -396,7 +400,8 @@ declare enum ERROR_CODE_TYPE {
     ERR_ADM_INIT_RECORDING = 1011,
     ERR_ADM_START_RECORDING = 1012,
     ERR_ADM_STOP_RECORDING = 1013,
-    ERR_VDM_CAMERA_NOT_AUTHORIZED = 1501
+    ERR_VDM_CAMERA_NOT_AUTHORIZED = 1501,
+    ERR_ADM_APPLICATION_LOOPBACK = 2007
 }
 declare enum LICENSE_ERROR_TYPE {
     LICENSE_ERR_INVALID = 1,
@@ -830,7 +835,12 @@ declare enum LOCAL_VIDEO_STREAM_ERROR {
     LOCAL_VIDEO_STREAM_ERROR_SCREEN_CAPTURE_WINDOW_OCCLUDED = 13,
     LOCAL_VIDEO_STREAM_ERROR_SCREEN_CAPTURE_WINDOW_NOT_SUPPORTED = 20,
     LOCAL_VIDEO_STREAM_ERROR_SCREEN_CAPTURE_FAILURE = 21,
-    LOCAL_VIDEO_STREAM_ERROR_SCREEN_CAPTURE_NO_PERMISSION = 22
+    LOCAL_VIDEO_STREAM_ERROR_SCREEN_CAPTURE_NO_PERMISSION = 22,
+    LOCAL_VIDEO_STREAM_ERROR_SCREEN_CAPTURE_PAUSED = 23,
+    LOCAL_VIDEO_STREAM_ERROR_SCREEN_CAPTURE_RESUMED = 24,
+    LOCAL_VIDEO_STREAM_ERROR_SCREEN_CAPTURE_WINDOW_HIDDEN = 25,
+    LOCAL_VIDEO_STREAM_ERROR_SCREEN_CAPTURE_WINDOW_RECOVER_FROM_HIDDEN = 26,
+    LOCAL_VIDEO_STREAM_ERROR_SCREEN_CAPTURE_WINDOW_RECOVER_FROM_MINIMIZED = 27
 }
 declare enum REMOTE_AUDIO_STATE {
     REMOTE_AUDIO_STATE_STOPPED = 0,
@@ -1096,7 +1106,8 @@ declare enum CONNECTION_CHANGED_REASON_TYPE {
     CONNECTION_CHANGED_CLIENT_IP_ADDRESS_CHANGED_BY_USER = 18,
     CONNECTION_CHANGED_SAME_UID_LOGIN = 19,
     CONNECTION_CHANGED_TOO_MANY_BROADCASTERS = 20,
-    CONNECTION_CHANGED_LICENSE_VALIDATION_FAILURE = 21
+    CONNECTION_CHANGED_LICENSE_VALIDATION_FAILURE = 21,
+    CONNECTION_CHANGED_CERTIFICATION_VERYFY_FAILURE = 22
 }
 declare enum CLIENT_ROLE_CHANGE_FAILED_REASON {
     CLIENT_ROLE_CHANGE_FAILED_TOO_MANY_BROADCASTERS = 1,
@@ -1126,7 +1137,8 @@ declare enum NETWORK_TYPE {
     NETWORK_TYPE_WIFI = 2,
     NETWORK_TYPE_MOBILE_2G = 3,
     NETWORK_TYPE_MOBILE_3G = 4,
-    NETWORK_TYPE_MOBILE_4G = 5
+    NETWORK_TYPE_MOBILE_4G = 5,
+    NETWORK_TYPE_MOBILE_5G = 6
 }
 declare enum VIDEO_VIEW_SETUP_MODE {
     VIDEO_VIEW_SETUP_REPLACE = 0,
@@ -1852,7 +1864,8 @@ declare enum MusicContentCenterStatusCode {
     kMusicContentCenterStatusErrPermissionAndResource = 3,
     kMusicContentCenterStatusErrInternalDataParse = 4,
     kMusicContentCenterStatusErrMusicLoading = 5,
-    kMusicContentCenterStatusErrMusicDecryption = 6
+    kMusicContentCenterStatusErrMusicDecryption = 6,
+    kMusicContentCenterStatusErrHttpInternalError = 7
 }
 declare class MusicChartInfo {
     chartName?: string;
@@ -1913,6 +1926,7 @@ declare class MusicContentCenterConfiguration {
     token?: string;
     mccUid?: number;
     maxCacheSize?: number;
+    mccDomain?: string;
 }
 interface IMusicPlayer {
 }
@@ -2240,6 +2254,10 @@ declare enum PROXY_TYPE {
     HTTP_PROXY_TYPE = 5,
     HTTPS_PROXY_TYPE = 6
 }
+declare enum FeatureType {
+    VIDEO_VIRTUAL_BACKGROUND = 1,
+    VIDEO_BEAUTY_EFFECT = 2
+}
 declare class LeaveChannelOptions {
     stopAudioMixing?: boolean;
     stopAllEffect?: boolean;
@@ -2342,8 +2360,8 @@ interface IRtcEngineEventHandler {
 }
 interface IVideoDeviceManager {
     enumerateVideoDevices(): CallApiReturnType;
-    setDevice(deviceIdUTF8: string): CallApiReturnType;
-    getDevice(deviceIdUTF8: string): CallApiReturnType;
+    setDevice(deviceIdUTF8: string[]): CallApiReturnType;
+    getDevice(deviceIdUTF8: string[]): CallApiReturnType;
     numberOfCapabilities(deviceIdUTF8: string): CallApiReturnType;
     getCapability(deviceIdUTF8: string, deviceCapabilityNumber: number, capability: VideoFormat): CallApiReturnType;
     startDeviceTest(hwnd: number): CallApiReturnType;
@@ -2703,6 +2721,7 @@ interface IRtcEngine {
     startMediaRenderingTracing(): CallApiReturnType;
     enableInstantMediaRendering(): CallApiReturnType;
     getNtpWallTimeInMs(): CallApiReturnType;
+    isFeatureAvailableOnDevice(type: FeatureType): CallApiReturnType;
 }
 declare enum QUALITY_REPORT_FORMAT_TYPE {
     QUALITY_REPORT_JSON = 0,
@@ -2895,6 +2914,7 @@ interface IRtcEngineEx {
     setDualStreamModeEx(mode: SIMULCAST_STREAM_MODE, streamConfig: SimulcastStreamConfig, connection: RtcConnection): CallApiReturnType;
     setHighPriorityUserListEx(uidList: number, uidNum: number, option: STREAM_FALLBACK_OPTIONS, connection: RtcConnection): CallApiReturnType;
     takeSnapshotEx(connection: RtcConnection, uid: number, filePath: string): CallApiReturnType;
+    enableContentInspectEx(enabled: boolean, config: ContentInspectConfig, connection: RtcConnection): CallApiReturnType;
     startMediaRenderingTracingEx(connection: RtcConnection): CallApiReturnType;
 }
 
@@ -2918,13 +2938,13 @@ interface IBaseSpatialAudioEngine {
     setMaxAudioRecvCount(maxCount: number): CallApiReturnType;
     setAudioRecvRange(range: number): CallApiReturnType;
     setDistanceUnit(unit: number): CallApiReturnType;
-    updateSelfPosition(position: number, axisForward: number, axisRight: number, axisUp: number): CallApiReturnType;
-    updateSelfPositionEx(position: number, axisForward: number, axisRight: number, axisUp: number, connection: RtcConnection): CallApiReturnType;
+    updateSelfPosition(position: number[], axisForward: number[], axisRight: number[], axisUp: number[]): CallApiReturnType;
+    updateSelfPositionEx(position: number[], axisForward: number[], axisRight: number[], axisUp: number[], connection: RtcConnection): CallApiReturnType;
     updatePlayerPositionInfo(playerId: number, positionInfo: RemoteVoicePositionInfo): CallApiReturnType;
     setParameters(params: string): CallApiReturnType;
     muteLocalAudioStream(mute: boolean): CallApiReturnType;
     muteAllRemoteAudioStreams(mute: boolean): CallApiReturnType;
-    setZones(zones: SpatialAudioZone, zoneCount: number): CallApiReturnType;
+    setZones(zones: SpatialAudioZone[], zoneCount: number): CallApiReturnType;
     setPlayerAttenuation(playerId: number, attenuation: number, forceSet: boolean): CallApiReturnType;
     muteRemoteAudioStream(uid: number, mute: boolean): CallApiReturnType;
 }
@@ -2945,18 +2965,18 @@ declare enum MAX_DEVICE_ID_LENGTH_TYPE {
 interface IAudioDeviceManager {
     enumeratePlaybackDevices(): CallApiReturnType;
     enumerateRecordingDevices(): CallApiReturnType;
-    setPlaybackDevice(deviceId: string): CallApiReturnType;
-    getPlaybackDevice(deviceId: string): CallApiReturnType;
+    setPlaybackDevice(deviceId: string[]): CallApiReturnType;
+    getPlaybackDevice(deviceId: string[]): CallApiReturnType;
     getPlaybackDeviceInfo(): CallApiReturnType;
     setPlaybackDeviceVolume(volume: number): CallApiReturnType;
     getPlaybackDeviceVolume(volume: number): CallApiReturnType;
-    setRecordingDevice(deviceId: string): CallApiReturnType;
-    getRecordingDevice(deviceId: string): CallApiReturnType;
+    setRecordingDevice(deviceId: string[]): CallApiReturnType;
+    getRecordingDevice(deviceId: string[]): CallApiReturnType;
     getRecordingDeviceInfo(): CallApiReturnType;
     setRecordingDeviceVolume(volume: number): CallApiReturnType;
     getRecordingDeviceVolume(volume: number): CallApiReturnType;
-    setLoopbackDevice(deviceId: string): CallApiReturnType;
-    getLoopbackDevice(deviceId: string): CallApiReturnType;
+    setLoopbackDevice(deviceId: string[]): CallApiReturnType;
+    getLoopbackDevice(deviceId: string[]): CallApiReturnType;
     setPlaybackDeviceMute(mute: boolean): CallApiReturnType;
     getPlaybackDeviceMute(mute: boolean): CallApiReturnType;
     setRecordingDeviceMute(mute: boolean): CallApiReturnType;
@@ -2973,4 +2993,4 @@ interface IAudioDeviceManager {
     release(): CallApiReturnType;
 }
 
-export { AREA_CODE, AREA_CODE_EX, AUDIENCE_LATENCY_LEVEL_TYPE, AUDIO_AINS_MODE, AUDIO_CODEC_PROFILE_TYPE, AUDIO_CODEC_TYPE, AUDIO_DUAL_MONO_MODE, AUDIO_EFFECT_PRESET, AUDIO_ENCODED_FRAME_OBSERVER_POSITION, AUDIO_ENCODING_TYPE, AUDIO_EQUALIZATION_BAND_FREQUENCY, AUDIO_FILE_RECORDING_TYPE, AUDIO_FRAME_POSITION, AUDIO_FRAME_TYPE, AUDIO_MIXING_DUAL_MONO_MODE, AUDIO_MIXING_REASON_TYPE, AUDIO_MIXING_STATE_TYPE, AUDIO_PROFILE_TYPE, AUDIO_RECORDING_QUALITY_TYPE, AUDIO_REVERB_TYPE, AUDIO_SAMPLE_RATE_TYPE, AUDIO_SCENARIO_TYPE, AUDIO_SESSION_OPERATION_RESTRICTION, AUDIO_TRACK_TYPE, AdvanceOptions, AdvancedAudioOptions, AdvancedConfigInfo, AgoraRhythmPlayerConfig, AudioEncodedFrameInfo, AudioEncodedFrameObserverConfig, AudioFrame, AudioParameters, AudioParams, AudioPcmDataInfo, AudioPcmFrame, AudioRecordingConfiguration, AudioRoute, AudioSpectrumData, AudioTrackConfig, AudioVolumeInfo, BACKGROUND_BLUR_DEGREE, BACKGROUND_SOURCE_TYPE, BYTES_PER_SAMPLE, BeautyOptions, CAMERA_DIRECTION, CAMERA_VIDEO_SOURCE_TYPE, CAPTURE_BRIGHTNESS_LEVEL_TYPE, CHANNEL_MEDIA_RELAY_ERROR, CHANNEL_MEDIA_RELAY_EVENT, CHANNEL_MEDIA_RELAY_STATE, CHANNEL_PROFILE_TYPE, CLIENT_ROLE_CHANGE_FAILED_REASON, CLIENT_ROLE_TYPE, CLOUD_PROXY_TYPE, CODEC_CAP_MASK, COMPRESSION_PREFERENCE, CONFIG_FETCH_TYPE, CONNECTION_CHANGED_REASON_TYPE, CONNECTION_STATE_TYPE, CONTENT_INSPECT_RESULT, CONTENT_INSPECT_TYPE, CacheStatistics, CameraCapturerConfiguration, ChannelMediaInfo, ChannelMediaOptions, ChannelMediaRelayConfiguration, ClientRoleOptions, ClimaxSegment, CodecCapInfo, CodecCapLevels, ColorEnhanceOptions, ContentInspectConfig, ContentInspectModule, DEGRADATION_PREFERENCE, DIRECT_CDN_STREAMING_ERROR, DIRECT_CDN_STREAMING_STATE, DataStreamConfig, DeviceInfo, DirectCdnStreamingMediaOptions, DirectCdnStreamingStats, DownlinkNetworkInfo, EAR_MONITORING_FILTER_TYPE, EGL_CONTEXT_TYPE, ENCODING_PREFERENCE, ENCRYPTION_ERROR_TYPE, ENCRYPTION_MODE, ERROR_CODE_TYPE, EXPERIENCE_POOR_REASON, EXPERIENCE_QUALITY_TYPE, EXTERNAL_VIDEO_SOURCE_TYPE, EchoTestConfiguration, EncodedAudioFrameAdvancedSettings, EncodedAudioFrameInfo, EncodedVideoFrameInfo, EncryptionConfig, ExtensionInfo, ExternalVideoFrame, FIT_MODE_TYPE, FRAME_HEIGHT, FRAME_RATE, FRAME_WIDTH, H264PacketizeMode, HEADPHONE_EQUALIZER_PRESET, IAudioDeviceManager, IAudioEncodedFrameObserver, IAudioFrameObserver, IAudioFrameObserverBase, IAudioPcmFrameSink, IAudioSpectrumObserver, IBaseSpatialAudioEngine, IDirectCdnStreamingEventHandler, ILocalSpatialAudioEngine, IMediaEngine, IMediaPlayer, IMediaPlayerCacheManager, IMediaPlayerSourceObserver, IMediaRecorder, IMediaRecorderObserver, IMetadataObserver, IMusicContentCenter, IMusicContentCenterEventHandler, IMusicPlayer, INJECT_STREAM_STATUS, INTERFACE_ID_TYPE, IRtcEngine, IRtcEngineEventHandler, IRtcEngineEventHandlerEx, IRtcEngineEx, IVideoDeviceManager, IVideoEncodedFrameObserver, IVideoFrameObserver, ImageTrackOptions, InjectStreamConfig, InputSeiData, LASTMILE_PROBE_RESULT_STATE, LICENSE_ERROR_TYPE, LIGHTENING_CONTRAST_LEVEL, LOCAL_AUDIO_STREAM_ERROR, LOCAL_AUDIO_STREAM_STATE, LOCAL_PROXY_MODE, LOCAL_VIDEO_STREAM_ERROR, LOCAL_VIDEO_STREAM_STATE, LOG_FILTER_TYPE, LOG_LEVEL, LOW_LIGHT_ENHANCE_LEVEL, LOW_LIGHT_ENHANCE_MODE, LastmileProbeConfig, LastmileProbeOneWayResult, LastmileProbeResult, LeaveChannelOptions, LiveStreamAdvancedFeature, LiveTranscoding, LocalAccessPointConfiguration, LocalAudioStats, LocalTranscoderConfiguration, LocalVideoStats, LogConfig, LogUploadServerInfo, LowlightEnhanceOptions, MAX_DEVICE_ID_LENGTH_TYPE, MAX_METADATA_SIZE_TYPE, MAX_USER_ACCOUNT_LENGTH_TYPE, MEDIA_DEVICE_STATE_TYPE, MEDIA_DEVICE_TYPE, MEDIA_PLAYER_ERROR, MEDIA_PLAYER_EVENT, MEDIA_PLAYER_METADATA_TYPE, MEDIA_PLAYER_SOURCE_TYPE, MEDIA_PLAYER_STATE, MEDIA_SOURCE_TYPE, MEDIA_STREAM_TYPE, MEDIA_TRACE_EVENT, METADATA_TYPE, MUSIC_CACHE_STATUS_TYPE, MediaRecorderConfiguration, MediaRecorderContainerFormat, MediaRecorderStreamType, MediaSource, Metadata, Music, MusicCacheInfo, MusicChartCollection, MusicChartInfo, MusicCollection, MusicContentCenterConfiguration, MusicContentCenterStatusCode, MvProperty, NETWORK_TYPE, ORIENTATION_MODE, PERMISSION_TYPE, PLAYER_PRELOAD_EVENT, PRIORITY_TYPE, PROXY_TYPE, Packet, PacketOptions, PeerDownlinkInfo, PlayerStreamInfo, PlayerUpdatedInfo, PreloadStatusCode, PublisherConfiguration, QUALITY_ADAPT_INDICATION, QUALITY_REPORT_FORMAT_TYPE, QUALITY_TYPE, RAW_AUDIO_FRAME_OP_MODE_TYPE, REMOTE_AUDIO_STATE, REMOTE_AUDIO_STATE_REASON, REMOTE_USER_STATE, REMOTE_VIDEO_DOWNSCALE_LEVEL, REMOTE_VIDEO_STATE, REMOTE_VIDEO_STATE_REASON, RENDER_MODE_TYPE, RHYTHM_PLAYER_ERROR_TYPE, RHYTHM_PLAYER_STATE_TYPE, RTMP_STREAMING_EVENT, RTMP_STREAM_LIFE_CYCLE_TYPE, RTMP_STREAM_PUBLISH_ERROR_TYPE, RTMP_STREAM_PUBLISH_STATE, RecorderErrorCode, RecorderInfo, RecorderState, RecorderStreamInfo, Rectangle, Region, RemoteAudioStats, RemoteVideoStats, RemoteVoicePositionInfo, RtcConnection, RtcEngineContext, RtcImage, RtcStats, SCREEN_CAPTURE_FRAMERATE_CAPABILITY, SCREEN_SCENARIO_TYPE, SEG_MODEL_TYPE, SIMULCAST_STREAM_MODE, SIZE, STREAMING_SRC_ERR, STREAMING_SRC_STATE, STREAM_FALLBACK_OPTIONS, STREAM_PUBLISH_STATE, STREAM_SUBSCRIBE_STATE, ScreenAudioParameters, ScreenCaptureConfiguration, ScreenCaptureParameters, ScreenCaptureParameters2, ScreenCaptureSourceInfo, ScreenCaptureSourceType, ScreenVideoParameters, SegmentationProperty, SenderOptions, SimulcastStreamConfig, SpatialAudioParams, SpatialAudioZone, SrcInfo, TCcMode, THREAD_PRIORITY_TYPE, ThumbImageBuffer, TranscodingUser, TranscodingVideoStream, UPLOAD_ERROR_REASON, USER_OFFLINE_REASON_TYPE, UplinkNetworkInfo, UserAudioSpectrumInfo, UserInfo, VIDEO_APPLICATION_SCENARIO_TYPE, VIDEO_BUFFER_TYPE, VIDEO_CODEC_CAPABILITY_LEVEL, VIDEO_CODEC_PROFILE_TYPE, VIDEO_CODEC_TYPE, VIDEO_CODEC_TYPE_FOR_STREAM, VIDEO_CONTENT_HINT, VIDEO_DENOISER_LEVEL, VIDEO_DENOISER_MODE, VIDEO_FRAME_PROCESS_MODE, VIDEO_FRAME_TYPE, VIDEO_MIRROR_MODE_TYPE, VIDEO_MODULE_POSITION, VIDEO_ORIENTATION, VIDEO_PIXEL_FORMAT, VIDEO_PROFILE_TYPE, VIDEO_SOURCE_TYPE, VIDEO_STREAM_TYPE, VIDEO_TRANSCODER_ERROR, VIDEO_VIEW_SETUP_MODE, VOICE_BEAUTIFIER_PRESET, VOICE_CONVERSION_PRESET, VideoCanvas, VideoCompositingLayout, VideoDenoiserOptions, VideoDimensions, VideoEncoderConfiguration, VideoFormat, VideoFrame, VideoRenderingTracingInfo, VideoSubscriptionOptions, VideoTrackInfo, VirtualBackgroundSource, WARN_CODE_TYPE, WATERMARK_FIT_MODE, WLACC_MESSAGE_REASON, WLACC_SUGGEST_ACTION, WatermarkOptions, WatermarkRatio, WlAccStats };
+export { AREA_CODE, AREA_CODE_EX, AUDIENCE_LATENCY_LEVEL_TYPE, AUDIO_AINS_MODE, AUDIO_CODEC_PROFILE_TYPE, AUDIO_CODEC_TYPE, AUDIO_DUAL_MONO_MODE, AUDIO_EFFECT_PRESET, AUDIO_ENCODED_FRAME_OBSERVER_POSITION, AUDIO_ENCODING_TYPE, AUDIO_EQUALIZATION_BAND_FREQUENCY, AUDIO_FILE_RECORDING_TYPE, AUDIO_FRAME_POSITION, AUDIO_FRAME_TYPE, AUDIO_MIXING_DUAL_MONO_MODE, AUDIO_MIXING_REASON_TYPE, AUDIO_MIXING_STATE_TYPE, AUDIO_PROFILE_TYPE, AUDIO_RECORDING_QUALITY_TYPE, AUDIO_REVERB_TYPE, AUDIO_SAMPLE_RATE_TYPE, AUDIO_SCENARIO_TYPE, AUDIO_SESSION_OPERATION_RESTRICTION, AUDIO_TRACK_TYPE, AdvanceOptions, AdvancedAudioOptions, AdvancedConfigInfo, AgoraRhythmPlayerConfig, AudioEncodedFrameInfo, AudioEncodedFrameObserverConfig, AudioFrame, AudioParameters, AudioParams, AudioPcmDataInfo, AudioPcmFrame, AudioRecordingConfiguration, AudioRoute, AudioSpectrumData, AudioTrackConfig, AudioVolumeInfo, BACKGROUND_BLUR_DEGREE, BACKGROUND_SOURCE_TYPE, BYTES_PER_SAMPLE, BeautyOptions, CAMERA_DIRECTION, CAMERA_VIDEO_SOURCE_TYPE, CAPTURE_BRIGHTNESS_LEVEL_TYPE, CHANNEL_MEDIA_RELAY_ERROR, CHANNEL_MEDIA_RELAY_EVENT, CHANNEL_MEDIA_RELAY_STATE, CHANNEL_PROFILE_TYPE, CLIENT_ROLE_CHANGE_FAILED_REASON, CLIENT_ROLE_TYPE, CLOUD_PROXY_TYPE, CODEC_CAP_MASK, COMPRESSION_PREFERENCE, CONFIG_FETCH_TYPE, CONNECTION_CHANGED_REASON_TYPE, CONNECTION_STATE_TYPE, CONTENT_INSPECT_RESULT, CONTENT_INSPECT_TYPE, CacheStatistics, CameraCapturerConfiguration, ChannelMediaInfo, ChannelMediaOptions, ChannelMediaRelayConfiguration, ClientRoleOptions, ClimaxSegment, CodecCapInfo, CodecCapLevels, ColorEnhanceOptions, ContentInspectConfig, ContentInspectModule, DEGRADATION_PREFERENCE, DIRECT_CDN_STREAMING_ERROR, DIRECT_CDN_STREAMING_STATE, DataStreamConfig, DeviceInfo, DirectCdnStreamingMediaOptions, DirectCdnStreamingStats, DownlinkNetworkInfo, EAR_MONITORING_FILTER_TYPE, EGL_CONTEXT_TYPE, ENCODING_PREFERENCE, ENCRYPTION_ERROR_TYPE, ENCRYPTION_MODE, ERROR_CODE_TYPE, EXPERIENCE_POOR_REASON, EXPERIENCE_QUALITY_TYPE, EXTERNAL_VIDEO_SOURCE_TYPE, EchoTestConfiguration, EncodedAudioFrameAdvancedSettings, EncodedAudioFrameInfo, EncodedVideoFrameInfo, EncryptionConfig, ExtensionInfo, ExternalVideoFrame, FIT_MODE_TYPE, FRAME_HEIGHT, FRAME_RATE, FRAME_WIDTH, FeatureType, H264PacketizeMode, HEADPHONE_EQUALIZER_PRESET, IAudioDeviceManager, IAudioEncodedFrameObserver, IAudioFrameObserver, IAudioFrameObserverBase, IAudioPcmFrameSink, IAudioSpectrumObserver, IBaseSpatialAudioEngine, IDirectCdnStreamingEventHandler, ILocalSpatialAudioEngine, IMediaEngine, IMediaPlayer, IMediaPlayerCacheManager, IMediaPlayerSourceObserver, IMediaRecorder, IMediaRecorderObserver, IMetadataObserver, IMusicContentCenter, IMusicContentCenterEventHandler, IMusicPlayer, INJECT_STREAM_STATUS, INTERFACE_ID_TYPE, IRtcEngine, IRtcEngineEventHandler, IRtcEngineEventHandlerEx, IRtcEngineEx, IVideoDeviceManager, IVideoEncodedFrameObserver, IVideoFrameObserver, ImageTrackOptions, InjectStreamConfig, InputSeiData, LASTMILE_PROBE_RESULT_STATE, LICENSE_ERROR_TYPE, LIGHTENING_CONTRAST_LEVEL, LOCAL_AUDIO_STREAM_ERROR, LOCAL_AUDIO_STREAM_STATE, LOCAL_PROXY_MODE, LOCAL_VIDEO_STREAM_ERROR, LOCAL_VIDEO_STREAM_STATE, LOG_FILTER_TYPE, LOG_LEVEL, LOW_LIGHT_ENHANCE_LEVEL, LOW_LIGHT_ENHANCE_MODE, LastmileProbeConfig, LastmileProbeOneWayResult, LastmileProbeResult, LeaveChannelOptions, LiveStreamAdvancedFeature, LiveTranscoding, LocalAccessPointConfiguration, LocalAudioStats, LocalTranscoderConfiguration, LocalVideoStats, LogConfig, LogUploadServerInfo, LowlightEnhanceOptions, MAX_DEVICE_ID_LENGTH_TYPE, MAX_METADATA_SIZE_TYPE, MAX_USER_ACCOUNT_LENGTH_TYPE, MEDIA_DEVICE_STATE_TYPE, MEDIA_DEVICE_TYPE, MEDIA_PLAYER_ERROR, MEDIA_PLAYER_EVENT, MEDIA_PLAYER_METADATA_TYPE, MEDIA_PLAYER_SOURCE_TYPE, MEDIA_PLAYER_STATE, MEDIA_SOURCE_TYPE, MEDIA_STREAM_TYPE, MEDIA_TRACE_EVENT, METADATA_TYPE, MUSIC_CACHE_STATUS_TYPE, MediaRecorderConfiguration, MediaRecorderContainerFormat, MediaRecorderStreamType, MediaSource, Metadata, Music, MusicCacheInfo, MusicChartCollection, MusicChartInfo, MusicCollection, MusicContentCenterConfiguration, MusicContentCenterStatusCode, MvProperty, NETWORK_TYPE, ORIENTATION_MODE, PERMISSION_TYPE, PLAYER_PRELOAD_EVENT, PRIORITY_TYPE, PROXY_TYPE, Packet, PacketOptions, PeerDownlinkInfo, PlayerStreamInfo, PlayerUpdatedInfo, PreloadStatusCode, PublisherConfiguration, QUALITY_ADAPT_INDICATION, QUALITY_REPORT_FORMAT_TYPE, QUALITY_TYPE, RAW_AUDIO_FRAME_OP_MODE_TYPE, REMOTE_AUDIO_STATE, REMOTE_AUDIO_STATE_REASON, REMOTE_USER_STATE, REMOTE_VIDEO_DOWNSCALE_LEVEL, REMOTE_VIDEO_STATE, REMOTE_VIDEO_STATE_REASON, RENDER_MODE_TYPE, RHYTHM_PLAYER_ERROR_TYPE, RHYTHM_PLAYER_STATE_TYPE, RTMP_STREAMING_EVENT, RTMP_STREAM_LIFE_CYCLE_TYPE, RTMP_STREAM_PUBLISH_ERROR_TYPE, RTMP_STREAM_PUBLISH_STATE, RecorderErrorCode, RecorderInfo, RecorderState, RecorderStreamInfo, Rectangle, Region, RemoteAudioStats, RemoteVideoStats, RemoteVoicePositionInfo, RtcConnection, RtcEngineContext, RtcImage, RtcStats, SCREEN_CAPTURE_FRAMERATE_CAPABILITY, SCREEN_SCENARIO_TYPE, SEG_MODEL_TYPE, SIMULCAST_STREAM_MODE, SIZE, STREAMING_SRC_ERR, STREAMING_SRC_STATE, STREAM_FALLBACK_OPTIONS, STREAM_PUBLISH_STATE, STREAM_SUBSCRIBE_STATE, ScreenAudioParameters, ScreenCaptureConfiguration, ScreenCaptureParameters, ScreenCaptureParameters2, ScreenCaptureSourceInfo, ScreenCaptureSourceType, ScreenVideoParameters, SegmentationProperty, SenderOptions, SimulcastStreamConfig, SpatialAudioParams, SpatialAudioZone, SrcInfo, TCcMode, THREAD_PRIORITY_TYPE, ThumbImageBuffer, TranscodingUser, TranscodingVideoStream, UPLOAD_ERROR_REASON, USER_OFFLINE_REASON_TYPE, UplinkNetworkInfo, UserAudioSpectrumInfo, UserInfo, VIDEO_APPLICATION_SCENARIO_TYPE, VIDEO_BUFFER_TYPE, VIDEO_CODEC_CAPABILITY_LEVEL, VIDEO_CODEC_PROFILE_TYPE, VIDEO_CODEC_TYPE, VIDEO_CODEC_TYPE_FOR_STREAM, VIDEO_CONTENT_HINT, VIDEO_DENOISER_LEVEL, VIDEO_DENOISER_MODE, VIDEO_FRAME_PROCESS_MODE, VIDEO_FRAME_TYPE, VIDEO_MIRROR_MODE_TYPE, VIDEO_MODULE_POSITION, VIDEO_ORIENTATION, VIDEO_PIXEL_FORMAT, VIDEO_PROFILE_TYPE, VIDEO_SOURCE_TYPE, VIDEO_STREAM_TYPE, VIDEO_TRANSCODER_ERROR, VIDEO_VIEW_SETUP_MODE, VOICE_BEAUTIFIER_PRESET, VOICE_CONVERSION_PRESET, VideoCanvas, VideoCompositingLayout, VideoDenoiserOptions, VideoDimensions, VideoEncoderConfiguration, VideoFormat, VideoFrame, VideoRenderingTracingInfo, VideoSubscriptionOptions, VideoTrackInfo, VirtualBackgroundSource, WARN_CODE_TYPE, WATERMARK_FIT_MODE, WLACC_MESSAGE_REASON, WLACC_SUGGEST_ACTION, WatermarkOptions, WatermarkRatio, WlAccStats };

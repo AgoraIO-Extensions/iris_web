@@ -90,15 +90,15 @@ export class IMusicContentCenterEventHandler {
     result: MusicChartCollection,
     errorCode: MusicContentCenterStatusCode
   ): void {
-    let obj = {
+    let _obj = {
       requestId,
       result,
       errorCode,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onMusicChartsResult');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onMusicChartsResult');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onMusicChartsResult eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -108,15 +108,15 @@ export class IMusicContentCenterEventHandler {
     result: MusicCollection,
     errorCode: MusicContentCenterStatusCode
   ): void {
-    let obj = {
+    let _obj = {
       requestId,
       result,
       errorCode,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onMusicCollectionResult');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onMusicCollectionResult');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onMusicCollectionResult eventParam ${JSON.stringify(eventParam)}`
     );
@@ -129,16 +129,16 @@ export class IMusicContentCenterEventHandler {
     lyricUrl: string,
     errorCode: MusicContentCenterStatusCode
   ): void {
-    let obj = {
+    let _obj = {
       requestId,
       songCode,
       lyricUrl,
       errorCode,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onLyricResult');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLyricResult');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onLyricResult eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -149,16 +149,16 @@ export class IMusicContentCenterEventHandler {
     simpleInfo: string,
     errorCode: MusicContentCenterStatusCode
   ): void {
-    let obj = {
+    let _obj = {
       requestId,
       songCode,
       simpleInfo,
       errorCode,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onSongSimpleInfoResult');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onSongSimpleInfoResult');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onSongSimpleInfoResult eventParam ${JSON.stringify(eventParam)}`
     );
@@ -173,7 +173,7 @@ export class IMusicContentCenterEventHandler {
     status: PreloadStatusCode,
     errorCode: MusicContentCenterStatusCode
   ): void {
-    let obj = {
+    let _obj = {
       requestId,
       songCode,
       percent,
@@ -181,10 +181,10 @@ export class IMusicContentCenterEventHandler {
       status,
       errorCode,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPreLoadEvent');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPreLoadEvent');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onPreLoadEvent eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }

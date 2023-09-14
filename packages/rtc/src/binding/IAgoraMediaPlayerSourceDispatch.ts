@@ -33,14 +33,14 @@ export class IMediaPlayerSourceObserver {
     state: MEDIA_PLAYER_STATE,
     ec: MEDIA_PLAYER_ERROR
   ): void {
-    let obj = {
+    let _obj = {
       state,
       ec,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPlayerSourceStateChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPlayerSourceStateChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onPlayerSourceStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -48,13 +48,13 @@ export class IMediaPlayerSourceObserver {
   }
 
   onPositionChanged(position_ms: number): void {
-    let obj = {
+    let _obj = {
       position_ms,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPositionChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPositionChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onPositionChanged eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -64,73 +64,73 @@ export class IMediaPlayerSourceObserver {
     elapsedTime: number,
     message: string
   ): void {
-    let obj = {
+    let _obj = {
       eventCode,
       elapsedTime,
       message,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPlayerEvent');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPlayerEvent');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onPlayerEvent eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onMetaData(data: void, length: number): void {
-    let obj = {
+    let _obj = {
       data,
       length,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onMetaData');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onMetaData');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onMetaData eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onPlayBufferUpdated(playCachedBuffer: number): void {
-    let obj = {
+    let _obj = {
       playCachedBuffer,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPlayBufferUpdated');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPlayBufferUpdated');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onPlayBufferUpdated eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onPreloadEvent(src: string, event: PLAYER_PRELOAD_EVENT): void {
-    let obj = {
+    let _obj = {
       src,
       event,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPreloadEvent');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPreloadEvent');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onPreloadEvent eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onCompleted(): void {
-    let obj = {};
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onCompleted');
+    let _obj = {};
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onCompleted');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onCompleted eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onAgoraCDNTokenWillExpire(): void {
-    let obj = {};
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAgoraCDNTokenWillExpire');
+    let _obj = {};
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAgoraCDNTokenWillExpire');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAgoraCDNTokenWillExpire eventParam ${JSON.stringify(eventParam)}`
     );
@@ -138,14 +138,14 @@ export class IMediaPlayerSourceObserver {
   }
 
   onPlayerSrcInfoChanged(from: SrcInfo, to: SrcInfo): void {
-    let obj = {
+    let _obj = {
       from,
       to,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPlayerSrcInfoChanged');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPlayerSrcInfoChanged');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onPlayerSrcInfoChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -153,25 +153,25 @@ export class IMediaPlayerSourceObserver {
   }
 
   onPlayerInfoUpdated(info: PlayerUpdatedInfo): void {
-    let obj = {
+    let _obj = {
       info,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPlayerInfoUpdated');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPlayerInfoUpdated');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(`onPlayerInfoUpdated eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
   onAudioVolumeIndication(volume: number): void {
-    let obj = {
+    let _obj = {
       volume,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onAudioVolumeIndication');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioVolumeIndication');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onAudioVolumeIndication eventParam ${JSON.stringify(eventParam)}`
     );

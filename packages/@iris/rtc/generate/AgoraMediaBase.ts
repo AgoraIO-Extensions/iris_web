@@ -81,6 +81,7 @@ export enum CONTENT_INSPECT_TYPE {
   CONTENT_INSPECT_INVALID = 0,
   CONTENT_INSPECT_MODERATION = 1,
   CONTENT_INSPECT_SUPERVISION = 2,
+  CONTENT_INSPECT_IMAGE_MODERATION = 3,
 }
 
 export class ContentInspectModule {
@@ -91,6 +92,8 @@ export class ContentInspectModule {
 
 export class ContentInspectConfig {
   extraInfo?: string;
+
+  serverConfig?: string;
 
   modules?: ContentInspectModule[];
 
@@ -143,6 +146,7 @@ export enum VIDEO_PIXEL_FORMAT {
   VIDEO_CVPIXEL_I420 = 13,
   VIDEO_CVPIXEL_BGRA = 14,
   VIDEO_PIXEL_I422 = 16,
+  VIDEO_TEXTURE_ID3D11TEXTURE2D = 17,
 }
 
 export enum RENDER_MODE_TYPE {
@@ -202,6 +206,8 @@ export class ExternalVideoFrame {
   metadata_size?: number;
 
   alphaBuffer?: number;
+
+  texture_slice_index?: number;
 }
 
 export class VideoFrame {
@@ -335,7 +341,7 @@ export interface IAudioSpectrumObserver {
   onLocalAudioSpectrum(data: AudioSpectrumData): boolean;
 
   onRemoteAudioSpectrum(
-    spectrums: UserAudioSpectrumInfo,
+    spectrums: UserAudioSpectrumInfo[],
     spectrumNumber: number
   ): boolean;
 }

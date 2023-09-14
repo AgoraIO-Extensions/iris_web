@@ -42,7 +42,11 @@ import {
   WatermarkOptions,
   WlAccStats,
 } from './AgoraBase';
-import { RENDER_MODE_TYPE, VIDEO_SOURCE_TYPE } from './AgoraMediaBase';
+import {
+  ContentInspectConfig,
+  RENDER_MODE_TYPE,
+  VIDEO_SOURCE_TYPE,
+} from './AgoraMediaBase';
 import {
   ChannelMediaOptions,
   LeaveChannelOptions,
@@ -587,6 +591,12 @@ export interface IRtcEngineEx {
     connection: RtcConnection,
     uid: number,
     filePath: string
+  ): CallApiReturnType;
+
+  enableContentInspectEx(
+    enabled: boolean,
+    config: ContentInspectConfig,
+    connection: RtcConnection
   ): CallApiReturnType;
 
   startMediaRenderingTracingEx(connection: RtcConnection): CallApiReturnType;

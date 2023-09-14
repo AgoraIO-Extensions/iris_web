@@ -17,6 +17,7 @@ export enum MusicContentCenterStatusCode {
   kMusicContentCenterStatusErrInternalDataParse = 4,
   kMusicContentCenterStatusErrMusicLoading = 5,
   kMusicContentCenterStatusErrMusicDecryption = 6,
+  kMusicContentCenterStatusErrHttpInternalError = 7,
 }
 
 export class MusicChartInfo {
@@ -141,6 +142,8 @@ export class MusicContentCenterConfiguration {
   mccUid?: number;
 
   maxCacheSize?: number;
+
+  mccDomain?: string;
 }
 
 export interface IMusicPlayer {}

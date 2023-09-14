@@ -5,7 +5,7 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util';
 import { AgoraConsole } from '../util/AgoraConsole';
 
-export class IMusicContentCenterImpl implements NATIVE_RTC.IAudioDeviceManager {
+export class IMusicContentCenterImpl implements NATIVE_RTC.IMusicContentCenter {
   private _engine: IrisRtcEngine;
 
   public constructor(engine: IrisRtcEngine) {
@@ -16,144 +16,101 @@ export class IMusicContentCenterImpl implements NATIVE_RTC.IAudioDeviceManager {
     this._engine.actionQueue.putAction(action);
   }
 
-  enumeratePlaybackDevices(): CallApiReturnType {
-    AgoraConsole.warn(
-      'enumeratePlaybackDevices not supported in this platform!'
-    );
+  initialize(
+    configuration: NATIVE_RTC.MusicContentCenterConfiguration
+  ): CallApiReturnType {
+    AgoraConsole.warn('initialize not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
-  enumerateRecordingDevices(): CallApiReturnType {
-    AgoraConsole.warn(
-      'enumerateRecordingDevices not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  setPlaybackDevice(deviceId: string): CallApiReturnType {
-    AgoraConsole.warn('setPlaybackDevice not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  getPlaybackDevice(deviceId: string): CallApiReturnType {
-    AgoraConsole.warn('getPlaybackDevice not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  getPlaybackDeviceInfo(): CallApiReturnType {
-    AgoraConsole.warn('getPlaybackDeviceInfo not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  setPlaybackDeviceVolume(volume: number): CallApiReturnType {
-    AgoraConsole.warn(
-      'setPlaybackDeviceVolume not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  getPlaybackDeviceVolume(volume: number): CallApiReturnType {
-    AgoraConsole.warn(
-      'getPlaybackDeviceVolume not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  setRecordingDevice(deviceId: string): CallApiReturnType {
-    AgoraConsole.warn('setRecordingDevice not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  getRecordingDevice(deviceId: string): CallApiReturnType {
-    AgoraConsole.warn('getRecordingDevice not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  getRecordingDeviceInfo(): CallApiReturnType {
-    AgoraConsole.warn('getRecordingDeviceInfo not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  setRecordingDeviceVolume(volume: number): CallApiReturnType {
-    AgoraConsole.warn(
-      'setRecordingDeviceVolume not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  getRecordingDeviceVolume(volume: number): CallApiReturnType {
-    AgoraConsole.warn(
-      'getRecordingDeviceVolume not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  setLoopbackDevice(deviceId: string): CallApiReturnType {
-    AgoraConsole.warn('setLoopbackDevice not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  getLoopbackDevice(deviceId: string): CallApiReturnType {
-    AgoraConsole.warn('getLoopbackDevice not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  setPlaybackDeviceMute(mute: boolean): CallApiReturnType {
-    AgoraConsole.warn('setPlaybackDeviceMute not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  getPlaybackDeviceMute(mute: boolean): CallApiReturnType {
-    AgoraConsole.warn('getPlaybackDeviceMute not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  setRecordingDeviceMute(mute: boolean): CallApiReturnType {
-    AgoraConsole.warn('setRecordingDeviceMute not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  getRecordingDeviceMute(mute: boolean): CallApiReturnType {
-    AgoraConsole.warn('getRecordingDeviceMute not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  startPlaybackDeviceTest(testAudioFilePath: string): CallApiReturnType {
-    AgoraConsole.warn(
-      'startPlaybackDeviceTest not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  stopPlaybackDeviceTest(): CallApiReturnType {
-    AgoraConsole.warn('stopPlaybackDeviceTest not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  startRecordingDeviceTest(indicationInterval: number): CallApiReturnType {
-    AgoraConsole.warn(
-      'startRecordingDeviceTest not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  stopRecordingDeviceTest(): CallApiReturnType {
-    AgoraConsole.warn(
-      'stopRecordingDeviceTest not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  startAudioDeviceLoopbackTest(indicationInterval: number): CallApiReturnType {
-    AgoraConsole.warn(
-      'startAudioDeviceLoopbackTest not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  stopAudioDeviceLoopbackTest(): CallApiReturnType {
-    AgoraConsole.warn(
-      'stopAudioDeviceLoopbackTest not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  followSystemPlaybackDevice(enable: boolean): CallApiReturnType {
-    AgoraConsole.warn(
-      'followSystemPlaybackDevice not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  followSystemRecordingDevice(enable: boolean): CallApiReturnType {
-    AgoraConsole.warn(
-      'followSystemRecordingDevice not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-  followSystemLoopbackDevice(enable: boolean): CallApiReturnType {
-    AgoraConsole.warn(
-      'followSystemLoopbackDevice not supported in this platform!'
-    );
+  renewToken(token: string): CallApiReturnType {
+    AgoraConsole.warn('renewToken not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   release(): CallApiReturnType {
     AgoraConsole.warn('release not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  registerEventHandler(
+    eventHandler: NATIVE_RTC.IMusicContentCenterEventHandler
+  ): CallApiReturnType {
+    AgoraConsole.warn('registerEventHandler not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  unregisterEventHandler(): CallApiReturnType {
+    AgoraConsole.warn('unregisterEventHandler not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  createMusicPlayer(): CallApiReturnType {
+    AgoraConsole.warn('createMusicPlayer not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getMusicCharts(requestId: string): CallApiReturnType {
+    AgoraConsole.warn('getMusicCharts not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getMusicCollectionByMusicChartId(
+    requestId: string,
+    musicChartId: number,
+    page: number,
+    pageSize: number,
+    jsonOption: string
+  ): CallApiReturnType {
+    AgoraConsole.warn(
+      'getMusicCollectionByMusicChartId not supported in this platform!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  searchMusic(
+    requestId: string,
+    keyWord: string,
+    page: number,
+    pageSize: number,
+    jsonOption: string
+  ): CallApiReturnType {
+    AgoraConsole.warn('searchMusic not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  preload(songCode: number, jsonOption: string): CallApiReturnType {
+    AgoraConsole.warn('preload not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  preload2(requestId: string, songCode: number): CallApiReturnType {
+    AgoraConsole.warn('preload2 not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  removeCache(songCode: number): CallApiReturnType {
+    AgoraConsole.warn('removeCache not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getCaches(
+    cacheInfo: NATIVE_RTC.MusicCacheInfo,
+    cacheInfoSize: number
+  ): CallApiReturnType {
+    AgoraConsole.warn('getCaches not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  isPreloaded(songCode: number): CallApiReturnType {
+    AgoraConsole.warn('isPreloaded not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getLyric(
+    requestId: string,
+    songCode: number,
+    LyricType: number
+  ): CallApiReturnType {
+    AgoraConsole.warn('getLyric not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getSongSimpleInfo(requestId: string, songCode: number): CallApiReturnType {
+    AgoraConsole.warn('getSongSimpleInfo not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getInternalSongCode(
+    songCode: number,
+    jsonOption: string,
+    internalSongCode: number
+  ): CallApiReturnType {
+    AgoraConsole.warn('getInternalSongCode not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 }

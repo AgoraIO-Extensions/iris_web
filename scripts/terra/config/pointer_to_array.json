@@ -1,0 +1,4 @@
+[
+  "agora::rtc::IBaseSpatialAudioEngine.setZones.zones",
+  "agora::media::IAudioSpectrumObserver.onRemoteAudioSpectrum.spectrums"
+]

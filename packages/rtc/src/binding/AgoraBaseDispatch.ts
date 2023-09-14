@@ -27,15 +27,15 @@ export class IAudioEncodedFrameObserver {
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void {
-    let obj = {
+    let _obj = {
       frameBuffer,
       length,
       audioEncodedFrameInfo,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onRecordAudioEncodedFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRecordAudioEncodedFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onRecordAudioEncodedFrame eventParam ${JSON.stringify(eventParam)}`
     );
@@ -47,15 +47,15 @@ export class IAudioEncodedFrameObserver {
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void {
-    let obj = {
+    let _obj = {
       frameBuffer,
       length,
       audioEncodedFrameInfo,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onPlaybackAudioEncodedFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onPlaybackAudioEncodedFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onPlaybackAudioEncodedFrame eventParam ${JSON.stringify(eventParam)}`
     );
@@ -67,15 +67,15 @@ export class IAudioEncodedFrameObserver {
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void {
-    let obj = {
+    let _obj = {
       frameBuffer,
       length,
       audioEncodedFrameInfo,
     };
-    let json = JSON.stringify(obj);
-    let key = this.eventKey('onMixedAudioEncodedFrame');
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onMixedAudioEncodedFrame');
 
-    let eventParam = new EventParam(key, json, 0, '', [], [], 0);
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
     console.log(
       `onMixedAudioEncodedFrame eventParam ${JSON.stringify(eventParam)}`
     );
