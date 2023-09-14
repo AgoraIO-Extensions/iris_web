@@ -18,9 +18,7 @@ export class ILocalSpatialAudioEngineImpl
   }
 
   initialize(): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('initialize not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setRemoteAudioAttenuation(
@@ -29,7 +27,7 @@ export class ILocalSpatialAudioEngineImpl
     forceSet: boolean
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setRemoteAudioAttenuation not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -143,9 +141,7 @@ export class IBaseSpatialAudioEngineImpl
   }
 
   initialize(): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('initialize not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setRemoteAudioAttenuation(
@@ -154,7 +150,7 @@ export class IBaseSpatialAudioEngineImpl
     forceSet: boolean
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setRemoteAudioAttenuation not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }

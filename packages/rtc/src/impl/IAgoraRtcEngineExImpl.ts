@@ -1,6 +1,4 @@
-import { VideoEncoderConfiguration } from 'agora-rtc-sdk-ng';
-
-import { AsyncTaskType, CallApiReturnType } from 'iris-web-core';
+import { CallApiReturnType } from 'iris-web-core';
 import * as NATIVE_RTC from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -17,26 +15,23 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   putAction(action: Action) {
     this._engine.actionQueue.putAction(action);
   }
-
   joinChannelEx(
     token: string,
     connection: NATIVE_RTC.RtcConnection,
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('joinChannelEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
-  leaveChannelEx(connection: NATIVE_RTC.RtcConnection): CallApiReturnType;
-  leaveChannelEx(
+  leaveChannelEx(connection: NATIVE_RTC.RtcConnection): CallApiReturnType {
+    AgoraConsole.warn('leaveChannelEx not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  leaveChannelEx2(
     connection: NATIVE_RTC.RtcConnection,
     options: NATIVE_RTC.LeaveChannelOptions
-  ): CallApiReturnType;
-  leaveChannelEx(connection: unknown, options?: unknown): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+  ): CallApiReturnType {
+    AgoraConsole.warn('leaveChannelEx2 not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   updateChannelMediaOptionsEx(
@@ -44,16 +39,16 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'updateChannelMediaOptionsEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setVideoEncoderConfigurationEx(
-    config: VideoEncoderConfiguration,
+    config: NATIVE_RTC.VideoEncoderConfiguration,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setVideoEncoderConfigurationEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -61,9 +56,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     canvas: NATIVE_RTC.VideoCanvas,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('setupRemoteVideoEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   muteRemoteAudioStreamEx(
@@ -72,7 +65,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'muteRemoteAudioStreamEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -82,7 +75,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'muteRemoteVideoStreamEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -92,7 +85,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setRemoteVideoStreamTypeEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -100,18 +93,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('muteLocalAudioStreamEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   muteLocalVideoStreamEx(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('muteLocalVideoStreamEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   muteAllRemoteAudioStreamsEx(
@@ -119,7 +108,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'muteAllRemoteAudioStreamsEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -128,7 +117,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'muteAllRemoteVideoStreamsEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -138,7 +127,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setSubscribeAudioBlocklistEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -148,7 +137,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setSubscribeAudioAllowlistEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -158,7 +147,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setSubscribeVideoBlocklistEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -168,7 +157,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setSubscribeVideoAllowlistEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -178,7 +167,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setRemoteVideoSubscriptionOptionsEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -189,7 +178,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setRemoteVoicePositionEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -199,7 +188,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setRemoteUserSpatialAudioParamsEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -209,9 +198,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('setRemoteRenderModeEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   enableLoopbackRecordingEx(
@@ -220,7 +207,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     deviceName: string
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'enableLoopbackRecordingEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -229,7 +216,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'adjustRecordingSignalVolumeEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -237,9 +224,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('muteRecordingSignalEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   adjustUserPlaybackSignalVolumeEx(
@@ -248,16 +233,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'adjustUserPlaybackSignalVolumeEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   getConnectionStateEx(
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('getConnectionStateEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   enableEncryptionEx(
@@ -265,9 +248,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     enabled: boolean,
     config: NATIVE_RTC.EncryptionConfig
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('enableEncryptionEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   createDataStreamEx(
@@ -275,21 +256,16 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     reliable: boolean,
     ordered: boolean,
     connection: NATIVE_RTC.RtcConnection
-  ): CallApiReturnType;
-  createDataStreamEx(
+  ): CallApiReturnType {
+    AgoraConsole.warn('createDataStreamEx not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  createDataStreamEx2(
     streamId: number,
     config: NATIVE_RTC.DataStreamConfig,
     connection: NATIVE_RTC.RtcConnection
-  ): CallApiReturnType;
-  createDataStreamEx(
-    streamId: unknown,
-    reliable: unknown,
-    ordered: unknown,
-    connection?: unknown
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('createDataStreamEx2 not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   sendStreamMessageEx(
@@ -298,9 +274,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     length: number,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('sendStreamMessageEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   addVideoWatermarkEx(
@@ -308,17 +282,13 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     options: NATIVE_RTC.WatermarkOptions,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('addVideoWatermarkEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   clearVideoWatermarkEx(
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('clearVideoWatermarkEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   sendCustomReportMessageEx(
@@ -330,7 +300,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'sendCustomReportMessageEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -341,7 +311,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'enableAudioVolumeIndicationEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -350,7 +320,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'startRtmpStreamWithoutTranscodingEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -360,7 +330,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'startRtmpStreamWithTranscodingEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -369,7 +339,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'updateRtmpTranscodingEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -377,9 +347,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     url: string,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('stopRtmpStreamEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   startOrUpdateChannelMediaRelayEx(
@@ -387,7 +355,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'startOrUpdateChannelMediaRelayEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -396,7 +364,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'startChannelMediaRelayEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -405,7 +373,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'updateChannelMediaRelayEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -413,7 +381,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'stopChannelMediaRelayEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -421,7 +389,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'pauseAllChannelMediaRelayEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -429,7 +397,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'resumeAllChannelMediaRelayEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -439,7 +407,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'getUserInfoByUserAccountEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -448,9 +416,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     userInfo: NATIVE_RTC.UserInfo,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('getUserInfoByUidEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   enableDualStreamModeEx(
@@ -458,9 +424,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     streamConfig: NATIVE_RTC.SimulcastStreamConfig,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('enableDualStreamModeEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setDualStreamModeEx(
@@ -468,9 +432,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     streamConfig: NATIVE_RTC.SimulcastStreamConfig,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('setDualStreamModeEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setHighPriorityUserListEx(
@@ -480,7 +442,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'setHighPriorityUserListEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -489,21 +451,15 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     uid: number,
     filePath: string
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
-    );
+    AgoraConsole.warn('takeSnapshotEx not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   startMediaRenderingTracingEx(
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'registerAudioFrameObserver not supported in this platfrom!'
+      'startMediaRenderingTracingEx not supported in this platfrom!'
     );
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-
-  private execute(task: AsyncTaskType): CallApiReturnType {
-    return this._engine.executor.execute(task);
   }
 }
