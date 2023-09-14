@@ -18,6 +18,13 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     this._engine.actionQueue.putAction(action);
   }
 
+  isFeatureAvailableOnDevice(type: NATIVE_RTC.FeatureType): CallApiReturnType {
+    AgoraConsole.warn(
+      'isFeatureAvailableOnDevice not supported in this platform!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+
   release(sync: boolean): CallApiReturnType {
     AgoraConsole.warn('release not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -1846,11 +1853,11 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
     AgoraConsole.warn('enumerateVideoDevices not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
-  setDevice(deviceIdUTF8: string): CallApiReturnType {
+  setDevice(deviceIdUTF8: string[]): CallApiReturnType {
     AgoraConsole.warn('setDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
-  getDevice(deviceIdUTF8: string): CallApiReturnType {
+  getDevice(deviceIdUTF8: string[]): CallApiReturnType {
     AgoraConsole.warn('getDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }

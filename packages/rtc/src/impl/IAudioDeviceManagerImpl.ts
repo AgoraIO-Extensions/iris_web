@@ -30,12 +30,12 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  setPlaybackDevice(deviceId: string): CallApiReturnType {
+  setPlaybackDevice(deviceId: string[]): CallApiReturnType {
     AgoraConsole.warn('setPlaybackDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  getPlaybackDevice(deviceId: string): CallApiReturnType {
+  getPlaybackDevice(deviceId: string[]): CallApiReturnType {
     AgoraConsole.warn('getPlaybackDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -59,12 +59,12 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  setRecordingDevice(deviceId: string): CallApiReturnType {
+  setRecordingDevice(deviceId: string[]): CallApiReturnType {
     AgoraConsole.warn('setRecordingDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  getRecordingDevice(deviceId: string): CallApiReturnType {
+  getRecordingDevice(deviceId: string[]): CallApiReturnType {
     AgoraConsole.warn('getRecordingDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -88,12 +88,12 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  setLoopbackDevice(deviceId: string): CallApiReturnType {
+  setLoopbackDevice(deviceId: string[]): CallApiReturnType {
     AgoraConsole.warn('setLoopbackDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  getLoopbackDevice(deviceId: string): CallApiReturnType {
+  getLoopbackDevice(deviceId: string[]): CallApiReturnType {
     AgoraConsole.warn('getLoopbackDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }

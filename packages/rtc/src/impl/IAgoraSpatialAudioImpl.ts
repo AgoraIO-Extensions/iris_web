@@ -145,7 +145,7 @@ export class IBaseSpatialAudioEngineImpl
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setZones(
-    zones: NATIVE_RTC.SpatialAudioZone,
+    zones: NATIVE_RTC.SpatialAudioZone[],
     zoneCount: number
   ): CallApiReturnType {
     AgoraConsole.warn('setZones not supported in this platform!');
@@ -192,19 +192,19 @@ export class IBaseSpatialAudioEngineImpl
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   updateSelfPosition(
-    position: number,
-    axisForward: number,
-    axisRight: number,
-    axisUp: number
+    position: number[],
+    axisForward: number[],
+    axisRight: number[],
+    axisUp: number[]
   ): number {
     AgoraConsole.warn('updateSelfPosition not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   updateSelfPositionEx(
-    position: number,
-    axisForward: number,
-    axisRight: number,
-    axisUp: number,
+    position: number[],
+    axisForward: number[],
+    axisRight: number[],
+    axisUp: number[],
     connection: NATIVE_RTC.RtcConnection
   ): number {
     AgoraConsole.warn('updateSelfPositionEx not supported in this platform!');

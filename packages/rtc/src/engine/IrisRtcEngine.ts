@@ -10,8 +10,6 @@ import {
   IrisEventHandlerManager,
 } from 'iris-web-core';
 
-// import { IAudioDeviceManagerDispatch } from '/generate/binding/IAudioDeviceManagerDispatch';
-
 import {
   IrisEventHandler,
   IrisVideoFrameBufferConfig,
@@ -19,16 +17,29 @@ import {
   VideoParams,
 } from '../base/BaseType';
 
-// import { ILocalSpatialAudioEngineDispatch } from '../binding/event_dispatch/ILocalSpatialAudioEngineDispatch';
 import { IMediaEngineDispatch } from '../binding/IAgoraMediaEngineDispatch';
 import {
   IMediaPlayerCacheManagerDispatch,
   IMediaPlayerDispatch,
 } from '../binding/IAgoraMediaPlayerDispatch';
 import { IMediaRecorderDispatch } from '../binding/IAgoraMediaRecorderDispatch';
-// import { IRtcEngineDispatch } from '../binding/event_dispatch/IRtcEngineDispatch';
-// import { IRtcEngineExDispatch } from '../binding/event_dispatch/IRtcEngineExDispatch';
-// import { IVideoDeviceManagerDispatch } from '../binding/event_dispatch/IVideoDeviceManagerDispatch';
+import {
+  IMusicContentCenterDispatch,
+  IMusicPlayerDispatch,
+  MusicChartCollectionDispatch,
+  MusicCollectionDispatch,
+} from '../binding/IAgoraMusicContentCenterDispatch';
+import {
+  IRtcEngineDispatch,
+  IVideoDeviceManagerDispatch,
+} from '../binding/IAgoraRtcEngineDispatch';
+import { IRtcEngineExDispatch } from '../binding/IAgoraRtcEngineExDispatch';
+import {
+  IBaseSpatialAudioEngineDispatch,
+  ILocalSpatialAudioEngineDispatch,
+} from '../binding/IAgoraSpatialAudioDispatch';
+import { IAudioDeviceManagerDispatch } from '../binding/IAudioDeviceManagerDispatch';
+
 import { IrisAgoraEventHandler } from '../event_handler/IrisAgoraEventHandler';
 import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
 import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
@@ -77,30 +88,47 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   constructor(irisEventHandlerManager: IrisEventHandlerManager) {
     this._implDispatchsMap = new Map();
-    this._implDispatchsMap.set('MediaPlayer', new IMediaPlayerDispatch(this));
+    this._implDispatchsMap.set('IMediaPlayer', new IMediaPlayerDispatch(this));
     this._implDispatchsMap.set(
-      'MediaPlayerCacheManager',
+      'IMediaPlayerCacheManager',
       new IMediaPlayerCacheManagerDispatch(this)
     );
-    this._implDispatchsMap.set('MediaEngine', new IMediaEngineDispatch(this));
+    this._implDispatchsMap.set('IMediaEngine', new IMediaEngineDispatch(this));
     this._implDispatchsMap.set(
-      'MediaRecorder',
+      'IMediaRecorder',
       new IMediaRecorderDispatch(this)
     );
-    // // this._implDispatchsMap.set(
-    // //   'AudioDeviceManager',
-    // //   new IAudioDeviceManagerDispatch(this)
-    // // );
-    // this._implDispatchsMap.set(
-    //   'VideoDeviceManager',
-    //   new IVideoDeviceManagerDispatch(this)
-    // );
-    // this._implDispatchsMap.set('RtcEngine', new IRtcEngineDispatch(this));
-    // this._implDispatchsMap.set('RtcEngineEx', new IRtcEngineExDispatch(this));
-    // this._implDispatchsMap.set(
-    //   'LocalSpatialAudioEngine',
-    //   new ILocalSpatialAudioEngineDispatch(this)
-    // );
+    this._implDispatchsMap.set(
+      'MusicChartCollection',
+      new MusicChartCollectionDispatch(this)
+    );
+    this._implDispatchsMap.set(
+      'MusicCollection',
+      new MusicCollectionDispatch(this)
+    );
+    this._implDispatchsMap.set('IMusicPlayer', new IMusicPlayerDispatch(this));
+    this._implDispatchsMap.set(
+      'IMusicContentCenter',
+      new IMusicContentCenterDispatch(this)
+    );
+    this._implDispatchsMap.set(
+      'IAudioDeviceManager',
+      new IAudioDeviceManagerDispatch(this)
+    );
+    this._implDispatchsMap.set(
+      'IVideoDeviceManager',
+      new IVideoDeviceManagerDispatch(this)
+    );
+    this._implDispatchsMap.set('IRtcEngine', new IRtcEngineDispatch(this));
+    this._implDispatchsMap.set('IRtcEngineEx', new IRtcEngineExDispatch(this));
+    this._implDispatchsMap.set(
+      'IBaseSpatialAudioEngine',
+      new IBaseSpatialAudioEngineDispatch(this)
+    );
+    this._implDispatchsMap.set(
+      'ILocalSpatialAudioEngine',
+      new ILocalSpatialAudioEngineDispatch(this)
+    );
 
     this.actionQueue = new AgoraActionQueue();
     // this.rtcEngineEventHandler = new RtcEngineEventHandler(this);
