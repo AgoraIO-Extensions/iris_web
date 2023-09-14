@@ -1,13 +1,12 @@
 import { CallApiReturnType } from 'iris-web-core';
 import * as NATIVE_RTC from 'iris-web-rtc';
-import { IRtcEngine } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
 
 export const RTCENGINE_KEY = 'RtcEngine';
 
-export class RtcEngineImpl implements IRtcEngine {
+export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
   private _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
@@ -1344,6 +1343,46 @@ export class RtcEngineImpl implements IRtcEngine {
   }
 
   public putAction(action: Action) {
+    this._engine.actionQueue.putAction(action);
+  }
+}
+
+export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
+  private _engine: IrisRtcEngine;
+
+  public constructor(engine: IrisRtcEngine) {
+    this._engine = engine;
+  }
+  enumerateVideoDevices(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setDevice(deviceIdUTF8: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getDevice(deviceIdUTF8: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  numberOfCapabilities(deviceIdUTF8: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getCapability(
+    deviceIdUTF8: string,
+    deviceCapabilityNumber: number,
+    capability: NATIVE_RTC.VideoFormat
+  ): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  startDeviceTest(hwnd: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  stopDeviceTest(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  release(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+
+  putAction(action: Action) {
     this._engine.actionQueue.putAction(action);
   }
 }

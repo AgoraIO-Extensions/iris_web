@@ -5,7 +5,7 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util';
 import { Action } from '../util/AgoraActionQueue';
 
-export class AudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
+export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
   private _engine: IrisRtcEngine;
 
   public constructor(engine: IrisRtcEngine) {

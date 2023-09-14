@@ -4,13 +4,13 @@ import { ApiParam, CallApiReturnType } from 'iris-web-core';
 import { IAudioDeviceManager } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { AudioDeviceManagerImpl } from '../impl/AudioDeviceManagerImpl';
+import { IAudioDeviceManagerImpl } from '../impl/IAudioDeviceManagerImpl';
 
 export class IAudioDeviceManagerDispatch {
   private _impl: IAudioDeviceManager;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new AudioDeviceManagerImpl(engine);
+    this._impl = new IAudioDeviceManagerImpl(engine);
   }
   enumeratePlaybackDevices(): CallApiReturnType {
     return this._impl.enumeratePlaybackDevices();

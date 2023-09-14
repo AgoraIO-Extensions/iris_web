@@ -20,8 +20,12 @@ import {
 } from '../base/BaseType';
 
 // import { ILocalSpatialAudioEngineDispatch } from '../binding/event_dispatch/ILocalSpatialAudioEngineDispatch';
-// import { IMediaEngineDispatch } from '../binding/event_dispatch/IMediaEngineDispatch';
-// import { IMediaPlayerDispatch } from '../binding/event_dispatch/IMediaPlayerDispatch';
+import { IMediaEngineDispatch } from '../binding/IAgoraMediaEngineDispatch';
+import {
+  IMediaPlayerCacheManagerDispatch,
+  IMediaPlayerDispatch,
+} from '../binding/IAgoraMediaPlayerDispatch';
+import { IMediaRecorderDispatch } from '../binding/IAgoraMediaRecorderDispatch';
 // import { IRtcEngineDispatch } from '../binding/event_dispatch/IRtcEngineDispatch';
 // import { IRtcEngineExDispatch } from '../binding/event_dispatch/IRtcEngineExDispatch';
 // import { IVideoDeviceManagerDispatch } from '../binding/event_dispatch/IVideoDeviceManagerDispatch';
@@ -73,8 +77,16 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   constructor(irisEventHandlerManager: IrisEventHandlerManager) {
     this._implDispatchsMap = new Map();
-    // this._implDispatchsMap.set('MediaPlayer', new IMediaPlayerDispatch(this));
-    // this._implDispatchsMap.set('MediaEngine', new IMediaEngineDispatch(this));
+    this._implDispatchsMap.set('MediaPlayer', new IMediaPlayerDispatch(this));
+    this._implDispatchsMap.set(
+      'MediaPlayerCacheManager',
+      new IMediaPlayerCacheManagerDispatch(this)
+    );
+    this._implDispatchsMap.set('MediaEngine', new IMediaEngineDispatch(this));
+    this._implDispatchsMap.set(
+      'MediaRecorder',
+      new IMediaRecorderDispatch(this)
+    );
     // // this._implDispatchsMap.set(
     // //   'AudioDeviceManager',
     // //   new IAudioDeviceManagerDispatch(this)

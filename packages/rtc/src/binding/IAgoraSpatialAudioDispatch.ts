@@ -2,19 +2,21 @@
 
 import { ApiParam, CallApiReturnType } from 'iris-web-core';
 import {
-  BaseSpatialAudioEngineImpl,
   IBaseSpatialAudioEngine,
   ILocalSpatialAudioEngine,
 } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { LocalSpatialAudioEngineImpl } from '../impl/LocalSpatialAudioEngineImpl';
+import {
+  IBaseSpatialAudioEngineImpl,
+  ILocalSpatialAudioEngineImpl,
+} from '../impl/IAgoraSpatialAudio';
 
 export class IBaseSpatialAudioEngineDispatch {
   private _impl: IBaseSpatialAudioEngine;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new BaseSpatialAudioEngineImpl(engine);
+    this._impl = new IBaseSpatialAudioEngineImpl(engine);
   }
   release(): CallApiReturnType {
     return this._impl.release();
@@ -155,7 +157,7 @@ export class ILocalSpatialAudioEngineDispatch {
   private _impl: ILocalSpatialAudioEngine;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new LocalSpatialAudioEngineImpl(engine);
+    this._impl = new ILocalSpatialAudioEngineImpl(engine);
   }
   initialize(): CallApiReturnType {
     return this._impl.initialize();

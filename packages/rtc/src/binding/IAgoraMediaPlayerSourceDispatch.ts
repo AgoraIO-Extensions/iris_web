@@ -13,8 +13,8 @@ import {
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
-export class MediaPlayerSourceObserver {
-  classPrefix: string = 'MediaPlayerSourceObserver_';
+export class IMediaPlayerSourceObserver {
+  classPrefix: string = 'IMediaPlayerSourceObserver_';
 
   _engine: IrisRtcEngine = null;
 

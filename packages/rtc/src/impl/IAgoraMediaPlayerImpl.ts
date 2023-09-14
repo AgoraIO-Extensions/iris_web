@@ -1,22 +1,10 @@
 import { CallApiReturnType } from 'iris-web-core';
-import {
-  AUDIO_DUAL_MONO_MODE,
-  IAudioPcmFrameSink,
-  IAudioSpectrumObserver,
-  IMediaPlayer,
-  IMediaPlayerSourceObserver,
-  IVideoFrameObserver,
-  MediaSource,
-  PlayerStreamInfo,
-  RAW_AUDIO_FRAME_OP_MODE_TYPE,
-  RENDER_MODE_TYPE,
-  SpatialAudioParams,
-} from 'iris-web-rtc';
+import * as NATIVE_RTC from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
 
-export class MediaPlayerImpl implements IMediaPlayer {
+export class IMediaPlayerImpl implements NATIVE_RTC.IMediaPlayer {
   private _engine: IrisRtcEngine;
 
   public constructor(engine: IrisRtcEngine) {
@@ -28,7 +16,7 @@ export class MediaPlayerImpl implements IMediaPlayer {
   open(url: string, startPos: number): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
-  openWithMediaSource(source: MediaSource): CallApiReturnType {
+  openWithMediaSource(source: NATIVE_RTC.MediaSource): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
   play(): CallApiReturnType {
@@ -58,7 +46,10 @@ export class MediaPlayerImpl implements IMediaPlayer {
   getStreamCount(count: number): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
-  getStreamInfo(index: number, info: PlayerStreamInfo): CallApiReturnType {
+  getStreamInfo(
+    index: number,
+    info: NATIVE_RTC.PlayerStreamInfo
+  ): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
   setLoopCount(loopCount: number): CallApiReturnType {
@@ -111,23 +102,25 @@ export class MediaPlayerImpl implements IMediaPlayer {
   setView(view: number): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
-  setRenderMode(renderMode: RENDER_MODE_TYPE): CallApiReturnType {
+  setRenderMode(renderMode: NATIVE_RTC.RENDER_MODE_TYPE): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
   registerPlayerSourceObserver(
-    observer: IMediaPlayerSourceObserver
+    observer: NATIVE_RTC.IMediaPlayerSourceObserver
   ): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
   unregisterPlayerSourceObserver(
-    observer: IMediaPlayerSourceObserver
+    observer: NATIVE_RTC.IMediaPlayerSourceObserver
   ): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
-  registerAudioFrameObserver(observer: IAudioPcmFrameSink): CallApiReturnType;
   registerAudioFrameObserver(
-    observer: IAudioPcmFrameSink,
-    mode: RAW_AUDIO_FRAME_OP_MODE_TYPE
+    observer: NATIVE_RTC.IAudioPcmFrameSink
+  ): CallApiReturnType;
+  registerAudioFrameObserver(
+    observer: NATIVE_RTC.IAudioPcmFrameSink,
+    mode: NATIVE_RTC.RAW_AUDIO_FRAME_OP_MODE_TYPE
   ): CallApiReturnType;
   registerAudioFrameObserver(
     observer: unknown,
@@ -136,30 +129,34 @@ export class MediaPlayerImpl implements IMediaPlayer {
     throw new Error('Method not implemented.');
   }
   unregisterAudioFrameObserver(
-    observer: IAudioPcmFrameSink
+    observer: NATIVE_RTC.IAudioPcmFrameSink
   ): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
-  registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType {
+  registerVideoFrameObserver(
+    observer: NATIVE_RTC.IVideoFrameObserver
+  ): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
   unregisterVideoFrameObserver(
-    observer: IVideoFrameObserver
+    observer: NATIVE_RTC.IVideoFrameObserver
   ): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
   registerMediaPlayerAudioSpectrumObserver(
-    observer: IAudioSpectrumObserver,
+    observer: NATIVE_RTC.IAudioSpectrumObserver,
     intervalInMS: number
   ): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
   unregisterMediaPlayerAudioSpectrumObserver(
-    observer: IAudioSpectrumObserver
+    observer: NATIVE_RTC.IAudioSpectrumObserver
   ): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
-  setAudioDualMonoMode(mode: AUDIO_DUAL_MONO_MODE): CallApiReturnType {
+  setAudioDualMonoMode(
+    mode: NATIVE_RTC.AUDIO_DUAL_MONO_MODE
+  ): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
   getPlayerSdkVersion(): CallApiReturnType {
@@ -201,10 +198,60 @@ export class MediaPlayerImpl implements IMediaPlayer {
   unloadSrc(src: string): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
-  setSpatialAudioParams(params: SpatialAudioParams): CallApiReturnType {
+  setSpatialAudioParams(
+    params: NATIVE_RTC.SpatialAudioParams
+  ): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
   setSoundPositionParams(pan: number, gain: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+
+  putAction(action: Action) {
+    this._engine.actionQueue.putAction(action);
+  }
+
+  //IMediaPlayer
+}
+
+export class IMediaPlayerCacheManagerImpl
+  implements NATIVE_RTC.IMediaPlayerCacheManager {
+  private _engine: IrisRtcEngine;
+
+  public constructor(engine: IrisRtcEngine) {
+    this._engine = engine;
+  }
+  removeAllCaches(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  removeOldCache(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  removeCacheByUri(uri: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setCacheDir(path: string): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setMaxCacheFileCount(count: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  setMaxCacheFileSize(cacheSize: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  enableAutoRemoveCache(enable: boolean): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getCacheDir(path: string, length: number): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getMaxCacheFileCount(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getMaxCacheFileSize(): CallApiReturnType {
+    throw new Error('Method not implemented.');
+  }
+  getCacheFileCount(): CallApiReturnType {
     throw new Error('Method not implemented.');
   }
 

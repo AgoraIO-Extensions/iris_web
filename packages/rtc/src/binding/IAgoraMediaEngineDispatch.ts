@@ -4,13 +4,13 @@ import { ApiParam, CallApiReturnType } from 'iris-web-core';
 import { IMediaEngine } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { MediaEngineImpl } from '../impl/MediaEngineImpl';
+import { IMediaEngineImpl } from '../impl/IAgoraMediaEngineImpl';
 
 export class IMediaEngineDispatch {
   private _impl: IMediaEngine;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new MediaEngineImpl(engine);
+    this._impl = new IMediaEngineImpl(engine);
   }
   registerAudioFrameObserver(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;

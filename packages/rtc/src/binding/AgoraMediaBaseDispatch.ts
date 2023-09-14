@@ -17,8 +17,8 @@ import {
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
-export class AudioPcmFrameSink {
-  classPrefix: string = 'AudioPcmFrameSink_';
+export class IAudioPcmFrameSink {
+  classPrefix: string = 'IAudioPcmFrameSink_';
 
   _engine: IrisRtcEngine = null;
 
@@ -46,8 +46,8 @@ export class AudioPcmFrameSink {
     this.notifyEvent(eventParam);
   }
 }
-export class AudioFrameObserverBase {
-  classPrefix: string = 'AudioFrameObserverBase_';
+export class IAudioFrameObserverBase {
+  classPrefix: string = 'IAudioFrameObserverBase_';
 
   _engine: IrisRtcEngine = null;
 
@@ -118,8 +118,8 @@ export class AudioFrameObserverBase {
     this.notifyEvent(eventParam);
   }
 }
-export class AudioFrameObserver {
-  classPrefix: string = 'AudioFrameObserver_';
+export class IAudioFrameObserver {
+  classPrefix: string = 'IAudioFrameObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -157,8 +157,8 @@ export class AudioFrameObserver {
     this.notifyEvent(eventParam);
   }
 }
-export class AudioSpectrumObserver {
-  classPrefix: string = 'AudioSpectrumObserver_';
+export class IAudioSpectrumObserver {
+  classPrefix: string = 'IAudioSpectrumObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -206,8 +206,8 @@ export class AudioSpectrumObserver {
     this.notifyEvent(eventParam);
   }
 }
-export class VideoEncodedFrameObserver {
-  classPrefix: string = 'VideoEncodedFrameObserver_';
+export class IVideoEncodedFrameObserver {
+  classPrefix: string = 'IVideoEncodedFrameObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -245,8 +245,8 @@ export class VideoEncodedFrameObserver {
     this.notifyEvent(eventParam);
   }
 }
-export class VideoFrameObserver {
-  classPrefix: string = 'VideoFrameObserver_';
+export class IVideoFrameObserver {
+  classPrefix: string = 'IVideoFrameObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -343,8 +343,8 @@ export class VideoFrameObserver {
     this.notifyEvent(eventParam);
   }
 }
-export class MediaRecorderObserver {
-  classPrefix: string = 'MediaRecorderObserver_';
+export class IMediaRecorderObserver {
+  classPrefix: string = 'IMediaRecorderObserver_';
 
   _engine: IrisRtcEngine = null;
 

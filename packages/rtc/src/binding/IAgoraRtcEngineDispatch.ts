@@ -62,11 +62,13 @@ import {
 } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { RtcEngineImpl } from '../impl/RtcEngineImpl';
-import { VideoDeviceManagerImpl } from '../impl/VideoDeviceManagerImpl';
+import {
+  IRtcEngineImpl,
+  IVideoDeviceManagerImpl,
+} from '../impl/IAgoraRtcEngineImpl';
 
-export class RtcEngineEventHandler {
-  classPrefix: string = 'RtcEngineEventHandler_';
+export class IRtcEngineEventHandler {
+  classPrefix: string = 'IRtcEngineEventHandler_';
 
   _engine: IrisRtcEngine = null;
 
@@ -1611,7 +1613,7 @@ export class IVideoDeviceManagerDispatch {
   private _impl: IVideoDeviceManager;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new VideoDeviceManagerImpl(engine);
+    this._impl = new IVideoDeviceManagerImpl(engine);
   }
   enumerateVideoDevices(): CallApiReturnType {
     return this._impl.enumerateVideoDevices();
@@ -1674,8 +1676,8 @@ export class IVideoDeviceManagerDispatch {
     return this._impl.release();
   }
 }
-export class MetadataObserver {
-  classPrefix: string = 'MetadataObserver_';
+export class IMetadataObserver {
+  classPrefix: string = 'IMetadataObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -1703,8 +1705,8 @@ export class MetadataObserver {
     this.notifyEvent(eventParam);
   }
 }
-export class DirectCdnStreamingEventHandler {
-  classPrefix: string = 'DirectCdnStreamingEventHandler_';
+export class IDirectCdnStreamingEventHandler {
+  classPrefix: string = 'IDirectCdnStreamingEventHandler_';
 
   _engine: IrisRtcEngine = null;
 
@@ -1760,7 +1762,7 @@ export class IRtcEngineDispatch {
   private _impl: IRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new RtcEngineImpl(engine);
+    this._impl = new IRtcEngineImpl(engine);
   }
   release(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;

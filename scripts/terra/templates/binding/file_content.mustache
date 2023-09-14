@@ -4,8 +4,8 @@ import { ApiParam, CallApiReturnType, EventParam } from 'iris-web-core';
 
 {{#nodes}}
 {{#user_data.isCallback}}
-export class {{user_data._name}} {
-  classPrefix: string = "{{user_data._name}}_";
+export class {{name}} {
+  classPrefix: string = "{{name}}_";
 
   _engine: IrisRtcEngine = null;
 
@@ -42,7 +42,7 @@ export class {{name}}Dispatch{
     private _impl: {{name}};
     
     constructor(engine: IrisRtcEngine) {
-      this._impl = new {{user_data._name}}Impl(engine);
+      this._impl = new {{name}}Impl(engine);
     }
 {{#methods}}
   {{name}}({{#user_data.hasParameters}}apiParam: ApiParam{{/user_data.hasParameters}}): CallApiReturnType {

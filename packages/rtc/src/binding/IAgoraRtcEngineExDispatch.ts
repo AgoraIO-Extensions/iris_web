@@ -35,10 +35,10 @@ import {
 } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { RtcEngineExImpl } from '../impl/RtcEngineExImpl';
+import { IRtcEngineExImpl } from '../impl/IAgoraRtcEngineEx';
 
-export class RtcEngineEventHandlerEx {
-  classPrefix: string = 'RtcEngineEventHandlerEx_';
+export class IRtcEngineEventHandlerEx {
+  classPrefix: string = 'IRtcEngineEventHandlerEx_';
 
   _engine: IrisRtcEngine = null;
 
@@ -966,7 +966,7 @@ export class IRtcEngineExDispatch {
   private _impl: IRtcEngineEx;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new RtcEngineExImpl(engine);
+    this._impl = new IRtcEngineExImpl(engine);
   }
   joinChannelEx(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;

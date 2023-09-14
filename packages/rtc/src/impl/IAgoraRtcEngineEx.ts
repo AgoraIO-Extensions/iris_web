@@ -6,7 +6,7 @@ import * as NATIVE_RTC from 'iris-web-rtc';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
 
-export class RtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
+export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   private _engine: IrisRtcEngine;
 
   public constructor(engine: IrisRtcEngine) {

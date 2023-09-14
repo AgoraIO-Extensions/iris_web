@@ -5,16 +5,18 @@ import {
   IMusicContentCenter,
   IMusicPlayer,
   MusicChartCollection,
-  MusicChartCollectionImpl,
   MusicCollection,
-  MusicCollectionImpl,
-  MusicContentCenterImpl,
   MusicContentCenterStatusCode,
-  MusicPlayerImpl,
   PreloadStatusCode,
 } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import {
+  IMusicContentCenterImpl,
+  IMusicPlayerImpl,
+  MusicChartCollectionImpl,
+  MusicCollectionImpl,
+} from '../impl/IAgoraMusicContentCenterImpl';
 
 export class MusicChartCollectionDispatch {
   private _impl: MusicChartCollection;
@@ -64,8 +66,8 @@ export class MusicCollectionDispatch {
     return this._impl.getMusic(index);
   }
 }
-export class MusicContentCenterEventHandler {
-  classPrefix: string = 'MusicContentCenterEventHandler_';
+export class IMusicContentCenterEventHandler {
+  classPrefix: string = 'IMusicContentCenterEventHandler_';
 
   _engine: IrisRtcEngine = null;
 
@@ -189,14 +191,14 @@ export class IMusicPlayerDispatch {
   private _impl: IMusicPlayer;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new MusicPlayerImpl(engine);
+    this._impl = new IMusicPlayerImpl(engine);
   }
 }
 export class IMusicContentCenterDispatch {
   private _impl: IMusicContentCenter;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new MusicContentCenterImpl(engine);
+    this._impl = new IMusicContentCenterImpl(engine);
   }
   initialize(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;

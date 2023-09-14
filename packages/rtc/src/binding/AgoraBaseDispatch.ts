@@ -6,8 +6,8 @@ import { EncodedAudioFrameInfo } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
-export class AudioEncodedFrameObserver {
-  classPrefix: string = 'AudioEncodedFrameObserver_';
+export class IAudioEncodedFrameObserver {
+  classPrefix: string = 'IAudioEncodedFrameObserver_';
 
   _engine: IrisRtcEngine = null;
 

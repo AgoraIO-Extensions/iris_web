@@ -5,7 +5,7 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
 
-export class MediaEngineImpl implements NATIVE_RTC.IMediaEngine {
+export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
   private _engine: IrisRtcEngine;
 
   public constructor(engine: IrisRtcEngine) {
