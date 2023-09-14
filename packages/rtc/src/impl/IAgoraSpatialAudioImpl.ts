@@ -12,19 +12,26 @@ export class ILocalSpatialAudioEngineImpl
   public constructor(engine: IrisRtcEngine) {
     this._engine = engine;
   }
+
+  putAction(action: Action) {
+    this._engine.actionQueue.putAction(action);
+  }
+
   initialize(): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setRemoteAudioAttenuation(
     uid: number,
     attenuation: number,
     forceSet: boolean
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-
-  putAction(action: Action) {
-    this._engine.actionQueue.putAction(action);
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
   setMaxAudioRecvCount(maxCount: number): number {
@@ -130,19 +137,26 @@ export class IBaseSpatialAudioEngineImpl
   public constructor(engine: IrisRtcEngine) {
     this._engine = engine;
   }
+
+  putAction(action: Action) {
+    this._engine.actionQueue.putAction(action);
+  }
+
   initialize(): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setRemoteAudioAttenuation(
     uid: number,
     attenuation: number,
     forceSet: boolean
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-
-  putAction(action: Action) {
-    this._engine.actionQueue.putAction(action);
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
   setMaxAudioRecvCount(maxCount: number): number {

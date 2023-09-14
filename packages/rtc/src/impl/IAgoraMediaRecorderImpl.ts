@@ -3,6 +3,7 @@ import * as NATIVE_RTC from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
+import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IMediaRecorderImpl implements NATIVE_RTC.IMediaRecorder {
   private _engine: IrisRtcEngine;
@@ -11,20 +12,30 @@ export class IMediaRecorderImpl implements NATIVE_RTC.IMediaRecorder {
     this._engine = engine;
   }
 
+  putAction(action: Action) {
+    this._engine.actionQueue.putAction(action);
+  }
+
   setMediaRecorderObserver(
     callback: NATIVE_RTC.IMediaRecorderObserver
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   startRecording(
     config: NATIVE_RTC.MediaRecorderConfiguration
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   stopRecording(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  putAction(action: Action) {
-    this._engine.actionQueue.putAction(action);
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 }

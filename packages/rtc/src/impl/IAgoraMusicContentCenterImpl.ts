@@ -3,6 +3,7 @@ import * as NATIVE_RTC from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util';
+import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IMusicContentCenterImpl implements NATIVE_RTC.IAudioDeviceManager {
   private _engine: IrisRtcEngine;
@@ -10,93 +11,178 @@ export class IMusicContentCenterImpl implements NATIVE_RTC.IAudioDeviceManager {
   public constructor(engine: IrisRtcEngine) {
     this._engine = engine;
   }
-  enumeratePlaybackDevices(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  enumerateRecordingDevices(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  setPlaybackDevice(deviceId: string): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getPlaybackDevice(deviceId: string): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getPlaybackDeviceInfo(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  setPlaybackDeviceVolume(volume: number): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getPlaybackDeviceVolume(volume: number): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  setRecordingDevice(deviceId: string): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getRecordingDevice(deviceId: string): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getRecordingDeviceInfo(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  setRecordingDeviceVolume(volume: number): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getRecordingDeviceVolume(volume: number): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  setLoopbackDevice(deviceId: string): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getLoopbackDevice(deviceId: string): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  setPlaybackDeviceMute(mute: boolean): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getPlaybackDeviceMute(mute: boolean): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  setRecordingDeviceMute(mute: boolean): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getRecordingDeviceMute(mute: boolean): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  startPlaybackDeviceTest(testAudioFilePath: string): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  stopPlaybackDeviceTest(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  startRecordingDeviceTest(indicationInterval: number): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  stopRecordingDeviceTest(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  startAudioDeviceLoopbackTest(indicationInterval: number): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  stopAudioDeviceLoopbackTest(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  followSystemPlaybackDevice(enable: boolean): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  followSystemRecordingDevice(enable: boolean): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  followSystemLoopbackDevice(enable: boolean): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  release(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
 
   putAction(action: Action) {
     this._engine.actionQueue.putAction(action);
+  }
+
+  enumeratePlaybackDevices(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  enumerateRecordingDevices(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  setPlaybackDevice(deviceId: string): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getPlaybackDevice(deviceId: string): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getPlaybackDeviceInfo(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  setPlaybackDeviceVolume(volume: number): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getPlaybackDeviceVolume(volume: number): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  setRecordingDevice(deviceId: string): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getRecordingDevice(deviceId: string): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getRecordingDeviceInfo(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  setRecordingDeviceVolume(volume: number): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getRecordingDeviceVolume(volume: number): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  setLoopbackDevice(deviceId: string): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getLoopbackDevice(deviceId: string): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  setPlaybackDeviceMute(mute: boolean): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getPlaybackDeviceMute(mute: boolean): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  setRecordingDeviceMute(mute: boolean): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getRecordingDeviceMute(mute: boolean): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  startPlaybackDeviceTest(testAudioFilePath: string): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  stopPlaybackDeviceTest(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  startRecordingDeviceTest(indicationInterval: number): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  stopRecordingDeviceTest(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  startAudioDeviceLoopbackTest(indicationInterval: number): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  stopAudioDeviceLoopbackTest(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  followSystemPlaybackDevice(enable: boolean): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  followSystemRecordingDevice(enable: boolean): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  followSystemLoopbackDevice(enable: boolean): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  release(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 }
 
@@ -107,15 +193,22 @@ export class MusicChartCollectionImpl
   public constructor(engine: IrisRtcEngine) {
     this._engine = engine;
   }
-  getCount(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  get(index: number): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
 
   putAction(action: Action) {
     this._engine.actionQueue.putAction(action);
+  }
+
+  getCount(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  get(index: number): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 }
 
@@ -137,23 +230,39 @@ export class MusicCollectionImpl implements NATIVE_RTC.MusicCollection {
   public constructor(engine: IrisRtcEngine) {
     this._engine = engine;
   }
-  getCount(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getTotal(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getPage(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getPageSize(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-  getMusic(index: number): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
 
   putAction(action: Action) {
     this._engine.actionQueue.putAction(action);
+  }
+
+  getCount(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getTotal(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getPage(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getPageSize(): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+  getMusic(index: number): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 }

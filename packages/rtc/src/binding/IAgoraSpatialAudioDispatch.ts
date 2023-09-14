@@ -10,7 +10,7 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import {
   IBaseSpatialAudioEngineImpl,
   ILocalSpatialAudioEngineImpl,
-} from '../impl/IAgoraSpatialAudio';
+} from '../impl/IAgoraSpatialAudioImpl';
 
 export class IBaseSpatialAudioEngineDispatch {
   private _impl: IBaseSpatialAudioEngine;

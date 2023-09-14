@@ -5,6 +5,7 @@ import * as NATIVE_RTC from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
+import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   private _engine: IrisRtcEngine;
@@ -12,12 +13,20 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   public constructor(engine: IrisRtcEngine) {
     this._engine = engine;
   }
+
+  putAction(action: Action) {
+    this._engine.actionQueue.putAction(action);
+  }
+
   joinChannelEx(
     token: string,
     connection: NATIVE_RTC.RtcConnection,
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   leaveChannelEx(connection: NATIVE_RTC.RtcConnection): CallApiReturnType;
   leaveChannelEx(
@@ -25,105 +34,153 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     options: NATIVE_RTC.LeaveChannelOptions
   ): CallApiReturnType;
   leaveChannelEx(connection: unknown, options?: unknown): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   updateChannelMediaOptionsEx(
     options: NATIVE_RTC.ChannelMediaOptions,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setVideoEncoderConfigurationEx(
     config: VideoEncoderConfiguration,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setupRemoteVideoEx(
     canvas: NATIVE_RTC.VideoCanvas,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   muteRemoteAudioStreamEx(
     uid: number,
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   muteRemoteVideoStreamEx(
     uid: number,
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setRemoteVideoStreamTypeEx(
     uid: number,
     streamType: NATIVE_RTC.VIDEO_STREAM_TYPE,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   muteLocalAudioStreamEx(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   muteLocalVideoStreamEx(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   muteAllRemoteAudioStreamsEx(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   muteAllRemoteVideoStreamsEx(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setSubscribeAudioBlocklistEx(
     uidList: number,
     uidNumber: number,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setSubscribeAudioAllowlistEx(
     uidList: number,
     uidNumber: number,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setSubscribeVideoBlocklistEx(
     uidList: number,
     uidNumber: number,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setSubscribeVideoAllowlistEx(
     uidList: number,
     uidNumber: number,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setRemoteVideoSubscriptionOptionsEx(
     uid: number,
     options: NATIVE_RTC.VideoSubscriptionOptions,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setRemoteVoicePositionEx(
     uid: number,
@@ -131,14 +188,20 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     gain: number,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setRemoteUserSpatialAudioParamsEx(
     uid: number,
     params: NATIVE_RTC.SpatialAudioParams,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setRemoteRenderModeEx(
     uid: number,
@@ -146,45 +209,66 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   enableLoopbackRecordingEx(
     connection: NATIVE_RTC.RtcConnection,
     enabled: boolean,
     deviceName: string
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   adjustRecordingSignalVolumeEx(
     volume: number,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   muteRecordingSignalEx(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   adjustUserPlaybackSignalVolumeEx(
     uid: number,
     volume: number,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   getConnectionStateEx(
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   enableEncryptionEx(
     connection: NATIVE_RTC.RtcConnection,
     enabled: boolean,
     config: NATIVE_RTC.EncryptionConfig
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   createDataStreamEx(
     streamId: number,
@@ -203,7 +287,10 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     ordered: unknown,
     connection?: unknown
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   sendStreamMessageEx(
     streamId: number,
@@ -211,19 +298,28 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     length: number,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   addVideoWatermarkEx(
     watermarkUrl: string,
     options: NATIVE_RTC.WatermarkOptions,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   clearVideoWatermarkEx(
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   sendCustomReportMessageEx(
     id: string,
@@ -233,7 +329,10 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     value: number,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   enableAudioVolumeIndicationEx(
     interval: number,
@@ -241,93 +340,138 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     reportVad: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   startRtmpStreamWithoutTranscodingEx(
     url: string,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   startRtmpStreamWithTranscodingEx(
     url: string,
     transcoding: NATIVE_RTC.LiveTranscoding,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   updateRtmpTranscodingEx(
     transcoding: NATIVE_RTC.LiveTranscoding,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   stopRtmpStreamEx(
     url: string,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   startOrUpdateChannelMediaRelayEx(
     configuration: NATIVE_RTC.ChannelMediaRelayConfiguration,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   startChannelMediaRelayEx(
     configuration: NATIVE_RTC.ChannelMediaRelayConfiguration,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   updateChannelMediaRelayEx(
     configuration: NATIVE_RTC.ChannelMediaRelayConfiguration,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   stopChannelMediaRelayEx(
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   pauseAllChannelMediaRelayEx(
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   resumeAllChannelMediaRelayEx(
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   getUserInfoByUserAccountEx(
     userAccount: string,
     userInfo: NATIVE_RTC.UserInfo,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   getUserInfoByUidEx(
     uid: number,
     userInfo: NATIVE_RTC.UserInfo,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   enableDualStreamModeEx(
     enabled: boolean,
     streamConfig: NATIVE_RTC.SimulcastStreamConfig,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setDualStreamModeEx(
     mode: NATIVE_RTC.SIMULCAST_STREAM_MODE,
     streamConfig: NATIVE_RTC.SimulcastStreamConfig,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setHighPriorityUserListEx(
     uidList: number,
@@ -335,23 +479,28 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     option: NATIVE_RTC.STREAM_FALLBACK_OPTIONS,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   takeSnapshotEx(
     connection: NATIVE_RTC.RtcConnection,
     uid: number,
     filePath: string
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   startMediaRenderingTracingEx(
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-
-  putAction(action: Action) {
-    this._engine.actionQueue.putAction(action);
+    AgoraConsole.warn(
+      'registerAudioFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
   private execute(task: AsyncTaskType): CallApiReturnType {

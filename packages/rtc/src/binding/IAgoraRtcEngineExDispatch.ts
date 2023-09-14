@@ -35,7 +35,7 @@ import {
 } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { IRtcEngineExImpl } from '../impl/IAgoraRtcEngineEx';
+import { IRtcEngineExImpl } from '../impl/IAgoraRtcEngineExImpl';
 
 export class IRtcEngineEventHandlerEx {
   classPrefix: string = 'IRtcEngineEventHandlerEx_';

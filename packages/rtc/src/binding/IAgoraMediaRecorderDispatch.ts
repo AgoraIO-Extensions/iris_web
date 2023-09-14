@@ -4,7 +4,7 @@ import { ApiParam, CallApiReturnType } from 'iris-web-core';
 import { IMediaRecorder } from 'iris-web-rtc';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { IMediaRecorderImpl } from '../impl/IAgoraMediaRecorder';
+import { IMediaRecorderImpl } from '../impl/IAgoraMediaRecorderImpl';
 
 export class IMediaRecorderDispatch {
   private _impl: IMediaRecorder;

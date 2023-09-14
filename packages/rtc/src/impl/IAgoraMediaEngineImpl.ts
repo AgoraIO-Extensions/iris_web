@@ -11,16 +11,25 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
   public constructor(engine: IrisRtcEngine) {
     this._engine = engine;
   }
+
+  putAction(action: Action) {
+    this._engine.actionQueue.putAction(action);
+  }
+
   registerVideoEncodedFrameObserver(
     observer: NATIVE_RTC.IVideoEncodedFrameObserver
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'registerVideoEncodedFrameObserver not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   pushAudioFrame(
     frame: NATIVE_RTC.AudioFrame,
     trackId: number
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn('pushAudioFrame not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setExternalAudioSource(
     enabled: boolean,
@@ -29,29 +38,38 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     localPlayback: boolean,
     publish: boolean
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn('setExternalAudioSource not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   createCustomAudioTrack(
     trackType: NATIVE_RTC.AUDIO_TRACK_TYPE,
     config: NATIVE_RTC.AudioTrackConfig
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn('createCustomAudioTrack not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   destroyCustomAudioTrack(trackId: number): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'destroyCustomAudioTrack not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setExternalAudioSink(
     enabled: boolean,
     sampleRate: number,
     channels: number
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn('setExternalAudioSink not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   enableCustomAudioLocalPlayback(
     trackId: number,
     enabled: boolean
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn(
+      'enableCustomAudioLocalPlayback not supported in this platfrom!'
+    );
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   pushEncodedVideoImage(
     imageBuffer: number,
@@ -59,14 +77,12 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     videoEncodedFrameInfo: NATIVE_RTC.EncodedVideoFrameInfo,
     videoTrackId: number
   ): CallApiReturnType {
-    throw new Error('Method not implemented.');
+    AgoraConsole.warn('pushEncodedVideoImage not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   release(): CallApiReturnType {
-    throw new Error('Method not implemented.');
-  }
-
-  putAction(action: Action) {
-    this._engine.actionQueue.putAction(action);
+    AgoraConsole.warn('release not supported in this platfrom!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
   registerAudioFrameObserver(observer: NATIVE_RTC.IAudioFrameObserver): number {
@@ -124,14 +140,6 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
 
   pushVideoFrame(frame: NATIVE_RTC.ExternalVideoFrame): number {
     AgoraConsole.warn('pushVideoFrame not supported in this platfrom!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-
-  pushVideoFrame2(
-    frame: NATIVE_RTC.ExternalVideoFrame,
-    connection: NATIVE_RTC.RtcConnection
-  ): number {
-    AgoraConsole.warn('pushVideoFrame2 not supported in this platfrom!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 }
