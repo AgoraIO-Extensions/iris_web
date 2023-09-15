@@ -55,7 +55,6 @@ export default defineConfig([
     define: {
       'process.env.NODE_ENV': JSON.stringify('production'),
     },
-    globalName: 'AgoraRTCReact',
     // esbuildPlugins: [
     //   setGlobals({
     //     'react': 'React',

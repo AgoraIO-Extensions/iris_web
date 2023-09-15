@@ -9,7 +9,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'this',
     // library: "",
-    filename: 'lib-iris-web.js',
+    filename: 'iris-web-rtc.js',
     environment: {
       arrowFunction: false, // 关闭webpack的箭头函数，可选
     },
