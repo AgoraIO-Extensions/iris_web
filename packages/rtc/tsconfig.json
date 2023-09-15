@@ -4,6 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "esModuleInterop": true,
     "baseUrl": "."
   },
   "exclude": ["node_modules"]
