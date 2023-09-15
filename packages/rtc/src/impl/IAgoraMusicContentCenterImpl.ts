@@ -83,8 +83,8 @@ export class IMusicContentCenterImpl implements NATIVE_RTC.IMusicContentCenter {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   getCaches(
-    cacheInfo: NATIVE_RTC.MusicCacheInfo,
-    cacheInfoSize: number
+    cacheInfo: NATIVE_RTC.MusicCacheInfo[],
+    cacheInfoSize: number[]
   ): CallApiReturnType {
     AgoraConsole.warn('getCaches not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;

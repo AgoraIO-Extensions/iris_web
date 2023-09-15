@@ -72,7 +72,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   pushEncodedVideoImage(
-    imageBuffer: number,
+    imageBuffer: Uint8Array,
     length: number,
     videoEncodedFrameInfo: NATIVE_RTC.EncodedVideoFrameInfo,
     videoTrackId: number
@@ -114,7 +114,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  pullAudioFrame(frame: NATIVE_RTC.AudioFrame): number {
+  pullAudioFrame(frame: NATIVE_RTC.AudioFrame[]): number {
     AgoraConsole.warn('pullAudioFrame not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -138,7 +138,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  pushVideoFrame(frame: NATIVE_RTC.ExternalVideoFrame): number {
+  pushVideoFrame(frame: NATIVE_RTC.ExternalVideoFrame[]): number {
     AgoraConsole.warn('pushVideoFrame not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }

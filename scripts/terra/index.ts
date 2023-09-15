@@ -33,7 +33,7 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
     cxxfile.nodes = cxxfile.nodes.map((node: TerraNode) => {
       let isCallback = isMatch(node.name, 'isCallback');
 
-      if (node.name === 'IMediaPlayerSourceObserver') {
+      if (node.name === 'IMediaEngine') {
         // debugger;
       }
 

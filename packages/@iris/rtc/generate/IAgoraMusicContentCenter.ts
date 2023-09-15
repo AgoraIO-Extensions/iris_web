@@ -156,7 +156,7 @@ export interface IMusicContentCenter {
   release(): CallApiReturnType;
 
   registerEventHandler(
-    eventHandler: IMusicContentCenterEventHandler[]
+    eventHandler: IMusicContentCenterEventHandler
   ): CallApiReturnType;
 
   unregisterEventHandler(): CallApiReturnType;

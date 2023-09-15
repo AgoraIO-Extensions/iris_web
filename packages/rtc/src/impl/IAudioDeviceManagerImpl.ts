@@ -35,7 +35,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  getPlaybackDevice(deviceId: string[]): CallApiReturnType {
+  getPlaybackDevice(deviceId: string): CallApiReturnType {
     AgoraConsole.warn('getPlaybackDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -52,7 +52,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  getPlaybackDeviceVolume(volume: number): CallApiReturnType {
+  getPlaybackDeviceVolume(volume: number[]): CallApiReturnType {
     AgoraConsole.warn(
       'getPlaybackDeviceVolume not supported in this platform!'
     );
@@ -64,7 +64,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  getRecordingDevice(deviceId: string[]): CallApiReturnType {
+  getRecordingDevice(deviceId: string): CallApiReturnType {
     AgoraConsole.warn('getRecordingDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -81,7 +81,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  getRecordingDeviceVolume(volume: number): CallApiReturnType {
+  getRecordingDeviceVolume(volume: number[]): CallApiReturnType {
     AgoraConsole.warn(
       'getRecordingDeviceVolume not supported in this platform!'
     );
@@ -93,7 +93,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  getLoopbackDevice(deviceId: string[]): CallApiReturnType {
+  getLoopbackDevice(deviceId: string): CallApiReturnType {
     AgoraConsole.warn('getLoopbackDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }

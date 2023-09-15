@@ -260,7 +260,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   createDataStreamEx(
-    streamId: number,
+    streamId: number[],
     reliable: boolean,
     ordered: boolean,
     connection: NATIVE_RTC.RtcConnection
@@ -269,7 +269,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   createDataStreamEx2(
-    streamId: number,
+    streamId: number[],
     config: NATIVE_RTC.DataStreamConfig,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
@@ -411,7 +411,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   }
   getUserInfoByUserAccountEx(
     userAccount: string,
-    userInfo: NATIVE_RTC.UserInfo,
+    userInfo: NATIVE_RTC.UserInfo[],
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn(
@@ -421,7 +421,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   }
   getUserInfoByUidEx(
     uid: number,
-    userInfo: NATIVE_RTC.UserInfo,
+    userInfo: NATIVE_RTC.UserInfo[],
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('getUserInfoByUidEx not supported in this platform!');

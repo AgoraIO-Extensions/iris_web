@@ -1313,7 +1313,7 @@ export interface IRtcEngine {
 
   registerAudioEncodedFrameObserver(
     config: AudioEncodedFrameObserverConfig,
-    observer: IAudioEncodedFrameObserver[]
+    observer: IAudioEncodedFrameObserver
   ): CallApiReturnType;
 
   stopAudioRecording(): CallApiReturnType;
@@ -1569,11 +1569,11 @@ export interface IRtcEngine {
   disableAudioSpectrumMonitor(): CallApiReturnType;
 
   registerAudioSpectrumObserver(
-    observer: IAudioSpectrumObserver[]
+    observer: IAudioSpectrumObserver
   ): CallApiReturnType;
 
   unregisterAudioSpectrumObserver(
-    observer: IAudioSpectrumObserver[]
+    observer: IAudioSpectrumObserver
   ): CallApiReturnType;
 
   adjustRecordingSignalVolume(volume: number): CallApiReturnType;
@@ -1857,12 +1857,10 @@ export interface IRtcEngine {
 
   getConnectionState(): CallApiReturnType;
 
-  registerEventHandler(
-    eventHandler: IRtcEngineEventHandler[]
-  ): CallApiReturnType;
+  registerEventHandler(eventHandler: IRtcEngineEventHandler): CallApiReturnType;
 
   unregisterEventHandler(
-    eventHandler: IRtcEngineEventHandler[]
+    eventHandler: IRtcEngineEventHandler
   ): CallApiReturnType;
 
   setRemoteUserPriority(
@@ -1920,12 +1918,12 @@ export interface IRtcEngine {
   ): CallApiReturnType;
 
   registerMediaMetadataObserver(
-    observer: IMetadataObserver[],
+    observer: IMetadataObserver,
     type: METADATA_TYPE
   ): CallApiReturnType;
 
   unregisterMediaMetadataObserver(
-    observer: IMetadataObserver[],
+    observer: IMetadataObserver,
     type: METADATA_TYPE
   ): CallApiReturnType;
 
@@ -2006,7 +2004,7 @@ export interface IRtcEngine {
   ): CallApiReturnType;
 
   startDirectCdnStreaming(
-    eventHandler: IDirectCdnStreamingEventHandler[],
+    eventHandler: IDirectCdnStreamingEventHandler,
     publishUrl: string,
     options: DirectCdnStreamingMediaOptions
   ): CallApiReturnType;

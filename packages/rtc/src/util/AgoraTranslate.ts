@@ -291,22 +291,20 @@ export class AgoraTranslate {
       inspectType: [],
     };
 
-    if (config.modules.length > 0) {
-      let module: NATIVE_RTC.ContentInspectModule = config.modules[0];
-      ret.interval = module.interval;
-      switch (module.type) {
-        case NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_INVALID:
-          break;
-        case NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_MODERATION:
-          ret.inspectType.push('moderation');
-          break;
-        case NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_SUPERVISION:
-          ret.inspectType.push('supervise');
-          break;
-      }
-      //web这里的单位是毫秒， 而native传入的间隔是秒
-      ret.interval = module.interval * 1000;
+    let module: NATIVE_RTC.ContentInspectModule = config.modules;
+    ret.interval = module.interval;
+    switch (module.type) {
+      case NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_INVALID:
+        break;
+      case NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_MODERATION:
+        ret.inspectType.push('moderation');
+        break;
+      case NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_SUPERVISION:
+        ret.inspectType.push('supervise');
+        break;
     }
+    //web这里的单位是毫秒， 而native传入的间隔是秒
+    ret.interval = module.interval * 1000;
 
     return ret;
   }

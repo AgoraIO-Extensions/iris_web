@@ -1,5 +1,6 @@
 {
   "agora::rtc::IRtcEngineEventHandler.onError.err@type": "ERROR_CODE_TYPE",
+  "agora::media::IMediaEngine.pushAudioFrame.frame@type": "AudioFrame",
   "^agora::media::(.*)": "$1",
   "^Optional<(.*)>": "$1",
   "^util::(.*)": "$1",
@@ -75,5 +76,10 @@
   "^bool const$": "boolean",
   "^bool$": "boolean",
   "^(.*)const\\*": "$1[]",
+
+  "^(.*)Observer\\*": "$1Observer",
+  "^(.*)Sink\\*": "$1Sink",
+  "^(.*)EventHandler\\*": "$1EventHandler",
+
   "^(.*)\\*": "$1[]"
 }

@@ -42,7 +42,7 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   queryCodecCapability(
-    codecInfo: NATIVE_RTC.CodecCapInfo,
+    codecInfo: NATIVE_RTC.CodecCapInfo[],
     size: number
   ): CallApiReturnType {
     AgoraConsole.warn('queryCodecCapability not supported in this platform!');
@@ -1482,7 +1482,7 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   createDataStream(
-    streamId: number,
+    streamId: number[],
     reliable: boolean,
     ordered: boolean
   ): CallApiReturnType {
@@ -1490,7 +1490,7 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   createDataStream2(
-    streamId: number,
+    streamId: number[],
     config: NATIVE_RTC.DataStreamConfig
   ): CallApiReturnType {
     AgoraConsole.warn('createDataStream2 not supported in this platform!');
@@ -1633,7 +1633,7 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
   }
   getUserInfoByUserAccount(
     userAccount: string,
-    userInfo: NATIVE_RTC.UserInfo
+    userInfo: NATIVE_RTC.UserInfo[]
   ): CallApiReturnType {
     AgoraConsole.warn(
       'getUserInfoByUserAccount not supported in this platform!'
@@ -1642,7 +1642,7 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
   }
   getUserInfoByUid(
     uid: number,
-    userInfo: NATIVE_RTC.UserInfo
+    userInfo: NATIVE_RTC.UserInfo[]
   ): CallApiReturnType {
     AgoraConsole.warn('getUserInfoByUid not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -1857,7 +1857,7 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
     AgoraConsole.warn('setDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
-  getDevice(deviceIdUTF8: string[]): CallApiReturnType {
+  getDevice(deviceIdUTF8: string): CallApiReturnType {
     AgoraConsole.warn('getDevice not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }

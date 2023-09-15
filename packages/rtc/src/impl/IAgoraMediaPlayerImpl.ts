@@ -91,7 +91,7 @@ export class IMediaPlayerImpl implements NATIVE_RTC.IMediaPlayer {
   }
   getStreamInfo(
     index: number,
-    info: NATIVE_RTC.PlayerStreamInfo
+    info: NATIVE_RTC.PlayerStreamInfo[]
   ): CallApiReturnType {
     AgoraConsole.warn('getStreamInfo not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;

@@ -25,19 +25,15 @@ export enum AUDIO_MIXING_DUAL_MONO_MODE {
 }
 
 export interface IMediaEngine {
-  registerAudioFrameObserver(
-    observer: IAudioFrameObserver[]
-  ): CallApiReturnType;
+  registerAudioFrameObserver(observer: IAudioFrameObserver): CallApiReturnType;
 
-  registerVideoFrameObserver(
-    observer: IVideoFrameObserver[]
-  ): CallApiReturnType;
+  registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
 
   registerVideoEncodedFrameObserver(
-    observer: IVideoEncodedFrameObserver[]
+    observer: IVideoEncodedFrameObserver
   ): CallApiReturnType;
 
-  pushAudioFrame(frame: AudioFrame[], trackId: number): CallApiReturnType;
+  pushAudioFrame(frame: AudioFrame, trackId: number): CallApiReturnType;
 
   pullAudioFrame(frame: AudioFrame[]): CallApiReturnType;
 

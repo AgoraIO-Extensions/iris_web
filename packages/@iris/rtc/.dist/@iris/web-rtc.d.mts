@@ -1703,10 +1703,10 @@ declare enum AUDIO_MIXING_DUAL_MONO_MODE {
     AUDIO_MIXING_DUAL_MONO_MIX = 3
 }
 interface IMediaEngine {
-    registerAudioFrameObserver(observer: IAudioFrameObserver[]): CallApiReturnType;
-    registerVideoFrameObserver(observer: IVideoFrameObserver[]): CallApiReturnType;
-    registerVideoEncodedFrameObserver(observer: IVideoEncodedFrameObserver[]): CallApiReturnType;
-    pushAudioFrame(frame: AudioFrame[], trackId: number): CallApiReturnType;
+    registerAudioFrameObserver(observer: IAudioFrameObserver): CallApiReturnType;
+    registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
+    registerVideoEncodedFrameObserver(observer: IVideoEncodedFrameObserver): CallApiReturnType;
+    pushAudioFrame(frame: AudioFrame, trackId: number): CallApiReturnType;
     pullAudioFrame(frame: AudioFrame[]): CallApiReturnType;
     setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: EXTERNAL_VIDEO_SOURCE_TYPE, encodedVideoOption: SenderOptions): CallApiReturnType;
     setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, localPlayback: boolean, publish: boolean): CallApiReturnType;
@@ -1764,15 +1764,15 @@ interface IMediaPlayer {
     getPublishSignalVolume(volume: number): CallApiReturnType;
     setView(view: any): CallApiReturnType;
     setRenderMode(renderMode: RENDER_MODE_TYPE): CallApiReturnType;
-    registerPlayerSourceObserver(observer: IMediaPlayerSourceObserver[]): CallApiReturnType;
-    unregisterPlayerSourceObserver(observer: IMediaPlayerSourceObserver[]): CallApiReturnType;
-    registerAudioFrameObserver(observer: IAudioPcmFrameSink[]): CallApiReturnType;
-    registerAudioFrameObserver2(observer: IAudioPcmFrameSink[], mode: RAW_AUDIO_FRAME_OP_MODE_TYPE): CallApiReturnType;
-    unregisterAudioFrameObserver(observer: IAudioPcmFrameSink[]): CallApiReturnType;
-    registerVideoFrameObserver(observer: IVideoFrameObserver[]): CallApiReturnType;
-    unregisterVideoFrameObserver(observer: IVideoFrameObserver[]): CallApiReturnType;
-    registerMediaPlayerAudioSpectrumObserver(observer: IAudioSpectrumObserver[], intervalInMS: number): CallApiReturnType;
-    unregisterMediaPlayerAudioSpectrumObserver(observer: IAudioSpectrumObserver[]): CallApiReturnType;
+    registerPlayerSourceObserver(observer: IMediaPlayerSourceObserver): CallApiReturnType;
+    unregisterPlayerSourceObserver(observer: IMediaPlayerSourceObserver): CallApiReturnType;
+    registerAudioFrameObserver(observer: IAudioPcmFrameSink): CallApiReturnType;
+    registerAudioFrameObserver2(observer: IAudioPcmFrameSink, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE): CallApiReturnType;
+    unregisterAudioFrameObserver(observer: IAudioPcmFrameSink): CallApiReturnType;
+    registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
+    unregisterVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
+    registerMediaPlayerAudioSpectrumObserver(observer: IAudioSpectrumObserver, intervalInMS: number): CallApiReturnType;
+    unregisterMediaPlayerAudioSpectrumObserver(observer: IAudioSpectrumObserver): CallApiReturnType;
     setAudioDualMonoMode(mode: AUDIO_DUAL_MONO_MODE): CallApiReturnType;
     getPlayerSdkVersion(): CallApiReturnType;
     getPlaySrc(): CallApiReturnType;
@@ -1805,7 +1805,7 @@ interface IMediaPlayerCacheManager {
 }
 
 interface IMediaRecorder {
-    setMediaRecorderObserver(callback: IMediaRecorderObserver[]): CallApiReturnType;
+    setMediaRecorderObserver(callback: IMediaRecorderObserver): CallApiReturnType;
     startRecording(config: MediaRecorderConfiguration): CallApiReturnType;
     stopRecording(): CallApiReturnType;
 }
@@ -1934,7 +1934,7 @@ interface IMusicContentCenter {
     initialize(configuration: MusicContentCenterConfiguration): CallApiReturnType;
     renewToken(token: string): CallApiReturnType;
     release(): CallApiReturnType;
-    registerEventHandler(eventHandler: IMusicContentCenterEventHandler[]): CallApiReturnType;
+    registerEventHandler(eventHandler: IMusicContentCenterEventHandler): CallApiReturnType;
     unregisterEventHandler(): CallApiReturnType;
     createMusicPlayer(): CallApiReturnType;
     getMusicCharts(requestId: string): CallApiReturnType;
@@ -2505,7 +2505,7 @@ interface IRtcEngine {
     startAudioRecording(filePath: string, quality: AUDIO_RECORDING_QUALITY_TYPE): CallApiReturnType;
     startAudioRecording2(filePath: string, sampleRate: number, quality: AUDIO_RECORDING_QUALITY_TYPE): CallApiReturnType;
     startAudioRecording3(config: AudioRecordingConfiguration): CallApiReturnType;
-    registerAudioEncodedFrameObserver(config: AudioEncodedFrameObserverConfig, observer: IAudioEncodedFrameObserver[]): CallApiReturnType;
+    registerAudioEncodedFrameObserver(config: AudioEncodedFrameObserverConfig, observer: IAudioEncodedFrameObserver): CallApiReturnType;
     stopAudioRecording(): CallApiReturnType;
     createMediaPlayer(): CallApiReturnType;
     destroyMediaPlayer(media_player: IMediaPlayer): CallApiReturnType;
@@ -2583,8 +2583,8 @@ interface IRtcEngine {
     setPlaybackAudioFrameBeforeMixingParameters(sampleRate: number, channel: number): CallApiReturnType;
     enableAudioSpectrumMonitor(intervalInMS: number): CallApiReturnType;
     disableAudioSpectrumMonitor(): CallApiReturnType;
-    registerAudioSpectrumObserver(observer: IAudioSpectrumObserver[]): CallApiReturnType;
-    unregisterAudioSpectrumObserver(observer: IAudioSpectrumObserver[]): CallApiReturnType;
+    registerAudioSpectrumObserver(observer: IAudioSpectrumObserver): CallApiReturnType;
+    unregisterAudioSpectrumObserver(observer: IAudioSpectrumObserver): CallApiReturnType;
     adjustRecordingSignalVolume(volume: number): CallApiReturnType;
     muteRecordingSignal(mute: boolean): CallApiReturnType;
     adjustPlaybackSignalVolume(volume: number): CallApiReturnType;
@@ -2664,8 +2664,8 @@ interface IRtcEngine {
     startScreenCapture2(sourceType: VIDEO_SOURCE_TYPE, config: ScreenCaptureConfiguration): CallApiReturnType;
     stopScreenCapture2(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
     getConnectionState(): CallApiReturnType;
-    registerEventHandler(eventHandler: IRtcEngineEventHandler[]): CallApiReturnType;
-    unregisterEventHandler(eventHandler: IRtcEngineEventHandler[]): CallApiReturnType;
+    registerEventHandler(eventHandler: IRtcEngineEventHandler): CallApiReturnType;
+    unregisterEventHandler(eventHandler: IRtcEngineEventHandler): CallApiReturnType;
     setRemoteUserPriority(uid: number, userPriority: PRIORITY_TYPE): CallApiReturnType;
     setEncryptionMode(encryptionMode: string): CallApiReturnType;
     setEncryptionSecret(secret: string): CallApiReturnType;
@@ -2680,8 +2680,8 @@ interface IRtcEngine {
     resumeAudio(): CallApiReturnType;
     enableWebSdkInteroperability(enabled: boolean): CallApiReturnType;
     sendCustomReportMessage(id: string, category: string, event: string, label: string, value: number): CallApiReturnType;
-    registerMediaMetadataObserver(observer: IMetadataObserver[], type: METADATA_TYPE): CallApiReturnType;
-    unregisterMediaMetadataObserver(observer: IMetadataObserver[], type: METADATA_TYPE): CallApiReturnType;
+    registerMediaMetadataObserver(observer: IMetadataObserver, type: METADATA_TYPE): CallApiReturnType;
+    unregisterMediaMetadataObserver(observer: IMetadataObserver, type: METADATA_TYPE): CallApiReturnType;
     startAudioFrameDump(channel_id: string, user_id: number, location: string, uuid: string, passwd: string, duration_ms: number, auto_upload: boolean): CallApiReturnType;
     stopAudioFrameDump(channel_id: string, user_id: number, location: string): CallApiReturnType;
     setAINSMode(enabled: boolean, mode: AUDIO_AINS_MODE): CallApiReturnType;
@@ -2699,7 +2699,7 @@ interface IRtcEngine {
     resumeAllChannelMediaRelay(): CallApiReturnType;
     setDirectCdnStreamingAudioConfiguration(profile: AUDIO_PROFILE_TYPE): CallApiReturnType;
     setDirectCdnStreamingVideoConfiguration(config: VideoEncoderConfiguration): CallApiReturnType;
-    startDirectCdnStreaming(eventHandler: IDirectCdnStreamingEventHandler[], publishUrl: string, options: DirectCdnStreamingMediaOptions): CallApiReturnType;
+    startDirectCdnStreaming(eventHandler: IDirectCdnStreamingEventHandler, publishUrl: string, options: DirectCdnStreamingMediaOptions): CallApiReturnType;
     stopDirectCdnStreaming(): CallApiReturnType;
     updateDirectCdnStreamingMediaOptions(options: DirectCdnStreamingMediaOptions): CallApiReturnType;
     startRhythmPlayer(sound1: string, sound2: string, config: AgoraRhythmPlayerConfig): CallApiReturnType;

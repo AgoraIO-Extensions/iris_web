@@ -76,39 +76,35 @@ export interface IMediaPlayer {
   setRenderMode(renderMode: RENDER_MODE_TYPE): CallApiReturnType;
 
   registerPlayerSourceObserver(
-    observer: IMediaPlayerSourceObserver[]
+    observer: IMediaPlayerSourceObserver
   ): CallApiReturnType;
 
   unregisterPlayerSourceObserver(
-    observer: IMediaPlayerSourceObserver[]
+    observer: IMediaPlayerSourceObserver
   ): CallApiReturnType;
 
-  registerAudioFrameObserver(observer: IAudioPcmFrameSink[]): CallApiReturnType;
+  registerAudioFrameObserver(observer: IAudioPcmFrameSink): CallApiReturnType;
 
   registerAudioFrameObserver2(
-    observer: IAudioPcmFrameSink[],
+    observer: IAudioPcmFrameSink,
     mode: RAW_AUDIO_FRAME_OP_MODE_TYPE
   ): CallApiReturnType;
 
-  unregisterAudioFrameObserver(
-    observer: IAudioPcmFrameSink[]
-  ): CallApiReturnType;
+  unregisterAudioFrameObserver(observer: IAudioPcmFrameSink): CallApiReturnType;
 
-  registerVideoFrameObserver(
-    observer: IVideoFrameObserver[]
-  ): CallApiReturnType;
+  registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
 
   unregisterVideoFrameObserver(
-    observer: IVideoFrameObserver[]
+    observer: IVideoFrameObserver
   ): CallApiReturnType;
 
   registerMediaPlayerAudioSpectrumObserver(
-    observer: IAudioSpectrumObserver[],
+    observer: IAudioSpectrumObserver,
     intervalInMS: number
   ): CallApiReturnType;
 
   unregisterMediaPlayerAudioSpectrumObserver(
-    observer: IAudioSpectrumObserver[]
+    observer: IAudioSpectrumObserver
   ): CallApiReturnType;
 
   setAudioDualMonoMode(mode: AUDIO_DUAL_MONO_MODE): CallApiReturnType;
