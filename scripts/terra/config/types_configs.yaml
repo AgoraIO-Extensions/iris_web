@@ -6,10 +6,10 @@ renderers:
   - ../index.ts
 parsers:
   - PointerToArrayParser:
-      configJsonFilePath: /Users/guoxianzhe/agora/iris_web/scripts/terra/config/pointer_to_array.json
+      configJsonFilePath: ./config/pointer_to_array.json
   - OrderNodeParser
   - FixEnumConstantParser
   - UpdateSimpleTypeParser:
-      configJsonFilePath: /Users/guoxianzhe/agora/iris_web/scripts/terra/config/param_type_list.json
+      configJsonFilePath: ./config/param_type_list.json
   - RemoveNodeParser:
-      configJsonFilePath: /Users/guoxianzhe/agora/iris_web/scripts/terra/config/remove_node_list.json
+      configJsonFilePath: ./config/remove_node_list.json

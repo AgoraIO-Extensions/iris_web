@@ -77,7 +77,7 @@ export class IMediaPlayerSourceObserver {
     this.notifyEvent(eventParam);
   }
 
-  onMetaData(data: void, length: number): void {
+  onMetaData(data: void[], length: number): void {
     let _obj = {
       data,
       length,

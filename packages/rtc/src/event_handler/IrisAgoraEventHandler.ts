@@ -9,10 +9,10 @@ export class IrisAgoraEventHandler {
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
-    AgoraRTC.onAutoplayFailed = this.onAutoplayFailed.bind(this);
-    AgoraRTC.onCameraChanged = this.onCameraChanged.bind(this);
-    AgoraRTC.onMicrophoneChanged = this.onMicrophoneChanged.bind(this);
-    AgoraRTC.onPlaybackDeviceChanged = this.onMicrophoneChanged.bind(this);
+    // AgoraRTC.onAutoplayFailed = this.onAutoplayFailed.bind(this);
+    // AgoraRTC.onCameraChanged = this.onCameraChanged.bind(this);
+    // AgoraRTC.onMicrophoneChanged = this.onMicrophoneChanged.bind(this);
+    // AgoraRTC.onPlaybackDeviceChanged = this.onMicrophoneChanged.bind(this);
   }
 
   onAutoplayFailed() {

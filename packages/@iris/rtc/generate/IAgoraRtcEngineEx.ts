@@ -76,7 +76,7 @@ export interface IRtcEngineEventHandlerEx {
 
   onAudioVolumeIndication(
     connection: RtcConnection,
-    speakers: AudioVolumeInfo,
+    speakers: AudioVolumeInfo[],
     speakerNumber: number,
     totalVolume: number
   ): void;
@@ -474,14 +474,14 @@ export interface IRtcEngineEx {
   ): CallApiReturnType;
 
   createDataStreamEx(
-    streamId: number,
+    streamId: number[],
     reliable: boolean,
     ordered: boolean,
     connection: RtcConnection
   ): CallApiReturnType;
 
   createDataStreamEx2(
-    streamId: number,
+    streamId: number[],
     config: DataStreamConfig,
     connection: RtcConnection
   ): CallApiReturnType;
@@ -558,13 +558,13 @@ export interface IRtcEngineEx {
 
   getUserInfoByUserAccountEx(
     userAccount: string,
-    userInfo: UserInfo,
+    userInfo: UserInfo[],
     connection: RtcConnection
   ): CallApiReturnType;
 
   getUserInfoByUidEx(
     uid: number,
-    userInfo: UserInfo,
+    userInfo: UserInfo[],
     connection: RtcConnection
   ): CallApiReturnType;
 

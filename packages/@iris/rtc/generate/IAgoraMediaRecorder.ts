@@ -8,7 +8,9 @@ import {
 } from './AgoraMediaBase';
 
 export interface IMediaRecorder {
-  setMediaRecorderObserver(callback: IMediaRecorderObserver): CallApiReturnType;
+  setMediaRecorderObserver(
+    callback: IMediaRecorderObserver[]
+  ): CallApiReturnType;
 
   startRecording(config: MediaRecorderConfiguration): CallApiReturnType;
 

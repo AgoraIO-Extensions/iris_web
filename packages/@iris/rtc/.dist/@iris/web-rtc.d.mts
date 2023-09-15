@@ -79,7 +79,7 @@ declare class ContentInspectModule {
 declare class ContentInspectConfig {
     extraInfo?: string;
     serverConfig?: string;
-    modules?: ContentInspectModule[];
+    modules?: ContentInspectModule;
     moduleCount?: number;
 }
 declare class PacketOptions {
@@ -141,7 +141,7 @@ declare enum VIDEO_BUFFER_TYPE {
 declare class ExternalVideoFrame {
     type?: VIDEO_BUFFER_TYPE;
     format?: VIDEO_PIXEL_FORMAT;
-    buffer?: void;
+    buffer?: void[];
     stride?: number;
     height?: number;
     cropLeft?: number;
@@ -153,9 +153,9 @@ declare class ExternalVideoFrame {
     eglType?: EGL_CONTEXT_TYPE;
     textureId?: number;
     matrix?: number;
-    metadata_buffer?: number;
+    metadata_buffer?: Uint8Array;
     metadata_size?: number;
-    alphaBuffer?: number;
+    alphaBuffer?: Uint8Array;
     texture_slice_index?: number;
 }
 declare class VideoFrame {
@@ -165,18 +165,18 @@ declare class VideoFrame {
     yStride?: number;
     uStride?: number;
     vStride?: number;
-    yBuffer?: number;
-    uBuffer?: number;
-    vBuffer?: number;
+    yBuffer?: Uint8Array;
+    uBuffer?: Uint8Array;
+    vBuffer?: Uint8Array;
     rotation?: number;
     renderTimeMs?: number;
     avsync_type?: number;
-    metadata_buffer?: number;
+    metadata_buffer?: Uint8Array;
     metadata_size?: number;
     textureId?: number;
     matrix?: number;
-    alphaBuffer?: number;
-    pixelBuffer?: void;
+    alphaBuffer?: Uint8Array;
+    pixelBuffer?: void[];
 }
 declare enum MEDIA_PLAYER_SOURCE_TYPE {
     MEDIA_PLAYER_SOURCE_DEFAULT = 0,
@@ -189,7 +189,7 @@ declare enum VIDEO_MODULE_POSITION {
     POSITION_PRE_ENCODER = 1
 }
 interface IAudioPcmFrameSink {
-    onFrame(frame: AudioPcmFrame): void;
+    onFrame(frame: AudioPcmFrame[]): void;
 }
 declare enum AUDIO_FRAME_TYPE {
     FRAME_TYPE_PCM16 = 0
@@ -200,7 +200,7 @@ declare class AudioFrame {
     bytesPerSample?: BYTES_PER_SAMPLE;
     channels?: number;
     samplesPerSec?: number;
-    buffer?: void;
+    buffer?: void[];
     renderTimeMs?: number;
     avsync_type?: number;
     presentationMs?: number;
@@ -229,7 +229,7 @@ interface IAudioFrameObserver {
     onPlaybackAudioFrameBeforeMixing(channelId: string, uid: number, audioFrame: AudioFrame): boolean;
 }
 declare class AudioSpectrumData {
-    audioSpectrumData?: number;
+    audioSpectrumData?: number[];
     dataLength?: number;
 }
 declare class UserAudioSpectrumInfo {
@@ -241,7 +241,7 @@ interface IAudioSpectrumObserver {
     onRemoteAudioSpectrum(spectrums: UserAudioSpectrumInfo[], spectrumNumber: number): boolean;
 }
 interface IVideoEncodedFrameObserver {
-    onEncodedVideoFrameReceived(uid: number, imageBuffer: number, length: number, videoEncodedFrameInfo: EncodedVideoFrameInfo): boolean;
+    onEncodedVideoFrameReceived(uid: number, imageBuffer: Uint8Array, length: number, videoEncodedFrameInfo: EncodedVideoFrameInfo): boolean;
 }
 declare enum VIDEO_FRAME_PROCESS_MODE {
     PROCESS_MODE_READ_ONLY = 0,
@@ -1020,18 +1020,18 @@ declare class LiveTranscoding {
     backgroundColor?: number;
     videoCodecType?: VIDEO_CODEC_TYPE_FOR_STREAM;
     userCount?: number;
-    transcodingUsers?: TranscodingUser;
+    transcodingUsers?: TranscodingUser[];
     transcodingExtraInfo?: string;
     metadata?: string;
-    watermark?: RtcImage;
+    watermark?: RtcImage[];
     watermarkCount?: number;
-    backgroundImage?: RtcImage;
+    backgroundImage?: RtcImage[];
     backgroundImageCount?: number;
     audioSampleRate?: AUDIO_SAMPLE_RATE_TYPE;
     audioBitrate?: number;
     audioChannels?: number;
     audioCodecProfile?: AUDIO_CODEC_PROFILE_TYPE;
-    advancedFeatures?: LiveStreamAdvancedFeature;
+    advancedFeatures?: LiveStreamAdvancedFeature[];
     advancedFeatureCount?: number;
 }
 declare class TranscodingVideoStream {
@@ -1049,7 +1049,7 @@ declare class TranscodingVideoStream {
 }
 declare class LocalTranscoderConfiguration {
     streamCount?: number;
-    videoInputStreams?: TranscodingVideoStream;
+    videoInputStreams?: TranscodingVideoStream[];
     videoOutputConfiguration?: VideoEncoderConfiguration;
     syncWithPrimaryCamera?: boolean;
 }
@@ -1146,7 +1146,7 @@ declare enum VIDEO_VIEW_SETUP_MODE {
     VIDEO_VIEW_SETUP_REMOVE = 2
 }
 declare class VideoCanvas {
-    view?: number;
+    view?: any;
     uid?: number;
     backgroundColor?: number;
     renderMode?: RENDER_MODE_TYPE;
@@ -1299,7 +1299,7 @@ declare class ScreenCaptureParameters {
     bitrate?: number;
     captureMouseCursor?: boolean;
     windowFocus?: boolean;
-    excludeWindowList?: number;
+    excludeWindowList?: any[];
     excludeWindowCount?: number;
     highLightWidth?: number;
     highLightColor?: number;
@@ -1334,9 +1334,9 @@ declare class AudioEncodedFrameObserverConfig {
     encodingType?: AUDIO_ENCODING_TYPE;
 }
 interface IAudioEncodedFrameObserver {
-    onRecordAudioEncodedFrame(frameBuffer: number, length: number, audioEncodedFrameInfo: EncodedAudioFrameInfo): void;
-    onPlaybackAudioEncodedFrame(frameBuffer: number, length: number, audioEncodedFrameInfo: EncodedAudioFrameInfo): void;
-    onMixedAudioEncodedFrame(frameBuffer: number, length: number, audioEncodedFrameInfo: EncodedAudioFrameInfo): void;
+    onRecordAudioEncodedFrame(frameBuffer: Uint8Array, length: number, audioEncodedFrameInfo: EncodedAudioFrameInfo): void;
+    onPlaybackAudioEncodedFrame(frameBuffer: Uint8Array, length: number, audioEncodedFrameInfo: EncodedAudioFrameInfo): void;
+    onMixedAudioEncodedFrame(frameBuffer: Uint8Array, length: number, audioEncodedFrameInfo: EncodedAudioFrameInfo): void;
 }
 declare enum AREA_CODE {
     AREA_CODE_CN = 1,
@@ -1417,7 +1417,7 @@ declare class DownlinkNetworkInfo {
     lastmile_buffer_delay_time_ms?: number;
     bandwidth_estimation_bps?: number;
     total_downscale_level_count?: number;
-    peer_downlink_info?: PeerDownlinkInfo;
+    peer_downlink_info?: PeerDownlinkInfo[];
     total_received_video_count?: number;
 }
 declare enum ENCRYPTION_MODE {
@@ -1467,7 +1467,7 @@ declare enum STREAM_PUBLISH_STATE {
     PUB_STATE_PUBLISHED = 3
 }
 declare class EchoTestConfiguration {
-    view?: number;
+    view?: any;
     enableAudio?: boolean;
     enableVideo?: boolean;
     token?: string;
@@ -1543,9 +1543,9 @@ declare class AdvancedConfigInfo {
     logUploadServer?: LogUploadServerInfo;
 }
 declare class LocalAccessPointConfiguration {
-    ipList?: string;
+    ipList?: string[];
     ipListSize?: number;
-    domainList?: string;
+    domainList?: string[];
     domainListSize?: number;
     verifyDomainName?: string;
     mode?: LOCAL_PROXY_MODE;
@@ -1703,19 +1703,19 @@ declare enum AUDIO_MIXING_DUAL_MONO_MODE {
     AUDIO_MIXING_DUAL_MONO_MIX = 3
 }
 interface IMediaEngine {
-    registerAudioFrameObserver(observer: IAudioFrameObserver): CallApiReturnType;
-    registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
-    registerVideoEncodedFrameObserver(observer: IVideoEncodedFrameObserver): CallApiReturnType;
-    pushAudioFrame(frame: AudioFrame, trackId: number): CallApiReturnType;
-    pullAudioFrame(frame: AudioFrame): CallApiReturnType;
+    registerAudioFrameObserver(observer: IAudioFrameObserver[]): CallApiReturnType;
+    registerVideoFrameObserver(observer: IVideoFrameObserver[]): CallApiReturnType;
+    registerVideoEncodedFrameObserver(observer: IVideoEncodedFrameObserver[]): CallApiReturnType;
+    pushAudioFrame(frame: AudioFrame[], trackId: number): CallApiReturnType;
+    pullAudioFrame(frame: AudioFrame[]): CallApiReturnType;
     setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: EXTERNAL_VIDEO_SOURCE_TYPE, encodedVideoOption: SenderOptions): CallApiReturnType;
     setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, localPlayback: boolean, publish: boolean): CallApiReturnType;
     createCustomAudioTrack(trackType: AUDIO_TRACK_TYPE, config: AudioTrackConfig): CallApiReturnType;
     destroyCustomAudioTrack(trackId: number): CallApiReturnType;
     setExternalAudioSink(enabled: boolean, sampleRate: number, channels: number): CallApiReturnType;
     enableCustomAudioLocalPlayback(trackId: number, enabled: boolean): CallApiReturnType;
-    pushVideoFrame(frame: ExternalVideoFrame, videoTrackId: number): CallApiReturnType;
-    pushEncodedVideoImage(imageBuffer: number, length: number, videoEncodedFrameInfo: EncodedVideoFrameInfo, videoTrackId: number): CallApiReturnType;
+    pushVideoFrame(frame: ExternalVideoFrame[], videoTrackId: number): CallApiReturnType;
+    pushEncodedVideoImage(imageBuffer: Uint8Array, length: number, videoEncodedFrameInfo: EncodedVideoFrameInfo, videoTrackId: number): CallApiReturnType;
     release(): CallApiReturnType;
 }
 
@@ -1723,7 +1723,7 @@ interface IMediaPlayerSourceObserver {
     onPlayerSourceStateChanged(state: MEDIA_PLAYER_STATE, ec: MEDIA_PLAYER_ERROR): void;
     onPositionChanged(position_ms: number): void;
     onPlayerEvent(eventCode: MEDIA_PLAYER_EVENT, elapsedTime: number, message: string): void;
-    onMetaData(data: void, length: number): void;
+    onMetaData(data: void[], length: number): void;
     onPlayBufferUpdated(playCachedBuffer: number): void;
     onPreloadEvent(src: string, event: PLAYER_PRELOAD_EVENT): void;
     onCompleted(): void;
@@ -1746,7 +1746,7 @@ interface IMediaPlayer {
     getDuration(duration: number): CallApiReturnType;
     getPlayPosition(pos: number): CallApiReturnType;
     getStreamCount(count: number): CallApiReturnType;
-    getStreamInfo(index: number, info: PlayerStreamInfo): CallApiReturnType;
+    getStreamInfo(index: number, info: PlayerStreamInfo[]): CallApiReturnType;
     setLoopCount(loopCount: number): CallApiReturnType;
     setPlaybackSpeed(speed: number): CallApiReturnType;
     selectAudioTrack(index: number): CallApiReturnType;
@@ -1762,17 +1762,17 @@ interface IMediaPlayer {
     getPlayoutVolume(volume: number): CallApiReturnType;
     adjustPublishSignalVolume(volume: number): CallApiReturnType;
     getPublishSignalVolume(volume: number): CallApiReturnType;
-    setView(view: number): CallApiReturnType;
+    setView(view: any): CallApiReturnType;
     setRenderMode(renderMode: RENDER_MODE_TYPE): CallApiReturnType;
-    registerPlayerSourceObserver(observer: IMediaPlayerSourceObserver): CallApiReturnType;
-    unregisterPlayerSourceObserver(observer: IMediaPlayerSourceObserver): CallApiReturnType;
-    registerAudioFrameObserver(observer: IAudioPcmFrameSink): CallApiReturnType;
-    registerAudioFrameObserver2(observer: IAudioPcmFrameSink, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE): CallApiReturnType;
-    unregisterAudioFrameObserver(observer: IAudioPcmFrameSink): CallApiReturnType;
-    registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
-    unregisterVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
-    registerMediaPlayerAudioSpectrumObserver(observer: IAudioSpectrumObserver, intervalInMS: number): CallApiReturnType;
-    unregisterMediaPlayerAudioSpectrumObserver(observer: IAudioSpectrumObserver): CallApiReturnType;
+    registerPlayerSourceObserver(observer: IMediaPlayerSourceObserver[]): CallApiReturnType;
+    unregisterPlayerSourceObserver(observer: IMediaPlayerSourceObserver[]): CallApiReturnType;
+    registerAudioFrameObserver(observer: IAudioPcmFrameSink[]): CallApiReturnType;
+    registerAudioFrameObserver2(observer: IAudioPcmFrameSink[], mode: RAW_AUDIO_FRAME_OP_MODE_TYPE): CallApiReturnType;
+    unregisterAudioFrameObserver(observer: IAudioPcmFrameSink[]): CallApiReturnType;
+    registerVideoFrameObserver(observer: IVideoFrameObserver[]): CallApiReturnType;
+    unregisterVideoFrameObserver(observer: IVideoFrameObserver[]): CallApiReturnType;
+    registerMediaPlayerAudioSpectrumObserver(observer: IAudioSpectrumObserver[], intervalInMS: number): CallApiReturnType;
+    unregisterMediaPlayerAudioSpectrumObserver(observer: IAudioSpectrumObserver[]): CallApiReturnType;
     setAudioDualMonoMode(mode: AUDIO_DUAL_MONO_MODE): CallApiReturnType;
     getPlayerSdkVersion(): CallApiReturnType;
     getPlaySrc(): CallApiReturnType;
@@ -1805,7 +1805,7 @@ interface IMediaPlayerCacheManager {
 }
 
 interface IMediaRecorder {
-    setMediaRecorderObserver(callback: IMediaRecorderObserver): CallApiReturnType;
+    setMediaRecorderObserver(callback: IMediaRecorderObserver[]): CallApiReturnType;
     startRecording(config: MediaRecorderConfiguration): CallApiReturnType;
     stopRecording(): CallApiReturnType;
 }
@@ -1847,7 +1847,7 @@ declare class InputSeiData {
     type?: number;
     timestamp?: number;
     frame_index?: number;
-    private_data?: number;
+    private_data?: Uint8Array;
     data_size?: number;
 }
 
@@ -1901,11 +1901,11 @@ declare class Music {
     type?: number;
     pitchType?: number;
     lyricCount?: number;
-    lyricList?: number;
+    lyricList?: number[];
     climaxSegmentCount?: number;
-    climaxSegmentList?: ClimaxSegment;
+    climaxSegmentList?: ClimaxSegment[];
     mvPropertyCount?: number;
-    mvPropertyList?: MvProperty;
+    mvPropertyList?: MvProperty[];
 }
 interface MusicCollection {
     getCount(): CallApiReturnType;
@@ -1934,7 +1934,7 @@ interface IMusicContentCenter {
     initialize(configuration: MusicContentCenterConfiguration): CallApiReturnType;
     renewToken(token: string): CallApiReturnType;
     release(): CallApiReturnType;
-    registerEventHandler(eventHandler: IMusicContentCenterEventHandler): CallApiReturnType;
+    registerEventHandler(eventHandler: IMusicContentCenterEventHandler[]): CallApiReturnType;
     unregisterEventHandler(): CallApiReturnType;
     createMusicPlayer(): CallApiReturnType;
     getMusicCharts(requestId: string): CallApiReturnType;
@@ -1943,7 +1943,7 @@ interface IMusicContentCenter {
     preload(songCode: number, jsonOption: string): CallApiReturnType;
     preload2(requestId: string, songCode: number): CallApiReturnType;
     removeCache(songCode: number): CallApiReturnType;
-    getCaches(cacheInfo: MusicCacheInfo, cacheInfoSize: number): CallApiReturnType;
+    getCaches(cacheInfo: MusicCacheInfo[], cacheInfoSize: number[]): CallApiReturnType;
     isPreloaded(songCode: number): CallApiReturnType;
     getLyric(requestId: string, songCode: number, LyricType: number): CallApiReturnType;
     getSongSimpleInfo(requestId: string, songCode: number): CallApiReturnType;
@@ -2114,7 +2114,7 @@ declare class VideoCompositingLayout {
     canvasWidth?: number;
     canvasHeight?: number;
     backgroundColor?: string;
-    regions?: Region;
+    regions?: Region[];
     regionCount?: number;
     appData?: string;
     appDataLength?: number;
@@ -2167,7 +2167,7 @@ declare class ScreenCaptureConfiguration {
     isCaptureWindow?: boolean;
     displayId?: number;
     screenRect?: Rectangle;
-    windowId?: number;
+    windowId?: any;
     params?: ScreenCaptureParameters;
     regionRect?: Rectangle;
 }
@@ -2189,7 +2189,7 @@ declare enum ScreenCaptureSourceType {
 }
 declare class ScreenCaptureSourceInfo {
     type?: ScreenCaptureSourceType;
-    sourceId?: number;
+    sourceId?: any;
     sourceName?: string;
     thumbImage?: ThumbImageBuffer;
     iconImage?: ThumbImageBuffer;
@@ -2199,7 +2199,7 @@ declare class ScreenCaptureSourceInfo {
     isOccluded?: boolean;
     position?: Rectangle;
     minimizeWindow?: boolean;
-    sourceDisplayId?: number;
+    sourceDisplayId?: any;
 }
 declare class AdvancedAudioOptions {
     audioProcessingChannels?: number;
@@ -2267,10 +2267,10 @@ interface IRtcEngineEventHandler {
     onJoinChannelSuccess(channel: string, uid: number, elapsed: number): void;
     onRejoinChannelSuccess(channel: string, uid: number, elapsed: number): void;
     onProxyConnected(channel: string, uid: number, proxyType: PROXY_TYPE, localProxyIp: string, elapsed: number): void;
-    onError(err: number, msg: string): void;
+    onError(err: ERROR_CODE_TYPE, msg: string): void;
     onAudioQuality(uid: number, quality: number, delay: number, lost: number): void;
     onLastmileProbeResult(result: LastmileProbeResult): void;
-    onAudioVolumeIndication(speakers: AudioVolumeInfo, speakerNumber: number, totalVolume: number): void;
+    onAudioVolumeIndication(speakers: AudioVolumeInfo[], speakerNumber: number, totalVolume: number): void;
     onLeaveChannel(stats: RtcStats): void;
     onRtcStats(stats: RtcStats): void;
     onAudioDeviceStateChanged(deviceId: string, deviceType: number, deviceState: number): void;
@@ -2304,7 +2304,7 @@ interface IRtcEngineEventHandler {
     onCameraReady(): void;
     onCameraFocusAreaChanged(x: number, y: number, width: number, height: number): void;
     onCameraExposureAreaChanged(x: number, y: number, width: number, height: number): void;
-    onFacePositionChanged(imageWidth: number, imageHeight: number, vecRectangle: Rectangle, vecDistance: number, numFaces: number): void;
+    onFacePositionChanged(imageWidth: number, imageHeight: number, vecRectangle: Rectangle[], vecDistance: number[], numFaces: number): void;
     onVideoStopped(): void;
     onAudioMixingStateChanged(state: AUDIO_MIXING_STATE_TYPE, reason: AUDIO_MIXING_REASON_TYPE): void;
     onRhythmPlayerStateChanged(state: RHYTHM_PLAYER_STATE_TYPE, errorCode: RHYTHM_PLAYER_ERROR_TYPE): void;
@@ -2361,10 +2361,10 @@ interface IRtcEngineEventHandler {
 interface IVideoDeviceManager {
     enumerateVideoDevices(): CallApiReturnType;
     setDevice(deviceIdUTF8: string[]): CallApiReturnType;
-    getDevice(deviceIdUTF8: string[]): CallApiReturnType;
+    getDevice(deviceIdUTF8: string): CallApiReturnType;
     numberOfCapabilities(deviceIdUTF8: string): CallApiReturnType;
     getCapability(deviceIdUTF8: string, deviceCapabilityNumber: number, capability: VideoFormat): CallApiReturnType;
-    startDeviceTest(hwnd: number): CallApiReturnType;
+    startDeviceTest(hwnd: any): CallApiReturnType;
     stopDeviceTest(): CallApiReturnType;
     release(): CallApiReturnType;
 }
@@ -2444,7 +2444,7 @@ interface IRtcEngine {
     initialize(context: RtcEngineContext): CallApiReturnType;
     getVersion(): CallApiReturnType;
     getErrorDescription(code: number): CallApiReturnType;
-    queryCodecCapability(codecInfo: CodecCapInfo, size: number): CallApiReturnType;
+    queryCodecCapability(codecInfo: CodecCapInfo[], size: number): CallApiReturnType;
     preloadChannel(token: string, channelId: string, uid: number): CallApiReturnType;
     preloadChannel2(token: string, channelId: string, userAccount: string): CallApiReturnType;
     updatePreloadChannelToken(token: string): CallApiReturnType;
@@ -2505,7 +2505,7 @@ interface IRtcEngine {
     startAudioRecording(filePath: string, quality: AUDIO_RECORDING_QUALITY_TYPE): CallApiReturnType;
     startAudioRecording2(filePath: string, sampleRate: number, quality: AUDIO_RECORDING_QUALITY_TYPE): CallApiReturnType;
     startAudioRecording3(config: AudioRecordingConfiguration): CallApiReturnType;
-    registerAudioEncodedFrameObserver(config: AudioEncodedFrameObserverConfig, observer: IAudioEncodedFrameObserver): CallApiReturnType;
+    registerAudioEncodedFrameObserver(config: AudioEncodedFrameObserverConfig, observer: IAudioEncodedFrameObserver[]): CallApiReturnType;
     stopAudioRecording(): CallApiReturnType;
     createMediaPlayer(): CallApiReturnType;
     destroyMediaPlayer(media_player: IMediaPlayer): CallApiReturnType;
@@ -2583,8 +2583,8 @@ interface IRtcEngine {
     setPlaybackAudioFrameBeforeMixingParameters(sampleRate: number, channel: number): CallApiReturnType;
     enableAudioSpectrumMonitor(intervalInMS: number): CallApiReturnType;
     disableAudioSpectrumMonitor(): CallApiReturnType;
-    registerAudioSpectrumObserver(observer: IAudioSpectrumObserver): CallApiReturnType;
-    unregisterAudioSpectrumObserver(observer: IAudioSpectrumObserver): CallApiReturnType;
+    registerAudioSpectrumObserver(observer: IAudioSpectrumObserver[]): CallApiReturnType;
+    unregisterAudioSpectrumObserver(observer: IAudioSpectrumObserver[]): CallApiReturnType;
     adjustRecordingSignalVolume(volume: number): CallApiReturnType;
     muteRecordingSignal(mute: boolean): CallApiReturnType;
     adjustPlaybackSignalVolume(volume: number): CallApiReturnType;
@@ -2638,7 +2638,7 @@ interface IRtcEngine {
     startScreenCaptureByDisplayId(displayId: number, regionRect: Rectangle, captureParams: ScreenCaptureParameters): CallApiReturnType;
     startScreenCaptureByScreenRect(screenRect: Rectangle, regionRect: Rectangle, captureParams: ScreenCaptureParameters): CallApiReturnType;
     getAudioDeviceInfo(deviceInfo: DeviceInfo): CallApiReturnType;
-    startScreenCaptureByWindowId(windowId: number, regionRect: Rectangle, captureParams: ScreenCaptureParameters): CallApiReturnType;
+    startScreenCaptureByWindowId(windowId: any, regionRect: Rectangle, captureParams: ScreenCaptureParameters): CallApiReturnType;
     setScreenCaptureContentHint(contentHint: VIDEO_CONTENT_HINT): CallApiReturnType;
     updateScreenCaptureRegion(regionRect: Rectangle): CallApiReturnType;
     updateScreenCaptureParameters(captureParams: ScreenCaptureParameters): CallApiReturnType;
@@ -2664,14 +2664,14 @@ interface IRtcEngine {
     startScreenCapture2(sourceType: VIDEO_SOURCE_TYPE, config: ScreenCaptureConfiguration): CallApiReturnType;
     stopScreenCapture2(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
     getConnectionState(): CallApiReturnType;
-    registerEventHandler(eventHandler: IRtcEngineEventHandler): CallApiReturnType;
-    unregisterEventHandler(eventHandler: IRtcEngineEventHandler): CallApiReturnType;
+    registerEventHandler(eventHandler: IRtcEngineEventHandler[]): CallApiReturnType;
+    unregisterEventHandler(eventHandler: IRtcEngineEventHandler[]): CallApiReturnType;
     setRemoteUserPriority(uid: number, userPriority: PRIORITY_TYPE): CallApiReturnType;
     setEncryptionMode(encryptionMode: string): CallApiReturnType;
     setEncryptionSecret(secret: string): CallApiReturnType;
     enableEncryption(enabled: boolean, config: EncryptionConfig): CallApiReturnType;
-    createDataStream(streamId: number, reliable: boolean, ordered: boolean): CallApiReturnType;
-    createDataStream2(streamId: number, config: DataStreamConfig): CallApiReturnType;
+    createDataStream(streamId: number[], reliable: boolean, ordered: boolean): CallApiReturnType;
+    createDataStream2(streamId: number[], config: DataStreamConfig): CallApiReturnType;
     sendStreamMessage(streamId: number, data: string, length: number): CallApiReturnType;
     addVideoWatermark(watermark: RtcImage): CallApiReturnType;
     addVideoWatermark2(watermarkUrl: string, options: WatermarkOptions): CallApiReturnType;
@@ -2680,8 +2680,8 @@ interface IRtcEngine {
     resumeAudio(): CallApiReturnType;
     enableWebSdkInteroperability(enabled: boolean): CallApiReturnType;
     sendCustomReportMessage(id: string, category: string, event: string, label: string, value: number): CallApiReturnType;
-    registerMediaMetadataObserver(observer: IMetadataObserver, type: METADATA_TYPE): CallApiReturnType;
-    unregisterMediaMetadataObserver(observer: IMetadataObserver, type: METADATA_TYPE): CallApiReturnType;
+    registerMediaMetadataObserver(observer: IMetadataObserver[], type: METADATA_TYPE): CallApiReturnType;
+    unregisterMediaMetadataObserver(observer: IMetadataObserver[], type: METADATA_TYPE): CallApiReturnType;
     startAudioFrameDump(channel_id: string, user_id: number, location: string, uuid: string, passwd: string, duration_ms: number, auto_upload: boolean): CallApiReturnType;
     stopAudioFrameDump(channel_id: string, user_id: number, location: string): CallApiReturnType;
     setAINSMode(enabled: boolean, mode: AUDIO_AINS_MODE): CallApiReturnType;
@@ -2689,8 +2689,8 @@ interface IRtcEngine {
     joinChannelWithUserAccount(token: string, channelId: string, userAccount: string): CallApiReturnType;
     joinChannelWithUserAccount2(token: string, channelId: string, userAccount: string, options: ChannelMediaOptions): CallApiReturnType;
     joinChannelWithUserAccountEx(token: string, channelId: string, userAccount: string, options: ChannelMediaOptions): CallApiReturnType;
-    getUserInfoByUserAccount(userAccount: string, userInfo: UserInfo): CallApiReturnType;
-    getUserInfoByUid(uid: number, userInfo: UserInfo): CallApiReturnType;
+    getUserInfoByUserAccount(userAccount: string, userInfo: UserInfo[]): CallApiReturnType;
+    getUserInfoByUid(uid: number, userInfo: UserInfo[]): CallApiReturnType;
     startOrUpdateChannelMediaRelay(configuration: ChannelMediaRelayConfiguration): CallApiReturnType;
     startChannelMediaRelay(configuration: ChannelMediaRelayConfiguration): CallApiReturnType;
     updateChannelMediaRelay(configuration: ChannelMediaRelayConfiguration): CallApiReturnType;
@@ -2699,7 +2699,7 @@ interface IRtcEngine {
     resumeAllChannelMediaRelay(): CallApiReturnType;
     setDirectCdnStreamingAudioConfiguration(profile: AUDIO_PROFILE_TYPE): CallApiReturnType;
     setDirectCdnStreamingVideoConfiguration(config: VideoEncoderConfiguration): CallApiReturnType;
-    startDirectCdnStreaming(eventHandler: IDirectCdnStreamingEventHandler, publishUrl: string, options: DirectCdnStreamingMediaOptions): CallApiReturnType;
+    startDirectCdnStreaming(eventHandler: IDirectCdnStreamingEventHandler[], publishUrl: string, options: DirectCdnStreamingMediaOptions): CallApiReturnType;
     stopDirectCdnStreaming(): CallApiReturnType;
     updateDirectCdnStreamingMediaOptions(options: DirectCdnStreamingMediaOptions): CallApiReturnType;
     startRhythmPlayer(sound1: string, sound2: string, config: AgoraRhythmPlayerConfig): CallApiReturnType;
@@ -2816,7 +2816,7 @@ interface IRtcEngineEventHandlerEx {
     onJoinChannelSuccess(connection: RtcConnection, elapsed: number): void;
     onRejoinChannelSuccess(connection: RtcConnection, elapsed: number): void;
     onAudioQuality(connection: RtcConnection, remoteUid: number, quality: number, delay: number, lost: number): void;
-    onAudioVolumeIndication(connection: RtcConnection, speakers: AudioVolumeInfo, speakerNumber: number, totalVolume: number): void;
+    onAudioVolumeIndication(connection: RtcConnection, speakers: AudioVolumeInfo[], speakerNumber: number, totalVolume: number): void;
     onLeaveChannel(connection: RtcConnection, stats: RtcStats): void;
     onRtcStats(connection: RtcConnection, stats: RtcStats): void;
     onNetworkQuality(connection: RtcConnection, remoteUid: number, txQuality: number, rxQuality: number): void;
@@ -2891,8 +2891,8 @@ interface IRtcEngineEx {
     adjustUserPlaybackSignalVolumeEx(uid: number, volume: number, connection: RtcConnection): CallApiReturnType;
     getConnectionStateEx(connection: RtcConnection): CallApiReturnType;
     enableEncryptionEx(connection: RtcConnection, enabled: boolean, config: EncryptionConfig): CallApiReturnType;
-    createDataStreamEx(streamId: number, reliable: boolean, ordered: boolean, connection: RtcConnection): CallApiReturnType;
-    createDataStreamEx2(streamId: number, config: DataStreamConfig, connection: RtcConnection): CallApiReturnType;
+    createDataStreamEx(streamId: number[], reliable: boolean, ordered: boolean, connection: RtcConnection): CallApiReturnType;
+    createDataStreamEx2(streamId: number[], config: DataStreamConfig, connection: RtcConnection): CallApiReturnType;
     sendStreamMessageEx(streamId: number, data: string, length: number, connection: RtcConnection): CallApiReturnType;
     addVideoWatermarkEx(watermarkUrl: string, options: WatermarkOptions, connection: RtcConnection): CallApiReturnType;
     clearVideoWatermarkEx(connection: RtcConnection): CallApiReturnType;
@@ -2908,8 +2908,8 @@ interface IRtcEngineEx {
     stopChannelMediaRelayEx(connection: RtcConnection): CallApiReturnType;
     pauseAllChannelMediaRelayEx(connection: RtcConnection): CallApiReturnType;
     resumeAllChannelMediaRelayEx(connection: RtcConnection): CallApiReturnType;
-    getUserInfoByUserAccountEx(userAccount: string, userInfo: UserInfo, connection: RtcConnection): CallApiReturnType;
-    getUserInfoByUidEx(uid: number, userInfo: UserInfo, connection: RtcConnection): CallApiReturnType;
+    getUserInfoByUserAccountEx(userAccount: string, userInfo: UserInfo[], connection: RtcConnection): CallApiReturnType;
+    getUserInfoByUidEx(uid: number, userInfo: UserInfo[], connection: RtcConnection): CallApiReturnType;
     enableDualStreamModeEx(enabled: boolean, streamConfig: SimulcastStreamConfig, connection: RtcConnection): CallApiReturnType;
     setDualStreamModeEx(mode: SIMULCAST_STREAM_MODE, streamConfig: SimulcastStreamConfig, connection: RtcConnection): CallApiReturnType;
     setHighPriorityUserListEx(uidList: number, uidNum: number, option: STREAM_FALLBACK_OPTIONS, connection: RtcConnection): CallApiReturnType;
@@ -2938,8 +2938,8 @@ interface IBaseSpatialAudioEngine {
     setMaxAudioRecvCount(maxCount: number): CallApiReturnType;
     setAudioRecvRange(range: number): CallApiReturnType;
     setDistanceUnit(unit: number): CallApiReturnType;
-    updateSelfPosition(position: number[], axisForward: number[], axisRight: number[], axisUp: number[]): CallApiReturnType;
-    updateSelfPositionEx(position: number[], axisForward: number[], axisRight: number[], axisUp: number[], connection: RtcConnection): CallApiReturnType;
+    updateSelfPosition(position: number, axisForward: number, axisRight: number, axisUp: number): CallApiReturnType;
+    updateSelfPositionEx(position: number, axisForward: number, axisRight: number, axisUp: number, connection: RtcConnection): CallApiReturnType;
     updatePlayerPositionInfo(playerId: number, positionInfo: RemoteVoicePositionInfo): CallApiReturnType;
     setParameters(params: string): CallApiReturnType;
     muteLocalAudioStream(mute: boolean): CallApiReturnType;
@@ -2966,17 +2966,17 @@ interface IAudioDeviceManager {
     enumeratePlaybackDevices(): CallApiReturnType;
     enumerateRecordingDevices(): CallApiReturnType;
     setPlaybackDevice(deviceId: string[]): CallApiReturnType;
-    getPlaybackDevice(deviceId: string[]): CallApiReturnType;
+    getPlaybackDevice(deviceId: string): CallApiReturnType;
     getPlaybackDeviceInfo(): CallApiReturnType;
     setPlaybackDeviceVolume(volume: number): CallApiReturnType;
-    getPlaybackDeviceVolume(volume: number): CallApiReturnType;
+    getPlaybackDeviceVolume(volume: number[]): CallApiReturnType;
     setRecordingDevice(deviceId: string[]): CallApiReturnType;
-    getRecordingDevice(deviceId: string[]): CallApiReturnType;
+    getRecordingDevice(deviceId: string): CallApiReturnType;
     getRecordingDeviceInfo(): CallApiReturnType;
     setRecordingDeviceVolume(volume: number): CallApiReturnType;
-    getRecordingDeviceVolume(volume: number): CallApiReturnType;
+    getRecordingDeviceVolume(volume: number[]): CallApiReturnType;
     setLoopbackDevice(deviceId: string[]): CallApiReturnType;
-    getLoopbackDevice(deviceId: string[]): CallApiReturnType;
+    getLoopbackDevice(deviceId: string): CallApiReturnType;
     setPlaybackDeviceMute(mute: boolean): CallApiReturnType;
     getPlaybackDeviceMute(mute: boolean): CallApiReturnType;
     setRecordingDeviceMute(mute: boolean): CallApiReturnType;

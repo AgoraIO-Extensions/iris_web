@@ -23,7 +23,7 @@ export interface IMediaPlayerSourceObserver {
     message: string
   ): void;
 
-  onMetaData(data: void, length: number): void;
+  onMetaData(data: void[], length: number): void;
 
   onPlayBufferUpdated(playCachedBuffer: number): void;
 

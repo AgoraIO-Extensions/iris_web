@@ -25,17 +25,21 @@ export enum AUDIO_MIXING_DUAL_MONO_MODE {
 }
 
 export interface IMediaEngine {
-  registerAudioFrameObserver(observer: IAudioFrameObserver): CallApiReturnType;
-
-  registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
-
-  registerVideoEncodedFrameObserver(
-    observer: IVideoEncodedFrameObserver
+  registerAudioFrameObserver(
+    observer: IAudioFrameObserver[]
   ): CallApiReturnType;
 
-  pushAudioFrame(frame: AudioFrame, trackId: number): CallApiReturnType;
+  registerVideoFrameObserver(
+    observer: IVideoFrameObserver[]
+  ): CallApiReturnType;
 
-  pullAudioFrame(frame: AudioFrame): CallApiReturnType;
+  registerVideoEncodedFrameObserver(
+    observer: IVideoEncodedFrameObserver[]
+  ): CallApiReturnType;
+
+  pushAudioFrame(frame: AudioFrame[], trackId: number): CallApiReturnType;
+
+  pullAudioFrame(frame: AudioFrame[]): CallApiReturnType;
 
   setExternalVideoSource(
     enabled: boolean,
@@ -71,12 +75,12 @@ export interface IMediaEngine {
   ): CallApiReturnType;
 
   pushVideoFrame(
-    frame: ExternalVideoFrame,
+    frame: ExternalVideoFrame[],
     videoTrackId: number
   ): CallApiReturnType;
 
   pushEncodedVideoImage(
-    imageBuffer: number,
+    imageBuffer: Uint8Array,
     length: number,
     videoEncodedFrameInfo: EncodedVideoFrameInfo,
     videoTrackId: number

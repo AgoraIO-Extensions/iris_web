@@ -74,15 +74,15 @@ export class Music {
 
   lyricCount?: number;
 
-  lyricList?: number;
+  lyricList?: number[];
 
   climaxSegmentCount?: number;
 
-  climaxSegmentList?: ClimaxSegment;
+  climaxSegmentList?: ClimaxSegment[];
 
   mvPropertyCount?: number;
 
-  mvPropertyList?: MvProperty;
+  mvPropertyList?: MvProperty[];
 }
 
 export interface MusicCollection {
@@ -156,7 +156,7 @@ export interface IMusicContentCenter {
   release(): CallApiReturnType;
 
   registerEventHandler(
-    eventHandler: IMusicContentCenterEventHandler
+    eventHandler: IMusicContentCenterEventHandler[]
   ): CallApiReturnType;
 
   unregisterEventHandler(): CallApiReturnType;
@@ -188,8 +188,8 @@ export interface IMusicContentCenter {
   removeCache(songCode: number): CallApiReturnType;
 
   getCaches(
-    cacheInfo: MusicCacheInfo,
-    cacheInfoSize: number
+    cacheInfo: MusicCacheInfo[],
+    cacheInfoSize: number[]
   ): CallApiReturnType;
 
   isPreloaded(songCode: number): CallApiReturnType;

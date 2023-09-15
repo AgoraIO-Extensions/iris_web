@@ -31,6 +31,7 @@ import {
 } from '../binding/IAgoraMusicContentCenterDispatch';
 import {
   IRtcEngineDispatch,
+  IRtcEngineEventHandler,
   IVideoDeviceManagerDispatch,
 } from '../binding/IAgoraRtcEngineDispatch';
 import { IRtcEngineExDispatch } from '../binding/IAgoraRtcEngineExDispatch';
@@ -131,7 +132,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     );
 
     this.actionQueue = new AgoraActionQueue();
-    // this.rtcEngineEventHandler = new RtcEngineEventHandler(this);
+    this.rtcEngineEventHandler = new IRtcEngineEventHandler(this);
     this.entitiesContainer = new IrisEntitiesContainer(this);
     this.globalVariables = new IrisGlobalVariables();
     this.mainClientVariables = new IrisMainClientVariables();

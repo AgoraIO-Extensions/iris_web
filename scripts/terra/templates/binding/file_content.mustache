@@ -22,7 +22,7 @@ export class {{name}} {
   }
 
   {{#methods}}
-    {{name}}({{#parameters}}{{name}}:{{type.name}},{{/parameters}}): void {
+    {{name}}({{#parameters}}{{name}}:{{type.source}},{{/parameters}}): void {
       let _obj = {
         {{#parameters}}{{name}},{{/parameters}}
       };

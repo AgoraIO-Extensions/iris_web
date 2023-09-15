@@ -23,7 +23,7 @@ export class IAudioEncodedFrameObserver {
   }
 
   onRecordAudioEncodedFrame(
-    frameBuffer: number,
+    frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void {
@@ -43,7 +43,7 @@ export class IAudioEncodedFrameObserver {
   }
 
   onPlaybackAudioEncodedFrame(
-    frameBuffer: number,
+    frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void {
@@ -63,7 +63,7 @@ export class IAudioEncodedFrameObserver {
   }
 
   onMixedAudioEncodedFrame(
-    frameBuffer: number,
+    frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void {

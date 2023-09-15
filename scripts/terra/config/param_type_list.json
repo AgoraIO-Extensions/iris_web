@@ -1,4 +1,5 @@
 {
+  "agora::rtc::IRtcEngineEventHandler.onError.err@type": "ERROR_CODE_TYPE",
   "^agora::media::(.*)": "$1",
   "^Optional<(.*)>": "$1",
   "^util::(.*)": "$1",
@@ -13,15 +14,17 @@
   "^agora_refptr<agora::rtc::(.*)>": "$1",
   "^agora::util::(.*)": "$1",
   "^(.*)::(.*)": "$2",
-  "VideoCompositingLayout::Region": "Region[]",
-  "ChannelMediaInfo*": "ChannelMediaInfo[]",
-  "ContentInspectModule*": "ContentInspectModule[]",
   "^ExternalVideoFrame::(.*)": "$1",
   "^IAudioFrameObserverBase::(.*)": "$1",
+  "^(.*)const&": "$1",
+  "^(.*)&": "$1",
+  "^(.*)\\[(.*)\\]": "$1",
 
   "^AString$": "string",
   "^user_id_t$": "string",
-  "^view_t$": "number",
+  "^view_t$": "any",
+  "^view_t\\*$": "any[]",
+  "^uid_t\\*$": "number",
   "^uid_t$": "number",
   "^track_id_t$": "number",
   "^video_track_id_t$": "number",
@@ -30,10 +33,13 @@
   "^size_t$": "number",
 
   "^const char \\*$": "string",
-  "^const char*$": "string",
+  "^char const\\*$": "string",
+  "^char const\\**$": "string[]",
+  "^unsigned char\\*$": "Uint8Array",
+  "^unsigned char const\\*$": "Uint8Array",
   "^unsigned int$": "number",
   "^unsigned short$": "number",
-  "^unsigned char$": "Uint8Array",
+  "^char\\*$": "string",
   "^char$": "string",
 
   "^ushort$": "number",
@@ -42,19 +48,32 @@
   "^ulong$": "number",
   "^long$": "number",
 
+  "^uint8_t const\\*$": "Uint8Array",
+  "^uint8_t\\*$": "Uint8Array",
   "^uint8_t$": "number",
+  "^uint32_t const$": "number",
   "^uint32_t$": "number",
   "^uint64_t$": "number",
   "^uint16_t$": "number",
+  "^uint\\*$": "number",
   "^uint$": "number",
 
   "^int64_t$": "number",
+  "^int32_t\\*$": "number[]",
   "^int32_t$": "number",
   "^int16_t$": "number",
+
+  "^int const\\*$": "number[]",
+  "^int\\*$": "number[]",
   "^int$": "number",
 
+  "^float const\\*$": "number[]",
   "^float$": "number",
   "^double$": "number",
 
-  "^bool$": "boolean"
+  "^bool\\*$": "boolean",
+  "^bool const$": "boolean",
+  "^bool$": "boolean",
+  "^(.*)const\\*": "$1[]",
+  "^(.*)\\*": "$1[]"
 }

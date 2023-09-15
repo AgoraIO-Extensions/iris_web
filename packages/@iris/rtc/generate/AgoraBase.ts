@@ -937,17 +937,17 @@ export class LiveTranscoding {
 
   userCount?: number;
 
-  transcodingUsers?: TranscodingUser;
+  transcodingUsers?: TranscodingUser[];
 
   transcodingExtraInfo?: string;
 
   metadata?: string;
 
-  watermark?: RtcImage;
+  watermark?: RtcImage[];
 
   watermarkCount?: number;
 
-  backgroundImage?: RtcImage;
+  backgroundImage?: RtcImage[];
 
   backgroundImageCount?: number;
 
@@ -959,7 +959,7 @@ export class LiveTranscoding {
 
   audioCodecProfile?: AUDIO_CODEC_PROFILE_TYPE;
 
-  advancedFeatures?: LiveStreamAdvancedFeature;
+  advancedFeatures?: LiveStreamAdvancedFeature[];
 
   advancedFeatureCount?: number;
 }
@@ -991,7 +991,7 @@ export class TranscodingVideoStream {
 export class LocalTranscoderConfiguration {
   streamCount?: number;
 
-  videoInputStreams?: TranscodingVideoStream;
+  videoInputStreams?: TranscodingVideoStream[];
 
   videoOutputConfiguration?: VideoEncoderConfiguration;
 
@@ -1113,7 +1113,7 @@ export enum VIDEO_VIEW_SETUP_MODE {
 }
 
 export class VideoCanvas {
-  view?: number;
+  view?: any;
 
   uid?: number;
 
@@ -1312,7 +1312,7 @@ export class ScreenCaptureParameters {
 
   windowFocus?: boolean;
 
-  excludeWindowList?: number;
+  excludeWindowList?: any[];
 
   excludeWindowCount?: number;
 
@@ -1364,19 +1364,19 @@ export class AudioEncodedFrameObserverConfig {
 
 export interface IAudioEncodedFrameObserver {
   onRecordAudioEncodedFrame(
-    frameBuffer: number,
+    frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void;
 
   onPlaybackAudioEncodedFrame(
-    frameBuffer: number,
+    frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void;
 
   onMixedAudioEncodedFrame(
-    frameBuffer: number,
+    frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void;
@@ -1480,7 +1480,7 @@ export class DownlinkNetworkInfo {
 
   total_downscale_level_count?: number;
 
-  peer_downlink_info?: PeerDownlinkInfo;
+  peer_downlink_info?: PeerDownlinkInfo[];
 
   total_received_video_count?: number;
 }
@@ -1542,7 +1542,7 @@ export enum STREAM_PUBLISH_STATE {
 }
 
 export class EchoTestConfiguration {
-  view?: number;
+  view?: any;
 
   enableAudio?: boolean;
 
@@ -1656,11 +1656,11 @@ export class AdvancedConfigInfo {
 }
 
 export class LocalAccessPointConfiguration {
-  ipList?: string;
+  ipList?: string[];
 
   ipListSize?: number;
 
-  domainList?: string;
+  domainList?: string[];
 
   domainListSize?: number;
 

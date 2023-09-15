@@ -40,17 +40,17 @@ export interface IBaseSpatialAudioEngine {
   setDistanceUnit(unit: number): CallApiReturnType;
 
   updateSelfPosition(
-    position: number[],
-    axisForward: number[],
-    axisRight: number[],
-    axisUp: number[]
+    position: number,
+    axisForward: number,
+    axisRight: number,
+    axisUp: number
   ): CallApiReturnType;
 
   updateSelfPositionEx(
-    position: number[],
-    axisForward: number[],
-    axisRight: number[],
-    axisUp: number[],
+    position: number,
+    axisForward: number,
+    axisRight: number,
+    axisUp: number,
     connection: RtcConnection
   ): CallApiReturnType;
 

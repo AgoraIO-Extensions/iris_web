@@ -42,7 +42,7 @@ export class InputSeiData {
 
   frame_index?: number;
 
-  private_data?: number;
+  private_data?: Uint8Array;
 
   data_size?: number;
 }

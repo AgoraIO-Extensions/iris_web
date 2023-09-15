@@ -107,7 +107,7 @@ export class IRtcEngineEventHandlerEx {
 
   onAudioVolumeIndication(
     connection: RtcConnection,
-    speakers: AudioVolumeInfo,
+    speakers: AudioVolumeInfo[],
     speakerNumber: number,
     totalVolume: number
   ): void {
@@ -1594,6 +1594,18 @@ export class IRtcEngineExDispatch {
     if (filePath === undefined) throw 'filePath is undefined';
 
     return this._impl.takeSnapshotEx(connection, uid, filePath);
+  }
+
+  enableContentInspectEx(apiParam: ApiParam): CallApiReturnType {
+    let obj = JSON.parse(apiParam.data) as any;
+    let enabled = obj.enabled;
+    if (enabled === undefined) throw 'enabled is undefined';
+    let config = obj.config;
+    if (config === undefined) throw 'config is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.enableContentInspectEx(enabled, config, connection);
   }
 
   startMediaRenderingTracingEx(apiParam: ApiParam): CallApiReturnType {

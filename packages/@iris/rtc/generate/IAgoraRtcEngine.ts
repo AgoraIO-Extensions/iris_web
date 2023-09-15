@@ -29,6 +29,7 @@ import {
   DeviceInfo,
   DownlinkNetworkInfo,
   ENCRYPTION_ERROR_TYPE,
+  ERROR_CODE_TYPE,
   EchoTestConfiguration,
   EncryptionConfig,
   HEADPHONE_EQUALIZER_PRESET,
@@ -339,7 +340,7 @@ export class VideoCompositingLayout {
 
   backgroundColor?: string;
 
-  regions?: Region;
+  regions?: Region[];
 
   regionCount?: number;
 
@@ -427,7 +428,7 @@ export class ScreenCaptureConfiguration {
 
   screenRect?: Rectangle;
 
-  windowId?: number;
+  windowId?: any;
 
   params?: ScreenCaptureParameters;
 
@@ -460,7 +461,7 @@ export enum ScreenCaptureSourceType {
 export class ScreenCaptureSourceInfo {
   type?: ScreenCaptureSourceType;
 
-  sourceId?: number;
+  sourceId?: any;
 
   sourceName?: string;
 
@@ -480,7 +481,7 @@ export class ScreenCaptureSourceInfo {
 
   minimizeWindow?: boolean;
 
-  sourceDisplayId?: number;
+  sourceDisplayId?: any;
 }
 
 export class AdvancedAudioOptions {
@@ -601,7 +602,7 @@ export interface IRtcEngineEventHandler {
     elapsed: number
   ): void;
 
-  onError(err: number, msg: string): void;
+  onError(err: ERROR_CODE_TYPE, msg: string): void;
 
   onAudioQuality(
     uid: number,
@@ -613,7 +614,7 @@ export interface IRtcEngineEventHandler {
   onLastmileProbeResult(result: LastmileProbeResult): void;
 
   onAudioVolumeIndication(
-    speakers: AudioVolumeInfo,
+    speakers: AudioVolumeInfo[],
     speakerNumber: number,
     totalVolume: number
   ): void;
@@ -738,8 +739,8 @@ export interface IRtcEngineEventHandler {
   onFacePositionChanged(
     imageWidth: number,
     imageHeight: number,
-    vecRectangle: Rectangle,
-    vecDistance: number,
+    vecRectangle: Rectangle[],
+    vecDistance: number[],
     numFaces: number
   ): void;
 
@@ -964,7 +965,7 @@ export interface IVideoDeviceManager {
 
   setDevice(deviceIdUTF8: string[]): CallApiReturnType;
 
-  getDevice(deviceIdUTF8: string[]): CallApiReturnType;
+  getDevice(deviceIdUTF8: string): CallApiReturnType;
 
   numberOfCapabilities(deviceIdUTF8: string): CallApiReturnType;
 
@@ -974,7 +975,7 @@ export interface IVideoDeviceManager {
     capability: VideoFormat
   ): CallApiReturnType;
 
-  startDeviceTest(hwnd: number): CallApiReturnType;
+  startDeviceTest(hwnd: any): CallApiReturnType;
 
   stopDeviceTest(): CallApiReturnType;
 
@@ -1103,7 +1104,7 @@ export interface IRtcEngine {
   getErrorDescription(code: number): CallApiReturnType;
 
   queryCodecCapability(
-    codecInfo: CodecCapInfo,
+    codecInfo: CodecCapInfo[],
     size: number
   ): CallApiReturnType;
 
@@ -1312,7 +1313,7 @@ export interface IRtcEngine {
 
   registerAudioEncodedFrameObserver(
     config: AudioEncodedFrameObserverConfig,
-    observer: IAudioEncodedFrameObserver
+    observer: IAudioEncodedFrameObserver[]
   ): CallApiReturnType;
 
   stopAudioRecording(): CallApiReturnType;
@@ -1568,11 +1569,11 @@ export interface IRtcEngine {
   disableAudioSpectrumMonitor(): CallApiReturnType;
 
   registerAudioSpectrumObserver(
-    observer: IAudioSpectrumObserver
+    observer: IAudioSpectrumObserver[]
   ): CallApiReturnType;
 
   unregisterAudioSpectrumObserver(
-    observer: IAudioSpectrumObserver
+    observer: IAudioSpectrumObserver[]
   ): CallApiReturnType;
 
   adjustRecordingSignalVolume(volume: number): CallApiReturnType;
@@ -1772,7 +1773,7 @@ export interface IRtcEngine {
   getAudioDeviceInfo(deviceInfo: DeviceInfo): CallApiReturnType;
 
   startScreenCaptureByWindowId(
-    windowId: number,
+    windowId: any,
     regionRect: Rectangle,
     captureParams: ScreenCaptureParameters
   ): CallApiReturnType;
@@ -1856,10 +1857,12 @@ export interface IRtcEngine {
 
   getConnectionState(): CallApiReturnType;
 
-  registerEventHandler(eventHandler: IRtcEngineEventHandler): CallApiReturnType;
+  registerEventHandler(
+    eventHandler: IRtcEngineEventHandler[]
+  ): CallApiReturnType;
 
   unregisterEventHandler(
-    eventHandler: IRtcEngineEventHandler
+    eventHandler: IRtcEngineEventHandler[]
   ): CallApiReturnType;
 
   setRemoteUserPriority(
@@ -1877,13 +1880,13 @@ export interface IRtcEngine {
   ): CallApiReturnType;
 
   createDataStream(
-    streamId: number,
+    streamId: number[],
     reliable: boolean,
     ordered: boolean
   ): CallApiReturnType;
 
   createDataStream2(
-    streamId: number,
+    streamId: number[],
     config: DataStreamConfig
   ): CallApiReturnType;
 
@@ -1917,12 +1920,12 @@ export interface IRtcEngine {
   ): CallApiReturnType;
 
   registerMediaMetadataObserver(
-    observer: IMetadataObserver,
+    observer: IMetadataObserver[],
     type: METADATA_TYPE
   ): CallApiReturnType;
 
   unregisterMediaMetadataObserver(
-    observer: IMetadataObserver,
+    observer: IMetadataObserver[],
     type: METADATA_TYPE
   ): CallApiReturnType;
 
@@ -1971,10 +1974,10 @@ export interface IRtcEngine {
 
   getUserInfoByUserAccount(
     userAccount: string,
-    userInfo: UserInfo
+    userInfo: UserInfo[]
   ): CallApiReturnType;
 
-  getUserInfoByUid(uid: number, userInfo: UserInfo): CallApiReturnType;
+  getUserInfoByUid(uid: number, userInfo: UserInfo[]): CallApiReturnType;
 
   startOrUpdateChannelMediaRelay(
     configuration: ChannelMediaRelayConfiguration
@@ -2003,7 +2006,7 @@ export interface IRtcEngine {
   ): CallApiReturnType;
 
   startDirectCdnStreaming(
-    eventHandler: IDirectCdnStreamingEventHandler,
+    eventHandler: IDirectCdnStreamingEventHandler[],
     publishUrl: string,
     options: DirectCdnStreamingMediaOptions
   ): CallApiReturnType;

@@ -33,7 +33,7 @@ export class IAudioPcmFrameSink {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
-  onFrame(frame: AudioPcmFrame): void {
+  onFrame(frame: AudioPcmFrame[]): void {
     let _obj = {
       frame,
     };
@@ -191,7 +191,7 @@ export class IAudioSpectrumObserver {
   }
 
   onRemoteAudioSpectrum(
-    spectrums: UserAudioSpectrumInfo,
+    spectrums: UserAudioSpectrumInfo[],
     spectrumNumber: number
   ): void {
     let _obj = {
@@ -228,7 +228,7 @@ export class IVideoEncodedFrameObserver {
 
   onEncodedVideoFrameReceived(
     uid: number,
-    imageBuffer: number,
+    imageBuffer: Uint8Array,
     length: number,
     videoEncodedFrameInfo: EncodedVideoFrameInfo
   ): void {

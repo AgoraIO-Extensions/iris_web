@@ -15,6 +15,7 @@ import {
   DirectCdnStreamingStats,
   DownlinkNetworkInfo,
   ENCRYPTION_ERROR_TYPE,
+  ERROR_CODE_TYPE,
   IRtcEngine,
   IVideoDeviceManager,
   LICENSE_ERROR_TYPE,
@@ -137,7 +138,7 @@ export class IRtcEngineEventHandler {
     this.notifyEvent(eventParam);
   }
 
-  onError(err: number, msg: string): void {
+  onError(err: ERROR_CODE_TYPE, msg: string): void {
     let _obj = {
       err,
       msg,
@@ -185,7 +186,7 @@ export class IRtcEngineEventHandler {
   }
 
   onAudioVolumeIndication(
-    speakers: AudioVolumeInfo,
+    speakers: AudioVolumeInfo[],
     speakerNumber: number,
     totalVolume: number
   ): void {
@@ -721,8 +722,8 @@ export class IRtcEngineEventHandler {
   onFacePositionChanged(
     imageWidth: number,
     imageHeight: number,
-    vecRectangle: Rectangle,
-    vecDistance: number,
+    vecRectangle: Rectangle[],
+    vecDistance: number[],
     numFaces: number
   ): void {
     let _obj = {
@@ -4278,5 +4279,13 @@ export class IRtcEngineDispatch {
 
   getNtpWallTimeInMs(): CallApiReturnType {
     return this._impl.getNtpWallTimeInMs();
+  }
+
+  isFeatureAvailableOnDevice(apiParam: ApiParam): CallApiReturnType {
+    let obj = JSON.parse(apiParam.data) as any;
+    let type = obj.type;
+    if (type === undefined) throw 'type is undefined';
+
+    return this._impl.isFeatureAvailableOnDevice(type);
   }
 }

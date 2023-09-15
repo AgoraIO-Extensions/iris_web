@@ -95,7 +95,7 @@ export class ContentInspectConfig {
 
   serverConfig?: string;
 
-  modules?: ContentInspectModule[];
+  modules?: ContentInspectModule;
 
   moduleCount?: number;
 }
@@ -177,7 +177,7 @@ export class ExternalVideoFrame {
 
   format?: VIDEO_PIXEL_FORMAT;
 
-  buffer?: void;
+  buffer?: void[];
 
   stride?: number;
 
@@ -201,11 +201,11 @@ export class ExternalVideoFrame {
 
   matrix?: number;
 
-  metadata_buffer?: number;
+  metadata_buffer?: Uint8Array;
 
   metadata_size?: number;
 
-  alphaBuffer?: number;
+  alphaBuffer?: Uint8Array;
 
   texture_slice_index?: number;
 }
@@ -223,11 +223,11 @@ export class VideoFrame {
 
   vStride?: number;
 
-  yBuffer?: number;
+  yBuffer?: Uint8Array;
 
-  uBuffer?: number;
+  uBuffer?: Uint8Array;
 
-  vBuffer?: number;
+  vBuffer?: Uint8Array;
 
   rotation?: number;
 
@@ -235,7 +235,7 @@ export class VideoFrame {
 
   avsync_type?: number;
 
-  metadata_buffer?: number;
+  metadata_buffer?: Uint8Array;
 
   metadata_size?: number;
 
@@ -243,9 +243,9 @@ export class VideoFrame {
 
   matrix?: number;
 
-  alphaBuffer?: number;
+  alphaBuffer?: Uint8Array;
 
-  pixelBuffer?: void;
+  pixelBuffer?: void[];
 }
 
 export enum MEDIA_PLAYER_SOURCE_TYPE {
@@ -261,7 +261,7 @@ export enum VIDEO_MODULE_POSITION {
 }
 
 export interface IAudioPcmFrameSink {
-  onFrame(frame: AudioPcmFrame): void;
+  onFrame(frame: AudioPcmFrame[]): void;
 }
 
 export enum AUDIO_FRAME_TYPE {
@@ -279,7 +279,7 @@ export class AudioFrame {
 
   samplesPerSec?: number;
 
-  buffer?: void;
+  buffer?: void[];
 
   renderTimeMs?: number;
 
@@ -326,7 +326,7 @@ export interface IAudioFrameObserver {
 }
 
 export class AudioSpectrumData {
-  audioSpectrumData?: number;
+  audioSpectrumData?: number[];
 
   dataLength?: number;
 }
@@ -349,7 +349,7 @@ export interface IAudioSpectrumObserver {
 export interface IVideoEncodedFrameObserver {
   onEncodedVideoFrameReceived(
     uid: number,
-    imageBuffer: number,
+    imageBuffer: Uint8Array,
     length: number,
     videoEncodedFrameInfo: EncodedVideoFrameInfo
   ): boolean;
