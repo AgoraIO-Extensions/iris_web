@@ -1,15 +1,6 @@
 import * as path from 'path';
 
-import {
-  CXXFile,
-  CXXTYPE,
-  RenderContext,
-  SimpleTypeKind,
-  TerraNode,
-  Variable,
-} from 'terra-cli';
-
-import supportList = require('./config/support_list.json');
+import { CXXFile, CXXTYPE, RenderContext, TerraNode } from 'terra-cli';
 
 import {
   appendNumberToDuplicateMemberFunction,
@@ -26,10 +17,6 @@ interface TerraNodeUserData {
   isEnumz: boolean;
   isClazz: boolean;
   isCallback: boolean;
-}
-
-interface ClazzMethodUserData {
-  isImpl: boolean;
 }
 
 export default function (cxxfiles: CXXFile[], context: RenderContext) {
@@ -56,21 +43,6 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
         node.asClazz().methods = appendNumberToDuplicateMemberFunction(
           node.asClazz().methods
         );
-        node.asClazz().methods = node.asClazz().methods.map((method) => {
-          const clazzMethodUserData: ClazzMethodUserData = {
-            isImpl:
-              supportList[node.name] &&
-              supportList[node.name].includes(method.name),
-          };
-          method.user_data = clazzMethodUserData;
-          method.parameters = method.parameters.map((parameter: Variable) => {
-            if (parameter.type.kind === SimpleTypeKind.array_t) {
-              parameter.type.name += '[]';
-            }
-            return parameter;
-          });
-          return method;
-        });
       }
       const terraNodeUserData: TerraNodeUserData = {
         isStruct: node.__TYPE === CXXTYPE.Struct,
