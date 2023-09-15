@@ -1600,17 +1600,32 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     AgoraConsole.warn('getConnectionState not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
-  registerEventHandler(
-    eventHandler: NATIVE_RTC.IRtcEngineEventHandler
-  ): CallApiReturnType {
-    AgoraConsole.warn('registerEventHandler not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  registerEventHandler(eventHandler: any): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      console.log('RtcEngineImpl registerEventHandler');
+
+      this._engine.irisEventHandlerManager.addEventHandler(
+        RTCENGINE_KEY,
+        eventHandler
+      );
+      return Promise.resolve(CallIrisApiResult.success());
+    };
+
+    return this.execute(processFunc);
   }
-  unregisterEventHandler(
-    eventHandler: NATIVE_RTC.IRtcEngineEventHandler
-  ): CallApiReturnType {
-    AgoraConsole.warn('unregisterEventHandler not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  unregisterEventHandler(eventHandler: any): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      console.log('unregisterEventHandler registerEventHandler');
+
+      this._engine.irisEventHandlerManager.removeEventHandler(
+        RTCENGINE_KEY,
+        eventHandler
+      );
+
+      return Promise.resolve(CallIrisApiResult.success());
+    };
+
+    return this.execute(processFunc);
   }
   setRemoteUserPriority(
     uid: number,
