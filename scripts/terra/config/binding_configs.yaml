@@ -2,9 +2,13 @@ include: shared:rtc_4.2.3/shared_configs.yaml
 
 language: ts
 
+defines_macros:
+  - __IRIS_WEB__
+
 renderers:
   - ../binding.ts
 parsers:
+  - AddNodeParser
   - PointerToArrayParser:
       configJsonFilePath: ./config/pointer_to_array.json
   - OrderNodeParser

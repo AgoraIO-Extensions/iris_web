@@ -4284,4 +4284,12 @@ export class IRtcEngineDispatch {
 
     return this._impl.isFeatureAvailableOnDevice(type);
   }
+
+  setAppType(apiParam: ApiParam): CallApiReturnType {
+    let obj = JSON.parse(apiParam.data) as any;
+    let appType = obj.appType;
+    if (appType === undefined) throw 'appType is undefined';
+
+    return this._impl.setAppType(appType);
+  }
 }

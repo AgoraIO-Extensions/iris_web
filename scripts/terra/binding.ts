@@ -4,6 +4,7 @@ import { CXXFile, RenderContext, TerraNode } from 'terra-cli';
 import { CXXTYPE } from 'terra-cli';
 
 import {
+  addMethodWrapper,
   appendNumberToDuplicateMemberFunction,
   filterFile,
   isMatch,
@@ -36,6 +37,7 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
       ),
     };
     cxxfile.user_data = cxxUserData;
+    cxxfile = addMethodWrapper(cxxfile);
 
     let nodes = cxxfile.nodes.filter((node: TerraNode) => {
       return node.__TYPE === CXXTYPE.Clazz;

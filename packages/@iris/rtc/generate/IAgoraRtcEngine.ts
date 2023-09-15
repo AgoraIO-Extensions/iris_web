@@ -2073,6 +2073,8 @@ export interface IRtcEngine {
   getNtpWallTimeInMs(): CallApiReturnType;
 
   isFeatureAvailableOnDevice(type: FeatureType): CallApiReturnType;
+
+  setAppType(appType: number): CallApiReturnType;
 }
 
 export enum QUALITY_REPORT_FORMAT_TYPE {

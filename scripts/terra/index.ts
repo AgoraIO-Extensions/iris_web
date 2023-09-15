@@ -3,6 +3,7 @@ import * as path from 'path';
 import { CXXFile, CXXTYPE, RenderContext, TerraNode } from 'terra-cli';
 
 import {
+  addMethodWrapper,
   appendNumberToDuplicateMemberFunction,
   filterFile,
   isMatch,
@@ -29,11 +30,12 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
       ),
     };
     cxxfile.user_data = cxxUserData;
+    cxxfile = addMethodWrapper(cxxfile);
 
     cxxfile.nodes = cxxfile.nodes.map((node: TerraNode) => {
       let isCallback = isMatch(node.name, 'isCallback');
 
-      if (node.name === 'IMediaEngine') {
+      if (node.name === 'IRtcEngine') {
         // debugger;
       }
 
