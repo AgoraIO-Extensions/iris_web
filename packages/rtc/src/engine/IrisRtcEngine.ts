@@ -89,14 +89,14 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   constructor(irisEventHandlerManager: IrisEventHandlerManager) {
     this._implDispatchsMap = new Map();
-    this._implDispatchsMap.set('IMediaPlayer', new IMediaPlayerDispatch(this));
+    this._implDispatchsMap.set('MediaPlayer', new IMediaPlayerDispatch(this));
     this._implDispatchsMap.set(
-      'IMediaPlayerCacheManager',
+      'MediaPlayerCacheManager',
       new IMediaPlayerCacheManagerDispatch(this)
     );
-    this._implDispatchsMap.set('IMediaEngine', new IMediaEngineDispatch(this));
+    this._implDispatchsMap.set('MediaEngine', new IMediaEngineDispatch(this));
     this._implDispatchsMap.set(
-      'IMediaRecorder',
+      'MediaRecorder',
       new IMediaRecorderDispatch(this)
     );
     this._implDispatchsMap.set(
@@ -107,27 +107,27 @@ export class IrisRtcEngine implements ApiInterceptor {
       'MusicCollection',
       new MusicCollectionDispatch(this)
     );
-    this._implDispatchsMap.set('IMusicPlayer', new IMusicPlayerDispatch(this));
+    this._implDispatchsMap.set('MusicPlayer', new IMusicPlayerDispatch(this));
     this._implDispatchsMap.set(
-      'IMusicContentCenter',
+      'MusicContentCenter',
       new IMusicContentCenterDispatch(this)
     );
     this._implDispatchsMap.set(
-      'IAudioDeviceManager',
+      'AudioDeviceManager',
       new IAudioDeviceManagerDispatch(this)
     );
     this._implDispatchsMap.set(
-      'IVideoDeviceManager',
+      'VideoDeviceManager',
       new IVideoDeviceManagerDispatch(this)
     );
-    this._implDispatchsMap.set('IRtcEngine', new IRtcEngineDispatch(this));
-    this._implDispatchsMap.set('IRtcEngineEx', new IRtcEngineExDispatch(this));
+    this._implDispatchsMap.set('RtcEngine', new IRtcEngineDispatch(this));
+    this._implDispatchsMap.set('RtcEngineEx', new IRtcEngineExDispatch(this));
     this._implDispatchsMap.set(
-      'IBaseSpatialAudioEngine',
+      'BaseSpatialAudioEngine',
       new IBaseSpatialAudioEngineDispatch(this)
     );
     this._implDispatchsMap.set(
-      'ILocalSpatialAudioEngine',
+      'LocalSpatialAudioEngine',
       new ILocalSpatialAudioEngineDispatch(this)
     );
 

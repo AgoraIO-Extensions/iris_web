@@ -1,9 +1,15 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
-import { CallApiReturnType } from 'iris-web-core';
+import AgoraRTC from 'agora-rtc-sdk-ng';
+import {
+  AsyncTaskType,
+  CallApiReturnType,
+  CallIrisApiResult,
+} from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
+import { AgoraTranslate } from '../util/AgoraTranslate';
 
 export const RTCENGINE_KEY = 'RtcEngine';
 
@@ -18,6 +24,10 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     this._engine.actionQueue.putAction(action);
   }
 
+  private execute(task: AsyncTaskType): CallApiReturnType {
+    return this._engine.executor.execute(task);
+  }
+
   isFeatureAvailableOnDevice(type: NATIVE_RTC.FeatureType): CallApiReturnType {
     AgoraConsole.warn(
       'isFeatureAvailableOnDevice not supported in this platform!'
@@ -30,8 +40,39 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   initialize(context: NATIVE_RTC.RtcEngineContext): CallApiReturnType {
-    AgoraConsole.warn('initialize not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      console.log('RtcEngineImpl initialize');
+      this._engine.globalVariables.appId = context.appId;
+      this._engine.mainClientVariables.channelProfile = context.channelProfile;
+      this._engine.globalVariables.audioScenario = context.audioScenario;
+      this._engine.globalVariables.areaCode = context.areaCode;
+
+      AgoraRTC.setArea([
+        AgoraTranslate.NATIVE_RTCAREA_CODE2AREAS(context.areaCode),
+      ]);
+
+      if (context.logConfig && context.logConfig.level) {
+        AgoraConsole.logLevel = context.logConfig.level;
+        let numberLevel: number = AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(
+          context.logConfig.level
+        );
+        AgoraRTC.setLogLevel(numberLevel);
+      }
+
+      let result = AgoraRTC.checkSystemRequirements();
+      if (result) {
+        AgoraConsole.log('AgoraRTC.checkSystemRequirements return true');
+      } else {
+        AgoraConsole.warn('AgoraRTC.checkSystemRequirements reutrn false');
+      }
+
+      console.log('RtcEngineImpl initialize 22222');
+      return Promise.resolve(
+        new CallIrisApiResult(0, '{"result": 0, "other": 111}')
+      );
+    };
+
+    return this.execute(processFunc);
   }
   getVersion(): CallApiReturnType {
     AgoraConsole.warn('getVersion not supported in this platform!');

@@ -1,13 +1,11 @@
 import "@testing-library/jest-dom";
 import { expect, vi } from "vitest";
 
-expect.extend(matchers);
-
 /**
  * started agora-rtc-sdk-ng@17.0.0, need mock RTCPeerConnection.
  * RTCPeerConnection does not implement global
  */
-global.RTCPeerConnection = vi.fn();
+(global.RTCPeerConnection as any) = vi.fn();
 
 /**
  * JSDOM does not implement global "HTMLMediaElement.prototype.play" function
