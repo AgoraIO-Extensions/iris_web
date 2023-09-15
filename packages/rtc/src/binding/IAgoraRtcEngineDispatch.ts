@@ -3756,19 +3756,15 @@ export class IRtcEngineDispatch {
   }
 
   registerEventHandler(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let eventHandler = obj.eventHandler;
+    let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
     if (eventHandler === undefined) throw 'eventHandler is undefined';
-
     return this._impl.registerEventHandler(eventHandler);
   }
 
   unregisterEventHandler(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let eventHandler = obj.eventHandler;
+    let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
     if (eventHandler === undefined) throw 'eventHandler is undefined';
-
-    return this._impl.unregisterEventHandler(eventHandler);
+    return this._impl.registerEventHandler(eventHandler);
   }
 
   setRemoteUserPriority(apiParam: ApiParam): CallApiReturnType {

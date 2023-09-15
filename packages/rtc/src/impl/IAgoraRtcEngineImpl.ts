@@ -1,11 +1,17 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
-import AgoraRTC from 'agora-rtc-sdk-ng';
+import AgoraRTC, {
+  ClientRole,
+  ClientRoleOptions,
+  ILocalAudioTrack,
+  IMicrophoneAudioTrack,
+} from 'agora-rtc-sdk-ng';
 import {
   AsyncTaskType,
   CallApiReturnType,
   CallIrisApiResult,
 } from 'iris-web-core';
 
+import { IrisAudioSourceType } from '../base/BaseType';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -28,6 +34,13 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     return this._engine.executor.execute(task);
   }
 
+  private returnResult(
+    code: number = 0,
+    data: string = '{"result": 0}'
+  ): Promise<CallIrisApiResult> {
+    return Promise.resolve(new CallIrisApiResult(code, data));
+  }
+
   isFeatureAvailableOnDevice(type: NATIVE_RTC.FeatureType): CallApiReturnType {
     AgoraConsole.warn(
       'isFeatureAvailableOnDevice not supported in this platform!'
@@ -39,6 +52,16 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     AgoraConsole.warn('release not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
+
+  setAppType(appType: number): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      AgoraRTC.setAppType(appType);
+      return Promise.resolve(new CallIrisApiResult(0, '{"result": 0}'));
+    };
+
+    return this.execute(processFunc);
+  }
+
   initialize(context: NATIVE_RTC.RtcEngineContext): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       console.log('RtcEngineImpl initialize');
@@ -155,17 +178,68 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     AgoraConsole.warn('setChannelProfile not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
+
+  //可以在加入频道前后调用
   setClientRole(role: NATIVE_RTC.CLIENT_ROLE_TYPE): CallApiReturnType {
-    AgoraConsole.warn('setClientRole not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let options: NATIVE_RTC.ClientRoleOptions = {
+      audienceLatencyLevel:
+        NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE
+          .AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY,
+      //todo 麦克风recording需要排查
+      // stopMicrophoneRecording: false,
+      // stopPreview: false,
+    };
+    return this.setClientRole2(role, options);
   }
+
   setClientRole2(
     role: NATIVE_RTC.CLIENT_ROLE_TYPE,
     options: NATIVE_RTC.ClientRoleOptions
   ): CallApiReturnType {
-    AgoraConsole.warn('setClientRole2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      this._engine.mainClientVariables.clientRoleType = role;
+
+      let webRole: ClientRole = AgoraTranslate.NATIVE_RTCCLIENT_ROLE_TYPE2ClientRole(
+        role
+      );
+      let webRoleOptions: ClientRoleOptions = AgoraTranslate.NATIVE_RTCClientRoleOptions2ClientRoleOptions(
+        options
+      );
+      //只有观众才能设置 第二个参数。主播不能设置第二个参数
+      this._engine.entitiesContainer
+        .getMainClient()
+        ?.setClientRole(webRole, webRole == 'audience' ? webRoleOptions : null);
+
+      let audioTrack = this._engine.entitiesContainer.getLocalAudioTrackByType(
+        IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+      );
+      if (audioTrack) {
+        let track = audioTrack.track as IMicrophoneAudioTrack;
+        if (track.muted == false) {
+          track
+            .setMuted(true)
+            .then(() => {})
+            .catch(() => {
+              AgoraConsole.error(' track.setMuted(true) failed');
+            });
+        } else if (track.muted == true) {
+          track
+            .setMuted(false)
+            .then(() => {})
+            .catch(() => {
+              AgoraConsole.error(' track.setMuted(false) failed');
+            });
+        }
+      }
+
+      // next();
+
+      return this.returnResult();
+    };
+
+    return this.execute(processFunc);
   }
+
   startEchoTest(): CallApiReturnType {
     AgoraConsole.warn('startEchoTest not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -293,8 +367,34 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   enableAudio(): CallApiReturnType {
-    AgoraConsole.warn('enableAudio not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processAudioTracks = async (): Promise<CallIrisApiResult> => {
+      this._engine.globalVariables.enabledAudio = true;
+      //找到本地audio
+      let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
+      for (let trackPackage of trackPackages) {
+        let track = trackPackage.track as ILocalAudioTrack;
+        if (track.enabled == false) {
+          try {
+            await track.setEnabled(true);
+          } catch (e) {
+            AgoraConsole.error('track setEnable(true) failed');
+            AgoraConsole.error(e);
+          }
+        }
+      }
+
+      //找到远端audio
+      let remoteUsers = this._engine.entitiesContainer.getAllRemoteUsers();
+      for (let remoteUser of remoteUsers) {
+        if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying == false) {
+          remoteUser.audioTrack.play();
+        }
+      }
+
+      return this.returnResult();
+    };
+
+    return this.execute(processAudioTracks);
   }
   disableAudio(): CallApiReturnType {
     AgoraConsole.warn('disableAudio not supported in this platform!');
@@ -304,12 +404,24 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     profile: NATIVE_RTC.AUDIO_PROFILE_TYPE,
     scenario: NATIVE_RTC.AUDIO_SCENARIO_TYPE
   ): CallApiReturnType {
-    AgoraConsole.warn('setAudioProfile not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      this._engine.globalVariables.audioProfile = profile;
+      this._engine.globalVariables.audioScenario = scenario;
+
+      return this.returnResult();
+    };
+
+    return this.execute(processFunc);
   }
+
   setAudioProfile2(profile: NATIVE_RTC.AUDIO_PROFILE_TYPE): CallApiReturnType {
-    AgoraConsole.warn('setAudioProfile2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      this._engine.globalVariables.audioProfile = profile;
+
+      return this.returnResult();
+    };
+
+    return this.execute(processFunc);
   }
   setAudioScenario(
     scenario: NATIVE_RTC.AUDIO_SCENARIO_TYPE

@@ -23,6 +23,7 @@ interface TerraNodeUserData {
 
 interface ClazzMethodUserData {
   hasParameters: boolean;
+  isRegisterMethod: boolean;
 }
 
 export default function (cxxfiles: CXXFile[], context: RenderContext) {
@@ -49,6 +50,9 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
       node.asClazz().methods.map((method) => {
         const clazzMethodUserData: ClazzMethodUserData = {
           hasParameters: method.parameters.length > 0,
+          isRegisterMethod: new RegExp('registerEventHandler').test(
+            method.name
+          ),
         };
         method.user_data = clazzMethodUserData;
       });

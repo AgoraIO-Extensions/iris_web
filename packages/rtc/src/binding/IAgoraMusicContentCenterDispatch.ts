@@ -225,15 +225,15 @@ export class IMusicContentCenterDispatch {
   }
 
   registerEventHandler(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let eventHandler = obj.eventHandler;
+    let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
     if (eventHandler === undefined) throw 'eventHandler is undefined';
-
     return this._impl.registerEventHandler(eventHandler);
   }
 
-  unregisterEventHandler(): CallApiReturnType {
-    return this._impl.unregisterEventHandler();
+  unregisterEventHandler(apiParam: ApiParam): CallApiReturnType {
+    let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
+    if (eventHandler === undefined) throw 'eventHandler is undefined';
+    return this._impl.registerEventHandler(eventHandler);
   }
 
   createMusicPlayer(): CallApiReturnType {
