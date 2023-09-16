@@ -1,0 +1,38 @@
+{
+  "IRtcEngine": [
+    "initialize",
+    "release",
+    "registerEventHandler",
+    "enableAudio",
+    "setClientRole",
+    "setAudioProfile",
+    "joinChannel",
+    "updateChannelMediaOptions",
+    "leaveChannel",
+    "enableLocalAudio",
+    "enableVideo",
+    "disableVideo",
+    "startPreview",
+    "stopPreview",
+    "setLogLevel",
+
+    "stopScreenCapture",
+    "startScreenCapture",
+    "stopEffect",
+    "playEffect",
+    "switchCamera"
+  ],
+  "IRtcEngineEx": [
+    "joinChannelEx",
+    "leaveChannelEx",
+    "updateChannelMediaOptionsEx"
+  ],
+  "IRtcEngineEventHandler": [
+    "onError",
+    "onJoinChannelSuccess",
+    "onLeaveChannel",
+    "onUserJoined",
+    "onUserOffline",
+    "onLocalVideoStateChanged"
+  ]
+}

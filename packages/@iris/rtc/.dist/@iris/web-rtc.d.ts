@@ -2722,7 +2722,6 @@ interface IRtcEngine {
     enableInstantMediaRendering(): CallApiReturnType;
     getNtpWallTimeInMs(): CallApiReturnType;
     isFeatureAvailableOnDevice(type: FeatureType): CallApiReturnType;
-    setAppType(appType: number): CallApiReturnType;
 }
 declare enum QUALITY_REPORT_FORMAT_TYPE {
     QUALITY_REPORT_JSON = 0,

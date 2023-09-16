@@ -25,11 +25,11 @@ export class IAudioPcmFrameSink {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -55,11 +55,11 @@ export class IAudioFrameObserverBase {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -128,11 +128,11 @@ export class IAudioFrameObserver {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -168,11 +168,11 @@ export class IAudioSpectrumObserver {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -218,11 +218,11 @@ export class IVideoEncodedFrameObserver {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -258,11 +258,11 @@ export class IVideoFrameObserver {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -357,11 +357,11 @@ export class IMediaRecorderObserver {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 

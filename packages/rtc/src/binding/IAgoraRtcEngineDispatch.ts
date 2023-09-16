@@ -16,8 +16,6 @@ import {
   DownlinkNetworkInfo,
   ENCRYPTION_ERROR_TYPE,
   ERROR_CODE_TYPE,
-  IRtcEngine,
-  IVideoDeviceManager,
   LICENSE_ERROR_TYPE,
   LOCAL_AUDIO_STREAM_ERROR,
   LOCAL_AUDIO_STREAM_STATE,
@@ -76,11 +74,11 @@ export class IRtcEngineEventHandler {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -1611,7 +1609,7 @@ export class IRtcEngineEventHandler {
 }
 
 export class IVideoDeviceManagerDispatch {
-  private _impl: IVideoDeviceManager;
+  _impl: IVideoDeviceManagerImpl;
 
   constructor(engine: IrisRtcEngine) {
     this._impl = new IVideoDeviceManagerImpl(engine);
@@ -1687,11 +1685,11 @@ export class IMetadataObserver {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -1717,11 +1715,11 @@ export class IDirectCdnStreamingEventHandler {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -1763,7 +1761,7 @@ export class IDirectCdnStreamingEventHandler {
 }
 
 export class IRtcEngineDispatch {
-  private _impl: IRtcEngine;
+  _impl: IRtcEngineImpl;
 
   constructor(engine: IrisRtcEngine) {
     this._impl = new IRtcEngineImpl(engine);
@@ -4283,13 +4281,5 @@ export class IRtcEngineDispatch {
     if (type === undefined) throw 'type is undefined';
 
     return this._impl.isFeatureAvailableOnDevice(type);
-  }
-
-  setAppType(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let appType = obj.appType;
-    if (appType === undefined) throw 'appType is undefined';
-
-    return this._impl.setAppType(appType);
   }
 }

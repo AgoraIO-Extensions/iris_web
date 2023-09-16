@@ -29,11 +29,7 @@ import {
   MusicChartCollectionDispatch,
   MusicCollectionDispatch,
 } from '../binding/IAgoraMusicContentCenterDispatch';
-import {
-  IRtcEngineDispatch,
-  IRtcEngineEventHandler,
-  IVideoDeviceManagerDispatch,
-} from '../binding/IAgoraRtcEngineDispatch';
+import { IVideoDeviceManagerDispatch } from '../binding/IAgoraRtcEngineDispatch';
 import { IRtcEngineExDispatch } from '../binding/IAgoraRtcEngineExDispatch';
 import {
   IBaseSpatialAudioEngineDispatch,
@@ -42,6 +38,11 @@ import {
 import { IAudioDeviceManagerDispatch } from '../binding/IAudioDeviceManagerDispatch';
 
 import { IrisAgoraEventHandler } from '../event_handler/IrisAgoraEventHandler';
+import {
+  IRtcEngineEventHandlerExtensions,
+  RtcEngineDispatchExtensions,
+  RtcEngineEventHandlerExtensions,
+} from '../extensions/IAgoraRtcEngineExtensions';
 import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
 import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
 import { IrisSubClientVariables } from '../states/IrisSubClientVariables';
@@ -78,7 +79,8 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   private _implDispatchsMap: Map<string, any> = null;
   public entitiesContainer: IrisEntitiesContainer = null;
-  public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandler = null;
+  public rtcEngineEventHandler: IRtcEngineEventHandlerExtensions = null;
+
   public globalVariables: IrisGlobalVariables = null;
   public mainClientVariables: IrisMainClientVariables = null;
   public subClientVariables: IrisSubClientVariables = null;
@@ -120,7 +122,10 @@ export class IrisRtcEngine implements ApiInterceptor {
       'VideoDeviceManager',
       new IVideoDeviceManagerDispatch(this)
     );
-    this._implDispatchsMap.set('RtcEngine', new IRtcEngineDispatch(this));
+    this._implDispatchsMap.set(
+      'RtcEngine',
+      new RtcEngineDispatchExtensions(this)
+    );
     this._implDispatchsMap.set('RtcEngineEx', new IRtcEngineExDispatch(this));
     this._implDispatchsMap.set(
       'BaseSpatialAudioEngine',
@@ -132,7 +137,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     );
 
     this.actionQueue = new AgoraActionQueue();
-    this.rtcEngineEventHandler = new IRtcEngineEventHandler(this);
+    this.rtcEngineEventHandler = new RtcEngineEventHandlerExtensions(this);
     this.entitiesContainer = new IrisEntitiesContainer(this);
     this.globalVariables = new IrisGlobalVariables();
     this.mainClientVariables = new IrisMainClientVariables();

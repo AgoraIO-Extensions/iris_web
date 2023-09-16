@@ -21,11 +21,11 @@ export class IMediaPlayerSourceObserver {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 

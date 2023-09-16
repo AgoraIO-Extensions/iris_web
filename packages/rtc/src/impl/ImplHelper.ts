@@ -804,4 +804,45 @@ export class ImplHelper {
       }
     }
   }
+
+  public static async enumerateDevices(
+    engine: IrisRtcEngine
+  ): Promise<{
+    playbackDevices: NATIVE_RTC.DeviceInfo[];
+    recordingDevices: NATIVE_RTC.DeviceInfo[];
+    videoDevices: NATIVE_RTC.DeviceInfo[];
+  }> {
+    let info = await AgoraRTC.getDevices();
+    let playbackDevices: any[] = [];
+    let recordingDevices: any[] = [];
+    let videoDevices: any[] = [];
+    for (let e of info) {
+      if (e.kind == 'audiooutput') {
+        playbackDevices.push({
+          deviceId: e.deviceId,
+          deviceName: e.label,
+        });
+      } else if (e.kind == 'audioinput') {
+        recordingDevices.push({
+          deviceId: e.deviceId,
+          deviceName: e.label,
+        });
+      } else if (e.kind == 'videoinput') {
+        videoDevices.push({
+          deviceId: e.deviceId,
+          deviceName: e.label,
+        });
+      }
+    }
+
+    engine.globalVariables.playbackDevices = playbackDevices;
+    engine.globalVariables.recordingDevices = recordingDevices;
+    engine.globalVariables.videoDevices = videoDevices;
+    engine.globalVariables.deviceEnumerated = true;
+    return {
+      playbackDevices: playbackDevices,
+      recordingDevices: recordingDevices,
+      videoDevices: videoDevices,
+    };
+  }
 }

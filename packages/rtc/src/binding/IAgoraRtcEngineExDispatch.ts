@@ -8,7 +8,6 @@ import {
   CONNECTION_STATE_TYPE,
   ClientRoleOptions,
   ENCRYPTION_ERROR_TYPE,
-  IRtcEngineEx,
   LICENSE_ERROR_TYPE,
   LOCAL_AUDIO_STREAM_ERROR,
   LOCAL_AUDIO_STREAM_STATE,
@@ -45,11 +44,11 @@ export class IRtcEngineEventHandlerEx {
     this._engine = engine;
   }
 
-  private eventKey(event: string): string {
+  eventKey(event: string): string {
     return `${this.classPrefix}${event}`;
   }
 
-  private notifyEvent(param: EventParam): void {
+  notifyEvent(param: EventParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -963,7 +962,7 @@ export class IRtcEngineEventHandlerEx {
 }
 
 export class IRtcEngineExDispatch {
-  private _impl: IRtcEngineEx;
+  _impl: IRtcEngineExImpl;
 
   constructor(engine: IrisRtcEngine) {
     this._impl = new IRtcEngineExImpl(engine);

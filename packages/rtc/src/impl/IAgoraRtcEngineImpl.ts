@@ -2,7 +2,9 @@ import * as NATIVE_RTC from '@iris/web-rtc';
 import AgoraRTC, {
   ClientRole,
   ClientRoleOptions,
+  IAgoraRTCClient,
   ILocalAudioTrack,
+  ILocalVideoTrack,
   IMicrophoneAudioTrack,
 } from 'agora-rtc-sdk-ng';
 import {
@@ -11,15 +13,27 @@ import {
   CallIrisApiResult,
 } from 'iris-web-core';
 
-import { IrisAudioSourceType } from '../base/BaseType';
+import {
+  IrisAudioSourceType,
+  IrisClientType,
+  IrisVideoSourceType,
+} from '../base/BaseType';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
+
+import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
+
+import { IRtcEngineExtensions } from '../extensions/IAgoraRtcEngineExtensions';
+import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
 import { Action } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { AgoraTranslate } from '../util/AgoraTranslate';
 
+import { ImplHelper } from './ImplHelper';
+
 export const RTCENGINE_KEY = 'RtcEngine';
 
-export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
+export class IRtcEngineImpl implements IRtcEngineExtensions {
   private _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
@@ -49,8 +63,13 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
   }
 
   release(sync: boolean): CallApiReturnType {
-    AgoraConsole.warn('release not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      await this._engine.entitiesContainer.destruction();
+
+      return CallIrisApiResult.success();
+    };
+
+    return this.execute(processFunc);
   }
 
   setAppType(appType: number): CallApiReturnType {
@@ -140,8 +159,34 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     info: string,
     uid: number
   ): CallApiReturnType {
-    AgoraConsole.warn('joinChannel not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let mvs = this._engine.mainClientVariables;
+    let options: NATIVE_RTC.ChannelMediaOptions = {
+      publishCameraTrack:
+        mvs.publishCameraTrack != null ? mvs.publishCameraTrack : true,
+      publishSecondaryCameraTrack:
+        mvs.publishSecondaryCameraTrack != null
+          ? mvs.publishSecondaryCameraTrack
+          : false,
+      // publishAudioTrack:
+      //   mvs.publishAudioTrack != null ? mvs.publishAudioTrack : true,
+      autoSubscribeAudio:
+        mvs.autoSubscribeAudio != null ? mvs.autoSubscribeAudio : true,
+      autoSubscribeVideo:
+        mvs.autoSubscribeVideo != null ? mvs.autoSubscribeVideo : true,
+      clientRoleType:
+        mvs.clientRoleType != null
+          ? mvs.clientRoleType
+          : NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+      defaultVideoStreamType:
+        mvs.defaultVideoStreamType != null
+          ? mvs.defaultVideoStreamType
+          : NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH,
+      channelProfile:
+        mvs.channelProfile != null
+          ? mvs.channelProfile
+          : NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
+    };
+    return this.joinChannel2(token, channelId, uid, options);
   }
   joinChannel2(
     token: string,
@@ -149,24 +194,529 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     uid: number,
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
-    AgoraConsole.warn('joinChannel2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    if (this._engine.mainClientVariables.joinChanneled == true) {
+      AgoraConsole.error('already call joinChannel');
+      return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED;
+    }
+
+    this._engine.mainClientVariables.joinChanneled = true;
+
+    let processJoinChannel = async (): Promise<CallIrisApiResult> => {
+      // this._engine.mainClientVariables.startPreviewed = false;
+      let mainClientVariables: IrisMainClientVariables = this._engine
+        .mainClientVariables;
+      let globalVariables = this._engine.globalVariables;
+      mainClientVariables.mergeChannelMediaOptions(options);
+      let mainClient: IAgoraRTCClient = ImplHelper.createMainClient(
+        this._engine
+      );
+
+      //在JoinChannel之前就必须监听client的event，不然在Join过程中触发的回调会丢失呢
+      let entitiesContainer = this._engine.entitiesContainer;
+      entitiesContainer.setMainClient(mainClient);
+      let clientEventHandler = new IrisClientEventHandler(
+        mainClient,
+        IrisClientType.kClientMian,
+        this._engine
+      );
+      entitiesContainer.setMainClientEventHandler(clientEventHandler);
+      try {
+        uid = (await mainClient.join(
+          globalVariables.appId,
+          channelId,
+          token ? token : null,
+          uid
+        )) as number;
+      } catch (reason) {
+        AgoraConsole.error('join channel failed: join failed');
+        reason && AgoraConsole.error(reason);
+        this._engine.rtcEngineEventHandler.onError(
+          NATIVE_RTC.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED,
+          ''
+        );
+        this._engine.mainClientVariables.joinChanneled = false;
+        this._engine.entitiesContainer.clearMainClientAll(null);
+        // next();
+        return;
+      }
+
+      this._engine.mainClientVariables.token = token;
+
+      let audioSource: IrisAudioSourceType =
+        IrisAudioSourceType.kAudioSourceTypeUnknow;
+      if (globalVariables.enabledAudio && globalVariables.enabledLocalAudio) {
+        if (mainClientVariables.publishAudioTrack) {
+          audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary;
+        }
+      }
+
+      let videoSource: IrisVideoSourceType =
+        IrisVideoSourceType.kVideoSourceTypeUnknown;
+      if (globalVariables.enabledVideo && globalVariables.enabledLocalVideo) {
+        if (mainClientVariables.publishCameraTrack) {
+          videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
+        } else if (mainClientVariables.publishSecondaryCameraTrack) {
+          videoSource = IrisVideoSourceType.kVideoSourceTypeCameraSecondary;
+        } else if (mainClientVariables.publishScreenTrack) {
+          videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+        } else if (mainClientVariables.publishSecondaryScreenTrack) {
+          videoSource = IrisVideoSourceType.kVideoSourceTypeScreenSecondary;
+        }
+      }
+
+      let clientType = IrisClientType.kClientMian;
+      let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
+      try {
+        trackArray = await ImplHelper.getOrCreateAudioAndVideoTrackAsync(
+          this._engine,
+          audioSource,
+          videoSource,
+          clientType,
+          null
+        );
+      } catch (e) {
+        AgoraConsole.error('create audio And videoTrack failed');
+        AgoraConsole.error(e);
+        // next();
+        return;
+      }
+
+      let con: NATIVE_RTC.RtcConnection = {
+        channelId: channelId,
+        localUid: mainClient.uid as number,
+      };
+      //joinChannel success咯
+      this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(con, 0);
+      //推送麦克风audio
+      let audioTrack: IMicrophoneAudioTrack = trackArray[0] as IMicrophoneAudioTrack;
+      if (audioTrack) {
+        if (mainClientVariables.publishAudioTrack) {
+          entitiesContainer.addMainClientLocalAudioTrack({
+            type: IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
+            track: audioTrack,
+          });
+          let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+            {
+              channelName: channelId,
+              client: mainClient,
+              track: audioTrack,
+              trackType: 'ILocalTrack',
+            },
+            this._engine
+          );
+          entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+
+          try {
+            await mainClient.publish(audioTrack);
+          } catch (reason) {
+            AgoraConsole.error('audio track publish failed');
+            AgoraConsole.error(reason);
+            entitiesContainer.removeMainClientTrackEventHandlerByTrack(
+              audioTrack
+            );
+            entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
+          }
+        }
+
+        //推送屏幕共享audio
+        if (mainClientVariables.publishScreenCaptureAudio) {
+          let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(
+            IrisAudioSourceType.kAudioSourceTypeScreenPrimary
+          );
+          if (audioTrackPackage) {
+            let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
+
+            entitiesContainer.addMainClientLocalAudioTrack({
+              type: IrisAudioSourceType.kAudioSourceTypeScreenPrimary,
+              track: audioTrack,
+            });
+            let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+              {
+                channelName: channelId,
+                client: mainClient,
+                track: audioTrack,
+                trackType: 'ILocalTrack',
+              },
+              this._engine
+            );
+            entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+
+            try {
+              await mainClient.publish(audioTrack);
+            } catch (reason) {
+              AgoraConsole.error('screen share audio track publish failed');
+              AgoraConsole.error(reason);
+              entitiesContainer.removeMainClientTrackEventHandlerByTrack(
+                audioTrack
+              );
+              entitiesContainer.removeMainClientLocalAudioTrack(audioTrack);
+            }
+          }
+        }
+      }
+
+      //推送video
+      let videoTrack: ILocalVideoTrack = trackArray[1] as ILocalVideoTrack;
+      if (videoTrack) {
+        entitiesContainer.setMainClientLocalVideoTrack({
+          type: videoSource,
+          track: videoTrack,
+        });
+        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+          {
+            channelName: channelId,
+            client: mainClient,
+            track: videoTrack,
+            trackType: 'ILocalVideoTrack',
+          },
+          this._engine
+        );
+        entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+
+        try {
+          await mainClient.publish(videoTrack);
+        } catch (reason) {
+          AgoraConsole.error('video track publish failed');
+          AgoraConsole.error(reason);
+          entitiesContainer.removeMainClientTrackEventHandlerByTrack(
+            videoTrack
+          );
+          entitiesContainer.clearMainClientLocalVideoTrack();
+        }
+      }
+
+      return this.returnResult();
+
+      // next();
+    };
+
+    return this.execute(processJoinChannel);
   }
   updateChannelMediaOptions(
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'updateChannelMediaOptions not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
+      this._engine.mainClientVariables.mergeChannelMediaOptions(options);
+
+      //必须先依次 unpublish, 完毕之后，再依次去publish
+      let entitiesContainer = this._engine.entitiesContainer;
+      let mainClient = entitiesContainer.getMainClient();
+      if (mainClient == null) {
+        return;
+      }
+
+      let argsUnpublish: Array<[
+        string,
+        IrisAudioSourceType | IrisVideoSourceType,
+        'audio' | 'video'
+      ]> = [];
+      let argsPublish: Array<[
+        string,
+        IrisAudioSourceType | IrisVideoSourceType,
+        'audio' | 'video'
+      ]> = [];
+
+      // if (options.publishAudioTrack == false) {
+      //   argsUnpublish.push([
+      //     'publishAudioTrack',
+      //     IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
+      //     'audio',
+      //   ]);
+      // } else if (options.publishAudioTrack == true) {
+      //   argsPublish.push([
+      //     'publishAudioTrack',
+      //     IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
+      //     'audio',
+      //   ]);
+      // }
+
+      if (options.publishCameraTrack == false) {
+        argsUnpublish.push([
+          'publishCameraTrack',
+          IrisVideoSourceType.kVideoSourceTypeCameraPrimary,
+          'video',
+        ]);
+      } else if (options.publishCameraTrack == true) {
+        argsPublish.push([
+          'publishCameraTrack',
+          IrisVideoSourceType.kVideoSourceTypeCameraPrimary,
+          'video',
+        ]);
+      }
+
+      if (options.publishSecondaryCameraTrack == false) {
+        argsUnpublish.push([
+          'publishSecondaryCameraTrack',
+          IrisVideoSourceType.kVideoSourceTypeCameraSecondary,
+          'video',
+        ]);
+      } else if (options.publishSecondaryCameraTrack == true) {
+        argsPublish.push([
+          'publishSecondaryCameraTrack',
+          IrisVideoSourceType.kVideoSourceTypeCameraSecondary,
+          'video',
+        ]);
+      }
+
+      if (options.publishScreenCaptureAudio == false) {
+        argsUnpublish.push([
+          'publishScreenCaptureAudio',
+          IrisAudioSourceType.kAudioSourceTypeScreenPrimary,
+          'audio',
+        ]);
+      } else if (options.publishScreenCaptureAudio == true) {
+        argsPublish.push([
+          'publishScreenCaptureAudio',
+          IrisAudioSourceType.kAudioSourceTypeScreenPrimary,
+          'audio',
+        ]);
+      }
+
+      if (options.publishScreenTrack == false) {
+        argsUnpublish.push([
+          'publishScreenTrack',
+          IrisVideoSourceType.kVideoSourceTypeScreenPrimary,
+          'video',
+        ]);
+      } else if (options.publishScreenTrack == true) {
+        argsPublish.push([
+          'publishScreenTrack',
+          IrisVideoSourceType.kVideoSourceTypeScreenPrimary,
+          'video',
+        ]);
+      }
+
+      if (options.publishSecondaryScreenTrack == false) {
+        argsUnpublish.push([
+          'publishSecondaryScreenTrack',
+          IrisVideoSourceType.kVideoSourceTypeScreenSecondary,
+          'video',
+        ]);
+      } else if (options.publishSecondaryScreenTrack == true) {
+        argsPublish.push([
+          'publishSecondaryScreenTrack',
+          IrisVideoSourceType.kVideoSourceTypeScreenSecondary,
+          'video',
+        ]);
+      }
+
+      for (let UnpublishArags of argsUnpublish) {
+        let optionName = UnpublishArags[0];
+        let audioOrVideoType = UnpublishArags[1];
+        let type = UnpublishArags[2];
+
+        if (type == 'audio') {
+          //unpublish audio
+          let audioPackage = entitiesContainer.getLocalAudioTrackByType(
+            audioOrVideoType as IrisAudioSourceType
+          );
+          if (audioPackage) {
+            let track = audioPackage.track as ILocalAudioTrack;
+            if (mainClient.localTracks.indexOf(track) != -1) {
+              try {
+                await mainClient.unpublish(track);
+                AgoraConsole.log(optionName + '(false) changed success');
+                entitiesContainer.removeMainClientTrackEventHandlerByTrack(
+                  track
+                );
+                entitiesContainer.removeMainClientLocalAudioTrack(track);
+              } catch (reason) {
+                AgoraConsole.error(optionName + '(false) changed failed');
+              }
+            }
+          }
+        } else {
+          //unpublish video
+          let videoPackage = entitiesContainer.getLocalVideoTrackByType(
+            audioOrVideoType as IrisVideoSourceType
+          );
+          if (videoPackage) {
+            let track = videoPackage.track as ILocalVideoTrack;
+            if (mainClient.localTracks.indexOf(track) != -1) {
+              try {
+                await mainClient.unpublish(track);
+                AgoraConsole.log(optionName + '(false) changed success');
+                entitiesContainer.removeMainClientTrackEventHandlerByTrack(
+                  track
+                );
+                entitiesContainer.setMainClientLocalVideoTrack(null);
+              } catch (reason) {
+                AgoraConsole.error(optionName + '(false) changed failed');
+              }
+            }
+          }
+        }
+      }
+
+      for (let publishArags of argsPublish) {
+        let optionName = publishArags[0];
+        let audioOrVideoType = publishArags[1];
+        let type = publishArags[2];
+        if (type == 'audio') {
+          //publish audio
+          let audioPackage = entitiesContainer.getLocalAudioTrackByType(
+            audioOrVideoType as IrisAudioSourceType
+          );
+          if (audioPackage) {
+            let track = audioPackage.track as ILocalAudioTrack;
+            if (mainClient.localTracks.indexOf(track) == -1) {
+              try {
+                await mainClient.publish(track);
+                AgoraConsole.log(optionName + '(true) changed success');
+                let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+                  {
+                    channelName: mainClient.channelName,
+                    client: mainClient,
+                    track: track,
+                    trackType: 'ILocalTrack',
+                  },
+                  this._engine
+                );
+
+                entitiesContainer.addMainClientTrackEventHandler(
+                  trackEventHandler
+                );
+                entitiesContainer.addMainClientLocalAudioTrack({
+                  type: audioOrVideoType as IrisAudioSourceType,
+                  track: track,
+                });
+              } catch (reason) {
+                AgoraConsole.error(optionName + '(true) changed failed');
+              }
+            }
+          }
+        } else {
+          //publish video
+          let videoPackage = entitiesContainer.getLocalVideoTrackByType(
+            audioOrVideoType as IrisVideoSourceType
+          );
+          if (videoPackage) {
+            let track = videoPackage.track as ILocalVideoTrack;
+            if (mainClient.localTracks.indexOf(track) == -1) {
+              try {
+                await mainClient.publish(track);
+                AgoraConsole.log(optionName + '(true) changed success');
+                let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+                  {
+                    channelName: mainClient.channelName,
+                    client: mainClient,
+                    track: track,
+                    trackType: 'ILocalVideoTrack',
+                  },
+                  this._engine
+                );
+
+                entitiesContainer.addMainClientTrackEventHandler(
+                  trackEventHandler
+                );
+                entitiesContainer.setMainClientLocalVideoTrack({
+                  type: audioOrVideoType as IrisVideoSourceType,
+                  track: track,
+                });
+              } catch (reason) {
+                AgoraConsole.error(optionName + '(true) changed failed');
+              }
+            }
+          }
+        }
+      }
+
+      /*
+                    clientRoleType?: CLIENT_ROLE_TYPE;
+                    audienceLatencyLevel?: AUDIENCE_LATENCY_LEVEL_TYPE;
+                    defaultVideoStreamType?: VIDEO_STREAM_TYPE;
+                    channelProfile?: CHANNEL_PROFILE_TYPE; 加入频道后client已经被创建了，它的 ChannelProfile（SDK_MODE）就无法改变了
+                    token?: string;
+                    */
+      if (options.clientRoleType != null) {
+        let roleOptions: ClientRoleOptions = null;
+        if (options.audienceLatencyLevel != null) {
+          roleOptions = AgoraTranslate.NATIVE_RTCAUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(
+            options.audienceLatencyLevel
+          );
+        }
+
+        try {
+          await mainClient.setClientRole(
+            AgoraTranslate.NATIVE_RTCCLIENT_ROLE_TYPE2ClientRole(
+              options.clientRoleType
+            ),
+            roleOptions
+          );
+        } catch (e) {
+          AgoraConsole.error('setClientRole failed');
+        }
+      }
+
+      if (options.token != null) {
+        try {
+          await mainClient.renewToken(options.token);
+          //这里的新token已经在 fun 的第一行被保存了
+        } catch (e) {
+          AgoraConsole.error('renewToken failed');
+        }
+      }
+      return CallIrisApiResult.success();
+    };
+    return this.execute(processFunc);
   }
   leaveChannel(): CallApiReturnType {
-    AgoraConsole.warn('leaveChannel not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let options: NATIVE_RTC.LeaveChannelOptions = {
+      stopAudioMixing: true,
+      stopAllEffect: true,
+      stopMicrophoneRecording: true,
+    };
+    return this.leaveChannel2(options);
   }
   leaveChannel2(options: NATIVE_RTC.LeaveChannelOptions): CallApiReturnType {
-    AgoraConsole.warn('leaveChannel2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
+      //离开频道啦 稍后处理
+      if (this._engine.mainClientVariables.joinChanneled == false) {
+        // AgoraConsole.error("you must join channel before you call this method");
+        // return CallIrisApiResult.failed(0, -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
+        return CallIrisApiResult.success();
+      }
+
+      this._engine.mainClientVariables.joinChanneled = false;
+
+      let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
+      if (mainClient) {
+        //todo 读取 options
+
+        //为了防止离开频道后丢失了channelName和uid，所以需要先保存一下
+        let con: NATIVE_RTC.RtcConnection = {
+          channelId: mainClient.channelName,
+          localUid: mainClient.uid as number,
+        };
+        let channelId = mainClient.channelName;
+        mainClient
+          .leave()
+          .then(() => {
+            this._engine.rtcEngineEventHandler.onLeaveChannelEx(
+              con,
+              new NATIVE_RTC.RtcStats()
+            );
+            this._engine.entitiesContainer.clearMainClientAll(channelId);
+          })
+          .catch((reason) => {
+            AgoraConsole.error('leaveChannel failed');
+            reason && AgoraConsole.error(reason);
+            this._engine.rtcEngineEventHandler.onError(
+              NATIVE_RTC.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED,
+              ''
+            );
+          })
+          .finally(() => {
+            // next();
+          });
+      } else {
+        // next();
+      }
+
+      return CallIrisApiResult.success();
+    };
+
+    return this.execute(processFunc);
   }
   renewToken(token: string): CallApiReturnType {
     AgoraConsole.warn('renewToken not supported in this platform!');
@@ -264,28 +814,261 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   enableVideo(): CallApiReturnType {
-    AgoraConsole.warn('enableVideo not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processVideoTrack = async (): Promise<CallIrisApiResult> => {
+      this._engine.globalVariables.enabledVideo = true;
+
+      //找到本端video
+      if (this._engine.globalVariables.enabledLocalVideo) {
+        let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
+        for (let trackPackage of trackPackages) {
+          if (!trackPackage.track) {
+            continue;
+          }
+
+          let track = trackPackage.track as ILocalVideoTrack;
+          if (track.isPlaying == false) {
+            try {
+              // TODO(littlegnal): This is a WebGL specific requirement
+              // await track.play(this._engine.generateVideoTrackLabelOrHtmlElement("", 0, trackPackage.type));
+            } catch (e) {
+              AgoraConsole.error('ILocalVideoTrack play(true) failed');
+              AgoraConsole.error(e);
+            }
+          }
+          if (track.enabled == false) {
+            try {
+              await track.setEnabled(true);
+            } catch (e) {
+              AgoraConsole.error('ILocalVideoTrack setEnable(true) failed');
+              AgoraConsole.error(e);
+            }
+          }
+        }
+      }
+
+      //找到远端video
+      //mainClient的远端用户
+      let entitiesContainer = this._engine.entitiesContainer;
+      let mainClient = entitiesContainer.getMainClient();
+      if (mainClient && mainClient.channelName) {
+        let remoteUsers = mainClient.remoteUsers;
+        for (let remoteUser of remoteUsers) {
+          //todo 远端用户发流的时候。我不订阅，那么他的hasVideo为true， 但是他们的videoTrack是null
+          if (
+            remoteUser.hasVideo &&
+            remoteUser.videoTrack &&
+            remoteUser.videoTrack.isPlaying == false
+          ) {
+            // TODO(littlegnal): This is a WebGL specific requirement
+            // remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
+          }
+        }
+      }
+
+      //subClient的远端用户
+      entitiesContainer.getSubClients().walkT((channel_id, uid, subClient) => {
+        let remoteUsers = subClient.remoteUsers;
+        for (let remoteUser of remoteUsers) {
+          if (
+            remoteUser.hasVideo &&
+            remoteUser.videoTrack &&
+            remoteUser.videoTrack.isPlaying == false
+          ) {
+            // TODO(littlegnal): This is a WebGL specific requirement
+            // remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
+          }
+        }
+      });
+
+      // next();
+
+      return this.returnResult();
+    };
+
+    return this.execute(processVideoTrack);
   }
   disableVideo(): CallApiReturnType {
-    AgoraConsole.warn('disableVideo not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processVideoTrack = async (): Promise<CallIrisApiResult> => {
+      this._engine.globalVariables.enabledVideo = false;
+
+      //todo 一股脑的全部enable或者disable是否合理?
+      //找到本端video
+      let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
+      for (let trackPackage of trackPackages) {
+        let track = trackPackage.track as ILocalVideoTrack;
+        if (track.enabled == true) {
+          try {
+            await track.setEnabled(false);
+          } catch (e) {
+            AgoraConsole.error('ILocalVideoTrack setEnable(false) failed');
+            AgoraConsole.error(e);
+          }
+        }
+      }
+
+      //mainClient的远端用户
+      let entitiesContainer = this._engine.entitiesContainer;
+      let mainClient = entitiesContainer.getMainClient();
+      if (mainClient && mainClient.channelName) {
+        let remoteUsers = mainClient.remoteUsers;
+        for (let remoteUser of remoteUsers) {
+          //todo 远端用户发流的时候。我不订阅，那么他的hasVideo为true， 但是他们的videoTrack是null
+          if (
+            remoteUser.hasVideo &&
+            remoteUser.videoTrack &&
+            remoteUser.videoTrack.isPlaying
+          ) {
+            remoteUser.videoTrack.stop();
+          }
+        }
+      }
+
+      //subClient的远端用户
+      entitiesContainer.getSubClients().walkT((channel_id, uid, subClient) => {
+        let remoteUsers = subClient.remoteUsers;
+        for (let remoteUser of remoteUsers) {
+          if (
+            remoteUser.hasVideo &&
+            remoteUser.videoTrack &&
+            remoteUser.videoTrack.isPlaying
+          ) {
+            remoteUser.videoTrack.stop();
+          }
+        }
+      });
+      return this.returnResult();
+    };
+    return this.execute(processVideoTrack);
   }
   startPreview(): CallApiReturnType {
-    AgoraConsole.warn('startPreview not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.startPreview2(NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA);
   }
   startPreview2(sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE): CallApiReturnType {
-    AgoraConsole.warn('startPreview2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let process = async (): Promise<CallIrisApiResult> => {
+      if (this._engine.globalVariables.enabledVideo == false) {
+        AgoraConsole.error('call enableVideo(true) before startPreview');
+        // next();
+        return;
+      }
+
+      // if (this._engine.mainClientVariables.startPreviewed == true) {
+      //     AgoraConsole.error("you already call startPreview");
+      //     next();
+      //     return;
+      // }
+
+      if (sourceType >= 4) {
+        AgoraConsole.error('Invalid source type');
+        // next();
+        return;
+      }
+
+      // this._engine.mainClientVariables.startPreviewed = true;
+
+      let audioSource: IrisAudioSourceType =
+        IrisAudioSourceType.kAudioSourceTypeUnknow;
+      let videoSource: IrisVideoSourceType = sourceType as number;
+
+      console.log(`startPreview2 videoSource: ${videoSource}`);
+
+      try {
+        await ImplHelper.getOrCreateAudioAndVideoTrackAsync(
+          this._engine,
+          audioSource,
+          videoSource,
+          IrisClientType.kClientMian,
+          null
+        );
+
+        let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
+        for (let trackPackage of trackPackages) {
+          let track = trackPackage.track as ILocalVideoTrack;
+          if (!track) {
+            continue;
+          }
+
+          if (track.enabled == false) {
+            try {
+              await track.setEnabled(true);
+            } catch (e) {
+              AgoraConsole.error('ILocalVideoTrack setEnable(true) failed');
+              AgoraConsole.error(e);
+            }
+          }
+
+          if (track.isPlaying) {
+            track.stop();
+          }
+
+          if (trackPackage.element) {
+            track.play(trackPackage.element);
+          }
+        }
+
+        AgoraConsole.log('start preview createCameraVideoTrack success');
+      } catch (err) {
+        AgoraConsole.error(
+          'Start preview failed: create video and audio track failed'
+        );
+        err && AgoraConsole.error(err);
+        // this._engine.mainClientVariables.startPreviewed = false;
+      }
+      // next();
+
+      return this.returnResult();
+    };
+
+    return this.execute(process);
   }
   stopPreview(): CallApiReturnType {
-    AgoraConsole.warn('stopPreview not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.stopPreview2(NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA);
   }
   stopPreview2(sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE): CallApiReturnType {
-    AgoraConsole.warn('stopPreview2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let process = async (): Promise<CallIrisApiResult> => {
+      let audioSource: IrisAudioSourceType =
+        IrisAudioSourceType.kAudioSourceTypeUnknow;
+      let videoSource: IrisVideoSourceType =
+        IrisVideoSourceType.kVideoSourceTypeUnknown;
+      if (
+        sourceType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
+      ) {
+        audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary;
+        videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
+      } else if (
+        sourceType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
+      ) {
+        audioSource = IrisAudioSourceType.kAudioSourceTypeScreenPrimary;
+        videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+      }
+
+      let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(
+        audioSource
+      );
+      if (audioTrackPackage) {
+        let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
+        if (audioTrack.enabled) {
+          audioTrack
+            .setEnabled(false)
+            .then(() => {})
+            .catch(() => {});
+        }
+      }
+
+      let videoTrackPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(
+        videoSource
+      );
+      if (videoTrackPackage) {
+        let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
+        if (videoTrack.enabled) {
+          videoTrack
+            .setEnabled(false)
+            .then(() => {})
+            .catch(() => {});
+        }
+      }
+      return this.returnResult();
+    };
+    return this.execute(process);
   }
   startLastmileProbeTest(
     config: NATIVE_RTC.LastmileProbeConfig
@@ -430,8 +1213,27 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   enableLocalAudio(enabled: boolean): CallApiReturnType {
-    AgoraConsole.warn('enableLocalAudio not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      this._engine.globalVariables.enabledLocalAudio = enabled;
+      //找到本地audio
+      let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
+      for (let trackPackage of trackPackages) {
+        let track = trackPackage.track as ILocalAudioTrack;
+        if (track.enabled != enabled) {
+          try {
+            await track.setEnabled(enabled);
+          } catch (e) {
+            AgoraConsole.error(
+              'ILocalAudioTrack setEnable{' + enabled + '} failed'
+            );
+            AgoraConsole.error(e);
+          }
+        }
+      }
+      return this.returnResult();
+    };
+
+    return this.execute(processFunc);
   }
   muteLocalAudioStream(mute: boolean): CallApiReturnType {
     AgoraConsole.warn('muteLocalAudioStream not supported in this platform!');
@@ -914,8 +1716,16 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setLogLevel(level: NATIVE_RTC.LOG_LEVEL): CallApiReturnType {
-    AgoraConsole.warn('setLogLevel not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      AgoraConsole.logLevel = level;
+      let numberLevel: number = AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(
+        level
+      );
+      AgoraRTC.setLogLevel(numberLevel);
+      return CallIrisApiResult.success();
+    };
+
+    return this.execute(processFunc);
   }
   setLogFileSize(fileSizeInKBytes: number): CallApiReturnType {
     AgoraConsole.warn('setLogFileSize not supported in this platform!');
@@ -1268,8 +2078,40 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   switchCamera(): CallApiReturnType {
-    AgoraConsole.warn('switchCamera not supported in this platform!');
+    AgoraConsole.warn('isCameraZoomSupported not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    // let process = async ():Promise<CallIrisApiResult> => {
+    //   let trackPack = this._engine.entitiesContainer.getLocalVideoTrackByType(
+    //     IrisVideoSourceType.kVideoSourceTypeCameraPrimary
+    //   );
+    //   let videoTrack: ICameraVideoTrack = trackPack.track as ICameraVideoTrack;
+    //   let curDeviceName: string = (videoTrack as any)._deviceName;
+
+    //   try {
+    //     let allDevices = (await ImplHelper.enumerateDevices(this._engine))
+    //       .videoDevices;
+    //     let curIndex = -1;
+    //     for (let i = 0; i < allDevices.length; i++) {
+    //       if (allDevices[i].deviceName == curDeviceName) {
+    //         curIndex = i;
+    //         break;
+    //       }
+    //     }
+    //     curIndex++;
+    //     let nextDevice = allDevices[curIndex % allDevices.length];
+    //     try {
+    //       await videoTrack.setDevice(nextDevice.deviceId);
+    //     } catch (e) {
+    //       AgoraConsole.error('switchCamera setDevice failed');
+    //       AgoraConsole.log(e);
+    //     }
+    //   } catch (e) {
+    //     AgoraConsole.error('switchCamera enumerateDevices failed');
+    //     AgoraConsole.log(e);
+    //   }
+    //   return CallIrisApiResult.success();
+    // };
+    // return this.execute(process);
   }
   isCameraZoomSupported(): CallApiReturnType {
     AgoraConsole.warn('isCameraZoomSupported not supported in this platform!');
@@ -1466,8 +2308,12 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
   startScreenCapture(
     captureParams: NATIVE_RTC.ScreenCaptureParameters2
   ): CallApiReturnType {
-    AgoraConsole.warn('startScreenCapture not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      //todo
+      return CallIrisApiResult.success();
+    };
+
+    return this.execute(processFunc);
   }
   updateScreenCapture(
     captureParams: NATIVE_RTC.ScreenCaptureParameters2
@@ -1490,8 +2336,12 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   stopScreenCapture(): CallApiReturnType {
-    AgoraConsole.warn('stopScreenCapture not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      //todo
+      return CallIrisApiResult.success();
+    };
+
+    return this.execute(processFunc);
   }
   getCallId(callId: string): CallApiReturnType {
     AgoraConsole.warn('getCallId not supported in this platform!');
@@ -1587,8 +2437,12 @@ export class IRtcEngineImpl implements NATIVE_RTC.IRtcEngine {
     sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
     config: NATIVE_RTC.ScreenCaptureConfiguration
   ): CallApiReturnType {
-    AgoraConsole.warn('startScreenCapture2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      //todo
+      return CallIrisApiResult.success();
+    };
+
+    return this.execute(processFunc);
   }
   stopScreenCapture2(
     sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE

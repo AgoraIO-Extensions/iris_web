@@ -16,6 +16,16 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     this._engine.actionQueue.putAction(action);
   }
 
+  setExternalVideoSource(
+    enabled: boolean,
+    useTexture: boolean,
+    sourceType: NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
+    encodedVideoOption: NATIVE_RTC.SenderOptions
+  ): CallApiReturnType {
+    AgoraConsole.warn('setExternalVideoSource not supported in this platform!');
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  }
+
   registerVideoEncodedFrameObserver(
     observer: NATIVE_RTC.IVideoEncodedFrameObserver
   ): CallApiReturnType {
@@ -119,15 +129,6 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  setExternalVideoSource(
-    enabled: boolean,
-    useTexture: boolean,
-    sourceType: NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
-  ): number {
-    AgoraConsole.warn('setExternalVideoSource not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-  }
-
   setDirectExternalAudioSource(
     enable: boolean,
     localPlayback: boolean
@@ -138,7 +139,10 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  pushVideoFrame(frame: NATIVE_RTC.ExternalVideoFrame[]): number {
+  pushVideoFrame(
+    frame: NATIVE_RTC.ExternalVideoFrame[],
+    videoTrackId: number
+  ): number {
     AgoraConsole.warn('pushVideoFrame not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }

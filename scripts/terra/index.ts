@@ -30,7 +30,7 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
       ),
     };
     cxxfile.user_data = cxxUserData;
-    cxxfile = addMethodWrapper(cxxfile);
+    // cxxfile = addMethodWrapper(cxxfile);
 
     cxxfile.nodes = cxxfile.nodes.map((node: TerraNode) => {
       let isCallback = isMatch(node.name, 'isCallback');
