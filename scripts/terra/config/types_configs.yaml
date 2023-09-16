@@ -10,10 +10,10 @@ renderers:
 parsers:
   # - AddNodeParser
   - PointerToArrayParser:
-      configJsonFilePath: ./config/pointer_to_array.json
+      configJsonFilePath: ./pointer_to_array.json
   - OrderNodeParser
   - FixEnumConstantParser
   - UpdateSimpleTypeParser:
-      configJsonFilePath: ./config/param_type_list.json
+      configJsonFilePath: ./param_type_list.json
   - RemoveNodeParser:
-      configJsonFilePath: ./config/remove_node_list.json
+      configJsonFilePath: ./remove_node_list.json
