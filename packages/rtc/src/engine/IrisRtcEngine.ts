@@ -166,7 +166,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     let className = array[0];
     let funName = array[1];
 
-    console.log(`[iris_web] callIrisApi apiParam: ${JSON.stringify(apiParam)}`);
+    AgoraConsole.log(`[callIrisApi][start]: ${JSON.stringify(apiParam)}`);
 
     let obj = this._implDispatchsMap.get(className);
     if (obj) {
@@ -180,14 +180,18 @@ export class IrisRtcEngine implements ApiInterceptor {
           bufferLength,
           resultObj
         );
-        AgoraConsole.log(`[callIrisApi] ${func_name} ret ${ret}`);
+        AgoraConsole.log(`[callIrisApi][result] ${func_name} ret ${ret.code}`);
         return ret;
       } else {
-        AgoraConsole.error(`${func_name} not found in ${className}Dispatch`);
+        AgoraConsole.error(
+          `[callIrisApi][result] ${func_name} not found in ${className}Dispatch`
+        );
         return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
       }
     } else {
-      AgoraConsole.error(`${className} not found in DispatchsMap`);
+      AgoraConsole.error(
+        `[callIrisApi][result] ${className} not found in DispatchsMap`
+      );
       return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
     }
   }
@@ -196,45 +200,24 @@ export class IrisRtcEngine implements ApiInterceptor {
     apiParam: ApiParam
   ): Promise<CallIrisApiResult> {
     let func_name = apiParam.event;
-    // let params: string = apiParam.data;
-    // let paramLength: number = apiParam.data_size;
-    // let buffer: Array<any> = apiParam.buffer;
-    // let bufferLength: Array<any> = apiParam.length;
-    // let buffer_count = apiParam.buffer_count;
-    // let result: any = apiParam.result;
-    // let resultObj: any = {};
-
     let array = func_name.split('_');
     let className = array[0];
     let funName = array[1];
 
-    console.log(
-      `[iris_web] callIrisApiAsync apiParam: ${JSON.stringify(apiParam)}`
-    );
+    AgoraConsole.log(`[callIrisApiAsync][start]: ${JSON.stringify(apiParam)}`);
 
     let obj = this._implDispatchsMap.get(className);
     if (obj) {
       let callApiFun: CallApiAsyncType = obj[funName];
       if (callApiFun) {
         let ret = await callApiFun.call(obj, apiParam);
-        console.assert(
-          (function () {
-            if (
-              ret === undefined ||
-              ret.code === undefined ||
-              ret.data === undefined
-            ) {
-              throw `[callIrisApiAsync] ${func_name} ret ${ret} not CallIrisApiResult`;
-            }
-
-            return true;
-          })()
+        AgoraConsole.log(
+          `[callIrisApiAsync][result] ${func_name} ret ${ret.code}`
         );
-        AgoraConsole.log(`[callIrisApiAsync] ${func_name} ret ${ret.code}`);
         return ret;
       } else {
         AgoraConsole.error(
-          `[callIrisApiAsync] ${func_name} not found in ${className}Dispatch`
+          `[callIrisApiAsync][result] ${func_name} not found in ${className}Dispatch`
         );
         return new CallIrisApiResult(
           -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED,
@@ -242,11 +225,11 @@ export class IrisRtcEngine implements ApiInterceptor {
         );
       }
     } else {
-      // AgoraConsole.error(`[callIrisApiAsync] ${className} not found in DispatchsMap`);
-      // return new CallIrisApiResult( -ERROR_CODE_TYPE.ERR_FAILED, "");
+      AgoraConsole.error(
+        `[callIrisApiAsync][result] ${className} not found in DispatchsMap`
+      );
+      return new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, '');
     }
-
-    return undefined;
   }
 
   public setEventHandler(event_handler: IrisEventHandler) {

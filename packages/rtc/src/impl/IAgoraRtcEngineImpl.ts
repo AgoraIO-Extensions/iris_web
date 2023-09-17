@@ -82,35 +82,22 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
 
   initialize(context: NATIVE_RTC.RtcEngineContext): CallApiReturnType {
-    let processFunc = async (): Promise<CallIrisApiResult> => {
-      console.log('RtcEngineImpl initialize');
-      this._engine.globalVariables.appId = context.appId;
-      this._engine.mainClientVariables.channelProfile = context.channelProfile;
-      this._engine.globalVariables.audioScenario = context.audioScenario;
-      this._engine.globalVariables.areaCode = context.areaCode;
+    let processFunc = () => {
+      this._engine.globalVariables.rtcEngineContext = context;
 
       AgoraRTC.setArea([
         AgoraTranslate.NATIVE_RTCAREA_CODE2AREAS(context.areaCode),
       ]);
 
-      if (context.logConfig && context.logConfig.level) {
-        AgoraConsole.logLevel = context.logConfig.level;
-        let numberLevel: number = AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(
-          context.logConfig.level
-        );
-        AgoraRTC.setLogLevel(numberLevel);
-      }
+      AgoraRTC.setLogLevel(
+        AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(context?.logConfig?.level)
+      );
 
       let result = AgoraRTC.checkSystemRequirements();
-      if (result) {
-        AgoraConsole.log('AgoraRTC.checkSystemRequirements return true');
-      } else {
-        AgoraConsole.warn('AgoraRTC.checkSystemRequirements reutrn false');
-      }
-
-      console.log('RtcEngineImpl initialize 22222');
-      return Promise.resolve(
-        new CallIrisApiResult(0, '{"result": 0, "other": 111}')
+      return this.returnResult(
+        result
+          ? -NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK
+          : -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_READY
       );
     };
 
@@ -160,6 +147,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     uid: number
   ): CallApiReturnType {
     let mvs = this._engine.mainClientVariables;
+    let rtcEngineContext = this._engine.globalVariables.rtcEngineContext;
     let options: NATIVE_RTC.ChannelMediaOptions = {
       publishCameraTrack:
         mvs.publishCameraTrack != null ? mvs.publishCameraTrack : true,
@@ -182,9 +170,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           ? mvs.defaultVideoStreamType
           : NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH,
       channelProfile:
-        mvs.channelProfile != null
-          ? mvs.channelProfile
-          : NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
+        rtcEngineContext.channelProfile ||
+        NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
     };
     return this.joinChannel2(token, channelId, uid, options);
   }
@@ -222,7 +209,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       entitiesContainer.setMainClientEventHandler(clientEventHandler);
       try {
         uid = (await mainClient.join(
-          globalVariables.appId,
+          globalVariables.rtcEngineContext.appId,
           channelId,
           token ? token : null,
           uid
@@ -621,13 +608,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         }
       }
 
-      /*
-                    clientRoleType?: CLIENT_ROLE_TYPE;
-                    audienceLatencyLevel?: AUDIENCE_LATENCY_LEVEL_TYPE;
-                    defaultVideoStreamType?: VIDEO_STREAM_TYPE;
-                    channelProfile?: CHANNEL_PROFILE_TYPE; 加入频道后client已经被创建了，它的 ChannelProfile（SDK_MODE）就无法改变了
-                    token?: string;
-                    */
       if (options.clientRoleType != null) {
         let roleOptions: ClientRoleOptions = null;
         if (options.audienceLatencyLevel != null) {
@@ -1189,7 +1169,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.globalVariables.audioProfile = profile;
-      this._engine.globalVariables.audioScenario = scenario;
+      this._engine.globalVariables.rtcEngineContext.audioScenario = scenario;
 
       return this.returnResult();
     };

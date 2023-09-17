@@ -22,16 +22,12 @@ export class CallApiExecutor {
   }
 
   execute(task: AsyncTaskType): CallApiReturnType {
-    console.log(`CallApiExecutor execute111: ${this.isAsyncCall}`);
     if (!this.isAsyncCall) {
-      console.log(`CallApiExecutor execute222: ${this.isAsyncCall}`);
       this.queue.enqueue(task);
       return 0;
     }
 
-    console.log(`CallApiExecutor execute333: ${this.isAsyncCall}`);
     let tmp = task();
-    console.log(`CallApiExecutor execute444: ${tmp}`);
     return tmp;
   }
 }

@@ -46,6 +46,11 @@ export class AgoraTranslate {
         return 3;
       case NATIVE_RTC.LOG_LEVEL.LOG_LEVEL_API_CALL:
         return 0;
+      default:
+        AgoraConsole.log(
+          'SDK logLevel is not specified, will not output any webSDK log.'
+        );
+        return 4;
     }
   }
 
@@ -84,7 +89,7 @@ export class AgoraTranslate {
       case NATIVE_RTC.AREA_CODE_EX.AREA_CODE_OVS:
         return AREAS.OVERSEA;
       default:
-        AgoraConsole.warn('inpput unkonw areaCode');
+        AgoraConsole.warn('input Unknown areaCode');
         return AREAS.GLOBAL;
     }
   }

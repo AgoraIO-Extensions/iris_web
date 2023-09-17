@@ -2,15 +2,12 @@ import * as NATIVE_RTC from '@iris/web-rtc';
 import { UID } from 'agora-rtc-sdk-ng';
 
 export class IrisGlobalVariables {
-  public appId: string = null;
+  public rtcEngineContext: NATIVE_RTC.RtcEngineContext;
+
+  // public appId: string = null;
 
   //C++ SetAudioProfile() initialize()
   public audioProfile: NATIVE_RTC.AUDIO_PROFILE_TYPE;
-  public audioScenario: NATIVE_RTC.AUDIO_SCENARIO_TYPE;
-
-  //initialize()
-  public areaCode: NATIVE_RTC.AREA_CODE | NATIVE_RTC.AREA_CODE_EX =
-    NATIVE_RTC.AREA_CODE.AREA_CODE_CN;
 
   public enabledAudio: boolean = true;
   public pausedAudio: boolean = false;

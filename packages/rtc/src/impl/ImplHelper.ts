@@ -718,6 +718,8 @@ export class ImplHelper {
   //根据保存的中间状态，生成ClientConfig
   public static generateMainClientConfig(engine: IrisRtcEngine): ClientConfig {
     let mainClientVariables = engine.mainClientVariables;
+    let globalVariables = engine.globalVariables;
+
     let config: ClientConfig = {
       codec:
         mainClientVariables.videoEncoderConfiguration != null
@@ -725,12 +727,11 @@ export class ImplHelper {
               mainClientVariables.videoEncoderConfiguration.codecType
             )
           : 'vp8',
-      mode:
-        mainClientVariables.channelProfile != null
-          ? AgoraTranslate.NATIVE_RTCCHANNEL_PROFILE_TYPE2SDK_MODE(
-              mainClientVariables.channelProfile
-            )
-          : 'rtc',
+      mode: globalVariables.rtcEngineContext.channelProfile
+        ? AgoraTranslate.NATIVE_RTCCHANNEL_PROFILE_TYPE2SDK_MODE(
+            globalVariables.rtcEngineContext.channelProfile
+          )
+        : 'rtc',
     };
     if (mainClientVariables.clientRoleType != null) {
       config.role = AgoraTranslate.NATIVE_RTCCLIENT_ROLE_TYPE2ClientRole(

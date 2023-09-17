@@ -3,7 +3,6 @@ import { UID } from 'agora-rtc-sdk-ng';
 
 //Record the intermediate status of the Main client
 export class IrisMainClientVariables {
-  //public channelProfile: NATIVE_RTC.CHANNEL_PROFILE_TYPE = NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING;
   //public role: NATIVE_RTC.CLIENT_ROLE_TYPE = NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE;
 
   //ClientRoleOptions
@@ -37,7 +36,6 @@ export class IrisMainClientVariables {
   public clientRoleType?: NATIVE_RTC.CLIENT_ROLE_TYPE;
   public audienceLatencyLevel?: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE;
   public defaultVideoStreamType?: NATIVE_RTC.VIDEO_STREAM_TYPE;
-  public channelProfile?: NATIVE_RTC.CHANNEL_PROFILE_TYPE;
   public audioDelayMs?: number;
   public mediaPlayerAudioDelayMs?: number;
   public token?: string;
@@ -71,7 +69,6 @@ export class IrisMainClientVariables {
     this.clientRoleType = null;
     this.audienceLatencyLevel = null;
     this.defaultVideoStreamType = null;
-    this.channelProfile = null;
     this.audioDelayMs = null;
     this.mediaPlayerAudioDelayMs = null;
     this.token = null;
