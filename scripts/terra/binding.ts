@@ -1,7 +1,10 @@
 import * as path from 'path';
 
-import { CXXFile, RenderContext, TerraNode } from 'terra-cli';
-import { CXXTYPE } from 'terra-cli';
+import { CXXFile, CXXTYPE, CXXTerraNode } from '@agoraio-extensions/cxx-parser';
+
+import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
+
+import { renderWithConfiguration } from '@agoraio-extensions/terra_shared_configs';
 
 import {
   addMethodWrapper,
@@ -29,7 +32,12 @@ interface ClazzMethodUserData {
   _prefix: string;
 }
 
-export default function (cxxfiles: CXXFile[], context: RenderContext) {
+export default function (
+  terraContext: TerraContext,
+  args: any,
+  parseResult: ParseResult
+) {
+  let cxxfiles = parseResult.nodes as CXXFile[];
   //移除不需要的文件
   let view = filterFile(cxxfiles).map((cxxfile: CXXFile) => {
     const cxxUserData: CXXFileUserData = {
@@ -41,11 +49,11 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
     cxxfile.user_data = cxxUserData;
     // cxxfile = addMethodWrapper(cxxfile);
 
-    let nodes = cxxfile.nodes.filter((node: TerraNode) => {
+    let nodes = cxxfile.nodes.filter((node: CXXTerraNode) => {
       return node.__TYPE === CXXTYPE.Clazz;
     });
 
-    cxxfile.nodes = nodes.map((node: TerraNode) => {
+    cxxfile.nodes = nodes.map((node: CXXTerraNode) => {
       if (node.name === 'IRtcEngineEventHandlerEx') {
         // debugger;
       }
@@ -99,7 +107,7 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
       }).length > 0
     );
   });
-  return context.mustacheRenderContext.renderWithConfiguration({
+  return renderWithConfiguration({
     fileNameTemplatePath: path.join(
       __dirname,
       'templates',
