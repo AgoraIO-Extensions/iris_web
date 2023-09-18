@@ -7,11 +7,11 @@ import {
   ApiParam,
   CallApiExecutor,
   CallIrisApiResult,
+  IrisEventHandler,
   IrisEventHandlerManager,
 } from 'iris-web-core';
 
 import {
-  IrisEventHandler,
   IrisVideoFrameBufferConfig,
   IrisVideoSourceType,
   VideoParams,
@@ -30,7 +30,10 @@ import {
   MusicCollectionDispatch,
 } from '../binding/IAgoraMusicContentCenterDispatch';
 import { IVideoDeviceManagerDispatch } from '../binding/IAgoraRtcEngineDispatch';
-import { IRtcEngineExDispatch } from '../binding/IAgoraRtcEngineExDispatch';
+import {
+  IRtcEngineEventHandlerEx,
+  IRtcEngineExDispatch,
+} from '../binding/IAgoraRtcEngineExDispatch';
 import {
   IBaseSpatialAudioEngineDispatch,
   ILocalSpatialAudioEngineDispatch,
@@ -38,11 +41,7 @@ import {
 import { IAudioDeviceManagerDispatch } from '../binding/IAudioDeviceManagerDispatch';
 
 import { IrisAgoraEventHandler } from '../event_handler/IrisAgoraEventHandler';
-import {
-  IRtcEngineEventHandlerExtensions,
-  RtcEngineDispatchExtensions,
-  RtcEngineEventHandlerExtensions,
-} from '../extensions/IAgoraRtcEngineExtensions';
+import { RtcEngineDispatchExtensions } from '../extensions/IAgoraRtcEngineExtensions';
 import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
 import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
 import { IrisSubClientVariables } from '../states/IrisSubClientVariables';
@@ -79,7 +78,7 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   private _implDispatchsMap: Map<string, any> = null;
   public entitiesContainer: IrisEntitiesContainer = null;
-  public rtcEngineEventHandler: IRtcEngineEventHandlerExtensions = null;
+  public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandlerEx = null;
 
   public globalVariables: IrisGlobalVariables = null;
   public mainClientVariables: IrisMainClientVariables = null;
@@ -137,7 +136,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     );
 
     this.actionQueue = new AgoraActionQueue();
-    this.rtcEngineEventHandler = new RtcEngineEventHandlerExtensions(this);
+    this.rtcEngineEventHandler = new IRtcEngineEventHandlerEx(this);
     this.entitiesContainer = new IrisEntitiesContainer(this);
     this.globalVariables = new IrisGlobalVariables();
     this.mainClientVariables = new IrisMainClientVariables();
@@ -265,7 +264,6 @@ export class IrisRtcEngine implements ApiInterceptor {
       fun: (next) => {
         let process = async () => {
           await this.entitiesContainer.destruction();
-          // this.rtcEngineEventHandler.onEngineDestroy();
           next();
         };
         setTimeout(process, 0);

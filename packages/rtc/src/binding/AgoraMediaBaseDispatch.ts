@@ -15,9 +15,10 @@ import {
 import { EventParam } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IAudioPcmFrameSink {
-  classPrefix: string = 'IAudioPcmFrameSink_';
+  classPrefix: string = 'AudioPcmFrameSink_';
 
   _engine: IrisRtcEngine = null;
 
@@ -41,13 +42,13 @@ export class IAudioPcmFrameSink {
     let _key = this.eventKey('onFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onFrame eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onFrame eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 }
 
 export class IAudioFrameObserverBase {
-  classPrefix: string = 'IAudioFrameObserverBase_';
+  classPrefix: string = 'AudioFrameObserverBase_';
 
   _engine: IrisRtcEngine = null;
 
@@ -72,7 +73,9 @@ export class IAudioFrameObserverBase {
     let _key = this.eventKey('onRecordAudioFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onRecordAudioFrame eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onRecordAudioFrame eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -85,7 +88,7 @@ export class IAudioFrameObserverBase {
     let _key = this.eventKey('onPlaybackAudioFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onPlaybackAudioFrame eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -100,7 +103,9 @@ export class IAudioFrameObserverBase {
     let _key = this.eventKey('onMixedAudioFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onMixedAudioFrame eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onMixedAudioFrame eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -112,19 +117,20 @@ export class IAudioFrameObserverBase {
     let _key = this.eventKey('onEarMonitoringAudioFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onEarMonitoringAudioFrame eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 }
 
-export class IAudioFrameObserver {
-  classPrefix: string = 'IAudioFrameObserver_';
+export class IAudioFrameObserver extends IAudioFrameObserverBase {
+  classPrefix: string = 'AudioFrameObserver_';
 
   _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
+    super(engine);
     this._engine = engine;
   }
 
@@ -150,7 +156,7 @@ export class IAudioFrameObserver {
     let _key = this.eventKey('onPlaybackAudioFrameBeforeMixing');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onPlaybackAudioFrameBeforeMixing eventParam ${JSON.stringify(
         eventParam
       )}`
@@ -160,7 +166,7 @@ export class IAudioFrameObserver {
 }
 
 export class IAudioSpectrumObserver {
-  classPrefix: string = 'IAudioSpectrumObserver_';
+  classPrefix: string = 'AudioSpectrumObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -184,7 +190,7 @@ export class IAudioSpectrumObserver {
     let _key = this.eventKey('onLocalAudioSpectrum');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onLocalAudioSpectrum eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -202,7 +208,7 @@ export class IAudioSpectrumObserver {
     let _key = this.eventKey('onRemoteAudioSpectrum');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRemoteAudioSpectrum eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -210,7 +216,7 @@ export class IAudioSpectrumObserver {
 }
 
 export class IVideoEncodedFrameObserver {
-  classPrefix: string = 'IVideoEncodedFrameObserver_';
+  classPrefix: string = 'VideoEncodedFrameObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -242,7 +248,7 @@ export class IVideoEncodedFrameObserver {
     let _key = this.eventKey('onEncodedVideoFrameReceived');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onEncodedVideoFrameReceived eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -250,7 +256,7 @@ export class IVideoEncodedFrameObserver {
 }
 
 export class IVideoFrameObserver {
-  classPrefix: string = 'IVideoFrameObserver_';
+  classPrefix: string = 'VideoFrameObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -278,7 +284,9 @@ export class IVideoFrameObserver {
     let _key = this.eventKey('onCaptureVideoFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onCaptureVideoFrame eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onCaptureVideoFrame eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -294,7 +302,7 @@ export class IVideoFrameObserver {
     let _key = this.eventKey('onPreEncodeVideoFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onPreEncodeVideoFrame eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -309,7 +317,7 @@ export class IVideoFrameObserver {
     let _key = this.eventKey('onMediaPlayerVideoFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onMediaPlayerVideoFrame eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -329,7 +337,9 @@ export class IVideoFrameObserver {
     let _key = this.eventKey('onRenderVideoFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onRenderVideoFrame eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onRenderVideoFrame eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -341,7 +351,7 @@ export class IVideoFrameObserver {
     let _key = this.eventKey('onTranscodedVideoFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onTranscodedVideoFrame eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -349,7 +359,7 @@ export class IVideoFrameObserver {
 }
 
 export class IMediaRecorderObserver {
-  classPrefix: string = 'IMediaRecorderObserver_';
+  classPrefix: string = 'MediaRecorderObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -381,7 +391,7 @@ export class IMediaRecorderObserver {
     let _key = this.eventKey('onRecorderStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRecorderStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -401,7 +411,7 @@ export class IMediaRecorderObserver {
     let _key = this.eventKey('onRecorderInfoUpdated');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRecorderInfoUpdated eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);

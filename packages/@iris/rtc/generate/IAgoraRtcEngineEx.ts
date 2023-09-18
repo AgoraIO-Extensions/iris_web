@@ -49,6 +49,7 @@ import {
 } from './AgoraMediaBase';
 import {
   ChannelMediaOptions,
+  IRtcEngineEventHandler,
   LeaveChannelOptions,
   RemoteAudioStats,
   RemoteVideoStats,
@@ -61,12 +62,12 @@ export class RtcConnection {
   localUid?: number;
 }
 
-export interface IRtcEngineEventHandlerEx {
-  onJoinChannelSuccess(connection: RtcConnection, elapsed: number): void;
+export interface IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
+  onJoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void;
 
-  onRejoinChannelSuccess(connection: RtcConnection, elapsed: number): void;
+  onRejoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void;
 
-  onAudioQuality(
+  onAudioQualityEx(
     connection: RtcConnection,
     remoteUid: number,
     quality: number,
@@ -74,27 +75,27 @@ export interface IRtcEngineEventHandlerEx {
     lost: number
   ): void;
 
-  onAudioVolumeIndication(
+  onAudioVolumeIndicationEx(
     connection: RtcConnection,
     speakers: AudioVolumeInfo[],
     speakerNumber: number,
     totalVolume: number
   ): void;
 
-  onLeaveChannel(connection: RtcConnection, stats: RtcStats): void;
+  onLeaveChannelEx(connection: RtcConnection, stats: RtcStats): void;
 
-  onRtcStats(connection: RtcConnection, stats: RtcStats): void;
+  onRtcStatsEx(connection: RtcConnection, stats: RtcStats): void;
 
-  onNetworkQuality(
+  onNetworkQualityEx(
     connection: RtcConnection,
     remoteUid: number,
     txQuality: number,
     rxQuality: number
   ): void;
 
-  onIntraRequestReceived(connection: RtcConnection): void;
+  onIntraRequestReceivedEx(connection: RtcConnection): void;
 
-  onFirstRemoteVideoDecoded(
+  onFirstRemoteVideoDecodedEx(
     connection: RtcConnection,
     remoteUid: number,
     width: number,
@@ -102,7 +103,7 @@ export interface IRtcEngineEventHandlerEx {
     elapsed: number
   ): void;
 
-  onVideoSizeChanged(
+  onVideoSizeChangedEx(
     connection: RtcConnection,
     sourceType: VIDEO_SOURCE_TYPE,
     uid: number,
@@ -111,7 +112,7 @@ export interface IRtcEngineEventHandlerEx {
     rotation: number
   ): void;
 
-  onRemoteVideoStateChanged(
+  onRemoteVideoStateChangedEx(
     connection: RtcConnection,
     remoteUid: number,
     state: REMOTE_VIDEO_STATE,
@@ -119,7 +120,7 @@ export interface IRtcEngineEventHandlerEx {
     elapsed: number
   ): void;
 
-  onFirstRemoteVideoFrame(
+  onFirstRemoteVideoFrameEx(
     connection: RtcConnection,
     remoteUid: number,
     width: number,
@@ -127,61 +128,67 @@ export interface IRtcEngineEventHandlerEx {
     elapsed: number
   ): void;
 
-  onUserJoined(
+  onUserJoinedEx(
     connection: RtcConnection,
     remoteUid: number,
     elapsed: number
   ): void;
 
-  onUserOffline(
+  onUserOfflineEx(
     connection: RtcConnection,
     remoteUid: number,
     reason: USER_OFFLINE_REASON_TYPE
   ): void;
 
-  onUserMuteAudio(
+  onUserMuteAudioEx(
     connection: RtcConnection,
     remoteUid: number,
     muted: boolean
   ): void;
 
-  onUserMuteVideo(
+  onUserMuteVideoEx(
     connection: RtcConnection,
     remoteUid: number,
     muted: boolean
   ): void;
 
-  onUserEnableVideo(
+  onUserEnableVideoEx(
     connection: RtcConnection,
     remoteUid: number,
     enabled: boolean
   ): void;
 
-  onUserEnableLocalVideo(
+  onUserEnableLocalVideoEx(
     connection: RtcConnection,
     remoteUid: number,
     enabled: boolean
   ): void;
 
-  onUserStateChanged(
+  onUserStateChangedEx(
     connection: RtcConnection,
     remoteUid: number,
     state: number
   ): void;
 
-  onLocalAudioStats(connection: RtcConnection, stats: LocalAudioStats): void;
+  onLocalAudioStatsEx(connection: RtcConnection, stats: LocalAudioStats): void;
 
-  onRemoteAudioStats(connection: RtcConnection, stats: RemoteAudioStats): void;
+  onRemoteAudioStatsEx(
+    connection: RtcConnection,
+    stats: RemoteAudioStats
+  ): void;
 
-  onRemoteVideoStats(connection: RtcConnection, stats: RemoteVideoStats): void;
+  onRemoteVideoStatsEx(
+    connection: RtcConnection,
+    stats: RemoteVideoStats
+  ): void;
 
-  onConnectionLost(connection: RtcConnection): void;
+  onConnectionLostEx(connection: RtcConnection): void;
 
-  onConnectionInterrupted(connection: RtcConnection): void;
+  onConnectionInterruptedEx(connection: RtcConnection): void;
 
-  onConnectionBanned(connection: RtcConnection): void;
+  onConnectionBannedEx(connection: RtcConnection): void;
 
-  onStreamMessage(
+  onStreamMessageEx(
     connection: RtcConnection,
     remoteUid: number,
     streamId: number,
@@ -190,7 +197,7 @@ export interface IRtcEngineEventHandlerEx {
     sentTs: number
   ): void;
 
-  onStreamMessageError(
+  onStreamMessageErrorEx(
     connection: RtcConnection,
     remoteUid: number,
     streamId: number,
@@ -199,39 +206,39 @@ export interface IRtcEngineEventHandlerEx {
     cached: number
   ): void;
 
-  onRequestToken(connection: RtcConnection): void;
+  onRequestTokenEx(connection: RtcConnection): void;
 
-  onLicenseValidationFailure(
+  onLicenseValidationFailureEx(
     connection: RtcConnection,
     reason: LICENSE_ERROR_TYPE
   ): void;
 
-  onTokenPrivilegeWillExpire(connection: RtcConnection, token: string): void;
+  onTokenPrivilegeWillExpireEx(connection: RtcConnection, token: string): void;
 
-  onFirstLocalAudioFramePublished(
+  onFirstLocalAudioFramePublishedEx(
     connection: RtcConnection,
     elapsed: number
   ): void;
 
-  onFirstRemoteAudioFrame(
+  onFirstRemoteAudioFrameEx(
     connection: RtcConnection,
     userId: number,
     elapsed: number
   ): void;
 
-  onFirstRemoteAudioDecoded(
+  onFirstRemoteAudioDecodedEx(
     connection: RtcConnection,
     uid: number,
     elapsed: number
   ): void;
 
-  onLocalAudioStateChanged(
+  onLocalAudioStateChangedEx(
     connection: RtcConnection,
     state: LOCAL_AUDIO_STREAM_STATE,
     error: LOCAL_AUDIO_STREAM_ERROR
   ): void;
 
-  onRemoteAudioStateChanged(
+  onRemoteAudioStateChangedEx(
     connection: RtcConnection,
     remoteUid: number,
     state: REMOTE_AUDIO_STATE,
@@ -239,22 +246,22 @@ export interface IRtcEngineEventHandlerEx {
     elapsed: number
   ): void;
 
-  onActiveSpeaker(connection: RtcConnection, uid: number): void;
+  onActiveSpeakerEx(connection: RtcConnection, uid: number): void;
 
-  onClientRoleChanged(
+  onClientRoleChangedEx(
     connection: RtcConnection,
     oldRole: CLIENT_ROLE_TYPE,
     newRole: CLIENT_ROLE_TYPE,
     newRoleOptions: ClientRoleOptions
   ): void;
 
-  onClientRoleChangeFailed(
+  onClientRoleChangeFailedEx(
     connection: RtcConnection,
     reason: CLIENT_ROLE_CHANGE_FAILED_REASON,
     currentRole: CLIENT_ROLE_TYPE
   ): void;
 
-  onRemoteAudioTransportStats(
+  onRemoteAudioTransportStatsEx(
     connection: RtcConnection,
     remoteUid: number,
     delay: number,
@@ -262,7 +269,7 @@ export interface IRtcEngineEventHandlerEx {
     rxKBitRate: number
   ): void;
 
-  onRemoteVideoTransportStats(
+  onRemoteVideoTransportStatsEx(
     connection: RtcConnection,
     remoteUid: number,
     delay: number,
@@ -270,46 +277,46 @@ export interface IRtcEngineEventHandlerEx {
     rxKBitRate: number
   ): void;
 
-  onConnectionStateChanged(
+  onConnectionStateChangedEx(
     connection: RtcConnection,
     state: CONNECTION_STATE_TYPE,
     reason: CONNECTION_CHANGED_REASON_TYPE
   ): void;
 
-  onWlAccMessage(
+  onWlAccMessageEx(
     connection: RtcConnection,
     reason: WLACC_MESSAGE_REASON,
     action: WLACC_SUGGEST_ACTION,
     wlAccMsg: string
   ): void;
 
-  onWlAccStats(
+  onWlAccStatsEx(
     connection: RtcConnection,
     currentStats: WlAccStats,
     averageStats: WlAccStats
   ): void;
 
-  onNetworkTypeChanged(connection: RtcConnection, type: NETWORK_TYPE): void;
+  onNetworkTypeChangedEx(connection: RtcConnection, type: NETWORK_TYPE): void;
 
-  onEncryptionError(
+  onEncryptionErrorEx(
     connection: RtcConnection,
     errorType: ENCRYPTION_ERROR_TYPE
   ): void;
 
-  onUploadLogResult(
+  onUploadLogResultEx(
     connection: RtcConnection,
     requestId: string,
     success: boolean,
     reason: UPLOAD_ERROR_REASON
   ): void;
 
-  onUserAccountUpdated(
+  onUserAccountUpdatedEx(
     connection: RtcConnection,
     remoteUid: number,
     userAccount: string
   ): void;
 
-  onSnapshotTaken(
+  onSnapshotTakenEx(
     connection: RtcConnection,
     uid: number,
     filePath: string,
@@ -318,7 +325,7 @@ export interface IRtcEngineEventHandlerEx {
     errCode: number
   ): void;
 
-  onVideoRenderingTracingResult(
+  onVideoRenderingTracingResultEx(
     connection: RtcConnection,
     uid: number,
     currentEvent: MEDIA_TRACE_EVENT,

@@ -1,8 +1,8 @@
 
 {{#user_data.isCallback}}
-export interface {{name}} {
+export interface {{name}} {{#base_clazzs}}extends {{.}}{{/base_clazzs}}{
 {{#methods}}
-  {{name}}({{#parameters}}{{name}}: {{type.source}},{{/parameters}}): {{#return_type}}{{source}}{{/return_type}};
+  {{name}}{{user_data._prefix}}({{#parameters}}{{name}}: {{type.source}},{{/parameters}}): {{#return_type}}{{source}}{{/return_type}};
 
 {{/methods}}
 }

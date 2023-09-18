@@ -36,6 +36,7 @@ export class IrisMainClientVariables {
   public clientRoleType?: NATIVE_RTC.CLIENT_ROLE_TYPE;
   public audienceLatencyLevel?: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE;
   public defaultVideoStreamType?: NATIVE_RTC.VIDEO_STREAM_TYPE;
+  public channelProfile?: NATIVE_RTC.CHANNEL_PROFILE_TYPE;
   public audioDelayMs?: number;
   public mediaPlayerAudioDelayMs?: number;
   public token?: string;
@@ -147,7 +148,7 @@ export class IrisMainClientVariables {
 
   // startPreviewed 似乎没有用处
   // startPreviewed: boolean = false;
-  joinChanneled: boolean = false;
+  isConnected: boolean = false;
 
   //用来记录暂停或者恢复的
   currChannelMediaRelayconfiguration: NATIVE_RTC.ChannelMediaRelayConfiguration = null;

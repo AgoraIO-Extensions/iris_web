@@ -34,13 +34,17 @@ import { ApiParam, CallApiReturnType, EventParam } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IRtcEngineExImpl } from '../impl/IAgoraRtcEngineExImpl';
+import { AgoraConsole } from '../util/AgoraConsole';
 
-export class IRtcEngineEventHandlerEx {
-  classPrefix: string = 'IRtcEngineEventHandlerEx_';
+import { IRtcEngineEventHandler } from './IAgoraRtcEngineDispatch';
+
+export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
+  classPrefix: string = 'RtcEngineEventHandler_';
 
   _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
+    super(engine);
     this._engine = engine;
   }
 
@@ -52,37 +56,37 @@ export class IRtcEngineEventHandlerEx {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
-  onJoinChannelSuccess(connection: RtcConnection, elapsed: number): void {
+  onJoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void {
     let _obj = {
       connection,
       elapsed,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onJoinChannelSuccess');
+    let _key = this.eventKey('onJoinChannelSuccessEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onJoinChannelSuccess eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onJoinChannelSuccessEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onRejoinChannelSuccess(connection: RtcConnection, elapsed: number): void {
+  onRejoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void {
     let _obj = {
       connection,
       elapsed,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRejoinChannelSuccess');
+    let _key = this.eventKey('onRejoinChannelSuccessEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onRejoinChannelSuccess eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onRejoinChannelSuccessEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onAudioQuality(
+  onAudioQualityEx(
     connection: RtcConnection,
     remoteUid: number,
     quality: number,
@@ -97,14 +101,16 @@ export class IRtcEngineEventHandlerEx {
       lost,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onAudioQuality');
+    let _key = this.eventKey('onAudioQualityEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onAudioQuality eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onAudioQualityEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onAudioVolumeIndication(
+  onAudioVolumeIndicationEx(
     connection: RtcConnection,
     speakers: AudioVolumeInfo[],
     speakerNumber: number,
@@ -117,42 +123,44 @@ export class IRtcEngineEventHandlerEx {
       totalVolume,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onAudioVolumeIndication');
+    let _key = this.eventKey('onAudioVolumeIndicationEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onAudioVolumeIndication eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onAudioVolumeIndicationEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onLeaveChannel(connection: RtcConnection, stats: RtcStats): void {
+  onLeaveChannelEx(connection: RtcConnection, stats: RtcStats): void {
     let _obj = {
       connection,
       stats,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onLeaveChannel');
+    let _key = this.eventKey('onLeaveChannelEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onLeaveChannel eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onLeaveChannelEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onRtcStats(connection: RtcConnection, stats: RtcStats): void {
+  onRtcStatsEx(connection: RtcConnection, stats: RtcStats): void {
     let _obj = {
       connection,
       stats,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRtcStats');
+    let _key = this.eventKey('onRtcStatsEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onRtcStats eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onRtcStatsEx eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
-  onNetworkQuality(
+  onNetworkQualityEx(
     connection: RtcConnection,
     remoteUid: number,
     txQuality: number,
@@ -165,28 +173,30 @@ export class IRtcEngineEventHandlerEx {
       rxQuality,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onNetworkQuality');
+    let _key = this.eventKey('onNetworkQualityEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onNetworkQuality eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
-  }
-
-  onIntraRequestReceived(connection: RtcConnection): void {
-    let _obj = {
-      connection,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onIntraRequestReceived');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onIntraRequestReceived eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onNetworkQualityEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onFirstRemoteVideoDecoded(
+  onIntraRequestReceivedEx(connection: RtcConnection): void {
+    let _obj = {
+      connection,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onIntraRequestReceivedEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onIntraRequestReceivedEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
+  }
+
+  onFirstRemoteVideoDecodedEx(
     connection: RtcConnection,
     remoteUid: number,
     width: number,
@@ -201,16 +211,16 @@ export class IRtcEngineEventHandlerEx {
       elapsed,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onFirstRemoteVideoDecoded');
+    let _key = this.eventKey('onFirstRemoteVideoDecodedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onFirstRemoteVideoDecoded eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onFirstRemoteVideoDecodedEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onVideoSizeChanged(
+  onVideoSizeChangedEx(
     connection: RtcConnection,
     sourceType: VIDEO_SOURCE_TYPE,
     uid: number,
@@ -227,14 +237,16 @@ export class IRtcEngineEventHandlerEx {
       rotation,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onVideoSizeChanged');
+    let _key = this.eventKey('onVideoSizeChangedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onVideoSizeChanged eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onVideoSizeChangedEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onRemoteVideoStateChanged(
+  onRemoteVideoStateChangedEx(
     connection: RtcConnection,
     remoteUid: number,
     state: REMOTE_VIDEO_STATE,
@@ -249,16 +261,16 @@ export class IRtcEngineEventHandlerEx {
       elapsed,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteVideoStateChanged');
+    let _key = this.eventKey('onRemoteVideoStateChangedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onRemoteVideoStateChanged eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onRemoteVideoStateChangedEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onFirstRemoteVideoFrame(
+  onFirstRemoteVideoFrameEx(
     connection: RtcConnection,
     remoteUid: number,
     width: number,
@@ -273,16 +285,16 @@ export class IRtcEngineEventHandlerEx {
       elapsed,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onFirstRemoteVideoFrame');
+    let _key = this.eventKey('onFirstRemoteVideoFrameEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onFirstRemoteVideoFrame eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onFirstRemoteVideoFrameEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onUserJoined(
+  onUserJoinedEx(
     connection: RtcConnection,
     remoteUid: number,
     elapsed: number
@@ -293,14 +305,14 @@ export class IRtcEngineEventHandlerEx {
       elapsed,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserJoined');
+    let _key = this.eventKey('onUserJoinedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserJoined eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onUserJoinedEx eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
-  onUserOffline(
+  onUserOfflineEx(
     connection: RtcConnection,
     remoteUid: number,
     reason: USER_OFFLINE_REASON_TYPE
@@ -311,88 +323,96 @@ export class IRtcEngineEventHandlerEx {
       reason,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserOffline');
+    let _key = this.eventKey('onUserOfflineEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserOffline eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
-  }
-
-  onUserMuteAudio(
-    connection: RtcConnection,
-    remoteUid: number,
-    muted: boolean
-  ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      muted,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserMuteAudio');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserMuteAudio eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
-  }
-
-  onUserMuteVideo(
-    connection: RtcConnection,
-    remoteUid: number,
-    muted: boolean
-  ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      muted,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserMuteVideo');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserMuteVideo eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
-  }
-
-  onUserEnableVideo(
-    connection: RtcConnection,
-    remoteUid: number,
-    enabled: boolean
-  ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      enabled,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserEnableVideo');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserEnableVideo eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
-  }
-
-  onUserEnableLocalVideo(
-    connection: RtcConnection,
-    remoteUid: number,
-    enabled: boolean
-  ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      enabled,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserEnableLocalVideo');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onUserEnableLocalVideo eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onUserOfflineEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onUserStateChanged(
+  onUserMuteAudioEx(
+    connection: RtcConnection,
+    remoteUid: number,
+    muted: boolean
+  ): void {
+    let _obj = {
+      connection,
+      remoteUid,
+      muted,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserMuteAudioEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onUserMuteAudioEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
+  }
+
+  onUserMuteVideoEx(
+    connection: RtcConnection,
+    remoteUid: number,
+    muted: boolean
+  ): void {
+    let _obj = {
+      connection,
+      remoteUid,
+      muted,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserMuteVideoEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onUserMuteVideoEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
+  }
+
+  onUserEnableVideoEx(
+    connection: RtcConnection,
+    remoteUid: number,
+    enabled: boolean
+  ): void {
+    let _obj = {
+      connection,
+      remoteUid,
+      enabled,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserEnableVideoEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onUserEnableVideoEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
+  }
+
+  onUserEnableLocalVideoEx(
+    connection: RtcConnection,
+    remoteUid: number,
+    enabled: boolean
+  ): void {
+    let _obj = {
+      connection,
+      remoteUid,
+      enabled,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserEnableLocalVideoEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onUserEnableLocalVideoEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
+  }
+
+  onUserStateChangedEx(
     connection: RtcConnection,
     remoteUid: number,
     state: number
@@ -403,91 +423,109 @@ export class IRtcEngineEventHandlerEx {
       state,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserStateChanged');
+    let _key = this.eventKey('onUserStateChangedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserStateChanged eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
-  }
-
-  onLocalAudioStats(connection: RtcConnection, stats: LocalAudioStats): void {
-    let _obj = {
-      connection,
-      stats,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onLocalAudioStats');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onLocalAudioStats eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
-  }
-
-  onRemoteAudioStats(connection: RtcConnection, stats: RemoteAudioStats): void {
-    let _obj = {
-      connection,
-      stats,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteAudioStats');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onRemoteAudioStats eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
-  }
-
-  onRemoteVideoStats(connection: RtcConnection, stats: RemoteVideoStats): void {
-    let _obj = {
-      connection,
-      stats,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteVideoStats');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onRemoteVideoStats eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
-  }
-
-  onConnectionLost(connection: RtcConnection): void {
-    let _obj = {
-      connection,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onConnectionLost');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onConnectionLost eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
-  }
-
-  onConnectionInterrupted(connection: RtcConnection): void {
-    let _obj = {
-      connection,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onConnectionInterrupted');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onConnectionInterrupted eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onUserStateChangedEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onConnectionBanned(connection: RtcConnection): void {
+  onLocalAudioStatsEx(connection: RtcConnection, stats: LocalAudioStats): void {
+    let _obj = {
+      connection,
+      stats,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLocalAudioStatsEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onLocalAudioStatsEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
+  }
+
+  onRemoteAudioStatsEx(
+    connection: RtcConnection,
+    stats: RemoteAudioStats
+  ): void {
+    let _obj = {
+      connection,
+      stats,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteAudioStatsEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onRemoteAudioStatsEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
+  }
+
+  onRemoteVideoStatsEx(
+    connection: RtcConnection,
+    stats: RemoteVideoStats
+  ): void {
+    let _obj = {
+      connection,
+      stats,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteVideoStatsEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onRemoteVideoStatsEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
+  }
+
+  onConnectionLostEx(connection: RtcConnection): void {
     let _obj = {
       connection,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onConnectionBanned');
+    let _key = this.eventKey('onConnectionLostEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onConnectionBanned eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onConnectionLostEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onStreamMessage(
+  onConnectionInterruptedEx(connection: RtcConnection): void {
+    let _obj = {
+      connection,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onConnectionInterruptedEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onConnectionInterruptedEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
+  }
+
+  onConnectionBannedEx(connection: RtcConnection): void {
+    let _obj = {
+      connection,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onConnectionBannedEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onConnectionBannedEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
+  }
+
+  onStreamMessageEx(
     connection: RtcConnection,
     remoteUid: number,
     streamId: number,
@@ -504,14 +542,16 @@ export class IRtcEngineEventHandlerEx {
       sentTs,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onStreamMessage');
+    let _key = this.eventKey('onStreamMessageEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onStreamMessage eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onStreamMessageEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onStreamMessageError(
+  onStreamMessageErrorEx(
     connection: RtcConnection,
     remoteUid: number,
     streamId: number,
@@ -528,28 +568,30 @@ export class IRtcEngineEventHandlerEx {
       cached,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onStreamMessageError');
+    let _key = this.eventKey('onStreamMessageErrorEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onStreamMessageError eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onStreamMessageErrorEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onRequestToken(connection: RtcConnection): void {
+  onRequestTokenEx(connection: RtcConnection): void {
     let _obj = {
       connection,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRequestToken');
+    let _key = this.eventKey('onRequestTokenEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onRequestToken eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onRequestTokenEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onLicenseValidationFailure(
+  onLicenseValidationFailureEx(
     connection: RtcConnection,
     reason: LICENSE_ERROR_TYPE
   ): void {
@@ -558,31 +600,31 @@ export class IRtcEngineEventHandlerEx {
       reason,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onLicenseValidationFailure');
+    let _key = this.eventKey('onLicenseValidationFailureEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onLicenseValidationFailure eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onLicenseValidationFailureEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onTokenPrivilegeWillExpire(connection: RtcConnection, token: string): void {
+  onTokenPrivilegeWillExpireEx(connection: RtcConnection, token: string): void {
     let _obj = {
       connection,
       token,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onTokenPrivilegeWillExpire');
+    let _key = this.eventKey('onTokenPrivilegeWillExpireEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onTokenPrivilegeWillExpire eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onTokenPrivilegeWillExpireEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onFirstLocalAudioFramePublished(
+  onFirstLocalAudioFramePublishedEx(
     connection: RtcConnection,
     elapsed: number
   ): void {
@@ -591,16 +633,18 @@ export class IRtcEngineEventHandlerEx {
       elapsed,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onFirstLocalAudioFramePublished');
+    let _key = this.eventKey('onFirstLocalAudioFramePublishedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onFirstLocalAudioFramePublished eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onFirstLocalAudioFramePublishedEx eventParam ${JSON.stringify(
+        eventParam
+      )}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onFirstRemoteAudioFrame(
+  onFirstRemoteAudioFrameEx(
     connection: RtcConnection,
     userId: number,
     elapsed: number
@@ -611,16 +655,16 @@ export class IRtcEngineEventHandlerEx {
       elapsed,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onFirstRemoteAudioFrame');
+    let _key = this.eventKey('onFirstRemoteAudioFrameEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onFirstRemoteAudioFrame eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onFirstRemoteAudioFrameEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onFirstRemoteAudioDecoded(
+  onFirstRemoteAudioDecodedEx(
     connection: RtcConnection,
     uid: number,
     elapsed: number
@@ -631,16 +675,16 @@ export class IRtcEngineEventHandlerEx {
       elapsed,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onFirstRemoteAudioDecoded');
+    let _key = this.eventKey('onFirstRemoteAudioDecodedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onFirstRemoteAudioDecoded eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onFirstRemoteAudioDecodedEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onLocalAudioStateChanged(
+  onLocalAudioStateChangedEx(
     connection: RtcConnection,
     state: LOCAL_AUDIO_STREAM_STATE,
     error: LOCAL_AUDIO_STREAM_ERROR
@@ -651,16 +695,16 @@ export class IRtcEngineEventHandlerEx {
       error,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onLocalAudioStateChanged');
+    let _key = this.eventKey('onLocalAudioStateChangedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onLocalAudioStateChanged eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onLocalAudioStateChangedEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onRemoteAudioStateChanged(
+  onRemoteAudioStateChangedEx(
     connection: RtcConnection,
     remoteUid: number,
     state: REMOTE_AUDIO_STATE,
@@ -675,29 +719,31 @@ export class IRtcEngineEventHandlerEx {
       elapsed,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteAudioStateChanged');
+    let _key = this.eventKey('onRemoteAudioStateChangedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onRemoteAudioStateChanged eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onRemoteAudioStateChangedEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onActiveSpeaker(connection: RtcConnection, uid: number): void {
+  onActiveSpeakerEx(connection: RtcConnection, uid: number): void {
     let _obj = {
       connection,
       uid,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onActiveSpeaker');
+    let _key = this.eventKey('onActiveSpeakerEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onActiveSpeaker eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onActiveSpeakerEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onClientRoleChanged(
+  onClientRoleChangedEx(
     connection: RtcConnection,
     oldRole: CLIENT_ROLE_TYPE,
     newRole: CLIENT_ROLE_TYPE,
@@ -710,14 +756,16 @@ export class IRtcEngineEventHandlerEx {
       newRoleOptions,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onClientRoleChanged');
+    let _key = this.eventKey('onClientRoleChangedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onClientRoleChanged eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onClientRoleChangedEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onClientRoleChangeFailed(
+  onClientRoleChangeFailedEx(
     connection: RtcConnection,
     reason: CLIENT_ROLE_CHANGE_FAILED_REASON,
     currentRole: CLIENT_ROLE_TYPE
@@ -728,16 +776,16 @@ export class IRtcEngineEventHandlerEx {
       currentRole,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onClientRoleChangeFailed');
+    let _key = this.eventKey('onClientRoleChangeFailedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onClientRoleChangeFailed eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onClientRoleChangeFailedEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onRemoteAudioTransportStats(
+  onRemoteAudioTransportStatsEx(
     connection: RtcConnection,
     remoteUid: number,
     delay: number,
@@ -752,16 +800,16 @@ export class IRtcEngineEventHandlerEx {
       rxKBitRate,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteAudioTransportStats');
+    let _key = this.eventKey('onRemoteAudioTransportStatsEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onRemoteAudioTransportStats eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onRemoteAudioTransportStatsEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onRemoteVideoTransportStats(
+  onRemoteVideoTransportStatsEx(
     connection: RtcConnection,
     remoteUid: number,
     delay: number,
@@ -776,16 +824,16 @@ export class IRtcEngineEventHandlerEx {
       rxKBitRate,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteVideoTransportStats');
+    let _key = this.eventKey('onRemoteVideoTransportStatsEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onRemoteVideoTransportStats eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onRemoteVideoTransportStatsEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onConnectionStateChanged(
+  onConnectionStateChangedEx(
     connection: RtcConnection,
     state: CONNECTION_STATE_TYPE,
     reason: CONNECTION_CHANGED_REASON_TYPE
@@ -796,16 +844,16 @@ export class IRtcEngineEventHandlerEx {
       reason,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onConnectionStateChanged');
+    let _key = this.eventKey('onConnectionStateChangedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onConnectionStateChanged eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onConnectionStateChangedEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onWlAccMessage(
+  onWlAccMessageEx(
     connection: RtcConnection,
     reason: WLACC_MESSAGE_REASON,
     action: WLACC_SUGGEST_ACTION,
@@ -818,14 +866,16 @@ export class IRtcEngineEventHandlerEx {
       wlAccMsg,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onWlAccMessage');
+    let _key = this.eventKey('onWlAccMessageEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onWlAccMessage eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onWlAccMessageEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onWlAccStats(
+  onWlAccStatsEx(
     connection: RtcConnection,
     currentStats: WlAccStats,
     averageStats: WlAccStats
@@ -836,29 +886,29 @@ export class IRtcEngineEventHandlerEx {
       averageStats,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onWlAccStats');
+    let _key = this.eventKey('onWlAccStatsEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onWlAccStats eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onWlAccStatsEx eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
-  onNetworkTypeChanged(connection: RtcConnection, type: NETWORK_TYPE): void {
+  onNetworkTypeChangedEx(connection: RtcConnection, type: NETWORK_TYPE): void {
     let _obj = {
       connection,
       type,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onNetworkTypeChanged');
+    let _key = this.eventKey('onNetworkTypeChangedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onNetworkTypeChanged eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onNetworkTypeChangedEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onEncryptionError(
+  onEncryptionErrorEx(
     connection: RtcConnection,
     errorType: ENCRYPTION_ERROR_TYPE
   ): void {
@@ -867,14 +917,16 @@ export class IRtcEngineEventHandlerEx {
       errorType,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onEncryptionError');
+    let _key = this.eventKey('onEncryptionErrorEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onEncryptionError eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onEncryptionErrorEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onUploadLogResult(
+  onUploadLogResultEx(
     connection: RtcConnection,
     requestId: string,
     success: boolean,
@@ -887,14 +939,16 @@ export class IRtcEngineEventHandlerEx {
       reason,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUploadLogResult');
+    let _key = this.eventKey('onUploadLogResultEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUploadLogResult eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onUploadLogResultEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onUserAccountUpdated(
+  onUserAccountUpdatedEx(
     connection: RtcConnection,
     remoteUid: number,
     userAccount: string
@@ -905,16 +959,16 @@ export class IRtcEngineEventHandlerEx {
       userAccount,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserAccountUpdated');
+    let _key = this.eventKey('onUserAccountUpdatedEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onUserAccountUpdated eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onUserAccountUpdatedEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }
 
-  onSnapshotTaken(
+  onSnapshotTakenEx(
     connection: RtcConnection,
     uid: number,
     filePath: string,
@@ -931,14 +985,16 @@ export class IRtcEngineEventHandlerEx {
       errCode,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onSnapshotTaken');
+    let _key = this.eventKey('onSnapshotTakenEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onSnapshotTaken eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onSnapshotTakenEx eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
-  onVideoRenderingTracingResult(
+  onVideoRenderingTracingResultEx(
     connection: RtcConnection,
     uid: number,
     currentEvent: MEDIA_TRACE_EVENT,
@@ -951,11 +1007,11 @@ export class IRtcEngineEventHandlerEx {
       tracingInfo,
     };
     let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onVideoRenderingTracingResult');
+    let _key = this.eventKey('onVideoRenderingTracingResultEx');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
-      `onVideoRenderingTracingResult eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.log(
+      `onVideoRenderingTracingResultEx eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
   }

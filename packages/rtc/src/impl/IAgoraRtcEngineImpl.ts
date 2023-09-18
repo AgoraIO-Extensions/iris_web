@@ -3,6 +3,7 @@ import AgoraRTC, {
   ClientRole,
   ClientRoleOptions,
   IAgoraRTCClient,
+  IAgoraRTCRemoteUser,
   ILocalAudioTrack,
   ILocalVideoTrack,
   IMicrophoneAudioTrack,
@@ -66,7 +67,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       await this._engine.entitiesContainer.destruction();
 
-      return CallIrisApiResult.success();
+      return this.returnResult();
     };
 
     return this.execute(processFunc);
@@ -75,7 +76,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   setAppType(appType: number): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       AgoraRTC.setAppType(appType);
-      return Promise.resolve(new CallIrisApiResult(0, '{"result": 0}'));
+      return this.returnResult();
     };
 
     return this.execute(processFunc);
@@ -84,6 +85,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   initialize(context: NATIVE_RTC.RtcEngineContext): CallApiReturnType {
     let processFunc = () => {
       this._engine.globalVariables.rtcEngineContext = context;
+      this._engine.mainClientVariables.channelProfile = context.channelProfile;
 
       AgoraRTC.setArea([
         AgoraTranslate.NATIVE_RTCAREA_CODE2AREAS(context.areaCode),
@@ -147,7 +149,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     uid: number
   ): CallApiReturnType {
     let mvs = this._engine.mainClientVariables;
-    let rtcEngineContext = this._engine.globalVariables.rtcEngineContext;
     let options: NATIVE_RTC.ChannelMediaOptions = {
       publishCameraTrack:
         mvs.publishCameraTrack != null ? mvs.publishCameraTrack : true,
@@ -170,7 +171,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           ? mvs.defaultVideoStreamType
           : NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH,
       channelProfile:
-        rtcEngineContext.channelProfile ||
+        mvs.channelProfile ||
         NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
     };
     return this.joinChannel2(token, channelId, uid, options);
@@ -181,13 +182,12 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     uid: number,
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
-    if (this._engine.mainClientVariables.joinChanneled == true) {
-      AgoraConsole.error('already call joinChannel');
+    if (this._engine.mainClientVariables.isConnected == true) {
+      AgoraConsole.error('you have already joinChannel');
       return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED;
     }
 
-    this._engine.mainClientVariables.joinChanneled = true;
-
+    this._engine.mainClientVariables.isConnected = true;
     let processJoinChannel = async (): Promise<CallIrisApiResult> => {
       // this._engine.mainClientVariables.startPreviewed = false;
       let mainClientVariables: IrisMainClientVariables = this._engine
@@ -203,7 +203,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       entitiesContainer.setMainClient(mainClient);
       let clientEventHandler = new IrisClientEventHandler(
         mainClient,
-        IrisClientType.kClientMian,
+        IrisClientType.kClientMain,
         this._engine
       );
       entitiesContainer.setMainClientEventHandler(clientEventHandler);
@@ -221,7 +221,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           NATIVE_RTC.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED,
           ''
         );
-        this._engine.mainClientVariables.joinChanneled = false;
+        this._engine.mainClientVariables.isConnected = false;
         this._engine.entitiesContainer.clearMainClientAll(null);
         // next();
         return;
@@ -251,7 +251,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         }
       }
 
-      let clientType = IrisClientType.kClientMian;
+      let clientType = IrisClientType.kClientMain;
       let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
       try {
         trackArray = await ImplHelper.getOrCreateAudioAndVideoTrackAsync(
@@ -273,6 +273,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         localUid: mainClient.uid as number,
       };
       //joinChannel success咯
+      debugger;
       this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(con, 0);
       //推送麦克风audio
       let audioTrack: IMicrophoneAudioTrack = trackArray[0] as IMicrophoneAudioTrack;
@@ -373,8 +374,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       return this.returnResult();
-
-      // next();
     };
 
     return this.execute(processJoinChannel);
@@ -651,13 +650,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   leaveChannel2(options: NATIVE_RTC.LeaveChannelOptions): CallApiReturnType {
     let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
       //离开频道啦 稍后处理
-      if (this._engine.mainClientVariables.joinChanneled == false) {
+      if (this._engine.mainClientVariables.isConnected == false) {
         // AgoraConsole.error("you must join channel before you call this method");
         // return CallIrisApiResult.failed(0, -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
         return CallIrisApiResult.success();
       }
 
-      this._engine.mainClientVariables.joinChanneled = false;
+      this._engine.mainClientVariables.isConnected = false;
 
       let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
       if (mainClient) {
@@ -715,9 +714,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       audienceLatencyLevel:
         NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE
           .AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY,
-      //todo 麦克风recording需要排查
-      // stopMicrophoneRecording: false,
-      // stopPreview: false,
     };
     return this.setClientRole2(role, options);
   }
@@ -743,26 +739,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let audioTrack = this._engine.entitiesContainer.getLocalAudioTrackByType(
         IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
       );
-      if (audioTrack) {
-        let track = audioTrack.track as IMicrophoneAudioTrack;
-        if (track.muted == false) {
-          track
-            .setMuted(true)
-            .then(() => {})
-            .catch(() => {
-              AgoraConsole.error(' track.setMuted(true) failed');
-            });
-        } else if (track.muted == true) {
-          track
-            .setMuted(false)
-            .then(() => {})
-            .catch(() => {
-              AgoraConsole.error(' track.setMuted(false) failed');
-            });
-        }
-      }
-
-      // next();
 
       return this.returnResult();
     };
@@ -860,8 +836,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         }
       });
 
-      // next();
-
       return this.returnResult();
     };
 
@@ -956,7 +930,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           this._engine,
           audioSource,
           videoSource,
-          IrisClientType.kClientMian,
+          IrisClientType.kClientMain,
           null
         );
 
@@ -1132,27 +1106,30 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   enableAudio(): CallApiReturnType {
     let processAudioTracks = async (): Promise<CallIrisApiResult> => {
       this._engine.globalVariables.enabledAudio = true;
-      //找到本地audio
-      let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
-      for (let trackPackage of trackPackages) {
-        let track = trackPackage.track as ILocalAudioTrack;
-        if (track.enabled == false) {
-          try {
-            await track.setEnabled(true);
-          } catch (e) {
-            AgoraConsole.error('track setEnable(true) failed');
-            AgoraConsole.error(e);
+      if (this._engine.globalVariables.enabledLocalAudio) {
+        //找到本地audio
+        let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
+        for (let trackPackage of trackPackages) {
+          let track = trackPackage.track as ILocalAudioTrack;
+          if (!track.enabled) {
+            try {
+              await track.setEnabled(true);
+            } catch (e) {
+              AgoraConsole.error(
+                `track${track.getTrackId()} setEnable(true) failed`
+              );
+            }
           }
         }
       }
 
       //找到远端audio
       let remoteUsers = this._engine.entitiesContainer.getAllRemoteUsers();
-      for (let remoteUser of remoteUsers) {
-        if (remoteUser.audioTrack && remoteUser.audioTrack.isPlaying == false) {
+      remoteUsers.map((remoteUser: IAgoraRTCRemoteUser) => {
+        if (remoteUser.audioTrack && !remoteUser.audioTrack.isPlaying) {
           remoteUser.audioTrack.play();
         }
-      }
+      });
 
       return this.returnResult();
     };
@@ -2436,27 +2413,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   registerEventHandler(eventHandler: any): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      console.log('RtcEngineImpl registerEventHandler');
-
       this._engine.irisEventHandlerManager.addEventHandler(
         RTCENGINE_KEY,
         eventHandler
       );
-      return Promise.resolve(CallIrisApiResult.success());
+      return this.returnResult();
     };
 
     return this.execute(processFunc);
   }
   unregisterEventHandler(eventHandler: any): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      console.log('unregisterEventHandler registerEventHandler');
-
       this._engine.irisEventHandlerManager.removeEventHandler(
         RTCENGINE_KEY,
         eventHandler
       );
 
-      return Promise.resolve(CallIrisApiResult.success());
+      return this.returnResult();
     };
 
     return this.execute(processFunc);

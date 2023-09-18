@@ -11,9 +11,10 @@ import {
 import { EventParam } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IMediaPlayerSourceObserver {
-  classPrefix: string = 'IMediaPlayerSourceObserver_';
+  classPrefix: string = 'MediaPlayerSourceObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -41,7 +42,7 @@ export class IMediaPlayerSourceObserver {
     let _key = this.eventKey('onPlayerSourceStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onPlayerSourceStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -55,7 +56,9 @@ export class IMediaPlayerSourceObserver {
     let _key = this.eventKey('onPositionChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onPositionChanged eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onPositionChanged eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -73,7 +76,7 @@ export class IMediaPlayerSourceObserver {
     let _key = this.eventKey('onPlayerEvent');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onPlayerEvent eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onPlayerEvent eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -86,7 +89,7 @@ export class IMediaPlayerSourceObserver {
     let _key = this.eventKey('onMetaData');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onMetaData eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onMetaData eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -98,7 +101,9 @@ export class IMediaPlayerSourceObserver {
     let _key = this.eventKey('onPlayBufferUpdated');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onPlayBufferUpdated eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onPlayBufferUpdated eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -111,7 +116,7 @@ export class IMediaPlayerSourceObserver {
     let _key = this.eventKey('onPreloadEvent');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onPreloadEvent eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onPreloadEvent eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -121,7 +126,7 @@ export class IMediaPlayerSourceObserver {
     let _key = this.eventKey('onCompleted');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onCompleted eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onCompleted eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -131,7 +136,7 @@ export class IMediaPlayerSourceObserver {
     let _key = this.eventKey('onAgoraCDNTokenWillExpire');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAgoraCDNTokenWillExpire eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -146,7 +151,7 @@ export class IMediaPlayerSourceObserver {
     let _key = this.eventKey('onPlayerSrcInfoChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onPlayerSrcInfoChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -160,7 +165,9 @@ export class IMediaPlayerSourceObserver {
     let _key = this.eventKey('onPlayerInfoUpdated');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onPlayerInfoUpdated eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onPlayerInfoUpdated eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -172,7 +179,7 @@ export class IMediaPlayerSourceObserver {
     let _key = this.eventKey('onAudioVolumeIndication');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAudioVolumeIndication eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);

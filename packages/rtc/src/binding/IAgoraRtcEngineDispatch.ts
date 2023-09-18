@@ -64,9 +64,10 @@ import {
   IRtcEngineImpl,
   IVideoDeviceManagerImpl,
 } from '../impl/IAgoraRtcEngineImpl';
+import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IRtcEngineEventHandler {
-  classPrefix: string = 'IRtcEngineEventHandler_';
+  classPrefix: string = 'RtcEngineEventHandler_';
 
   _engine: IrisRtcEngine = null;
 
@@ -92,7 +93,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onJoinChannelSuccess');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onJoinChannelSuccess eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -108,7 +109,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRejoinChannelSuccess');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRejoinChannelSuccess eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -132,7 +133,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onProxyConnected');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onProxyConnected eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onProxyConnected eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -145,7 +148,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onError');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onError eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onError eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -165,7 +168,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onAudioQuality');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onAudioQuality eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onAudioQuality eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -177,7 +180,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onLastmileProbeResult');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onLastmileProbeResult eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -197,7 +200,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onAudioVolumeIndication');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAudioVolumeIndication eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -211,7 +214,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onLeaveChannel');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onLeaveChannel eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onLeaveChannel eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -223,7 +226,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRtcStats');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onRtcStats eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onRtcStats eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -241,7 +244,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onAudioDeviceStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAudioDeviceStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -255,7 +258,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onAudioMixingPositionChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAudioMixingPositionChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -267,7 +270,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onAudioMixingFinished');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAudioMixingFinished eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -281,7 +284,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onAudioEffectFinished');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAudioEffectFinished eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -301,7 +304,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onVideoDeviceStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onVideoDeviceStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -317,7 +320,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onNetworkQuality');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onNetworkQuality eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onNetworkQuality eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -327,7 +332,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onIntraRequestReceived');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onIntraRequestReceived eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -341,7 +346,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onUplinkNetworkInfoUpdated');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onUplinkNetworkInfoUpdated eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -355,7 +360,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onDownlinkNetworkInfoUpdated');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onDownlinkNetworkInfoUpdated eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -369,7 +374,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onLastmileQuality');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onLastmileQuality eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onLastmileQuality eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -389,7 +396,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onFirstLocalVideoFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onFirstLocalVideoFrame eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -407,7 +414,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onFirstLocalVideoFramePublished');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onFirstLocalVideoFramePublished eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -429,7 +436,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onFirstRemoteVideoDecoded');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onFirstRemoteVideoDecoded eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -453,7 +460,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onVideoSizeChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onVideoSizeChanged eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onVideoSizeChanged eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -471,7 +480,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onLocalVideoStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onLocalVideoStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -493,7 +502,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRemoteVideoStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRemoteVideoStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -515,7 +524,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onFirstRemoteVideoFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onFirstRemoteVideoFrame eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -530,7 +539,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onUserJoined');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserJoined eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onUserJoined eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -543,7 +552,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onUserOffline');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserOffline eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onUserOffline eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -556,7 +565,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onUserMuteAudio');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserMuteAudio eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onUserMuteAudio eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -569,7 +580,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onUserMuteVideo');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserMuteVideo eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onUserMuteVideo eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -582,7 +595,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onUserEnableVideo');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserEnableVideo eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onUserEnableVideo eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -595,7 +610,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onUserStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserStateChanged eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onUserStateChanged eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -608,7 +625,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onUserEnableLocalVideo');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onUserEnableLocalVideo eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -622,7 +639,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onLocalAudioStats');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onLocalAudioStats eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onLocalAudioStats eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -634,7 +653,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRemoteAudioStats');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onRemoteAudioStats eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onRemoteAudioStats eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -647,7 +668,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onLocalVideoStats');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onLocalVideoStats eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onLocalVideoStats eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -659,7 +682,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRemoteVideoStats');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onRemoteVideoStats eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onRemoteVideoStats eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -669,7 +694,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onCameraReady');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onCameraReady eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onCameraReady eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -689,7 +714,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onCameraFocusAreaChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onCameraFocusAreaChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -711,7 +736,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onCameraExposureAreaChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onCameraExposureAreaChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -735,7 +760,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onFacePositionChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onFacePositionChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -747,7 +772,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onVideoStopped');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onVideoStopped eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onVideoStopped eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -763,7 +788,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onAudioMixingStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAudioMixingStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -781,7 +806,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRhythmPlayerStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRhythmPlayerStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -793,7 +818,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onConnectionLost');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onConnectionLost eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onConnectionLost eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -803,7 +830,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onConnectionInterrupted');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onConnectionInterrupted eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -815,7 +842,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onConnectionBanned');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onConnectionBanned eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onConnectionBanned eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -837,7 +866,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onStreamMessage');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onStreamMessage eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onStreamMessage eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -859,7 +890,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onStreamMessageError');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onStreamMessageError eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -871,7 +902,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRequestToken');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onRequestToken eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onRequestToken eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -883,7 +914,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onTokenPrivilegeWillExpire');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onTokenPrivilegeWillExpire eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -897,7 +928,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onLicenseValidationFailure');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onLicenseValidationFailure eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -911,7 +942,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onFirstLocalAudioFramePublished');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onFirstLocalAudioFramePublished eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -926,7 +957,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onFirstRemoteAudioFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onFirstRemoteAudioFrame eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -941,7 +972,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onFirstRemoteAudioDecoded');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onFirstRemoteAudioDecoded eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -959,7 +990,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onLocalAudioStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onLocalAudioStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -981,7 +1012,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRemoteAudioStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRemoteAudioStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -995,7 +1026,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onActiveSpeaker');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onActiveSpeaker eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onActiveSpeaker eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -1007,7 +1040,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onContentInspectResult');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onContentInspectResult eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1031,7 +1064,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onSnapshotTaken');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onSnapshotTaken eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onSnapshotTaken eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -1049,7 +1084,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onClientRoleChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onClientRoleChanged eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onClientRoleChanged eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -1065,7 +1102,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onClientRoleChangeFailed');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onClientRoleChangeFailed eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1085,7 +1122,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onAudioDeviceVolumeChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAudioDeviceVolumeChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1105,7 +1142,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRtmpStreamingStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRtmpStreamingStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1120,7 +1157,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRtmpStreamingEvent');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRtmpStreamingEvent eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1132,7 +1169,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onTranscodingUpdated');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onTranscodingUpdated eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1146,7 +1183,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onAudioRoutingChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAudioRoutingChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1161,7 +1198,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onChannelMediaRelayStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onChannelMediaRelayStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1175,7 +1212,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onChannelMediaRelayEvent');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onChannelMediaRelayEvent eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1189,7 +1226,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onLocalPublishFallbackToAudioOnly');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onLocalPublishFallbackToAudioOnly eventParam ${JSON.stringify(
         eventParam
       )}`
@@ -1209,7 +1246,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRemoteSubscribeFallbackToAudioOnly');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRemoteSubscribeFallbackToAudioOnly eventParam ${JSON.stringify(
         eventParam
       )}`
@@ -1233,7 +1270,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRemoteAudioTransportStats');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRemoteAudioTransportStats eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1255,7 +1292,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onRemoteVideoTransportStats');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRemoteVideoTransportStats eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1273,7 +1310,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onConnectionStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onConnectionStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1293,7 +1330,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onWlAccMessage');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onWlAccMessage eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onWlAccMessage eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -1306,7 +1343,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onWlAccStats');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onWlAccStats eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onWlAccStats eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -1318,7 +1355,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onNetworkTypeChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onNetworkTypeChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1332,7 +1369,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onEncryptionError');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onEncryptionError eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onEncryptionError eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -1344,7 +1383,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onPermissionError');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onPermissionError eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onPermissionError eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -1357,7 +1398,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onLocalUserRegistered');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onLocalUserRegistered eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1372,7 +1413,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onUserInfoUpdated');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUserInfoUpdated eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onUserInfoUpdated eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -1390,7 +1433,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onUploadLogResult');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onUploadLogResult eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onUploadLogResult eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -1412,7 +1457,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onAudioSubscribeStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAudioSubscribeStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1436,7 +1481,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onVideoSubscribeStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onVideoSubscribeStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1458,7 +1503,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onAudioPublishStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onAudioPublishStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1482,7 +1527,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onVideoPublishStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onVideoPublishStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1504,7 +1549,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onExtensionEvent');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onExtensionEvent eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onExtensionEvent eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -1517,7 +1564,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onExtensionStarted');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onExtensionStarted eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onExtensionStarted eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -1530,7 +1579,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onExtensionStopped');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onExtensionStopped eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onExtensionStopped eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -1550,7 +1601,9 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onExtensionError');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onExtensionError eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onExtensionError eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -1563,7 +1616,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onUserAccountUpdated');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onUserAccountUpdated eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1581,7 +1634,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onLocalVideoTranscoderError');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onLocalVideoTranscoderError eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1601,7 +1654,7 @@ export class IRtcEngineEventHandler {
     let _key = this.eventKey('onVideoRenderingTracingResult');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onVideoRenderingTracingResult eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -1677,7 +1730,7 @@ export class IVideoDeviceManagerDispatch {
 }
 
 export class IMetadataObserver {
-  classPrefix: string = 'IMetadataObserver_';
+  classPrefix: string = 'MetadataObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -1701,13 +1754,15 @@ export class IMetadataObserver {
     let _key = this.eventKey('onMetadataReceived');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onMetadataReceived eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onMetadataReceived eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 }
 
 export class IDirectCdnStreamingEventHandler {
-  classPrefix: string = 'IDirectCdnStreamingEventHandler_';
+  classPrefix: string = 'DirectCdnStreamingEventHandler_';
 
   _engine: IrisRtcEngine = null;
 
@@ -1737,7 +1792,7 @@ export class IDirectCdnStreamingEventHandler {
     let _key = this.eventKey('onDirectCdnStreamingStateChanged');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onDirectCdnStreamingStateChanged eventParam ${JSON.stringify(
         eventParam
       )}`
@@ -1753,7 +1808,7 @@ export class IDirectCdnStreamingEventHandler {
     let _key = this.eventKey('onDirectCdnStreamingStats');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onDirectCdnStreamingStats eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);

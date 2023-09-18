@@ -4,8 +4,6 @@ import { UID } from 'agora-rtc-sdk-ng';
 export class IrisGlobalVariables {
   public rtcEngineContext: NATIVE_RTC.RtcEngineContext;
 
-  // public appId: string = null;
-
   //C++ SetAudioProfile() initialize()
   public audioProfile: NATIVE_RTC.AUDIO_PROFILE_TYPE;
 

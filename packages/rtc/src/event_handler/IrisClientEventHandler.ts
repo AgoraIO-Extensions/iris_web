@@ -17,7 +17,6 @@ export class IrisClientEventHandler {
     private _clientType: IrisClientType;
 
     constructor(client: IAgoraRTCClient, type: IrisClientType, engine: IrisRtcEngine) {
-        console.log("IrisClient")
         this._client = client;
         this._clientType = type;
         this._engine = engine;
@@ -58,18 +57,17 @@ export class IrisClientEventHandler {
         };
 
         if (curState == 'DISCONNECTED')
-            console.log(1);
-            // this._engine.rtcEngineEventHandler.onConnectionLostEx(connection);
+            this._engine.rtcEngineEventHandler.onConnectionLostEx(connection);
         else if (reason == ConnectionDisconnectedReason.CHANNEL_BANNED
             || reason == ConnectionDisconnectedReason.IP_BANNED
             || reason == ConnectionDisconnectedReason.UID_BANNED
         ) {
-            // this._engine.rtcEngineEventHandler.onConnectionBannedEx(connection);
+            this._engine.rtcEngineEventHandler.onConnectionBannedEx(connection);
         }
         else if (reason == ConnectionDisconnectedReason.NETWORK_ERROR
             || reason == ConnectionDisconnectedReason.SERVER_ERROR
         ) {
-            // this._engine.rtcEngineEventHandler.onConnectionInterruptedEx(connection);
+            this._engine.rtcEngineEventHandler.onConnectionInterruptedEx(connection);
         }
 
 
@@ -79,7 +77,7 @@ export class IrisClientEventHandler {
             if (reason != null) {
                 reason2 = AgoraTranslate.ConnectionDisconnectedReason2NATIVE_RTCCONNECTION_CHANGED_REASON_TYPE(reason);
             }
-            // this._engine.rtcEngineEventHandler.onConnectionStateChangedEx(connection, state, reason2);
+            this._engine.rtcEngineEventHandler.onConnectionStateChangedEx(connection, state, reason2);
         }
 
     }
@@ -97,7 +95,7 @@ export class IrisClientEventHandler {
         };
         let remoteUid = user.uid;
         let elapsed = 0;
-        // this._engine.rtcEngineEventHandler.onUserJoinedEx(connection, remoteUid as number, elapsed);
+        this._engine.rtcEngineEventHandler.onUserJoinedEx(connection, remoteUid as number, elapsed);
 
 
         // let con2: NATIVE_RTC.RtcConnection = {
@@ -122,7 +120,7 @@ export class IrisClientEventHandler {
         };
         let remoteUid = user.uid;
         let reason2 = AgoraTranslate.string2NATIVE_RTCUSER_OFFLINE_REASON_TYPE(reason);
-        // this._engine.rtcEngineEventHandler.onUserOfflineEx(connection, remoteUid as number, reason2);
+        this._engine.rtcEngineEventHandler.onUserOfflineEx(connection, remoteUid as number, reason2);
 
 
         let con2: NATIVE_RTC.RtcConnection = {
@@ -138,7 +136,7 @@ export class IrisClientEventHandler {
         //     return;
 
 
-        if (this._clientType == IrisClientType.kClientMian) {
+        if (this._clientType == IrisClientType.kClientMain) {
             this._engine.entitiesContainer.removeMainClientTrackEventHandlerByRemoteUser(user, "all");
         }
         else {
@@ -174,7 +172,7 @@ export class IrisClientEventHandler {
 
         if (mediaType == 'audio' && enableAudio) {
             let autoSubscribeAudio: boolean = false;
-            if (this._clientType == IrisClientType.kClientMian) {
+            if (this._clientType == IrisClientType.kClientMain) {
                 if (this._engine.mainClientVariables.autoSubscribeAudio == true)
                     autoSubscribeAudio = true;
             }
@@ -206,7 +204,7 @@ export class IrisClientEventHandler {
                         };
                         let trackEventHandler = new IrisTrackEventHandler(param, this._engine);
 
-                        if (this._clientType == IrisClientType.kClientMian) {
+                        if (this._clientType == IrisClientType.kClientMain) {
                             this._engine.entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
                         }
                         else {
@@ -225,7 +223,7 @@ export class IrisClientEventHandler {
         else if (mediaType == 'video' && enableVideo) {
             //video
             let autoSubscribeVideo: boolean = false;
-            if (this._clientType == IrisClientType.kClientMian) {
+            if (this._clientType == IrisClientType.kClientMain) {
                 if (this._engine.mainClientVariables.autoSubscribeVideo == true)
                     autoSubscribeVideo = true;
             }
@@ -239,7 +237,7 @@ export class IrisClientEventHandler {
             if (autoSubscribeVideo) {
                 this._client.subscribe(user, mediaType)
                     .then(() => {
-                        console.log("onEventUserPublished subcribe video success");
+                        console.log("onEventUserPublished subscribe video success");
                         // user.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(this._client.channelName, user.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote));
 
                         this._engine.entitiesContainer.addOrUpdateRemoteVideoViewHolder({ channelId: this._client.channelName, uid: user.uid, type: IrisVideoSourceType.kVideoSourceTypeRemote });
@@ -259,7 +257,7 @@ export class IrisClientEventHandler {
                         };
                         let trackEventHandler = new IrisTrackEventHandler(param, this._engine);
 
-                        if (this._clientType == IrisClientType.kClientMian) {
+                        if (this._clientType == IrisClientType.kClientMain) {
                             this._engine.entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
                         }
                         else {
@@ -294,7 +292,7 @@ export class IrisClientEventHandler {
         // if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
         //     return;
 
-        if (this._clientType == IrisClientType.kClientMian) {
+        if (this._clientType == IrisClientType.kClientMain) {
             this._engine.entitiesContainer.removeMainClientTrackEventHandlerByRemoteUser(user, mediaType);
         }
         else {
@@ -315,26 +313,26 @@ export class IrisClientEventHandler {
 
         switch (msg) {
             case 'mute-audio':
-                // this._engine.rtcEngineEventHandler.onUserMuteAudioEx(connection, remoteUid, true);
-                // this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_AUDIO);
+                this._engine.rtcEngineEventHandler.onUserMuteAudioEx(connection, remoteUid, true);
+                this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_AUDIO);
                 break;
             case 'mute-video':
-                // this._engine.rtcEngineEventHandler.onUserMuteVideoEx(connection, remoteUid, true);
-                // this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_VIDEO);
+                this._engine.rtcEngineEventHandler.onUserMuteVideoEx(connection, remoteUid, true);
+                this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_VIDEO);
 
                 break;
             case 'unmute-audio':
-                // this._engine.rtcEngineEventHandler.onUserMuteAudioEx(connection, remoteUid, false);
+                this._engine.rtcEngineEventHandler.onUserMuteAudioEx(connection, remoteUid, false);
                 break;
             case 'unmute-video':
-                // this._engine.rtcEngineEventHandler.onUserMuteVideoEx(connection, remoteUid, false);
+                this._engine.rtcEngineEventHandler.onUserMuteVideoEx(connection, remoteUid, false);
                 break;
             case 'enable-local-video':
-                // this._engine.rtcEngineEventHandler.onUserEnableLocalVideoEx(connection, remoteUid, true);
-                // this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_ENABLE_LOCAL_VIDEO);
+                this._engine.rtcEngineEventHandler.onUserEnableLocalVideoEx(connection, remoteUid, true);
+                this._engine.rtcEngineEventHandler.onUserStateChangedEx(connection, remoteUid, NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_ENABLE_LOCAL_VIDEO);
                 break;
             case 'disable-local-video':
-                // this._engine.rtcEngineEventHandler.onUserEnableLocalVideoEx(connection, remoteUid, false);
+                this._engine.rtcEngineEventHandler.onUserEnableLocalVideoEx(connection, remoteUid, false);
                 break;
         }
     }
@@ -383,7 +381,7 @@ export class IrisClientEventHandler {
          * of all the remote speakers.
         */
         let totalVolume = 0;
-        // this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(connection, speakers, speakerNumber, totalVolume);
+        this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(connection, speakers, speakerNumber, totalVolume);
     }
 
     onEventCryptError(): void {
@@ -392,7 +390,7 @@ export class IrisClientEventHandler {
             localUid: this._client.uid as number
         };
         let errorType: NATIVE_RTC.ENCRYPTION_ERROR_TYPE = NATIVE_RTC.ENCRYPTION_ERROR_TYPE.ENCRYPTION_ERROR_INTERNAL_FAILURE;
-        // this._engine.rtcEngineEventHandler.onEncryptionErrorEx(connection, errorType);
+        this._engine.rtcEngineEventHandler.onEncryptionErrorEx(connection, errorType);
     }
 
     onEventTokenPrivilegeWillExpire(): void {
@@ -402,7 +400,7 @@ export class IrisClientEventHandler {
         };
 
         let token: string = "";
-        if (this._clientType == IrisClientType.kClientMian) {
+        if (this._clientType == IrisClientType.kClientMain) {
             if (this._engine.mainClientVariables.token) {
                 token = this._engine.mainClientVariables.token
             }
@@ -413,7 +411,7 @@ export class IrisClientEventHandler {
                 token = options.token;
             }
         }
-        // this._engine.rtcEngineEventHandler.onTokenPrivilegeWillExpireEx(connection, token);
+        this._engine.rtcEngineEventHandler.onTokenPrivilegeWillExpireEx(connection, token);
     }
 
 
@@ -422,7 +420,7 @@ export class IrisClientEventHandler {
             channelId: this._client.channelName,
             localUid: this._client.uid as number
         };
-        // this._engine.rtcEngineEventHandler.onRequestTokenEx(connection);
+        this._engine.rtcEngineEventHandler.onRequestTokenEx(connection);
     }
 
     onEventNetworkQuality(stats: NetworkQuality): void {
@@ -457,7 +455,7 @@ export class IrisClientEventHandler {
 
     onEventPublishedUserList(users: IAgoraRTCRemoteUser): void {
         //todo 暂时没有找到对应的回调
-        console.log("onEventPulishedUserList");
+        console.log("onEventPublishedUserList");
         console.log(users);
     }
 
@@ -471,7 +469,7 @@ export class IrisClientEventHandler {
 
     onEventContentInspectResult(data?: "porn" | "sexy" | "neutral", error?: IAgoraRTCError) {
         if (data) {
-            let result = AgoraTranslate.data2NATIVE_RTCCONTENT_INSPECT_RESULT(data);
+            let result = AgoraTranslate.data2NATIVE_RTC_CONNECT_INSPECT_RESULT(data);
             this._engine.rtcEngineEventHandler.onContentInspectResult(result);
         }
     }

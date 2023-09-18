@@ -19,12 +19,14 @@ interface TerraNodeUserData {
   isEnumz: boolean;
   isClazz: boolean;
   isCallback: boolean;
-  _name: string;
+  classPrefix: string;
+  hasBaseClazzs: boolean;
 }
 
 interface ClazzMethodUserData {
   hasParameters: boolean;
   isRegisterMethod: boolean;
+  _prefix: string;
 }
 
 export default function (cxxfiles: CXXFile[], context: RenderContext) {
@@ -44,6 +46,10 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
     });
 
     cxxfile.nodes = nodes.map((node: TerraNode) => {
+      if (node.name === 'IRtcEngineEventHandlerEx') {
+        // debugger;
+      }
+
       //重载函数重命名, 自动末尾+数字
       //['joinChannel', 'joinChannel'] => ['joinChannel', 'joinChannel2']
       node.asClazz().methods = appendNumberToDuplicateMemberFunction(
@@ -55,6 +61,11 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
           isRegisterMethod: new RegExp('registerEventHandler').test(
             method.name
           ),
+          _prefix:
+            method.parent.asClazz().name === 'IRtcEngineEventHandlerEx' &&
+            !method.name.endsWith('Ex')
+              ? 'Ex'
+              : '',
         };
         method.user_data = clazzMethodUserData;
       });
@@ -63,7 +74,11 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
         isStruct: node.__TYPE === CXXTYPE.Struct,
         isEnumz: node.__TYPE === CXXTYPE.Enumz,
         isClazz: node.__TYPE === CXXTYPE.Clazz,
-        _name: node.name.replace('I', ''),
+        classPrefix:
+          node.name === 'IRtcEngineEventHandlerEx'
+            ? 'RtcEngineEventHandler_'
+            : node.name.replace(new RegExp('^I(.*)'), '$1_'),
+        hasBaseClazzs: node.asClazz().base_clazzs.length > 0,
         isCallback: isMatch(node.name, 'isCallback'),
       };
       node.user_data = terraNodeUserData;

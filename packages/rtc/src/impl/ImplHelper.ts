@@ -341,7 +341,7 @@ export class ImplHelper {
       let config: VideoPlayerConfig = {};
 
       let videoEncoderConfiguration: NATIVE_RTC.VideoEncoderConfiguration = null;
-      if (type == IrisClientType.kClientMian) {
+      if (type == IrisClientType.kClientMain) {
         videoEncoderConfiguration =
           engine.mainClientVariables.videoEncoderConfiguration;
       } else {
@@ -727,9 +727,9 @@ export class ImplHelper {
               mainClientVariables.videoEncoderConfiguration.codecType
             )
           : 'vp8',
-      mode: globalVariables.rtcEngineContext.channelProfile
+      mode: mainClientVariables.channelProfile
         ? AgoraTranslate.NATIVE_RTCCHANNEL_PROFILE_TYPE2SDK_MODE(
-            globalVariables.rtcEngineContext.channelProfile
+            mainClientVariables.channelProfile
           )
         : 'rtc',
     };

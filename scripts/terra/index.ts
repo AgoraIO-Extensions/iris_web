@@ -20,6 +20,10 @@ interface TerraNodeUserData {
   isCallback: boolean;
 }
 
+interface ClazzMethodUserData {
+  _prefix: string;
+}
+
 export default function (cxxfiles: CXXFile[], context: RenderContext) {
   //移除不需要的文件
   let view = filterFile(cxxfiles).map((cxxfile: CXXFile) => {
@@ -45,6 +49,17 @@ export default function (cxxfiles: CXXFile[], context: RenderContext) {
         node.asClazz().methods = appendNumberToDuplicateMemberFunction(
           node.asClazz().methods
         );
+
+        node.asClazz().methods.map((method) => {
+          const clazzMethodUserData: ClazzMethodUserData = {
+            _prefix:
+              method.parent.asClazz().name === 'IRtcEngineEventHandlerEx' &&
+              !method.name.endsWith('Ex')
+                ? 'Ex'
+                : '',
+          };
+          method.user_data = clazzMethodUserData;
+        });
       }
       const terraNodeUserData: TerraNodeUserData = {
         isStruct: node.__TYPE === CXXTYPE.Struct,

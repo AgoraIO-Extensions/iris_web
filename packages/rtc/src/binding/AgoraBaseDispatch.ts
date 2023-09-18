@@ -4,9 +4,10 @@ import { EncodedAudioFrameInfo } from '@iris/web-rtc';
 import { EventParam } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IAudioEncodedFrameObserver {
-  classPrefix: string = 'IAudioEncodedFrameObserver_';
+  classPrefix: string = 'AudioEncodedFrameObserver_';
 
   _engine: IrisRtcEngine = null;
 
@@ -36,7 +37,7 @@ export class IAudioEncodedFrameObserver {
     let _key = this.eventKey('onRecordAudioEncodedFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onRecordAudioEncodedFrame eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -56,7 +57,7 @@ export class IAudioEncodedFrameObserver {
     let _key = this.eventKey('onPlaybackAudioEncodedFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onPlaybackAudioEncodedFrame eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -76,7 +77,7 @@ export class IAudioEncodedFrameObserver {
     let _key = this.eventKey('onMixedAudioEncodedFrame');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onMixedAudioEncodedFrame eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);

@@ -317,7 +317,7 @@ export interface IAudioFrameObserverBase {
   onEarMonitoringAudioFrame(audioFrame: AudioFrame): boolean;
 }
 
-export interface IAudioFrameObserver {
+export interface IAudioFrameObserver extends IAudioFrameObserverBase {
   onPlaybackAudioFrameBeforeMixing(
     channelId: string,
     uid: number,

@@ -15,6 +15,7 @@ import {
   MusicChartCollectionImpl,
   MusicCollectionImpl,
 } from '../impl/IAgoraMusicContentCenterImpl';
+import { AgoraConsole } from '../util/AgoraConsole';
 
 export class MusicChartCollectionDispatch {
   _impl: MusicChartCollectionImpl;
@@ -67,7 +68,7 @@ export class MusicCollectionDispatch {
 }
 
 export class IMusicContentCenterEventHandler {
-  classPrefix: string = 'IMusicContentCenterEventHandler_';
+  classPrefix: string = 'MusicContentCenterEventHandler_';
 
   _engine: IrisRtcEngine = null;
 
@@ -97,7 +98,9 @@ export class IMusicContentCenterEventHandler {
     let _key = this.eventKey('onMusicChartsResult');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onMusicChartsResult eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(
+      `onMusicChartsResult eventParam ${JSON.stringify(eventParam)}`
+    );
     this.notifyEvent(eventParam);
   }
 
@@ -115,7 +118,7 @@ export class IMusicContentCenterEventHandler {
     let _key = this.eventKey('onMusicCollectionResult');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onMusicCollectionResult eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -137,7 +140,7 @@ export class IMusicContentCenterEventHandler {
     let _key = this.eventKey('onLyricResult');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onLyricResult eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onLyricResult eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 
@@ -157,7 +160,7 @@ export class IMusicContentCenterEventHandler {
     let _key = this.eventKey('onSongSimpleInfoResult');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(
+    AgoraConsole.log(
       `onSongSimpleInfoResult eventParam ${JSON.stringify(eventParam)}`
     );
     this.notifyEvent(eventParam);
@@ -183,7 +186,7 @@ export class IMusicContentCenterEventHandler {
     let _key = this.eventKey('onPreLoadEvent');
 
     let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    console.log(`onPreLoadEvent eventParam ${JSON.stringify(eventParam)}`);
+    AgoraConsole.log(`onPreLoadEvent eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
 }

@@ -48,9 +48,9 @@ export class AgoraTranslate {
         return 0;
       default:
         AgoraConsole.log(
-          'SDK logLevel is not specified, will not output any webSDK log.'
+          'SDK logLevel is not specified, will output webSDK log.'
         );
-        return 4;
+        return 0;
     }
   }
 
@@ -655,7 +655,7 @@ export class AgoraTranslate {
     return 6 - webQuality;
   }
 
-  public static data2NATIVE_RTCCONTENT_INSPECT_RESULT(
+  public static data2NATIVE_RTC_CONNECT_INSPECT_RESULT(
     data: 'porn' | 'sexy' | 'neutral'
   ): NATIVE_RTC.CONTENT_INSPECT_RESULT {
     switch (data) {
