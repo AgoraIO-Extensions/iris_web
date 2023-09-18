@@ -42,9 +42,7 @@ export class IrisEventHandlerImpl implements IrisEventHandler {
       this.eventId.toString()
     );
 
-    console.log(`IrisEventHandler111 ${JSON.stringify(newParam)}`);
     if (this._eventHandler) {
-      console.log(`IrisEventHandler222 ${JSON.stringify(newParam)}`);
       this._eventHandler(newParam);
     }
   }

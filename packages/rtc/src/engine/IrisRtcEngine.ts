@@ -165,7 +165,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     let className = array[0];
     let funName = array[1];
 
-    AgoraConsole.log(`[callIrisApi][start]: ${JSON.stringify(apiParam)}`);
+    AgoraConsole.log(`[callIrisApi][start] ${JSON.stringify(apiParam)}`);
 
     let obj = this._implDispatchsMap.get(className);
     if (obj) {
@@ -203,7 +203,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     let className = array[0];
     let funName = array[1];
 
-    AgoraConsole.log(`[callIrisApiAsync][start]: ${JSON.stringify(apiParam)}`);
+    AgoraConsole.log(`[callIrisApiAsync][start] ${JSON.stringify(apiParam)}`);
 
     let obj = this._implDispatchsMap.get(className);
     if (obj) {

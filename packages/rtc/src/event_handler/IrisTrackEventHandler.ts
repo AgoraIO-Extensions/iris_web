@@ -9,7 +9,6 @@ import {
   ITrack,
 } from 'agora-rtc-sdk-ng';
 
-
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { CheckVideoVisibleResult } from '../web_sdk';
 
@@ -114,16 +113,16 @@ export class IrisTrackEventHandler {
       };
       let remoteUid = (this._remoteUser?.uid as number) || -1;
       let elaspsed = 0;
-      // this._engine.rtcEngineEventHandler.onFirstRemoteAudioDecodedEx(
-      //   connection,
-      //   remoteUid,
-      //   elaspsed
-      // );
-      // this._engine.rtcEngineEventHandler.onFirstRemoteAudioFrameEx(
-      //   connection,
-      //   remoteUid,
-      //   elaspsed
-      // );
+      this._engine.rtcEngineEventHandler.onFirstRemoteAudioDecodedEx(
+        connection,
+        remoteUid,
+        elaspsed
+      );
+      this._engine.rtcEngineEventHandler.onFirstRemoteAudioFrameEx(
+        connection,
+        remoteUid,
+        elaspsed
+      );
     } else if (this._trackType == 'IRemoteVideoTrack') {
       let connection: NATIVE_RTC.RtcConnection = {
         channelId: this._client.channelName,
@@ -138,20 +137,20 @@ export class IrisTrackEventHandler {
         width = imageData?.width || -1;
         height = imageData?.height || -1;
       }
-      // this._engine.rtcEngineEventHandler.onFirstRemoteVideoDecodedEx(
-      //   connection,
-      //   remoteUid,
-      //   width,
-      //   height,
-      //   elaspsed
-      // );
-      // this._engine.rtcEngineEventHandler.onFirstRemoteVideoFrameEx(
-      //   connection,
-      //   remoteUid,
-      //   width,
-      //   height,
-      //   elaspsed
-      // );
+      this._engine.rtcEngineEventHandler.onFirstRemoteVideoDecodedEx(
+        connection,
+        remoteUid,
+        width,
+        height,
+        elaspsed
+      );
+      this._engine.rtcEngineEventHandler.onFirstRemoteVideoFrameEx(
+        connection,
+        remoteUid,
+        width,
+        height,
+        elaspsed
+      );
     }
   }
 

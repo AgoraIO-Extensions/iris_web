@@ -273,7 +273,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         localUid: mainClient.uid as number,
       };
       //joinChannel success咯
-      debugger;
       this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(con, 0);
       //推送麦克风audio
       let audioTrack: IMicrophoneAudioTrack = trackArray[0] as IMicrophoneAudioTrack;
@@ -650,7 +649,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   leaveChannel2(options: NATIVE_RTC.LeaveChannelOptions): CallApiReturnType {
     let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
       //离开频道啦 稍后处理
-      if (this._engine.mainClientVariables.isConnected == false) {
+      if (!this._engine.mainClientVariables.isConnected) {
         // AgoraConsole.error("you must join channel before you call this method");
         // return CallIrisApiResult.failed(0, -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
         return CallIrisApiResult.success();
@@ -660,39 +659,46 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
       if (mainClient) {
-        //todo 读取 options
+        //读取 options
+        let channelId = mainClient.channelName;
+        let audioTrack = this._engine.entitiesContainer.getLocalAudioTrackByType(
+          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+        );
+        debugger;
+        if (audioTrack) {
+          let track = audioTrack.track as IMicrophoneAudioTrack;
+          if (options.stopMicrophoneRecording && !track.muted) {
+            await track.setMuted(true);
+          } else if (!options.stopMicrophoneRecording && track.muted) {
+            await track.setMuted(false);
+          }
+          track.isPlaying && track.stop();
+          track.close();
+        }
 
         //为了防止离开频道后丢失了channelName和uid，所以需要先保存一下
         let con: NATIVE_RTC.RtcConnection = {
           channelId: mainClient.channelName,
           localUid: mainClient.uid as number,
         };
-        let channelId = mainClient.channelName;
-        mainClient
-          .leave()
-          .then(() => {
-            this._engine.rtcEngineEventHandler.onLeaveChannelEx(
-              con,
-              new NATIVE_RTC.RtcStats()
-            );
-            this._engine.entitiesContainer.clearMainClientAll(channelId);
-          })
-          .catch((reason) => {
-            AgoraConsole.error('leaveChannel failed');
-            reason && AgoraConsole.error(reason);
-            this._engine.rtcEngineEventHandler.onError(
-              NATIVE_RTC.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED,
-              ''
-            );
-          })
-          .finally(() => {
-            // next();
-          });
-      } else {
-        // next();
+
+        this._engine.entitiesContainer.clearMainClientAll(channelId);
+        try {
+          await mainClient.leave();
+        } catch (e) {
+          AgoraConsole.error(`leaveChannel failed:${e}`);
+          this._engine.rtcEngineEventHandler.onError(
+            NATIVE_RTC.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED,
+            ''
+          );
+        }
+        this._engine.rtcEngineEventHandler.onLeaveChannelEx(
+          con,
+          new NATIVE_RTC.RtcStats()
+        );
       }
 
-      return CallIrisApiResult.success();
+      return this.returnResult();
     };
 
     return this.execute(processFunc);
@@ -1846,7 +1852,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'adjustPlaybackSignalVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
   adjustUserPlaybackSignalVolume(
     uid: number,
