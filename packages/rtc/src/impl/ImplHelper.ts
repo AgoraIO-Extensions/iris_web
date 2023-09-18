@@ -194,7 +194,7 @@ export class ImplHelper {
         let audioConfig: MicrophoneAudioTrackInitConfig = this.generateMicrophoneAudioTrackInitConfig(
           engine
         );
-        let audioTrack = await AgoraRTC.createMicrophoneAudioTrack(audioConfig);
+        audioTrack = await AgoraRTC.createMicrophoneAudioTrack(audioConfig);
       } catch (e) {
         AgoraConsole.error('createMicrophoneAudioTrack failed');
         e && AgoraConsole.log(e);

@@ -12,21 +12,13 @@ export class AgoraConsole {
 
   public static log(msg: any) {
     if (AgoraConsole.logLevel >= LOG_LEVEL.LOG_LEVEL_INFO) {
-      console.log(
-        `%c[${this.getDate()}] [Iris log]:`,
-        'color:#E040FB; font-weight: bold;',
-        msg
-      );
+      console.log(`\x1B[35m[${this.getDate()}][Iris log]:\x1B[30m ${msg}`);
     }
   }
 
   public static warn(msg: any) {
     if (AgoraConsole.logLevel >= LOG_LEVEL.LOG_LEVEL_WARN) {
-      console.log(
-        `%c[${this.getDate()}] [Iris warning]:`,
-        'color:#FFD600; font-weight: bold;',
-        msg
-      );
+      console.log(`\x1B[33m[${this.getDate()}][Iris warning]:\x1B[30m${msg}`);
     }
   }
 

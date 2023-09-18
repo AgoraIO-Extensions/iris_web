@@ -664,7 +664,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         let audioTrack = this._engine.entitiesContainer.getLocalAudioTrackByType(
           IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
         );
-        debugger;
         if (audioTrack) {
           let track = audioTrack.track as IMicrophoneAudioTrack;
           if (options.stopMicrophoneRecording && !track.muted) {
