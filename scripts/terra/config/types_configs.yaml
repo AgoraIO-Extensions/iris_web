@@ -11,6 +11,7 @@ parsers:
         exclude:
           - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/IAgoraH265Transcoder.h'
           - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/time_utils.h'
+          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/IAgoraMediaComponentFactory.h'
       customHeaders:
         - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/custom_headers/*.h'
 

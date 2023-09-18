@@ -37,7 +37,7 @@ export default function (
   args: any,
   parseResult: ParseResult
 ): RenderResult[] {
-  let cxxfiles = parseResult.nodes;
+  let cxxfiles = parseResult.nodes as CXXFile[];
   //移除不需要的文件
   let view = filterFile(cxxfiles).map((cxxfile: CXXFile) => {
     const cxxUserData: CXXFileUserData = {
