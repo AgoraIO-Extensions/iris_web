@@ -1,19 +1,38 @@
-include: shared:rtc_4.2.3/shared_configs.yaml
+parsers:
+  # CXXParser should always put first
+  - name: CXXParser
+    package: '@agoraio-extensions/cxx-parser'
+    args:
+      includeHeaderDirs:
+        - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include'
+      parseFiles:
+        include:
+          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/*.h'
+        exclude:
+          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/IAgoraH265Transcoder.h'
+          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/time_utils.h'
+      customHeaders:
+        - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/custom_headers/*.h'
 
-language: ts
+  - name: PointerToArrayParser
+    package: '@agoraio-extensions/terra_shared_configs'
+    args:
+      configJsonFilePath: ./pointer_to_array.json
+  - name: OrderNodeParser
+    package: '@agoraio-extensions/terra_shared_configs'
+  - name: FixEnumConstantParser
+    package: '@agoraio-extensions/terra_shared_configs'
+  - name: UpdateSimpleTypeParser
+    package: '@agoraio-extensions/terra_shared_configs'
+    args:
+      configJsonFilePath: ./param_type_list.json
+  - name: RemoveNodeParser
+    package: '@agoraio-extensions/terra_shared_configs'
+    args:
+      configJsonFilePath: ./remove_node_list.json
 
 # defines_macros:
 #   - __IRIS_WEB__
 
 renderers:
-  - ../index.ts
-parsers:
-  # - AddNodeParser
-  - PointerToArrayParser:
-      configJsonFilePath: ./pointer_to_array.json
-  - OrderNodeParser
-  - FixEnumConstantParser
-  - UpdateSimpleTypeParser:
-      configJsonFilePath: ./param_type_list.json
-  - RemoveNodeParser:
-      configJsonFilePath: ./remove_node_list.json
+  - path: ../index.ts

@@ -10,7 +10,7 @@ find ${OUTPUT_DIR} -type f -delete
 
 
 # packages/rtc/src/binding
-npm run build -- render \
+npm run build -- run \
     --config ${MY_PATH}/config/binding_configs.yaml \
     --output-dir=${OUTPUT_DIR} \
     --cache \

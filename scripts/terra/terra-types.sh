@@ -8,7 +8,7 @@ OUTPUT_DIR=$(realpath ${MY_PATH}/../../packages/@iris/rtc/generate)
 find ${OUTPUT_DIR} -type f -delete
 
 # packages/@iris/rtc/generate
-npm run build -- render \
+npm run build -- run \
     --config ${MY_PATH}/config/types_configs.yaml \
     --output-dir=${OUTPUT_DIR} \
     --cache \
