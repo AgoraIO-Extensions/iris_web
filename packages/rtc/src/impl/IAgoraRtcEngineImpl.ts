@@ -51,9 +51,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
 
   private returnResult(
-    code: number = 0,
+    isSuccess: boolean = true,
+    code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
     data: string = '{"result": 0}'
   ): Promise<CallIrisApiResult> {
+    if (!isSuccess) {
+      code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
+    }
     return Promise.resolve(new CallIrisApiResult(code, data));
   }
 
@@ -97,11 +101,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       );
 
       let result = AgoraRTC.checkSystemRequirements();
-      return this.returnResult(
-        result
-          ? -NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK
-          : -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_READY
-      );
+      return this.returnResult(result);
     };
 
     return this.execute(processFunc);
@@ -231,7 +231,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.mainClientVariables.token = token;
 
       let audioSource: IrisAudioSourceType =
-        IrisAudioSourceType.kAudioSourceTypeUnknow;
+        IrisAudioSourceType.kAudioSourceTypeUnknown;
       if (globalVariables.enabledAudio && globalVariables.enabledLocalAudio) {
         if (mainClientVariables.publishAudioTrack) {
           audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary;
@@ -928,7 +928,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       // this._engine.mainClientVariables.startPreviewed = true;
 
       let audioSource: IrisAudioSourceType =
-        IrisAudioSourceType.kAudioSourceTypeUnknow;
+        IrisAudioSourceType.kAudioSourceTypeUnknown;
       let videoSource: IrisVideoSourceType = sourceType as number;
 
       AgoraConsole.log(`startPreview2 videoSource: ${videoSource}`);
@@ -973,9 +973,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           'Start preview failed: create video and audio track failed'
         );
         err && AgoraConsole.error(err);
+        return this.returnResult(false);
         // this._engine.mainClientVariables.startPreviewed = false;
       }
-      // next();
 
       return this.returnResult();
     };
@@ -988,7 +988,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   stopPreview2(sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE): CallApiReturnType {
     let process = async (): Promise<CallIrisApiResult> => {
       let audioSource: IrisAudioSourceType =
-        IrisAudioSourceType.kAudioSourceTypeUnknow;
+        IrisAudioSourceType.kAudioSourceTypeUnknown;
       let videoSource: IrisVideoSourceType =
         IrisVideoSourceType.kVideoSourceTypeUnknown;
       if (
@@ -1899,7 +1899,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'adjustPlaybackSignalVolume not supported in this platform!'
     );
-    return this.returnResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   adjustUserPlaybackSignalVolume(
     uid: number,
@@ -2318,12 +2318,77 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   startScreenCapture(
     captureParams: NATIVE_RTC.ScreenCaptureParameters2
   ): CallApiReturnType {
-    let processFunc = async (): Promise<CallIrisApiResult> => {
-      //todo
-      return CallIrisApiResult.success();
+    this._engine.globalVariables.screenCaptureParameters2 = captureParams;
+    let process = async () => {
+      let audioType = captureParams.captureAudio
+        ? IrisAudioSourceType.kAudioSourceTypeScreenPrimary
+        : IrisAudioSourceType.kAudioSourceTypeUnknown;
+      let videoType = captureParams.captureVideo
+        ? IrisVideoSourceType.kVideoSourceTypeScreenPrimary
+        : IrisVideoSourceType.kVideoSourceTypeUnknown;
+      let clientType = IrisClientType.kClientMain;
+      try {
+        let trackArray = await ImplHelper.getOrCreateAudioAndVideoTrackAsync(
+          this._engine,
+          audioType,
+          videoType,
+          clientType,
+          null
+        );
+        AgoraConsole.log('ScreenShare track create success');
+        let mainClient = this._engine.entitiesContainer.getMainClient();
+        let publishScreenTrack =
+          this._engine.mainClientVariables.publishScreenTrack ||
+          this._engine.mainClientVariables.publishScreenCaptureVideo;
+
+        if (mainClient && mainClient.channelName && publishScreenTrack) {
+          let screenShareTrack = trackArray[1] as ILocalVideoTrack;
+          let entitiesContainer = this._engine.entitiesContainer;
+
+          if (!entitiesContainer.isMainClientPublishedVideoTrack()) {
+            //当前还主客户端还没有发流
+            let videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+            entitiesContainer.setMainClientLocalVideoTrack({
+              type: videoSource,
+              track: screenShareTrack,
+            });
+            let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+              {
+                channelName: mainClient.channelName,
+                client: mainClient,
+                track: screenShareTrack,
+                trackType: 'ILocalVideoTrack',
+              },
+              this._engine
+            );
+            entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
+
+            try {
+              await mainClient.publish(screenShareTrack);
+            } catch (reason) {
+              AgoraConsole.error('screen video track publish failed');
+              AgoraConsole.error(reason);
+              entitiesContainer.removeMainClientTrackEventHandlerByTrack(
+                screenShareTrack
+              );
+              entitiesContainer.clearMainClientLocalVideoTrack();
+            }
+          } else {
+            AgoraConsole.warn(
+              'main client already publish a video track. cant publish screen share video track again'
+            );
+          }
+        }
+      } catch (err) {
+        AgoraConsole.error('ScreenShare failed');
+        err && AgoraConsole.error(err);
+        return this.returnResult(false);
+      }
+
+      return this.returnResult();
     };
 
-    return this.execute(processFunc);
+    return this.execute(process);
   }
   updateScreenCapture(
     captureParams: NATIVE_RTC.ScreenCaptureParameters2

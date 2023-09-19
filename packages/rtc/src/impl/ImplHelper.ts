@@ -32,11 +32,11 @@ export class ImplHelper {
     connection: NATIVE_RTC.RtcConnection
   ): Promise<[ILocalAudioTrack, ILocalVideoTrack]> {
     if (
-      audioType == IrisAudioSourceType.kAudioSourceTypeUnknow &&
+      audioType == IrisAudioSourceType.kAudioSourceTypeUnknown &&
       videoType == IrisVideoSourceType.kVideoSourceTypeUnknown
     ) {
       AgoraConsole.warn(
-        'getOrCreateAudioAndVideoTrack  audio and video both unknow '
+        'getOrCreateAudioAndVideoTrack  audio and video both unknown '
       );
       return [null, null];
     }
@@ -71,17 +71,20 @@ export class ImplHelper {
           (videoPackage.track as ILocalVideoTrack).close();
         }
 
-        let trackArray: [ILocalVideoTrack, ILocalAudioTrack] = null;
+        let trackArray:
+          | [ILocalVideoTrack, ILocalAudioTrack]
+          | ILocalVideoTrack
+          | null = null;
         let audioTrack: ILocalAudioTrack = null;
         let videoTrack: ILocalVideoTrack = null;
         try {
           let conf: ScreenVideoTrackInitConfig = this.generateScreenVideoTrackInitConfig(
             engine
           );
-          trackArray = await AgoraRTC.createScreenVideoTrack(conf, 'enable');
+          trackArray = await AgoraRTC.createScreenVideoTrack(conf, 'auto');
         } catch (e) {
           AgoraConsole.error('createScreenVideoTrack with audio failed');
-          e && AgoraConsole.log(e);
+          throw e;
         }
         if (trackArray) {
           //每一个track都可能是null
@@ -131,7 +134,7 @@ export class ImplHelper {
         videoTrack = await AgoraRTC.createScreenVideoTrack(conf, 'disable');
       } catch (e) {
         AgoraConsole.error('createScreenVideoTrack failed');
-        e && AgoraConsole.log(e);
+        throw e;
       }
       if (videoTrack) {
         //这里的videoTrack有可能是null, 如果promise创建失败的话
@@ -157,14 +160,11 @@ export class ImplHelper {
           engine
         );
         videoTrack = await AgoraRTC.createCameraVideoTrack(videoConfig);
-
-        console.log(`createCameraVideoTrack 11111111 ${videoType}`);
       } catch (e) {
         AgoraConsole.error('createCameraVideoTrack failed');
-        e && AgoraConsole.log(e);
+        AgoraConsole.error(e);
       }
       if (videoTrack) {
-        console.log(`createCameraVideoTrack 2222222 ${videoType}`);
         //video 可能为null
         this.processVideoTrack(
           engine,
@@ -197,7 +197,7 @@ export class ImplHelper {
         audioTrack = await AgoraRTC.createMicrophoneAudioTrack(audioConfig);
       } catch (e) {
         AgoraConsole.error('createMicrophoneAudioTrack failed');
-        e && AgoraConsole.log(e);
+        throw e;
       }
       if (audioTrack) {
         this.processAudioTrack(engine, audioTrack, clientType);
