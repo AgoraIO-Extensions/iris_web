@@ -4,6 +4,7 @@ import AgoraRTC, {
   ClientRoleOptions,
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
+  ICameraVideoTrack,
   ILocalAudioTrack,
   ILocalVideoTrack,
   IMicrophoneAudioTrack,
@@ -683,7 +684,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
         this._engine.entitiesContainer.clearMainClientAll(channelId);
         try {
+          // webSDK在leave的时候会直接reset client 没有release方法
           await mainClient.leave();
+          AgoraConsole.log(`leaveChannel success`);
         } catch (e) {
           AgoraConsole.error(`leaveChannel failed:${e}`);
           this._engine.rtcEngineEventHandler.onError(
@@ -928,7 +931,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         IrisAudioSourceType.kAudioSourceTypeUnknow;
       let videoSource: IrisVideoSourceType = sourceType as number;
 
-      console.log(`startPreview2 videoSource: ${videoSource}`);
+      AgoraConsole.log(`startPreview2 videoSource: ${videoSource}`);
 
       try {
         await ImplHelper.getOrCreateAudioAndVideoTrackAsync(
@@ -1042,10 +1045,24 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   setVideoEncoderConfiguration(
     config: NATIVE_RTC.VideoEncoderConfiguration
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'setVideoEncoderConfiguration not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      this._engine.globalVariables.videoEncoderConfiguration = config;
+      this._engine.mainClientVariables.videoEncoderConfiguration = config;
+      //todo 找到所有mainClient 的 ICameraTrack。如果存在则 setEncoderConfiguration（） 一下
+      let videoTrack = this._engine.entitiesContainer.getLocalVideoTrackByType(
+        IrisVideoSourceType.kVideoSourceTypeCameraPrimary
+      );
+      if (videoTrack) {
+        let track = videoTrack.track as ICameraVideoTrack;
+        await track.setEncoderConfiguration(
+          AgoraTranslate.NATIVE_RTCVideoEncoderConfiguration2VideoEncoderConfiguration(
+            config
+          )
+        );
+      }
+      return this.returnResult();
+    };
+    return this.execute(processFunc);
   }
   setBeautyEffectOptions(
     enabled: boolean,
@@ -1099,8 +1116,39 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setupLocalVideo(canvas: NATIVE_RTC.VideoCanvas): CallApiReturnType {
-    AgoraConsole.warn('setupLocalVideo not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processVideoTrack = async (): Promise<CallIrisApiResult> => {
+      this._engine.entitiesContainer.addLocalVideoTrack({
+        element: canvas.view,
+        type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary,
+      });
+
+      let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
+      for (let trackPackage of trackPackages) {
+        let track = trackPackage.track as ILocalVideoTrack;
+        if (!track) {
+          continue;
+        }
+
+        if (track.enabled == false) {
+          try {
+            await track.setEnabled(true);
+          } catch (e) {
+            AgoraConsole.error('ILocalVideoTrack setEnable(true) failed');
+            AgoraConsole.error(e);
+          }
+        }
+
+        if (track.isPlaying) {
+          track.stop();
+        }
+
+        track.play(trackPackage.element);
+      }
+
+      return this.returnResult();
+    };
+
+    return this.execute(processVideoTrack);
   }
   setVideoScenario(
     scenarioType: NATIVE_RTC.VIDEO_APPLICATION_SCENARIO_TYPE

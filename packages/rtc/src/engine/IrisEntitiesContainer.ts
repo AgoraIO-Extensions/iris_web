@@ -265,7 +265,7 @@ export class IrisEntitiesContainer {
       for (let i = 0; i < this._localVideoTracks.length; i++) {
         let trackPack = this._localVideoTracks[i];
         let track = trackPack.track as ILocalVideoTrack;
-        console.log(
+        AgoraConsole.log(
           'clearLocalVideoTracks clearLocalVideoTracks clearLocalVideoTracks'
         );
         track.stop();
@@ -1078,15 +1078,12 @@ export class IrisEntitiesContainer {
     return false;
   }
 
-  //
   async destruction() {
     await this.clearLocalAudioTracks(true);
     await this.clearLocalVideoTracks(true);
 
-    console.log('main client leave 1111111');
     //mainClient
     if (this._mainClient && this._mainClient.channelName) {
-      console.log('main client leave 22222');
       try {
         await this._mainClient.leave();
         AgoraConsole.log('main client leave success');

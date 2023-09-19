@@ -1,6 +1,11 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
-import { CallApiReturnType } from 'iris-web-core';
+import {
+  AsyncTaskType,
+  CallApiReturnType,
+  CallIrisApiResult,
+} from 'iris-web-core';
 
+import { IrisVideoSourceType } from '../base/BaseType';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -11,6 +16,22 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   public constructor(engine: IrisRtcEngine) {
     this._engine = engine;
   }
+
+  putAction(action: Action) {
+    this._engine.actionQueue.putAction(action);
+  }
+
+  private execute(task: AsyncTaskType): CallApiReturnType {
+    return this._engine.executor.execute(task);
+  }
+
+  private returnResult(
+    code: number = 0,
+    data: string = '{"result": 0}'
+  ): Promise<CallIrisApiResult> {
+    return Promise.resolve(new CallIrisApiResult(code, data));
+  }
+
   enableContentInspectEx(
     enabled: boolean,
     config: NATIVE_RTC.ContentInspectConfig,
@@ -20,9 +41,6 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  putAction(action: Action) {
-    this._engine.actionQueue.putAction(action);
-  }
   joinChannelEx(
     token: string,
     connection: NATIVE_RTC.RtcConnection,
@@ -64,8 +82,54 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     canvas: NATIVE_RTC.VideoCanvas,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn('setupRemoteVideoEx not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processVideoTrack = async (): Promise<CallIrisApiResult> => {
+      let holder = {
+        element: canvas.view,
+        channelId: connection.channelId,
+        uid: canvas.uid,
+        type: IrisVideoSourceType.kVideoSourceTypeRemote,
+      };
+      this._engine.entitiesContainer.addOrUpdateRemoteVideoViewHolder(holder);
+
+      let mainClient = this._engine.entitiesContainer.getMainClient();
+      if (mainClient && mainClient.channelName == holder.channelId) {
+        for (let remoteUser of mainClient.remoteUsers) {
+          if (remoteUser.uid == holder.uid) {
+            if (remoteUser.videoTrack?.isPlaying == true) {
+              remoteUser.videoTrack.stop();
+            }
+            if (holder.element) {
+              remoteUser.videoTrack?.play(holder.element);
+            }
+            break;
+          }
+        }
+      }
+
+      let subClients = this._engine.entitiesContainer.getSubClients();
+      subClients?.walkT((channel_id, unuseUid, subClient) => {
+        if (
+          channel_id == connection.channelId &&
+          unuseUid == connection.localUid
+        ) {
+          let remoteUsers = subClient.remoteUsers;
+          for (let remoteUser of remoteUsers) {
+            if (remoteUser.uid == holder.uid) {
+              if (remoteUser.videoTrack?.isPlaying == true) {
+                remoteUser.videoTrack.stop();
+              }
+              if (holder.element) {
+                remoteUser.videoTrack?.play(holder.element);
+              }
+            }
+          }
+        }
+      });
+
+      return this.returnResult();
+    };
+
+    return this.execute(processVideoTrack);
   }
   muteRemoteAudioStreamEx(
     uid: number,

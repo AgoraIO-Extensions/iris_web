@@ -5,7 +5,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "rootDirs": ["./src", "./test"]
   },
   "exclude": ["node_modules"]
 }

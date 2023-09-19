@@ -72,8 +72,6 @@ export class AgoraTranslate {
         return AREAS.INDIA;
       case NATIVE_RTC.AREA_CODE.AREA_CODE_GLOB:
         return AREAS.GLOBAL;
-      case NATIVE_RTC.AREA_CODE_EX.AREA_CODE_OC:
-        return AREAS.OCEANIA;
       case NATIVE_RTC.AREA_CODE_EX.AREA_CODE_SA:
         return AREAS.SOUTH_AMERICA;
       case NATIVE_RTC.AREA_CODE_EX.AREA_CODE_AF:
@@ -149,17 +147,13 @@ export class AgoraTranslate {
   public static NATIVE_RTCVideoEncoderConfiguration2VideoEncoderConfiguration(
     conf: NATIVE_RTC.VideoEncoderConfiguration
   ): VideoEncoderConfiguration {
-    let ret: VideoEncoderConfiguration = {
+    return {
       width: conf.dimensions.width,
       height: conf.dimensions.height,
-      frameRate: {
-        ideal: conf.frameRate,
-        min: conf.frameRate,
-      },
+      frameRate: conf.frameRate,
       bitrateMax: conf.bitrate,
       bitrateMin: conf.minBitrate,
     };
-    return ret;
   }
 
   public static NATIVE_RTCVideoFormat2VideoEncoderConfiguration(
