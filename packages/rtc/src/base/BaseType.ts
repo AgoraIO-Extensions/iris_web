@@ -28,13 +28,6 @@ export enum IrisAudioSourceType {
   kAudioSourceTypeUnknown,
 }
 
-export enum IrisVideoFrameType {
-  kVideoFrameTypeYUV420,
-  kVideoFrameTypeYUV422,
-  kVideoFrameTypeRGBA,
-  kVideoFrameTypeBGRA,
-}
-
 export interface IrisVideoFrameBufferConfig {
   type: NATIVE_RTC.VIDEO_SOURCE_TYPE;
   id: UID;
@@ -44,7 +37,7 @@ export interface IrisVideoFrameBufferConfig {
 export type IrisVideoFrameBufferDelegateHandle = IrisVideoFrameBufferConfig;
 
 export interface IrisCVideoFrameBuffer {
-  type: IrisVideoFrameType;
+  type: NATIVE_RTC.VIDEO_FRAME_TYPE;
   OnVideoFrameReceived(
     video_track: ILocalVideoTrack | IRemoteVideoTrack,
     config: IrisVideoFrameBufferConfig,

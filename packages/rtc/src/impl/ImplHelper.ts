@@ -55,13 +55,13 @@ export class ImplHelper {
       } else {
         //屏幕共享 audio 和 video 应该要同步创建和同步销毁
         if (audioPackage) {
-          await engine.entitiesContainer.audioTrackWillClose(
+          await engine.entitiesContainer.processAudioTrackClose(
             audioPackage.track as ILocalAudioTrack
           );
           (audioPackage.track as ILocalAudioTrack).close();
         }
         if (videoPackage) {
-          await engine.entitiesContainer.videoTrackWillClose(
+          await engine.entitiesContainer.processVideoTrackClose(
             videoPackage.track as ILocalVideoTrack
           );
           (videoPackage.track as ILocalVideoTrack).close();

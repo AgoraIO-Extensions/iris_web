@@ -10,6 +10,8 @@ import {
 } from 'agora-rtc-sdk-ng';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { AgoraConsole } from '../util';
+
 import { CheckVideoVisibleResult } from '../web_sdk';
 
 export type TrackType =
@@ -18,11 +20,12 @@ export type TrackType =
   | 'IRemoteTrack'
   | 'IRemoteVideoTrack';
 export interface IrisTrackEventHandlerParam {
-  channelName: string;
+  channelName?: string;
   client?: IAgoraRTCClient;
   remoteUser?: IAgoraRTCRemoteUser;
   track: ITrack;
   trackType: TrackType;
+  videoSourceType?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
 }
 
 //一个track可能被多个Client发布出去，所以一个track可以同事存在多个TrackEventHandler
@@ -32,6 +35,7 @@ export class IrisTrackEventHandler {
   private _remoteUser: IAgoraRTCRemoteUser = null;
   private _track: ITrack = null;
   private _trackType: TrackType = 'ILocalTrack';
+  private _videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE;
 
   private _engine: IrisRtcEngine;
 
@@ -47,50 +51,68 @@ export class IrisTrackEventHandler {
     this._remoteUser = params.remoteUser;
     this._track = params.track;
     this._trackType = params.trackType;
+    this._videoSourceType = params.videoSourceType;
     this._engine = engine;
-
-    if (this._trackType == 'ILocalTrack') {
-      let track = this._track as ILocalTrack;
-      this.__onEventTrackEnded = this.onEventTrackEnded.bind(this);
-      track.on('track-ended', this.__onEventTrackEnded);
-    } else if (this._trackType == 'ILocalVideoTrack') {
-      let track = this._track as ILocalVideoTrack;
-      this.__onEventTrackEnded = this.onEventTrackEnded.bind(this);
-      track.on('track-ended', this.__onEventTrackEnded);
-      this.__onEventBeautyEffectOverload = this.onEventBeautyEffectOverload.bind(
-        this
-      );
-      this.__onEventVideoElementVisibleStatus2 = this.onEventVideoElementVisibleStatus2.bind(
-        this
-      );
-      track.on(
-        'video-element-visible-status',
-        this.__onEventVideoElementVisibleStatus2
-      );
-    } else if (this._trackType == 'IRemoteTrack') {
-      let track = this._track as IRemoteTrack;
-      this.__onEventFirstFrameDecoded = this.onEventFirstFrameDecoded.bind(
-        this
-      );
-      track.on('first-frame-decoded', this.__onEventFirstFrameDecoded);
-    } else if (this._trackType == 'IRemoteVideoTrack') {
-      let track = this._track as IRemoteVideoTrack;
-      this.__onEventFirstFrameDecoded = this.onEventFirstFrameDecoded.bind(
-        this
-      );
-      track.on('first-frame-decoded', this.__onEventFirstFrameDecoded);
-      this.__onEventVideoElementVisibleStatus = this.onEventVideoElementVisibleStatus.bind(
-        this
-      );
-      track.on(
-        'video-element-visible-status',
-        this.__onEventVideoElementVisibleStatus
-      );
+    switch (this._trackType) {
+      case 'ILocalTrack':
+        this.__onEventTrackEnded = this.onEventTrackEnded.bind(this);
+        this._track.on('track-ended', this.__onEventTrackEnded);
+        break;
+      case 'ILocalVideoTrack':
+        this.__onEventTrackEnded = this.onEventTrackEnded.bind(this);
+        this._track.on('track-ended', this.__onEventTrackEnded);
+        this.__onEventBeautyEffectOverload = this.onEventBeautyEffectOverload.bind(
+          this
+        );
+        this.__onEventVideoElementVisibleStatus2 = this.onEventVideoElementVisibleStatus2.bind(
+          this
+        );
+        this._track.on(
+          'video-element-visible-status',
+          this.__onEventVideoElementVisibleStatus2
+        );
+        break;
+      case 'IRemoteTrack':
+        this.__onEventFirstFrameDecoded = this.onEventFirstFrameDecoded.bind(
+          this
+        );
+        this._track.on('first-frame-decoded', this.__onEventFirstFrameDecoded);
+        break;
+      case 'IRemoteVideoTrack':
+        this.__onEventFirstFrameDecoded = this.onEventFirstFrameDecoded.bind(
+          this
+        );
+        this._track.on('first-frame-decoded', this.__onEventFirstFrameDecoded);
+        this.__onEventVideoElementVisibleStatus = this.onEventVideoElementVisibleStatus.bind(
+          this
+        );
+        this._track.on(
+          'video-element-visible-status',
+          this.__onEventVideoElementVisibleStatus
+        );
+        break;
     }
   }
 
   onEventTrackEnded() {
-    //目前没有找到对应的回调
+    AgoraConsole.log(`track-ended`);
+    switch (this._trackType) {
+      case 'ILocalTrack':
+        this.__onEventTrackEnded = this.onEventTrackEnded.bind(this);
+        this._track.on('track-ended', this.__onEventTrackEnded);
+        break;
+      case 'ILocalVideoTrack':
+        //只处理传了videoSourceType的
+        if (typeof this._videoSourceType !== 'undefined') {
+          this._engine.rtcEngineEventHandler.onLocalVideoStateChanged(
+            this._videoSourceType,
+            NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE
+              .LOCAL_VIDEO_STREAM_STATE_STOPPED,
+            0
+          );
+        }
+        break;
+    }
   }
 
   onEventBeautyEffectOverload() {

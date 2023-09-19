@@ -22,6 +22,7 @@ import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler'
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 
 import { IRtcEngineExtensions } from '../extensions/IAgoraRtcEngineExtensions';
+import { TrackHelper } from '../helper/TrackHelper';
 import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
 import { Action } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -790,7 +791,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           }
 
           let track = trackPackage.track as ILocalVideoTrack;
-          if (track.isPlaying == false) {
+          if (!track.isPlaying) {
             try {
               // TODO(littlegnal): This is a WebGL specific requirement
               // await track.play(this._engine.generateVideoTrackLabelOrHtmlElement("", 0, trackPackage.type));
@@ -799,13 +800,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               AgoraConsole.error(e);
             }
           }
-          if (track.enabled == false) {
-            try {
-              await track.setEnabled(true);
-            } catch (e) {
-              AgoraConsole.error('ILocalVideoTrack setEnable(true) failed');
-              AgoraConsole.error(e);
-            }
+          if (!track.enabled) {
+            await TrackHelper.setEnabled(track, true);
           }
         }
       }
@@ -858,13 +854,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
       for (let trackPackage of trackPackages) {
         let track = trackPackage.track as ILocalVideoTrack;
-        if (track.enabled == true) {
-          try {
-            await track.setEnabled(false);
-          } catch (e) {
-            AgoraConsole.error('ILocalVideoTrack setEnable(false) failed');
-            AgoraConsole.error(e);
-          }
+        if (track.enabled) {
+          await TrackHelper.setEnabled(track, false);
         }
       }
 
@@ -906,26 +897,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this.startPreview2(NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA);
   }
   startPreview2(sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE): CallApiReturnType {
+    let mainClient = this._engine.entitiesContainer.getMainClient();
     let process = async (): Promise<CallIrisApiResult> => {
       if (this._engine.globalVariables.enabledVideo == false) {
         AgoraConsole.error('call enableVideo(true) before startPreview');
-        // next();
         return;
       }
-
-      // if (this._engine.mainClientVariables.startPreviewed == true) {
-      //     AgoraConsole.error("you already call startPreview");
-      //     next();
-      //     return;
-      // }
 
       if (sourceType >= 4) {
         AgoraConsole.error('Invalid source type');
-        // next();
-        return;
+        return this.returnResult(false);
       }
-
-      // this._engine.mainClientVariables.startPreviewed = true;
 
       let audioSource: IrisAudioSourceType =
         IrisAudioSourceType.kAudioSourceTypeUnknown;
@@ -949,13 +931,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             continue;
           }
 
-          if (track.enabled == false) {
-            try {
-              await track.setEnabled(true);
-            } catch (e) {
-              AgoraConsole.error('ILocalVideoTrack setEnable(true) failed');
-              AgoraConsole.error(e);
-            }
+          if (!track.enabled) {
+            await TrackHelper.setEnabled(track, true);
           }
 
           if (track.isPlaying) {
@@ -964,17 +941,34 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
           if (trackPackage.element) {
             track.play(trackPackage.element);
+
+            let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+              {
+                client: mainClient,
+                track: track,
+                trackType: 'ILocalVideoTrack',
+                videoSourceType: sourceType,
+              },
+              this._engine
+            );
+            this._engine.entitiesContainer.addMainClientTrackEventHandler(
+              trackEventHandler
+            );
+
+            AgoraConsole.log(
+              `startPreview2 videoSource: ${videoSource} success`
+            );
+            this._engine.rtcEngineEventHandler.onLocalVideoStateChanged(
+              videoSource,
+              NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE
+                .LOCAL_VIDEO_STREAM_STATE_ENCODING,
+              0
+            );
           }
         }
-
-        AgoraConsole.log('start preview createCameraVideoTrack success');
       } catch (err) {
-        AgoraConsole.error(
-          'Start preview failed: create video and audio track failed'
-        );
-        err && AgoraConsole.error(err);
+        AgoraConsole.error(err);
         return this.returnResult(false);
-        // this._engine.mainClientVariables.startPreviewed = false;
       }
 
       return this.returnResult();
@@ -1009,10 +1003,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       if (audioTrackPackage) {
         let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
         if (audioTrack.enabled) {
-          audioTrack
-            .setEnabled(false)
-            .then(() => {})
-            .catch(() => {});
+          await TrackHelper.setEnabled(audioTrack, false);
         }
       }
 
@@ -1022,10 +1013,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       if (videoTrackPackage) {
         let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
         if (videoTrack.enabled) {
-          videoTrack
-            .setEnabled(false)
-            .then(() => {})
-            .catch(() => {});
+          await TrackHelper.setEnabled(videoTrack, false);
         }
       }
       return this.returnResult();
@@ -1119,7 +1107,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
       this._engine.entitiesContainer.addLocalVideoTrack({
         element: canvas.view,
-        type: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
+        type:
+          canvas.sourceType ||
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
       });
 
       let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
@@ -1128,14 +1118,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         if (!track) {
           continue;
         }
-
-        if (track.enabled == false) {
-          try {
-            await track.setEnabled(true);
-          } catch (e) {
-            AgoraConsole.error('ILocalVideoTrack setEnable(true) failed');
-            AgoraConsole.error(e);
-          }
+        if (!track.enabled) {
+          await TrackHelper.setEnabled(track, true);
         }
 
         if (track.isPlaying) {
@@ -1165,13 +1149,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         for (let trackPackage of trackPackages) {
           let track = trackPackage.track as ILocalAudioTrack;
           if (!track.enabled) {
-            try {
-              await track.setEnabled(true);
-            } catch (e) {
-              AgoraConsole.error(
-                `track${track.getTrackId()} setEnable(true) failed`
-              );
-            }
+            await TrackHelper.setEnabled(track, true);
           }
         }
       }
@@ -1229,16 +1207,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();
       for (let trackPackage of trackPackages) {
         let track = trackPackage.track as ILocalAudioTrack;
-        if (track.enabled != enabled) {
-          try {
-            await track.setEnabled(enabled);
-          } catch (e) {
-            AgoraConsole.error(
-              'ILocalAudioTrack setEnable{' + enabled + '} failed'
-            );
-            AgoraConsole.error(e);
-          }
-        }
+        await TrackHelper.setEnabled(track, enabled);
       }
       return this.returnResult();
     };
@@ -1246,7 +1215,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this.execute(processFunc);
   }
   muteLocalAudioStream(mute: boolean): CallApiReturnType {
-    AgoraConsole.warn('muteLocalAudioStream not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   muteAllRemoteAudioStreams(mute: boolean): CallApiReturnType {
@@ -2353,16 +2321,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               type: videoSource,
               track: screenShareTrack,
             });
-            let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
-              {
-                channelName: mainClient.channelName,
-                client: mainClient,
-                track: screenShareTrack,
-                trackType: 'ILocalVideoTrack',
-              },
-              this._engine
+            entitiesContainer.addMainClientTrackEventHandler(
+              new IrisTrackEventHandler(
+                {
+                  channelName: mainClient.channelName,
+                  client: mainClient,
+                  track: screenShareTrack,
+                  trackType: 'ILocalVideoTrack',
+                },
+                this._engine
+              )
             );
-            entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
 
             try {
               await mainClient.publish(screenShareTrack);
@@ -2412,13 +2381,50 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   stopScreenCapture(): CallApiReturnType {
+    return this.stopScreenCapture2(
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
+    );
+  }
+
+  stopScreenCapture2(
+    sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE
+  ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      //todo
-      return CallIrisApiResult.success();
+      let entitiesContainer = this._engine.entitiesContainer;
+
+      let audioTrackPackage = entitiesContainer.getLocalAudioTrackByType(
+        IrisAudioSourceType.kAudioSourceTypeScreenPrimary
+      );
+      if (audioTrackPackage) {
+        await entitiesContainer.processAudioTrackClose(
+          audioTrackPackage.track as ILocalAudioTrack
+        );
+        this._engine.rtcEngineEventHandler.onLocalAudioStateChanged(
+          NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE.LOCAL_AUDIO_STREAM_STATE_STOPPED,
+          0
+        );
+      }
+
+      let videoTrackPackage = entitiesContainer.getLocalVideoTrackByType(
+        sourceType
+      );
+      if (entitiesContainer.getLocalVideoTrackByType(sourceType)) {
+        await entitiesContainer.processVideoTrackClose(
+          videoTrackPackage.track as ILocalVideoTrack
+        );
+        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged(
+          sourceType,
+          NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_STOPPED,
+          0
+        );
+      }
+
+      return this.returnResult();
     };
 
     return this.execute(processFunc);
   }
+
   getCallId(callId: string): CallApiReturnType {
     AgoraConsole.warn('getCallId not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -2519,12 +2525,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     };
 
     return this.execute(processFunc);
-  }
-  stopScreenCapture2(
-    sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE
-  ): CallApiReturnType {
-    AgoraConsole.warn('stopScreenCapture2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   getConnectionState(): CallApiReturnType {
     AgoraConsole.warn('getConnectionState not supported in this platform!');

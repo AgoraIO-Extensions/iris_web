@@ -52,8 +52,8 @@ export default function (
     cxxfile.nodes = cxxfile.nodes.map((node: CXXTerraNode) => {
       let isCallback = isMatch(node.name, 'isCallback');
 
-      if (node.name === 'IRtcEngine') {
-        // debugger;
+      if (node.name === 'VIDEO_SOURCE_TYPE') {
+        debugger;
       }
 
       if (node.__TYPE === CXXTYPE.Clazz) {

@@ -119,8 +119,8 @@ importers:
   scripts/terra:
     dependencies:
       '@agoraio-extensions/cxx-parser':
-        specifier: '>=0.1.6'
-        version: 0.1.6(@agoraio-extensions/terra-core@0.1.2)
+        specifier: '>=0.1.7'
+        version: 0.1.7(@agoraio-extensions/terra-core@0.1.2)
       '@agoraio-extensions/terra':
         specifier: '>=0.1.2'
         version: 0.1.2(@agoraio-extensions/terra-core@0.1.2)
@@ -128,8 +128,8 @@ importers:
         specifier: '>=0.1.2'
         version: 0.1.2
       '@agoraio-extensions/terra_shared_configs':
-        specifier: git+https://github.com/AgoraIO-Extensions/terra_shared_configs.git#littlegnal/add-cxx-parsers
-        version: github.com/AgoraIO-Extensions/terra_shared_configs/92b825c17d163f9279ca9ec4b68c64ebadae61b5
+        specifier: git+https://github.com/AgoraIO-Extensions/terra_shared_configs.git
+        version: github.com/AgoraIO-Extensions/terra_shared_configs/ba7762516e941e15ea519c2ddf688db7d907343e
       ts-node:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@18.17.9)(typescript@5.1.6)
@@ -148,8 +148,8 @@ packages:
     resolution: {integrity: sha512-/62yikz7NLScCGAAST5SHdnjaDJQBDq0M2muyRTpf2VQhw6StBg2ALiu73zSJQ4fMVLA+0uBhBHAle7Wg+2kSg==}
     dev: true
 
-  /@agoraio-extensions/cxx-parser@0.1.6(@agoraio-extensions/terra-core@0.1.2):
-    resolution: {integrity: sha512-bcAoytTvcfNAWW7BaKNbXeTpAjhWPvqc3gx7cZ7csGsXWy9rZsKK9V1bmEYrxTLHEQ9qVQtW6UNmUlTc2uQt8A==, tarball: https://npm.pkg.github.com/download/@agoraio-extensions/cxx-parser/0.1.6/b399112e276e6417fccae6010fe9a8c073106351}
+  /@agoraio-extensions/cxx-parser@0.1.7(@agoraio-extensions/terra-core@0.1.2):
+    resolution: {integrity: sha512-Mz53ngTpZ3RKmz7atBvo5M6wWU32YRgpcNF2db6+UAY343mlWFSzsLRa9ozYUNJw1ve4TIs6wXsSGG5eh9MRYQ==, tarball: https://npm.pkg.github.com/download/@agoraio-extensions/cxx-parser/0.1.7/ecd565913ae7c8c524a65195cc91b51487ce7c3e}
     peerDependencies:
       '@agoraio-extensions/terra-core': '>=0.1.0'
     dependencies:
@@ -6984,13 +6984,13 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/AgoraIO-Extensions/terra_shared_configs/92b825c17d163f9279ca9ec4b68c64ebadae61b5:
-    resolution: {commit: 92b825c17d163f9279ca9ec4b68c64ebadae61b5, repo: git+ssh://git@github.com/AgoraIO-Extensions/terra_shared_configs.git, type: git}
+  github.com/AgoraIO-Extensions/terra_shared_configs/ba7762516e941e15ea519c2ddf688db7d907343e:
+    resolution: {commit: ba7762516e941e15ea519c2ddf688db7d907343e, repo: git+ssh://git@github.com/AgoraIO-Extensions/terra_shared_configs.git, type: git}
     name: '@agoraio-extensions/terra_shared_configs'
     version: 1.0.0
     requiresBuild: true
     dependencies:
-      '@agoraio-extensions/cxx-parser': 0.1.6(@agoraio-extensions/terra-core@0.1.2)
+      '@agoraio-extensions/cxx-parser': 0.1.7(@agoraio-extensions/terra-core@0.1.2)
       '@agoraio-extensions/terra-core': 0.1.2
       '@types/mustache': 4.2.2
       '@types/node': 20.6.2

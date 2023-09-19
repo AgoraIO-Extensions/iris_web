@@ -17,7 +17,7 @@
     "typescript": "^5.1.6",
     "@agoraio-extensions/terra": ">=0.1.2",
     "@agoraio-extensions/terra-core": ">=0.1.2",
-    "@agoraio-extensions/terra_shared_configs": "git+https://github.com/AgoraIO-Extensions/terra_shared_configs.git#littlegnal/add-cxx-parsers",
-    "@agoraio-extensions/cxx-parser": ">=0.1.6"
+    "@agoraio-extensions/terra_shared_configs": "git+https://github.com/AgoraIO-Extensions/terra_shared_configs.git",
+    "@agoraio-extensions/cxx-parser": ">=0.1.7"
   }
 }

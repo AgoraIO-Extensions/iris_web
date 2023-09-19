@@ -8,6 +8,8 @@ import {
   UID,
 } from 'agora-rtc-sdk-ng';
 
+import { CallIrisApiResult } from 'iris-web-core';
+
 import {
   AudioTrackPackage,
   IRIS_VIDEO_PROCESS_ERR,
@@ -911,7 +913,7 @@ export class IrisEntitiesContainer {
   }
 
   //  当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 并且停止发流 记住是所有哦
-  async audioTrackWillClose(audioTrack: ILocalAudioTrack) {
+  async processAudioTrackClose(audioTrack: ILocalAudioTrack) {
     //local
     this.removeLocalAudioTrackByTrack(audioTrack);
 
@@ -926,7 +928,11 @@ export class IrisEntitiesContainer {
         await this._mainClient.unpublish(audioTrack);
         AgoraConsole.log('unpublish success');
       } catch (e) {
-        AgoraConsole.error('unpublish error');
+        AgoraConsole.error(e);
+        Promise.resolve(
+          new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+        );
+        throw e;
       }
     }
 
@@ -956,26 +962,33 @@ export class IrisEntitiesContainer {
     );
 
     let container = this._subClients.getContainer();
-    for (let e of container) {
-      let channelId = e[0];
-      let clients = e[1];
-      for (let c of clients) {
-        let uid = c[0];
-        let client = c[1];
+    for (let _container of container) {
+      let clients = _container[1];
+      for (let _client of clients) {
+        let client = _client[1];
         if (client.localTracks.indexOf(audioTrack) != -1) {
           try {
             await client.unpublish(audioTrack);
             AgoraConsole.log('unpublish success');
           } catch (e) {
-            AgoraConsole.error('unpublish failed');
+            AgoraConsole.error(e);
+            Promise.resolve(
+              new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+            );
+            throw e;
           }
         }
       }
     }
+    //删除完毕后进行stop,close
+    if (audioTrack.isPlaying) {
+      audioTrack.stop();
+    }
+    audioTrack.close();
   }
 
   // 当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 记住是所有哦
-  async videoTrackWillClose(videoTrack: ILocalVideoTrack) {
+  async processVideoTrackClose(videoTrack: ILocalVideoTrack) {
     //local
     this.removeLocalVideoTrackByTrack(videoTrack);
 
@@ -992,7 +1005,11 @@ export class IrisEntitiesContainer {
         await this._mainClient.unpublish(videoTrack);
         AgoraConsole.log('unpublish success');
       } catch (e) {
-        AgoraConsole.error('unpublish error');
+        AgoraConsole.error(e);
+        Promise.resolve(
+          new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+        );
+        throw e;
       }
     }
 
@@ -1027,22 +1044,29 @@ export class IrisEntitiesContainer {
     );
 
     let container = this._subClients.getContainer();
-    for (let e of container) {
-      let channelId = e[0];
-      let clients = e[1];
-      for (let c of clients) {
-        let uid = c[0];
-        let client = c[1];
+    for (let _container of container) {
+      let clients = _container[1];
+      for (let _client of clients) {
+        let client = _client[1];
         if (client.localTracks.indexOf(videoTrack) != -1) {
           try {
             await client.unpublish(videoTrack);
             AgoraConsole.log('unpublish success');
           } catch (e) {
-            AgoraConsole.error('unpublish failed');
+            AgoraConsole.error(e);
+            Promise.resolve(
+              new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+            );
+            throw e;
           }
         }
       }
     }
+    //删除完毕后进行stop,close
+    if (videoTrack.isPlaying) {
+      videoTrack.stop();
+    }
+    videoTrack.close();
   }
 
   getLocalAudioTrackType(track: ILocalAudioTrack): IrisAudioSourceType {
