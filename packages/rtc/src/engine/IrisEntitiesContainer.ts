@@ -1050,7 +1050,7 @@ export class IrisEntitiesContainer {
         return e.type;
       }
     }
-    return IrisAudioSourceType.kAudioSourceTypeUnknow;
+    return IrisAudioSourceType.kAudioSourceTypeUnknown;
   }
 
   getLocalVideoTrackType(track: ILocalVideoTrack): IrisVideoSourceType {

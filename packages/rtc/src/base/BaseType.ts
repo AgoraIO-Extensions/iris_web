@@ -43,7 +43,7 @@ export enum IrisAudioSourceType {
   kAudioSourceTypeScreenPrimary,
   kAudioSourceTypeScreenSecondary,
   kAudioSourceTypeCustom,
-  kAudioSourceTypeUnknow,
+  kAudioSourceTypeUnknown,
 }
 
 export enum IrisVideoFrameType {

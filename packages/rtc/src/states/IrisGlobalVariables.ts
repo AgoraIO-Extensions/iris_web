@@ -53,6 +53,7 @@ export class IrisGlobalVariables {
   screenCaptureContentHint: NATIVE_RTC.VIDEO_CONTENT_HINT = null;
 
   screenCaptureParameters: NATIVE_RTC.ScreenCaptureParameters = null;
+  screenCaptureParameters2: NATIVE_RTC.ScreenCaptureParameters2 = null;
 
   cloudProxy: NATIVE_RTC.CLOUD_PROXY_TYPE = null;
 
