@@ -3,7 +3,7 @@ import { ChannelMediaRelayError, ChannelMediaRelayEvent, ChannelMediaRelayState,
 
 
 
-import { IrisClientType, IrisVideoSourceType } from "../base/BaseType";
+import { IrisClientType } from "../base/BaseType";
 import { IrisRtcEngine } from "../engine/IrisRtcEngine";
 import { AgoraTranslate } from "../util/AgoraTranslate";
 import { InspectState } from "../web_sdk";
@@ -238,9 +238,9 @@ export class IrisClientEventHandler {
                 this._client.subscribe(user, mediaType)
                     .then(() => {
                         console.log("onEventUserPublished subscribe video success");
-                        // user.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(this._client.channelName, user.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote));
+                        // user.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(this._client.channelName, user.uid as number, NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE));
 
-                        this._engine.entitiesContainer.addOrUpdateRemoteVideoViewHolder({ channelId: this._client.channelName, uid: user.uid, type: IrisVideoSourceType.kVideoSourceTypeRemote });
+                        this._engine.entitiesContainer.addOrUpdateRemoteVideoViewHolder({ channelId: this._client.channelName, uid: user.uid, type: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE });
                         for (let holder of this._engine.entitiesContainer.getRemoteVideoViewHolders()) {
                             if (holder.element && holder.channelId == this._client.channelName && holder.uid == user.uid) {
                                 user.videoTrack.play(holder.element);

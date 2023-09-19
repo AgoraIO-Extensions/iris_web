@@ -11,11 +11,7 @@ import {
   IrisEventHandlerManager,
 } from 'iris-web-core';
 
-import {
-  IrisVideoFrameBufferConfig,
-  IrisVideoSourceType,
-  VideoParams,
-} from '../base/BaseType';
+import { IrisVideoFrameBufferConfig, VideoParams } from '../base/BaseType';
 
 import { IMediaEngineDispatch } from '../binding/IAgoraMediaEngineDispatch';
 import {
@@ -67,7 +63,7 @@ export type CallApiAsyncType = (
 export type GenerateVideoTrackLabelOrHtmlElementCb = (
   channelName: string,
   uid: number,
-  type: IrisVideoSourceType
+  type: NATIVE_RTC.VIDEO_SOURCE_TYPE
 ) => string;
 
 export class IrisRtcEngine implements ApiInterceptor {
@@ -275,7 +271,7 @@ export class IrisRtcEngine implements ApiInterceptor {
   public generateVideoTrackLabelOrHtmlElement(
     channelName: string,
     uid: number,
-    type: IrisVideoSourceType
+    type: NATIVE_RTC.VIDEO_SOURCE_TYPE
   ): string {
     if (this._generateVideoTrackLabelOrHtmlElementCb) {
       return this._generateVideoTrackLabelOrHtmlElementCb(

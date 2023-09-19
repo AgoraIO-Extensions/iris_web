@@ -13,11 +13,7 @@ import AgoraRTC, {
   VideoPlayerConfig,
 } from 'agora-rtc-sdk-ng';
 
-import {
-  IrisAudioSourceType,
-  IrisClientType,
-  IrisVideoSourceType,
-} from '../base/BaseType';
+import { IrisAudioSourceType, IrisClientType } from '../base/BaseType';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -27,13 +23,13 @@ export class ImplHelper {
   public static async getOrCreateAudioAndVideoTrackAsync(
     engine: IrisRtcEngine,
     audioType: IrisAudioSourceType,
-    videoType: IrisVideoSourceType,
+    videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
     clientType: IrisClientType,
     connection: NATIVE_RTC.RtcConnection
   ): Promise<[ILocalAudioTrack, ILocalVideoTrack]> {
     if (
       audioType == IrisAudioSourceType.kAudioSourceTypeUnknown &&
-      videoType == IrisVideoSourceType.kVideoSourceTypeUnknown
+      videoType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN
     ) {
       AgoraConsole.warn(
         'getOrCreateAudioAndVideoTrack  audio and video both unknown '
@@ -42,7 +38,7 @@ export class ImplHelper {
     }
 
     if (
-      videoType == IrisVideoSourceType.kVideoSourceTypeScreenPrimary &&
+      videoType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY &&
       audioType == IrisAudioSourceType.kAudioSourceTypeScreenPrimary
     ) {
       let audioPackage = engine.entitiesContainer.getLocalAudioTrackByType(
@@ -123,8 +119,8 @@ export class ImplHelper {
         videoType
       ).track as ILocalVideoTrack;
     } else if (
-      videoType == IrisVideoSourceType.kVideoSourceTypeScreenPrimary ||
-      videoType == IrisVideoSourceType.kVideoSourceTypeScreenSecondary
+      videoType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY ||
+      videoType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY
     ) {
       let videoTrack: ILocalVideoTrack = null;
       try {
@@ -151,8 +147,8 @@ export class ImplHelper {
       }
       retVideoTrack = videoTrack;
     } else if (
-      videoType == IrisVideoSourceType.kVideoSourceTypeCameraPrimary ||
-      videoType == IrisVideoSourceType.kVideoSourceTypeCameraSecondary
+      videoType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY ||
+      videoType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY
     ) {
       let videoTrack: ICameraVideoTrack = null;
       try {
@@ -262,7 +258,7 @@ export class ImplHelper {
     engine: IrisRtcEngine,
     videoTrack: ILocalVideoTrack,
     type: IrisClientType,
-    videoSource: IrisVideoSourceType
+    videoSource: NATIVE_RTC.VIDEO_SOURCE_TYPE
   ) {
     let globalVariables = engine.globalVariables;
     let mainClientVariables = engine.mainClientVariables;
@@ -333,7 +329,7 @@ export class ImplHelper {
     engine: IrisRtcEngine,
     videoTrack: ICameraVideoTrack,
     type: IrisClientType,
-    videoSource: IrisVideoSourceType,
+    videoSource: NATIVE_RTC.VIDEO_SOURCE_TYPE,
     connection: NATIVE_RTC.RtcConnection
   ) {
     let globalVariables = engine.globalVariables;

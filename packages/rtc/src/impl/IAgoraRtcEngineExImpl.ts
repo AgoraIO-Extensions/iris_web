@@ -5,7 +5,6 @@ import {
   CallIrisApiResult,
 } from 'iris-web-core';
 
-import { IrisVideoSourceType } from '../base/BaseType';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { Action } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -87,7 +86,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         element: canvas.view,
         channelId: connection.channelId,
         uid: canvas.uid,
-        type: IrisVideoSourceType.kVideoSourceTypeRemote,
+        type: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
       };
       this._engine.entitiesContainer.addOrUpdateRemoteVideoViewHolder(holder);
 

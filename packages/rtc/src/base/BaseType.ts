@@ -1,3 +1,4 @@
+import * as NATIVE_RTC from '@iris/web-rtc';
 import {
   ILocalAudioTrack,
   ILocalVideoTrack,
@@ -11,25 +12,6 @@ export enum IRIS_VIDEO_PROCESS_ERR {
   ERR_NULL_POINTER = 1,
   ERR_SIZE_NOT_MATCHING = 2,
   ERR_BUFFER_EMPTY = 5,
-}
-
-export enum IrisVideoSourceType {
-  kVideoSourceTypeCameraPrimary,
-  kVideoSourceTypeCameraSecondary,
-  kVideoSourceTypeScreenPrimary,
-  kVideoSourceTypeScreenSecondary,
-  kVideoSourceTypeCustom,
-  kVideoSourceTypeMediaPlayer,
-  kVideoSourceTypeRtcImagePng,
-  kVideoSourceTypeRtcImageJpeg,
-  kVideoSourceTypeRtcImageGif,
-  kVideoSourceTypeRemote,
-  kVideoSourceTypeTranscoded,
-  // kVideoSourceTypePreEncode,
-  // kVideoSourceTypePreEncodeSecondaryCamera,
-  // kVideoSourceTypePreEncodeScreen,
-  // kVideoSourceTypePreEncodeSecondaryScreen,
-  kVideoSourceTypeUnknown = 100,
 }
 
 export enum IrisClientType {
@@ -54,7 +36,7 @@ export enum IrisVideoFrameType {
 }
 
 export interface IrisVideoFrameBufferConfig {
-  type: IrisVideoSourceType;
+  type: NATIVE_RTC.VIDEO_SOURCE_TYPE;
   id: UID;
   key: string;
 }
@@ -84,7 +66,7 @@ export interface Size {
 
 export interface VideoTrackPackage {
   element?: string;
-  type?: IrisVideoSourceType;
+  type?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
   track?: ILocalVideoTrack | IRemoteVideoTrack;
 }
 
@@ -92,7 +74,7 @@ export interface VideoViewHolder {
   element?: string;
   channelId?: string;
   uid?: UID;
-  type?: IrisVideoSourceType;
+  type?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
 }
 
 export interface AudioTrackPackage {

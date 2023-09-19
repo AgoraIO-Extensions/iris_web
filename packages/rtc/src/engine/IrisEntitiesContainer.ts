@@ -13,7 +13,6 @@ import {
   IRIS_VIDEO_PROCESS_ERR,
   IrisAudioSourceType,
   IrisVideoFrameBufferConfig,
-  IrisVideoSourceType,
   VideoParams,
   VideoTrackPackage,
   VideoViewHolder,
@@ -220,7 +219,9 @@ export class IrisEntitiesContainer {
     this._localVideoTracks.push(trackPackage);
   }
 
-  getLocalVideoTrackByType(type: IrisVideoSourceType): VideoTrackPackage {
+  getLocalVideoTrackByType(
+    type: NATIVE_RTC.VIDEO_SOURCE_TYPE
+  ): VideoTrackPackage {
     for (let trackPack of this._localVideoTracks) {
       if (trackPack.type == type && trackPack.track) {
         return trackPack;
@@ -249,7 +250,7 @@ export class IrisEntitiesContainer {
     }
   }
 
-  removeLocalVideoTrackByType(type: IrisVideoSourceType) {
+  removeLocalVideoTrackByType(type: NATIVE_RTC.VIDEO_SOURCE_TYPE) {
     for (let i = 0; i < this._localVideoTracks.length; i++) {
       let trackPack = this._localVideoTracks[i];
       if (trackPack.type == type) {
@@ -1053,13 +1054,15 @@ export class IrisEntitiesContainer {
     return IrisAudioSourceType.kAudioSourceTypeUnknown;
   }
 
-  getLocalVideoTrackType(track: ILocalVideoTrack): IrisVideoSourceType {
+  getLocalVideoTrackType(
+    track: ILocalVideoTrack
+  ): NATIVE_RTC.VIDEO_SOURCE_TYPE {
     for (let e of this._localVideoTracks) {
       if (e.track == track) {
         return e.type;
       }
     }
-    return IrisVideoSourceType.kVideoSourceTypeUnknown;
+    return NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN;
   }
 
   isMainClientOrSubClient(connection: NATIVE_RTC.RtcConnection): boolean {

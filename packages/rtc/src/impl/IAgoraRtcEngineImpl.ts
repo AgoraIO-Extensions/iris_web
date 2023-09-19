@@ -15,11 +15,7 @@ import {
   CallIrisApiResult,
 } from 'iris-web-core';
 
-import {
-  IrisAudioSourceType,
-  IrisClientType,
-  IrisVideoSourceType,
-} from '../base/BaseType';
+import { IrisAudioSourceType, IrisClientType } from '../base/BaseType';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
 
@@ -238,17 +234,21 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         }
       }
 
-      let videoSource: IrisVideoSourceType =
-        IrisVideoSourceType.kVideoSourceTypeUnknown;
+      let videoSource: NATIVE_RTC.VIDEO_SOURCE_TYPE =
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN;
       if (globalVariables.enabledVideo && globalVariables.enabledLocalVideo) {
         if (mainClientVariables.publishCameraTrack) {
-          videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
+          videoSource =
+            NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY;
         } else if (mainClientVariables.publishSecondaryCameraTrack) {
-          videoSource = IrisVideoSourceType.kVideoSourceTypeCameraSecondary;
+          videoSource =
+            NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY;
         } else if (mainClientVariables.publishScreenTrack) {
-          videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+          videoSource =
+            NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
         } else if (mainClientVariables.publishSecondaryScreenTrack) {
-          videoSource = IrisVideoSourceType.kVideoSourceTypeScreenSecondary;
+          videoSource =
+            NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY;
         }
       }
 
@@ -393,12 +393,12 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       let argsUnpublish: Array<[
         string,
-        IrisAudioSourceType | IrisVideoSourceType,
+        IrisAudioSourceType | NATIVE_RTC.VIDEO_SOURCE_TYPE,
         'audio' | 'video'
       ]> = [];
       let argsPublish: Array<[
         string,
-        IrisAudioSourceType | IrisVideoSourceType,
+        IrisAudioSourceType | NATIVE_RTC.VIDEO_SOURCE_TYPE,
         'audio' | 'video'
       ]> = [];
 
@@ -419,13 +419,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       if (options.publishCameraTrack == false) {
         argsUnpublish.push([
           'publishCameraTrack',
-          IrisVideoSourceType.kVideoSourceTypeCameraPrimary,
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
           'video',
         ]);
       } else if (options.publishCameraTrack == true) {
         argsPublish.push([
           'publishCameraTrack',
-          IrisVideoSourceType.kVideoSourceTypeCameraPrimary,
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
           'video',
         ]);
       }
@@ -433,13 +433,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       if (options.publishSecondaryCameraTrack == false) {
         argsUnpublish.push([
           'publishSecondaryCameraTrack',
-          IrisVideoSourceType.kVideoSourceTypeCameraSecondary,
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY,
           'video',
         ]);
       } else if (options.publishSecondaryCameraTrack == true) {
         argsPublish.push([
           'publishSecondaryCameraTrack',
-          IrisVideoSourceType.kVideoSourceTypeCameraSecondary,
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY,
           'video',
         ]);
       }
@@ -461,13 +461,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       if (options.publishScreenTrack == false) {
         argsUnpublish.push([
           'publishScreenTrack',
-          IrisVideoSourceType.kVideoSourceTypeScreenPrimary,
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY,
           'video',
         ]);
       } else if (options.publishScreenTrack == true) {
         argsPublish.push([
           'publishScreenTrack',
-          IrisVideoSourceType.kVideoSourceTypeScreenPrimary,
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY,
           'video',
         ]);
       }
@@ -475,13 +475,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       if (options.publishSecondaryScreenTrack == false) {
         argsUnpublish.push([
           'publishSecondaryScreenTrack',
-          IrisVideoSourceType.kVideoSourceTypeScreenSecondary,
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY,
           'video',
         ]);
       } else if (options.publishSecondaryScreenTrack == true) {
         argsPublish.push([
           'publishSecondaryScreenTrack',
-          IrisVideoSourceType.kVideoSourceTypeScreenSecondary,
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY,
           'video',
         ]);
       }
@@ -514,7 +514,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         } else {
           //unpublish video
           let videoPackage = entitiesContainer.getLocalVideoTrackByType(
-            audioOrVideoType as IrisVideoSourceType
+            audioOrVideoType as NATIVE_RTC.VIDEO_SOURCE_TYPE
           );
           if (videoPackage) {
             let track = videoPackage.track as ILocalVideoTrack;
@@ -574,7 +574,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         } else {
           //publish video
           let videoPackage = entitiesContainer.getLocalVideoTrackByType(
-            audioOrVideoType as IrisVideoSourceType
+            audioOrVideoType as NATIVE_RTC.VIDEO_SOURCE_TYPE
           );
           if (videoPackage) {
             let track = videoPackage.track as ILocalVideoTrack;
@@ -596,7 +596,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
                   trackEventHandler
                 );
                 entitiesContainer.setMainClientLocalVideoTrack({
-                  type: audioOrVideoType as IrisVideoSourceType,
+                  type: audioOrVideoType as NATIVE_RTC.VIDEO_SOURCE_TYPE,
                   track: track,
                 });
               } catch (reason) {
@@ -824,7 +824,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             remoteUser.videoTrack.isPlaying == false
           ) {
             // TODO(littlegnal): This is a WebGL specific requirement
-            // remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
+            // remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE))
           }
         }
       }
@@ -839,7 +839,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             remoteUser.videoTrack.isPlaying == false
           ) {
             // TODO(littlegnal): This is a WebGL specific requirement
-            // remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, IrisVideoSourceType.kVideoSourceTypeRemote))
+            // remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE))
           }
         }
       });
@@ -929,7 +929,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       let audioSource: IrisAudioSourceType =
         IrisAudioSourceType.kAudioSourceTypeUnknown;
-      let videoSource: IrisVideoSourceType = sourceType as number;
+      let videoSource: NATIVE_RTC.VIDEO_SOURCE_TYPE = sourceType as number;
 
       AgoraConsole.log(`startPreview2 videoSource: ${videoSource}`);
 
@@ -989,18 +989,18 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let process = async (): Promise<CallIrisApiResult> => {
       let audioSource: IrisAudioSourceType =
         IrisAudioSourceType.kAudioSourceTypeUnknown;
-      let videoSource: IrisVideoSourceType =
-        IrisVideoSourceType.kVideoSourceTypeUnknown;
+      let videoSource: NATIVE_RTC.VIDEO_SOURCE_TYPE =
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN;
       if (
         sourceType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
       ) {
         audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary;
-        videoSource = IrisVideoSourceType.kVideoSourceTypeCameraPrimary;
+        videoSource = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY;
       } else if (
         sourceType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
       ) {
         audioSource = IrisAudioSourceType.kAudioSourceTypeScreenPrimary;
-        videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+        videoSource = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
       }
 
       let audioTrackPackage = this._engine.entitiesContainer.getLocalAudioTrackByType(
@@ -1050,7 +1050,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.mainClientVariables.videoEncoderConfiguration = config;
       //todo 找到所有mainClient 的 ICameraTrack。如果存在则 setEncoderConfiguration（） 一下
       let videoTrack = this._engine.entitiesContainer.getLocalVideoTrackByType(
-        IrisVideoSourceType.kVideoSourceTypeCameraPrimary
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
       );
       if (videoTrack) {
         let track = videoTrack.track as ICameraVideoTrack;
@@ -1119,7 +1119,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
       this._engine.entitiesContainer.addLocalVideoTrack({
         element: canvas.view,
-        type: IrisVideoSourceType.kVideoSourceTypeCameraPrimary,
+        type: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
       });
 
       let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
@@ -2092,7 +2092,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     // let process = async ():Promise<CallIrisApiResult> => {
     //   let trackPack = this._engine.entitiesContainer.getLocalVideoTrackByType(
-    //     IrisVideoSourceType.kVideoSourceTypeCameraPrimary
+    //     NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
     //   );
     //   let videoTrack: ICameraVideoTrack = trackPack.track as ICameraVideoTrack;
     //   let curDeviceName: string = (videoTrack as any)._deviceName;
@@ -2324,8 +2324,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         ? IrisAudioSourceType.kAudioSourceTypeScreenPrimary
         : IrisAudioSourceType.kAudioSourceTypeUnknown;
       let videoType = captureParams.captureVideo
-        ? IrisVideoSourceType.kVideoSourceTypeScreenPrimary
-        : IrisVideoSourceType.kVideoSourceTypeUnknown;
+        ? NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
+        : NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN;
       let clientType = IrisClientType.kClientMain;
       try {
         let trackArray = await ImplHelper.getOrCreateAudioAndVideoTrackAsync(
@@ -2347,7 +2347,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
           if (!entitiesContainer.isMainClientPublishedVideoTrack()) {
             //当前还主客户端还没有发流
-            let videoSource = IrisVideoSourceType.kVideoSourceTypeScreenPrimary;
+            let videoSource =
+              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
             entitiesContainer.setMainClientLocalVideoTrack({
               type: videoSource,
               track: screenShareTrack,
