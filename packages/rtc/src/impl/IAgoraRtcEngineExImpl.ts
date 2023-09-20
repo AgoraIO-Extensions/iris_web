@@ -16,6 +16,7 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
 
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
+import { ClientHelper } from '../helper/ClientHelper';
 
 import { Action } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -79,7 +80,6 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         this._engine,
         connection
       );
-
       let audioSource = IrisAudioSourceType.kAudioSourceTypeUnknown;
       let videoSource = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN;
       let clientType = IrisClientType.kClientSub;
@@ -99,19 +99,6 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         options.publishScreenCaptureVideo
       ) {
         videoSource = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
-      }
-
-      //检查是否已经创建了屏幕共享的video track,如果没有则跳出
-      if (
-        !ImplHelper.getAudioAndVideoTrack(
-          this._engine,
-          audioSource,
-          videoSource
-        )[1]
-      ) {
-        console.log(1);
-        AgoraConsole.log('screen share track not found, skip joinChannel call');
-        return this.returnResult();
       }
 
       let entitiesContainer = this._engine.entitiesContainer;
@@ -144,6 +131,19 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       }
 
       this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(connection, 0);
+
+      //检查是否已经创建了屏幕共享的video track,如果没有则跳出
+      if (
+        !ImplHelper.getAudioAndVideoTrack(
+          this._engine,
+          audioSource,
+          videoSource
+        )[1]
+      ) {
+        AgoraConsole.log('screen share track not found, skip joinChannel call');
+        return this.returnResult();
+      }
+
       let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
       try {
         trackArray = await ImplHelper.getOrCreateAudioAndVideoTrackAsync(
@@ -257,10 +257,417 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     options: NATIVE_RTC.ChannelMediaOptions,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'updateChannelMediaOptionsEx not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processInSequence = async () => {
+      this._engine.subClientVariables.mergeChannelMediaOptions(
+        connection,
+        options
+      );
+
+      //必须先依次 unpublish, 完毕之后，再依次去publish
+      let entitiesContainer = this._engine.entitiesContainer;
+      let subClient = entitiesContainer.getSubClient(connection);
+      if (subClient == null) {
+        return this.returnResult(false);
+      }
+
+      let argsUnpublish: Array<[
+        string,
+        IrisAudioSourceType | NATIVE_RTC.VIDEO_SOURCE_TYPE,
+        'audio' | 'video'
+      ]> = [];
+      let argsPublish: Array<[
+        string,
+        IrisAudioSourceType | NATIVE_RTC.VIDEO_SOURCE_TYPE,
+        'audio' | 'video'
+      ]> = [];
+
+      if (!options.publishCameraTrack) {
+        argsUnpublish.push([
+          'publishCameraTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
+          'video',
+        ]);
+      } else if (options.publishCameraTrack) {
+        argsPublish.push([
+          'publishCameraTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
+          'video',
+        ]);
+      }
+
+      if (!options.publishSecondaryCameraTrack) {
+        argsUnpublish.push([
+          'publishSecondaryCameraTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY,
+          'video',
+        ]);
+      } else if (options.publishSecondaryCameraTrack) {
+        argsPublish.push([
+          'publishSecondaryCameraTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY,
+          'video',
+        ]);
+      }
+
+      if (!options.publishThirdCameraTrack) {
+        argsUnpublish.push([
+          'publishThirdCameraTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD,
+          'video',
+        ]);
+      } else if (options.publishThirdCameraTrack) {
+        argsPublish.push([
+          'publishThirdCameraTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD,
+          'video',
+        ]);
+      }
+
+      if (!options.publishFourthCameraTrack) {
+        argsUnpublish.push([
+          'publishFourthCameraTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH,
+          'video',
+        ]);
+      } else if (options.publishFourthCameraTrack) {
+        argsPublish.push([
+          'publishFourthCameraTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH,
+          'video',
+        ]);
+      }
+
+      if (!options.publishMicrophoneTrack) {
+        argsUnpublish.push([
+          'publishMicrophoneTrack',
+          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
+          'audio',
+        ]);
+      } else if (options.publishMicrophoneTrack) {
+        argsPublish.push([
+          'publishMicrophoneTrack',
+          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
+          'audio',
+        ]);
+      }
+
+      if (!options.publishScreenCaptureVideo) {
+        argsUnpublish.push([
+          'publishScreenCaptureVideo',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY,
+          'audio',
+        ]);
+      } else if (options.publishScreenCaptureVideo) {
+        argsPublish.push([
+          'publishScreenCaptureVideo',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY,
+          'audio',
+        ]);
+      }
+
+      if (!options.publishScreenCaptureAudio) {
+        argsUnpublish.push([
+          'publishScreenCaptureAudio',
+          IrisAudioSourceType.kAudioSourceTypeScreenPrimary,
+          'audio',
+        ]);
+      } else if (options.publishScreenCaptureAudio) {
+        argsPublish.push([
+          'publishScreenCaptureAudio',
+          IrisAudioSourceType.kAudioSourceTypeScreenPrimary,
+          'audio',
+        ]);
+      }
+
+      if (!options.publishScreenTrack) {
+        argsUnpublish.push([
+          'publishScreenTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY,
+          'video',
+        ]);
+      } else if (options.publishScreenTrack) {
+        argsPublish.push([
+          'publishScreenTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY,
+          'video',
+        ]);
+      }
+
+      if (!options.publishSecondaryScreenTrack) {
+        argsUnpublish.push([
+          'publishSecondaryScreenTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY,
+          'video',
+        ]);
+      } else if (options.publishSecondaryScreenTrack) {
+        argsPublish.push([
+          'publishSecondaryScreenTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY,
+          'video',
+        ]);
+      }
+
+      if (!options.publishThirdScreenTrack) {
+        argsUnpublish.push([
+          'publishThirdScreenTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD,
+          'video',
+        ]);
+      } else if (options.publishThirdScreenTrack) {
+        argsPublish.push([
+          'publishThirdScreenTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD,
+          'video',
+        ]);
+      }
+
+      if (!options.publishFourthScreenTrack) {
+        argsUnpublish.push([
+          'publishFourthScreenTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH,
+          'video',
+        ]);
+      } else if (options.publishFourthScreenTrack) {
+        argsPublish.push([
+          'publishFourthScreenTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH,
+          'video',
+        ]);
+      }
+
+      if (!options.publishCustomAudioTrack) {
+        argsUnpublish.push([
+          'publishCustomAudioTrack',
+          IrisAudioSourceType.kAudioSourceTypeCustom,
+          'audio',
+        ]);
+      } else if (options.publishCustomAudioTrack) {
+        argsPublish.push([
+          'publishCustomAudioTrack',
+          IrisAudioSourceType.kAudioSourceTypeCustom,
+          'audio',
+        ]);
+      }
+
+      if (!options.publishCustomVideoTrack) {
+        argsUnpublish.push([
+          'publishCustomVideoTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM,
+          'video',
+        ]);
+      } else if (options.publishCustomVideoTrack) {
+        argsPublish.push([
+          'publishCustomVideoTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM,
+          'video',
+        ]);
+      }
+
+      if (!options.publishEncodedVideoTrack) {
+        argsUnpublish.push([
+          'publishEncodedVideoTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN,
+          'video',
+        ]);
+      } else if (options.publishEncodedVideoTrack) {
+        argsPublish.push([
+          'publishEncodedVideoTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN,
+          'video',
+        ]);
+      }
+
+      if (!options.publishMediaPlayerAudioTrack) {
+        argsUnpublish.push([
+          'publishMediaPlayerAudioTrack',
+          IrisAudioSourceType.kAudioSourceTypeUnknown,
+          'audio',
+        ]);
+      } else if (options.publishMediaPlayerAudioTrack) {
+        argsPublish.push([
+          'publishMediaPlayerAudioTrack',
+          IrisAudioSourceType.kAudioSourceTypeUnknown,
+          'audio',
+        ]);
+      }
+
+      if (!options.publishMediaPlayerVideoTrack) {
+        argsUnpublish.push([
+          'publishMediaPlayerVideoTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_MEDIA_PLAYER,
+          'video',
+        ]);
+      } else if (options.publishMediaPlayerVideoTrack) {
+        argsPublish.push([
+          'publishMediaPlayerVideoTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_MEDIA_PLAYER,
+          'video',
+        ]);
+      }
+
+      if (!options.publishTranscodedVideoTrack) {
+        argsUnpublish.push([
+          'publishTranscodedVideoTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_TRANSCODED,
+          'video',
+        ]);
+      } else if (options.publishTranscodedVideoTrack) {
+        argsPublish.push([
+          'publishTranscodedVideoTrack',
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_TRANSCODED,
+          'video',
+        ]);
+      }
+
+      for (let UnpublishArgs of argsUnpublish) {
+        let optionName = UnpublishArgs[0];
+        let audioOrVideoType = UnpublishArgs[1];
+        let type = UnpublishArgs[2];
+
+        if (type == 'audio') {
+          //unpublish audio
+          let audioPackage = entitiesContainer.getLocalAudioTrackByType(
+            audioOrVideoType as IrisAudioSourceType
+          );
+          if (audioPackage) {
+            let track = audioPackage.track as ILocalAudioTrack;
+            if (subClient.localTracks.indexOf(track) != -1) {
+              try {
+                await subClient.unpublish(track);
+                AgoraConsole.log(optionName + '(false) changed success');
+                entitiesContainer.removeSubClientTrackEventHandlerByTrack(
+                  connection,
+                  track
+                );
+                entitiesContainer.removeSubClientLocalAudioTrack(
+                  connection,
+                  track
+                );
+              } catch (reason) {
+                AgoraConsole.error(optionName + '(false) changed failed');
+              }
+            }
+          }
+        } else {
+          //unpublish video
+          let videoPackage = entitiesContainer.getLocalVideoTrackByType(
+            audioOrVideoType as NATIVE_RTC.VIDEO_SOURCE_TYPE
+          );
+          if (videoPackage) {
+            let track = videoPackage.track as ILocalVideoTrack;
+            if (subClient.localTracks.indexOf(track) != -1) {
+              try {
+                await subClient.unpublish(track);
+                AgoraConsole.log(optionName + '(false) changed success');
+                entitiesContainer.removeSubClientTrackEventHandlerByTrack(
+                  connection,
+                  track
+                );
+                entitiesContainer.clearSubClientLocalVideoTrack(connection);
+              } catch (reason) {
+                AgoraConsole.error(optionName + '(false) changed failed');
+              }
+            }
+          }
+        }
+      }
+
+      for (let publishArgs of argsPublish) {
+        let optionName = publishArgs[0];
+        let audioOrVideoType = publishArgs[1];
+        let type = publishArgs[2];
+        if (type == 'audio') {
+          //publish audio
+          let audioPackage = entitiesContainer.getLocalAudioTrackByType(
+            audioOrVideoType as IrisAudioSourceType
+          );
+          if (audioPackage) {
+            let track = audioPackage.track as ILocalAudioTrack;
+            if (subClient.localTracks.indexOf(track) == -1) {
+              try {
+                await subClient.publish(track);
+                AgoraConsole.log(optionName + '(true) changed success');
+                let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+                  {
+                    channelName: subClient.channelName,
+                    client: subClient,
+                    track: track,
+                    trackType: 'ILocalTrack',
+                  },
+                  this._engine
+                );
+
+                entitiesContainer.addSubClientTrackEventHandler(
+                  connection,
+                  trackEventHandler
+                );
+                entitiesContainer.addSubClientLocalAudioTrack(connection, {
+                  type: audioOrVideoType as IrisAudioSourceType,
+                  track: track,
+                });
+              } catch (reason) {
+                AgoraConsole.error(optionName + '(true) changed failed');
+              }
+            }
+          }
+        } else {
+          //publish video
+          let videoPackage = entitiesContainer.getLocalVideoTrackByType(
+            audioOrVideoType as NATIVE_RTC.VIDEO_SOURCE_TYPE
+          );
+          if (videoPackage) {
+            let track = videoPackage.track as ILocalVideoTrack;
+            if (subClient.localTracks.indexOf(track) == -1) {
+              try {
+                await subClient.publish(track);
+                AgoraConsole.log(optionName + '(true) changed success');
+                let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+                  {
+                    channelName: subClient.channelName,
+                    client: subClient,
+                    track: track,
+                    trackType: 'ILocalVideoTrack',
+                  },
+                  this._engine
+                );
+
+                entitiesContainer.addSubClientTrackEventHandler(
+                  connection,
+                  trackEventHandler
+                );
+                entitiesContainer.setSubClientLocalVideoTrack(connection, {
+                  type: audioOrVideoType as NATIVE_RTC.VIDEO_SOURCE_TYPE,
+                  track: track,
+                });
+              } catch (reason) {
+                AgoraConsole.error(optionName + '(true) changed failed');
+              }
+            }
+          }
+        }
+      }
+
+      if (options.clientRoleType != null) {
+        debugger;
+        await ClientHelper.setClientRole(
+          subClient,
+          options.clientRoleType,
+          options.audienceLatencyLevel
+        );
+      }
+
+      if (options.token != null) {
+        try {
+          await subClient.renewToken(options.token);
+        } catch (e) {
+          return this.returnResult(false);
+        }
+      }
+
+      return this.returnResult();
+    };
+
+    return this.execute(processInSequence);
   }
   setVideoEncoderConfigurationEx(
     config: NATIVE_RTC.VideoEncoderConfiguration,
@@ -288,7 +695,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       if (mainClient && mainClient.channelName == holder.channelId) {
         for (let remoteUser of mainClient.remoteUsers) {
           if (remoteUser.uid == holder.uid) {
-            if (remoteUser.videoTrack?.isPlaying == true) {
+            if (remoteUser.videoTrack?.isPlaying) {
               remoteUser.videoTrack.stop();
             }
             if (holder.element) {
@@ -308,7 +715,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           let remoteUsers = subClient.remoteUsers;
           for (let remoteUser of remoteUsers) {
             if (remoteUser.uid == holder.uid) {
-              if (remoteUser.videoTrack?.isPlaying == true) {
+              if (remoteUser.videoTrack?.isPlaying) {
                 remoteUser.videoTrack.stop();
               }
               if (holder.element) {

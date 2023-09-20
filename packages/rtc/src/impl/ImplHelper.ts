@@ -40,7 +40,6 @@ export class ImplHelper {
       engine.entitiesContainer.getLocalVideoTrackByType(videoType)
         ?.track as ILocalVideoTrack,
     ];
-    debugger;
     return trackArray;
   }
 
@@ -123,7 +122,6 @@ export class ImplHelper {
                 .LOCAL_VIDEO_STREAM_ERROR_DEVICE_NO_PERMISSION
             );
           }
-          debugger;
           throw e;
         }
         if (trackArray) {
@@ -754,13 +752,13 @@ export class ImplHelper {
             )
           : 'vp8',
       mode: mainClientVariables.channelProfile
-        ? AgoraTranslate.NATIVE_RTCCHANNEL_PROFILE_TYPE2SDK_MODE(
+        ? AgoraTranslate.NATIVE_RTC_CHANNEL_PROFILE_TYPE2SDK_MODE(
             mainClientVariables.channelProfile
           )
-        : 'rtc',
+        : 'live',
     };
     if (mainClientVariables.clientRoleType != null) {
-      config.role = AgoraTranslate.NATIVE_RTCCLIENT_ROLE_TYPE2ClientRole(
+      config.role = AgoraTranslate.NATIVE_RTC_CLIENT_ROLE_TYPE2ClientRole(
         mainClientVariables.clientRoleType
       );
     }
@@ -796,13 +794,13 @@ export class ImplHelper {
           : 'vp8',
       mode:
         channelProfile != null
-          ? AgoraTranslate.NATIVE_RTCCHANNEL_PROFILE_TYPE2SDK_MODE(
+          ? AgoraTranslate.NATIVE_RTC_CHANNEL_PROFILE_TYPE2SDK_MODE(
               channelProfile
             )
-          : 'rtc',
+          : 'live',
     };
     if (clientRoleType != null) {
-      config.role = AgoraTranslate.NATIVE_RTCCLIENT_ROLE_TYPE2ClientRole(
+      config.role = AgoraTranslate.NATIVE_RTC_CLIENT_ROLE_TYPE2ClientRole(
         clientRoleType
       );
     }

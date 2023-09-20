@@ -1,7 +1,5 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
 import AgoraRTC, {
-  ClientRole,
-  ClientRoleOptions,
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
   ICameraVideoTrack,
@@ -22,6 +20,7 @@ import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler'
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 
 import { IRtcEngineExtensions } from '../extensions/IAgoraRtcEngineExtensions';
+import { ClientHelper } from '../helper/ClientHelper';
 import { TrackHelper } from '../helper/TrackHelper';
 import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
 import { Container } from '../util';
@@ -441,10 +440,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         ]);
       }
 
-      for (let UnpublishArags of argsUnpublish) {
-        let optionName = UnpublishArags[0];
-        let audioOrVideoType = UnpublishArags[1];
-        let type = UnpublishArags[2];
+      for (let UnpublishArgs of argsUnpublish) {
+        let optionName = UnpublishArgs[0];
+        let audioOrVideoType = UnpublishArgs[1];
+        let type = UnpublishArgs[2];
 
         if (type == 'audio') {
           //unpublish audio
@@ -489,10 +488,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         }
       }
 
-      for (let publishArags of argsPublish) {
-        let optionName = publishArags[0];
-        let audioOrVideoType = publishArags[1];
-        let type = publishArags[2];
+      for (let publishArgs of argsPublish) {
+        let optionName = publishArgs[0];
+        let audioOrVideoType = publishArgs[1];
+        let type = publishArgs[2];
         if (type == 'audio') {
           //publish audio
           let audioPackage = entitiesContainer.getLocalAudioTrackByType(
@@ -563,23 +562,11 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       if (options.clientRoleType != null) {
-        let roleOptions: ClientRoleOptions = null;
-        if (options.audienceLatencyLevel != null) {
-          roleOptions = AgoraTranslate.NATIVE_RTCAUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(
-            options.audienceLatencyLevel
-          );
-        }
-
-        try {
-          await mainClient.setClientRole(
-            AgoraTranslate.NATIVE_RTCCLIENT_ROLE_TYPE2ClientRole(
-              options.clientRoleType
-            ),
-            roleOptions
-          );
-        } catch (e) {
-          AgoraConsole.error('setClientRole failed');
-        }
+        await ClientHelper.setClientRole(
+          mainClient,
+          options.clientRoleType,
+          options.audienceLatencyLevel
+        );
       }
 
       if (options.token != null) {
@@ -715,20 +702,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.mainClientVariables.clientRoleType = role;
 
-      let webRole: ClientRole = AgoraTranslate.NATIVE_RTCCLIENT_ROLE_TYPE2ClientRole(
-        role
-      );
-      let webRoleOptions: ClientRoleOptions = AgoraTranslate.NATIVE_RTCClientRoleOptions2ClientRoleOptions(
-        options
-      );
-      //只有观众才能设置 第二个参数。主播不能设置第二个参数
-      this._engine.entitiesContainer
-        .getMainClient()
-        ?.setClientRole(webRole, webRole == 'audience' ? webRoleOptions : null);
-
-      let audioTrack = this._engine.entitiesContainer.getLocalAudioTrackByType(
-        IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
-      );
+      let client = this._engine.entitiesContainer.getMainClient();
+      client &&
+        (await ClientHelper.setClientRole(
+          client,
+          role,
+          options.audienceLatencyLevel
+        ));
 
       return this.returnResult();
     };

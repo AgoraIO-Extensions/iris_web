@@ -92,7 +92,7 @@ export class AgoraTranslate {
     }
   }
 
-  public static NATIVE_RTCCLIENT_ROLE_TYPE2ClientRole(
+  public static NATIVE_RTC_CLIENT_ROLE_TYPE2ClientRole(
     clientRole: NATIVE_RTC.CLIENT_ROLE_TYPE
   ): ClientRole {
     switch (clientRole) {
@@ -103,7 +103,7 @@ export class AgoraTranslate {
     }
   }
 
-  public static NATIVE_RTCCHANNEL_PROFILE_TYPE2SDK_MODE(
+  public static NATIVE_RTC_CHANNEL_PROFILE_TYPE2SDK_MODE(
     channelProfile: NATIVE_RTC.CHANNEL_PROFILE_TYPE
   ): SDK_MODE {
     switch (channelProfile) {
@@ -129,7 +129,7 @@ export class AgoraTranslate {
     }
   }
 
-  public static NATIVE_RTCAUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(
+  public static NATIVE_RTC_AUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(
     level: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE
   ): ClientRoleOptions {
     switch (level) {
