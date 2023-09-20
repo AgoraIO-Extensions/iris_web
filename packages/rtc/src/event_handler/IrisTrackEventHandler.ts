@@ -56,6 +56,7 @@ export class IrisTrackEventHandler {
     switch (this._trackType) {
       case 'ILocalTrack':
         this.__onEventTrackEnded = this.onEventTrackEnded.bind(this);
+        debugger;
         this._track.on('track-ended', this.__onEventTrackEnded);
         break;
       case 'ILocalVideoTrack':

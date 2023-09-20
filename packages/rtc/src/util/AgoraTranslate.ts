@@ -168,13 +168,11 @@ export class AgoraTranslate {
   }
 
   public static NATIVE_RTCScreenCaptureParameters2VideoEncoderConfiguration(
-    conf: NATIVE_RTC.ScreenCaptureParameters
+    conf: NATIVE_RTC.ScreenCaptureParameters2
   ): VideoEncoderConfiguration {
     let ret: VideoEncoderConfiguration = {
-      width: conf.dimensions?.width,
-      height: conf.dimensions?.height,
-      frameRate: conf.frameRate,
-      bitrateMax: conf.bitrate,
+      frameRate: conf.videoParams?.frameRate,
+      bitrateMax: conf.videoParams?.bitrate,
     };
     return ret;
   }

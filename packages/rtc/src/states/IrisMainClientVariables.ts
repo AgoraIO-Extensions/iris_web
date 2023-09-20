@@ -148,7 +148,6 @@ export class IrisMainClientVariables {
 
   // startPreviewed 似乎没有用处
   // startPreviewed: boolean = false;
-  isConnected: boolean = false;
 
   //用来记录暂停或者恢复的
   currChannelMediaRelayconfiguration: NATIVE_RTC.ChannelMediaRelayConfiguration = null;

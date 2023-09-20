@@ -20,6 +20,29 @@ import { AgoraConsole } from '../util/AgoraConsole';
 import { AgoraTranslate } from '../util/AgoraTranslate';
 
 export class ImplHelper {
+  public static getAudioAndVideoTrack(
+    engine: IrisRtcEngine,
+    audioType: IrisAudioSourceType,
+    videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE
+  ): [ILocalAudioTrack, ILocalVideoTrack] {
+    let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
+    if (
+      audioType == IrisAudioSourceType.kAudioSourceTypeUnknown &&
+      videoType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN
+    ) {
+      AgoraConsole.warn('getAudioAndVideoTrack  audio and video both unknown');
+    }
+
+    trackArray = [
+      engine.entitiesContainer.getLocalAudioTrackByType(audioType)
+        ?.track as ILocalAudioTrack,
+      engine.entitiesContainer.getLocalVideoTrackByType(videoType)
+        ?.track as ILocalVideoTrack,
+    ];
+    debugger;
+    return trackArray;
+  }
+
   public static async getOrCreateAudioAndVideoTrackAsync(
     engine: IrisRtcEngine,
     audioType: IrisAudioSourceType,
@@ -41,6 +64,11 @@ export class ImplHelper {
       videoType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY &&
       audioType == IrisAudioSourceType.kAudioSourceTypeScreenPrimary
     ) {
+      //如果没有进行屏幕共享,则不create也不get
+      if (!engine.globalVariables.isScreenSharing) {
+        return [null, null];
+      }
+
       let audioPackage = engine.entitiesContainer.getLocalAudioTrackByType(
         audioType
       );
@@ -77,7 +105,13 @@ export class ImplHelper {
           let conf: ScreenVideoTrackInitConfig = this.generateScreenVideoTrackInitConfig(
             engine
           );
-          trackArray = await AgoraRTC.createScreenVideoTrack(conf, 'auto');
+          //由于平台差异,有可能无法返回音频track,故做兼容
+          let screenTrack = await AgoraRTC.createScreenVideoTrack(conf, 'auto');
+          if (Array.isArray(screenTrack)) {
+            trackArray = screenTrack;
+          } else {
+            trackArray = [screenTrack, null];
+          }
         } catch (e) {
           AgoraConsole.error('createScreenVideoTrack with audio failed');
           throw e;
@@ -266,8 +300,7 @@ export class ImplHelper {
     if (mainClientVariables.videoDeviceId) {
       //屏幕共享视频没有设备id咯
     }
-
-    if (globalVariables.enabledVideo) {
+    if (globalVariables.enabledVideo && videoTrack.enabled) {
       videoTrack.play(
         engine.generateVideoTrackLabelOrHtmlElement('0', 0, videoSource)
       );
@@ -699,9 +732,9 @@ export class ImplHelper {
       );
     }
 
-    if (globalVariables.screenCaptureParameters != null) {
+    if (globalVariables.screenCaptureParameters2 != null) {
       conf.encoderConfig = AgoraTranslate.NATIVE_RTCScreenCaptureParameters2VideoEncoderConfiguration(
-        globalVariables.screenCaptureParameters
+        globalVariables.screenCaptureParameters2
       );
     } else if (globalVariables.videoEncoderConfiguration != null) {
       conf.encoderConfig = AgoraTranslate.NATIVE_RTCVideoEncoderConfiguration2VideoEncoderConfiguration(
