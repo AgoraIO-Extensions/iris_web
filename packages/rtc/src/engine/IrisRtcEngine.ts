@@ -72,7 +72,7 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   private _generateVideoTrackLabelOrHtmlElementCb: GenerateVideoTrackLabelOrHtmlElementCb = null;
 
-  private _implDispatchsMap: Map<string, any> = null;
+  public implDispatchsMap: Map<string, any> = null;
   public entitiesContainer: IrisEntitiesContainer = null;
   public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandlerEx = null;
 
@@ -85,48 +85,48 @@ export class IrisRtcEngine implements ApiInterceptor {
   public irisEventHandlerManager: IrisEventHandlerManager = null;
 
   constructor(irisEventHandlerManager: IrisEventHandlerManager) {
-    this._implDispatchsMap = new Map();
-    this._implDispatchsMap.set('MediaPlayer', new IMediaPlayerDispatch(this));
-    this._implDispatchsMap.set(
+    this.implDispatchsMap = new Map();
+    this.implDispatchsMap.set('MediaPlayer', new IMediaPlayerDispatch(this));
+    this.implDispatchsMap.set(
       'MediaPlayerCacheManager',
       new IMediaPlayerCacheManagerDispatch(this)
     );
-    this._implDispatchsMap.set('MediaEngine', new IMediaEngineDispatch(this));
-    this._implDispatchsMap.set(
+    this.implDispatchsMap.set('MediaEngine', new IMediaEngineDispatch(this));
+    this.implDispatchsMap.set(
       'MediaRecorder',
       new IMediaRecorderDispatch(this)
     );
-    this._implDispatchsMap.set(
+    this.implDispatchsMap.set(
       'MusicChartCollection',
       new MusicChartCollectionDispatch(this)
     );
-    this._implDispatchsMap.set(
+    this.implDispatchsMap.set(
       'MusicCollection',
       new MusicCollectionDispatch(this)
     );
-    this._implDispatchsMap.set('MusicPlayer', new IMusicPlayerDispatch(this));
-    this._implDispatchsMap.set(
+    this.implDispatchsMap.set('MusicPlayer', new IMusicPlayerDispatch(this));
+    this.implDispatchsMap.set(
       'MusicContentCenter',
       new IMusicContentCenterDispatch(this)
     );
-    this._implDispatchsMap.set(
+    this.implDispatchsMap.set(
       'AudioDeviceManager',
       new IAudioDeviceManagerDispatch(this)
     );
-    this._implDispatchsMap.set(
+    this.implDispatchsMap.set(
       'VideoDeviceManager',
       new IVideoDeviceManagerDispatch(this)
     );
-    this._implDispatchsMap.set(
+    this.implDispatchsMap.set(
       'RtcEngine',
       new RtcEngineDispatchExtensions(this)
     );
-    this._implDispatchsMap.set('RtcEngineEx', new IRtcEngineExDispatch(this));
-    this._implDispatchsMap.set(
+    this.implDispatchsMap.set('RtcEngineEx', new IRtcEngineExDispatch(this));
+    this.implDispatchsMap.set(
       'BaseSpatialAudioEngine',
       new IBaseSpatialAudioEngineDispatch(this)
     );
-    this._implDispatchsMap.set(
+    this.implDispatchsMap.set(
       'LocalSpatialAudioEngine',
       new ILocalSpatialAudioEngineDispatch(this)
     );
@@ -163,7 +163,7 @@ export class IrisRtcEngine implements ApiInterceptor {
 
     AgoraConsole.log(`[callIrisApi][start] ${JSON.stringify(apiParam)}`);
 
-    let obj = this._implDispatchsMap.get(className);
+    let obj = this.implDispatchsMap.get(className);
     if (obj) {
       let callApiFun: CallApiType = obj[funName];
       if (callApiFun) {
@@ -201,7 +201,7 @@ export class IrisRtcEngine implements ApiInterceptor {
 
     AgoraConsole.log(`[callIrisApiAsync][start] ${JSON.stringify(apiParam)}`);
 
-    let obj = this._implDispatchsMap.get(className);
+    let obj = this.implDispatchsMap.get(className);
     if (obj) {
       let callApiFun: CallApiAsyncType = obj[funName];
       if (callApiFun) {

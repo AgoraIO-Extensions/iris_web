@@ -10,7 +10,6 @@ import {
 } from 'agora-rtc-sdk-ng';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { AgoraConsole } from '../util';
 
 import { CheckVideoVisibleResult } from '../web_sdk';
 
@@ -56,7 +55,6 @@ export class IrisTrackEventHandler {
     switch (this._trackType) {
       case 'ILocalTrack':
         this.__onEventTrackEnded = this.onEventTrackEnded.bind(this);
-        debugger;
         this._track.on('track-ended', this.__onEventTrackEnded);
         break;
       case 'ILocalVideoTrack':
@@ -95,23 +93,20 @@ export class IrisTrackEventHandler {
     }
   }
 
-  onEventTrackEnded() {
-    AgoraConsole.log(`track-ended`);
+  async onEventTrackEnded() {
     switch (this._trackType) {
       case 'ILocalTrack':
-        this.__onEventTrackEnded = this.onEventTrackEnded.bind(this);
-        this._track.on('track-ended', this.__onEventTrackEnded);
+        // 屏幕共享的case
+        if (
+          this._videoSourceType ===
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
+        ) {
+          this._engine.implDispatchsMap
+            .get('RtcEngine')
+            ._impl.stopScreenCapture();
+        }
         break;
       case 'ILocalVideoTrack':
-        //只处理传了videoSourceType的
-        if (typeof this._videoSourceType !== 'undefined') {
-          this._engine.rtcEngineEventHandler.onLocalVideoStateChanged(
-            this._videoSourceType,
-            NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE
-              .LOCAL_VIDEO_STREAM_STATE_STOPPED,
-            0
-          );
-        }
         break;
     }
   }

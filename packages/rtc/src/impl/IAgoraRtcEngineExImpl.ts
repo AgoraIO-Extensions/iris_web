@@ -185,7 +185,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         );
       }
 
-      // //推送videoTrack
+      //推送videoTrack
       let videoTrack: ILocalVideoTrack = trackArray[1] as ILocalVideoTrack;
       if (videoTrack) {
         try {

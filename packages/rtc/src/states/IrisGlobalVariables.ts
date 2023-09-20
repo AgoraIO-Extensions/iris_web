@@ -1,8 +1,6 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
 import { UID } from 'agora-rtc-sdk-ng';
 
-import { IrisAudioSourceType } from '../base/BaseType';
-
 export class IrisGlobalVariables {
   public rtcEngineContext: NATIVE_RTC.RtcEngineContext;
   isConnected: boolean = false;
@@ -56,10 +54,6 @@ export class IrisGlobalVariables {
   screenCaptureContentHint: NATIVE_RTC.VIDEO_CONTENT_HINT = null;
 
   isScreenSharing: boolean = false;
-  videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE =
-    NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
-  audioSourceType: IrisAudioSourceType =
-    IrisAudioSourceType.kAudioSourceTypeScreenPrimary;
 
   // screenCaptureParameters: NATIVE_RTC.ScreenCaptureParameters = null;
   screenCaptureParameters2: NATIVE_RTC.ScreenCaptureParameters2 = null;

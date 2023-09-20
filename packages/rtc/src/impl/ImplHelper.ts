@@ -1,5 +1,6 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
 import AgoraRTC, {
+  AgoraRTCErrorCode,
   CameraVideoTrackInitConfig,
   ClientConfig,
   EncryptionMode,
@@ -113,14 +114,23 @@ export class ImplHelper {
             trackArray = [screenTrack, null];
           }
         } catch (e) {
-          AgoraConsole.error('createScreenVideoTrack with audio failed');
+          if (e.code === AgoraRTCErrorCode.PERMISSION_DENIED) {
+            engine.rtcEngineEventHandler.onLocalVideoStateChanged(
+              videoType,
+              NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE
+                .LOCAL_VIDEO_STREAM_STATE_FAILED,
+              NATIVE_RTC.LOCAL_VIDEO_STREAM_ERROR
+                .LOCAL_VIDEO_STREAM_ERROR_DEVICE_NO_PERMISSION
+            );
+          }
+          debugger;
           throw e;
         }
         if (trackArray) {
           //每一个track都可能是null
           audioTrack = trackArray[1];
           if (audioTrack) {
-            this.processSceneShareAuidoTrack(engine, audioTrack, clientType);
+            this.processScreenShareAudioTrack(engine, audioTrack);
             engine.entitiesContainer.addLocalAudioTrack({
               type: audioType,
               track: audioTrack,
@@ -129,12 +139,7 @@ export class ImplHelper {
 
           videoTrack = trackArray[0];
           if (videoTrack) {
-            this.processSceneShareVideoTrack(
-              engine,
-              videoTrack,
-              clientType,
-              videoType
-            );
+            this.processScreenShareVideoTrack(engine, videoTrack, videoType);
             engine.entitiesContainer.addLocalVideoTrack({
               type: videoType,
               track: videoTrack,
@@ -163,17 +168,11 @@ export class ImplHelper {
         );
         videoTrack = await AgoraRTC.createScreenVideoTrack(conf, 'disable');
       } catch (e) {
-        AgoraConsole.error('createScreenVideoTrack failed');
         throw e;
       }
       if (videoTrack) {
         //这里的videoTrack有可能是null, 如果promise创建失败的话
-        this.processSceneShareVideoTrack(
-          engine,
-          videoTrack,
-          clientType,
-          videoType
-        );
+        this.processScreenShareVideoTrack(engine, videoTrack, videoType);
         engine.entitiesContainer.addLocalVideoTrack({
           type: videoType,
           track: videoTrack,
@@ -243,10 +242,9 @@ export class ImplHelper {
   }
 
   //当一个audioTrack被创建的时候，要拆解这些参数
-  public static processSceneShareAuidoTrack(
+  public static processScreenShareAudioTrack(
     engine: IrisRtcEngine,
-    audioTrack: ILocalAudioTrack,
-    type: IrisClientType
+    audioTrack: ILocalAudioTrack
   ) {
     let globalVariables = engine.globalVariables;
     let mainClientVariables = engine.mainClientVariables;
@@ -288,10 +286,9 @@ export class ImplHelper {
     }
   }
 
-  public static processSceneShareVideoTrack(
+  public static processScreenShareVideoTrack(
     engine: IrisRtcEngine,
     videoTrack: ILocalVideoTrack,
-    type: IrisClientType,
     videoSource: NATIVE_RTC.VIDEO_SOURCE_TYPE
   ) {
     let globalVariables = engine.globalVariables;

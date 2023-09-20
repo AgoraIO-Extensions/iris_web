@@ -2278,11 +2278,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         : NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN;
       let clientType = IrisClientType.kClientMain;
       this._engine.globalVariables.isScreenSharing = true;
-      this._engine.globalVariables.videoSourceType = videoType;
-      this._engine.globalVariables.audioSourceType = audioType;
 
+      let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
       try {
-        let trackArray = await ImplHelper.getOrCreateAudioAndVideoTrackAsync(
+        trackArray = await ImplHelper.getOrCreateAudioAndVideoTrackAsync(
           this._engine,
           audioType,
           videoType,
@@ -2291,9 +2290,24 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         );
         AgoraConsole.log('ScreenShare track create success');
       } catch (err) {
-        AgoraConsole.error('ScreenShare failed');
         err && AgoraConsole.error(err);
         return this.returnResult(false);
+      }
+
+      //设置屏幕共享特殊的事件
+      let videoTrack: ILocalVideoTrack = trackArray[1] as ILocalVideoTrack;
+      if (videoTrack) {
+        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+          {
+            track: videoTrack,
+            videoSourceType: videoType,
+            trackType: 'ILocalTrack',
+          },
+          this._engine
+        );
+        this._engine.entitiesContainer.addMainClientTrackEventHandler(
+          trackEventHandler
+        );
       }
 
       return this.returnResult();
@@ -2336,10 +2350,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let entitiesContainer = this._engine.entitiesContainer;
       this._engine.globalVariables.screenCaptureParameters2 = null;
       this._engine.globalVariables.isScreenSharing = false;
-      this._engine.globalVariables.videoSourceType =
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
-      this._engine.globalVariables.audioSourceType =
-        IrisAudioSourceType.kAudioSourceTypeScreenPrimary;
 
       let audioTrackPackage = entitiesContainer.getLocalAudioTrackByType(
         IrisAudioSourceType.kAudioSourceTypeScreenPrimary
