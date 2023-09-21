@@ -63,7 +63,7 @@ export type CallApiAsyncType = (
 export type GenerateVideoTrackLabelOrHtmlElementCb = (
   channelName: string,
   uid: number,
-  type: NATIVE_RTC.VIDEO_SOURCE_TYPE
+  type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
 ) => string;
 
 export class IrisRtcEngine implements ApiInterceptor {
@@ -198,9 +198,9 @@ export class IrisRtcEngine implements ApiInterceptor {
     let array = func_name.split('_');
     let className = array[0];
     let funName = array[1];
+    let buffer = apiParam.buffer;
 
     AgoraConsole.log(`[callIrisApiAsync][start] ${JSON.stringify(apiParam)}`);
-
     let obj = this.implDispatchsMap.get(className);
     if (obj) {
       let callApiFun: CallApiAsyncType = obj[funName];
@@ -271,7 +271,7 @@ export class IrisRtcEngine implements ApiInterceptor {
   public generateVideoTrackLabelOrHtmlElement(
     channelName: string,
     uid: number,
-    type: NATIVE_RTC.VIDEO_SOURCE_TYPE
+    type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
   ): string {
     if (this._generateVideoTrackLabelOrHtmlElementCb) {
       return this._generateVideoTrackLabelOrHtmlElementCb(

@@ -5,6 +5,8 @@ import { ApiParam, CallApiReturnType } from 'iris-web-core';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IMediaEngineImpl } from '../impl/IAgoraMediaEngineImpl';
 
+import { callApiBufferExtension } from './CallApiBufferExtensions';
+
 export class IMediaEngineDispatch {
   _impl: IMediaEngineImpl;
 
@@ -137,6 +139,7 @@ export class IMediaEngineDispatch {
 
   pushVideoFrame(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
+    obj = callApiBufferExtension(apiParam.event, obj, apiParam.buffer);
     let frame = obj.frame;
     if (frame === undefined) throw 'frame is undefined';
     let videoTrackId = obj.videoTrackId;

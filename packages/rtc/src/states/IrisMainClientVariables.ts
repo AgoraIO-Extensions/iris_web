@@ -11,9 +11,9 @@ export class IrisMainClientVariables {
   public stopPreview?: boolean;
 
   //ChannelMediaOptions
-  public publishCameraTrack?: boolean = true;
+  public publishCameraTrack?: boolean;
   public publishSecondaryCameraTrack?: boolean;
-  public publishAudioTrack?: boolean = true;
+  public publishAudioTrack?: boolean;
   public publishScreenCaptureVideo?: boolean;
   public publishScreenCaptureAudio?: boolean;
   public publishScreenTrack: boolean;

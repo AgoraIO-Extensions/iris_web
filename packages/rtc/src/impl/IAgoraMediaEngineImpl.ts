@@ -1,12 +1,18 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
+import { ILocalAudioTrack, ILocalVideoTrack } from 'agora-rtc-sdk-ng';
 import {
   AsyncTaskType,
   CallApiReturnType,
   CallIrisApiResult,
 } from 'iris-web-core';
 
+import { IrisAudioSourceType, IrisClientType } from '../base/BaseType';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 import { AgoraConsole } from '../util/AgoraConsole';
+import { drawBufferToCanvas } from '../util/BufferConvert';
+
+import { ImplHelper } from './ImplHelper';
 
 export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
   private _engine: IrisRtcEngine;
@@ -148,7 +154,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
 
-  pullAudioFrame(frame: NATIVE_RTC.AudioFrame[]): CallApiReturnType {
+  pullAudioFrame(frame: NATIVE_RTC.AudioFrame): CallApiReturnType {
     AgoraConsole.warn('pullAudioFrame not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
@@ -164,7 +170,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
   }
 
   pushVideoFrame(
-    frame: NATIVE_RTC.ExternalVideoFrame[],
+    frame: NATIVE_RTC.ExternalVideoFrame,
     videoTrackId: number
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
@@ -173,6 +179,66 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
           'pushVideoFrameEnabled is disabled , call setExternalVideoSource first'
         );
         return this.returnResult(false);
+      }
+      let canvas = document.querySelector('canvas');
+      if (!canvas) {
+        canvas = document.createElement('canvas');
+      }
+      drawBufferToCanvas(frame.stride, frame.height, frame.buffer, canvas);
+      let video = document.querySelector('video');
+      if (!video) {
+        video = document.createElement('video');
+      }
+      canvas.style.display = 'none';
+      video.style.display = 'none';
+      document.body.appendChild(canvas);
+      document.body.appendChild(video);
+      const stream = canvas.captureStream();
+
+      let audioType = IrisAudioSourceType.kAudioSourceTypeUnknown;
+      let videoType = this._engine.globalVariables.pushVideoFrameSourceType;
+      let clientType = IrisClientType.kClientMain;
+      this._engine.globalVariables.isScreenSharing = true;
+
+      let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
+      try {
+        trackArray = await ImplHelper.getOrCreateCustomAudioAndVideoTrackAsync(
+          this._engine,
+          audioType,
+          videoType,
+          stream.getVideoTracks()[0],
+          clientType,
+          null
+        );
+        AgoraConsole.log('create custom track success');
+      } catch (err) {
+        err && AgoraConsole.error(err);
+        return this.returnResult(false);
+      }
+      let videoTrack: ILocalVideoTrack = trackArray[1] as ILocalVideoTrack;
+      if (videoTrack) {
+        let mainClient = this._engine.entitiesContainer.getMainClient();
+        try {
+          await mainClient.publish(videoTrack);
+        } catch (reason) {
+          AgoraConsole.error(reason);
+        }
+        this._engine.entitiesContainer.setMainClientLocalVideoTrack({
+          type: videoType,
+          track: videoTrack,
+        });
+        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+          {
+            channelName: mainClient.channelName,
+            client: mainClient,
+            track: videoTrack,
+            trackType: 'ILocalVideoTrack',
+          },
+          this._engine
+        );
+        this._engine.entitiesContainer.addMainClientTrackEventHandler(
+          trackEventHandler
+        );
       }
 
       return this.returnResult();

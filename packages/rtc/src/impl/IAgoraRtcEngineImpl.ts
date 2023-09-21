@@ -251,7 +251,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY;
         }
       }
-
       let clientType = IrisClientType.kClientMain;
       let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
       try {
@@ -1647,8 +1646,12 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   setLogFilter(filter: number): CallApiReturnType {
-    AgoraConsole.warn('setLogFilter not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.execute(
+      (): Promise<CallIrisApiResult> => {
+        AgoraConsole.warn('setLogFilter not supported in this platform!');
+        return this.returnResult();
+      }
+    );
   }
   setLogLevel(level: NATIVE_RTC.LOG_LEVEL): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {

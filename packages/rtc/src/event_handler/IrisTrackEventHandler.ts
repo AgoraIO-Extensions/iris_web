@@ -24,7 +24,9 @@ export interface IrisTrackEventHandlerParam {
   remoteUser?: IAgoraRTCRemoteUser;
   track: ITrack;
   trackType: TrackType;
-  videoSourceType?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
+  videoSourceType?:
+    | NATIVE_RTC.VIDEO_SOURCE_TYPE
+    | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
 }
 
 //一个track可能被多个Client发布出去，所以一个track可以同事存在多个TrackEventHandler
@@ -34,7 +36,9 @@ export class IrisTrackEventHandler {
   private _remoteUser: IAgoraRTCRemoteUser = null;
   private _track: ITrack = null;
   private _trackType: TrackType = 'ILocalTrack';
-  private _videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE;
+  private _videoSourceType:
+    | NATIVE_RTC.VIDEO_SOURCE_TYPE
+    | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
 
   private _engine: IrisRtcEngine;
 

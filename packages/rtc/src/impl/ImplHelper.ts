@@ -43,6 +43,51 @@ export class ImplHelper {
     return trackArray;
   }
 
+  public static async getOrCreateCustomAudioAndVideoTrackAsync(
+    engine: IrisRtcEngine,
+    audioType: IrisAudioSourceType,
+    videoType: NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
+    mediaStreamTrack: MediaStreamTrack,
+    clientType: IrisClientType,
+    connection: NATIVE_RTC.RtcConnection
+  ): Promise<[ILocalAudioTrack, ILocalVideoTrack]> {
+    let retAudioTrack: ILocalAudioTrack = null;
+    let retVideoTrack: ILocalVideoTrack = engine.entitiesContainer.getLocalVideoTrackByType(
+      videoType
+    )?.track as ILocalVideoTrack;
+    //video
+    if (!retVideoTrack) {
+      let videoTrack: ILocalVideoTrack = null;
+      try {
+        videoTrack = AgoraRTC.createCustomVideoTrack({
+          mediaStreamTrack,
+        });
+      } catch (e) {
+        AgoraConsole.error('createCustomVideoTrack failed');
+        AgoraConsole.error(e);
+      }
+      if (videoTrack) {
+        //video 可能为null
+        this.processVideoTrack(
+          engine,
+          videoTrack,
+          clientType,
+          videoType,
+          connection
+        );
+        engine.entitiesContainer.addLocalVideoTrack({
+          type: videoType,
+          track: videoTrack,
+        });
+      }
+      retVideoTrack = videoTrack;
+    }
+
+    //audio 暂时不实现
+
+    return [retAudioTrack, retVideoTrack];
+  }
+
   public static async getOrCreateAudioAndVideoTrackAsync(
     engine: IrisRtcEngine,
     audioType: IrisAudioSourceType,
@@ -355,9 +400,11 @@ export class ImplHelper {
 
   public static processVideoTrack(
     engine: IrisRtcEngine,
-    videoTrack: ICameraVideoTrack,
+    videoTrack: ICameraVideoTrack | ILocalVideoTrack,
     type: IrisClientType,
-    videoSource: NATIVE_RTC.VIDEO_SOURCE_TYPE,
+    videoSource:
+      | NATIVE_RTC.VIDEO_SOURCE_TYPE
+      | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
     connection: NATIVE_RTC.RtcConnection
   ) {
     let globalVariables = engine.globalVariables;

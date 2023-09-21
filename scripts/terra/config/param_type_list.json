@@ -1,6 +1,8 @@
 {
   "agora::rtc::IRtcEngineEventHandler.onError.err@type": "ERROR_CODE_TYPE",
   "agora::media::IMediaEngine.pushAudioFrame.frame@type": "AudioFrame",
+  "agora::media::IMediaEngine.pullAudioFrame.frame@type": "AudioFrame",
+  "agora::media::IMediaEngine.pushVideoFrame.frame@type": "ExternalVideoFrame",
   "^agora::media::(.*)": "$1",
   "^Optional<(.*)>": "$1",
   "^util::(.*)": "$1",
@@ -15,7 +17,6 @@
   "^agora_refptr<agora::rtc::(.*)>": "$1",
   "^agora::util::(.*)": "$1",
   "^(.*)::(.*)": "$2",
-  "^ExternalVideoFrame::(.*)": "$1",
   "^IAudioFrameObserverBase::(.*)": "$1",
   "^(.*)const&": "$1",
   "^(.*)&": "$1",

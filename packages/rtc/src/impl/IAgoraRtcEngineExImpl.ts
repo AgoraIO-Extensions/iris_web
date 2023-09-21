@@ -648,7 +648,6 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       }
 
       if (options.clientRoleType != null) {
-        debugger;
         await ClientHelper.setClientRole(
           subClient,
           options.clientRoleType,

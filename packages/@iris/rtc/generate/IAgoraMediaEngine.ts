@@ -35,7 +35,7 @@ export interface IMediaEngine {
 
   pushAudioFrame(frame: AudioFrame, trackId: number): CallApiReturnType;
 
-  pullAudioFrame(frame: AudioFrame[]): CallApiReturnType;
+  pullAudioFrame(frame: AudioFrame): CallApiReturnType;
 
   setExternalVideoSource(
     enabled: boolean,
@@ -71,7 +71,7 @@ export interface IMediaEngine {
   ): CallApiReturnType;
 
   pushVideoFrame(
-    frame: ExternalVideoFrame[],
+    frame: ExternalVideoFrame,
     videoTrackId: number
   ): CallApiReturnType;
 

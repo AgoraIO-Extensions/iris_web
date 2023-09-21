@@ -59,7 +59,7 @@ export interface Size {
 
 export interface VideoTrackPackage {
   element?: string;
-  type?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
+  type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
   track?: ILocalVideoTrack | IRemoteVideoTrack;
 }
 

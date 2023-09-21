@@ -222,7 +222,7 @@ export class IrisEntitiesContainer {
   }
 
   getLocalVideoTrackByType(
-    type: NATIVE_RTC.VIDEO_SOURCE_TYPE
+    type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
   ): VideoTrackPackage {
     for (let trackPack of this._localVideoTracks) {
       if (trackPack.type == type && trackPack.track) {
@@ -1080,7 +1080,7 @@ export class IrisEntitiesContainer {
 
   getLocalVideoTrackType(
     track: ILocalVideoTrack
-  ): NATIVE_RTC.VIDEO_SOURCE_TYPE {
+  ): NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE {
     for (let e of this._localVideoTracks) {
       if (e.track == track) {
         return e.type;

@@ -1707,14 +1707,14 @@ interface IMediaEngine {
     registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
     registerVideoEncodedFrameObserver(observer: IVideoEncodedFrameObserver): CallApiReturnType;
     pushAudioFrame(frame: AudioFrame, trackId: number): CallApiReturnType;
-    pullAudioFrame(frame: AudioFrame[]): CallApiReturnType;
+    pullAudioFrame(frame: AudioFrame): CallApiReturnType;
     setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: EXTERNAL_VIDEO_SOURCE_TYPE, encodedVideoOption: SenderOptions): CallApiReturnType;
     setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, localPlayback: boolean, publish: boolean): CallApiReturnType;
     createCustomAudioTrack(trackType: AUDIO_TRACK_TYPE, config: AudioTrackConfig): CallApiReturnType;
     destroyCustomAudioTrack(trackId: number): CallApiReturnType;
     setExternalAudioSink(enabled: boolean, sampleRate: number, channels: number): CallApiReturnType;
     enableCustomAudioLocalPlayback(trackId: number, enabled: boolean): CallApiReturnType;
-    pushVideoFrame(frame: ExternalVideoFrame[], videoTrackId: number): CallApiReturnType;
+    pushVideoFrame(frame: ExternalVideoFrame, videoTrackId: number): CallApiReturnType;
     pushEncodedVideoImage(imageBuffer: Uint8Array, length: number, videoEncodedFrameInfo: EncodedVideoFrameInfo, videoTrackId: number): CallApiReturnType;
     release(): CallApiReturnType;
 }
