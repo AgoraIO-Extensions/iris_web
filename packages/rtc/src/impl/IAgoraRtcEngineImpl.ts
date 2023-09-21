@@ -39,10 +39,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     this._engine = engine;
   }
 
-  putAction(action: Action) {
-    this._engine.actionQueue.putAction(action);
-  }
-
   private execute(task: AsyncTaskType): CallApiReturnType {
     return this._engine.executor.execute(task);
   }

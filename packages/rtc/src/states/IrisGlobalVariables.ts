@@ -11,6 +11,12 @@ export class IrisGlobalVariables {
   public enabledAudio: boolean = true;
   public pausedAudio: boolean = false;
 
+  pushVideoFrameEnabled: boolean = false;
+  pushVideoFrameUseTexture: boolean = false;
+  pushVideoFrameSourceType: NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE =
+    NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE.ENCODED_VIDEO_FRAME;
+  pushVideoFrameEncodedVideoOption: NATIVE_RTC.SenderOptions;
+
   //开启或禁用本地audio功能，audio流
   public enabledLocalAudio: boolean = true;
   public mutedLocalAudioStream: boolean = false;
