@@ -6,8 +6,9 @@ import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
 import { renderWithConfiguration } from '@agoraio-extensions/terra_shared_configs';
 
+import bindingExtensionList = require('./config/binding_extension_list.json');
+
 import {
-  addMethodWrapper,
   appendNumberToDuplicateMemberFunction,
   filterFile,
   isMatch,
@@ -30,6 +31,7 @@ interface ClazzMethodUserData {
   hasParameters: boolean;
   isRegisterMethod: boolean;
   _prefix: string;
+  bindingExtensionList: [];
 }
 
 export default function (
@@ -47,7 +49,6 @@ export default function (
       ),
     };
     cxxfile.user_data = cxxUserData;
-    // cxxfile = addMethodWrapper(cxxfile);
 
     let nodes = cxxfile.nodes.filter((node: CXXTerraNode) => {
       return node.__TYPE === CXXTYPE.Clazz;
@@ -74,6 +75,7 @@ export default function (
             !method.name.endsWith('Ex')
               ? 'Ex'
               : '',
+          bindingExtensionList: bindingExtensionList[method.fullName],
         };
         method.user_data = clazzMethodUserData;
       });

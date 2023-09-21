@@ -3,9 +3,8 @@
 import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { callApiBufferExtension } from '../extensions/CallApiBufferExtensions';
 import { IMediaEngineImpl } from '../impl/IAgoraMediaEngineImpl';
-
-import { callApiBufferExtension } from './CallApiBufferExtensions';
 
 export class IMediaEngineDispatch {
   _impl: IMediaEngineImpl;

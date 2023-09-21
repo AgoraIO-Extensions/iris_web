@@ -1,0 +1,18 @@
+{
+  "plugins": ["auto-import", "unused-imports"],
+  "overrides": [
+    {
+      "files": ["./binding/*.ts"],
+      "rules": {
+        "unused-imports/no-unused-imports": "error",
+        "auto-import/auto-import": [
+          "error",
+          {
+            "rootPath": "../../../packages/rtc/src",
+            "external": "@iris/web-rtc"
+          }
+        ]
+      }
+    }
+  ]
+}

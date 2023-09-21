@@ -1,13 +1,12 @@
 import path = require('path');
 
-import { CXXFile, CXXTYPE, Clazz, MemberFunction, TerraNode } from 'terra-cli';
+import { CXXFile, MemberFunction } from '@agoraio-extensions/cxx-parser';
 
 let regMap = {
   isCallback: '.*(Observer|Handler|Callback|Receiver|Sink).*',
 };
 
 import filterFileList = require('./config/filter_file_list.json');
-import methodWrapperList = require('./config/wrapper_list.json');
 
 export function filterFile(cxxfiles: CXXFile[]): CXXFile[] {
   return cxxfiles.filter((file) => {
@@ -42,16 +41,4 @@ export function appendNumberToDuplicateMemberFunction(
     }
   });
   return arr;
-}
-
-export function addMethodWrapper(cxxfile: CXXFile): CXXFile {
-  cxxfile.nodes = cxxfile.nodes.map((node: TerraNode) => {
-    if (methodWrapperList[node.fullName]) {
-      node.asClazz().methods = node
-        .asClazz()
-        .methods.concat(methodWrapperList[node.fullName].methods);
-    }
-    return node;
-  });
-  return cxxfile;
 }

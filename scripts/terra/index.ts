@@ -11,7 +11,6 @@ import {
 import { renderWithConfiguration } from '@agoraio-extensions/terra_shared_configs';
 
 import {
-  addMethodWrapper,
   appendNumberToDuplicateMemberFunction,
   filterFile,
   isMatch,
@@ -47,7 +46,6 @@ export default function (
       ),
     };
     cxxfile.user_data = cxxUserData;
-    // cxxfile = addMethodWrapper(cxxfile);
 
     cxxfile.nodes = cxxfile.nodes.map((node: CXXTerraNode) => {
       let isCallback = isMatch(node.name, 'isCallback');

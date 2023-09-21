@@ -62,6 +62,9 @@ export class {{name}}Dispatch{
     {{^user_data.isRegisterMethod}}
     {{#user_data.hasParameters}}
     let obj = JSON.parse(apiParam.data) as any;
+    {{#user_data.bindingExtensionList}}
+    {{{.}}}
+    {{/user_data.bindingExtensionList}}
     {{/user_data.hasParameters}}
     {{#parameters}}
     let {{name}} = obj.{{name}};

@@ -8,7 +8,6 @@
   },
   "prettier.enable": true,
   "cSpell.enabled": true,
-  "typescript.tsdk": "terra-cli/node_modules/typescript/lib",
   "[json]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
