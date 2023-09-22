@@ -38,6 +38,7 @@ import { IAudioDeviceManagerDispatch } from '../binding/IAudioDeviceManagerDispa
 
 import { IrisAgoraEventHandler } from '../event_handler/IrisAgoraEventHandler';
 import { RtcEngineDispatchExtensions } from '../extensions/IAgoraRtcEngineExtensions';
+import { IrisElement } from '../helper/DomHelper';
 import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
 import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
 import { IrisSubClientVariables } from '../states/IrisSubClientVariables';
@@ -83,6 +84,7 @@ export class IrisRtcEngine implements ApiInterceptor {
   public actionQueue: AgoraActionQueue = null;
   public executor: CallApiExecutor = null;
   public irisEventHandlerManager: IrisEventHandlerManager = null;
+  public irisElement: IrisElement = null;
 
   constructor(irisEventHandlerManager: IrisEventHandlerManager) {
     this.implDispatchsMap = new Map();
@@ -135,6 +137,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     this.rtcEngineEventHandler = new IRtcEngineEventHandlerEx(this);
     this.entitiesContainer = new IrisEntitiesContainer(this);
     this.globalVariables = new IrisGlobalVariables();
+    this.irisElement = new IrisElement();
     this.mainClientVariables = new IrisMainClientVariables();
     this.subClientVariables = new IrisSubClientVariables();
     this.agoraEventHandler = new IrisAgoraEventHandler(this);

@@ -7,6 +7,8 @@ import {
 } from 'iris-web-core';
 
 import { IrisAudioSourceType, IrisClientType } from '../base/BaseType';
+import { IrisApiType } from '../base/IrisApiType';
+
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -180,19 +182,29 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
         );
         return this.returnResult(false);
       }
-      let canvas = document.querySelector('canvas');
+      //创建custom track的html element
+      let irisContainer = this._engine.irisElement.getIrisElement();
+      if (!irisContainer) {
+        irisContainer = this._engine.irisElement.createIrisElement();
+      }
+      let canvasID = `${IrisApiType.FUNC_MEDIAENGINE_PUSHVIDEOFRAME}_CANVAS`;
+      let canvas: HTMLCanvasElement = document.querySelector(`#${canvasID}`);
       if (!canvas) {
         canvas = document.createElement('canvas');
+        canvas.id = canvasID;
+        canvas.style.display = 'none';
       }
       drawBufferToCanvas(frame.stride, frame.height, frame.buffer, canvas);
-      let video = document.querySelector('video');
+      let videoID = `${IrisApiType.FUNC_MEDIAENGINE_PUSHVIDEOFRAME}_VIDEO`;
+      let video: HTMLVideoElement = document.querySelector(`#${videoID}`);
       if (!video) {
         video = document.createElement('video');
+        video.id = videoID;
+        video.style.display = 'none';
       }
-      canvas.style.display = 'none';
-      video.style.display = 'none';
-      document.body.appendChild(canvas);
-      document.body.appendChild(video);
+      irisContainer.appendChild(canvas);
+      irisContainer.appendChild(video);
+      document.body.appendChild(irisContainer);
       const stream = canvas.captureStream();
 
       let audioType = IrisAudioSourceType.kAudioSourceTypeUnknown;
@@ -240,7 +252,10 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
           trackEventHandler
         );
       }
-
+      //销毁custom track的html element
+      setTimeout(() => {
+        this._engine.irisElement.remove();
+      }, 3000);
       return this.returnResult();
     };
     return this.execute(processFunc);

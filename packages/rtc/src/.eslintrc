@@ -1,10 +1,13 @@
 {
   "plugins": ["auto-import", "unused-imports"],
+  "rules": {
+    "unused-imports/no-unused-imports": "error"
+  },
   "overrides": [
     {
+      "plugins": ["auto-import"],
       "files": ["./binding/*.ts"],
       "rules": {
-        "unused-imports/no-unused-imports": "error",
         "auto-import/auto-import": [
           "error",
           {
