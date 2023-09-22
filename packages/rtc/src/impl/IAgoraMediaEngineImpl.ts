@@ -12,7 +12,7 @@ import { IrisApiType } from '../base/IrisApiType';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 import { AgoraConsole } from '../util/AgoraConsole';
-import { drawBufferToCanvas } from '../util/BufferConvert';
+import { drawRGBABufferToCanvas } from '../util/BufferConvert';
 
 import { ImplHelper } from './ImplHelper';
 
@@ -175,6 +175,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     frame: NATIVE_RTC.ExternalVideoFrame,
     videoTrackId: number
   ): CallApiReturnType {
+    //这个方法在web中每次都需要走一遍全新的create pub
     let processFunc = async (): Promise<CallIrisApiResult> => {
       if (!this._engine.globalVariables.pushVideoFrameEnabled) {
         AgoraConsole.error(
@@ -194,16 +195,9 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
         canvas.id = canvasID;
         canvas.style.display = 'none';
       }
-      drawBufferToCanvas(frame.stride, frame.height, frame.buffer, canvas);
-      let videoID = `${IrisApiType.FUNC_MEDIAENGINE_PUSHVIDEOFRAME}_VIDEO`;
-      let video: HTMLVideoElement = document.querySelector(`#${videoID}`);
-      if (!video) {
-        video = document.createElement('video');
-        video.id = videoID;
-        video.style.display = 'none';
-      }
+      //todo 目前flutter给到的数据解析时是bgra, 需要转成rgba才能正常渲染
+      drawRGBABufferToCanvas(frame.stride, frame.height, frame.buffer, canvas);
       irisContainer.appendChild(canvas);
-      irisContainer.appendChild(video);
       document.body.appendChild(irisContainer);
       const stream = canvas.captureStream();
 
@@ -253,8 +247,12 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
         );
       }
       //销毁custom track的html element
+      //注销创建的track
       setTimeout(() => {
         this._engine.irisElement.remove();
+        videoTrack.isPlaying && videoTrack.stop();
+        videoTrack.close();
+        this._engine.entitiesContainer.processVideoTrackClose(videoTrack);
       }, 3000);
       return this.returnResult();
     };
