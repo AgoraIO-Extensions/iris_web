@@ -176,7 +176,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     uid: number,
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
-    if (this._engine.globalVariables.isConnected == true) {
+    if (this._engine.globalVariables.isCreateMainClient == true) {
       AgoraConsole.error('you have already joinChannel');
       return this.returnResult(
         false,
@@ -184,7 +184,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       );
     }
 
-    this._engine.globalVariables.isConnected = true;
+    this._engine.globalVariables.isCreateMainClient = true;
     let processJoinChannel = async (): Promise<CallIrisApiResult> => {
       // this._engine.mainClientVariables.startPreviewed = false;
       let mainClientVariables: IrisMainClientVariables = this._engine
@@ -217,7 +217,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           NATIVE_RTC.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED,
           ''
         );
-        this._engine.globalVariables.isConnected = false;
+        this._engine.globalVariables.isCreateMainClient = false;
         this._engine.entitiesContainer.clearMainClientAll(null);
         return this.returnResult(false);
       }
@@ -587,13 +587,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   leaveChannel2(options: NATIVE_RTC.LeaveChannelOptions): CallApiReturnType {
     let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
       //离开频道啦 稍后处理
-      if (!this._engine.globalVariables.isConnected) {
+      if (!this._engine.globalVariables.isCreateMainClient) {
         // AgoraConsole.error("you must join channel before you call this method");
         // return CallIrisApiResult.failed(0, -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
         return CallIrisApiResult.success();
       }
 
-      this._engine.globalVariables.isConnected = false;
+      this._engine.globalVariables.isCreateMainClient = false;
 
       let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
       if (mainClient) {
