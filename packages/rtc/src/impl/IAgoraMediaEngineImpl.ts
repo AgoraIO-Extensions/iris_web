@@ -204,7 +204,6 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
       let audioType = IrisAudioSourceType.kAudioSourceTypeUnknown;
       let videoType = this._engine.globalVariables.pushVideoFrameSourceType;
       let clientType = IrisClientType.kClientMain;
-      this._engine.globalVariables.isScreenSharing = true;
 
       let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
       try {
