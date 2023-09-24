@@ -1,5 +1,6 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
 import {
+  IBufferSourceAudioTrack,
   ILocalAudioTrack,
   ILocalVideoTrack,
   IRemoteAudioTrack,
@@ -73,6 +74,11 @@ export interface VideoViewHolder {
 export interface AudioTrackPackage {
   type: IrisAudioSourceType;
   track: ILocalAudioTrack | IRemoteAudioTrack;
+}
+
+export interface BufferSourceAudioTrackPackage {
+  soundId: number;
+  track: IBufferSourceAudioTrack;
 }
 
 export interface EncryptionConfigPackage {}

@@ -1,7 +1,10 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
 import AgoraRTC, {
+  AudioSourceOptions,
+  BufferSourceAudioTrackInitConfig,
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
+  IBufferSourceAudioTrack,
   ICameraVideoTrack,
   ILocalAudioTrack,
   ILocalVideoTrack,
@@ -1450,14 +1453,95 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     soundId: number,
     filePath: string,
     loopCount: number,
-    pitch: number,
-    pan: number,
+    pitch: number, //web没有
+    pan: number, //web没有
     gain: number,
     publish: boolean,
     startPos: number
   ): CallApiReturnType {
-    AgoraConsole.warn('playEffect not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      console.log(filePath);
+      if (
+        !this._engine.globalVariables.enabledAudio ||
+        !this._engine.globalVariables.enabledLocalAudio
+      ) {
+        AgoraConsole.error('please enableAudio first');
+        return this.returnResult(false);
+      }
+
+      let audioType = IrisAudioSourceType.kAudioSourceTypeUnknown;
+      let clientType = IrisClientType.kClientMain;
+
+      let bufferSourceAudioTrack: IBufferSourceAudioTrack = null;
+      let bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig;
+      if (filePath.startsWith('https://') || filePath.startsWith('http://')) {
+        bufferSourceAudioTrackInitConfig.source = filePath;
+      } else {
+        // filePath是一个本地连接
+        console.log('这是一个本地连接');
+      }
+      bufferSourceAudioTrackInitConfig.source = filePath;
+
+      try {
+        bufferSourceAudioTrack = await ImplHelper.createBufferSourceAudioTrackAsync(
+          this._engine,
+          audioType,
+          bufferSourceAudioTrackInitConfig,
+          clientType
+        );
+        AgoraConsole.log('createBufferSourceAudioTrack success');
+      } catch (err) {
+        err && AgoraConsole.error(err);
+        return this.returnResult(false);
+      }
+      if (publish && bufferSourceAudioTrack) {
+        //设置音效
+        if (gain) {
+          bufferSourceAudioTrack.setVolume(gain);
+        }
+        let mainClient = this._engine.entitiesContainer.getMainClient();
+        try {
+          //https://docportal.shengwang.cn/cn/video-call-4.x/audio_effect_mixing_web_ng?platform=Web#发布多个音频轨道以实现混音
+          let config: AudioSourceOptions = {
+            loop: false,
+          };
+          if (typeof loopCount === 'number' && loopCount >= 0) {
+            config.cycle = loopCount;
+            if (loopCount === -1) {
+              config.loop = true;
+            }
+          }
+          //native是毫秒 web是秒
+          if (startPos) {
+            config.startPlayTime = Math.floor(startPos / 1000);
+          }
+          bufferSourceAudioTrack.startProcessAudioBuffer(config);
+          await mainClient.publish(bufferSourceAudioTrack);
+        } catch (reason) {
+          AgoraConsole.error(reason);
+        }
+        this._engine.entitiesContainer.addMainClientLocalBufferSourceAudioTrack(
+          {
+            soundId: soundId,
+            track: bufferSourceAudioTrack,
+          }
+        );
+        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+          {
+            channelName: mainClient.channelName,
+            client: mainClient,
+            track: bufferSourceAudioTrack,
+            trackType: 'IBufferSourceAudioTrack',
+          },
+          this._engine
+        );
+        this._engine.entitiesContainer.addMainClientTrackEventHandler(
+          trackEventHandler
+        );
+      }
+      return this.returnResult();
+    };
+    return this.execute(processFunc);
   }
   playAllEffects(
     loopCount: number,

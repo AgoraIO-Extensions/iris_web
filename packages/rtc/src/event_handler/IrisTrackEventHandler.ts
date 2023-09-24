@@ -17,6 +17,7 @@ export type TrackType =
   | 'ILocalTrack'
   | 'ILocalVideoTrack'
   | 'IRemoteTrack'
+  | 'IBufferSourceAudioTrack'
   | 'IRemoteVideoTrack';
 export interface IrisTrackEventHandlerParam {
   channelName?: string;

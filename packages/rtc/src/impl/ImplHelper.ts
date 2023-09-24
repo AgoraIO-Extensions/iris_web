@@ -1,10 +1,12 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
 import AgoraRTC, {
   AgoraRTCErrorCode,
+  BufferSourceAudioTrackInitConfig,
   CameraVideoTrackInitConfig,
   ClientConfig,
   EncryptionMode,
   IAgoraRTCClient,
+  IBufferSourceAudioTrack,
   ICameraVideoTrack,
   ILocalAudioTrack,
   ILocalVideoTrack,
@@ -41,6 +43,40 @@ export class ImplHelper {
         ?.track as ILocalVideoTrack,
     ];
     return trackArray;
+  }
+
+  public static async createBufferSourceAudioTrackAsync(
+    engine: IrisRtcEngine,
+    soundId: number,
+    bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig,
+    clientType: IrisClientType
+  ): Promise<IBufferSourceAudioTrack> {
+    let bufferSourceAudioTrack: IBufferSourceAudioTrack = null;
+
+    let bufferSourceAudioTrackPackage = engine.entitiesContainer.getLocalBufferSourceAudioTrackBySoundId(
+      soundId
+    );
+    if (bufferSourceAudioTrackPackage) {
+      throw `soundId:${bufferSourceAudioTrackPackage.soundId} already create`;
+    }
+    try {
+      bufferSourceAudioTrack = await AgoraRTC.createBufferSourceAudioTrack(
+        bufferSourceAudioTrackInitConfig
+      );
+    } catch (e) {
+      AgoraConsole.error('createBufferSourceAudioTrack failed');
+      AgoraConsole.error(e);
+    }
+    if (bufferSourceAudioTrack) {
+      //audio 可能为null
+      // this.processAudioTrack(engine, bufferSourceAudioTrack, clientType);
+      engine.entitiesContainer.addLocalBufferSourceAudioTrack({
+        soundId: soundId,
+        track: bufferSourceAudioTrack,
+      });
+    }
+
+    return bufferSourceAudioTrack;
   }
 
   public static async getOrCreateCustomAudioAndVideoTrackAsync(
@@ -370,7 +406,7 @@ export class ImplHelper {
 
   public static processAudioTrack(
     engine: IrisRtcEngine,
-    audioTrack: IMicrophoneAudioTrack,
+    audioTrack: IMicrophoneAudioTrack | IBufferSourceAudioTrack,
     type: IrisClientType
   ) {
     let globalVariables = engine.globalVariables;

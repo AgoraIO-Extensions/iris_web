@@ -2,6 +2,7 @@ import * as NATIVE_RTC from '@iris/web-rtc';
 import {
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
+  IBufferSourceAudioTrack,
   ILocalAudioTrack,
   ILocalVideoTrack,
   ITrack,
@@ -12,6 +13,7 @@ import { CallIrisApiResult } from 'iris-web-core';
 
 import {
   AudioTrackPackage,
+  BufferSourceAudioTrackPackage,
   IRIS_VIDEO_PROCESS_ERR,
   IrisAudioSourceType,
   IrisVideoFrameBufferConfig,
@@ -39,12 +41,18 @@ export class IrisEntitiesContainer {
   private _mainClientLocalAudioTracks: Array<AudioTrackPackage> = new Array<
     AudioTrackPackage
   >();
+  private _mainClientLocalBufferSourceAudioTracks: Array<
+    BufferSourceAudioTrackPackage
+  > = new Array<BufferSourceAudioTrackPackage>();
   private _mainClientLocalVideoTrack: VideoTrackPackage = null;
   private _mainClientTrackEventHandlers: Array<
     IrisTrackEventHandler
   > = new Array<IrisTrackEventHandler>();
 
   //all local tracks
+  private _localBufferSourceAudioTracks: Array<
+    BufferSourceAudioTrackPackage
+  > = new Array<BufferSourceAudioTrackPackage>();
   private _localAudioTracks: Array<AudioTrackPackage> = new Array<
     AudioTrackPackage
   >();
@@ -279,6 +287,61 @@ export class IrisEntitiesContainer {
     this._localVideoTracks = [];
   }
 
+  addLocalBufferSourceAudioTrack(trackPackage: BufferSourceAudioTrackPackage) {
+    this._localBufferSourceAudioTracks.push(trackPackage);
+  }
+
+  getLocalBufferSourceAudioTrackBySoundId(
+    soundId: number
+  ): BufferSourceAudioTrackPackage {
+    for (let trackPack of this._localBufferSourceAudioTracks) {
+      if (trackPack.soundId == soundId) {
+        return trackPack;
+      }
+    }
+    return null;
+  }
+
+  removeLocalBufferSourceAudioTrackBySoundId(soundId: number) {
+    for (let i = 0; i < this._localBufferSourceAudioTracks.length; i++) {
+      let trackPack = this._localBufferSourceAudioTracks[i];
+      if (trackPack.soundId == soundId) {
+        this._localBufferSourceAudioTracks.splice(i, 1);
+        break;
+      }
+    }
+  }
+
+  removeLocalBufferSourceAudioTrackByTrack(track: IBufferSourceAudioTrack) {
+    for (let i = 0; i < this._localBufferSourceAudioTracks.length; i++) {
+      let trackPack = this._localBufferSourceAudioTracks[i];
+      if (trackPack.track == track) {
+        this._localBufferSourceAudioTracks.splice(i, 1);
+        break;
+      }
+    }
+  }
+
+  addMainClientLocalBufferSourceAudioTrack(
+    trackPackage: BufferSourceAudioTrackPackage
+  ) {
+    this._mainClientLocalBufferSourceAudioTracks.push(trackPackage);
+  }
+
+  removeMainClientLocalBufferSourceAudioTrack(track: IBufferSourceAudioTrack) {
+    for (
+      let i = 0;
+      i < this._mainClientLocalBufferSourceAudioTracks.length;
+      i++
+    ) {
+      let trackPackage = this._mainClientLocalBufferSourceAudioTracks[i];
+      if (trackPackage.track == track) {
+        this._mainClientLocalBufferSourceAudioTracks.splice(i, 1);
+        break;
+      }
+    }
+  }
+
   addLocalAudioTrack(trackPackage: AudioTrackPackage) {
     this._localAudioTracks.push(trackPackage);
   }
@@ -290,16 +353,6 @@ export class IrisEntitiesContainer {
       }
     }
     return null;
-  }
-
-  removeLocalAudioTrack(trackPackage: AudioTrackPackage) {
-    for (let i = 0; i < this._localAudioTracks.length; i++) {
-      let trackPack = this._localAudioTracks[i];
-      if (trackPack == trackPackage) {
-        this._localAudioTracks.splice(i, 1);
-        break;
-      }
-    }
   }
 
   removeLocalAudioTrackByTrack(track: ILocalAudioTrack) {
@@ -910,6 +963,32 @@ export class IrisEntitiesContainer {
       connection.channelId,
       connection.localUid
     );
+  }
+
+  //  当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 并且停止发流 记住是所有哦
+  async processBufferSourceAudioTrackClose(track: IBufferSourceAudioTrack) {
+    //local
+    this.removeLocalBufferSourceAudioTrackByTrack(track);
+
+    //main
+    this.removeMainClientLocalBufferSourceAudioTrack(track);
+    this.removeMainClientTrackEventHandlerByTrack(track);
+    if (this._mainClient && this._mainClient.localTracks.indexOf(track) != -1) {
+      try {
+        await this._mainClient.unpublish(track);
+        AgoraConsole.log('unpublish success');
+      } catch (e) {
+        AgoraConsole.error(e);
+        Promise.resolve(
+          new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+        );
+        throw e;
+      }
+    }
+
+    //删除完毕后进行stop,close
+    track.stopProcessAudioBuffer();
+    track.close();
   }
 
   //  当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 并且停止发流 记住是所有哦
