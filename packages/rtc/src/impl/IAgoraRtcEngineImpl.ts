@@ -1460,7 +1460,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     startPos: number
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      console.log(filePath);
       if (
         !this._engine.globalVariables.enabledAudio ||
         !this._engine.globalVariables.enabledLocalAudio
@@ -1469,23 +1468,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         return this.returnResult(false);
       }
 
-      let audioType = IrisAudioSourceType.kAudioSourceTypeUnknown;
       let clientType = IrisClientType.kClientMain;
 
       let bufferSourceAudioTrack: IBufferSourceAudioTrack = null;
-      let bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig;
+      let bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig = {
+        source: null,
+      };
+      //如果是带有http或者https的则不拼接,否则拼接origin
       if (filePath.startsWith('https://') || filePath.startsWith('http://')) {
         bufferSourceAudioTrackInitConfig.source = filePath;
       } else {
-        // filePath是一个本地连接
-        console.log('这是一个本地连接');
+        bufferSourceAudioTrackInitConfig.source = `${location.origin}/${filePath}`;
       }
-      bufferSourceAudioTrackInitConfig.source = filePath;
 
       try {
         bufferSourceAudioTrack = await ImplHelper.createBufferSourceAudioTrackAsync(
           this._engine,
-          audioType,
+          soundId,
           bufferSourceAudioTrackInitConfig,
           clientType
         );
@@ -1578,8 +1577,40 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   stopEffect(soundId: number): CallApiReturnType {
-    AgoraConsole.warn('stopEffect not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      let bufferSourceAudioTrack: IBufferSourceAudioTrack = this._engine.entitiesContainer.getLocalBufferSourceAudioTrackBySoundId(
+        soundId
+      )?.track;
+      if (!bufferSourceAudioTrack) {
+        AgoraConsole.error(`soundId:${soundId} not found`);
+        this._engine.rtcEngineEventHandler.onError(
+          NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED,
+          `soundId:${soundId} not found`
+        );
+        return this.returnResult(false);
+      }
+      try {
+        bufferSourceAudioTrack.stopProcessAudioBuffer();
+        let mainClient = this._engine.entitiesContainer.getMainClient();
+        await mainClient?.unpublish([bufferSourceAudioTrack]);
+      } catch (err) {
+        err && AgoraConsole.error(err);
+        this._engine.rtcEngineEventHandler.onError(
+          NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED,
+          `stopEffect:${soundId} stopEffect failed`
+        );
+        return this.returnResult(false);
+      }
+      this._engine.entitiesContainer.removeLocalBufferSourceAudioTrackBySoundId(
+        soundId
+      );
+      await this._engine.entitiesContainer.processBufferSourceAudioTrackClose(
+        bufferSourceAudioTrack
+      );
+      return this.returnResult();
+    };
+
+    return this.execute(processFunc);
   }
   stopAllEffects(): CallApiReturnType {
     AgoraConsole.warn('stopAllEffects not supported in this platform!');

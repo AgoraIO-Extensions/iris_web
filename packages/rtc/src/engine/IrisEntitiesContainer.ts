@@ -302,6 +302,17 @@ export class IrisEntitiesContainer {
     return null;
   }
 
+  getLocalBufferSourceAudioTrackSoundIdByTrack(
+    track: IBufferSourceAudioTrack
+  ): number {
+    for (let trackPack of this._localBufferSourceAudioTracks) {
+      if (trackPack.track == track) {
+        return trackPack.soundId;
+      }
+    }
+    return null;
+  }
+
   removeLocalBufferSourceAudioTrackBySoundId(soundId: number) {
     for (let i = 0; i < this._localBufferSourceAudioTracks.length; i++) {
       let trackPack = this._localBufferSourceAudioTracks[i];

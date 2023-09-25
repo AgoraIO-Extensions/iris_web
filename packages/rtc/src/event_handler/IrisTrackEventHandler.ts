@@ -2,6 +2,7 @@ import * as NATIVE_RTC from '@iris/web-rtc';
 import {
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
+  IBufferSourceAudioTrack,
   ILocalTrack,
   ILocalVideoTrack,
   IRemoteTrack,
@@ -35,7 +36,7 @@ export class IrisTrackEventHandler {
   private _channelName: string = null;
   private _client: IAgoraRTCClient = null;
   private _remoteUser: IAgoraRTCRemoteUser = null;
-  private _track: ITrack = null;
+  private _track: ITrack | IBufferSourceAudioTrack = null;
   private _trackType: TrackType = 'ILocalTrack';
   private _videoSourceType:
     | NATIVE_RTC.VIDEO_SOURCE_TYPE
@@ -48,6 +49,7 @@ export class IrisTrackEventHandler {
   private __onEventVideoElementVisibleStatus2 = null;
   private __onEventFirstFrameDecoded = null;
   private __onEventVideoElementVisibleStatus = null;
+  private __onEventSourceStateChange = null;
 
   constructor(params: IrisTrackEventHandlerParam, engine: IrisRtcEngine) {
     this._channelName = params.channelName;
@@ -95,6 +97,12 @@ export class IrisTrackEventHandler {
           this.__onEventVideoElementVisibleStatus
         );
         break;
+      case 'IBufferSourceAudioTrack':
+        this.__onEventSourceStateChange = this.onEventSourceStateChange.bind(
+          this
+        );
+        this._track.on('source-state-change', this.__onEventSourceStateChange);
+        break;
     }
   }
 
@@ -113,6 +121,15 @@ export class IrisTrackEventHandler {
         break;
       case 'ILocalVideoTrack':
         break;
+    }
+  }
+
+  onEventSourceStateChange() {
+    if (this._trackType === 'IBufferSourceAudioTrack') {
+      let soundId = this._engine.entitiesContainer.getLocalBufferSourceAudioTrackSoundIdByTrack(
+        this._track as IBufferSourceAudioTrack
+      );
+      this._engine.rtcEngineEventHandler.onAudioEffectFinished(soundId);
     }
   }
 
