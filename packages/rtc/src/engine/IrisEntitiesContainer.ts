@@ -1199,6 +1199,8 @@ export class IrisEntitiesContainer {
     await this.clearLocalAudioTracks(true);
     await this.clearLocalVideoTracks(true);
 
+    //销毁iris html element
+    this._engine.irisElement.dispose();
     //mainClient
     if (this._mainClient && this._mainClient.channelName) {
       try {

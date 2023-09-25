@@ -175,7 +175,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     frame: NATIVE_RTC.ExternalVideoFrame,
     videoTrackId: number
   ): CallApiReturnType {
-    //这个方法在web中每次都需要走一遍全新的create pub
+    //调用engine.release后才会创建新的track
     let processFunc = async (): Promise<CallIrisApiResult> => {
       if (!this._engine.globalVariables.pushVideoFrameEnabled) {
         AgoraConsole.error(
@@ -245,14 +245,6 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
           trackEventHandler
         );
       }
-      //销毁custom track的html element
-      //注销创建的track
-      setTimeout(() => {
-        this._engine.irisElement.remove();
-        videoTrack.isPlaying && videoTrack.stop();
-        videoTrack.close();
-        this._engine.entitiesContainer.processVideoTrackClose(videoTrack);
-      }, 3000);
       return this.returnResult();
     };
     return this.execute(processFunc);
