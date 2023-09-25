@@ -197,7 +197,23 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
         canvas.style.display = 'none';
       }
       //todo 目前flutter给到的数据解析时是bgra, 需要转成rgba才能正常渲染
-      drawRGBABufferToCanvas(frame.stride, frame.height, frame.buffer, canvas);
+      if (
+        frame.format !== NATIVE_RTC.VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_BGRA &&
+        frame.format !== NATIVE_RTC.VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_RGBA
+      ) {
+        AgoraConsole.error(`format${frame.format} not supported`);
+        return this.returnResult(
+          false,
+          -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+        );
+      }
+      drawRGBABufferToCanvas(
+        frame.stride,
+        frame.height,
+        frame.buffer,
+        frame.format,
+        canvas
+      );
       irisContainer.appendChild(canvas);
       document.body.appendChild(irisContainer);
       const stream = canvas.captureStream();
