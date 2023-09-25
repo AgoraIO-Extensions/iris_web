@@ -2360,8 +2360,8 @@ interface IRtcEngineEventHandler {
 }
 interface IVideoDeviceManager {
     enumerateVideoDevices(): CallApiReturnType;
-    setDevice(deviceIdUTF8: string[]): CallApiReturnType;
-    getDevice(deviceIdUTF8: string): CallApiReturnType;
+    setDevice(deviceIdUTF8: string): CallApiReturnType;
+    getDevice(): CallApiReturnType;
     numberOfCapabilities(deviceIdUTF8: string): CallApiReturnType;
     getCapability(deviceIdUTF8: string, deviceCapabilityNumber: number, capability: VideoFormat): CallApiReturnType;
     startDeviceTest(hwnd: any): CallApiReturnType;

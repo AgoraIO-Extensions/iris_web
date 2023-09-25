@@ -119,13 +119,13 @@ importers:
   scripts/terra:
     dependencies:
       '@agoraio-extensions/cxx-parser':
-        specifier: '>=0.1.7'
+        specifier: latest
         version: 0.1.7(@agoraio-extensions/terra-core@0.1.2)
       '@agoraio-extensions/terra':
-        specifier: '>=0.1.2'
+        specifier: latest
         version: 0.1.2(@agoraio-extensions/terra-core@0.1.2)
       '@agoraio-extensions/terra-core':
-        specifier: '>=0.1.2'
+        specifier: latest
         version: 0.1.2
       '@agoraio-extensions/terra_shared_configs':
         specifier: git+https://github.com/AgoraIO-Extensions/terra_shared_configs.git

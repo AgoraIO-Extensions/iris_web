@@ -3,6 +3,7 @@
   "agora::media::IMediaEngine.pushAudioFrame.frame@type": "AudioFrame",
   "agora::media::IMediaEngine.pullAudioFrame.frame@type": "AudioFrame",
   "agora::media::IMediaEngine.pushVideoFrame.frame@type": "ExternalVideoFrame",
+  "agora::rtc::IVideoDeviceManager.setDevice.deviceIdUTF8@type":"string",
   "^agora::media::(.*)": "$1",
   "^Optional<(.*)>": "$1",
   "^util::(.*)": "$1",

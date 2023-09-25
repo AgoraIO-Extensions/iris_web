@@ -963,9 +963,9 @@ export interface IRtcEngineEventHandler {
 export interface IVideoDeviceManager {
   enumerateVideoDevices(): CallApiReturnType;
 
-  setDevice(deviceIdUTF8: string[]): CallApiReturnType;
+  setDevice(deviceIdUTF8: string): CallApiReturnType;
 
-  getDevice(deviceIdUTF8: string): CallApiReturnType;
+  getDevice(): CallApiReturnType;
 
   numberOfCapabilities(deviceIdUTF8: string): CallApiReturnType;
 

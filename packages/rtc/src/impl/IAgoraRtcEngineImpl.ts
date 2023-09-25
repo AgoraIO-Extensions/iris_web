@@ -16,7 +16,11 @@ import {
   CallIrisApiResult,
 } from 'iris-web-core';
 
-import { IrisAudioSourceType, IrisClientType } from '../base/BaseType';
+import {
+  IrisAudioSourceType,
+  IrisClientType,
+  VideoTrackPackage,
+} from '../base/BaseType';
 import { IrisIntervalType, IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
 
@@ -3065,18 +3069,96 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
     this._engine.actionQueue.putAction(action);
   }
 
+  private execute(task: AsyncTaskType): CallApiReturnType {
+    return this._engine.executor.execute(task);
+  }
+
+  private returnResult(
+    isSuccess: boolean = true,
+    code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
+    data: string = '{"result": 0}'
+  ): Promise<CallIrisApiResult> {
+    if (!isSuccess) {
+      code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
+    }
+    return Promise.resolve(new CallIrisApiResult(code, data));
+  }
+
   enumerateVideoDevices(): CallApiReturnType {
-    AgoraConsole.warn('enumerateVideoDevices not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let deviceList = [];
+    let process = async () => {
+      try {
+        deviceList = (await ImplHelper.enumerateDevices(this._engine))
+          ?.videoDevices;
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this.returnResult(false);
+      }
+      return this.returnResult(true, 0, JSON.stringify({ result: deviceList }));
+    };
+    return this.execute(process);
   }
-  setDevice(deviceIdUTF8: string[]): CallApiReturnType {
-    AgoraConsole.warn('setDevice not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  setDevice(deviceIdUTF8: string): CallApiReturnType {
+    let process = async () => {
+      this._engine.mainClientVariables.videoDeviceId = deviceIdUTF8;
+      try {
+        this._engine.entitiesContainer.walkAllILocalVideoTrack(
+          (trackPackage: VideoTrackPackage) => {
+            if (
+              trackPackage.type ==
+                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY ||
+              trackPackage.type ==
+                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY ||
+              trackPackage.type ==
+                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD ||
+              trackPackage.type ==
+                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH
+            ) {
+              TrackHelper.setDevice(
+                trackPackage.track as ICameraVideoTrack,
+                deviceIdUTF8
+              );
+            }
+          }
+        );
+        return this.returnResult();
+      } catch (e) {
+        AgoraConsole.error(e);
+        return this.returnResult(false);
+      }
+    };
+    return this.execute(process);
   }
-  getDevice(deviceIdUTF8: string): CallApiReturnType {
-    AgoraConsole.warn('getDevice not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+  getDevice(): CallApiReturnType {
+    let process = async () => {
+      let list: MediaDeviceInfo[] = [];
+      let deviceId = '';
+      if (this._engine.mainClientVariables.videoDeviceId) {
+        deviceId = this._engine.mainClientVariables.videoDeviceId;
+      } else if (this._engine.globalVariables.deviceEnumerated) {
+        deviceId = this._engine.globalVariables.videoDevices[0]?.deviceId || '';
+      } else {
+        try {
+          list = await AgoraRTC.getCameras();
+        } catch (e) {
+          return this.returnResult(false);
+        }
+        if (list && list.length > 0) {
+          deviceId = list[0].deviceId;
+        }
+      }
+      return this.returnResult(
+        true,
+        0,
+        JSON.stringify({
+          result: NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
+          deviceIdUTF8: deviceId,
+        })
+      );
+    };
+    return this.execute(process);
   }
+
   numberOfCapabilities(deviceIdUTF8: string): CallApiReturnType {
     AgoraConsole.warn('numberOfCapabilities not supported in this platform!');
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -3098,7 +3180,14 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
     return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
   }
   release(): CallApiReturnType {
-    AgoraConsole.warn('release not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let process = async () => {
+      let engine = this._engine;
+      engine.globalVariables.playbackDevices = new Array();
+      engine.globalVariables.recordingDevices = new Array();
+      engine.globalVariables.videoDevices = new Array();
+      engine.globalVariables.deviceEnumerated = false;
+      return this.returnResult();
+    };
+    return this.execute(process);
   }
 }

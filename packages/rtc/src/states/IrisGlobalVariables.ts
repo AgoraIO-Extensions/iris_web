@@ -1,6 +1,11 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
 import { UID } from 'agora-rtc-sdk-ng';
 
+export interface DeviceInfo {
+  deviceName: string;
+  deviceId: string;
+}
+
 export class IrisGlobalVariables {
   public rtcEngineContext: NATIVE_RTC.RtcEngineContext;
   isCreateMainClient: boolean = false;
@@ -68,9 +73,9 @@ export class IrisGlobalVariables {
 
   //devicesInfo
   deviceEnumerated: boolean = false;
-  playbackDevices: NATIVE_RTC.DeviceInfo[] = new Array();
-  recordingDevices: NATIVE_RTC.DeviceInfo[] = new Array();
-  videoDevices: NATIVE_RTC.DeviceInfo[] = new Array();
+  playbackDevices: DeviceInfo[] = new Array();
+  recordingDevices: DeviceInfo[] = new Array();
+  videoDevices: DeviceInfo[] = new Array();
 
   //enableAudioVolumeIndication
   enableAudioVolumeIndication: boolean = false;

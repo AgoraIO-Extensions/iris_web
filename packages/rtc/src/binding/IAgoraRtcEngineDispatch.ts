@@ -1679,12 +1679,8 @@ export class IVideoDeviceManagerDispatch {
     return this._impl.setDevice(deviceIdUTF8);
   }
 
-  getDevice(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let deviceIdUTF8 = obj.deviceIdUTF8;
-    if (deviceIdUTF8 === undefined) throw 'deviceIdUTF8 is undefined';
-
-    return this._impl.getDevice(deviceIdUTF8);
+  getDevice(): CallApiReturnType {
+    return this._impl.getDevice();
   }
 
   numberOfCapabilities(apiParam: ApiParam): CallApiReturnType {
