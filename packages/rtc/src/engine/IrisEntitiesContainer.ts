@@ -276,12 +276,14 @@ export class IrisEntitiesContainer {
       for (let i = 0; i < this._localVideoTracks.length; i++) {
         let trackPack = this._localVideoTracks[i];
         let track = trackPack.track as ILocalVideoTrack;
-        AgoraConsole.log(
+        AgoraConsole.debug(
           'clearLocalVideoTracks clearLocalVideoTracks clearLocalVideoTracks'
         );
-        track.stop();
-        await track.setEnabled(false);
-        track.close();
+        if (track) {
+          track.stop();
+          await track.setEnabled(false);
+          track.close();
+        }
       }
     }
     this._localVideoTracks = [];
@@ -1199,6 +1201,7 @@ export class IrisEntitiesContainer {
     await this.clearLocalAudioTracks(true);
     await this.clearLocalVideoTracks(true);
 
+    this._engine.clearIrisInterval();
     //销毁iris html element
     this._engine.irisElement.dispose();
     //mainClient

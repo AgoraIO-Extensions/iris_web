@@ -10,6 +10,12 @@ export class AgoraConsole {
     ).slice(-3)}`;
   }
 
+  public static debug(msg: any) {
+    if (AgoraConsole.logLevel >= LOG_LEVEL.LOG_LEVEL_NONE) {
+      console.log(`\x1B[35m[${this.getDate()}][Iris debug]:\x1B[30m ${msg}`);
+    }
+  }
+
   public static log(msg: any) {
     if (AgoraConsole.logLevel >= LOG_LEVEL.LOG_LEVEL_INFO) {
       console.log(`\x1B[35m[${this.getDate()}][Iris log]:\x1B[30m ${msg}`);

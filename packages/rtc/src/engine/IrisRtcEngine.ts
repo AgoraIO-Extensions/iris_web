@@ -67,6 +67,10 @@ export type GenerateVideoTrackLabelOrHtmlElementCb = (
   type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
 ) => string;
 
+export enum IrisIntervalType {
+  enableAudioVolumeIndication = 0,
+}
+
 export class IrisRtcEngine implements ApiInterceptor {
   //EventHandler
   private _eventHandler: IrisEventHandler = null;
@@ -85,6 +89,10 @@ export class IrisRtcEngine implements ApiInterceptor {
   public executor: CallApiExecutor = null;
   public irisEventHandlerManager: IrisEventHandlerManager = null;
   public irisElement: IrisElement = null;
+  public irisIntervalList: {
+    type: IrisIntervalType;
+    interval: NodeJS.Timeout;
+  }[] = [];
 
   constructor(irisEventHandlerManager: IrisEventHandlerManager) {
     this.implDispatchsMap = new Map();
@@ -209,7 +217,7 @@ export class IrisRtcEngine implements ApiInterceptor {
       let callApiFun: CallApiAsyncType = obj[funName];
       if (callApiFun) {
         let ret = await callApiFun.call(obj, apiParam);
-        AgoraConsole.log(
+        AgoraConsole.debug(
           `[callIrisApiAsync][result] ${func_name} ret ${ret.code}`
         );
         return ret;
@@ -285,6 +293,28 @@ export class IrisRtcEngine implements ApiInterceptor {
     }
 
     return channelName + '_' + uid + '_' + type;
+  }
+
+  public addIrisInterval(type: IrisIntervalType, interval: NodeJS.Timeout) {
+    this.irisIntervalList.push({
+      type,
+      interval,
+    });
+  }
+
+  public getIrisIntervalByType(type: IrisIntervalType) {
+    this.irisIntervalList.filter((a) => type == a.type);
+  }
+
+  public removeIrisIntervalByType(type: IrisIntervalType) {
+    this.irisIntervalList.filter((a) => type != a.type);
+  }
+
+  public clearIrisInterval() {
+    this.irisIntervalList.map((item) => {
+      AgoraConsole.debug(`clear interval`);
+      item.interval && clearInterval(item.interval);
+    });
   }
 
   dispose(): Promise<void> {

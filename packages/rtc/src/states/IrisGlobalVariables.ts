@@ -71,4 +71,12 @@ export class IrisGlobalVariables {
   playbackDevices: NATIVE_RTC.DeviceInfo[] = new Array();
   recordingDevices: NATIVE_RTC.DeviceInfo[] = new Array();
   videoDevices: NATIVE_RTC.DeviceInfo[] = new Array();
+
+  //enableAudioVolumeIndication
+  enableAudioVolumeIndication: boolean = false;
+  enableAudioVolumeIndicationConfig = {
+    interval: 50,
+    smooth: 3,
+    reportVad: false,
+  };
 }

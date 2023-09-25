@@ -17,7 +17,7 @@ import {
 } from 'iris-web-core';
 
 import { IrisAudioSourceType, IrisClientType } from '../base/BaseType';
-import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { IrisIntervalType, IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
 
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
@@ -1290,10 +1290,72 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     smooth: number,
     reportVad: boolean
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'enableAudioVolumeIndication not supported in this platform!'
-    );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      this._engine.globalVariables.enableAudioVolumeIndicationConfig = {
+        ...this._engine.globalVariables.enableAudioVolumeIndicationConfig,
+        ...(interval && { interval }),
+        ...(smooth && { smooth }),
+        ...(reportVad && { reportVad }),
+      };
+      //只有在初次的时候才注册onAudioVolumeIndication事件
+      let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
+
+      if (!this._engine.globalVariables.enableAudioVolumeIndication) {
+        let intervalFunction = setInterval(() => {
+          console.log('interval');
+          if (mainClient) {
+            const localStats = mainClient.getLocalAudioStats();
+            let connection: NATIVE_RTC.RtcConnection = {
+              channelId: mainClient.channelName,
+              localUid: mainClient.uid as number,
+            };
+            if (reportVad) {
+              this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(
+                connection,
+                [
+                  {
+                    uid: mainClient.uid as number,
+                    volume: localStats.sendVolumeLevel,
+                    vad: localStats.sendVolumeLevel > 0 ? 1 : 0,
+                    // voicePitch: number,  web没有
+                  },
+                ],
+                1,
+                localStats.sendVolumeLevel
+              );
+            }
+            const remoteStats = mainClient.getRemoteAudioStats();
+            let remoteSpeakers = [];
+            for (let uid in remoteStats) {
+              remoteSpeakers.push({
+                uid: uid,
+                volume: remoteStats[uid].receiveLevel,
+                vad: 1,
+                // voicePitch: number,  web没有
+              });
+            }
+            let biggestVolumeRemoteSpeaker = remoteSpeakers.reduce(
+              (prev, curr) => {
+                return curr.receiveLevel > prev.receiveLevel ? curr : prev;
+              }
+            );
+            this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(
+              connection,
+              remoteSpeakers,
+              remoteSpeakers.length,
+              biggestVolumeRemoteSpeaker
+            );
+          }
+        }, interval);
+        this._engine.addIrisInterval(
+          IrisIntervalType.enableAudioVolumeIndication,
+          intervalFunction
+        );
+      }
+      this._engine.globalVariables.enableAudioVolumeIndication = true;
+      return this.returnResult();
+    };
+    return this.execute(processFunc);
   }
   startAudioRecording(
     filePath: string,
