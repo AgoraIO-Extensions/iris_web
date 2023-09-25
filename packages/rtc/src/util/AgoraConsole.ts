@@ -11,7 +11,7 @@ export class AgoraConsole {
   }
 
   public static debug(msg: any) {
-    if (AgoraConsole.logLevel >= LOG_LEVEL.LOG_LEVEL_NONE) {
+    if (AgoraConsole.logLevel > LOG_LEVEL.LOG_LEVEL_INFO) {
       console.log(`\x1B[35m[${this.getDate()}][Iris debug]:\x1B[30m ${msg}`);
     }
   }
