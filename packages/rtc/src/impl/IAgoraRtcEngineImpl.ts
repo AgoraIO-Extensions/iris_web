@@ -863,7 +863,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         return;
       }
 
-      if (sourceType >= 4) {
+      if (sourceType >= 5) {
         AgoraConsole.error('Invalid source type');
         return this.returnResult(false);
       }
@@ -873,6 +873,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let videoSource: NATIVE_RTC.VIDEO_SOURCE_TYPE = sourceType as number;
 
       AgoraConsole.log(`startPreview2 videoSource: ${videoSource}`);
+
+      if (
+        sourceType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM &&
+        this._engine.globalVariables.pushVideoFrameEnabled
+      ) {
+        //开启了pushVideoFrame,先什么都不做
+      }
 
       try {
         await ImplHelper.getOrCreateAudioAndVideoTrackAsync(

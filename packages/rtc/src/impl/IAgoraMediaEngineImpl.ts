@@ -11,6 +11,7 @@ import { IrisApiType } from '../base/IrisApiType';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
+import { TrackHelper } from '../helper/TrackHelper';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { drawRGBABufferToCanvas } from '../util/BufferConvert';
 
@@ -202,7 +203,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
       const stream = canvas.captureStream();
 
       let audioType = IrisAudioSourceType.kAudioSourceTypeUnknown;
-      let videoType = this._engine.globalVariables.pushVideoFrameSourceType;
+      let videoType = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM;
       let clientType = IrisClientType.kClientMain;
 
       let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
@@ -215,23 +216,29 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
           clientType,
           null
         );
-        AgoraConsole.log('create custom track success');
       } catch (err) {
         err && AgoraConsole.error(err);
         return this.returnResult(false);
       }
       let videoTrack: ILocalVideoTrack = trackArray[1] as ILocalVideoTrack;
       if (videoTrack) {
+        let videoPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM
+        );
+        if (!videoTrack.enabled) {
+          await TrackHelper.setEnabled(videoTrack, true);
+        }
+
+        if (!videoTrack.isPlaying) {
+          videoTrack.play(videoPackage.element);
+        }
+
         let mainClient = this._engine.entitiesContainer.getMainClient();
         try {
           await mainClient.publish(videoTrack);
         } catch (reason) {
           AgoraConsole.error(reason);
         }
-        this._engine.entitiesContainer.setMainClientLocalVideoTrack({
-          type: videoType,
-          track: videoTrack,
-        });
         let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
           {
             channelName: mainClient.channelName,
@@ -245,6 +252,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
           trackEventHandler
         );
       }
+
       return this.returnResult();
     };
     return this.execute(processFunc);

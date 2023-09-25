@@ -82,7 +82,7 @@ export class ImplHelper {
   public static async getOrCreateCustomAudioAndVideoTrackAsync(
     engine: IrisRtcEngine,
     audioType: IrisAudioSourceType,
-    videoType: NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
+    videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM,
     mediaStreamTrack: MediaStreamTrack,
     clientType: IrisClientType,
     connection: NATIVE_RTC.RtcConnection

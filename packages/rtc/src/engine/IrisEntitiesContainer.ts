@@ -210,7 +210,6 @@ export class IrisEntitiesContainer {
 
     // Update the exist one
     if (item) {
-      console.log(`addLocalVideoTrack add to item: ${JSON.stringify(item)}`);
       if (trackPackage.element) {
         item.element = trackPackage.element;
       }
@@ -220,6 +219,7 @@ export class IrisEntitiesContainer {
       if (trackPackage.type) {
         item.type = trackPackage.type;
       }
+      console.log(`localVideoTrack updated: ${JSON.stringify(item)}`);
 
       return;
     }
