@@ -12,7 +12,7 @@
           "error",
           {
             "rootPath": "../../../packages/rtc/src",
-            "external": "@iris/web-rtc"
+            "external": "@iris/native-rtc-binding"
           }
         ]
       }

@@ -7,7 +7,7 @@ import {
   PLAYER_PRELOAD_EVENT,
   PlayerUpdatedInfo,
   SrcInfo,
-} from '@iris/web-rtc';
+} from '@iris/native-rtc-binding';
 import { EventParam } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';

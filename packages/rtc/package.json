@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@iris/web-rtc": "workspace: *",
+    "@iris/native-rtc-binding": "workspace: *",
     "agora-rtc-sdk-ng": "^4.18.2",
     "iris-web-core": "workspace: *"
   },

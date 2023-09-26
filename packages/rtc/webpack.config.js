@@ -1,6 +1,7 @@
 const path = require('path');
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   entry: './src/index.ts',
@@ -11,14 +12,24 @@ module.exports = {
     // library: "",
     filename: 'iris-web-rtc.js',
     environment: {
-      arrowFunction: false, // 关闭webpack的箭头函数，可选
+      arrowFunction: false,
     },
   },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          toplevel: true,
+          ie8: true,
+          safari10: true,
+        },
+      }),
+    ],
+  },
 
-  devtool: 'inline-source-map',
-  // optimization: {
-  //     minimize: true
-  // },
+  // devtool: 'inline-source-map',
 
   resolve: {
     extensions: ['.ts', '.js'],

@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/web-rtc';
+import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';

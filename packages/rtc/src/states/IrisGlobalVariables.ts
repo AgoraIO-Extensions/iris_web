@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/web-rtc';
+import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import AgoraRTC, { IAgoraRTC, UID } from 'agora-rtc-sdk-ng';
 
 export interface DeviceInfo {

@@ -56,7 +56,7 @@ import {
   WLACC_MESSAGE_REASON,
   WLACC_SUGGEST_ACTION,
   WlAccStats,
-} from '@iris/web-rtc';
+} from '@iris/native-rtc-binding';
 import { ApiParam, CallApiReturnType, EventParam } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';

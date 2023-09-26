@@ -5,7 +5,7 @@ import {
   MusicCollection,
   MusicContentCenterStatusCode,
   PreloadStatusCode,
-} from '@iris/web-rtc';
+} from '@iris/native-rtc-binding';
 import { ApiParam, CallApiReturnType, EventParam } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';

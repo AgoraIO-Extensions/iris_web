@@ -1,4 +1,4 @@
-import { LOG_LEVEL } from '@iris/web-rtc';
+import { LOG_LEVEL } from '@iris/native-rtc-binding';
 
 export class AgoraConsole {
   public static logLevel: LOG_LEVEL = LOG_LEVEL.LOG_LEVEL_ERROR;
