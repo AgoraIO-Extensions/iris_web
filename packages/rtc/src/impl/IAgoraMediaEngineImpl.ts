@@ -61,14 +61,20 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     AgoraConsole.warn(
       'registerVideoEncodedFrameObserver not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   pushAudioFrame(
     frame: NATIVE_RTC.AudioFrame,
     trackId: number
   ): CallApiReturnType {
     AgoraConsole.warn('pushAudioFrame not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setExternalAudioSource(
     enabled: boolean,
@@ -78,20 +84,29 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     publish: boolean
   ): CallApiReturnType {
     AgoraConsole.warn('setExternalAudioSource not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   createCustomAudioTrack(
     trackType: NATIVE_RTC.AUDIO_TRACK_TYPE,
     config: NATIVE_RTC.AudioTrackConfig
   ): CallApiReturnType {
     AgoraConsole.warn('createCustomAudioTrack not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   destroyCustomAudioTrack(trackId: number): CallApiReturnType {
     AgoraConsole.warn(
       'destroyCustomAudioTrack not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setExternalAudioSink(
     enabled: boolean,
@@ -99,7 +114,10 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     channels: number
   ): CallApiReturnType {
     AgoraConsole.warn('setExternalAudioSink not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableCustomAudioLocalPlayback(
     trackId: number,
@@ -108,7 +126,10 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     AgoraConsole.warn(
       'enableCustomAudioLocalPlayback not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   pushEncodedVideoImage(
     imageBuffer: Uint8Array,
@@ -117,11 +138,17 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     videoTrackId: number
   ): CallApiReturnType {
     AgoraConsole.warn('pushEncodedVideoImage not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   release(): CallApiReturnType {
     AgoraConsole.warn('release not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
 
   registerAudioFrameObserver(
@@ -130,7 +157,10 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     AgoraConsole.warn(
       'registerAudioFrameObserver not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
 
   registerVideoFrameObserver(
@@ -139,27 +169,42 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     AgoraConsole.warn(
       'registerVideoFrameObserver not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
 
   pushCaptureAudioFrame(frame: NATIVE_RTC.AudioFrame): CallApiReturnType {
     AgoraConsole.warn('pushCaptureAudioFrame not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
 
   pushReverseAudioFrame(frame: NATIVE_RTC.AudioFrame): CallApiReturnType {
     AgoraConsole.warn('pushReverseAudioFrame not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
 
   pushDirectAudioFrame(frame: NATIVE_RTC.AudioFrame): CallApiReturnType {
     AgoraConsole.warn('pushDirectAudioFrame not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
 
   pullAudioFrame(frame: NATIVE_RTC.AudioFrame): CallApiReturnType {
     AgoraConsole.warn('pullAudioFrame not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
 
   setDirectExternalAudioSource(
@@ -169,7 +214,10 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     AgoraConsole.warn(
       'setDirectExternalAudioSource not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
 
   pushVideoFrame(

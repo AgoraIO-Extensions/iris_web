@@ -31,7 +31,6 @@ import { ClientHelper } from '../helper/ClientHelper';
 import { TrackHelper } from '../helper/TrackHelper';
 import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
 import { Container } from '../util';
-import { Action } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { AgoraTranslate } from '../util/AgoraTranslate';
 
@@ -65,7 +64,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'isFeatureAvailableOnDevice not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
 
   release(sync: boolean): CallApiReturnType {
@@ -108,18 +110,27 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   getVersion(): CallApiReturnType {
     AgoraConsole.warn('getVersion not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getErrorDescription(code: number): CallApiReturnType {
     AgoraConsole.warn('getErrorDescription not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   queryCodecCapability(
     codecInfo: NATIVE_RTC.CodecCapInfo[],
     size: number
   ): CallApiReturnType {
     AgoraConsole.warn('queryCodecCapability not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   preloadChannel(
     token: string,
@@ -127,7 +138,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     uid: number
   ): CallApiReturnType {
     AgoraConsole.warn('preloadChannel not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   preloadChannel2(
     token: string,
@@ -135,13 +149,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     userAccount: string
   ): CallApiReturnType {
     AgoraConsole.warn('preloadChannel2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   updatePreloadChannelToken(token: string): CallApiReturnType {
     AgoraConsole.warn(
       'updatePreloadChannelToken not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   joinChannel(
     token: string,
@@ -678,13 +698,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   renewToken(token: string): CallApiReturnType {
     AgoraConsole.warn('renewToken not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setChannelProfile(
     profile: NATIVE_RTC.CHANNEL_PROFILE_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('setChannelProfile not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
 
   //可以在加入频道前后调用
@@ -720,26 +746,41 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   startEchoTest(): CallApiReturnType {
     AgoraConsole.warn('startEchoTest not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startEchoTest2(intervalInSeconds: number): CallApiReturnType {
     AgoraConsole.warn('startEchoTest2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startEchoTest3(config: NATIVE_RTC.EchoTestConfiguration): CallApiReturnType {
     AgoraConsole.warn('startEchoTest3 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopEchoTest(): CallApiReturnType {
     AgoraConsole.warn('stopEchoTest not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableMultiCamera(
     enabled: boolean,
     config: NATIVE_RTC.CameraCapturerConfiguration
   ): CallApiReturnType {
     AgoraConsole.warn('enableMultiCamera not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableVideo(): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
@@ -994,11 +1035,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     config: NATIVE_RTC.LastmileProbeConfig
   ): CallApiReturnType {
     AgoraConsole.warn('startLastmileProbeTest not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopLastmileProbeTest(): CallApiReturnType {
     AgoraConsole.warn('stopLastmileProbeTest not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setVideoEncoderConfiguration(
     config: NATIVE_RTC.VideoEncoderConfiguration
@@ -1028,7 +1075,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     type: NATIVE_RTC.MEDIA_SOURCE_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('setBeautyEffectOptions not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLowlightEnhanceOptions(
     enabled: boolean,
@@ -1038,7 +1088,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setLowlightEnhanceOptions not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setVideoDenoiserOptions(
     enabled: boolean,
@@ -1048,7 +1101,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setVideoDenoiserOptions not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setColorEnhanceOptions(
     enabled: boolean,
@@ -1056,7 +1112,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     type: NATIVE_RTC.MEDIA_SOURCE_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('setColorEnhanceOptions not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableVirtualBackground(
     enabled: boolean,
@@ -1067,11 +1126,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'enableVirtualBackground not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setupRemoteVideo(canvas: NATIVE_RTC.VideoCanvas): CallApiReturnType {
     AgoraConsole.warn('setupRemoteVideo not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setupLocalVideo(canvas: NATIVE_RTC.VideoCanvas): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
@@ -1108,7 +1173,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     scenarioType: NATIVE_RTC.VIDEO_APPLICATION_SCENARIO_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('setVideoScenario not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableAudio(): CallApiReturnType {
     let processAudioTracks = async (): Promise<CallIrisApiResult> => {
@@ -1139,7 +1207,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   disableAudio(): CallApiReturnType {
     AgoraConsole.warn('disableAudio not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setAudioProfile(
     profile: NATIVE_RTC.AUDIO_PROFILE_TYPE,
@@ -1168,7 +1239,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     scenario: NATIVE_RTC.AUDIO_SCENARIO_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('setAudioScenario not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableLocalAudio(enabled: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
@@ -1185,47 +1259,74 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this.execute(processFunc);
   }
   muteLocalAudioStream(mute: boolean): CallApiReturnType {
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   muteAllRemoteAudioStreams(mute: boolean): CallApiReturnType {
     AgoraConsole.warn(
       'muteAllRemoteAudioStreams not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setDefaultMuteAllRemoteAudioStreams(mute: boolean): CallApiReturnType {
     AgoraConsole.warn(
       'setDefaultMuteAllRemoteAudioStreams not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   muteRemoteAudioStream(uid: number, mute: boolean): CallApiReturnType {
     AgoraConsole.warn('muteRemoteAudioStream not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   muteLocalVideoStream(mute: boolean): CallApiReturnType {
     AgoraConsole.warn('muteLocalVideoStream not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableLocalVideo(enabled: boolean): CallApiReturnType {
     AgoraConsole.warn('enableLocalVideo not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   muteAllRemoteVideoStreams(mute: boolean): CallApiReturnType {
     AgoraConsole.warn(
       'muteAllRemoteVideoStreams not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setDefaultMuteAllRemoteVideoStreams(mute: boolean): CallApiReturnType {
     AgoraConsole.warn(
       'setDefaultMuteAllRemoteVideoStreams not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   muteRemoteVideoStream(uid: number, mute: boolean): CallApiReturnType {
     AgoraConsole.warn('muteRemoteVideoStream not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setRemoteVideoStreamType(
     uid: number,
@@ -1234,7 +1335,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setRemoteVideoStreamType not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setRemoteVideoSubscriptionOptions(
     uid: number,
@@ -1243,7 +1347,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setRemoteVideoSubscriptionOptions not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setRemoteDefaultVideoStreamType(
     streamType: NATIVE_RTC.VIDEO_STREAM_TYPE
@@ -1251,7 +1358,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setRemoteDefaultVideoStreamType not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setSubscribeAudioBlocklist(
     uidList: number,
@@ -1260,7 +1370,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setSubscribeAudioBlocklist not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setSubscribeAudioAllowlist(
     uidList: number,
@@ -1269,7 +1382,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setSubscribeAudioAllowlist not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setSubscribeVideoBlocklist(
     uidList: number,
@@ -1278,7 +1394,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setSubscribeVideoBlocklist not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setSubscribeVideoAllowlist(
     uidList: number,
@@ -1287,7 +1406,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setSubscribeVideoAllowlist not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableAudioVolumeIndication(
     interval: number,
@@ -1365,7 +1487,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     quality: NATIVE_RTC.AUDIO_RECORDING_QUALITY_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('startAudioRecording not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startAudioRecording2(
     filePath: string,
@@ -1373,13 +1498,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     quality: NATIVE_RTC.AUDIO_RECORDING_QUALITY_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('startAudioRecording2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startAudioRecording3(
     config: NATIVE_RTC.AudioRecordingConfiguration
   ): CallApiReturnType {
     AgoraConsole.warn('startAudioRecording3 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   registerAudioEncodedFrameObserver(
     config: NATIVE_RTC.AudioEncodedFrameObserverConfig,
@@ -1388,29 +1519,47 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'registerAudioEncodedFrameObserver not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopAudioRecording(): CallApiReturnType {
     AgoraConsole.warn('stopAudioRecording not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   createMediaPlayer(): CallApiReturnType {
     AgoraConsole.warn('createMediaPlayer not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   destroyMediaPlayer(media_player: NATIVE_RTC.IMediaPlayer): CallApiReturnType {
     AgoraConsole.warn('destroyMediaPlayer not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   createMediaRecorder(info: NATIVE_RTC.RecorderStreamInfo): CallApiReturnType {
     AgoraConsole.warn('createMediaRecorder not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   destroyMediaRecorder(
     mediaRecorder: NATIVE_RTC.IMediaRecorder
   ): CallApiReturnType {
     AgoraConsole.warn('destroyMediaRecorder not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startAudioMixing(
     filePath: string,
@@ -1418,7 +1567,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     cycle: number
   ): CallApiReturnType {
     AgoraConsole.warn('startAudioMixing not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startAudioMixing2(
     filePath: string,
@@ -1427,71 +1579,113 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     startPos: number
   ): CallApiReturnType {
     AgoraConsole.warn('startAudioMixing2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopAudioMixing(): CallApiReturnType {
     AgoraConsole.warn('stopAudioMixing not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   pauseAudioMixing(): CallApiReturnType {
     AgoraConsole.warn('pauseAudioMixing not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   resumeAudioMixing(): CallApiReturnType {
     AgoraConsole.warn('resumeAudioMixing not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   selectAudioTrack(index: number): CallApiReturnType {
     AgoraConsole.warn('selectAudioTrack not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getAudioTrackCount(): CallApiReturnType {
     AgoraConsole.warn('getAudioTrackCount not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   adjustAudioMixingVolume(volume: number): CallApiReturnType {
     AgoraConsole.warn(
       'adjustAudioMixingVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   adjustAudioMixingPublishVolume(volume: number): CallApiReturnType {
     AgoraConsole.warn(
       'adjustAudioMixingPublishVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getAudioMixingPublishVolume(): CallApiReturnType {
     AgoraConsole.warn(
       'getAudioMixingPublishVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   adjustAudioMixingPlayoutVolume(volume: number): CallApiReturnType {
     AgoraConsole.warn(
       'adjustAudioMixingPlayoutVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getAudioMixingPlayoutVolume(): CallApiReturnType {
     AgoraConsole.warn(
       'getAudioMixingPlayoutVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getAudioMixingDuration(): CallApiReturnType {
     AgoraConsole.warn('getAudioMixingDuration not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getAudioMixingCurrentPosition(): CallApiReturnType {
     AgoraConsole.warn(
       'getAudioMixingCurrentPosition not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setAudioMixingPosition(pos: number): CallApiReturnType {
     AgoraConsole.warn('setAudioMixingPosition not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setAudioMixingDualMonoMode(
     mode: NATIVE_RTC.AUDIO_MIXING_DUAL_MONO_MODE
@@ -1499,19 +1693,31 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setAudioMixingDualMonoMode not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setAudioMixingPitch(pitch: number): CallApiReturnType {
     AgoraConsole.warn('setAudioMixingPitch not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getEffectsVolume(): CallApiReturnType {
     AgoraConsole.warn('getEffectsVolume not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setEffectsVolume(volume: number): CallApiReturnType {
     AgoraConsole.warn('setEffectsVolume not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   preloadEffect(
     soundId: number,
@@ -1519,7 +1725,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     startPos: number
   ): CallApiReturnType {
     AgoraConsole.warn('preloadEffect not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   playEffect(
     soundId: number,
@@ -1622,31 +1831,52 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     publish: boolean
   ): CallApiReturnType {
     AgoraConsole.warn('playAllEffects not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getVolumeOfEffect(soundId: number): CallApiReturnType {
     AgoraConsole.warn('getVolumeOfEffect not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setVolumeOfEffect(soundId: number, volume: number): CallApiReturnType {
     AgoraConsole.warn('setVolumeOfEffect not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   pauseEffect(soundId: number): CallApiReturnType {
     AgoraConsole.warn('pauseEffect not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   pauseAllEffects(): CallApiReturnType {
     AgoraConsole.warn('pauseAllEffects not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   resumeEffect(soundId: number): CallApiReturnType {
     AgoraConsole.warn('resumeEffect not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   resumeAllEffects(): CallApiReturnType {
     AgoraConsole.warn('resumeAllEffects not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopEffect(soundId: number): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
@@ -1686,35 +1916,56 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   stopAllEffects(): CallApiReturnType {
     AgoraConsole.warn('stopAllEffects not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   unloadEffect(soundId: number): CallApiReturnType {
     AgoraConsole.warn('unloadEffect not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   unloadAllEffects(): CallApiReturnType {
     AgoraConsole.warn('unloadAllEffects not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getEffectDuration(filePath: string): CallApiReturnType {
     AgoraConsole.warn('getEffectDuration not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setEffectPosition(soundId: number, pos: number): CallApiReturnType {
     AgoraConsole.warn('setEffectPosition not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getEffectCurrentPosition(soundId: number): CallApiReturnType {
     AgoraConsole.warn(
       'getEffectCurrentPosition not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableSoundPositionIndication(enabled: boolean): CallApiReturnType {
     AgoraConsole.warn(
       'enableSoundPositionIndication not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setRemoteVoicePosition(
     uid: number,
@@ -1722,11 +1973,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     gain: number
   ): CallApiReturnType {
     AgoraConsole.warn('setRemoteVoicePosition not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableSpatialAudio(enabled: boolean): CallApiReturnType {
     AgoraConsole.warn('enableSpatialAudio not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setRemoteUserSpatialAudioParams(
     uid: number,
@@ -1735,7 +1992,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setRemoteUserSpatialAudioParams not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setVoiceBeautifierPreset(
     preset: NATIVE_RTC.VOICE_BEAUTIFIER_PRESET
@@ -1743,13 +2003,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setVoiceBeautifierPreset not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setAudioEffectPreset(
     preset: NATIVE_RTC.AUDIO_EFFECT_PRESET
   ): CallApiReturnType {
     AgoraConsole.warn('setAudioEffectPreset not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setVoiceConversionPreset(
     preset: NATIVE_RTC.VOICE_CONVERSION_PRESET
@@ -1757,7 +2023,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setVoiceConversionPreset not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setAudioEffectParameters(
     preset: NATIVE_RTC.AUDIO_EFFECT_PRESET,
@@ -1767,7 +2036,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setAudioEffectParameters not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setVoiceBeautifierParameters(
     preset: NATIVE_RTC.VOICE_BEAUTIFIER_PRESET,
@@ -1777,7 +2049,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setVoiceBeautifierParameters not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setVoiceConversionParameters(
     preset: NATIVE_RTC.VOICE_CONVERSION_PRESET,
@@ -1787,15 +2062,24 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setVoiceConversionParameters not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLocalVoicePitch(pitch: number): CallApiReturnType {
     AgoraConsole.warn('setLocalVoicePitch not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLocalVoiceFormant(formantRatio: number): CallApiReturnType {
     AgoraConsole.warn('setLocalVoiceFormant not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLocalVoiceEqualization(
     bandFrequency: NATIVE_RTC.AUDIO_EQUALIZATION_BAND_FREQUENCY,
@@ -1804,20 +2088,29 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setLocalVoiceEqualization not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLocalVoiceReverb(
     reverbKey: NATIVE_RTC.AUDIO_REVERB_TYPE,
     value: number
   ): CallApiReturnType {
     AgoraConsole.warn('setLocalVoiceReverb not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setHeadphoneEQPreset(
     preset: NATIVE_RTC.HEADPHONE_EQUALIZER_PRESET
   ): CallApiReturnType {
     AgoraConsole.warn('setHeadphoneEQPreset not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setHeadphoneEQParameters(
     lowGain: number,
@@ -1826,11 +2119,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setHeadphoneEQParameters not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLogFile(filePath: string): CallApiReturnType {
     AgoraConsole.warn('setLogFile not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLogFilter(filter: number): CallApiReturnType {
     return this.execute(
@@ -1854,18 +2153,27 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   setLogFileSize(fileSizeInKBytes: number): CallApiReturnType {
     AgoraConsole.warn('setLogFileSize not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   uploadLogFile(requestId: string): CallApiReturnType {
     AgoraConsole.warn('uploadLogFile not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLocalRenderMode(
     renderMode: NATIVE_RTC.RENDER_MODE_TYPE,
     mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('setLocalRenderMode not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setRemoteRenderMode(
     uid: number,
@@ -1873,13 +2181,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('setRemoteRenderMode not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLocalRenderMode2(
     renderMode: NATIVE_RTC.RENDER_MODE_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('setLocalRenderMode2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLocalVideoMirrorMode(
     mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE
@@ -1887,29 +2201,44 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setLocalVideoMirrorMode not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableDualStreamMode(enabled: boolean): CallApiReturnType {
     AgoraConsole.warn('enableDualStreamMode not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableDualStreamMode2(
     enabled: boolean,
     streamConfig: NATIVE_RTC.SimulcastStreamConfig
   ): CallApiReturnType {
     AgoraConsole.warn('enableDualStreamMode2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setDualStreamMode(mode: NATIVE_RTC.SIMULCAST_STREAM_MODE): CallApiReturnType {
     AgoraConsole.warn('setDualStreamMode not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setDualStreamMode2(
     mode: NATIVE_RTC.SIMULCAST_STREAM_MODE,
     streamConfig: NATIVE_RTC.SimulcastStreamConfig
   ): CallApiReturnType {
     AgoraConsole.warn('setDualStreamMode2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableCustomAudioLocalPlayback(
     trackId: number,
@@ -1918,7 +2247,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'enableCustomAudioLocalPlayback not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setRecordingAudioFrameParameters(
     sampleRate: number,
@@ -1929,7 +2261,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setRecordingAudioFrameParameters not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setPlaybackAudioFrameParameters(
     sampleRate: number,
@@ -1940,7 +2275,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setPlaybackAudioFrameParameters not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setMixedAudioFrameParameters(
     sampleRate: number,
@@ -1950,7 +2288,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setMixedAudioFrameParameters not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setEarMonitoringAudioFrameParameters(
     sampleRate: number,
@@ -1961,7 +2302,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setEarMonitoringAudioFrameParameters not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setPlaybackAudioFrameBeforeMixingParameters(
     sampleRate: number,
@@ -1970,19 +2314,28 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setPlaybackAudioFrameBeforeMixingParameters not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableAudioSpectrumMonitor(intervalInMS: number): CallApiReturnType {
     AgoraConsole.warn(
       'enableAudioSpectrumMonitor not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   disableAudioSpectrumMonitor(): CallApiReturnType {
     AgoraConsole.warn(
       'disableAudioSpectrumMonitor not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   registerAudioSpectrumObserver(
     observer: NATIVE_RTC.IAudioSpectrumObserver
@@ -1990,7 +2343,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'registerAudioSpectrumObserver not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   unregisterAudioSpectrumObserver(
     observer: NATIVE_RTC.IAudioSpectrumObserver
@@ -1998,23 +2354,35 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'unregisterAudioSpectrumObserver not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   adjustRecordingSignalVolume(volume: number): CallApiReturnType {
     AgoraConsole.warn(
       'adjustRecordingSignalVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   muteRecordingSignal(mute: boolean): CallApiReturnType {
     AgoraConsole.warn('muteRecordingSignal not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   adjustPlaybackSignalVolume(volume: number): CallApiReturnType {
     AgoraConsole.warn(
       'adjustPlaybackSignalVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   adjustUserPlaybackSignalVolume(
     uid: number,
@@ -2023,7 +2391,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'adjustUserPlaybackSignalVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLocalPublishFallbackOption(
     option: NATIVE_RTC.STREAM_FALLBACK_OPTIONS
@@ -2031,7 +2402,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setLocalPublishFallbackOption not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setRemoteSubscribeFallbackOption(
     option: NATIVE_RTC.STREAM_FALLBACK_OPTIONS
@@ -2039,7 +2413,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setRemoteSubscribeFallbackOption not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setHighPriorityUserList(
     uidList: number,
@@ -2049,7 +2426,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setHighPriorityUserList not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableLoopbackRecording(
     enabled: boolean,
@@ -2058,39 +2438,57 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'enableLoopbackRecording not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   adjustLoopbackSignalVolume(volume: number): CallApiReturnType {
     AgoraConsole.warn(
       'adjustLoopbackSignalVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getLoopbackRecordingVolume(): CallApiReturnType {
     AgoraConsole.warn(
       'getLoopbackRecordingVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableInEarMonitoring(
     enabled: boolean,
     includeAudioFilters: number
   ): CallApiReturnType {
     AgoraConsole.warn('enableInEarMonitoring not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setInEarMonitoringVolume(volume: number): CallApiReturnType {
     AgoraConsole.warn(
       'setInEarMonitoringVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   loadExtensionProvider(
     path: string,
     unload_after_use: boolean
   ): CallApiReturnType {
     AgoraConsole.warn('loadExtensionProvider not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setExtensionProviderProperty(
     provider: string,
@@ -2100,7 +2498,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setExtensionProviderProperty not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   registerExtension(
     provider: string,
@@ -2108,7 +2509,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     type: NATIVE_RTC.MEDIA_SOURCE_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('registerExtension not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableExtension(
     provider: string,
@@ -2117,7 +2521,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     type: NATIVE_RTC.MEDIA_SOURCE_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('enableExtension not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableExtension2(
     provider: string,
@@ -2126,7 +2533,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     enable: boolean
   ): CallApiReturnType {
     AgoraConsole.warn('enableExtension2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setExtensionProperty(
     provider: string,
@@ -2136,7 +2546,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     type: NATIVE_RTC.MEDIA_SOURCE_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('setExtensionProperty not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getExtensionProperty(
     provider: string,
@@ -2147,7 +2560,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     type: NATIVE_RTC.MEDIA_SOURCE_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('getExtensionProperty not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setExtensionProperty2(
     provider: string,
@@ -2157,7 +2573,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     value: string
   ): CallApiReturnType {
     AgoraConsole.warn('setExtensionProperty2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getExtensionProperty2(
     provider: string,
@@ -2168,7 +2587,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     buf_len: number
   ): CallApiReturnType {
     AgoraConsole.warn('getExtensionProperty2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setCameraCapturerConfiguration(
     config: NATIVE_RTC.CameraCapturerConfiguration
@@ -2176,11 +2598,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setCameraCapturerConfiguration not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   createCustomVideoTrack(): CallApiReturnType {
     AgoraConsole.warn('createCustomVideoTrack not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   createCustomEncodedVideoTrack(
     sender_option: NATIVE_RTC.SenderOptions
@@ -2188,23 +2616,35 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'createCustomEncodedVideoTrack not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   destroyCustomVideoTrack(video_track_id: number): CallApiReturnType {
     AgoraConsole.warn(
       'destroyCustomVideoTrack not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   destroyCustomEncodedVideoTrack(video_track_id: number): CallApiReturnType {
     AgoraConsole.warn(
       'destroyCustomEncodedVideoTrack not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   switchCamera(): CallApiReturnType {
     AgoraConsole.warn('isCameraZoomSupported not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
     // let process = async ():Promise<CallIrisApiResult> => {
     //   let trackPack = this._engine.entitiesContainer.getLocalVideoTrackByType(
     //     NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
@@ -2240,39 +2680,63 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   isCameraZoomSupported(): CallApiReturnType {
     AgoraConsole.warn('isCameraZoomSupported not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   isCameraFaceDetectSupported(): CallApiReturnType {
     AgoraConsole.warn(
       'isCameraFaceDetectSupported not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   isCameraTorchSupported(): CallApiReturnType {
     AgoraConsole.warn('isCameraTorchSupported not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   isCameraFocusSupported(): CallApiReturnType {
     AgoraConsole.warn('isCameraFocusSupported not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   isCameraAutoFocusFaceModeSupported(): CallApiReturnType {
     AgoraConsole.warn(
       'isCameraAutoFocusFaceModeSupported not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setCameraZoomFactor(factor: number): CallApiReturnType {
     AgoraConsole.warn('setCameraZoomFactor not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableFaceDetection(enabled: boolean): CallApiReturnType {
     AgoraConsole.warn('enableFaceDetection not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getCameraMaxZoomFactor(): CallApiReturnType {
     AgoraConsole.warn('getCameraMaxZoomFactor not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setCameraFocusPositionInPreview(
     positionX: number,
@@ -2281,23 +2745,35 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setCameraFocusPositionInPreview not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setCameraTorchOn(isOn: boolean): CallApiReturnType {
     AgoraConsole.warn('setCameraTorchOn not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setCameraAutoFocusFaceModeEnabled(enabled: boolean): CallApiReturnType {
     AgoraConsole.warn(
       'setCameraAutoFocusFaceModeEnabled not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   isCameraExposurePositionSupported(): CallApiReturnType {
     AgoraConsole.warn(
       'isCameraExposurePositionSupported not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setCameraExposurePosition(
     positionXinView: number,
@@ -2306,31 +2782,46 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setCameraExposurePosition not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   isCameraExposureSupported(): CallApiReturnType {
     AgoraConsole.warn(
       'isCameraExposureSupported not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setCameraExposureFactor(factor: number): CallApiReturnType {
     AgoraConsole.warn(
       'setCameraExposureFactor not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   isCameraAutoExposureFaceModeSupported(): CallApiReturnType {
     AgoraConsole.warn(
       'isCameraAutoExposureFaceModeSupported not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setCameraAutoExposureFaceModeEnabled(enabled: boolean): CallApiReturnType {
     AgoraConsole.warn(
       'setCameraAutoExposureFaceModeEnabled not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setDefaultAudioRouteToSpeakerphone(
     defaultToSpeaker: boolean
@@ -2338,21 +2829,33 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setDefaultAudioRouteToSpeakerphone not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setEnableSpeakerphone(speakerOn: boolean): CallApiReturnType {
     AgoraConsole.warn('setEnableSpeakerphone not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   isSpeakerphoneEnabled(): CallApiReturnType {
     AgoraConsole.warn('isSpeakerphoneEnabled not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setRouteInCommunicationMode(route: number): CallApiReturnType {
     AgoraConsole.warn(
       'setRouteInCommunicationMode not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getScreenCaptureSources(
     thumbSize: NATIVE_RTC.SIZE,
@@ -2362,7 +2865,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'getScreenCaptureSources not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setAudioSessionOperationRestriction(
     restriction: NATIVE_RTC.AUDIO_SESSION_OPERATION_RESTRICTION
@@ -2370,7 +2876,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setAudioSessionOperationRestriction not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startScreenCaptureByDisplayId(
     displayId: number,
@@ -2380,7 +2889,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'startScreenCaptureByDisplayId not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startScreenCaptureByScreenRect(
     screenRect: NATIVE_RTC.Rectangle,
@@ -2390,11 +2902,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'startScreenCaptureByScreenRect not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getAudioDeviceInfo(deviceInfo: NATIVE_RTC.DeviceInfo): CallApiReturnType {
     AgoraConsole.warn('getAudioDeviceInfo not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startScreenCaptureByWindowId(
     windowId: number,
@@ -2404,7 +2922,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'startScreenCaptureByWindowId not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setScreenCaptureContentHint(
     contentHint: NATIVE_RTC.VIDEO_CONTENT_HINT
@@ -2412,7 +2933,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setScreenCaptureContentHint not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   updateScreenCaptureRegion(
     regionRect: NATIVE_RTC.Rectangle
@@ -2420,7 +2944,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'updateScreenCaptureRegion not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   updateScreenCaptureParameters(
     captureParams: NATIVE_RTC.ScreenCaptureParameters
@@ -2428,7 +2955,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'updateScreenCaptureParameters not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startScreenCapture(
     captureParams: NATIVE_RTC.ScreenCaptureParameters2
@@ -2484,13 +3014,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     captureParams: NATIVE_RTC.ScreenCaptureParameters2
   ): CallApiReturnType {
     AgoraConsole.warn('updateScreenCapture not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   queryScreenCaptureCapability(): CallApiReturnType {
     AgoraConsole.warn(
       'queryScreenCaptureCapability not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setScreenCaptureScenario(
     screenScenario: NATIVE_RTC.SCREEN_SCENARIO_TYPE
@@ -2498,7 +3034,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setScreenCaptureScenario not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopScreenCapture(): CallApiReturnType {
     return this.stopScreenCapture2(
@@ -2552,21 +3091,33 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   getCallId(callId: string): CallApiReturnType {
     AgoraConsole.warn('getCallId not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   rate(callId: string, rating: number, description: string): CallApiReturnType {
     AgoraConsole.warn('rate not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   complain(callId: string, description: string): CallApiReturnType {
     AgoraConsole.warn('complain not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startRtmpStreamWithoutTranscoding(url: string): CallApiReturnType {
     AgoraConsole.warn(
       'startRtmpStreamWithoutTranscoding not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startRtmpStreamWithTranscoding(
     url: string,
@@ -2575,17 +3126,26 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'startRtmpStreamWithTranscoding not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   updateRtmpTranscoding(
     transcoding: NATIVE_RTC.LiveTranscoding
   ): CallApiReturnType {
     AgoraConsole.warn('updateRtmpTranscoding not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopRtmpStream(url: string): CallApiReturnType {
     AgoraConsole.warn('stopRtmpStream not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startLocalVideoTranscoder(
     config: NATIVE_RTC.LocalTranscoderConfiguration
@@ -2593,7 +3153,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'startLocalVideoTranscoder not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   updateLocalTranscoderConfiguration(
     config: NATIVE_RTC.LocalTranscoderConfiguration
@@ -2601,26 +3164,38 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'updateLocalTranscoderConfiguration not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopLocalVideoTranscoder(): CallApiReturnType {
     AgoraConsole.warn(
       'stopLocalVideoTranscoder not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startCameraCapture(
     sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
     config: NATIVE_RTC.CameraCapturerConfiguration
   ): CallApiReturnType {
     AgoraConsole.warn('startCameraCapture not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopCameraCapture(
     sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('stopCameraCapture not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setCameraDeviceOrientation(
     type: NATIVE_RTC.VIDEO_SOURCE_TYPE,
@@ -2629,7 +3204,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setCameraDeviceOrientation not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setScreenCaptureOrientation(
     type: NATIVE_RTC.VIDEO_SOURCE_TYPE,
@@ -2638,7 +3216,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setScreenCaptureOrientation not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startScreenCapture2(
     sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
@@ -2653,7 +3234,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   getConnectionState(): CallApiReturnType {
     AgoraConsole.warn('getConnectionState not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   registerEventHandler(eventHandler: any): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
@@ -2683,22 +3267,34 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     userPriority: NATIVE_RTC.PRIORITY_TYPE
   ): CallApiReturnType {
     AgoraConsole.warn('setRemoteUserPriority not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setEncryptionMode(encryptionMode: string): CallApiReturnType {
     AgoraConsole.warn('setEncryptionMode not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setEncryptionSecret(secret: string): CallApiReturnType {
     AgoraConsole.warn('setEncryptionSecret not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableEncryption(
     enabled: boolean,
     config: NATIVE_RTC.EncryptionConfig
   ): CallApiReturnType {
     AgoraConsole.warn('enableEncryption not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   createDataStream(
     streamId: number[],
@@ -2706,14 +3302,20 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     ordered: boolean
   ): CallApiReturnType {
     AgoraConsole.warn('createDataStream not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   createDataStream2(
     streamId: number[],
     config: NATIVE_RTC.DataStreamConfig
   ): CallApiReturnType {
     AgoraConsole.warn('createDataStream2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   sendStreamMessage(
     streamId: number,
@@ -2721,36 +3323,57 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     length: number
   ): CallApiReturnType {
     AgoraConsole.warn('sendStreamMessage not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   addVideoWatermark(watermark: NATIVE_RTC.RtcImage): CallApiReturnType {
     AgoraConsole.warn('addVideoWatermark not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   addVideoWatermark2(
     watermarkUrl: string,
     options: NATIVE_RTC.WatermarkOptions
   ): CallApiReturnType {
     AgoraConsole.warn('addVideoWatermark2 not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   clearVideoWatermarks(): CallApiReturnType {
     AgoraConsole.warn('clearVideoWatermarks not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   pauseAudio(): CallApiReturnType {
     AgoraConsole.warn('pauseAudio not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   resumeAudio(): CallApiReturnType {
     AgoraConsole.warn('resumeAudio not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableWebSdkInteroperability(enabled: boolean): CallApiReturnType {
     AgoraConsole.warn(
       'enableWebSdkInteroperability not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   sendCustomReportMessage(
     id: string,
@@ -2762,7 +3385,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'sendCustomReportMessage not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   registerMediaMetadataObserver(
     observer: NATIVE_RTC.IMetadataObserver,
@@ -2771,7 +3397,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'registerMediaMetadataObserver not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   unregisterMediaMetadataObserver(
     observer: NATIVE_RTC.IMetadataObserver,
@@ -2780,7 +3409,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'unregisterMediaMetadataObserver not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startAudioFrameDump(
     channel_id: string,
@@ -2792,7 +3424,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     auto_upload: boolean
   ): CallApiReturnType {
     AgoraConsole.warn('startAudioFrameDump not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopAudioFrameDump(
     channel_id: string,
@@ -2800,14 +3435,20 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     location: string
   ): CallApiReturnType {
     AgoraConsole.warn('stopAudioFrameDump not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setAINSMode(
     enabled: boolean,
     mode: NATIVE_RTC.AUDIO_AINS_MODE
   ): CallApiReturnType {
     AgoraConsole.warn('setAINSMode not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   registerLocalUserAccount(
     appId: string,
@@ -2816,7 +3457,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'registerLocalUserAccount not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   joinChannelWithUserAccount(
     token: string,
@@ -2826,7 +3470,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'joinChannelWithUserAccount not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   joinChannelWithUserAccount2(
     token: string,
@@ -2837,7 +3484,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'joinChannelWithUserAccount2 not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   joinChannelWithUserAccountEx(
     token: string,
@@ -2848,7 +3498,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'joinChannelWithUserAccountEx not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getUserInfoByUserAccount(
     userAccount: string,
@@ -2857,14 +3510,20 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'getUserInfoByUserAccount not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getUserInfoByUid(
     uid: number,
     userInfo: NATIVE_RTC.UserInfo[]
   ): CallApiReturnType {
     AgoraConsole.warn('getUserInfoByUid not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startOrUpdateChannelMediaRelay(
     configuration: NATIVE_RTC.ChannelMediaRelayConfiguration
@@ -2872,13 +3531,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'startOrUpdateChannelMediaRelay not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startChannelMediaRelay(
     configuration: NATIVE_RTC.ChannelMediaRelayConfiguration
   ): CallApiReturnType {
     AgoraConsole.warn('startChannelMediaRelay not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   updateChannelMediaRelay(
     configuration: NATIVE_RTC.ChannelMediaRelayConfiguration
@@ -2886,23 +3551,35 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'updateChannelMediaRelay not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopChannelMediaRelay(): CallApiReturnType {
     AgoraConsole.warn('stopChannelMediaRelay not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   pauseAllChannelMediaRelay(): CallApiReturnType {
     AgoraConsole.warn(
       'pauseAllChannelMediaRelay not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   resumeAllChannelMediaRelay(): CallApiReturnType {
     AgoraConsole.warn(
       'resumeAllChannelMediaRelay not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setDirectCdnStreamingAudioConfiguration(
     profile: NATIVE_RTC.AUDIO_PROFILE_TYPE
@@ -2910,7 +3587,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setDirectCdnStreamingAudioConfiguration not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setDirectCdnStreamingVideoConfiguration(
     config: NATIVE_RTC.VideoEncoderConfiguration
@@ -2918,7 +3598,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setDirectCdnStreamingVideoConfiguration not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startDirectCdnStreaming(
     eventHandler: NATIVE_RTC.IDirectCdnStreamingEventHandler,
@@ -2928,11 +3611,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'startDirectCdnStreaming not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopDirectCdnStreaming(): CallApiReturnType {
     AgoraConsole.warn('stopDirectCdnStreaming not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   updateDirectCdnStreamingMediaOptions(
     options: NATIVE_RTC.DirectCdnStreamingMediaOptions
@@ -2940,7 +3629,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'updateDirectCdnStreamingMediaOptions not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startRhythmPlayer(
     sound1: string,
@@ -2948,28 +3640,43 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     config: NATIVE_RTC.AgoraRhythmPlayerConfig
   ): CallApiReturnType {
     AgoraConsole.warn('startRhythmPlayer not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopRhythmPlayer(): CallApiReturnType {
     AgoraConsole.warn('stopRhythmPlayer not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   configRhythmPlayer(
     config: NATIVE_RTC.AgoraRhythmPlayerConfig
   ): CallApiReturnType {
     AgoraConsole.warn('configRhythmPlayer not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   takeSnapshot(uid: number, filePath: string): CallApiReturnType {
     AgoraConsole.warn('takeSnapshot not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableContentInspect(
     enabled: boolean,
     config: NATIVE_RTC.ContentInspectConfig
   ): CallApiReturnType {
     AgoraConsole.warn('enableContentInspect not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   adjustCustomAudioPublishVolume(
     trackId: number,
@@ -2978,7 +3685,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'adjustCustomAudioPublishVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   adjustCustomAudioPlayoutVolume(
     trackId: number,
@@ -2987,17 +3697,26 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'adjustCustomAudioPlayoutVolume not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setCloudProxy(proxyType: NATIVE_RTC.CLOUD_PROXY_TYPE): CallApiReturnType {
     AgoraConsole.warn('setCloudProxy not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setLocalAccessPoint(
     config: NATIVE_RTC.LocalAccessPointConfiguration
   ): CallApiReturnType {
     AgoraConsole.warn('setLocalAccessPoint not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setAdvancedAudioOptions(
     options: NATIVE_RTC.AdvancedAudioOptions,
@@ -3006,54 +3725,84 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     AgoraConsole.warn(
       'setAdvancedAudioOptions not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setAVSyncSource(channelId: string, uid: number): CallApiReturnType {
     AgoraConsole.warn('setAVSyncSource not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableVideoImageSource(
     enable: boolean,
     options: NATIVE_RTC.ImageTrackOptions
   ): CallApiReturnType {
     AgoraConsole.warn('enableVideoImageSource not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getCurrentMonotonicTimeInMs(): CallApiReturnType {
     AgoraConsole.warn(
       'getCurrentMonotonicTimeInMs not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableWirelessAccelerate(enabled: boolean): CallApiReturnType {
     AgoraConsole.warn(
       'enableWirelessAccelerate not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getNetworkType(): CallApiReturnType {
     AgoraConsole.warn('getNetworkType not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   setParameters(parameters: string): CallApiReturnType {
     AgoraConsole.warn('setParameters not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startMediaRenderingTracing(): CallApiReturnType {
     AgoraConsole.warn(
       'startMediaRenderingTracing not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   enableInstantMediaRendering(): CallApiReturnType {
     AgoraConsole.warn(
       'enableInstantMediaRendering not supported in this platform!'
     );
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getNtpWallTimeInMs(): CallApiReturnType {
     AgoraConsole.warn('getNtpWallTimeInMs not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
 }
 
@@ -3062,10 +3811,6 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
 
   public constructor(engine: IrisRtcEngine) {
     this._engine = engine;
-  }
-
-  putAction(action: Action) {
-    this._engine.actionQueue.putAction(action);
   }
 
   private execute(task: AsyncTaskType): CallApiReturnType {
@@ -3160,7 +3905,10 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
 
   numberOfCapabilities(deviceIdUTF8: string): CallApiReturnType {
     AgoraConsole.warn('numberOfCapabilities not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getCapability(
     deviceIdUTF8: string,
@@ -3168,15 +3916,24 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
     capability: NATIVE_RTC.VideoFormat
   ): CallApiReturnType {
     AgoraConsole.warn('getCapability not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   startDeviceTest(hwnd: number): CallApiReturnType {
     AgoraConsole.warn('startDeviceTest not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   stopDeviceTest(): CallApiReturnType {
     AgoraConsole.warn('stopDeviceTest not supported in this platform!');
-    return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+    return this.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   release(): CallApiReturnType {
     let process = async () => {
