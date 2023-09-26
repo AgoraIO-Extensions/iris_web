@@ -5,7 +5,9 @@ import {
   ApiInterceptor,
   ApiInterceptorReturnType,
   ApiParam,
+  AsyncTaskType,
   CallApiExecutor,
+  CallApiReturnType,
   CallIrisApiResult,
   IrisEventHandler,
   IrisEventHandlerManager,
@@ -274,19 +276,25 @@ export class IrisRtcEngine implements ApiInterceptor {
     return this.entitiesContainer.getVideoFrameByConfig(config);
   }
 
-  public destruction() {
+  public execute(task: AsyncTaskType): CallApiReturnType {
+    return this.executor.execute(task);
+  }
+
+  public returnResult(
+    isSuccess: boolean = true,
+    code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
+    data: string = '{"result": 0}'
+  ): Promise<CallIrisApiResult> {
+    if (!isSuccess) {
+      code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
+    }
+    return Promise.resolve(new CallIrisApiResult(code, data));
+  }
+
+  public async destruction() {
     this.agoraEventHandler.destruction();
 
-    this.actionQueue.putAction({
-      fun: (next) => {
-        let process = async () => {
-          await this.entitiesContainer.destruction();
-          next();
-        };
-        setTimeout(process, 0);
-      },
-      args: [],
-    });
+    await this.entitiesContainer.destruction();
   }
 
   public generateVideoTrackLabelOrHtmlElement(
@@ -327,8 +335,8 @@ export class IrisRtcEngine implements ApiInterceptor {
     });
   }
 
-  dispose(): Promise<void> {
-    this.destruction();
+  async dispose(): Promise<void> {
+    await this.destruction();
     return Promise.resolve();
   }
 }

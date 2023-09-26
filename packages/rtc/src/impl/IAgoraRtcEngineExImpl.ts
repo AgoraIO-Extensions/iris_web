@@ -4,11 +4,7 @@ import {
   ILocalAudioTrack,
   ILocalVideoTrack,
 } from 'agora-rtc-sdk-ng';
-import {
-  AsyncTaskType,
-  CallApiReturnType,
-  CallIrisApiResult,
-} from 'iris-web-core';
+import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
 import { IrisAudioSourceType, IrisClientType } from '../base/BaseType';
 
@@ -31,28 +27,13 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     this._engine = engine;
   }
 
-  private execute(task: AsyncTaskType): CallApiReturnType {
-    return this._engine.executor.execute(task);
-  }
-
-  private returnResult(
-    isSuccess: boolean = true,
-    code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
-    data: string = '{"result": 0}'
-  ): Promise<CallIrisApiResult> {
-    if (!isSuccess) {
-      code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
-    }
-    return Promise.resolve(new CallIrisApiResult(code, data));
-  }
-
   enableContentInspectEx(
     enabled: boolean,
     config: NATIVE_RTC.ContentInspectConfig,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('enableContentInspectEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -125,7 +106,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           ''
         );
         this._engine.entitiesContainer.clearSubClientAll(connection);
-        return this.returnResult(false);
+        return this._engine.returnResult(false);
       }
 
       this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(connection, 0);
@@ -139,7 +120,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         )[1]
       ) {
         AgoraConsole.log('screen share track not found, skip joinChannel call');
-        return this.returnResult();
+        return this._engine.returnResult();
       }
 
       let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
@@ -153,7 +134,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         );
       } catch (e) {
         AgoraConsole.error(e);
-        return this.returnResult(false);
+        return this._engine.returnResult(false);
       }
 
       // 推送audioTrack
@@ -209,9 +190,9 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           trackEventHandler
         );
       }
-      return this.returnResult();
+      return this._engine.returnResult();
     };
-    return this.execute(processJoinChannel);
+    return this._engine.execute(processJoinChannel);
   }
   leaveChannelEx(connection: NATIVE_RTC.RtcConnection): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
@@ -223,7 +204,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           await subClient.leave();
         } catch (e) {
           AgoraConsole.error(e);
-          this.returnResult(false);
+          this._engine.returnResult(false);
           this._engine.rtcEngineEventHandler.onError(
             NATIVE_RTC.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED,
             ''
@@ -240,16 +221,16 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let subClients: Container<IAgoraRTCClient> = this._engine.entitiesContainer.getSubClients();
       let container = subClients.getContainer();
       this._engine.globalVariables.isJoinChannel = container.size > 0;
-      return this.returnResult();
+      return this._engine.returnResult();
     };
-    return this.execute(processFunc);
+    return this._engine.execute(processFunc);
   }
   leaveChannelEx2(
     connection: NATIVE_RTC.RtcConnection,
     options: NATIVE_RTC.LeaveChannelOptions
   ): CallApiReturnType {
     AgoraConsole.warn('leaveChannelEx2 not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -268,7 +249,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let entitiesContainer = this._engine.entitiesContainer;
       let subClient = entitiesContainer.getSubClient(connection);
       if (subClient == null) {
-        return this.returnResult(false);
+        return this._engine.returnResult(false);
       }
 
       let argsUnpublish: Array<[
@@ -660,14 +641,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         try {
           await subClient.renewToken(options.token);
         } catch (e) {
-          return this.returnResult(false);
+          return this._engine.returnResult(false);
         }
       }
 
-      return this.returnResult();
+      return this._engine.returnResult();
     };
 
-    return this.execute(processInSequence);
+    return this._engine.execute(processInSequence);
   }
   setVideoEncoderConfigurationEx(
     config: NATIVE_RTC.VideoEncoderConfiguration,
@@ -676,7 +657,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'setVideoEncoderConfigurationEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -729,10 +710,10 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         }
       });
 
-      return this.returnResult();
+      return this._engine.returnResult();
     };
 
-    return this.execute(processVideoTrack);
+    return this._engine.execute(processVideoTrack);
   }
   muteRemoteAudioStreamEx(
     uid: number,
@@ -742,7 +723,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'muteRemoteAudioStreamEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -755,7 +736,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'muteRemoteVideoStreamEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -768,7 +749,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'setRemoteVideoStreamTypeEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -778,7 +759,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('muteLocalAudioStreamEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -788,7 +769,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('muteLocalVideoStreamEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -800,7 +781,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'muteAllRemoteAudioStreamsEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -812,7 +793,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'muteAllRemoteVideoStreamsEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -825,7 +806,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'setSubscribeAudioBlocklistEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -838,7 +819,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'setSubscribeAudioAllowlistEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -851,7 +832,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'setSubscribeVideoBlocklistEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -864,7 +845,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'setSubscribeVideoAllowlistEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -877,7 +858,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'setRemoteVideoSubscriptionOptionsEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -891,7 +872,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'setRemoteVoicePositionEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -904,7 +885,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'setRemoteUserSpatialAudioParamsEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -916,7 +897,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('setRemoteRenderModeEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -929,7 +910,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'enableLoopbackRecordingEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -941,7 +922,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'adjustRecordingSignalVolumeEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -951,7 +932,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('muteRecordingSignalEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -964,7 +945,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'adjustUserPlaybackSignalVolumeEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -973,7 +954,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('getConnectionStateEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -984,7 +965,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     config: NATIVE_RTC.EncryptionConfig
   ): CallApiReturnType {
     AgoraConsole.warn('enableEncryptionEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -996,7 +977,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('createDataStreamEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1007,7 +988,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('createDataStreamEx2 not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1019,7 +1000,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('sendStreamMessageEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1030,7 +1011,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('addVideoWatermarkEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1039,7 +1020,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('clearVideoWatermarkEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1055,7 +1036,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'sendCustomReportMessageEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1069,7 +1050,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'enableAudioVolumeIndicationEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1081,7 +1062,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'startRtmpStreamWithoutTranscodingEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1094,7 +1075,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'startRtmpStreamWithTranscodingEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1106,7 +1087,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'updateRtmpTranscodingEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1116,7 +1097,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('stopRtmpStreamEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1128,7 +1109,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'startOrUpdateChannelMediaRelayEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1140,7 +1121,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'startChannelMediaRelayEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1152,7 +1133,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'updateChannelMediaRelayEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1163,7 +1144,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'stopChannelMediaRelayEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1174,7 +1155,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'pauseAllChannelMediaRelayEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1185,7 +1166,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'resumeAllChannelMediaRelayEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1198,7 +1179,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'getUserInfoByUserAccountEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1209,7 +1190,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('getUserInfoByUidEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1220,7 +1201,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('enableDualStreamModeEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1231,7 +1212,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('setDualStreamModeEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1245,7 +1226,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'setHighPriorityUserListEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1256,7 +1237,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     filePath: string
   ): CallApiReturnType {
     AgoraConsole.warn('takeSnapshotEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -1267,7 +1248,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     AgoraConsole.warn(
       'startMediaRenderingTracingEx not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );

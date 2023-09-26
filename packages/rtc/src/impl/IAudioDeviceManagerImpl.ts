@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
+import { CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util';
@@ -11,22 +11,11 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     this._engine = engine;
   }
 
-  private returnResult(
-    isSuccess: boolean = true,
-    code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
-    data: string = '{"result": 0}'
-  ): Promise<CallIrisApiResult> {
-    if (!isSuccess) {
-      code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
-    }
-    return Promise.resolve(new CallIrisApiResult(code, data));
-  }
-
   enumeratePlaybackDevices(): CallApiReturnType {
     AgoraConsole.warn(
       'enumeratePlaybackDevices not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -36,7 +25,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'enumerateRecordingDevices not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -44,7 +33,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   setPlaybackDevice(deviceId: string[]): CallApiReturnType {
     AgoraConsole.warn('setPlaybackDevice not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -52,7 +41,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   getPlaybackDevice(deviceId: string): CallApiReturnType {
     AgoraConsole.warn('getPlaybackDevice not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -60,7 +49,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   getPlaybackDeviceInfo(): CallApiReturnType {
     AgoraConsole.warn('getPlaybackDeviceInfo not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -70,7 +59,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'setPlaybackDeviceVolume not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -80,7 +69,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'getPlaybackDeviceVolume not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -88,7 +77,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   setRecordingDevice(deviceId: string[]): CallApiReturnType {
     AgoraConsole.warn('setRecordingDevice not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -96,7 +85,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   getRecordingDevice(deviceId: string): CallApiReturnType {
     AgoraConsole.warn('getRecordingDevice not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -104,7 +93,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   getRecordingDeviceInfo(): CallApiReturnType {
     AgoraConsole.warn('getRecordingDeviceInfo not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -114,7 +103,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'setRecordingDeviceVolume not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -124,7 +113,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'getRecordingDeviceVolume not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -132,7 +121,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   setLoopbackDevice(deviceId: string[]): CallApiReturnType {
     AgoraConsole.warn('setLoopbackDevice not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -140,7 +129,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   getLoopbackDevice(deviceId: string): CallApiReturnType {
     AgoraConsole.warn('getLoopbackDevice not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -148,7 +137,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   setPlaybackDeviceMute(mute: boolean): CallApiReturnType {
     AgoraConsole.warn('setPlaybackDeviceMute not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -156,7 +145,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   getPlaybackDeviceMute(mute: boolean): CallApiReturnType {
     AgoraConsole.warn('getPlaybackDeviceMute not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -164,7 +153,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   setRecordingDeviceMute(mute: boolean): CallApiReturnType {
     AgoraConsole.warn('setRecordingDeviceMute not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -172,7 +161,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   getRecordingDeviceMute(mute: boolean): CallApiReturnType {
     AgoraConsole.warn('getRecordingDeviceMute not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -182,7 +171,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'startPlaybackDeviceTest not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -190,7 +179,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   stopPlaybackDeviceTest(): CallApiReturnType {
     AgoraConsole.warn('stopPlaybackDeviceTest not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -200,7 +189,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'startRecordingDeviceTest not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -210,7 +199,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'stopRecordingDeviceTest not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -220,7 +209,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'startAudioDeviceLoopbackTest not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -230,7 +219,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'stopAudioDeviceLoopbackTest not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -240,7 +229,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'followSystemPlaybackDevice not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -250,7 +239,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'followSystemRecordingDevice not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -260,7 +249,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     AgoraConsole.warn(
       'followSystemLoopbackDevice not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -268,7 +257,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
 
   release(): CallApiReturnType {
     AgoraConsole.warn('release not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );

@@ -3,13 +3,14 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = {
+const environment = process.env.NODE_ENV;
+
+config = {
   entry: './src/index.ts',
 
   output: {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'this',
-    // library: "",
     filename: 'iris-web-rtc.js',
     environment: {
       arrowFunction: false,
@@ -20,16 +21,15 @@ module.exports = {
     minimizer: [
       new TerserPlugin({
         parallel: true,
+        extractComments: false,
         terserOptions: {
           toplevel: true,
-          ie8: true,
+          ie8: false,
           safari10: true,
         },
       }),
     ],
   },
-
-  // devtool: 'inline-source-map',
 
   resolve: {
     extensions: ['.ts', '.js'],
@@ -58,3 +58,8 @@ module.exports = {
     },
   },
 };
+if (environment !== 'production') {
+  config.devtool = 'inline-source-map';
+}
+
+module.exports = config;

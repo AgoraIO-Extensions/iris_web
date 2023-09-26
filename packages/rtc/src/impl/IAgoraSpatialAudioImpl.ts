@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
+import { CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -12,20 +12,9 @@ export class ILocalSpatialAudioEngineImpl
     this._engine = engine;
   }
 
-  private returnResult(
-    isSuccess: boolean = true,
-    code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
-    data: string = '{"result": 0}'
-  ): Promise<CallIrisApiResult> {
-    if (!isSuccess) {
-      code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
-    }
-    return Promise.resolve(new CallIrisApiResult(code, data));
-  }
-
   initialize(): CallApiReturnType {
     AgoraConsole.warn('initialize not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -38,7 +27,7 @@ export class ILocalSpatialAudioEngineImpl
     AgoraConsole.warn(
       'setRemoteAudioAttenuation not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -46,21 +35,21 @@ export class ILocalSpatialAudioEngineImpl
 
   setMaxAudioRecvCount(maxCount: number): CallApiReturnType {
     AgoraConsole.warn('setMaxAudioRecvCount not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   }
   setAudioRecvRange(range: number): CallApiReturnType {
     AgoraConsole.warn('setAudioRecvRange not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   }
   setDistanceUnit(unit: number): CallApiReturnType {
     AgoraConsole.warn('setDistanceUnit not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -72,7 +61,7 @@ export class ILocalSpatialAudioEngineImpl
     axisUp: number[]
   ): CallApiReturnType {
     AgoraConsole.warn('updateSelfPosition not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -85,7 +74,7 @@ export class ILocalSpatialAudioEngineImpl
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('updateSelfPositionEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -97,21 +86,21 @@ export class ILocalSpatialAudioEngineImpl
     AgoraConsole.warn(
       'updatePlayerPositionInfo not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   }
   setParameters(params: string): CallApiReturnType {
     AgoraConsole.warn('setParameters not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   }
   muteLocalAudioStream(mute: boolean): CallApiReturnType {
     AgoraConsole.warn('muteLocalAudioStream not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -120,7 +109,7 @@ export class ILocalSpatialAudioEngineImpl
     AgoraConsole.warn(
       'muteAllRemoteAudioStreams not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -131,7 +120,7 @@ export class ILocalSpatialAudioEngineImpl
     posInfo: NATIVE_RTC.RemoteVoicePositionInfo
   ): CallApiReturnType {
     AgoraConsole.warn('updateRemotePosition not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -143,7 +132,7 @@ export class ILocalSpatialAudioEngineImpl
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('updateRemotePositionEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -151,7 +140,7 @@ export class ILocalSpatialAudioEngineImpl
 
   removeRemotePosition(uid: number): CallApiReturnType {
     AgoraConsole.warn('removeRemotePosition not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -162,7 +151,7 @@ export class ILocalSpatialAudioEngineImpl
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('removeRemotePositionEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -170,7 +159,7 @@ export class ILocalSpatialAudioEngineImpl
 
   clearRemotePositions(): CallApiReturnType {
     AgoraConsole.warn('clearRemotePositions not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -180,7 +169,7 @@ export class ILocalSpatialAudioEngineImpl
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('clearRemotePositionsEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -195,20 +184,9 @@ export class IBaseSpatialAudioEngineImpl
     this._engine = engine;
   }
 
-  private returnResult(
-    isSuccess: boolean = true,
-    code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
-    data: string = '{"result": 0}'
-  ): Promise<CallIrisApiResult> {
-    if (!isSuccess) {
-      code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
-    }
-    return Promise.resolve(new CallIrisApiResult(code, data));
-  }
-
   release(): CallApiReturnType {
     AgoraConsole.warn('release not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -218,7 +196,7 @@ export class IBaseSpatialAudioEngineImpl
     zoneCount: number
   ): CallApiReturnType {
     AgoraConsole.warn('setZones not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -229,14 +207,14 @@ export class IBaseSpatialAudioEngineImpl
     forceSet: boolean
   ): CallApiReturnType {
     AgoraConsole.warn('setPlayerAttenuation not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   }
   muteRemoteAudioStream(uid: number, mute: boolean): CallApiReturnType {
     AgoraConsole.warn('muteRemoteAudioStream not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -244,7 +222,7 @@ export class IBaseSpatialAudioEngineImpl
 
   initialize(): CallApiReturnType {
     AgoraConsole.warn('initialize not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -257,7 +235,7 @@ export class IBaseSpatialAudioEngineImpl
     AgoraConsole.warn(
       'setRemoteAudioAttenuation not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -265,21 +243,21 @@ export class IBaseSpatialAudioEngineImpl
 
   setMaxAudioRecvCount(maxCount: number): CallApiReturnType {
     AgoraConsole.warn('setMaxAudioRecvCount not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   }
   setAudioRecvRange(range: number): CallApiReturnType {
     AgoraConsole.warn('setAudioRecvRange not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   }
   setDistanceUnit(unit: number): CallApiReturnType {
     AgoraConsole.warn('setDistanceUnit not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -291,7 +269,7 @@ export class IBaseSpatialAudioEngineImpl
     axisUp: number
   ): CallApiReturnType {
     AgoraConsole.warn('updateSelfPosition not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -304,7 +282,7 @@ export class IBaseSpatialAudioEngineImpl
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('updateSelfPositionEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -316,21 +294,21 @@ export class IBaseSpatialAudioEngineImpl
     AgoraConsole.warn(
       'updatePlayerPositionInfo not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   }
   setParameters(params: string): CallApiReturnType {
     AgoraConsole.warn('setParameters not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   }
   muteLocalAudioStream(mute: boolean): CallApiReturnType {
     AgoraConsole.warn('muteLocalAudioStream not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -339,7 +317,7 @@ export class IBaseSpatialAudioEngineImpl
     AgoraConsole.warn(
       'muteAllRemoteAudioStreams not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -350,7 +328,7 @@ export class IBaseSpatialAudioEngineImpl
     posInfo: NATIVE_RTC.RemoteVoicePositionInfo
   ): CallApiReturnType {
     AgoraConsole.warn('updateRemotePosition not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -362,7 +340,7 @@ export class IBaseSpatialAudioEngineImpl
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('updateRemotePositionEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -370,7 +348,7 @@ export class IBaseSpatialAudioEngineImpl
 
   removeRemotePosition(uid: number): CallApiReturnType {
     AgoraConsole.warn('removeRemotePosition not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -381,7 +359,7 @@ export class IBaseSpatialAudioEngineImpl
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('removeRemotePositionEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -389,7 +367,7 @@ export class IBaseSpatialAudioEngineImpl
 
   clearRemotePositions(): CallApiReturnType {
     AgoraConsole.warn('clearRemotePositions not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -399,7 +377,7 @@ export class IBaseSpatialAudioEngineImpl
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     AgoraConsole.warn('clearRemotePositionsEx not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
