@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
-import { UID } from 'agora-rtc-sdk-ng';
+import AgoraRTC, { IAgoraRTC, UID } from 'agora-rtc-sdk-ng';
 
 export interface DeviceInfo {
   deviceName: string;
@@ -8,7 +8,7 @@ export interface DeviceInfo {
 
 export class IrisGlobalVariables {
   public rtcEngineContext: NATIVE_RTC.RtcEngineContext;
-  isCreateMainClient: boolean = false;
+  isJoinChannel: boolean = false;
 
   //C++ SetAudioProfile() initialize()
   public audioProfile: NATIVE_RTC.AUDIO_PROFILE_TYPE;
@@ -84,4 +84,7 @@ export class IrisGlobalVariables {
     smooth: 3,
     reportVad: false,
   };
+
+  //fake
+  AgoraRTC: IAgoraRTC = AgoraRTC;
 }

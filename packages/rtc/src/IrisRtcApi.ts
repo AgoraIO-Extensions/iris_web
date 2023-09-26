@@ -1,10 +1,18 @@
+import { IAgoraRTC } from 'agora-rtc-sdk-ng';
 import { IrisApiEngine } from 'iris-web-core';
 
 import { IrisRtcEngine } from './engine/IrisRtcEngine';
 
-export function initIrisRtc(irisApiEngine: IrisApiEngine) {
+export interface InitIrisRtcOptions {
+  fakeAgoraRTC: IAgoraRTC;
+}
+
+export function initIrisRtc(
+  irisApiEngine: IrisApiEngine,
+  options?: InitIrisRtcOptions
+) {
   irisApiEngine.addApiInterceptor(
-    new IrisRtcEngine(irisApiEngine.getIrisEventHandlerManager())
+    new IrisRtcEngine(irisApiEngine.getIrisEventHandlerManager(), options)
   );
 }
 

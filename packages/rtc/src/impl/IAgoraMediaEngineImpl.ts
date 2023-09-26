@@ -196,7 +196,6 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
         canvas.id = canvasID;
         canvas.style.display = 'none';
       }
-      //todo 目前flutter给到的数据解析时是bgra, 需要转成rgba才能正常渲染
       if (
         frame.format !== NATIVE_RTC.VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_BGRA &&
         frame.format !== NATIVE_RTC.VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_RGBA
@@ -245,28 +244,31 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
           await TrackHelper.setEnabled(videoTrack, true);
         }
 
+        //如果没有播放，需要play
         if (!videoTrack.isPlaying) {
           videoTrack.play(videoPackage.element);
         }
-
-        let mainClient = this._engine.entitiesContainer.getMainClient();
-        try {
-          await mainClient.publish(videoTrack);
-        } catch (reason) {
-          AgoraConsole.error(reason);
+        //如果已经加入频道，需要publish
+        if (this._engine.globalVariables.isJoinChannel) {
+          let mainClient = this._engine.entitiesContainer.getMainClient();
+          try {
+            await mainClient.publish(videoTrack);
+          } catch (reason) {
+            AgoraConsole.error(reason);
+          }
+          let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+            {
+              channelName: mainClient.channelName,
+              client: mainClient,
+              track: videoTrack,
+              trackType: 'ILocalVideoTrack',
+            },
+            this._engine
+          );
+          this._engine.entitiesContainer.addMainClientTrackEventHandler(
+            trackEventHandler
+          );
         }
-        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
-          {
-            channelName: mainClient.channelName,
-            client: mainClient,
-            track: videoTrack,
-            trackType: 'ILocalVideoTrack',
-          },
-          this._engine
-        );
-        this._engine.entitiesContainer.addMainClientTrackEventHandler(
-          trackEventHandler
-        );
       }
 
       return this.returnResult();

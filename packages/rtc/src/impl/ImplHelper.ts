@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
-import AgoraRTC, {
+import {
   AgoraRTCErrorCode,
   BufferSourceAudioTrackInitConfig,
   CameraVideoTrackInitConfig,
@@ -60,7 +60,7 @@ export class ImplHelper {
       throw `soundId:${bufferSourceAudioTrackPackage.soundId} already create`;
     }
     try {
-      bufferSourceAudioTrack = await AgoraRTC.createBufferSourceAudioTrack(
+      bufferSourceAudioTrack = await engine.globalVariables.AgoraRTC.createBufferSourceAudioTrack(
         bufferSourceAudioTrackInitConfig
       );
     } catch (e) {
@@ -95,7 +95,7 @@ export class ImplHelper {
     if (!retVideoTrack) {
       let videoTrack: ILocalVideoTrack = null;
       try {
-        videoTrack = AgoraRTC.createCustomVideoTrack({
+        videoTrack = engine.globalVariables.AgoraRTC.createCustomVideoTrack({
           mediaStreamTrack,
         });
       } catch (e) {
@@ -187,7 +187,10 @@ export class ImplHelper {
             engine
           );
           //由于平台差异,有可能无法返回音频track,故做兼容
-          let screenTrack = await AgoraRTC.createScreenVideoTrack(conf, 'auto');
+          let screenTrack = await engine.globalVariables.AgoraRTC.createScreenVideoTrack(
+            conf,
+            'auto'
+          );
           if (Array.isArray(screenTrack)) {
             trackArray = screenTrack;
           } else {
@@ -245,7 +248,10 @@ export class ImplHelper {
         let conf: ScreenVideoTrackInitConfig = this.generateScreenVideoTrackInitConfig(
           engine
         );
-        videoTrack = await AgoraRTC.createScreenVideoTrack(conf, 'disable');
+        videoTrack = await engine.globalVariables.AgoraRTC.createScreenVideoTrack(
+          conf,
+          'disable'
+        );
       } catch (e) {
         throw e;
       }
@@ -267,7 +273,9 @@ export class ImplHelper {
         let videoConfig: CameraVideoTrackInitConfig = this.generateCameraVideoTrackInitConfig(
           engine
         );
-        videoTrack = await AgoraRTC.createCameraVideoTrack(videoConfig);
+        videoTrack = await engine.globalVariables.AgoraRTC.createCameraVideoTrack(
+          videoConfig
+        );
       } catch (e) {
         AgoraConsole.error('createCameraVideoTrack failed');
         AgoraConsole.error(e);
@@ -302,7 +310,9 @@ export class ImplHelper {
         let audioConfig: MicrophoneAudioTrackInitConfig = this.generateMicrophoneAudioTrackInitConfig(
           engine
         );
-        audioTrack = await AgoraRTC.createMicrophoneAudioTrack(audioConfig);
+        audioTrack = await engine.globalVariables.AgoraRTC.createMicrophoneAudioTrack(
+          audioConfig
+        );
       } catch (e) {
         AgoraConsole.error('createMicrophoneAudioTrack failed');
         throw e;
@@ -489,7 +499,9 @@ export class ImplHelper {
 
   public static createMainClient(engine: IrisRtcEngine): IAgoraRTCClient {
     let config: ClientConfig = this.generateMainClientConfig(engine);
-    let mainClient: IAgoraRTCClient = AgoraRTC.createClient(config);
+    let mainClient: IAgoraRTCClient = engine.globalVariables.AgoraRTC.createClient(
+      config
+    );
 
     let mainClientVariables = engine.mainClientVariables;
     //设置远端默认是 大流还是小流
@@ -620,7 +632,9 @@ export class ImplHelper {
     connection: NATIVE_RTC.RtcConnection
   ): IAgoraRTCClient {
     let config: ClientConfig = this.generateSubClientConfig(engine, connection);
-    let subClient: IAgoraRTCClient = AgoraRTC.createClient(config);
+    let subClient: IAgoraRTCClient = engine.globalVariables.AgoraRTC.createClient(
+      config
+    );
     let subClientVariables = engine.subClientVariables;
 
     //设置远端默认是 大流还是小流
@@ -920,7 +934,7 @@ export class ImplHelper {
     recordingDevices: NATIVE_RTC.DeviceInfo[];
     videoDevices: NATIVE_RTC.DeviceInfo[];
   }> {
-    let info = await AgoraRTC.getDevices();
+    let info = await engine.globalVariables.AgoraRTC.getDevices();
     let playbackDevices: any[] = [];
     let recordingDevices: any[] = [];
     let videoDevices: any[] = [];

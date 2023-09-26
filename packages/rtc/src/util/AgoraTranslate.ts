@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
-import AgoraRTC, {
+import {
   AREAS,
   AudienceLatencyLevelType,
   ChannelMediaRelayError,
@@ -26,6 +26,8 @@ import AgoraRTC, {
   UID,
   VideoEncoderConfiguration,
 } from 'agora-rtc-sdk-ng';
+
+import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import { AgoraConsole } from './AgoraConsole';
 
@@ -248,9 +250,10 @@ export class AgoraTranslate {
   }
 
   public static NATIVE_RTCChannelMediaRelayConfiguration2IChannelMediaRelayConfiguration(
-    config: NATIVE_RTC.ChannelMediaRelayConfiguration
+    config: NATIVE_RTC.ChannelMediaRelayConfiguration,
+    engine: IrisRtcEngine
   ): IChannelMediaRelayConfiguration {
-    let ret: IChannelMediaRelayConfiguration = AgoraRTC.createChannelMediaRelayConfiguration();
+    let ret: IChannelMediaRelayConfiguration = engine.globalVariables.AgoraRTC.createChannelMediaRelayConfiguration();
     for (let i = 0; i < config.srcInfo.length; i++) {
       ret.addDestChannelInfo(
         AgoraTranslate.NATIVE_RTCChannelMediaInfo2ChannelMediaRelayInfo(

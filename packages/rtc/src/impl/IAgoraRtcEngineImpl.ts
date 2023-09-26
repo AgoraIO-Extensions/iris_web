@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
-import AgoraRTC, {
+import {
   AudioSourceOptions,
   BufferSourceAudioTrackInitConfig,
   IAgoraRTCClient,
@@ -80,7 +80,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   setAppType(appType: number): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      AgoraRTC.setAppType(appType);
+      this._engine.globalVariables.AgoraRTC.setAppType(appType);
       return this.returnResult();
     };
 
@@ -92,15 +92,15 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalVariables.rtcEngineContext = context;
       this._engine.mainClientVariables.channelProfile = context.channelProfile;
 
-      AgoraRTC.setArea([
+      this._engine.globalVariables.AgoraRTC.setArea([
         AgoraTranslate.NATIVE_RTCAREA_CODE2AREAS(context.areaCode),
       ]);
 
-      AgoraRTC.setLogLevel(
+      this._engine.globalVariables.AgoraRTC.setLogLevel(
         AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(context?.logConfig?.level)
       );
 
-      let result = AgoraRTC.checkSystemRequirements();
+      let result = this._engine.globalVariables.AgoraRTC.checkSystemRequirements();
       return this.returnResult(result);
     };
 
@@ -183,7 +183,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     uid: number,
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
-    if (this._engine.globalVariables.isCreateMainClient == true) {
+    if (this._engine.globalVariables.isJoinChannel == true) {
       AgoraConsole.error('you have already joinChannel');
       return this.returnResult(
         false,
@@ -191,7 +191,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       );
     }
 
-    this._engine.globalVariables.isCreateMainClient = true;
+    this._engine.globalVariables.isJoinChannel = true;
     let processJoinChannel = async (): Promise<CallIrisApiResult> => {
       // this._engine.mainClientVariables.startPreviewed = false;
       let mainClientVariables: IrisMainClientVariables = this._engine
@@ -224,7 +224,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           NATIVE_RTC.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED,
           ''
         );
-        this._engine.globalVariables.isCreateMainClient = false;
+        this._engine.globalVariables.isJoinChannel = false;
         this._engine.entitiesContainer.clearMainClientAll(null);
         return this.returnResult(false);
       }
@@ -594,13 +594,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   leaveChannel2(options: NATIVE_RTC.LeaveChannelOptions): CallApiReturnType {
     let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
       //离开频道啦 稍后处理
-      if (!this._engine.globalVariables.isCreateMainClient) {
+      if (!this._engine.globalVariables.isJoinChannel) {
         // AgoraConsole.error("you must join channel before you call this method");
         // return CallIrisApiResult.failed(0, -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
         return CallIrisApiResult.success();
       }
 
-      this._engine.globalVariables.isCreateMainClient = false;
+      this._engine.globalVariables.isJoinChannel = false;
 
       let mainClient: IAgoraRTCClient = this._engine.entitiesContainer.getMainClient();
       if (mainClient) {
@@ -1306,7 +1306,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       if (!this._engine.globalVariables.enableAudioVolumeIndication) {
         let intervalFunction = setInterval(() => {
-          console.log('interval');
           if (mainClient) {
             const localStats = mainClient.getLocalAudioStats();
             let connection: NATIVE_RTC.RtcConnection = {
@@ -1847,7 +1846,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let numberLevel: number = AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(
         level
       );
-      AgoraRTC.setLogLevel(numberLevel);
+      this._engine.globalVariables.AgoraRTC.setLogLevel(numberLevel);
       return CallIrisApiResult.success();
     };
 
@@ -3139,7 +3138,7 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
         deviceId = this._engine.globalVariables.videoDevices[0]?.deviceId || '';
       } else {
         try {
-          list = await AgoraRTC.getCameras();
+          list = await this._engine.globalVariables.AgoraRTC.getCameras();
         } catch (e) {
           return this.returnResult(false);
         }

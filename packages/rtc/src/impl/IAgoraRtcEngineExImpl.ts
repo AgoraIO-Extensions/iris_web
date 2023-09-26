@@ -67,7 +67,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   ): CallApiReturnType {
     let processJoinChannel = async (): Promise<CallIrisApiResult> => {
       //设置全局已经建立过连接
-      this._engine.globalVariables.isCreateMainClient = true;
+      this._engine.globalVariables.isJoinChannel = true;
 
       let subClientVariables = this._engine.subClientVariables;
       let fullOptions = subClientVariables.mergeChannelMediaOptions(
@@ -241,7 +241,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       //如果已经没有subClient, 则需要将连接状态更改
       let subClients: Container<IAgoraRTCClient> = this._engine.entitiesContainer.getSubClients();
       let container = subClients.getContainer();
-      this._engine.globalVariables.isCreateMainClient = container.size > 0;
+      this._engine.globalVariables.isJoinChannel = container.size > 0;
       return this.returnResult();
     };
     return this.execute(processFunc);

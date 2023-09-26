@@ -11,6 +11,8 @@ import {
   IrisEventHandlerManager,
 } from 'iris-web-core';
 
+import { InitIrisRtcOptions } from '../IrisRtcApi';
+
 import { IrisVideoFrameBufferConfig, VideoParams } from '../base/BaseType';
 
 import { IMediaEngineDispatch } from '../binding/IAgoraMediaEngineDispatch';
@@ -94,7 +96,10 @@ export class IrisRtcEngine implements ApiInterceptor {
     interval: NodeJS.Timeout;
   }[] = [];
 
-  constructor(irisEventHandlerManager: IrisEventHandlerManager) {
+  constructor(
+    irisEventHandlerManager: IrisEventHandlerManager,
+    options: InitIrisRtcOptions
+  ) {
     this.implDispatchsMap = new Map();
     this.implDispatchsMap.set('MediaPlayer', new IMediaPlayerDispatch(this));
     this.implDispatchsMap.set(
@@ -152,6 +157,11 @@ export class IrisRtcEngine implements ApiInterceptor {
 
     this.executor = new CallApiExecutor(true);
     this.irisEventHandlerManager = irisEventHandlerManager;
+
+    if (options && options.fakeAgoraRTC) {
+      AgoraConsole.debug('use fake agora rtc');
+      this.globalVariables.AgoraRTC = options.fakeAgoraRTC;
+    }
   }
 
   intercept(apiParam: ApiParam): ApiInterceptorReturnType {

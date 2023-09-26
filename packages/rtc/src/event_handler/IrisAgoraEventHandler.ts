@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/web-rtc';
-import AgoraRTC, { DeviceInfo } from 'agora-rtc-sdk-ng';
+import { DeviceInfo } from 'agora-rtc-sdk-ng';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraTranslate } from '../util/AgoraTranslate';
@@ -9,7 +9,7 @@ export class IrisAgoraEventHandler {
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
-    // AgoraRTC.onAutoplayFailed = this.onAutoplayFailed.bind(this);
+    // onAutoplayFailed = this.onAutoplayFailed.bind(this);
     // AgoraRTC.onCameraChanged = this.onCameraChanged.bind(this);
     // AgoraRTC.onMicrophoneChanged = this.onMicrophoneChanged.bind(this);
     // AgoraRTC.onPlaybackDeviceChanged = this.onMicrophoneChanged.bind(this);
@@ -71,9 +71,9 @@ export class IrisAgoraEventHandler {
   }
 
   destruction() {
-    AgoraRTC.onAutoplayFailed = undefined;
-    AgoraRTC.onCameraChanged = undefined;
-    AgoraRTC.onMicrophoneChanged = undefined;
-    AgoraRTC.onPlaybackDeviceChanged = undefined;
+    this._engine.globalVariables.AgoraRTC.onAutoplayFailed = undefined;
+    this._engine.globalVariables.AgoraRTC.onCameraChanged = undefined;
+    this._engine.globalVariables.AgoraRTC.onMicrophoneChanged = undefined;
+    this._engine.globalVariables.AgoraRTC.onPlaybackDeviceChanged = undefined;
   }
 }
