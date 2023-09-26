@@ -1,0 +1,12 @@
+{
+  "plugins": ["auto-import", "unused-imports"],
+  "rules": {
+    "unused-imports/no-unused-imports": "error",
+    "auto-import/auto-import": [
+      "error",
+      {
+        "rootPath": "../../../packages/@iris/rtc/generate"
+      }
+    ]
+  }
+}

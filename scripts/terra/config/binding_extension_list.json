@@ -1,0 +1,5 @@
+{
+  "agora::media::IMediaEngine.pushVideoFrame": [
+    "obj = callApiBufferExtension(apiParam.event, obj, apiParam.buffer);"
+  ]
+}

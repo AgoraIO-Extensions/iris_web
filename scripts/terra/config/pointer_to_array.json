@@ -1,0 +1,7 @@
+[
+  "agora::rtc::IBaseSpatialAudioEngine.setZones.zones",
+  "agora::media::IAudioSpectrumObserver.onRemoteAudioSpectrum.spectrums",
+  "^.*(s|list|array)$",
+  "^.*(buffer|data)$",
+  "^.*(list|array)$"
+]

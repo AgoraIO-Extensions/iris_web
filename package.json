@@ -1,0 +1,42 @@
+{
+  "name": "iris-web-mono",
+  "private": true,
+  "description": "iris web",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "lint": "eslint --ext .ts,.tsx . && prettier --check .",
+    "lint:fix": "eslint --fix --ext .ts,.tsx . && prettier --write .",
+    "terra": "pnpm -F terra-generate run terra",
+    "start": "sh ./build_local_dev.sh"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "rollup",
+        "esbuild"
+      ]
+    },
+    "overrides": {
+      "nodeunit": "npm:noop-package@1.0.0"
+    },
+    "patchedDependencies": {
+      "eslint-plugin-auto-import@0.1.1": "patches/eslint-plugin-auto-import@0.1.1.patch",
+      "eslint@8.4.1": "patches/eslint@8.4.1.patch"
+    }
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.44.2",
+    "@types/node": "^18.17.9",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.4.1",
+    "tsup": "^7.1.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-auto-import": "^0.1.1",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-unused-imports": "^3.0.0",
+    "prettier": "^2.0.5"
+  }
+}
