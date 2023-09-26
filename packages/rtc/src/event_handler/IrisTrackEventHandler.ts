@@ -114,7 +114,7 @@ export class IrisTrackEventHandler {
           this._videoSourceType ===
           NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
         ) {
-          this._engine.implDispatchsMap
+          this._engine.implDispatchesMap
             .get('RtcEngine')
             ._impl.stopScreenCapture();
         }

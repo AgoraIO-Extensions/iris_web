@@ -16,21 +16,6 @@ config = {
       arrowFunction: false,
     },
   },
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new TerserPlugin({
-        parallel: true,
-        extractComments: false,
-        terserOptions: {
-          toplevel: true,
-          ie8: false,
-          safari10: true,
-        },
-      }),
-    ],
-  },
-
   resolve: {
     extensions: ['.ts', '.js'],
   },
@@ -60,6 +45,21 @@ config = {
 };
 if (environment !== 'production') {
   config.devtool = 'inline-source-map';
+} else {
+  config.optimization = {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        extractComments: false,
+        terserOptions: {
+          toplevel: true,
+          ie8: false,
+          safari10: true,
+        },
+      }),
+    ],
+  };
 }
 
 module.exports = config;

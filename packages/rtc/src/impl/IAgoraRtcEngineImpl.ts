@@ -16,6 +16,8 @@ import {
   CallIrisApiResult,
 } from 'iris-web-core';
 
+import { Container } from 'src/util';
+
 import {
   IrisAudioSourceType,
   IrisClientType,
@@ -30,7 +32,6 @@ import { IRtcEngineExtensions } from '../extensions/IAgoraRtcEngineExtensions';
 import { ClientHelper } from '../helper/ClientHelper';
 import { TrackHelper } from '../helper/TrackHelper';
 import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
-import { Container } from '../util';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { AgoraTranslate } from '../util/AgoraTranslate';
 
@@ -83,9 +84,11 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         AgoraTranslate.NATIVE_RTCAREA_CODE2AREAS(context.areaCode),
       ]);
 
-      this._engine.globalVariables.AgoraRTC.setLogLevel(
-        AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(context?.logConfig?.level)
-      );
+      if (context?.logConfig?.level) {
+        this._engine.globalVariables.AgoraRTC.setLogLevel(
+          AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(context?.logConfig?.level)
+        );
+      }
 
       let result = this._engine.globalVariables.AgoraRTC.checkSystemRequirements();
       return this._engine.returnResult(result);
@@ -309,7 +312,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         );
         entitiesContainer.addMainClientTrackEventHandler(trackEventHandler);
       }
-
       //推送video
       let videoTrack: ILocalVideoTrack = trackArray[1] as ILocalVideoTrack;
       if (videoTrack) {
@@ -648,7 +650,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           new NATIVE_RTC.RtcStats()
         );
       }
-
       let subClients: Container<IAgoraRTCClient> = this._engine.entitiesContainer.getSubClients();
       let container = subClients.getContainer();
       for (let _container of container) {
@@ -770,7 +771,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   enableVideo(): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
       this._engine.globalVariables.enabledVideo = true;
-
+      this._engine.mainClientVariables.publishCameraTrack = true;
       //找到本端video
       if (this._engine.globalVariables.enabledLocalVideo) {
         let trackPackages = this._engine.entitiesContainer.getLocalVideoTracks();
@@ -782,8 +783,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           let track = trackPackage.track as ILocalVideoTrack;
           if (!track.isPlaying) {
             try {
-              // TODO(littlegnal): This is a WebGL specific requirement
-              // await track.play(this._engine.generateVideoTrackLabelOrHtmlElement("", 0, trackPackage.type));
             } catch (e) {
               AgoraConsole.error('ILocalVideoTrack play(true) failed');
               AgoraConsole.error(e);
@@ -794,40 +793,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           }
         }
       }
-
-      //找到远端video
-      //mainClient的远端用户
-      let entitiesContainer = this._engine.entitiesContainer;
-      let mainClient = entitiesContainer.getMainClient();
-      if (mainClient && mainClient.channelName) {
-        let remoteUsers = mainClient.remoteUsers;
-        for (let remoteUser of remoteUsers) {
-          //todo 远端用户发流的时候。我不订阅，那么他的hasVideo为true， 但是他们的videoTrack是null
-          if (
-            remoteUser.hasVideo &&
-            remoteUser.videoTrack &&
-            remoteUser.videoTrack.isPlaying == false
-          ) {
-            // TODO(littlegnal): This is a WebGL specific requirement
-            // remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE))
-          }
-        }
-      }
-
-      //subClient的远端用户
-      entitiesContainer.getSubClients().walkT((channel_id, uid, subClient) => {
-        let remoteUsers = subClient.remoteUsers;
-        for (let remoteUser of remoteUsers) {
-          if (
-            remoteUser.hasVideo &&
-            remoteUser.videoTrack &&
-            remoteUser.videoTrack.isPlaying == false
-          ) {
-            // TODO(littlegnal): This is a WebGL specific requirement
-            // remoteUser.videoTrack.play(this._engine.generateVideoTrackLabelOrHtmlElement(mainClient.channelName, remoteUser.uid as number, NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE))
-          }
-        }
-      });
 
       return this._engine.returnResult();
     };
@@ -1166,6 +1131,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   enableAudio(): CallApiReturnType {
     let processAudioTracks = async (): Promise<CallIrisApiResult> => {
       this._engine.globalVariables.enabledAudio = true;
+      this._engine.mainClientVariables.publishAudioTrack = true;
       if (this._engine.globalVariables.enabledLocalAudio) {
         //找到本地audio
         let trackPackages = this._engine.entitiesContainer.getLocalAudioTracks();

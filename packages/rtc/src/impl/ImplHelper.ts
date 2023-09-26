@@ -221,7 +221,7 @@ export class ImplHelper {
 
           videoTrack = trackArray[0];
           if (videoTrack) {
-            this.processScreenShareVideoTrack(engine, videoTrack, videoType);
+            this.processScreenShareVideoTrack(engine, videoTrack);
             engine.entitiesContainer.addLocalVideoTrack({
               type: videoType,
               track: videoTrack,
@@ -257,7 +257,7 @@ export class ImplHelper {
       }
       if (videoTrack) {
         //这里的videoTrack有可能是null, 如果promise创建失败的话
-        this.processScreenShareVideoTrack(engine, videoTrack, videoType);
+        this.processScreenShareVideoTrack(engine, videoTrack);
         engine.entitiesContainer.addLocalVideoTrack({
           type: videoType,
           track: videoTrack,
@@ -377,20 +377,9 @@ export class ImplHelper {
 
   public static processScreenShareVideoTrack(
     engine: IrisRtcEngine,
-    videoTrack: ILocalVideoTrack,
-    videoSource: NATIVE_RTC.VIDEO_SOURCE_TYPE
+    videoTrack: ILocalVideoTrack
   ) {
     let globalVariables = engine.globalVariables;
-    let mainClientVariables = engine.mainClientVariables;
-
-    if (mainClientVariables.videoDeviceId) {
-      //屏幕共享视频没有设备id咯
-    }
-    if (globalVariables.enabledVideo && videoTrack.enabled) {
-      videoTrack.play(
-        engine.generateVideoTrackLabelOrHtmlElement('0', 0, videoSource)
-      );
-    }
 
     if (globalVariables.pausedVideo) {
       videoTrack
@@ -473,8 +462,6 @@ export class ImplHelper {
           videoEncoderConfiguration.mirrorMode
         );
       }
-
-      // videoTrack.play(engine.generateVideoTrackLabelOrHtmlElement("0", 0, videoSource), config);
     }
 
     if (globalVariables.pausedVideo) {
