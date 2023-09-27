@@ -3,9 +3,6 @@ import {
   AgoraRTCErrorCode,
   BufferSourceAudioTrackInitConfig,
   CameraVideoTrackInitConfig,
-  ClientConfig,
-  EncryptionMode,
-  IAgoraRTCClient,
   IBufferSourceAudioTrack,
   ICameraVideoTrack,
   ILocalAudioTrack,
@@ -16,7 +13,8 @@ import {
   VideoPlayerConfig,
 } from 'agora-rtc-sdk-ng';
 
-import { IrisAudioSourceType, IrisClientType } from '../base/BaseType';
+import { IrisAudioSourceType } from '../base/BaseType';
+
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -26,7 +24,8 @@ export class ImplHelper {
   public static getAudioAndVideoTrack(
     engine: IrisRtcEngine,
     audioType: IrisAudioSourceType,
-    videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE
+    videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
+    connection: NATIVE_RTC.RtcConnection
   ): [ILocalAudioTrack, ILocalVideoTrack] {
     let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
     if (
@@ -37,9 +36,9 @@ export class ImplHelper {
     }
 
     trackArray = [
-      engine.entitiesContainer.getLocalAudioTrackByType(audioType)
+      engine.entitiesContainer.getLocalAudioTrack(audioType, connection)
         ?.track as ILocalAudioTrack,
-      engine.entitiesContainer.getLocalVideoTrackByType(videoType)
+      engine.entitiesContainer.getLocalVideoTrack(videoType, connection)
         ?.track as ILocalVideoTrack,
     ];
     return trackArray;
@@ -49,11 +48,12 @@ export class ImplHelper {
     engine: IrisRtcEngine,
     soundId: number,
     bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig,
-    clientType: IrisClientType
+    connection?: NATIVE_RTC.RtcConnection
   ): Promise<IBufferSourceAudioTrack> {
     let bufferSourceAudioTrack: IBufferSourceAudioTrack = null;
+    let irisClient = engine.entitiesContainer.getIrisClient(connection);
 
-    let bufferSourceAudioTrackPackage = engine.entitiesContainer.getLocalBufferSourceAudioTrackBySoundId(
+    let bufferSourceAudioTrackPackage = irisClient.getLocalBufferSourceAudioTrackBySoundId(
       soundId
     );
     if (bufferSourceAudioTrackPackage) {
@@ -70,7 +70,7 @@ export class ImplHelper {
     if (bufferSourceAudioTrack) {
       //audio 可能为null
       // this.processAudioTrack(engine, bufferSourceAudioTrack, clientType);
-      engine.entitiesContainer.addLocalBufferSourceAudioTrack({
+      irisClient.addLocalBufferSourceAudioTrack({
         soundId: soundId,
         track: bufferSourceAudioTrack,
       });
@@ -84,12 +84,13 @@ export class ImplHelper {
     audioType: IrisAudioSourceType,
     videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM,
     mediaStreamTrack: MediaStreamTrack,
-    clientType: IrisClientType,
     connection: NATIVE_RTC.RtcConnection
   ): Promise<[ILocalAudioTrack, ILocalVideoTrack]> {
+    let irisClient = engine.entitiesContainer.getIrisClient(connection);
     let retAudioTrack: ILocalAudioTrack = null;
-    let retVideoTrack: ILocalVideoTrack = engine.entitiesContainer.getLocalVideoTrackByType(
-      videoType
+    let retVideoTrack: ILocalVideoTrack = engine.entitiesContainer.getLocalVideoTrack(
+      videoType,
+      connection
     )?.track as ILocalVideoTrack;
     //video
     if (!retVideoTrack) {
@@ -104,14 +105,8 @@ export class ImplHelper {
       }
       if (videoTrack) {
         //video 可能为null
-        this.processVideoTrack(
-          engine,
-          videoTrack,
-          clientType,
-          videoType,
-          connection
-        );
-        engine.entitiesContainer.addLocalVideoTrack({
+        this.processVideoTrack(engine, videoTrack, connection);
+        irisClient.setLocalVideoTrack({
           type: videoType,
           track: videoTrack,
         });
@@ -128,9 +123,10 @@ export class ImplHelper {
     engine: IrisRtcEngine,
     audioType: IrisAudioSourceType,
     videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
-    clientType: IrisClientType,
     connection: NATIVE_RTC.RtcConnection
   ): Promise<[ILocalAudioTrack, ILocalVideoTrack]> {
+    let irisClient = engine.entitiesContainer.getIrisClient(connection);
+
     if (
       audioType == IrisAudioSourceType.kAudioSourceTypeUnknown &&
       videoType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN
@@ -140,7 +136,6 @@ export class ImplHelper {
       );
       return [null, null];
     }
-
     if (
       videoType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY &&
       audioType == IrisAudioSourceType.kAudioSourceTypeScreenPrimary
@@ -150,11 +145,13 @@ export class ImplHelper {
         return [null, null];
       }
 
-      let audioPackage = engine.entitiesContainer.getLocalAudioTrackByType(
-        audioType
+      let audioPackage = engine.entitiesContainer.getLocalAudioTrack(
+        audioType,
+        connection
       );
-      let videoPackage = engine.entitiesContainer.getLocalVideoTrackByType(
-        videoType
+      let videoPackage = engine.entitiesContainer.getLocalVideoTrack(
+        videoType,
+        connection
       );
       if (audioPackage && videoPackage) {
         return [
@@ -164,13 +161,13 @@ export class ImplHelper {
       } else {
         //屏幕共享 audio 和 video 应该要同步创建和同步销毁
         if (audioPackage) {
-          await engine.entitiesContainer.processAudioTrackClose(
+          await irisClient.processAudioTrackClose(
             audioPackage.track as ILocalAudioTrack
           );
           (audioPackage.track as ILocalAudioTrack).close();
         }
         if (videoPackage) {
-          await engine.entitiesContainer.processVideoTrackClose(
+          await irisClient.processVideoTrackClose(
             videoPackage.track as ILocalVideoTrack
           );
           (videoPackage.track as ILocalVideoTrack).close();
@@ -213,7 +210,7 @@ export class ImplHelper {
           audioTrack = trackArray[1];
           if (audioTrack) {
             this.processScreenShareAudioTrack(engine, audioTrack);
-            engine.entitiesContainer.addLocalAudioTrack({
+            irisClient.addLocalAudioTrack({
               type: audioType,
               track: audioTrack,
             });
@@ -221,8 +218,8 @@ export class ImplHelper {
 
           videoTrack = trackArray[0];
           if (videoTrack) {
-            this.processScreenShareVideoTrack(engine, videoTrack);
-            engine.entitiesContainer.addLocalVideoTrack({
+            this.processScreenShareVideoTrack(engine, videoTrack, videoType);
+            irisClient.setLocalVideoTrack({
               type: videoType,
               track: videoTrack,
             });
@@ -235,9 +232,10 @@ export class ImplHelper {
     let retAudioTrack: ILocalAudioTrack = null;
     let retVideoTrack: ILocalVideoTrack = null;
     //video
-    if (engine.entitiesContainer.getLocalVideoTrackByType(videoType)) {
-      retVideoTrack = engine.entitiesContainer.getLocalVideoTrackByType(
-        videoType
+    if (engine.entitiesContainer.getLocalVideoTrack(videoType, connection)) {
+      retVideoTrack = engine.entitiesContainer.getLocalVideoTrack(
+        videoType,
+        connection
       ).track as ILocalVideoTrack;
     } else if (
       videoType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY ||
@@ -257,8 +255,8 @@ export class ImplHelper {
       }
       if (videoTrack) {
         //这里的videoTrack有可能是null, 如果promise创建失败的话
-        this.processScreenShareVideoTrack(engine, videoTrack);
-        engine.entitiesContainer.addLocalVideoTrack({
+        this.processScreenShareVideoTrack(engine, videoTrack, videoType);
+        irisClient.setLocalVideoTrack({
           type: videoType,
           track: videoTrack,
         });
@@ -271,7 +269,8 @@ export class ImplHelper {
       let videoTrack: ICameraVideoTrack = null;
       try {
         let videoConfig: CameraVideoTrackInitConfig = this.generateCameraVideoTrackInitConfig(
-          engine
+          engine,
+          connection
         );
         videoTrack = await engine.globalVariables.AgoraRTC.createCameraVideoTrack(
           videoConfig
@@ -282,14 +281,8 @@ export class ImplHelper {
       }
       if (videoTrack) {
         //video 可能为null
-        this.processVideoTrack(
-          engine,
-          videoTrack,
-          clientType,
-          videoType,
-          connection
-        );
-        engine.entitiesContainer.addLocalVideoTrack({
+        this.processVideoTrack(engine, videoTrack, connection);
+        irisClient.setLocalVideoTrack({
           type: videoType,
           track: videoTrack,
         });
@@ -298,9 +291,10 @@ export class ImplHelper {
     }
 
     //audio
-    if (engine.entitiesContainer.getLocalAudioTrackByType(audioType)) {
-      retAudioTrack = engine.entitiesContainer.getLocalAudioTrackByType(
-        audioType
+    if (engine.entitiesContainer.getLocalAudioTrack(audioType, connection)) {
+      retAudioTrack = engine.entitiesContainer.getLocalAudioTrack(
+        audioType,
+        connection
       ).track as ILocalAudioTrack;
     } else if (
       audioType == IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
@@ -308,7 +302,8 @@ export class ImplHelper {
       let audioTrack: IMicrophoneAudioTrack = null;
       try {
         let audioConfig: MicrophoneAudioTrackInitConfig = this.generateMicrophoneAudioTrackInitConfig(
-          engine
+          engine,
+          connection
         );
         audioTrack = await engine.globalVariables.AgoraRTC.createMicrophoneAudioTrack(
           audioConfig
@@ -318,8 +313,8 @@ export class ImplHelper {
         throw e;
       }
       if (audioTrack) {
-        this.processAudioTrack(engine, audioTrack, clientType);
-        engine.entitiesContainer.addLocalAudioTrack({
+        this.processAudioTrack(engine, audioTrack);
+        irisClient.addLocalAudioTrack({
           type: audioType,
           track: audioTrack,
         });
@@ -336,15 +331,15 @@ export class ImplHelper {
     audioTrack: ILocalAudioTrack
   ) {
     let globalVariables = engine.globalVariables;
-    let mainClientVariables = engine.mainClientVariables;
+    let irisClient = engine.entitiesContainer.getIrisClient();
 
     //audio
-    if (mainClientVariables.playbackDeviceId) {
+    if (irisClient.irisClientVariables.playbackDeviceId) {
       audioTrack
-        .setPlaybackDevice(mainClientVariables.playbackDeviceId)
+        .setPlaybackDevice(irisClient.irisClientVariables.playbackDeviceId)
         .then(() => {})
         .catch((reason) => {
-          AgoraConsole.error('audiotrack setPlaybackDevice failed');
+          AgoraConsole.error('audio track setPlaybackDevice failed');
           reason && AgoraConsole.error(reason);
         })
         .finally(() => {});
@@ -377,9 +372,16 @@ export class ImplHelper {
 
   public static processScreenShareVideoTrack(
     engine: IrisRtcEngine,
-    videoTrack: ILocalVideoTrack
+    videoTrack: ILocalVideoTrack,
+    videoSource: NATIVE_RTC.VIDEO_SOURCE_TYPE
   ) {
     let globalVariables = engine.globalVariables;
+
+    // if (globalVariables.enabledVideo && videoTrack.enabled) {
+    //   videoTrack.play(
+    //     engine.generateVideoTrackLabelOrHtmlElement('0', 0, videoSource)
+    //   );
+    // }
 
     if (globalVariables.pausedVideo) {
       videoTrack
@@ -405,8 +407,7 @@ export class ImplHelper {
 
   public static processAudioTrack(
     engine: IrisRtcEngine,
-    audioTrack: IMicrophoneAudioTrack | IBufferSourceAudioTrack,
-    type: IrisClientType
+    audioTrack: IMicrophoneAudioTrack | IBufferSourceAudioTrack
   ) {
     let globalVariables = engine.globalVariables;
     //这里play的话，自己会听到自己的声音,
@@ -436,26 +437,16 @@ export class ImplHelper {
   public static processVideoTrack(
     engine: IrisRtcEngine,
     videoTrack: ICameraVideoTrack | ILocalVideoTrack,
-    type: IrisClientType,
-    videoSource:
-      | NATIVE_RTC.VIDEO_SOURCE_TYPE
-      | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
     connection: NATIVE_RTC.RtcConnection
   ) {
     let globalVariables = engine.globalVariables;
     if (globalVariables.enabledVideo) {
       let config: VideoPlayerConfig = {};
 
+      let irisClient = engine.entitiesContainer.getIrisClient(connection);
       let videoEncoderConfiguration: NATIVE_RTC.VideoEncoderConfiguration = null;
-      if (type == IrisClientType.kClientMain) {
-        videoEncoderConfiguration =
-          engine.mainClientVariables.videoEncoderConfiguration;
-      } else {
-        videoEncoderConfiguration = engine.subClientVariables.videoEncoderConfigurations.getT(
-          connection.channelId,
-          connection.localUid
-        );
-      }
+      videoEncoderConfiguration =
+        irisClient.irisClientVariables.videoEncoderConfiguration;
 
       if (videoEncoderConfiguration) {
         config.mirror = AgoraTranslate.NATIVE_RTCVIDEO_MIRROR_MODE_TYPE2boolean(
@@ -484,303 +475,28 @@ export class ImplHelper {
     }
   }
 
-  public static createMainClient(engine: IrisRtcEngine): IAgoraRTCClient {
-    let config: ClientConfig = this.generateMainClientConfig(engine);
-    let mainClient: IAgoraRTCClient = engine.globalVariables.AgoraRTC.createClient(
-      config
-    );
-
-    let mainClientVariables = engine.mainClientVariables;
-    //设置远端默认是 大流还是小流
-    if (mainClientVariables.remoteDefaultVideoStreamType != null) {
-      mainClient
-        .setRemoteDefaultVideoStreamType(
-          AgoraTranslate.NATIVE_RTCVIDEO_STREAM_TYPE2RemoteStreamType(
-            mainClientVariables.remoteDefaultVideoStreamType
-          )
-        )
-        .then(() => {})
-        .catch(() => {})
-        .finally(() => {});
-    }
-    //设置指定的远端uid具体是大流还是小流
-    for (let e of mainClientVariables.remoteVideoStreamTypes) {
-      mainClient
-        .setRemoteVideoStreamType(
-          e[0],
-          AgoraTranslate.NATIVE_RTCVIDEO_STREAM_TYPE2RemoteStreamType(e[1])
-        )
-        .then(() => {})
-        .catch(() => {})
-        .finally(() => {});
-    }
-
-    //
-    let videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE;
-    if (mainClientVariables.publishCameraTrack == true) {
-      videoSourceType =
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY;
-    } else if (mainClientVariables.publishSecondaryCameraTrack == true) {
-      videoSourceType =
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY;
-    } else if (mainClientVariables.publishScreenCaptureVideo == true) {
-      videoSourceType =
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
-    }
-
-    //如果当前轨道被特别指定了，那么就设置一下
-    if (mainClientVariables.enabledDualStreamModes.has(videoSourceType)) {
-      let steamMode = mainClientVariables.enabledDualStreamModes.get(
-        videoSourceType
-      );
-      if (steamMode.enabled) {
-        mainClient
-          .enableDualStream()
-          .then(() => {})
-          .catch(() => {})
-          .finally(() => {});
-
-        if (steamMode.streamConfig != null) {
-          mainClient.setLowStreamParameter(
-            AgoraTranslate.NATIVE_RTCSimulcastStreamConfig2LowStreamParameter(
-              steamMode.streamConfig
-            )
-          );
-        }
-      } else {
-        mainClient
-          .disableDualStream()
-          .then(() => {})
-          .catch(() => {})
-          .finally(() => {});
-      }
-    } else {
-      if (mainClientVariables.enabledDualStreamMode) {
-        mainClient
-          .enableDualStream()
-          .then(() => {})
-          .catch(() => {})
-          .finally(() => {});
-      }
-    }
-
-    //设置是否报告说话的人
-    if (mainClientVariables.enabledAudioVolumeIndication) {
-      mainClient.enableAudioVolumeIndicator();
-      mainClientVariables.enabledAudioVolumeIndication = null;
-    }
-
-    //是否开启了加密
-    if (mainClientVariables.encryptionConfig?.enabled) {
-      let config: NATIVE_RTC.EncryptionConfig =
-        mainClientVariables.encryptionConfig.config;
-      let encryptionMode: EncryptionMode = AgoraTranslate.NATIVE_RTCENCRYPTION_MODE2EncryptionMode(
-        config.encryptionMode
-      );
-      let salt: Uint8Array = new Uint8Array(config.encryptionKdfSalt);
-      mainClient.setEncryptionConfig(
-        encryptionMode,
-        config.encryptionKey,
-        salt
-      );
-      //加密只有一次生效
-      mainClientVariables.encryptionConfig.enabled = false;
-    }
-
-    //是否开启了鉴黄
-    if (mainClientVariables.contentInspect != null) {
-      mainClient
-        .enableContentInspect(
-          AgoraTranslate.NATIVE_RTCContentInspectConfig2InspectConfiguration(
-            mainClientVariables.contentInspect
-          )
-        )
-        .then(() => {})
-        .catch(() => {})
-        .finally(() => {});
-    }
-
-    let globalVariables: IrisGlobalVariables = engine.globalVariables;
-
-    //是否开启了cloudProxy
-    if (globalVariables.cloudProxy != null) {
-      let proxyType = globalVariables.cloudProxy;
-      if (proxyType == NATIVE_RTC.CLOUD_PROXY_TYPE.UDP_PROXY) {
-        mainClient.startProxyServer(3);
-      } else if (proxyType == NATIVE_RTC.CLOUD_PROXY_TYPE.TCP_PROXY) {
-        mainClient.startProxyServer(5);
-      }
-    }
-    return mainClient;
-  }
-
-  public static createSubClient(
+  public static generateMicrophoneAudioTrackInitConfig(
     engine: IrisRtcEngine,
     connection: NATIVE_RTC.RtcConnection
-  ): IAgoraRTCClient {
-    let config: ClientConfig = this.generateSubClientConfig(engine, connection);
-    let subClient: IAgoraRTCClient = engine.globalVariables.AgoraRTC.createClient(
-      config
-    );
-    let subClientVariables = engine.subClientVariables;
-
-    //设置远端默认是 大流还是小流
-    // if (subClientVariables.remoteDefaultVideoStreamType != null) {
-    //     subClient.setRemoteDefaultVideoStreamType(AgoraTranslate.NATIVE_RTCVIDEO_STREAM_TYPE2RemoteStreamType(mainClientVariables.remoteDefaultVideoStreamType))
-    //         .then(() => {
-
-    //         })
-    //         .catch(() => {
-
-    //         })
-    //         .finally(() => {
-
-    //         })
-    // }
-    //设置指定的远端uid具体是大流还是小流
-    let remoteVideoStreamTypes = subClientVariables.remoteVideoStreamTypes.getT(
-      connection.channelId,
-      connection.localUid
-    );
-    if (remoteVideoStreamTypes)
-      for (let e of remoteVideoStreamTypes) {
-        subClient
-          .setRemoteVideoStreamType(
-            e[0],
-            AgoraTranslate.NATIVE_RTCVIDEO_STREAM_TYPE2RemoteStreamType(e[1])
-          )
-          .then(() => {})
-          .catch(() => {})
-          .finally(() => {});
-      }
-
-    //
-    let options = subClientVariables.channelMediaOptions.getT(
-      connection.channelId,
-      connection.localUid
-    );
-    let videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE =
-      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN;
-    if (options) {
-      if (options.publishCameraTrack == true) {
-        videoSourceType =
-          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY;
-      } else if (options.publishSecondaryCameraTrack == true) {
-        videoSourceType =
-          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY;
-      } else if (options.publishScreenCaptureVideo == true) {
-        videoSourceType =
-          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
-      }
-    }
-
-    //如果当前轨道被特别指定了，那么就设置一下
-    let enabledDualStreamModes = subClientVariables.enabledDualStreamModes.getT(
-      connection.channelId,
-      connection.localUid
-    );
-    if (enabledDualStreamModes && enabledDualStreamModes.has(videoSourceType)) {
-      let steamMode = enabledDualStreamModes.get(videoSourceType);
-      if (steamMode.enabled) {
-        subClient
-          .enableDualStream()
-          .then(() => {})
-          .catch(() => {})
-          .finally(() => {});
-
-        if (steamMode.streamConfig != null) {
-          subClient.setLowStreamParameter(
-            AgoraTranslate.NATIVE_RTCSimulcastStreamConfig2LowStreamParameter(
-              steamMode.streamConfig
-            )
-          );
-        }
-      } else {
-        subClient
-          .disableDualStream()
-          .then(() => {})
-          .catch(() => {})
-          .finally(() => {});
-      }
-    }
-
-    //设置是否报告说话的人
-    let enabledAudioVolumeIndication = subClientVariables.enabledAudioVolumeIndications.getT(
-      connection.channelId,
-      connection.localUid
-    );
-    if (enabledAudioVolumeIndication) {
-      subClient.enableAudioVolumeIndicator();
-      subClientVariables.enabledAudioVolumeIndications.removeT(
-        connection.channelId,
-        connection.localUid
-      );
-    }
-
-    //是否开启了加密
-    let encryptionConfig = subClientVariables.encryptionConfigs.getT(
-      connection.channelId,
-      connection.localUid
-    );
-    if (encryptionConfig?.enabled) {
-      let config: NATIVE_RTC.EncryptionConfig = encryptionConfig.config;
-      let encryptionMode: EncryptionMode = AgoraTranslate.NATIVE_RTCENCRYPTION_MODE2EncryptionMode(
-        config.encryptionMode
-      );
-      let salt: Uint8Array = new Uint8Array(config.encryptionKdfSalt);
-      subClient.setEncryptionConfig(encryptionMode, config.encryptionKey, salt);
-      //加密只有一次生效
-      subClientVariables.encryptionConfigs.removeT(
-        connection.channelId,
-        connection.localUid
-      );
-    }
-
-    //是否开启了鉴黄
-    // if (mainClientVariables.contentInspect != null) {
-    //     subClient.enableContentInspect(AgoraTranslate.NATIVE_RTCContentInspectConfig2InspectConfiguration(mainClientVariables.contentInspect))
-    //         .then(() => {
-
-    //         })
-    //         .catch(() => {
-
-    //         })
-    //         .finally(() => {
-
-    //         })
-    // }
-
-    // let globalVariables: IrisGlobalVariables = engine.globalVariables;
-
-    //是否开启了cloudProxy
-    // if (globalVariables.cloudProxy != null) {
-    //     let proxyType = globalVariables.cloudProxy;
-    //     if (proxyType == NATIVE_RTC.CLOUD_PROXY_TYPE.UDP_PROXY) {
-    //         subClient.startProxyServer(3);
-    //     }
-    //     else if (proxyType == NATIVE_RTC.CLOUD_PROXY_TYPE.TCP_PROXY) {
-    //         subClient.startProxyServer(5);
-    //     }
-    // }
-    return subClient;
-  }
-
-  public static generateMicrophoneAudioTrackInitConfig(
-    engine: IrisRtcEngine
   ): MicrophoneAudioTrackInitConfig {
     let audioConfig: MicrophoneAudioTrackInitConfig = {};
-    if (engine.mainClientVariables.recordingDeviceId) {
-      audioConfig.microphoneId = engine.mainClientVariables.recordingDeviceId;
+    let irisClient = engine.entitiesContainer.getIrisClient(connection);
+
+    if (irisClient?.irisClientVariables.recordingDeviceId) {
+      audioConfig.microphoneId =
+        irisClient.irisClientVariables.recordingDeviceId;
     }
     return audioConfig;
   }
 
   public static generateCameraVideoTrackInitConfig(
-    engine: IrisRtcEngine
+    engine: IrisRtcEngine,
+    connection: NATIVE_RTC.RtcConnection
   ): CameraVideoTrackInitConfig {
     let videoConfig: CameraVideoTrackInitConfig = {};
-    if (engine.mainClientVariables.videoDeviceId) {
-      videoConfig.cameraId = engine.mainClientVariables.videoDeviceId;
+    let irisClient = engine.entitiesContainer.getIrisClient(connection);
+    if (irisClient?.irisClientVariables.videoDeviceId) {
+      videoConfig.cameraId = irisClient.irisClientVariables.videoDeviceId;
     }
     if (engine.globalVariables.videoEncoderConfiguration) {
       videoConfig.encoderConfig = AgoraTranslate.NATIVE_RTCVideoEncoderConfiguration2VideoEncoderConfiguration(
@@ -821,97 +537,6 @@ export class ImplHelper {
       );
     }
     return conf;
-  }
-
-  //根据保存的中间状态，生成ClientConfig
-  public static generateMainClientConfig(engine: IrisRtcEngine): ClientConfig {
-    let mainClientVariables = engine.mainClientVariables;
-    let globalVariables = engine.globalVariables;
-
-    let config: ClientConfig = {
-      codec:
-        mainClientVariables.videoEncoderConfiguration != null
-          ? AgoraTranslate.NATIVE_RTCVIDEO_CODEC_TYPE2SDK_CODEC(
-              mainClientVariables.videoEncoderConfiguration.codecType
-            )
-          : 'vp8',
-      mode: mainClientVariables.channelProfile
-        ? AgoraTranslate.NATIVE_RTC_CHANNEL_PROFILE_TYPE2SDK_MODE(
-            mainClientVariables.channelProfile
-          )
-        : 'live',
-    };
-    if (mainClientVariables.clientRoleType != null) {
-      config.role = AgoraTranslate.NATIVE_RTC_CLIENT_ROLE_TYPE2ClientRole(
-        mainClientVariables.clientRoleType
-      );
-    }
-    if (mainClientVariables.clientRoleOptions != null) {
-      config.clientRoleOptions = AgoraTranslate.NATIVE_RTCClientRoleOptions2ClientRoleOptions(
-        mainClientVariables.clientRoleOptions
-      );
-    }
-    return config;
-  }
-
-  public static generateSubClientConfig(
-    engine: IrisRtcEngine,
-    connection: NATIVE_RTC.RtcConnection
-  ): ClientConfig {
-    let subClientVariables = engine.subClientVariables;
-    let videoEncoderConfiguration = subClientVariables.videoEncoderConfigurations.getT(
-      connection.channelId,
-      connection.localUid
-    );
-    let options = subClientVariables.channelMediaOptions.getT(
-      connection.channelId,
-      connection.localUid
-    );
-    let channelProfile = options?.channelProfile;
-    let clientRoleType = options?.clientRoleType;
-    let config: ClientConfig = {
-      codec:
-        videoEncoderConfiguration != null
-          ? AgoraTranslate.NATIVE_RTCVIDEO_CODEC_TYPE2SDK_CODEC(
-              videoEncoderConfiguration.codecType
-            )
-          : 'vp8',
-      mode:
-        channelProfile != null
-          ? AgoraTranslate.NATIVE_RTC_CHANNEL_PROFILE_TYPE2SDK_MODE(
-              channelProfile
-            )
-          : 'live',
-    };
-    if (clientRoleType != null) {
-      config.role = AgoraTranslate.NATIVE_RTC_CLIENT_ROLE_TYPE2ClientRole(
-        clientRoleType
-      );
-    }
-    // if (mainClientVariables.clientRoleOptions != null) {
-    //     config.clientRoleOptions = AgoraTranslate.NATIVE_RTCClientRoleOptions2ClientRoleOptions(mainClientVariables.clientRoleOptions);
-    // }
-    return config;
-  }
-
-  public static pretreatmentChannelMediaRelayConfiguration(
-    engine: IrisRtcEngine,
-    conf: NATIVE_RTC.ChannelMediaRelayConfiguration
-  ) {
-    //在这里0表示自己
-    let mainClientUid = engine.entitiesContainer.getMainClient()?.uid || 0;
-
-    for (let e of conf.srcInfo) {
-      if (e.uid == 0) {
-        e.uid = mainClientUid as number;
-      }
-    }
-
-    for (let e of conf.destInfos) {
-      if (e.uid == 0) {
-        e.uid = mainClientUid as number;
-      }
-    }
   }
 
   public static async enumerateDevices(

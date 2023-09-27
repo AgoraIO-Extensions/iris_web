@@ -1,6 +1,6 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import { UID } from 'agora-rtc-sdk-ng';
 
+import { UID } from 'agora-rtc-sdk-ng';
 import {
   ApiInterceptor,
   ApiInterceptorReturnType,
@@ -12,9 +12,9 @@ import {
   IrisEventHandlerManager,
 } from 'iris-web-core';
 
-import { InitIrisRtcOptions } from '../IrisRtcApi';
+import { IrisVideoFrameBufferConfig, VideoParams } from 'src/base/BaseType';
 
-import { IrisVideoFrameBufferConfig, VideoParams } from '../base/BaseType';
+import { InitIrisRtcOptions } from '../IrisRtcApi';
 
 import { IMediaEngineDispatch } from '../binding/IAgoraMediaEngineDispatch';
 import {
@@ -43,12 +43,10 @@ import { IrisAgoraEventHandler } from '../event_handler/IrisAgoraEventHandler';
 import { RtcEngineDispatchExtensions } from '../extensions/IAgoraRtcEngineExtensions';
 import { IrisElement } from '../helper/DomHelper';
 import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
-import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
-import { IrisSubClientVariables } from '../states/IrisSubClientVariables';
 import { AgoraActionQueue } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
 
-import { IrisEntitiesContainer } from './IrisEntitiesContainer';
+import { IrisClientManager } from './IrisClientManager';
 
 export type GenerateVideoTrackLabelOrHtmlElementCb = (
   channelName: string,
@@ -64,12 +62,10 @@ export class IrisRtcEngine implements ApiInterceptor {
   private _generateVideoTrackLabelOrHtmlElementCb: GenerateVideoTrackLabelOrHtmlElementCb = null;
 
   public implDispatchesMap: Map<string, any> = new Map();
-  public entitiesContainer: IrisEntitiesContainer = null;
+  public entitiesContainer: IrisClientManager = new IrisClientManager(this);
   public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandlerEx = null;
 
   public globalVariables: IrisGlobalVariables = null;
-  public mainClientVariables: IrisMainClientVariables = null;
-  public subClientVariables: IrisSubClientVariables = null;
   public agoraEventHandler: IrisAgoraEventHandler = null;
   public actionQueue: AgoraActionQueue = null;
   public executor: CallApiExecutor = null;
@@ -107,11 +103,8 @@ export class IrisRtcEngine implements ApiInterceptor {
 
     this.actionQueue = new AgoraActionQueue();
     this.rtcEngineEventHandler = new IRtcEngineEventHandlerEx(this);
-    this.entitiesContainer = new IrisEntitiesContainer(this);
     this.globalVariables = new IrisGlobalVariables();
     this.irisElement = new IrisElement();
-    this.mainClientVariables = new IrisMainClientVariables();
-    this.subClientVariables = new IrisSubClientVariables();
     this.agoraEventHandler = new IrisAgoraEventHandler(this);
 
     this.executor = new CallApiExecutor(true);
@@ -141,7 +134,7 @@ export class IrisRtcEngine implements ApiInterceptor {
       let callApiFun = obj[funName];
       if (callApiFun) {
         let ret = await callApiFun.call(obj, apiParam);
-        AgoraConsole.debug(
+        AgoraConsole.log(
           `[callIrisApiAsync][result] ${func_name} ret ${ret.code}`
         );
         return ret;
@@ -176,6 +169,12 @@ export class IrisRtcEngine implements ApiInterceptor {
     return this.executor.execute(task);
   }
 
+  public setGenerateVideoTrackLabelOrHtmlElementCb(
+    cb: GenerateVideoTrackLabelOrHtmlElementCb
+  ) {
+    this._generateVideoTrackLabelOrHtmlElementCb = cb;
+  }
+
   public returnResult(
     isSuccess: boolean = true,
     code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
@@ -187,10 +186,25 @@ export class IrisRtcEngine implements ApiInterceptor {
     return Promise.resolve(new CallIrisApiResult(code, data));
   }
 
-  public async destruction() {
-    this.agoraEventHandler.destruction();
+  public async release() {
+    this.agoraEventHandler.release();
+    await this.entitiesContainer.release();
+  }
 
-    await this.entitiesContainer.destruction();
+  public generateVideoTrackLabelOrHtmlElement(
+    channelName: string,
+    uid: number,
+    type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
+  ): string {
+    if (this._generateVideoTrackLabelOrHtmlElementCb) {
+      return this._generateVideoTrackLabelOrHtmlElementCb(
+        channelName,
+        uid,
+        type
+      );
+    }
+
+    return channelName + '_' + uid + '_' + type;
   }
 
   public addIrisInterval(type: IrisIntervalType, interval: NodeJS.Timeout) {
@@ -216,7 +230,7 @@ export class IrisRtcEngine implements ApiInterceptor {
   }
 
   async dispose(): Promise<void> {
-    await this.destruction();
+    await this.release();
     return Promise.resolve();
   }
 }

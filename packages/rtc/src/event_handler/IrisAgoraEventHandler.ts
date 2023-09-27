@@ -70,7 +70,7 @@ export class IrisAgoraEventHandler {
     // this._engine.rtcEngineEventHandler.onMediaDeviceChanged(deviceType);
   }
 
-  destruction() {
+  release() {
     this._engine.globalVariables.AgoraRTC.onAutoplayFailed = undefined;
     this._engine.globalVariables.AgoraRTC.onCameraChanged = undefined;
     this._engine.globalVariables.AgoraRTC.onMicrophoneChanged = undefined;

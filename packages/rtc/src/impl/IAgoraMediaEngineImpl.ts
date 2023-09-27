@@ -2,7 +2,7 @@ import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { ILocalAudioTrack, ILocalVideoTrack } from 'agora-rtc-sdk-ng';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
-import { IrisAudioSourceType, IrisClientType } from '../base/BaseType';
+import { IrisAudioSourceType } from '../base/BaseType';
 import { IrisApiType } from '../base/IrisApiType';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -248,7 +248,6 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
 
       let audioType = IrisAudioSourceType.kAudioSourceTypeUnknown;
       let videoType = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM;
-      let clientType = IrisClientType.kClientMain;
 
       let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
       try {
@@ -257,7 +256,6 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
           audioType,
           videoType,
           stream.getVideoTracks()[0],
-          clientType,
           null
         );
       } catch (err) {
@@ -266,8 +264,9 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
       }
       let videoTrack: ILocalVideoTrack = trackArray[1] as ILocalVideoTrack;
       if (videoTrack) {
-        let videoPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(
-          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM
+        let videoPackage = this._engine.entitiesContainer.getLocalVideoTrack(
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM,
+          null
         );
         if (!videoTrack.enabled) {
           await TrackHelper.setEnabled(videoTrack, true);
@@ -278,25 +277,28 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
           videoTrack.play(videoPackage.element);
         }
         //如果已经加入频道，需要publish
-        if (this._engine.globalVariables.isJoinChannel) {
-          let mainClient = this._engine.entitiesContainer.getMainClient();
-          try {
-            await mainClient.publish(videoTrack);
-          } catch (reason) {
-            AgoraConsole.error(reason);
+        if (this._engine.entitiesContainer.irisClientList.length > 0) {
+          let agoraRTCClient = this._engine.entitiesContainer.getIrisClient()
+            ?.agoraRTCClient;
+          if (agoraRTCClient) {
+            try {
+              await agoraRTCClient.publish(videoTrack);
+            } catch (reason) {
+              AgoraConsole.error(reason);
+            }
+            let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+              {
+                channelName: agoraRTCClient.channelName,
+                client: agoraRTCClient,
+                track: videoTrack,
+                trackType: 'ILocalVideoTrack',
+              },
+              this._engine
+            );
+            this._engine.entitiesContainer.mainIrisClient.addTrackEventHandler(
+              trackEventHandler
+            );
           }
-          let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
-            {
-              channelName: mainClient.channelName,
-              client: mainClient,
-              track: videoTrack,
-              trackType: 'ILocalVideoTrack',
-            },
-            this._engine
-          );
-          this._engine.entitiesContainer.addMainClientTrackEventHandler(
-            trackEventHandler
-          );
         }
       }
 

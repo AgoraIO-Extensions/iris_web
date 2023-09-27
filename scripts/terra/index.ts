@@ -51,7 +51,7 @@ export default function (
       let isCallback = isMatch(node.name, 'isCallback');
 
       if (node.name === 'VIDEO_SOURCE_TYPE') {
-        debugger;
+        // debugger;
       }
 
       if (node.__TYPE === CXXTYPE.Clazz) {

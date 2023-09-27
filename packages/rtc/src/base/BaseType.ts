@@ -15,11 +15,6 @@ export enum IRIS_VIDEO_PROCESS_ERR {
   ERR_BUFFER_EMPTY = 5,
 }
 
-export enum IrisClientType {
-  kClientMain,
-  kClientSub,
-}
-
 export enum IrisAudioSourceType {
   kAudioSourceTypeMicrophonePrimary,
   kAudioSourceTypeMicrophoneSecondary,
@@ -80,5 +75,3 @@ export interface BufferSourceAudioTrackPackage {
   soundId: number;
   track: IBufferSourceAudioTrack;
 }
-
-export interface EncryptionConfigPackage {}

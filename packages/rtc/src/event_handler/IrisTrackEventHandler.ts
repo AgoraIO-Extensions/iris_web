@@ -126,7 +126,8 @@ export class IrisTrackEventHandler {
 
   onEventSourceStateChange() {
     if (this._trackType === 'IBufferSourceAudioTrack') {
-      let soundId = this._engine.entitiesContainer.getLocalBufferSourceAudioTrackSoundIdByTrack(
+      let irisClient = this._engine.entitiesContainer.getIrisClient();
+      let soundId = irisClient.getLocalBufferSourceAudioTrackSoundIdByTrack(
         this._track as IBufferSourceAudioTrack
       );
       this._engine.rtcEngineEventHandler.onAudioEffectFinished(soundId);
@@ -206,7 +207,7 @@ export class IrisTrackEventHandler {
     return this._trackType;
   }
 
-  destruction() {
+  release() {
     if (this._trackType == 'ILocalTrack') {
       let track = this._track as ILocalTrack;
       track.off('track-ended', this.__onEventTrackEnded);

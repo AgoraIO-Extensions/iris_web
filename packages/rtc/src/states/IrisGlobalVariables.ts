@@ -8,7 +8,6 @@ export interface DeviceInfo {
 
 export class IrisGlobalVariables {
   public rtcEngineContext: NATIVE_RTC.RtcEngineContext;
-  isJoinChannel: boolean = false;
 
   //C++ SetAudioProfile() initialize()
   public audioProfile: NATIVE_RTC.AUDIO_PROFILE_TYPE;

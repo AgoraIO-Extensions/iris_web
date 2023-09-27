@@ -1,8 +1,8 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { UID } from 'agora-rtc-sdk-ng';
 
-//Record the intermediate status of the Main client
-export class IrisMainClientVariables {
+//Record the intermediate status of the client
+export class IrisClientVariables {
   //public role: NATIVE_RTC.CLIENT_ROLE_TYPE = NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE;
 
   //ClientRoleOptions
