@@ -255,7 +255,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
 
       let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
       try {
-        trackArray = await ImplHelper.getOrCreateCustomAudioAndVideoTrackAsync(
+        trackArray = await ImplHelper.getOrCreateCustomAudioAndVideoTrack(
           this._engine,
           audioType,
           videoType,

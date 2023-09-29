@@ -49,7 +49,7 @@ export class ImplHelper {
     return trackArray;
   }
 
-  public static async createBufferSourceAudioTrackAsync(
+  public static async createBufferSourceAudioTrack(
     engine: IrisRtcEngine,
     soundId: number,
     bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig,
@@ -88,7 +88,7 @@ export class ImplHelper {
     return bufferSourceAudioTrackPackage;
   }
 
-  public static async getOrCreateCustomAudioAndVideoTrackAsync(
+  public static async getOrCreateCustomAudioAndVideoTrack(
     engine: IrisRtcEngine,
     audioType: IrisAudioSourceType,
     videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM,
@@ -174,59 +174,44 @@ export class ImplHelper {
     );
   }
 
-  public static async getOrCreateAudioTrack(
+  public static async createAudioTrack(
     engine: IrisRtcEngine,
     connection?: NATIVE_RTC.RtcConnection
   ) {
     let audioTrackPackage: AudioTrackPackage;
     let audioTrack: IMicrophoneAudioTrack = null;
-    audioTrackPackage = engine.entitiesContainer.getLocalAudioTrackPackageBySourceType(
-      IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
-    )[0];
-    if (audioTrackPackage) {
-      return audioTrackPackage;
-    } else {
-      try {
-        let audioConfig: MicrophoneAudioTrackInitConfig = this.generateMicrophoneAudioTrackInitConfig(
-          engine,
-          connection
-        );
-        audioTrack = await engine.globalVariables.AgoraRTC.createMicrophoneAudioTrack(
-          audioConfig
-        );
-        //受全局enabledAudio控制
-        audioTrack.setEnabled(false);
-      } catch (e) {
-        AgoraConsole.error('createMicrophoneAudioTrack failed');
-        throw e;
-      }
-
-      if (audioTrack) {
-        this.processAudioTrack(engine, audioTrack);
-        audioTrackPackage = new AudioTrackPackage(
-          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
-          audioTrack
-        );
-        engine.entitiesContainer.addLocalAudioTrackPackage(audioTrackPackage);
-      }
-      return audioTrackPackage;
+    try {
+      let audioConfig: MicrophoneAudioTrackInitConfig = this.generateMicrophoneAudioTrackInitConfig(
+        engine,
+        connection
+      );
+      audioTrack = await engine.globalVariables.AgoraRTC.createMicrophoneAudioTrack(
+        audioConfig
+      );
+      //受全局enabledAudio控制
+      audioTrack.setEnabled(false);
+    } catch (e) {
+      AgoraConsole.error('createMicrophoneAudioTrack failed');
+      throw e;
     }
+
+    this.processAudioTrack(engine, audioTrack);
+    audioTrackPackage = new AudioTrackPackage(
+      IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
+      audioTrack
+    );
+    engine.entitiesContainer.addLocalAudioTrackPackage(audioTrackPackage);
+    return audioTrackPackage;
   }
 
-  public static async getOrCreateVideoTrack(
+  public static async createVideoTrack(
     engine: IrisRtcEngine,
     videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
     connection?: NATIVE_RTC.RtcConnection
   ) {
-    let irisClient = engine.entitiesContainer.getIrisClient(connection);
     let videoTrack: ICameraVideoTrack = null;
-    let videoTrackPackage = engine.entitiesContainer.getLocalVideoTrackPackageBySourceType(
-      videoType
-    )[0];
+    let videoTrackPackage: VideoTrackPackage;
 
-    if (videoTrackPackage?.track) {
-      return videoTrackPackage;
-    }
     try {
       let videoConfig: CameraVideoTrackInitConfig = this.generateCameraVideoTrackInitConfig(
         engine,
@@ -240,12 +225,7 @@ export class ImplHelper {
       AgoraConsole.error(e);
     }
 
-    if (videoTrackPackage) {
-      videoTrackPackage.update(null, videoTrack, null);
-      return videoTrackPackage;
-    } else {
-      videoTrackPackage = new VideoTrackPackage(null, videoType, videoTrack);
-    }
+    videoTrackPackage = new VideoTrackPackage(null, videoType, videoTrack);
     this.processVideoTrack(engine, videoTrack, connection);
     engine.entitiesContainer.addLocalVideoTrackPackage(videoTrackPackage);
     return videoTrackPackage;

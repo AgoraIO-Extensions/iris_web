@@ -98,7 +98,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       //音频模块默认是开启的,所以默认创建音频轨道
-      await ImplHelper.getOrCreateAudioTrack(this._engine, null);
+      await ImplHelper.createAudioTrack(this._engine, null);
 
       let result = this._engine.globalVariables.AgoraRTC.checkSystemRequirements();
       return this._engine.returnResult(result);
@@ -239,7 +239,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         [
           ...this._engine.entitiesContainer.localAudioTrackPackages,
           ...this._engine.entitiesContainer.localVideoTrackPackages,
-        ]
+        ],
+        [irisClient]
       );
       let con: NATIVE_RTC.RtcConnection = {
         channelId: channelId,
@@ -524,7 +525,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         [
           ...this._engine.entitiesContainer.localAudioTrackPackages,
           ...this._engine.entitiesContainer.localVideoTrackPackages,
-        ]
+        ],
+        this._engine.entitiesContainer.irisClientList
       );
       this._engine.entitiesContainer.irisClientList.map(async (irisClient) => {
         irisClient.irisClientVariables.mergeChannelMediaOptions(options);
@@ -955,7 +957,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         canvas.sourceType
       )[0];
       if (!trackPackage) {
-        trackPackage = await ImplHelper.getOrCreateVideoTrack(
+        trackPackage = await ImplHelper.createVideoTrack(
           this._engine,
           sourceType
         );
@@ -1065,7 +1067,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       this._engine.entitiesContainer.irisClientObserver.notify(
         enabled ? NotifyType.PUBLISH : NotifyType.UNPUBLISH,
-        this._engine.entitiesContainer.localAudioTrackPackages
+        this._engine.entitiesContainer.localAudioTrackPackages,
+        this._engine.entitiesContainer.irisClientList
       );
 
       return this._engine.returnResult();
@@ -1584,7 +1587,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       try {
-        bufferSourceAudioTrackPackage = await ImplHelper.createBufferSourceAudioTrackAsync(
+        bufferSourceAudioTrackPackage = await ImplHelper.createBufferSourceAudioTrack(
           this._engine,
           soundId,
           bufferSourceAudioTrackInitConfig
@@ -1616,10 +1619,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           }
           bufferSourceAudioTrackPackage.track.startProcessAudioBuffer(config);
           await agoraRTCClient.publish(bufferSourceAudioTrackPackage.track);
-          this._engine.entitiesContainer.irisClientObserver.notify(
-            NotifyType.PUBLISH,
-            [bufferSourceAudioTrackPackage]
-          );
         } catch (reason) {
           AgoraConsole.error(reason);
         }
@@ -1699,7 +1698,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
       this._engine.entitiesContainer.irisClientObserver.notify(
         NotifyType.UNPUBLISH,
-        [bufferSourceAudioTrackPackage]
+        [bufferSourceAudioTrackPackage],
+        [irisClient]
       );
 
       return this._engine.returnResult();
