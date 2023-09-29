@@ -1,20 +1,151 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import { UID } from 'agora-rtc-sdk-ng';
+import {
+  IBufferSourceAudioTrack,
+  ILocalAudioTrack,
+  ILocalTrack,
+  ILocalVideoTrack,
+  IMicrophoneAudioTrack,
+  IRemoteAudioTrack,
+  IRemoteVideoTrack,
+  UID,
+} from 'agora-rtc-sdk-ng';
 
 import {
-  AudioTrackPackage,
   IRIS_VIDEO_PROCESS_ERR,
   IrisAudioSourceType,
   IrisVideoFrameBufferConfig,
   VideoParams,
-  VideoTrackPackage,
   VideoViewHolder,
 } from '../base/BaseType';
 
 import { IrisClient, IrisClientType } from './IrisClient';
+import { IrisClientObserver } from './IrisClientObserver';
 import { IrisRtcEngine } from './IrisRtcEngine';
 
 export type WalkILocalVideoPackageTrackFun = (track: VideoTrackPackage) => void;
+
+export class ScreenTrack {
+  videoTrack: VideoTrackPackage = new VideoTrackPackage();
+  audioTrack: AudioTrackPackage = new AudioTrackPackage();
+
+  dispose() {
+    this.audioTrack.dispose();
+    this.videoTrack.dispose();
+  }
+}
+
+export class VideoTrackPackage {
+  element?: string;
+  type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
+  track?: ILocalVideoTrack | IRemoteVideoTrack;
+  isPreview: boolean = false;
+
+  constructor(
+    element?: string,
+    type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
+    track?: ILocalVideoTrack | IRemoteVideoTrack
+  ) {
+    this.element = element;
+    this.type = type;
+    this.track = track;
+  }
+
+  setPreview(isPreview: boolean) {
+    this.isPreview = isPreview;
+  }
+
+  update(
+    type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
+    track?: ILocalVideoTrack | IRemoteVideoTrack,
+    element?: string
+  ) {
+    if (element) {
+      this.element = element;
+    }
+    if (type) {
+      this.type = type;
+    }
+    if (track) {
+      this.track = track;
+    }
+  }
+
+  dispose() {
+    this.element = null;
+    this.type = null;
+    this.isPreview = false;
+    try {
+      if (this.track) {
+        if (this.track.isPlaying) {
+          this.track.stop();
+        }
+        if ((this.track as ILocalTrack).enabled) {
+          (this.track as ILocalTrack).close();
+        }
+      }
+    } catch {}
+    this.track = null;
+  }
+}
+
+export class AudioTrackPackage {
+  type: IrisAudioSourceType;
+  track: ILocalAudioTrack | IRemoteAudioTrack | IMicrophoneAudioTrack;
+
+  constructor(
+    type?: IrisAudioSourceType,
+    track?: ILocalAudioTrack | IRemoteAudioTrack
+  ) {
+    this.type = type;
+    this.track = track;
+  }
+
+  update(
+    type?: IrisAudioSourceType,
+    track?: ILocalAudioTrack | IRemoteAudioTrack
+  ) {
+    if (type) {
+      this.type = type;
+    }
+    if (track) {
+      this.track = track;
+    }
+  }
+
+  dispose() {
+    this.type = null;
+    try {
+      if (this.track) {
+        if (this.track.isPlaying) {
+          this.track.stop();
+        }
+        (this.track as ILocalTrack).close();
+      }
+    } catch {}
+    this.track = null;
+  }
+}
+
+export class BufferSourceAudioTrackPackage extends AudioTrackPackage {
+  soundId: number;
+  type: IrisAudioSourceType;
+  track: IBufferSourceAudioTrack;
+
+  constructor(
+    type?: IrisAudioSourceType,
+    track?: IBufferSourceAudioTrack,
+    soundId?: number
+  ) {
+    super();
+    this.type = type;
+    this.track = track;
+    this.soundId = soundId;
+  }
+}
+
+export type MultiAudioTrackPackage =
+  | AudioTrackPackage
+  | BufferSourceAudioTrackPackage;
 
 // 存放一堆东西的
 export class IrisClientManager {
@@ -22,14 +153,20 @@ export class IrisClientManager {
 
   irisClientList: IrisClient[] = [];
   mainIrisClient: IrisClient = null;
+  localVideoTrackPackages: VideoTrackPackage[] = [];
+  localAudioTrackPackages: MultiAudioTrackPackage[] = [];
+  irisClientObserver: IrisClientObserver;
 
   //all local tracks
   private _remoteVideoViewHolders: Array<VideoViewHolder> = new Array<
     VideoViewHolder
   >();
 
+  screenTrack: ScreenTrack = new ScreenTrack();
+
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
+    this.irisClientObserver = new IrisClientObserver(engine);
   }
 
   getLocalVideoTrack(
@@ -68,12 +205,75 @@ export class IrisClientManager {
     return null;
   }
 
-  getLocalVideoTracks(): Array<VideoTrackPackage> {
-    let localVideoTracks: Array<VideoTrackPackage> = [];
-    this.irisClientList.map((irisClient: IrisClient) => {
-      localVideoTracks.push(irisClient.localVideoTrack);
+  addLocalVideoTrackPackage(videoTrackPackage: VideoTrackPackage) {
+    this.localVideoTrackPackages.push(videoTrackPackage);
+    this.irisClientObserver.addVideoTrackPackageObserver(videoTrackPackage);
+  }
+
+  removeLocalVideoTrackPackage(videoTrackPackage: VideoTrackPackage) {
+    for (let i = 0; i < this.localVideoTrackPackages.length; i++) {
+      let trackPackage = this.localVideoTrackPackages[i];
+      if (
+        trackPackage.track == videoTrackPackage.track &&
+        trackPackage.type == trackPackage.type
+      ) {
+        this.localVideoTrackPackages.splice(i, 1);
+        this.irisClientObserver.removeVideoTrackPackageObserver(
+          videoTrackPackage
+        );
+        break;
+      }
+    }
+  }
+
+  getLocalVideoTrackPackageBySourceType(
+    sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.VIDEO_SOURCE_TYPE[]
+  ): VideoTrackPackage[] {
+    return this.localVideoTrackPackages.filter((trackPackage) => {
+      if (Array.isArray(sourceType)) {
+        sourceType.map((type) => {
+          return trackPackage.type == type;
+        });
+      } else {
+        return trackPackage.type == sourceType;
+      }
     });
-    return localVideoTracks;
+  }
+
+  addLocalAudioTrackPackage(audioTrackPackage: MultiAudioTrackPackage) {
+    this.localAudioTrackPackages.push(audioTrackPackage);
+    this.irisClientObserver.addAudioTrackPackageObserver(audioTrackPackage);
+  }
+
+  getLocalAudioTrackPackageBySourceType(
+    sourceType: IrisAudioSourceType | IrisAudioSourceType[]
+  ): MultiAudioTrackPackage[] {
+    return this.localAudioTrackPackages.filter((trackPackage) => {
+      if (Array.isArray(sourceType)) {
+        sourceType.map((type) => {
+          return trackPackage.type == type;
+        });
+      } else {
+        return trackPackage.type == sourceType;
+      }
+    });
+  }
+
+  removeLocalAudioTrackPackage(audioTrackPackage: MultiAudioTrackPackage) {
+    for (let i = 0; i < this.localAudioTrackPackages.length; i++) {
+      let trackPackage = this.localAudioTrackPackages[i];
+      if (
+        trackPackage.track == audioTrackPackage.track &&
+        trackPackage.type == trackPackage.type
+      ) {
+        this.localAudioTrackPackages.splice(i, 1);
+        this.irisClientObserver.removeAudioTrackPackageObserver(
+          audioTrackPackage
+        );
+
+        break;
+      }
+    }
   }
 
   getRemoteVideoViewHolders(): Array<VideoViewHolder> {
@@ -120,14 +320,6 @@ export class IrisClientManager {
     );
 
     this._remoteVideoViewHolders.push(viewHolder);
-  }
-
-  getLocalAudioTracks(): Array<AudioTrackPackage> {
-    let localAudioTracks: Array<AudioTrackPackage> = [];
-    this.irisClientList.map((irisClient: IrisClient) => {
-      localAudioTracks = localAudioTracks.concat(irisClient.localAudioTracks);
-    });
-    return localAudioTracks;
   }
 
   public getVideoFrame(uid: UID, channel_id: string): VideoParams {
@@ -223,16 +415,39 @@ export class IrisClientManager {
     }
   }
 
+  getScreenCaptureStatus(): boolean {
+    return (
+      this.getLocalVideoTrackPackageBySourceType([
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY,
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY,
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD,
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH,
+      ]).length > 0
+    );
+  }
+
   async release() {
     this._engine.clearIrisInterval();
     //销毁iris html element
     this._engine.irisElement.release();
     //释放所有
+
+    this.localVideoTrackPackages.map((trackPackage) => {
+      trackPackage.dispose();
+    });
+    this.localAudioTrackPackages.map((trackPackage) => {
+      trackPackage.dispose();
+    });
+
     for (let irisClient of this.irisClientList) {
       await irisClient.release();
     }
+
     //重置IrisClientManager状态
     this.irisClientList = [];
+    this.localAudioTrackPackages = [];
+    this.localVideoTrackPackages = [];
+    this.irisClientObserver.release();
     this.mainIrisClient = null;
   }
 }

@@ -57,13 +57,9 @@ export class IrisGlobalVariables {
   //setVideoEncoderConfiguration
   videoEncoderConfiguration: NATIVE_RTC.VideoEncoderConfiguration = null;
 
-  cameraDirection: NATIVE_RTC.CAMERA_DIRECTION = null;
-
   fallbackOption: NATIVE_RTC.STREAM_FALLBACK_OPTIONS = null;
 
   screenCaptureContentHint: NATIVE_RTC.VIDEO_CONTENT_HINT = null;
-
-  isScreenSharing: boolean = false;
 
   // screenCaptureParameters: NATIVE_RTC.ScreenCaptureParameters = null;
   screenCaptureParameters2: NATIVE_RTC.ScreenCaptureParameters2 = null;
@@ -83,6 +79,13 @@ export class IrisGlobalVariables {
     smooth: 3,
     reportVad: false,
   };
+
+  reset() {
+    this.enabledAudio = true;
+    this.pausedAudio = false;
+    this.enabledLocalAudio = true;
+    this.mutedLocalAudioStream = false;
+  }
 
   //fake
   AgoraRTC: IAgoraRTC = AgoraRTC;

@@ -19,6 +19,20 @@ export class TrackHelper {
       throw e;
     }
   }
+  public static async setMuted(
+    track: ILocalTrack,
+    enabled: boolean
+  ): Promise<void> {
+    try {
+      await track.setMuted(enabled);
+    } catch (e) {
+      AgoraConsole.error(e);
+      Promise.resolve(
+        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+      );
+      throw e;
+    }
+  }
   public static async setDevice(
     track: ICameraVideoTrack,
     deviceId: string

@@ -5,79 +5,83 @@ import { UID } from 'agora-rtc-sdk-ng';
 export class IrisClientVariables {
   //public role: NATIVE_RTC.CLIENT_ROLE_TYPE = NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE;
 
-  //ClientRoleOptions
-  // audienceLatencyLevel?: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE;
-  // stopMicrophoneRecording?: boolean;
-  public stopPreview?: boolean;
+  //LeaveChannelOptions
+  stopAudioMixing?: boolean = true;
+  stopAllEffect?: boolean = true;
+  stopMicrophoneRecording?: boolean = true;
 
   //ChannelMediaOptions
-  public publishCameraTrack?: boolean = true;
-  public publishSecondaryCameraTrack?: boolean;
-  public publishAudioTrack?: boolean = true;
-  public publishScreenCaptureVideo?: boolean;
-  public publishScreenCaptureAudio?: boolean;
-  public publishScreenTrack: boolean;
-  public publishSecondaryScreenTrack: boolean;
-  public publishCustomAudioTrack?: boolean;
-  public publishCustomAudioSourceId?: number;
-  public publishCustomAudioTrackEnableAec?: boolean;
-  public publishDirectCustomAudioTrack?: boolean;
-  public publishCustomAudioTrackAec?: boolean;
-  public publishCustomVideoTrack?: boolean;
-  public publishEncodedVideoTrack?: boolean;
-  public publishMediaPlayerAudioTrack?: boolean;
-  public publishMediaPlayerVideoTrack?: boolean;
-  public publishTrancodedVideoTrack?: boolean;
-  public autoSubscribeAudio?: boolean = true;
-  public autoSubscribeVideo?: boolean = true;
-  public startPreview?: boolean;
-  public enableAudioRecordingOrPlayout?: boolean;
-  public publishMediaPlayerId?: number;
-  public clientRoleType?: NATIVE_RTC.CLIENT_ROLE_TYPE;
-  public audienceLatencyLevel?: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE;
-  public defaultVideoStreamType?: NATIVE_RTC.VIDEO_STREAM_TYPE;
-  public channelProfile?: NATIVE_RTC.CHANNEL_PROFILE_TYPE;
-  public audioDelayMs?: number;
-  public mediaPlayerAudioDelayMs?: number;
-  public token?: string;
-  public enableBuiltInMediaEncryption?: boolean;
-  public publishRhythmPlayerTrack?: boolean;
-  // public audioOptionsExternal: AudioOptionsExternal;
+  publishCameraTrack?: boolean;
 
-  clearChannelMediaOptions() {
-    this.publishCameraTrack = null;
-    this.publishSecondaryCameraTrack = null;
-    this.publishAudioTrack = null;
-    this.publishScreenCaptureVideo = null;
-    this.publishScreenCaptureAudio = null;
-    this.publishScreenTrack = null;
-    this.publishSecondaryScreenTrack = null;
-    this.publishCustomAudioTrack = null;
-    this.publishCustomAudioSourceId = null;
-    this.publishCustomAudioTrackEnableAec = null;
-    this.publishDirectCustomAudioTrack = null;
-    this.publishCustomAudioTrackAec = null;
-    this.publishCustomVideoTrack = null;
-    this.publishEncodedVideoTrack = null;
-    this.publishMediaPlayerAudioTrack = null;
-    this.publishMediaPlayerVideoTrack = null;
-    this.publishTrancodedVideoTrack = null;
-    this.autoSubscribeAudio = null;
-    this.autoSubscribeVideo = null;
-    this.startPreview = null;
-    this.enableAudioRecordingOrPlayout = null;
-    this.publishMediaPlayerId = null;
-    this.clientRoleType = null;
-    this.audienceLatencyLevel = null;
-    this.defaultVideoStreamType = null;
-    this.audioDelayMs = null;
-    this.mediaPlayerAudioDelayMs = null;
-    this.token = null;
-    this.enableBuiltInMediaEncryption = null;
-    this.publishRhythmPlayerTrack = null;
-  }
+  publishSecondaryCameraTrack?: boolean;
 
-  mergeChannelMediaOptions(options: NATIVE_RTC.ChannelMediaOptions) {
+  publishThirdCameraTrack?: boolean;
+
+  publishFourthCameraTrack?: boolean;
+
+  publishMicrophoneTrack?: boolean = true;
+
+  publishScreenCaptureVideo?: boolean;
+
+  publishScreenCaptureAudio?: boolean;
+
+  publishScreenTrack?: boolean;
+
+  publishSecondaryScreenTrack?: boolean;
+
+  publishThirdScreenTrack?: boolean;
+
+  publishFourthScreenTrack?: boolean;
+
+  publishCustomAudioTrack?: boolean;
+
+  publishCustomAudioTrackId?: number;
+
+  publishCustomVideoTrack?: boolean;
+
+  publishEncodedVideoTrack?: boolean;
+
+  publishMediaPlayerAudioTrack?: boolean;
+
+  publishMediaPlayerVideoTrack?: boolean;
+
+  publishTranscodedVideoTrack?: boolean;
+
+  autoSubscribeAudio?: boolean = true;
+
+  autoSubscribeVideo?: boolean = true;
+
+  enableAudioRecordingOrPlayout?: boolean;
+
+  publishMediaPlayerId?: number;
+
+  clientRoleType?: NATIVE_RTC.CLIENT_ROLE_TYPE;
+
+  audienceLatencyLevel?: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE;
+
+  defaultVideoStreamType?: NATIVE_RTC.VIDEO_STREAM_TYPE;
+
+  channelProfile?: NATIVE_RTC.CHANNEL_PROFILE_TYPE;
+
+  audioDelayMs?: number;
+
+  mediaPlayerAudioDelayMs?: number;
+
+  token?: string;
+
+  enableBuiltInMediaEncryption?: boolean;
+
+  publishRhythmPlayerTrack?: boolean;
+
+  isInteractiveAudience?: boolean;
+
+  customVideoTrackId?: number;
+
+  isAudioFilterable?: boolean;
+
+  mergeChannelMediaOptions(
+    options: NATIVE_RTC.ChannelMediaOptions | NATIVE_RTC.LeaveChannelOptions
+  ) {
     for (let key in options) {
       this[key] = options[key];
     }
@@ -85,11 +89,6 @@ export class IrisClientVariables {
 
   //setClientOptions()
   public clientRoleOptions?: NATIVE_RTC.ClientRoleOptions = null;
-
-  //LeaveChannelOptions
-  public stopAudioMixing: boolean = true;
-  public stopAllEffect: boolean = true;
-  public stopMicrophoneRecording: boolean = true;
 
   //mute 远端的用户流
   mutedRemoteAudioStreams: Map<UID, boolean> = new Map<UID, boolean>();

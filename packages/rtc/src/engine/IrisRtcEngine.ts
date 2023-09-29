@@ -12,9 +12,8 @@ import {
   IrisEventHandlerManager,
 } from 'iris-web-core';
 
-import { IrisVideoFrameBufferConfig, VideoParams } from 'src/base/BaseType';
-
 import { InitIrisRtcOptions } from '../IrisRtcApi';
+import { IrisVideoFrameBufferConfig, VideoParams } from '../base/BaseType';
 
 import { IMediaEngineDispatch } from '../binding/IAgoraMediaEngineDispatch';
 import {

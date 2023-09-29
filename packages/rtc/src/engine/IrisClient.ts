@@ -4,26 +4,24 @@ import {
   EncryptionMode,
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
-  IBufferSourceAudioTrack,
   ILocalAudioTrack,
   ILocalVideoTrack,
   ITrack,
 } from 'agora-rtc-sdk-ng';
 
 import { CallIrisApiResult } from 'iris-web-core';
-import {
-  AudioTrackPackage,
-  BufferSourceAudioTrackPackage,
-  VideoTrackPackage,
-} from 'src/base/BaseType';
-
-import { IrisTrackEventHandler } from 'src/event_handler/IrisTrackEventHandler';
 
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
+import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 
 import { IrisClientVariables } from '../states/IrisClientVariables';
 import { AgoraConsole, AgoraTranslate } from '../util';
 
+import {
+  AudioTrackPackage,
+  BufferSourceAudioTrackPackage,
+  VideoTrackPackage,
+} from './IrisClientManager';
 import { IrisRtcEngine } from './IrisRtcEngine';
 
 export enum IrisClientType {
@@ -39,10 +37,7 @@ export class IrisClient {
   clientEventHandler: IrisClientEventHandler;
 
   localAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
-  localBufferSourceAudioTracks: Array<
-    BufferSourceAudioTrackPackage
-  > = new Array<BufferSourceAudioTrackPackage>();
-  localVideoTrack: VideoTrackPackage = null;
+  localVideoTrack: VideoTrackPackage = new VideoTrackPackage();
   trackEventHandlers: Array<IrisTrackEventHandler> = new Array<
     IrisTrackEventHandler
   >();
@@ -250,34 +245,8 @@ export class IrisClient {
     }
   }
 
-  addLocalBufferSourceAudioTrack(trackPackage: BufferSourceAudioTrackPackage) {
-    this.localBufferSourceAudioTracks.push(trackPackage);
-  }
-
-  removeLocalBufferSourceAudioTrack(track: IBufferSourceAudioTrack) {
-    for (let i = 0; i < this.localBufferSourceAudioTracks.length; i++) {
-      let trackPackage = this.localBufferSourceAudioTracks[i];
-      if (trackPackage.track == track) {
-        this.localBufferSourceAudioTracks.splice(i, 1);
-        break;
-      }
-    }
-  }
-
-  setLocalVideoTrack(trackPack: VideoTrackPackage) {
-    if (!this.localVideoTrack) {
-      this.localVideoTrack = trackPack;
-    } else {
-      if (trackPack.element) {
-        this.localVideoTrack.element = trackPack.element;
-      }
-      if (trackPack.track) {
-        this.localVideoTrack.track = trackPack.track;
-      }
-      if (trackPack.type) {
-        this.localVideoTrack.type = trackPack.type;
-      }
-    }
+  setLocalVideoTrack(trackPackage: VideoTrackPackage) {
+    this.localVideoTrack = trackPackage;
   }
 
   clearLocalVideoTrack() {
@@ -333,54 +302,10 @@ export class IrisClient {
     );
   }
 
-  getLocalBufferSourceAudioTrackBySoundId(
-    soundId: number
-  ): BufferSourceAudioTrackPackage {
-    for (let trackPack of this.localBufferSourceAudioTracks) {
-      if (trackPack.soundId == soundId) {
-        return trackPack;
-      }
-    }
-    return null;
-  }
-
-  getLocalBufferSourceAudioTrackSoundIdByTrack(
-    track: IBufferSourceAudioTrack
-  ): number {
-    for (let trackPack of this.localBufferSourceAudioTracks) {
-      if (trackPack.track == track) {
-        return trackPack.soundId;
-      }
-    }
-    return null;
-  }
-
-  removeLocalBufferSourceAudioTrackBySoundId(soundId: number) {
-    for (let i = 0; i < this.localBufferSourceAudioTracks.length; i++) {
-      let trackPack = this.localBufferSourceAudioTracks[i];
-      if (trackPack.soundId == soundId) {
-        this.localBufferSourceAudioTracks.splice(i, 1);
-        break;
-      }
-    }
-  }
-
-  removeLocalBufferSourceAudioTrackByTrack(track: IBufferSourceAudioTrack) {
-    for (let i = 0; i < this.localBufferSourceAudioTracks.length; i++) {
-      let trackPack = this.localBufferSourceAudioTracks[i];
-      if (trackPack.track == track) {
-        this.localBufferSourceAudioTracks.splice(i, 1);
-        break;
-      }
-    }
-  }
-
-  async processBufferSourceAudioTrackClose(track: IBufferSourceAudioTrack) {
-    //local
-    this.removeLocalBufferSourceAudioTrackByTrack(track);
-
-    this.removeLocalBufferSourceAudioTrack(track);
-    this.removeTrackEventHandlerByTrack(track);
+  async processBufferSourceAudioTrackClose(
+    bufferSourceAudioTrackPackage: BufferSourceAudioTrackPackage
+  ) {
+    let track = bufferSourceAudioTrackPackage.track;
     if (
       this.agoraRTCClient &&
       this.agoraRTCClient.localTracks.indexOf(track) != -1
@@ -397,13 +322,17 @@ export class IrisClient {
     //删除完毕后进行stop,close
     track.stopProcessAudioBuffer();
     track.close();
+
+    this._engine.entitiesContainer.removeLocalAudioTrackPackage(
+      bufferSourceAudioTrackPackage
+    );
+    this.removeLocalAudioTrack(track);
+    this.removeTrackEventHandlerByTrack(track);
   }
 
   //  当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 并且停止发流 记住是所有哦
-  async processAudioTrackClose(audioTrack: ILocalAudioTrack) {
-    //main
-    this.removeLocalAudioTrack(audioTrack);
-    this.removeTrackEventHandlerByTrack(audioTrack);
+  async processAudioTrackClose(audioTrackPackage: AudioTrackPackage) {
+    let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
     if (
       this.agoraRTCClient &&
       this.agoraRTCClient.localTracks.indexOf(audioTrack) != -1
@@ -419,21 +348,24 @@ export class IrisClient {
         throw e;
       }
     }
-
-    //删除完毕后进行stop,close
+    //删除完毕后进行stop
     if (audioTrack.isPlaying) {
       audioTrack.stop();
     }
-    audioTrack.close();
+    if (!audioTrack.muted) {
+      audioTrack.setEnabled(false);
+    }
+    this.removeTrackEventHandlerByTrack(audioTrack);
+    // this.removeLocalAudioTrack(audioTrack);
+    // this._engine.entitiesContainer.removeLocalAudioTrackPackage(
+    //   audioTrackPackage
+    // );
   }
 
   // 当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 记住是所有哦
-  async processVideoTrackClose(videoTrack: ILocalVideoTrack) {
-    //main
-    if (this.localVideoTrack?.track == videoTrack) {
-      this.localVideoTrack = null;
-    }
-    this.removeTrackEventHandlerByTrack(videoTrack);
+  async processVideoTrackClose(videoTrackPackage: VideoTrackPackage) {
+    let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
+
     if (
       this.agoraRTCClient &&
       this.agoraRTCClient.localTracks.indexOf(videoTrack) != -1
@@ -450,11 +382,20 @@ export class IrisClient {
       }
     }
 
-    //删除完毕后进行stop,close
-    if (videoTrack.isPlaying) {
-      videoTrack.stop();
+    //如果isPreview是false则停止播放以及设置为不可用
+    if (!videoTrackPackage.isPreview) {
+      if (videoTrack.isPlaying) {
+        videoTrack.stop();
+      }
+      if (!videoTrack.muted) {
+        videoTrack.setEnabled(false);
+      }
     }
-    videoTrack.close();
+    this.removeTrackEventHandlerByTrack(videoTrack);
+    // this.clearLocalVideoTrack();
+    // this._engine.entitiesContainer.removeLocalVideoTrackPackage(
+    //   videoTrackPackage
+    // );
   }
 
   async release() {
@@ -477,6 +418,8 @@ export class IrisClient {
       }
     }
 
+    this.localAudioTracks = [];
+    this.localVideoTrack = null;
     this.agoraRTCClient = null;
   }
 }

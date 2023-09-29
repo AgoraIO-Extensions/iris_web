@@ -1,12 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import {
-  IBufferSourceAudioTrack,
-  ILocalAudioTrack,
-  ILocalVideoTrack,
-  IRemoteAudioTrack,
-  IRemoteVideoTrack,
-  UID,
-} from 'agora-rtc-sdk-ng';
+import { ILocalVideoTrack, IRemoteVideoTrack, UID } from 'agora-rtc-sdk-ng';
 
 export enum IRIS_VIDEO_PROCESS_ERR {
   ERR_OK = 0,
@@ -16,12 +9,12 @@ export enum IRIS_VIDEO_PROCESS_ERR {
 }
 
 export enum IrisAudioSourceType {
-  kAudioSourceTypeMicrophonePrimary,
-  kAudioSourceTypeMicrophoneSecondary,
-  kAudioSourceTypeScreenPrimary,
-  kAudioSourceTypeScreenSecondary,
-  kAudioSourceTypeCustom,
-  kAudioSourceTypeUnknown,
+  kAudioSourceTypeMicrophonePrimary = 2001,
+  kAudioSourceTypeMicrophoneSecondary = 2002,
+  kAudioSourceTypeScreenCapture = 2003,
+  kAudioSourceTypeCustom = 2004,
+  kAudioSourceTypeBufferSourceAudio = 2005,
+  kAudioSourceTypeUnknown = 2006,
 }
 
 export interface IrisVideoFrameBufferConfig {
@@ -53,25 +46,9 @@ export interface Size {
   height: number;
 }
 
-export interface VideoTrackPackage {
-  element?: string;
-  type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
-  track?: ILocalVideoTrack | IRemoteVideoTrack;
-}
-
 export interface VideoViewHolder {
   element?: string;
   channelId?: string;
   uid?: UID;
   type?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
-}
-
-export interface AudioTrackPackage {
-  type: IrisAudioSourceType;
-  track: ILocalAudioTrack | IRemoteAudioTrack;
-}
-
-export interface BufferSourceAudioTrackPackage {
-  soundId: number;
-  track: IBufferSourceAudioTrack;
 }

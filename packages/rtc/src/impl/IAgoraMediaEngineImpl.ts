@@ -207,6 +207,10 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
   ): CallApiReturnType {
     //调用engine.release后才会创建新的track
     let processFunc = async (): Promise<CallIrisApiResult> => {
+      if (this._engine.globalVariables.enabledVideo == false) {
+        AgoraConsole.error('call enableVideo(true) before startPreview');
+        return this._engine.returnResult(false);
+      }
       if (!this._engine.globalVariables.pushVideoFrameEnabled) {
         AgoraConsole.error(
           'pushVideoFrameEnabled is disabled , call setExternalVideoSource first'
