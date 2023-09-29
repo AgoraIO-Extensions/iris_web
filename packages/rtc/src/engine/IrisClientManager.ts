@@ -221,6 +221,7 @@ export class IrisClientManager {
         this.irisClientObserver.removeVideoTrackPackageObserver(
           videoTrackPackage
         );
+        videoTrackPackage.dispose();
         break;
       }
     }
@@ -231,9 +232,11 @@ export class IrisClientManager {
   ): VideoTrackPackage[] {
     return this.localVideoTrackPackages.filter((trackPackage) => {
       if (Array.isArray(sourceType)) {
-        sourceType.map((type) => {
-          return trackPackage.type == type;
-        });
+        for (let type of sourceType) {
+          if (trackPackage.type == type) {
+            return true;
+          }
+        }
       } else {
         return trackPackage.type == sourceType;
       }
@@ -250,9 +253,11 @@ export class IrisClientManager {
   ): MultiAudioTrackPackage[] {
     return this.localAudioTrackPackages.filter((trackPackage) => {
       if (Array.isArray(sourceType)) {
-        sourceType.map((type) => {
-          return trackPackage.type == type;
-        });
+        for (let type of sourceType) {
+          if (trackPackage.type == type) {
+            return true;
+          }
+        }
       } else {
         return trackPackage.type == sourceType;
       }
@@ -270,6 +275,7 @@ export class IrisClientManager {
         this.irisClientObserver.removeAudioTrackPackageObserver(
           audioTrackPackage
         );
+        audioTrackPackage.dispose();
 
         break;
       }

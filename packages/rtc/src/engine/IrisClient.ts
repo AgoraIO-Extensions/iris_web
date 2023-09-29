@@ -357,9 +357,6 @@ export class IrisClient {
     }
     this.removeTrackEventHandlerByTrack(audioTrack);
     // this.removeLocalAudioTrack(audioTrack);
-    // this._engine.entitiesContainer.removeLocalAudioTrackPackage(
-    //   audioTrackPackage
-    // );
   }
 
   // 当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 记住是所有哦
@@ -393,9 +390,6 @@ export class IrisClient {
     }
     this.removeTrackEventHandlerByTrack(videoTrack);
     // this.clearLocalVideoTrack();
-    // this._engine.entitiesContainer.removeLocalVideoTrackPackage(
-    //   videoTrackPackage
-    // );
   }
 
   async release() {

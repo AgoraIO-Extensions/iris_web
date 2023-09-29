@@ -125,7 +125,7 @@ export class ImplHelper {
     return [retAudioTrack, retVideoTrack];
   }
 
-  public static async createScreenTrackAsync(
+  public static async createScreenTrack(
     engine: IrisRtcEngine,
     captureParams: NATIVE_RTC.ScreenCaptureParameters2,
     videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
@@ -158,6 +158,16 @@ export class ImplHelper {
         videoTrack = screenTrack[0];
         if (videoTrack) {
           this.processScreenShareVideoTrack(engine, videoTrack, videoType);
+          //设置屏幕共享特殊的事件
+          let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+            {
+              track: videoTrack,
+              videoSourceType: videoType,
+              trackType: 'ILocalTrack',
+            },
+            engine
+          );
+          irisClient.addTrackEventHandler(trackEventHandler);
         }
       }
     } catch (e) {
@@ -211,7 +221,7 @@ export class ImplHelper {
   ) {
     let videoTrack: ICameraVideoTrack = null;
     let videoTrackPackage: VideoTrackPackage;
-
+    console.log('start create');
     try {
       let videoConfig: CameraVideoTrackInitConfig = this.generateCameraVideoTrackInitConfig(
         engine,
@@ -220,6 +230,8 @@ export class ImplHelper {
       videoTrack = await engine.globalVariables.AgoraRTC.createCameraVideoTrack(
         videoConfig
       );
+      //受全局enabledVideo控制
+      videoTrack.setEnabled(false);
     } catch (e) {
       AgoraConsole.error('createCameraVideoTrack failed');
       AgoraConsole.error(e);

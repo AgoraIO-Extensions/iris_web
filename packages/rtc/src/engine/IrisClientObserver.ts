@@ -184,7 +184,7 @@ export class IrisClientObserver {
       } else {
         publishTrack = null;
       }
-
+      // debugger;
       if (publishTrack) {
         if (!publishTrack.enabled) {
           await publishTrack.setEnabled(true);

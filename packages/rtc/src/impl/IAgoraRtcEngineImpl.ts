@@ -99,6 +99,11 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       //音频模块默认是开启的,所以默认创建音频轨道
       await ImplHelper.createAudioTrack(this._engine, null);
+      await ImplHelper.createVideoTrack(
+        this._engine,
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
+        null
+      );
 
       let result = this._engine.globalVariables.AgoraRTC.checkSystemRequirements();
       return this._engine.returnResult(result);
@@ -677,31 +682,15 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
       this._engine.globalVariables.enabledVideo = true;
 
-      let irisClient = this._engine.entitiesContainer.getIrisClient();
-      if (irisClient) {
-        irisClient.irisClientVariables.publishCameraTrack = true;
-      }
+      this._engine.entitiesContainer.irisClientList.map((irisCLient) => {
+        irisCLient.irisClientVariables.publishCameraTrack = true;
+      });
 
-      //找到本端video
-      if (this._engine.globalVariables.enabledLocalVideo) {
-        for (let trackPackage of this._engine.entitiesContainer
-          .localVideoTrackPackages) {
-          if (!trackPackage?.track) {
-            continue;
-          }
-
-          let track = trackPackage.track as ILocalVideoTrack;
-          if (!track.isPlaying) {
-            try {
-            } catch (e) {
-              AgoraConsole.error('ILocalVideoTrack play(true) failed');
-              AgoraConsole.error(e);
-            }
-          }
-          if (!track.enabled) {
-            await TrackHelper.setEnabled(track, true);
-          }
-        }
+      //找到本地video
+      for (let trackPackage of this._engine.entitiesContainer
+        .localVideoTrackPackages) {
+        let track = trackPackage.track as ILocalVideoTrack;
+        await TrackHelper.setEnabled(track, true);
       }
 
       return this._engine.returnResult();
@@ -954,15 +943,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         canvas.sourceType ||
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY;
       let trackPackage = this._engine.entitiesContainer.getLocalVideoTrackPackageBySourceType(
-        canvas.sourceType
+        sourceType
       )[0];
-      if (!trackPackage) {
-        trackPackage = await ImplHelper.createVideoTrack(
-          this._engine,
-          sourceType
-        );
-      }
-
       trackPackage?.update(sourceType, null, canvas.view);
       let track = trackPackage.track as ILocalVideoTrack;
       if (track) {
@@ -2783,7 +2765,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let videoType = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
 
       try {
-        await ImplHelper.createScreenTrackAsync(
+        await ImplHelper.createScreenTrack(
           this._engine,
           captureParams,
           videoType
@@ -2792,23 +2774,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       } catch (err) {
         err && AgoraConsole.error(err);
         return this._engine.returnResult(false);
-      }
-
-      let videoPackage = this._engine.entitiesContainer.getLocalVideoTrackPackageBySourceType(
-        videoType
-      )[0];
-
-      //设置屏幕共享特殊的事件
-      if (videoPackage.track) {
-        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
-          {
-            track: videoPackage.track,
-            videoSourceType: videoType,
-            trackType: 'ILocalTrack',
-          },
-          this._engine
-        );
-        irisClient.addTrackEventHandler(trackEventHandler);
       }
 
       return this._engine.returnResult();
@@ -2858,7 +2823,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let entitiesContainer = this._engine.entitiesContainer;
       let irisClient = entitiesContainer.getIrisClient();
       if (!this._engine.entitiesContainer.getScreenCaptureStatus()) {
-        AgoraConsole.log('screen share is not start');
+        AgoraConsole.error('screen share is not start');
         return this._engine.returnResult(false);
       }
       let videoPackages = entitiesContainer.getLocalVideoTrackPackageBySourceType(
@@ -2867,29 +2832,27 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let audioPackages = entitiesContainer.getLocalAudioTrackPackageBySourceType(
         IrisAudioSourceType.kAudioSourceTypeScreenCapture
       );
-      if (videoPackages.length > 0) {
-        AgoraConsole.log(`sourceType:${sourceType} is not start`);
+      if (videoPackages.length == 0) {
+        AgoraConsole.error(`sourceType:${sourceType} is not start`);
         return this._engine.returnResult(false);
       }
 
       //注销屏幕共享的音频
-      // if (audioPackages) {
-      //   audioPackages.map(async (audioPackage) => {
-      //     if (audioPackage.track) {
-      //       await irisClient.processAudioTrackClose(
-      //         audioPackage.track as ILocalAudioTrack
-      //       );
-      //       this._engine.rtcEngineEventHandler.onLocalAudioStateChanged(
-      //         NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
-      //           .LOCAL_AUDIO_STREAM_STATE_STOPPED,
-      //         0
-      //       );
-      //     }
-      //     this._engine.entitiesContainer.removeLocalAudioTrackPackage(
-      //       audioPackage
-      //     );
-      //   });
-      // }
+      if (audioPackages) {
+        audioPackages.map(async (audioPackage) => {
+          if (audioPackage.track) {
+            await irisClient.processAudioTrackClose(audioPackage);
+            this._engine.rtcEngineEventHandler.onLocalAudioStateChanged(
+              NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
+                .LOCAL_AUDIO_STREAM_STATE_STOPPED,
+              0
+            );
+          }
+          this._engine.entitiesContainer.removeLocalAudioTrackPackage(
+            audioPackage
+          );
+        });
+      }
 
       //注销屏幕共享的视频
       if (videoPackages) {
