@@ -49,20 +49,18 @@ export class VideoTrackPackage {
     this.irisClient = irisClient;
   }
 
-  update(
-    type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
-    track?: ILocalVideoTrack | IRemoteVideoTrack,
-    element?: string
-  ) {
-    if (element) {
-      this.element = element;
-    }
-    if (type) {
-      this.type = type;
-    }
-    if (track) {
-      this.track = track;
-    }
+  update({
+    type = this.type,
+    track = this.track,
+    element = this.element,
+  }: {
+    type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
+    track?: ILocalVideoTrack | IRemoteVideoTrack;
+    element?: string;
+  }) {
+    this.element = element;
+    this.type = type;
+    this.track = track;
   }
 
   dispose() {
@@ -105,16 +103,19 @@ export class AudioTrackPackage {
     this.irisClient = irisClient;
   }
 
-  update(
-    type?: IrisAudioSourceType,
-    track?: ILocalAudioTrack | IRemoteAudioTrack
-  ) {
-    if (type) {
-      this.type = type;
-    }
-    if (track) {
-      this.track = track;
-    }
+  update({
+    type = this.type,
+    track = this.track,
+  }: {
+    type?: IrisAudioSourceType;
+    track?:
+      | ILocalAudioTrack
+      | IRemoteAudioTrack
+      | IMicrophoneAudioTrack
+      | ILocalTrack;
+  }) {
+    this.type = type;
+    this.track = track;
   }
 
   dispose() {
@@ -176,42 +177,6 @@ export class IrisClientManager {
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
     this.irisClientObserver = new IrisClientObserver(engine);
-  }
-
-  getLocalVideoTrack(
-    type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
-    connection: NATIVE_RTC.RtcConnection
-  ): VideoTrackPackage {
-    this._engine.irisClientManager.irisClientList.map((irisClient) => {
-      if (
-        irisClient.connection?.channelId == connection.channelId &&
-        irisClient.connection?.localUid == connection.localUid
-      ) {
-        if (type == irisClient.videoTrackPackage?.type) {
-          return irisClient.videoTrackPackage;
-        }
-      }
-    });
-    return null;
-  }
-
-  getLocalAudioTrack(
-    type: IrisAudioSourceType,
-    connection: NATIVE_RTC.RtcConnection
-  ): AudioTrackPackage {
-    this._engine.irisClientManager.irisClientList.map((irisClient) => {
-      if (
-        irisClient.connection?.channelId == connection.channelId &&
-        irisClient.connection?.localUid == connection.localUid
-      ) {
-        for (let trackPack of irisClient.audioTrackPackages) {
-          if (trackPack.type == type) {
-            return trackPack;
-          }
-        }
-      }
-    });
-    return null;
   }
 
   addLocalVideoTrackPackage(videoTrackPackage: VideoTrackPackage) {
@@ -306,33 +271,9 @@ export class IrisClientManager {
 
     // Update the exist one
     if (item) {
-      console.log(
-        `addOrUpdateRemoteVideoViewHolder add to item: ${JSON.stringify(item)}`
-      );
-      if (viewHolder.element) {
-        item.element = viewHolder.element;
-      }
-
-      if (viewHolder.type) {
-        item.type = viewHolder.type;
-      }
-
-      if (viewHolder.channelId) {
-        item.channelId = viewHolder.channelId;
-      }
-
-      if (viewHolder.uid) {
-        item.uid = viewHolder.uid;
-      }
-
+      Object.assign(item, viewHolder);
       return;
     }
-
-    console.log(
-      `addOrUpdateRemoteVideoViewHolder add to item new: ${JSON.stringify(
-        viewHolder
-      )}`
-    );
 
     this._remoteVideoViewHolders.push(viewHolder);
   }
@@ -431,14 +372,20 @@ export class IrisClientManager {
   }
 
   getScreenCaptureStatus(): boolean {
-    return (
-      this.getLocalVideoTrackPackageBySourceType([
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY,
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY,
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD,
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH,
-      ]).length > 0
-    );
+    let result = false;
+    let videoTrackPackages = this.getLocalVideoTrackPackageBySourceType([
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY,
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY,
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD,
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH,
+    ]);
+    videoTrackPackages.map((videoTrackPackage) => {
+      if (videoTrackPackage.track) {
+        result = true;
+        return;
+      }
+    });
+    return result;
   }
 
   async release() {

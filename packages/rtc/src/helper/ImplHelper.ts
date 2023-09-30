@@ -106,7 +106,7 @@ export class ImplHelper {
         videoTrackPackage
       );
     } else {
-      videoTrackPackage.update(null, videoTrack, null);
+      videoTrackPackage.update({ track: videoTrack });
     }
     let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
       {
@@ -128,6 +128,15 @@ export class ImplHelper {
     connection?: NATIVE_RTC.RtcConnection
   ) {
     let irisClient = this._engine.irisClientManager.getIrisClient(connection);
+    let videoTrackPackage: VideoTrackPackage = this._engine.irisClientManager.getLocalVideoTrackPackageBySourceType(
+      videoType
+    )[0];
+
+    //如果已经有track了，就不需要再创建了
+    if (videoTrackPackage?.track) {
+      return;
+    }
+    //如果没有track，但是有package，就需要创建track
     let audioTrack: ILocalAudioTrack = null;
     let videoTrack: ILocalVideoTrack = null;
     let screenTrack = [null, null];
@@ -160,6 +169,20 @@ export class ImplHelper {
         videoTrack = screenTrack[0];
         if (videoTrack) {
           await this.processScreenShareVideoTrack(videoTrack);
+
+          if (!videoTrackPackage) {
+            videoTrackPackage = new VideoTrackPackage(
+              null,
+              videoType,
+              videoTrack
+            );
+            this._engine.irisClientManager.addLocalVideoTrackPackage(
+              videoTrackPackage
+            );
+          } else {
+            videoTrackPackage.update({ track: videoTrack });
+          }
+
           //设置屏幕共享特殊的事件
           let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
             {
@@ -170,14 +193,6 @@ export class ImplHelper {
             this._engine
           );
           irisClient.addTrackEventHandler(trackEventHandler);
-          let videoTrackPackage = new VideoTrackPackage(
-            null,
-            videoType,
-            videoTrack
-          );
-          this._engine.irisClientManager.addLocalVideoTrackPackage(
-            videoTrackPackage
-          );
         }
       }
     } catch (e) {

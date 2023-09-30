@@ -687,7 +687,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         trackPackage = new VideoTrackPackage(canvas.view, sourceType, null);
         this._engine.irisClientManager.addLocalVideoTrackPackage(trackPackage);
       }
-      trackPackage.update(sourceType, null, canvas.view);
+      trackPackage.update({ type: sourceType, element: canvas.view });
 
       let track = trackPackage.track as ILocalVideoTrack;
       if (track) {
@@ -2460,7 +2460,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   ): CallApiReturnType {
     let process = async () => {
       let irisClient = this._engine.irisClientManager.getIrisClient();
-
       if (this._engine.irisClientManager.getScreenCaptureStatus()) {
         AgoraConsole.error('you have already startScreenCapture');
         return this._engine.returnResult(false);
@@ -2690,12 +2689,11 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
     config: NATIVE_RTC.ScreenCaptureConfiguration
   ): CallApiReturnType {
-    let processFunc = async (): Promise<CallIrisApiResult> => {
-      //todo
-      return CallIrisApiResult.success();
-    };
-
-    return this._engine.execute(processFunc);
+    AgoraConsole.warn('startScreenCapture2 not supported in this platform!');
+    return this._engine.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   }
   getConnectionState(): CallApiReturnType {
     AgoraConsole.warn('getConnectionState not supported in this platform!');
