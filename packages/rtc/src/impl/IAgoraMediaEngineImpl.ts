@@ -1,12 +1,13 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import { ILocalAudioTrack, ILocalVideoTrack } from 'agora-rtc-sdk-ng';
+import { ILocalVideoTrack } from 'agora-rtc-sdk-ng';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
-import { IrisAudioSourceType } from '../base/BaseType';
+import { VideoTrackPackage } from 'src/engine/IrisClientManager';
+
 import { IrisApiType } from '../base/IrisApiType';
+import { NotifyType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { drawRGBABufferToCanvas } from '../util/BufferConvert';
 
@@ -247,13 +248,10 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
       document.body.appendChild(irisContainer);
       const stream = canvas.captureStream();
 
-      let audioType = IrisAudioSourceType.kAudioSourceTypeUnknown;
       let videoType = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM;
-
-      let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
+      let videoTrackPackage: VideoTrackPackage;
       try {
-        trackArray = await this._engine.implHelper.getOrCreateCustomAudioAndVideoTrack(
-          audioType,
+        videoTrackPackage = await this._engine.implHelper.createCustomVideoTrack(
           videoType,
           stream.getVideoTracks()[0],
           null
@@ -262,44 +260,20 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
         err && AgoraConsole.error(err);
         return this._engine.returnResult(false);
       }
-      let videoTrack: ILocalVideoTrack = trackArray[1] as ILocalVideoTrack;
+      let videoTrack: ILocalVideoTrack = videoTrackPackage.track as ILocalVideoTrack;
       if (videoTrack) {
-        let videoPackage = this._engine.irisClientManager.getLocalVideoTrack(
-          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM,
-          null
-        );
         if (!videoTrack.enabled) {
           await this._engine.trackHelper.setEnabled(videoTrack, true);
         }
-
         //如果没有播放，需要play
-        if (!videoTrack.isPlaying) {
-          this._engine.trackHelper.play(videoTrack, videoPackage.element);
+        if (!videoTrack.isPlaying && videoTrackPackage.element) {
+          this._engine.trackHelper.play(videoTrack, videoTrackPackage.element);
         }
-        //如果已经加入频道，需要publish
-        if (this._engine.irisClientManager.irisClientList.length > 0) {
-          let agoraRTCClient = this._engine.irisClientManager.getIrisClient()
-            ?.agoraRTCClient;
-          if (agoraRTCClient) {
-            try {
-              await agoraRTCClient.publish(videoTrack);
-            } catch (reason) {
-              AgoraConsole.error(reason);
-            }
-            let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
-              {
-                channelName: agoraRTCClient.channelName,
-                client: agoraRTCClient,
-                track: videoTrack,
-                trackType: 'ILocalVideoTrack',
-              },
-              this._engine
-            );
-            this._engine.irisClientManager.mainIrisClient.addTrackEventHandler(
-              trackEventHandler
-            );
-          }
-        }
+        this._engine.irisClientManager.irisClientObserver.notify(
+          NotifyType.START_TRACK,
+          [videoTrackPackage],
+          this._engine.irisClientManager.irisClientList
+        );
       }
 
       return this._engine.returnResult();

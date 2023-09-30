@@ -164,6 +164,16 @@ export class IrisClientObserver {
             irisClient.setLocalVideoTrack(trackPackage);
           }
         }
+        if (options.publishCustomVideoTrack) {
+          if (
+            trackPackage.track &&
+            trackPackage.type ===
+              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM
+          ) {
+            publishTrack = trackPackage.track as ILocalTrack;
+            irisClient.setLocalVideoTrack(trackPackage);
+          }
+        }
       }
 
       //发布轨道必须保证该client的options满足条件,并且client已经加入频道,并且该轨道没有被发布过
@@ -177,7 +187,6 @@ export class IrisClientObserver {
       } else {
         publishTrack = null;
       }
-      // debugger;
       if (publishTrack) {
         if (!publishTrack.enabled) {
           await this._engine.trackHelper.setEnabled(publishTrack, true);
@@ -188,7 +197,6 @@ export class IrisClientObserver {
         } catch (reason) {
           AgoraConsole.error(reason);
         }
-        console.log(this._engine.irisClientManager);
       }
     }
   }

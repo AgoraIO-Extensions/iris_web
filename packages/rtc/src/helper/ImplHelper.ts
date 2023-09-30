@@ -71,42 +71,55 @@ export class ImplHelper {
     return bufferSourceAudioTrackPackage;
   }
 
-  public async getOrCreateCustomAudioAndVideoTrack(
-    audioType: IrisAudioSourceType,
+  public async createCustomVideoTrack(
     videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM,
     mediaStreamTrack: MediaStreamTrack,
     connection: NATIVE_RTC.RtcConnection
-  ): Promise<[ILocalAudioTrack, ILocalVideoTrack]> {
+  ): Promise<VideoTrackPackage> {
+    let videoTrackPackage: VideoTrackPackage = this._engine.irisClientManager.getLocalVideoTrackPackageBySourceType(
+      videoType
+    )[0];
+    let videoTrack: ILocalVideoTrack = null;
     let irisClient = this._engine.irisClientManager.getIrisClient(connection);
-    let retAudioTrack: ILocalAudioTrack = null;
-    let retVideoTrack: ILocalVideoTrack = this._engine.irisClientManager.getLocalVideoTrack(
-      videoType,
-      connection
-    )?.track as ILocalVideoTrack;
-    //video
-    if (!retVideoTrack) {
-      let videoTrack: ILocalVideoTrack = null;
-      try {
-        videoTrack = this._engine.globalVariables.AgoraRTC.createCustomVideoTrack(
-          {
-            mediaStreamTrack,
-          }
-        );
-      } catch (e) {
-        AgoraConsole.error('createCustomVideoTrack failed');
-        AgoraConsole.error(e);
-      }
-      if (videoTrack) {
-        //video 可能为null
-        await this.processVideoTrack(videoTrack, connection);
-        irisClient.videoTrackPackage.update(videoType, videoTrack);
-      }
-      retVideoTrack = videoTrack;
+    let config = {
+      mediaStreamTrack,
+    };
+
+    //如果已经有track了，就不需要再创建了
+    if (videoTrackPackage?.track) {
+      return videoTrackPackage;
     }
+    //如果没有track，但是有package，就需要创建track
+    try {
+      videoTrack = this._engine.globalVariables.AgoraRTC.createCustomVideoTrack(
+        config
+      );
+    } catch (e) {
+      AgoraConsole.error('createCustomVideoTrack failed');
+      AgoraConsole.error(e);
+    }
+    await this.processVideoTrack(videoTrack, connection);
 
-    //audio 暂时不实现
+    if (!videoTrackPackage) {
+      videoTrackPackage = new VideoTrackPackage(null, videoType, videoTrack);
+      this._engine.irisClientManager.addLocalVideoTrackPackage(
+        videoTrackPackage
+      );
+    } else {
+      videoTrackPackage.update(null, videoTrack, null);
+    }
+    let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
+      {
+        track: videoTrack,
+        trackType: 'ILocalVideoTrack',
+      },
+      this._engine
+    );
+    this._engine.irisClientManager.mainIrisClient.addTrackEventHandler(
+      trackEventHandler
+    );
 
-    return [retAudioTrack, retVideoTrack];
+    return videoTrackPackage;
   }
 
   public async createScreenTrack(
@@ -206,7 +219,6 @@ export class ImplHelper {
     let videoTrack: ICameraVideoTrack = null;
     let videoTrackPackage: VideoTrackPackage;
     let irisClient = this._engine.irisClientManager.getIrisClient(connection);
-    console.log('start create');
     try {
       let videoConfig: CameraVideoTrackInitConfig = this.generateCameraVideoTrackInitConfig(
         connection

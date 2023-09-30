@@ -38,7 +38,7 @@ export class TrackHelper {
 
   public async setEnabled(track: ILocalTrack, enabled: boolean): Promise<void> {
     try {
-      await track.setEnabled(enabled);
+      await track?.setEnabled(enabled);
     } catch (e) {
       AgoraConsole.error(e);
       Promise.resolve(
@@ -49,8 +49,8 @@ export class TrackHelper {
   }
   public async setMuted(track: ILocalTrack, enabled: boolean): Promise<void> {
     try {
-      if (track.enabled) {
-        await track.setMuted(enabled);
+      if (track?.enabled) {
+        await track?.setMuted(enabled);
       }
     } catch (e) {
       AgoraConsole.error(e);
@@ -65,7 +65,7 @@ export class TrackHelper {
     deviceId: string
   ): Promise<void> {
     try {
-      await track.setDevice(deviceId);
+      await track?.setDevice(deviceId);
     } catch (e) {
       AgoraConsole.error(e);
       Promise.resolve(

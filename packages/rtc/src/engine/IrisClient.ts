@@ -95,12 +95,6 @@ export class IrisClient {
   }
 
   createClient(options: NATIVE_RTC.ChannelMediaOptions) {
-    if (this._engine.irisClientManager.mainIrisClient.agoraRTCClient) {
-      let errorMsg =
-        'already has main agoraRTCClient client, please use joinChannelEx';
-      throw errorMsg;
-    }
-
     if (options) {
       this.irisClientVariables.mergeChannelMediaOptions(options);
     }

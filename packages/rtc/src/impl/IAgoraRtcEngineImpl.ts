@@ -487,7 +487,14 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       videoTrackPackage = this._engine.irisClientManager.getLocalVideoTrackPackageBySourceType(
         sourceType
       )[0];
-      videoTrackPackage?.setPreview(true);
+      if (!videoTrackPackage) {
+        videoTrackPackage = new VideoTrackPackage(null, sourceType, null);
+        this._engine.irisClientManager.addLocalVideoTrackPackage(
+          videoTrackPackage
+        );
+      }
+      videoTrackPackage.setPreview(true);
+
       try {
         let track = videoTrackPackage?.track as ILocalVideoTrack;
 
@@ -676,7 +683,12 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let trackPackage = this._engine.irisClientManager.getLocalVideoTrackPackageBySourceType(
         sourceType
       )[0];
-      trackPackage?.update(sourceType, null, canvas.view);
+      if (!trackPackage) {
+        trackPackage = new VideoTrackPackage(canvas.view, sourceType, null);
+        this._engine.irisClientManager.addLocalVideoTrackPackage(trackPackage);
+      }
+      trackPackage.update(sourceType, null, canvas.view);
+
       let track = trackPackage.track as ILocalVideoTrack;
       if (track) {
         if (!track.enabled) {
