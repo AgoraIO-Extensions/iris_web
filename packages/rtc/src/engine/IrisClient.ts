@@ -62,6 +62,10 @@ export class IrisClient {
     this._engine.irisClientManager.irisClientList.push(this);
   }
 
+  setConnection(connection: NATIVE_RTC.RtcConnection) {
+    this.connection = connection;
+  }
+
   setClientConfig(): ClientConfig {
     let irisClientVariables = this.irisClientVariables;
     let config: ClientConfig = {
@@ -348,7 +352,7 @@ export class IrisClient {
     }
     //删除完毕后进行stop
     if (audioTrack.isPlaying) {
-      audioTrack.stop();
+      this._engine.trackHelper.stop(audioTrack);
     }
     if (!audioTrack.muted) {
       await this._engine.trackHelper.setEnabled(audioTrack, false);
@@ -378,7 +382,7 @@ export class IrisClient {
     //如果isPreview是false则停止播放以及设置为不可用
     if (!videoTrackPackage.isPreview) {
       if (videoTrack.isPlaying) {
-        videoTrack.stop();
+        this._engine.trackHelper.stop(videoTrack);
       }
       if (!videoTrack.muted) {
         await this._engine.trackHelper.setEnabled(videoTrack, false);

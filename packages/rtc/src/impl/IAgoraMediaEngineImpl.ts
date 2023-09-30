@@ -274,7 +274,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
 
         //如果没有播放，需要play
         if (!videoTrack.isPlaying) {
-          videoTrack.play(videoPackage.element);
+          this._engine.trackHelper.play(videoTrack, videoPackage.element);
         }
         //如果已经加入频道，需要publish
         if (this._engine.irisClientManager.irisClientList.length > 0) {

@@ -258,7 +258,7 @@ export class IrisClientEventHandler {
                 this._engine.globalVariables.playbackSignalVolume
               );
             }
-            user.audioTrack.play();
+            this._engine.trackHelper.play(user.audioTrack);
 
             let param: IrisTrackEventHandlerParam = {
               channelName: this.agoraRTCClient.channelName,
@@ -300,7 +300,8 @@ export class IrisClientEventHandler {
                 holder.channelId == this.agoraRTCClient.channelName &&
                 holder.uid == user.uid
               ) {
-                user.videoTrack.play(holder.element);
+                this._engine.trackHelper.play(user.videoTrack, holder.element);
+
                 break;
               }
             }

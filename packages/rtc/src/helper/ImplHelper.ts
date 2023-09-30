@@ -244,7 +244,7 @@ export class ImplHelper {
         .finally(() => {});
     }
     if (globalVariables.enabledAudio) {
-      audioTrack.play();
+      this._engine.trackHelper.play(audioTrack);
     }
     if (globalVariables.pausedAudio) {
       await this._engine.trackHelper.setEnabled(audioTrack, false);
@@ -445,7 +445,6 @@ export class ImplHelper {
         return this._engine.returnResult(false);
       }
     }
-
     irisClientObserver.notify(
       NotifyType.START_TRACK,
       [

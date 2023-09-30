@@ -129,7 +129,10 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processInSequence = async () => {
-      this._engine.implHelper.updateChannelMediaOptions(options);
+      await this._engine.implHelper.updateChannelMediaOptions(
+        options,
+        connection
+      );
 
       return this._engine.returnResult();
     };
@@ -152,11 +155,19 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     canvas: NATIVE_RTC.VideoCanvas,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn('setupRemoteVideoEx not supported in this platform!');
-    return this._engine.returnResult(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    let processVideoTrack = async (): Promise<CallIrisApiResult> => {
+      let holder = {
+        element: canvas.view,
+        channelId: connection.channelId,
+        uid: canvas.uid,
+        type: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
+      };
+      this._engine.irisClientManager.addOrUpdateRemoteVideoViewHolder(holder);
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processVideoTrack);
   }
   muteRemoteAudioStreamEx(
     uid: number,

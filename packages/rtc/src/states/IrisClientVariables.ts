@@ -11,9 +11,9 @@ export class IrisClientVariables {
   stopMicrophoneRecording?: boolean = true;
 
   //ChannelMediaOptions
-  publishCameraTrack?: boolean;
+  publishCameraTrack?: boolean = true;
 
-  publishSecondaryCameraTrack?: boolean;
+  publishSecondaryCameraTrack?: boolean = false;
 
   publishThirdCameraTrack?: boolean;
 
@@ -55,13 +55,16 @@ export class IrisClientVariables {
 
   publishMediaPlayerId?: number;
 
-  clientRoleType?: NATIVE_RTC.CLIENT_ROLE_TYPE;
+  clientRoleType?: NATIVE_RTC.CLIENT_ROLE_TYPE =
+    NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER;
 
   audienceLatencyLevel?: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE;
 
-  defaultVideoStreamType?: NATIVE_RTC.VIDEO_STREAM_TYPE;
+  defaultVideoStreamType?: NATIVE_RTC.VIDEO_STREAM_TYPE =
+    NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH;
 
-  channelProfile?: NATIVE_RTC.CHANNEL_PROFILE_TYPE;
+  channelProfile?: NATIVE_RTC.CHANNEL_PROFILE_TYPE =
+    NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION;
 
   audioDelayMs?: number;
 

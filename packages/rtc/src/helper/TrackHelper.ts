@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import { ICameraVideoTrack, ILocalTrack } from 'agora-rtc-sdk-ng';
+import { ICameraVideoTrack, ILocalTrack, ITrack } from 'agora-rtc-sdk-ng';
 import { CallIrisApiResult } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -10,6 +10,30 @@ export class TrackHelper {
   _engine: IrisRtcEngine;
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
+  }
+
+  public play(track: ITrack, element?: string): void {
+    try {
+      track?.play(element);
+    } catch (e) {
+      AgoraConsole.error(e);
+      Promise.resolve(
+        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+      );
+      throw e;
+    }
+  }
+
+  public stop(track: ITrack): void {
+    try {
+      track?.stop();
+    } catch (e) {
+      AgoraConsole.error(e);
+      Promise.resolve(
+        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+      );
+      throw e;
+    }
   }
 
   public async setEnabled(track: ILocalTrack, enabled: boolean): Promise<void> {

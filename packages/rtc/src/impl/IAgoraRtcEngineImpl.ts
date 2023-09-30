@@ -166,34 +166,12 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     uid: number
   ): CallApiReturnType {
     let irisClient = this._engine.irisClientManager.getIrisClient();
-    let mvs = irisClient.irisClientVariables;
-
-    let options: NATIVE_RTC.ChannelMediaOptions = {
-      publishCameraTrack:
-        mvs.publishCameraTrack != null ? mvs.publishCameraTrack : true,
-      publishSecondaryCameraTrack:
-        mvs.publishSecondaryCameraTrack != null
-          ? mvs.publishSecondaryCameraTrack
-          : false,
-      publishMicrophoneTrack:
-        mvs.publishMicrophoneTrack != null ? mvs.publishMicrophoneTrack : true,
-      autoSubscribeAudio:
-        mvs.autoSubscribeAudio != null ? mvs.autoSubscribeAudio : true,
-      autoSubscribeVideo:
-        mvs.autoSubscribeVideo != null ? mvs.autoSubscribeVideo : true,
-      clientRoleType:
-        mvs.clientRoleType != null
-          ? mvs.clientRoleType
-          : NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
-      defaultVideoStreamType:
-        mvs.defaultVideoStreamType != null
-          ? mvs.defaultVideoStreamType
-          : NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH,
-      channelProfile:
-        mvs.channelProfile ||
-        NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
-    };
-    return this.joinChannel2(token, channelId, uid, options);
+    return this.joinChannel2(
+      token,
+      channelId,
+      uid,
+      irisClient.irisClientVariables
+    );
   }
   joinChannel2(
     token: string,
@@ -216,7 +194,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let irisClientVariables = irisClient.irisClientVariables;
       let agoraRTCClient = irisClient.agoraRTCClient;
       try {
-        await agoraRTCClient.join(
+        let _uid = await agoraRTCClient.join(
           globalVariables.rtcEngineContext.appId,
           channelId,
           token ? token : null,
@@ -231,7 +209,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         irisClient.release();
         return this._engine.returnResult(false);
       }
-
       await this._engine.irisClientManager.irisClientObserver.notify(
         NotifyType.START_TRACK,
         [
@@ -244,6 +221,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         channelId: channelId,
         localUid: agoraRTCClient.uid as number,
       };
+      irisClient.setConnection(con);
       this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(con, 0);
 
       return this._engine.returnResult();
@@ -255,7 +233,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
     let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
-      this._engine.implHelper.updateChannelMediaOptions(options);
+      await this._engine.implHelper.updateChannelMediaOptions(options);
 
       return this._engine.returnResult();
     };
@@ -272,7 +250,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   leaveChannel2(options: NATIVE_RTC.LeaveChannelOptions): CallApiReturnType {
     let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
       //离开频道后重置参数
-      this._engine.globalVariables.reset();
+      // this._engine.globalVariables.reset();
       if (this._engine.irisClientManager.irisClientList.length === 0) {
         return this._engine.returnResult();
       }
@@ -474,7 +452,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               remoteUser.videoTrack &&
               remoteUser.videoTrack.isPlaying
             ) {
-              remoteUser.videoTrack.stop();
+              this._engine.trackHelper.stop(remoteUser?.videoTrack);
             }
           }
         }
@@ -518,7 +496,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             await this._engine.trackHelper.setEnabled(track, true);
           }
           if (videoTrackPackage.element) {
-            track.play(videoTrackPackage.element);
+            this._engine.trackHelper.play(track, videoTrackPackage.element);
           }
         }
       } catch (err) {
@@ -564,7 +542,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             await this._engine.trackHelper.setEnabled(track, false);
           }
           if (videoTrackPackage.element) {
-            track.play(videoTrackPackage.element);
+            this._engine.trackHelper.play(
+              videoTrackPackage.track,
+              videoTrackPackage.element
+            );
           }
         }
       } catch (err) {
@@ -703,7 +684,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         }
 
         if (trackPackage.element && trackPackage.isPreview) {
-          track.play(trackPackage.element);
+          this._engine.trackHelper.play(track, trackPackage.element);
         }
       }
       return this._engine.returnResult();
@@ -737,7 +718,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         let remoteUsers = irisClient.agoraRTCClient?.remoteUsers;
         remoteUsers?.map((remoteUser: IAgoraRTCRemoteUser) => {
           if (remoteUser.audioTrack && !remoteUser.audioTrack.isPlaying) {
-            remoteUser.audioTrack.play();
+            this._engine.trackHelper.play(remoteUser.audioTrack);
           }
         });
       });
