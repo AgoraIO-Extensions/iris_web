@@ -15,7 +15,6 @@ import { IrisAudioSourceType } from '../base/BaseType';
 import { BufferSourceAudioTrackPackage } from '../engine/IrisClientManager';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { ImplHelper } from '../impl/ImplHelper';
 
 import { CheckVideoVisibleResult } from '../web_sdk';
 
@@ -114,7 +113,7 @@ export class IrisTrackEventHandler {
       case 'ILocalTrack':
         // 屏幕共享的case
         if (
-          ImplHelper.isScreenCapture(
+          this._engine.implHelper.isScreenCapture(
             this._videoSourceType as NATIVE_RTC.VIDEO_SOURCE_TYPE
           )
         ) {

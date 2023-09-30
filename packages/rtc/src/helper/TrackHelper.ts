@@ -2,13 +2,17 @@ import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { ICameraVideoTrack, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { CallIrisApiResult } from 'iris-web-core';
 
+import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+
 import { AgoraConsole } from '../util/AgoraConsole';
 
 export class TrackHelper {
-  public static async setEnabled(
-    track: ILocalTrack,
-    enabled: boolean
-  ): Promise<void> {
+  _engine: IrisRtcEngine;
+  constructor(engine: IrisRtcEngine) {
+    this._engine = engine;
+  }
+
+  public async setEnabled(track: ILocalTrack, enabled: boolean): Promise<void> {
     try {
       await track.setEnabled(enabled);
     } catch (e) {
@@ -19,10 +23,7 @@ export class TrackHelper {
       throw e;
     }
   }
-  public static async setMuted(
-    track: ILocalTrack,
-    enabled: boolean
-  ): Promise<void> {
+  public async setMuted(track: ILocalTrack, enabled: boolean): Promise<void> {
     try {
       if (track.enabled) {
         await track.setMuted(enabled);
@@ -35,7 +36,7 @@ export class TrackHelper {
       throw e;
     }
   }
-  public static async setDevice(
+  public async setDevice(
     track: ICameraVideoTrack,
     deviceId: string
   ): Promise<void> {

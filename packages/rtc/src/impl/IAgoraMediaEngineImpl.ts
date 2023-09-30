@@ -7,11 +7,8 @@ import { IrisApiType } from '../base/IrisApiType';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
-import { TrackHelper } from '../helper/TrackHelper';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { drawRGBABufferToCanvas } from '../util/BufferConvert';
-
-import { ImplHelper } from './ImplHelper';
 
 export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
   private _engine: IrisRtcEngine;
@@ -255,8 +252,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
 
       let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
       try {
-        trackArray = await ImplHelper.getOrCreateCustomAudioAndVideoTrack(
-          this._engine,
+        trackArray = await this._engine.implHelper.getOrCreateCustomAudioAndVideoTrack(
           audioType,
           videoType,
           stream.getVideoTracks()[0],
@@ -273,7 +269,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
           null
         );
         if (!videoTrack.enabled) {
-          await TrackHelper.setEnabled(videoTrack, true);
+          await this._engine.trackHelper.setEnabled(videoTrack, true);
         }
 
         //如果没有播放，需要play

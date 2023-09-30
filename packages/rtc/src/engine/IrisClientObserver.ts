@@ -3,9 +3,6 @@ import { ILocalTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 
 import { IrisAudioSourceType } from '../base/BaseType';
 
-import { TrackHelper } from '../helper/TrackHelper';
-import { ImplHelper } from '../impl/ImplHelper';
-
 import { AgoraConsole } from '../util';
 
 import { IrisClient } from './IrisClient';
@@ -65,7 +62,7 @@ export class IrisClientObserver {
                 IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary)
           ) {
             console.log(this._engine.irisClientManager.localAudioTrackPackages);
-            TrackHelper.setMuted(
+            this._engine.trackHelper.setMuted(
               trackPackage.track as IMicrophoneAudioTrack,
               false
             );
@@ -183,7 +180,7 @@ export class IrisClientObserver {
       // debugger;
       if (publishTrack) {
         if (!publishTrack.enabled) {
-          await TrackHelper.setEnabled(publishTrack, true);
+          await this._engine.trackHelper.setEnabled(publishTrack, true);
         }
         try {
           AgoraConsole.debug(`publishTrack ${publishTrack}`);
@@ -208,7 +205,7 @@ export class IrisClientObserver {
       if (!trackPackage.irisClient) {
         irisClient = this._engine.irisClientManager.mainIrisClient;
       }
-      if (ImplHelper.isAudio(trackPackage.type)) {
+      if (this._engine.implHelper.isAudio(trackPackage.type)) {
         await irisClient.processAudioTrackClose(
           trackPackage as AudioTrackPackage
         );
@@ -237,11 +234,11 @@ export class IrisClientObserver {
         this._engine.irisClientManager.removeLocalAudioTrackPackage(
           trackPackage
         );
-      } else if (ImplHelper.isVideoCamera(trackPackage.type)) {
+      } else if (this._engine.implHelper.isVideoCamera(trackPackage.type)) {
         await irisClient.processVideoTrackClose(
           trackPackage as VideoTrackPackage
         );
-      } else if (ImplHelper.isScreenCapture(trackPackage.type)) {
+      } else if (this._engine.implHelper.isScreenCapture(trackPackage.type)) {
         await irisClient.processVideoTrackClose(
           trackPackage as VideoTrackPackage
         );
@@ -272,13 +269,19 @@ export class IrisClientObserver {
     for (let scopePackage of scopePackages) {
       switch (type) {
         case NotifyType.START_TRACK:
-          await this.publishTrack(scopePackage, irisClientList);
+          if (scopePackage) {
+            await this.publishTrack(scopePackage, irisClientList);
+          }
           break;
         case NotifyType.STOP_TRACK:
-          await this.stopTrack(scopePackage);
+          if (scopePackage) {
+            await this.stopTrack(scopePackage);
+          }
           break;
         case NotifyType.UPDATE_TRACK:
-          await this.updateTrack(scopePackage);
+          if (scopePackage) {
+            await this.updateTrack(scopePackage);
+          }
           break;
       }
     }

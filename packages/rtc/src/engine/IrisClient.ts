@@ -13,7 +13,6 @@ import { CallIrisApiResult } from 'iris-web-core';
 
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
-import { TrackHelper } from '../helper/TrackHelper';
 
 import { IrisClientVariables } from '../states/IrisClientVariables';
 import { AgoraConsole, AgoraTranslate } from '../util';
@@ -37,8 +36,8 @@ export class IrisClient {
   irisClientVariables: IrisClientVariables;
   clientEventHandler: IrisClientEventHandler;
 
-  localAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
-  localVideoTrack: VideoTrackPackage;
+  audioTrackPackages: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
+  videoTrackPackage: VideoTrackPackage;
   trackEventHandlers: Array<IrisTrackEventHandler> = new Array<
     IrisTrackEventHandler
   >();
@@ -233,27 +232,27 @@ export class IrisClient {
   }
 
   addLocalAudioTrack(trackPackage: AudioTrackPackage) {
-    this.localAudioTracks.push(trackPackage);
+    this.audioTrackPackages.push(trackPackage);
     trackPackage.setIrisClient(this);
   }
 
   removeLocalAudioTrack(trackPackage: AudioTrackPackage) {
-    for (let i = 0; i < this.localAudioTracks.length; i++) {
-      let _trackPackage = this.localAudioTracks[i];
+    for (let i = 0; i < this.audioTrackPackages.length; i++) {
+      let _trackPackage = this.audioTrackPackages[i];
       if (_trackPackage.track == trackPackage.track) {
-        this.localAudioTracks.splice(i, 1);
+        this.audioTrackPackages.splice(i, 1);
         break;
       }
     }
   }
 
   setLocalVideoTrack(trackPackage: VideoTrackPackage) {
-    this.localVideoTrack = trackPackage;
+    this.videoTrackPackage = trackPackage;
     trackPackage.setIrisClient(this);
   }
 
   clearLocalVideoTrack() {
-    this.localVideoTrack = null;
+    this.videoTrackPackage = null;
   }
 
   addTrackEventHandler(trackEventHandler: IrisTrackEventHandler) {
@@ -352,7 +351,7 @@ export class IrisClient {
       audioTrack.stop();
     }
     if (!audioTrack.muted) {
-      await TrackHelper.setEnabled(audioTrack, false);
+      await this._engine.trackHelper.setEnabled(audioTrack, false);
     }
     this.removeTrackEventHandlerByTrack(audioTrack);
   }
@@ -382,7 +381,7 @@ export class IrisClient {
         videoTrack.stop();
       }
       if (!videoTrack.muted) {
-        await TrackHelper.setEnabled(videoTrack, false);
+        await this._engine.trackHelper.setEnabled(videoTrack, false);
       }
     }
     this.removeTrackEventHandlerByTrack(videoTrack);
@@ -408,8 +407,8 @@ export class IrisClient {
       }
     }
 
-    this.localAudioTracks = [];
-    this.localVideoTrack = null;
+    this.audioTrackPackages = [];
+    this.videoTrackPackage = null;
     this.agoraRTCClient = null;
 
     this._engine.irisClientManager.irisClientList = this._engine.irisClientManager.irisClientList.filter(

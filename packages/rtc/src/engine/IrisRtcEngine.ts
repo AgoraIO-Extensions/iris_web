@@ -40,7 +40,10 @@ import { IAudioDeviceManagerDispatch } from '../binding/IAudioDeviceManagerDispa
 
 import { IrisAgoraEventHandler } from '../event_handler/IrisAgoraEventHandler';
 import { RtcEngineDispatchExtensions } from '../extensions/IAgoraRtcEngineExtensions';
+import { ClientHelper } from '../helper/ClientHelper';
 import { IrisElement } from '../helper/DomHelper';
+import { ImplHelper } from '../helper/ImplHelper';
+import { TrackHelper } from '../helper/TrackHelper';
 import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
 import { AgoraActionQueue } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -61,6 +64,10 @@ export class IrisRtcEngine implements ApiInterceptor {
   // private _generateVideoTrackLabelOrHtmlElementCb: GenerateVideoTrackLabelOrHtmlElementCb = null;
 
   public implDispatchesMap: Map<string, any> = new Map();
+  public implHelper: ImplHelper = new ImplHelper(this);
+  public trackHelper: TrackHelper = new TrackHelper(this);
+  public clientHelper: ClientHelper = new ClientHelper(this);
+
   public irisClientManager: IrisClientManager = new IrisClientManager(this);
   public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandlerEx = null;
 

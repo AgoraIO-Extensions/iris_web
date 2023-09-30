@@ -187,8 +187,8 @@ export class IrisClientManager {
         irisClient.connection?.channelId == connection.channelId &&
         irisClient.connection?.localUid == connection.localUid
       ) {
-        if (type == irisClient.localVideoTrack?.type) {
-          return irisClient.localVideoTrack;
+        if (type == irisClient.videoTrackPackage?.type) {
+          return irisClient.videoTrackPackage;
         }
       }
     });
@@ -204,7 +204,7 @@ export class IrisClientManager {
         irisClient.connection?.channelId == connection.channelId &&
         irisClient.connection?.localUid == connection.localUid
       ) {
-        for (let trackPack of irisClient.localAudioTracks) {
+        for (let trackPack of irisClient.audioTrackPackages) {
           if (trackPack.type == type) {
             return trackPack;
           }
@@ -345,7 +345,7 @@ export class IrisClientManager {
         irisClient.agoraRTCClient.uid == uid
       ) {
         return {
-          video_track: irisClient.localVideoTrack.track,
+          video_track: irisClient.videoTrackPackage.track,
           is_new_frame: true, //todo  how to know is a new frame
           process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK,
         };
@@ -380,9 +380,9 @@ export class IrisClientManager {
 
     this._engine.irisClientManager.irisClientList.map((irisClient) => {
       //当存在于本地
-      if (irisClient.localVideoTrack?.type == type) {
+      if (irisClient.videoTrackPackage?.type == type) {
         return {
-          video_track: irisClient.localVideoTrack.track,
+          video_track: irisClient.videoTrackPackage.track,
           is_new_frame: true, //todo  how to know is a new frame
           process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK,
         };
