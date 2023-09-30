@@ -47,21 +47,21 @@ import { AgoraConsole } from '../util/AgoraConsole';
 
 import { IrisClientManager } from './IrisClientManager';
 
-export type GenerateVideoTrackLabelOrHtmlElementCb = (
-  channelName: string,
-  uid: number,
-  type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
-) => string;
+// export type GenerateVideoTrackLabelOrHtmlElementCb = (
+//   channelName: string,
+//   uid: number,
+//   type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
+// ) => string;
 
 export enum IrisIntervalType {
   enableAudioVolumeIndication = 0,
 }
 
 export class IrisRtcEngine implements ApiInterceptor {
-  private _generateVideoTrackLabelOrHtmlElementCb: GenerateVideoTrackLabelOrHtmlElementCb = null;
+  // private _generateVideoTrackLabelOrHtmlElementCb: GenerateVideoTrackLabelOrHtmlElementCb = null;
 
   public implDispatchesMap: Map<string, any> = new Map();
-  public entitiesContainer: IrisClientManager = new IrisClientManager(this);
+  public irisClientManager: IrisClientManager = new IrisClientManager(this);
   public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandlerEx = null;
 
   public globalVariables: IrisGlobalVariables = null;
@@ -155,24 +155,24 @@ export class IrisRtcEngine implements ApiInterceptor {
   }
 
   public getVideoFrame(uid: UID, channel_id: string): VideoParams {
-    return this.entitiesContainer.getVideoFrame(uid, channel_id);
+    return this.irisClientManager.getVideoFrame(uid, channel_id);
   }
 
   public getVideoFrameByConfig(
     config: IrisVideoFrameBufferConfig
   ): VideoParams {
-    return this.entitiesContainer.getVideoFrameByConfig(config);
+    return this.irisClientManager.getVideoFrameByConfig(config);
   }
 
   public execute(task: AsyncTaskType): CallApiReturnType {
     return this.executor.execute(task);
   }
 
-  public setGenerateVideoTrackLabelOrHtmlElementCb(
-    cb: GenerateVideoTrackLabelOrHtmlElementCb
-  ) {
-    this._generateVideoTrackLabelOrHtmlElementCb = cb;
-  }
+  // public setGenerateVideoTrackLabelOrHtmlElementCb(
+  //   cb: GenerateVideoTrackLabelOrHtmlElementCb
+  // ) {
+  //   this._generateVideoTrackLabelOrHtmlElementCb = cb;
+  // }
 
   public returnResult(
     isSuccess: boolean = true,
@@ -187,24 +187,24 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   public async release() {
     this.agoraEventHandler.release();
-    await this.entitiesContainer.release();
+    await this.irisClientManager.release();
   }
 
-  public generateVideoTrackLabelOrHtmlElement(
-    channelName: string,
-    uid: number,
-    type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
-  ): string {
-    if (this._generateVideoTrackLabelOrHtmlElementCb) {
-      return this._generateVideoTrackLabelOrHtmlElementCb(
-        channelName,
-        uid,
-        type
-      );
-    }
+  // public generateVideoTrackLabelOrHtmlElement(
+  //   channelName: string,
+  //   uid: number,
+  //   type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
+  // ): string {
+  //   if (this._generateVideoTrackLabelOrHtmlElementCb) {
+  //     return this._generateVideoTrackLabelOrHtmlElementCb(
+  //       channelName,
+  //       uid,
+  //       type
+  //     );
+  //   }
 
-    return channelName + '_' + uid + '_' + type;
-  }
+  //   return channelName + '_' + uid + '_' + type;
+  // }
 
   public addIrisInterval(type: IrisIntervalType, interval: NodeJS.Timeout) {
     this.irisIntervalList.push({

@@ -207,9 +207,9 @@ export class IrisClientEventHandler {
 
     //过滤掉情况 2，3
 
-    if (this._engine.entitiesContainer.getIrisClient(con2)) return;
+    if (this._engine.irisClientManager.getIrisClient(con2)) return;
 
-    // if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
+    // if (this._engine.irisClientManager.getRemoteUser(con2) != user)
     //     return;
 
     this._irisClient.removetrackEventHandlerByRemoteUser(user, 'all');
@@ -225,14 +225,14 @@ export class IrisClientEventHandler {
     };
 
     //过滤掉情况 2，3
-    if (this._engine.entitiesContainer.getIrisClient(con2)) return;
+    if (this._engine.irisClientManager.getIrisClient(con2)) return;
 
     //这里有bug。 如果A(不订阅)， B（订阅先后加入频道）
     //那么A先捕获到C，并且不订阅
     //B加入频道好后就不能捕获C了。即使订阅也看不到人‘
     //我认为这个情况是可以接受的，用户不要这么干最好s
     //在情况1下。C触发了第二次发布流。但是此时的容器里存放的是前一个触发回调。所以自己不做处理了。
-    // if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
+    // if (this._engine.irisClientManager.getRemoteUser(con2) != user)
     //     return;
 
     let enableAudio: boolean = this._engine.globalVariables.enabledAudio;
@@ -289,12 +289,12 @@ export class IrisClientEventHandler {
           .then(() => {
             console.log('onEventUserPublished subscribe video success');
 
-            this._engine.entitiesContainer.addOrUpdateRemoteVideoViewHolder({
+            this._engine.irisClientManager.addOrUpdateRemoteVideoViewHolder({
               channelId: this.agoraRTCClient.channelName,
               uid: user.uid,
               type: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
             });
-            for (let holder of this._engine.entitiesContainer.getRemoteVideoViewHolders()) {
+            for (let holder of this._engine.irisClientManager.getRemoteVideoViewHolders()) {
               if (
                 holder.element &&
                 holder.channelId == this.agoraRTCClient.channelName &&
@@ -336,10 +336,10 @@ export class IrisClientEventHandler {
     };
 
     //过滤掉情况 2，3
-    if (this._engine.entitiesContainer.getIrisClient(con2)) return;
+    if (this._engine.irisClientManager.getIrisClient(con2)) return;
 
     //在情况1下。C触发了第二次发布流。但是此时的容器里存放的是前一个触发回调的user。所以自己不做处理了。
-    // if (this._engine.entitiesContainer.getRemoteUser(con2) != user)
+    // if (this._engine.irisClientManager.getRemoteUser(con2) != user)
     //     return;
 
     this._irisClient.removetrackEventHandlerByRemoteUser(user, mediaType);

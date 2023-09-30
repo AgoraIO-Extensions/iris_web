@@ -24,7 +24,9 @@ export class TrackHelper {
     enabled: boolean
   ): Promise<void> {
     try {
-      await track.setMuted(enabled);
+      if (track.enabled) {
+        await track.setMuted(enabled);
+      }
     } catch (e) {
       AgoraConsole.error(e);
       Promise.resolve(

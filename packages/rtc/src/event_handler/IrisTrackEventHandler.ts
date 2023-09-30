@@ -130,7 +130,7 @@ export class IrisTrackEventHandler {
 
   onEventSourceStateChange() {
     if (this._trackType === 'IBufferSourceAudioTrack') {
-      let soundId = (this._engine.entitiesContainer.getLocalAudioTrackPackageBySourceType(
+      let soundId = (this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(
         IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
       )[0] as BufferSourceAudioTrackPackage).soundId;
       this._engine.rtcEngineEventHandler.onAudioEffectFinished(soundId);

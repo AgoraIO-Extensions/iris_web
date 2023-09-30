@@ -24,21 +24,12 @@ import { IrisRtcEngine } from './IrisRtcEngine';
 
 export type WalkILocalVideoPackageTrackFun = (track: VideoTrackPackage) => void;
 
-export class ScreenTrack {
-  videoTrack: VideoTrackPackage = new VideoTrackPackage();
-  audioTrack: AudioTrackPackage = new AudioTrackPackage();
-
-  dispose() {
-    this.audioTrack.dispose();
-    this.videoTrack.dispose();
-  }
-}
-
 export class VideoTrackPackage {
   element?: string;
   type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
   track?: ILocalVideoTrack | IRemoteVideoTrack;
   isPreview: boolean = false;
+  irisClient: IrisClient;
 
   constructor(
     element?: string,
@@ -52,6 +43,10 @@ export class VideoTrackPackage {
 
   setPreview(isPreview: boolean) {
     this.isPreview = isPreview;
+  }
+
+  setIrisClient(irisClient: IrisClient) {
+    this.irisClient = irisClient;
   }
 
   update(
@@ -85,12 +80,18 @@ export class VideoTrackPackage {
       }
     } catch {}
     this.track = null;
+    this.irisClient = null;
   }
 }
 
 export class AudioTrackPackage {
   type: IrisAudioSourceType;
-  track: ILocalAudioTrack | IRemoteAudioTrack | IMicrophoneAudioTrack;
+  track:
+    | ILocalAudioTrack
+    | IRemoteAudioTrack
+    | IMicrophoneAudioTrack
+    | ILocalTrack;
+  irisClient: IrisClient;
 
   constructor(
     type?: IrisAudioSourceType,
@@ -98,6 +99,10 @@ export class AudioTrackPackage {
   ) {
     this.type = type;
     this.track = track;
+  }
+
+  setIrisClient(irisClient: IrisClient) {
+    this.irisClient = irisClient;
   }
 
   update(
@@ -122,6 +127,7 @@ export class AudioTrackPackage {
         (this.track as ILocalTrack).close();
       }
     } catch {}
+    this.irisClient = null;
     this.track = null;
   }
 }
@@ -147,6 +153,11 @@ export type MultiAudioTrackPackage =
   | AudioTrackPackage
   | BufferSourceAudioTrackPackage;
 
+export type TrackPackage =
+  | AudioTrackPackage
+  | BufferSourceAudioTrackPackage
+  | VideoTrackPackage;
+
 // 存放一堆东西的
 export class IrisClientManager {
   private _engine: IrisRtcEngine = null;
@@ -162,8 +173,6 @@ export class IrisClientManager {
     VideoViewHolder
   >();
 
-  screenTrack: ScreenTrack = new ScreenTrack();
-
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
     this.irisClientObserver = new IrisClientObserver(engine);
@@ -173,12 +182,12 @@ export class IrisClientManager {
     type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
     connection: NATIVE_RTC.RtcConnection
   ): VideoTrackPackage {
-    this._engine.entitiesContainer.irisClientList.map((irisClient) => {
+    this._engine.irisClientManager.irisClientList.map((irisClient) => {
       if (
         irisClient.connection?.channelId == connection.channelId &&
         irisClient.connection?.localUid == connection.localUid
       ) {
-        if (type == irisClient.localVideoTrack.type) {
+        if (type == irisClient.localVideoTrack?.type) {
           return irisClient.localVideoTrack;
         }
       }
@@ -190,7 +199,7 @@ export class IrisClientManager {
     type: IrisAudioSourceType,
     connection: NATIVE_RTC.RtcConnection
   ): AudioTrackPackage {
-    this._engine.entitiesContainer.irisClientList.map((irisClient) => {
+    this._engine.irisClientManager.irisClientList.map((irisClient) => {
       if (
         irisClient.connection?.channelId == connection.channelId &&
         irisClient.connection?.localUid == connection.localUid
@@ -329,7 +338,7 @@ export class IrisClientManager {
   }
 
   public getVideoFrame(uid: UID, channel_id: string): VideoParams {
-    this._engine.entitiesContainer.irisClientList.map((irisClient) => {
+    this._engine.irisClientManager.irisClientList.map((irisClient) => {
       //当存在于本地
       if (
         irisClient.agoraRTCClient.channelName == channel_id &&
@@ -369,7 +378,7 @@ export class IrisClientManager {
     let channel_id = config.key;
     let type = config.type;
 
-    this._engine.entitiesContainer.irisClientList.map((irisClient) => {
+    this._engine.irisClientManager.irisClientList.map((irisClient) => {
       //当存在于本地
       if (irisClient.localVideoTrack?.type == type) {
         return {

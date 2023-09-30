@@ -9,22 +9,18 @@ import { ImplHelper } from '../impl/ImplHelper';
 import { AgoraConsole } from '../util';
 
 import { IrisClient } from './IrisClient';
-import { AudioTrackPackage, VideoTrackPackage } from './IrisClientManager';
+import {
+  AudioTrackPackage,
+  BufferSourceAudioTrackPackage,
+  TrackPackage,
+  VideoTrackPackage,
+} from './IrisClientManager';
 import { IrisRtcEngine } from './IrisRtcEngine';
 
 export enum NotifyType {
-  'PUBLISH',
-  'UNPUBLISH',
-}
-
-export enum AudioTrackPackageObserverNotifyType {
-  'PUBLISH',
-  'UNPUBLISH',
-}
-
-export enum VideoTrackPackageObserverNotifyType {
-  'PUBLISH',
-  'UNPUBLISH',
+  'START_TRACK',
+  'STOP_TRACK',
+  'UPDATE_TRACK',
 }
 
 export class IrisClientObserver {
@@ -54,10 +50,10 @@ export class IrisClientObserver {
     );
   }
 
-  async publishTrack(trackPackage: any, irisClientList: IrisClient[]) {
+  async publishTrack(trackPackage: TrackPackage, irisClientList: IrisClient[]) {
     let publishTrack: ILocalTrack;
     let globalVariables = this._engine.globalVariables;
-    irisClientList.map(async (irisClient: IrisClient) => {
+    for (let irisClient of irisClientList) {
       let options = irisClient.irisClientVariables;
       if (globalVariables.enabledAudio && globalVariables.enabledLocalAudio) {
         if (options.publishMicrophoneTrack) {
@@ -68,12 +64,12 @@ export class IrisClientObserver {
               trackPackage.type ===
                 IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary)
           ) {
-            console.log(this._engine.entitiesContainer.localAudioTrackPackages);
+            console.log(this._engine.irisClientManager.localAudioTrackPackages);
             TrackHelper.setMuted(
               trackPackage.track as IMicrophoneAudioTrack,
               false
             );
-            publishTrack = trackPackage.track;
+            publishTrack = trackPackage.track as ILocalTrack;
             irisClient.addLocalAudioTrack(trackPackage);
           }
         }
@@ -83,7 +79,7 @@ export class IrisClientObserver {
             trackPackage.type ===
               IrisAudioSourceType.kAudioSourceTypeScreenCapture
           ) {
-            publishTrack = trackPackage.track;
+            publishTrack = trackPackage.track as ILocalTrack;
             irisClient.addLocalAudioTrack(trackPackage);
           }
         }
@@ -96,7 +92,7 @@ export class IrisClientObserver {
               trackPackage.type ===
                 NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
             ) {
-              publishTrack = trackPackage.track;
+              publishTrack = trackPackage.track as ILocalTrack;
               irisClient.setLocalVideoTrack(trackPackage);
             }
           }
@@ -106,7 +102,7 @@ export class IrisClientObserver {
               trackPackage.type ===
                 NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY
             ) {
-              publishTrack = trackPackage.track;
+              publishTrack = trackPackage.track as ILocalTrack;
               irisClient.setLocalVideoTrack(trackPackage);
             }
           }
@@ -116,7 +112,7 @@ export class IrisClientObserver {
               trackPackage.type ===
                 NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD
             ) {
-              publishTrack = trackPackage.track;
+              publishTrack = trackPackage.track as ILocalTrack;
               irisClient.setLocalVideoTrack(trackPackage);
             }
           }
@@ -126,7 +122,7 @@ export class IrisClientObserver {
               trackPackage.type ===
                 NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH
             ) {
-              publishTrack = trackPackage.track;
+              publishTrack = trackPackage.track as ILocalTrack;
               irisClient.setLocalVideoTrack(trackPackage);
             }
           }
@@ -137,7 +133,7 @@ export class IrisClientObserver {
             trackPackage.type ===
               NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
           ) {
-            publishTrack = trackPackage.track;
+            publishTrack = trackPackage.track as ILocalTrack;
             irisClient.setLocalVideoTrack(trackPackage);
           }
         }
@@ -147,7 +143,7 @@ export class IrisClientObserver {
             trackPackage.type ===
               NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY
           ) {
-            publishTrack = trackPackage.track;
+            publishTrack = trackPackage.track as ILocalTrack;
             irisClient.setLocalVideoTrack(trackPackage);
           }
         }
@@ -157,7 +153,7 @@ export class IrisClientObserver {
             trackPackage.type ===
               NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD
           ) {
-            publishTrack = trackPackage.track;
+            publishTrack = trackPackage.track as ILocalTrack;
             irisClient.setLocalVideoTrack(trackPackage);
           }
         }
@@ -167,7 +163,7 @@ export class IrisClientObserver {
             trackPackage.type ===
               NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH
           ) {
-            publishTrack = trackPackage.track;
+            publishTrack = trackPackage.track as ILocalTrack;
             irisClient.setLocalVideoTrack(trackPackage);
           }
         }
@@ -187,7 +183,7 @@ export class IrisClientObserver {
       // debugger;
       if (publishTrack) {
         if (!publishTrack.enabled) {
-          await publishTrack.setEnabled(true);
+          await TrackHelper.setEnabled(publishTrack, true);
         }
         try {
           AgoraConsole.debug(`publishTrack ${publishTrack}`);
@@ -195,50 +191,97 @@ export class IrisClientObserver {
         } catch (reason) {
           AgoraConsole.error(reason);
         }
-        // console.log(this._engine.entitiesContainer.localVideoTrackPackages);
+        console.log(this._engine.irisClientManager);
       }
-    });
+    }
   }
 
-  async unpublishTrack(trackPackage: any, irisClientList: IrisClient[]) {
-    irisClientList.map(async (irisClient: IrisClient) => {
-      try {
-        if (irisClient.agoraRTCClient?.channelName) {
-          AgoraConsole.debug(`unpublishTrack ${trackPackage.track}`);
-          if (ImplHelper.isAudio(trackPackage.type)) {
-            await irisClient.processAudioTrackClose(trackPackage);
-          } else if (
-            IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio ===
-            trackPackage.type
-          ) {
-            await irisClient.processBufferSourceAudioTrackClose(trackPackage);
-          } else if (ImplHelper.isVideoCamera(trackPackage.type)) {
-            await irisClient.processVideoTrackClose(trackPackage);
-          } else {
-            // this._engine.entitiesContainer.removeLocalVideoTrackPackage(
-            //   trackPackage
-            // );
-            // irisClient.clearLocalVideoTrack();
-          }
+  async stopTrack(trackPackage: TrackPackage) {
+    try {
+      if (!trackPackage.track) {
+        return;
+      }
+
+      AgoraConsole.debug(`stopTrack ${trackPackage.track}`);
+      //还没有分配给对应的irisClient时,track会放到mainClient,所以用mainClient处理
+      let irisClient = trackPackage.irisClient;
+      if (!trackPackage.irisClient) {
+        irisClient = this._engine.irisClientManager.mainIrisClient;
+      }
+      if (ImplHelper.isAudio(trackPackage.type)) {
+        await irisClient.processAudioTrackClose(
+          trackPackage as AudioTrackPackage
+        );
+        if (
+          trackPackage.type ===
+          IrisAudioSourceType.kAudioSourceTypeScreenCapture
+        ) {
+          this._engine.rtcEngineEventHandler.onLocalAudioStateChanged(
+            NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
+              .LOCAL_AUDIO_STREAM_STATE_STOPPED,
+            0
+          );
+          this._engine.irisClientManager.removeLocalAudioTrackPackage(
+            trackPackage
+          );
+          irisClient.removeLocalAudioTrack(trackPackage);
         }
-      } catch (reason) {
-        AgoraConsole.error(reason);
-        throw reason;
+      } else if (
+        IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio ===
+        trackPackage.type
+      ) {
+        await irisClient.processBufferSourceAudioTrackClose(
+          trackPackage as BufferSourceAudioTrackPackage
+        );
+        irisClient.removeLocalAudioTrack(trackPackage);
+        this._engine.irisClientManager.removeLocalAudioTrackPackage(
+          trackPackage
+        );
+      } else if (ImplHelper.isVideoCamera(trackPackage.type)) {
+        await irisClient.processVideoTrackClose(
+          trackPackage as VideoTrackPackage
+        );
+      } else if (ImplHelper.isScreenCapture(trackPackage.type)) {
+        await irisClient.processVideoTrackClose(
+          trackPackage as VideoTrackPackage
+        );
+        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged(
+          trackPackage.type as NATIVE_RTC.VIDEO_SOURCE_TYPE,
+          NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_STOPPED,
+          0
+        );
+        this._engine.irisClientManager.removeLocalVideoTrackPackage(
+          trackPackage as VideoTrackPackage
+        );
+        irisClient.clearLocalVideoTrack();
+      } else {
       }
-    });
+    } catch (reason) {
+      AgoraConsole.error(reason);
+      throw reason;
+    }
   }
 
-  notify(type: NotifyType, scopePackage: any[], irisClientList: IrisClient[]) {
-    scopePackage.forEach(async (item) => {
+  async updateTrack(trackPackage: TrackPackage) {}
+
+  async notify(
+    type: NotifyType,
+    scopePackages: TrackPackage[],
+    irisClientList?: IrisClient[]
+  ) {
+    for (let scopePackage of scopePackages) {
       switch (type) {
-        case NotifyType.PUBLISH:
-          await this.publishTrack(item, irisClientList);
+        case NotifyType.START_TRACK:
+          await this.publishTrack(scopePackage, irisClientList);
           break;
-        case NotifyType.UNPUBLISH:
-          await this.unpublishTrack(item, irisClientList);
+        case NotifyType.STOP_TRACK:
+          await this.stopTrack(scopePackage);
+          break;
+        case NotifyType.UPDATE_TRACK:
+          await this.updateTrack(scopePackage);
           break;
       }
-    });
+    }
   }
 
   release() {

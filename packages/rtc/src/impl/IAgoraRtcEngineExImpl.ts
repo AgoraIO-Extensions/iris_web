@@ -5,6 +5,7 @@ import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 import { IrisAudioSourceType } from '../base/BaseType';
 import { IrisClient, IrisClientType } from '../engine/IrisClient';
 import { AudioTrackPackage } from '../engine/IrisClientManager';
+import { NotifyType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
@@ -12,8 +13,6 @@ import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 import { ClientHelper } from '../helper/ClientHelper';
 
 import { AgoraConsole } from '../util/AgoraConsole';
-
-import { ImplHelper } from './ImplHelper';
 
 export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   private _engine: IrisRtcEngine;
@@ -40,7 +39,6 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
     let processJoinChannel = async (): Promise<CallIrisApiResult> => {
-      //设置全局已经建立过连接
       let irisClient = new IrisClient(
         this._engine,
         IrisClientType.SUB,
@@ -67,118 +65,36 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         return this._engine.returnResult(false);
       }
 
-      let audioSource = IrisAudioSourceType.kAudioSourceTypeUnknown;
-      let videoSource = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_UNKNOWN;
-
-      if (options.publishMicrophoneTrack) {
-        audioSource = IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary;
-      } else if (options.publishScreenCaptureAudio) {
-        audioSource = IrisAudioSourceType.kAudioSourceTypeScreenCapture;
-      }
-      if (options.publishCameraTrack) {
-        videoSource = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY;
-      } else if (options.publishSecondaryCameraTrack) {
-        videoSource =
-          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY;
-      } else if (
-        options.publishScreenTrack ||
-        options.publishScreenCaptureVideo
-      ) {
-        videoSource = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
-      }
-
-      //检查是否已经创建了屏幕共享的video track,如果没有则跳出
-      if (
-        options.publishScreenTrack ||
-        options.publishScreenCaptureVideo ||
-        options.publishSecondaryScreenTrack ||
-        options.publishThirdScreenTrack ||
-        options.publishFourthScreenTrack
-      ) {
-        if (
-          !ImplHelper.getAudioAndVideoTrack(
-            this._engine,
-            audioSource,
-            videoSource,
-            connection
-          )[1]
-        ) {
-          AgoraConsole.log(
-            'screen share track not found, ignore joinChannel call'
-          );
-          return this._engine.returnResult();
-        }
-      }
-      let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
-      // try {
-      //   trackArray = await ImplHelper.getOrCreateAudioAndVideoTrackAsync(
-      //     this._engine,
-      //     audioSource,
-      //     videoSource,
-      //     connection
-      //   );
-      // } catch (e) {
-      //   AgoraConsole.error('getOrCreateAudioAndVideoTrackAsync failed');
-      //   return this._engine.returnResult(false);
-      // }
-
-      // 推送audioTrack
-      let audioTrack: ILocalAudioTrack = trackArray[0] as ILocalAudioTrack;
-      if (audioTrack) {
-        try {
-          await agoraRTCClient.publish(audioTrack);
-        } catch (reason) {
-          AgoraConsole.error(reason);
-        }
-        irisClient.addLocalAudioTrack(
-          new AudioTrackPackage(audioSource, audioTrack)
-        );
-        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
-          {
-            channelName: connection.channelId,
-            client: agoraRTCClient,
-            track: audioTrack,
-            trackType: 'ILocalTrack',
-          },
-          this._engine
-        );
-        irisClient.addTrackEventHandler(trackEventHandler);
-      }
-
-      //推送videoTrack
-      let videoTrack: ILocalVideoTrack = trackArray[1] as ILocalVideoTrack;
-      if (videoTrack) {
-        try {
-          await agoraRTCClient.publish(videoTrack);
-        } catch (reason) {
-          AgoraConsole.error(reason);
-        }
-        irisClient.localVideoTrack.update(videoSource, videoTrack);
-        let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
-          {
-            channelName: connection.channelId,
-            client: agoraRTCClient,
-            track: videoTrack,
-            trackType: 'ILocalTrack',
-          },
-          this._engine
-        );
-        irisClient.addTrackEventHandler(trackEventHandler);
-      }
+      await this._engine.irisClientManager.irisClientObserver.notify(
+        NotifyType.START_TRACK,
+        [
+          ...this._engine.irisClientManager.localAudioTrackPackages,
+          ...this._engine.irisClientManager.localVideoTrackPackages,
+        ],
+        [irisClient]
+      );
 
       this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(connection, 0);
-
       return this._engine.returnResult();
     };
     return this._engine.execute(processJoinChannel);
   }
   leaveChannelEx(connection: NATIVE_RTC.RtcConnection): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      if (this._engine.entitiesContainer.irisClientList.length === 0) {
+      if (this._engine.irisClientManager.irisClientList.length === 0) {
         return this._engine.returnResult();
       }
 
-      let irisClient = this._engine.entitiesContainer.getIrisClient(connection);
+      let irisClient = this._engine.irisClientManager.getIrisClient(connection);
+
+      await this._engine.irisClientManager.irisClientObserver.notify(
+        NotifyType.STOP_TRACK,
+        [
+          ...this._engine.irisClientManager.localAudioTrackPackages,
+          ...this._engine.irisClientManager.localVideoTrackPackages,
+        ]
+      );
+
       let agoraRTCClient = irisClient?.agoraRTCClient;
       if (agoraRTCClient) {
         try {
@@ -195,7 +111,9 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           connection,
           new NATIVE_RTC.RtcStats()
         );
+        console.log(this._engine.irisClientManager.irisClientList, 888);
         irisClient.release();
+        console.log(this._engine.irisClientManager.irisClientList.length, 999);
       }
 
       return this._engine.returnResult();
@@ -217,8 +135,8 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processInSequence = async () => {
-      let entitiesContainer = this._engine.entitiesContainer;
-      let irisClient = entitiesContainer.getIrisClient(connection);
+      let irisClientManager = this._engine.irisClientManager;
+      let irisClient = irisClientManager.getIrisClient(connection);
       irisClient.irisClientVariables.mergeChannelMediaOptions(options);
 
       let agoraRTCClient = irisClient?.agoraRTCClient;
@@ -490,7 +408,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
         if (type == 'audio') {
           //unpublish audio
-          let audioPackage = entitiesContainer.getLocalAudioTrack(
+          let audioPackage = irisClientManager.getLocalAudioTrack(
             audioOrVideoType as IrisAudioSourceType,
             connection
           );
@@ -501,7 +419,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
                 await agoraRTCClient.unpublish(track);
                 AgoraConsole.log(optionName + '(false) changed success');
                 irisClient.removeTrackEventHandlerByTrack(track);
-                irisClient.removeLocalAudioTrack(track);
+                irisClient.removeLocalAudioTrack(audioPackage);
               } catch (reason) {
                 AgoraConsole.error(optionName + '(false) changed failed');
               }
@@ -509,7 +427,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           }
         } else {
           //unpublish video
-          let videoPackage = entitiesContainer.getLocalVideoTrack(
+          let videoPackage = irisClientManager.getLocalVideoTrack(
             audioOrVideoType as NATIVE_RTC.VIDEO_SOURCE_TYPE,
             connection
           );
@@ -535,7 +453,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         let type = publishArgs[2];
         if (type == 'audio') {
           //publish audio
-          let audioPackage = entitiesContainer.getLocalAudioTrack(
+          let audioPackage = irisClientManager.getLocalAudioTrack(
             audioOrVideoType as IrisAudioSourceType,
             connection
           );
@@ -569,7 +487,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           }
         } else {
           //publish video
-          let videoPackage = entitiesContainer.getLocalVideoTrack(
+          let videoPackage = irisClientManager.getLocalVideoTrack(
             audioOrVideoType as NATIVE_RTC.VIDEO_SOURCE_TYPE,
             connection
           );

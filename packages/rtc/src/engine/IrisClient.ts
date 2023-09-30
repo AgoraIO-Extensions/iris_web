@@ -13,6 +13,7 @@ import { CallIrisApiResult } from 'iris-web-core';
 
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
+import { TrackHelper } from '../helper/TrackHelper';
 
 import { IrisClientVariables } from '../states/IrisClientVariables';
 import { AgoraConsole, AgoraTranslate } from '../util';
@@ -37,7 +38,7 @@ export class IrisClient {
   clientEventHandler: IrisClientEventHandler;
 
   localAudioTracks: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
-  localVideoTrack: VideoTrackPackage = new VideoTrackPackage();
+  localVideoTrack: VideoTrackPackage;
   trackEventHandlers: Array<IrisTrackEventHandler> = new Array<
     IrisTrackEventHandler
   >();
@@ -54,12 +55,12 @@ export class IrisClient {
     this._engine = engine;
     this.irisClientVariables = new IrisClientVariables();
     if (this.clientType === IrisClientType.MAIN) {
-      this._engine.entitiesContainer.setMainIrisClient(this);
+      this._engine.irisClientManager.setMainIrisClient(this);
     } else {
       this.connection = connection;
     }
 
-    this._engine.entitiesContainer.irisClientList.push(this);
+    this._engine.irisClientManager.irisClientList.push(this);
   }
 
   setClientConfig(): ClientConfig {
@@ -91,7 +92,7 @@ export class IrisClient {
   }
 
   createClient(options: NATIVE_RTC.ChannelMediaOptions) {
-    if (this._engine.entitiesContainer.mainIrisClient.agoraRTCClient) {
+    if (this._engine.irisClientManager.mainIrisClient.agoraRTCClient) {
       let errorMsg =
         'already has main agoraRTCClient client, please use joinChannelEx';
       throw errorMsg;
@@ -233,12 +234,13 @@ export class IrisClient {
 
   addLocalAudioTrack(trackPackage: AudioTrackPackage) {
     this.localAudioTracks.push(trackPackage);
+    trackPackage.setIrisClient(this);
   }
 
-  removeLocalAudioTrack(track: ILocalAudioTrack) {
+  removeLocalAudioTrack(trackPackage: AudioTrackPackage) {
     for (let i = 0; i < this.localAudioTracks.length; i++) {
-      let trackPackage = this.localAudioTracks[i];
-      if (trackPackage.track == track) {
+      let _trackPackage = this.localAudioTracks[i];
+      if (_trackPackage.track == trackPackage.track) {
         this.localAudioTracks.splice(i, 1);
         break;
       }
@@ -247,6 +249,7 @@ export class IrisClient {
 
   setLocalVideoTrack(trackPackage: VideoTrackPackage) {
     this.localVideoTrack = trackPackage;
+    trackPackage.setIrisClient(this);
   }
 
   clearLocalVideoTrack() {
@@ -323,10 +326,6 @@ export class IrisClient {
     track.stopProcessAudioBuffer();
     track.close();
 
-    this._engine.entitiesContainer.removeLocalAudioTrackPackage(
-      bufferSourceAudioTrackPackage
-    );
-    this.removeLocalAudioTrack(track);
     this.removeTrackEventHandlerByTrack(track);
   }
 
@@ -353,16 +352,14 @@ export class IrisClient {
       audioTrack.stop();
     }
     if (!audioTrack.muted) {
-      audioTrack.setEnabled(false);
+      await TrackHelper.setEnabled(audioTrack, false);
     }
     this.removeTrackEventHandlerByTrack(audioTrack);
-    // this.removeLocalAudioTrack(audioTrack);
   }
 
   // 当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 记住是所有哦
   async processVideoTrackClose(videoTrackPackage: VideoTrackPackage) {
     let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
-
     if (
       this.agoraRTCClient &&
       this.agoraRTCClient.localTracks.indexOf(videoTrack) != -1
@@ -385,11 +382,10 @@ export class IrisClient {
         videoTrack.stop();
       }
       if (!videoTrack.muted) {
-        videoTrack.setEnabled(false);
+        await TrackHelper.setEnabled(videoTrack, false);
       }
     }
     this.removeTrackEventHandlerByTrack(videoTrack);
-    // this.clearLocalVideoTrack();
   }
 
   async release() {
@@ -415,5 +411,9 @@ export class IrisClient {
     this.localAudioTracks = [];
     this.localVideoTrack = null;
     this.agoraRTCClient = null;
+
+    this._engine.irisClientManager.irisClientList = this._engine.irisClientManager.irisClientList.filter(
+      (item) => item != this
+    );
   }
 }

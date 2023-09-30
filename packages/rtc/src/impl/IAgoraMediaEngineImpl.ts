@@ -268,7 +268,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
       }
       let videoTrack: ILocalVideoTrack = trackArray[1] as ILocalVideoTrack;
       if (videoTrack) {
-        let videoPackage = this._engine.entitiesContainer.getLocalVideoTrack(
+        let videoPackage = this._engine.irisClientManager.getLocalVideoTrack(
           NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM,
           null
         );
@@ -281,8 +281,8 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
           videoTrack.play(videoPackage.element);
         }
         //如果已经加入频道，需要publish
-        if (this._engine.entitiesContainer.irisClientList.length > 0) {
-          let agoraRTCClient = this._engine.entitiesContainer.getIrisClient()
+        if (this._engine.irisClientManager.irisClientList.length > 0) {
+          let agoraRTCClient = this._engine.irisClientManager.getIrisClient()
             ?.agoraRTCClient;
           if (agoraRTCClient) {
             try {
@@ -299,7 +299,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
               },
               this._engine
             );
-            this._engine.entitiesContainer.mainIrisClient.addTrackEventHandler(
+            this._engine.irisClientManager.mainIrisClient.addTrackEventHandler(
               trackEventHandler
             );
           }
