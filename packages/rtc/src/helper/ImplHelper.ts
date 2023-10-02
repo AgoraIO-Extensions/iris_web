@@ -7,9 +7,7 @@ import {
   ILocalAudioTrack,
   ILocalVideoTrack,
   IMicrophoneAudioTrack,
-  MicrophoneAudioTrackInitConfig,
   ScreenVideoTrackInitConfig,
-  VideoPlayerConfig,
 } from 'agora-rtc-sdk-ng';
 
 import { IrisAudioSourceType } from '../base/BaseType';
@@ -35,11 +33,9 @@ export class ImplHelper {
 
   public async createBufferSourceAudioTrack(
     soundId: number,
-    bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig,
-    connection?: NATIVE_RTC.RtcConnection
+    bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig
   ): Promise<BufferSourceAudioTrackPackage> {
     let bufferSourceAudioTrack: IBufferSourceAudioTrack = null;
-    let irisClient = this._engine.irisClientManager.getIrisClient(connection);
 
     try {
       bufferSourceAudioTrack = await this._engine.globalVariables.AgoraRTC.createBufferSourceAudioTrack(
@@ -66,21 +62,19 @@ export class ImplHelper {
       },
       this._engine
     );
-    irisClient.addTrackEventHandler(trackEventHandler);
+    this._engine.irisClientManager.addTrackEventHandler(trackEventHandler);
 
     return bufferSourceAudioTrackPackage;
   }
 
   public async createCustomVideoTrack(
     videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM,
-    mediaStreamTrack: MediaStreamTrack,
-    connection: NATIVE_RTC.RtcConnection
+    mediaStreamTrack: MediaStreamTrack
   ): Promise<VideoTrackPackage> {
     let videoTrackPackage: VideoTrackPackage = this._engine.irisClientManager.getLocalVideoTrackPackageBySourceType(
       videoType
     )[0];
     let videoTrack: ILocalVideoTrack = null;
-    let irisClient = this._engine.irisClientManager.getIrisClient(connection);
     let config = {
       mediaStreamTrack,
     };
@@ -98,7 +92,7 @@ export class ImplHelper {
       AgoraConsole.error('createCustomVideoTrack failed');
       AgoraConsole.error(e);
     }
-    await this.processVideoTrack(videoTrack, connection);
+    await this.processVideoTrack(videoTrack);
 
     if (!videoTrackPackage) {
       videoTrackPackage = new VideoTrackPackage(null, videoType, videoTrack);
@@ -115,19 +109,15 @@ export class ImplHelper {
       },
       this._engine
     );
-    this._engine.irisClientManager.mainIrisClient.addTrackEventHandler(
-      trackEventHandler
-    );
+    this._engine.irisClientManager.addTrackEventHandler(trackEventHandler);
 
     return videoTrackPackage;
   }
 
   public async createScreenTrack(
     captureParams: NATIVE_RTC.ScreenCaptureParameters2,
-    videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
-    connection?: NATIVE_RTC.RtcConnection
+    videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE
   ) {
-    let irisClient = this._engine.irisClientManager.getIrisClient(connection);
     let videoTrackPackage: VideoTrackPackage = this._engine.irisClientManager.getLocalVideoTrackPackageBySourceType(
       videoType
     )[0];
@@ -141,9 +131,7 @@ export class ImplHelper {
     let videoTrack: ILocalVideoTrack = null;
     let screenTrack = [null, null];
     try {
-      let conf: ScreenVideoTrackInitConfig = this.generateScreenVideoTrackInitConfig(
-        connection
-      );
+      let conf: ScreenVideoTrackInitConfig = this.generateScreenVideoTrackInitConfig();
       let result = await this._engine.globalVariables.AgoraRTC.createScreenVideoTrack(
         conf,
         captureParams.captureAudio ? 'disable' : 'auto'
@@ -192,7 +180,9 @@ export class ImplHelper {
             },
             this._engine
           );
-          irisClient.addTrackEventHandler(trackEventHandler);
+          this._engine.irisClientManager.addTrackEventHandler(
+            trackEventHandler
+          );
         }
       }
     } catch (e) {
@@ -200,20 +190,11 @@ export class ImplHelper {
     }
   }
 
-  public async createAudioTrack(
-    audioType: IrisAudioSourceType,
-    connection?: NATIVE_RTC.RtcConnection
-  ) {
+  public async createAudioTrack(audioType: IrisAudioSourceType) {
     let audioTrackPackage: AudioTrackPackage;
     let audioTrack: IMicrophoneAudioTrack = null;
-    let irisClient = this._engine.irisClientManager.getIrisClient(connection);
     try {
-      let audioConfig: MicrophoneAudioTrackInitConfig = this.generateMicrophoneAudioTrackInitConfig(
-        connection
-      );
-      audioTrack = await this._engine.globalVariables.AgoraRTC.createMicrophoneAudioTrack(
-        audioConfig
-      );
+      audioTrack = await this._engine.globalVariables.AgoraRTC.createMicrophoneAudioTrack();
       //受全局enabledAudio控制
       await this._engine.trackHelper.setEnabled(audioTrack, false);
     } catch (e) {
@@ -227,20 +208,11 @@ export class ImplHelper {
     return audioTrackPackage;
   }
 
-  public async createVideoTrack(
-    videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
-    connection?: NATIVE_RTC.RtcConnection
-  ) {
+  public async createVideoTrack(videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE) {
     let videoTrack: ICameraVideoTrack = null;
     let videoTrackPackage: VideoTrackPackage;
-    let irisClient = this._engine.irisClientManager.getIrisClient(connection);
     try {
-      let videoConfig: CameraVideoTrackInitConfig = this.generateCameraVideoTrackInitConfig(
-        connection
-      );
-      videoTrack = await this._engine.globalVariables.AgoraRTC.createCameraVideoTrack(
-        videoConfig
-      );
+      videoTrack = await this._engine.globalVariables.AgoraRTC.createCameraVideoTrack();
       //受全局enabledVideo控制
       await this._engine.trackHelper.setEnabled(videoTrack, false);
     } catch (e) {
@@ -249,7 +221,7 @@ export class ImplHelper {
     }
 
     videoTrackPackage = new VideoTrackPackage(null, videoType, videoTrack);
-    await this.processVideoTrack(videoTrack, connection);
+    await this.processVideoTrack(videoTrack);
     this._engine.irisClientManager.addLocalVideoTrackPackage(videoTrackPackage);
     return videoTrackPackage;
   }
@@ -306,24 +278,9 @@ export class ImplHelper {
   }
 
   public async processVideoTrack(
-    videoTrack: ICameraVideoTrack | ILocalVideoTrack,
-    connection: NATIVE_RTC.RtcConnection
+    videoTrack: ICameraVideoTrack | ILocalVideoTrack
   ) {
     let globalVariables = this._engine.globalVariables;
-    if (globalVariables.enabledVideo) {
-      let config: VideoPlayerConfig = {};
-
-      let irisClient = this._engine.irisClientManager.getIrisClient(connection);
-      let videoEncoderConfiguration: NATIVE_RTC.VideoEncoderConfiguration = null;
-      videoEncoderConfiguration =
-        irisClient.irisClientVariables.videoEncoderConfiguration;
-
-      if (videoEncoderConfiguration) {
-        config.mirror = AgoraTranslate.NATIVE_RTCVIDEO_MIRROR_MODE_TYPE2boolean(
-          videoEncoderConfiguration.mirrorMode
-        );
-      }
-    }
 
     if (globalVariables.pausedVideo) {
       await this._engine.trackHelper.setEnabled(videoTrack, false);
@@ -333,41 +290,8 @@ export class ImplHelper {
     }
   }
 
-  public generateMicrophoneAudioTrackInitConfig(
-    connection: NATIVE_RTC.RtcConnection
-  ): MicrophoneAudioTrackInitConfig {
-    let audioConfig: MicrophoneAudioTrackInitConfig = {};
-    let irisClient = this._engine.irisClientManager.getIrisClient(connection);
-
-    if (irisClient?.irisClientVariables.recordingDeviceId) {
-      audioConfig.microphoneId =
-        irisClient.irisClientVariables.recordingDeviceId;
-    }
-    return audioConfig;
-  }
-
-  public generateCameraVideoTrackInitConfig(
-    connection: NATIVE_RTC.RtcConnection
-  ): CameraVideoTrackInitConfig {
+  public generateScreenVideoTrackInitConfig(): ScreenVideoTrackInitConfig {
     let videoConfig: CameraVideoTrackInitConfig = {};
-    let irisClient = this._engine.irisClientManager.getIrisClient(connection);
-    if (irisClient?.irisClientVariables.videoDeviceId) {
-      videoConfig.cameraId = irisClient.irisClientVariables.videoDeviceId;
-    }
-    if (irisClient?.irisClientVariables.videoEncoderConfiguration) {
-      videoConfig.encoderConfig = AgoraTranslate.NATIVE_RTCVideoEncoderConfiguration2VideoEncoderConfiguration(
-        irisClient?.irisClientVariables.videoEncoderConfiguration
-      );
-    }
-
-    return videoConfig;
-  }
-
-  public generateScreenVideoTrackInitConfig(
-    connection: NATIVE_RTC.RtcConnection
-  ): ScreenVideoTrackInitConfig {
-    let videoConfig: CameraVideoTrackInitConfig = {};
-    let irisClient = this._engine.irisClientManager.getIrisClient(connection);
     let conf: ScreenVideoTrackInitConfig = {};
     let globalVariables: IrisGlobalVariables = this._engine.globalVariables;
     if (
@@ -383,12 +307,6 @@ export class ImplHelper {
     if (globalVariables.screenCaptureParameters2 != null) {
       conf.encoderConfig = AgoraTranslate.NATIVE_RTCScreenCaptureParameters2VideoEncoderConfiguration(
         globalVariables.screenCaptureParameters2
-      );
-    } else if (
-      irisClient?.irisClientVariables.videoEncoderConfiguration != null
-    ) {
-      conf.encoderConfig = AgoraTranslate.NATIVE_RTCVideoEncoderConfiguration2VideoEncoderConfiguration(
-        irisClient?.irisClientVariables.videoEncoderConfiguration
       );
     }
     return conf;

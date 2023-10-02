@@ -3,25 +3,14 @@ import {
   ClientConfig,
   EncryptionMode,
   IAgoraRTCClient,
-  IAgoraRTCRemoteUser,
-  ILocalAudioTrack,
-  ILocalVideoTrack,
-  ITrack,
 } from 'agora-rtc-sdk-ng';
 
-import { CallIrisApiResult } from 'iris-web-core';
-
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
-import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 
 import { IrisClientVariables } from '../states/IrisClientVariables';
 import { AgoraConsole, AgoraTranslate } from '../util';
 
-import {
-  AudioTrackPackage,
-  BufferSourceAudioTrackPackage,
-  VideoTrackPackage,
-} from './IrisClientManager';
+import { AudioTrackPackage, VideoTrackPackage } from './IrisClientManager';
 import { IrisRtcEngine } from './IrisRtcEngine';
 
 export enum IrisClientType {
@@ -38,11 +27,7 @@ export class IrisClient {
 
   audioTrackPackages: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
   videoTrackPackage: VideoTrackPackage;
-  trackEventHandlers: Array<IrisTrackEventHandler> = new Array<
-    IrisTrackEventHandler
-  >();
 
-  //connection
   connection: NATIVE_RTC.RtcConnection;
 
   constructor(
@@ -239,6 +224,7 @@ export class IrisClient {
       let _trackPackage = this.audioTrackPackages[i];
       if (_trackPackage.track == trackPackage.track) {
         this.audioTrackPackages.splice(i, 1);
+        i--;
         break;
       }
     }
@@ -253,148 +239,11 @@ export class IrisClient {
     this.videoTrackPackage = null;
   }
 
-  addTrackEventHandler(trackEventHandler: IrisTrackEventHandler) {
-    this.trackEventHandlers.push(trackEventHandler);
-  }
-
-  removeTrackEventHandlerByTrack(track: ITrack) {
-    for (let i = 0; i < this.trackEventHandlers.length; i++) {
-      let trackEventHandler = this.trackEventHandlers[i];
-      if (trackEventHandler.getTrack() == track) {
-        trackEventHandler.release();
-        this.trackEventHandlers.splice(i, 1);
-        break;
-      }
-    }
-  }
-
-  removetrackEventHandlerByRemoteUser(
-    user: IAgoraRTCRemoteUser,
-    mediaType: 'audio' | 'video' | 'all'
-  ) {
-    this.trackEventHandlers = this.trackEventHandlers.filter(
-      (trackEventHandler: IrisTrackEventHandler) => {
-        if (trackEventHandler.getRemoteUser() != user) return true;
-
-        if (mediaType == 'all') {
-          trackEventHandler.release();
-          return false;
-        }
-
-        if (
-          mediaType == 'audio' &&
-          trackEventHandler.getTrackType() == 'IRemoteTrack'
-        ) {
-          trackEventHandler.release();
-          return false;
-        }
-
-        if (
-          mediaType == 'video' &&
-          trackEventHandler.getTrackType() == 'IRemoteVideoTrack'
-        ) {
-          trackEventHandler.release();
-          return false;
-        }
-
-        return true;
-      }
-    );
-  }
-
-  async processBufferSourceAudioTrackClose(
-    bufferSourceAudioTrackPackage: BufferSourceAudioTrackPackage
-  ) {
-    let track = bufferSourceAudioTrackPackage.track;
-    if (
-      this.agoraRTCClient &&
-      this.agoraRTCClient.localTracks.indexOf(track) != -1
-    ) {
-      try {
-        await this.agoraRTCClient.unpublish(track);
-        AgoraConsole.log('unpublish success');
-      } catch (e) {
-        this._engine.returnResult(false);
-        throw e;
-      }
-    }
-
-    //删除完毕后进行stop,close
-    track.stopProcessAudioBuffer();
-    track.close();
-
-    this.removeTrackEventHandlerByTrack(track);
-  }
-
-  //  当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 并且停止发流 记住是所有哦
-  async processAudioTrackClose(audioTrackPackage: AudioTrackPackage) {
-    let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
-    if (
-      this.agoraRTCClient &&
-      this.agoraRTCClient.localTracks.indexOf(audioTrack) != -1
-    ) {
-      try {
-        await this.agoraRTCClient.unpublish(audioTrack);
-        AgoraConsole.log('unpublish success');
-      } catch (e) {
-        AgoraConsole.error(e);
-        Promise.resolve(
-          new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-        );
-        throw e;
-      }
-    }
-    //删除完毕后进行stop
-    if (audioTrack.isPlaying) {
-      this._engine.trackHelper.stop(audioTrack);
-    }
-    if (!audioTrack.muted) {
-      await this._engine.trackHelper.setEnabled(audioTrack, false);
-    }
-    this.removeTrackEventHandlerByTrack(audioTrack);
-  }
-
-  // 当一个轨道将被close的时候。会去所有保存这个track， 以及trackEvent 的容器里去删除这个track. 记住是所有哦
-  async processVideoTrackClose(videoTrackPackage: VideoTrackPackage) {
-    let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
-    if (
-      this.agoraRTCClient &&
-      this.agoraRTCClient.localTracks.indexOf(videoTrack) != -1
-    ) {
-      try {
-        await this.agoraRTCClient.unpublish(videoTrack);
-        AgoraConsole.log('unpublish success');
-      } catch (e) {
-        AgoraConsole.error(e);
-        Promise.resolve(
-          new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-        );
-        throw e;
-      }
-    }
-
-    //如果isPreview是false则停止播放以及设置为不可用
-    if (!videoTrackPackage.isPreview) {
-      if (videoTrack.isPlaying) {
-        this._engine.trackHelper.stop(videoTrack);
-      }
-      if (!videoTrack.muted) {
-        await this._engine.trackHelper.setEnabled(videoTrack, false);
-      }
-    }
-    this.removeTrackEventHandlerByTrack(videoTrack);
-  }
-
   async release() {
     //client event
     if (this.clientEventHandler) {
       this.clientEventHandler.release();
     }
-
-    //trackEvent
-    this.trackEventHandlers.forEach((element) => {
-      element.release();
-    });
 
     if (this.agoraRTCClient?.channelName) {
       try {
@@ -408,7 +257,6 @@ export class IrisClient {
     this.audioTrackPackages = [];
     this.videoTrackPackage = null;
     this.agoraRTCClient = null;
-
     this._engine.irisClientManager.irisClientList = this._engine.irisClientManager.irisClientList.filter(
       (item) => item != this
     );

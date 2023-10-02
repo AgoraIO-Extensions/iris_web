@@ -350,8 +350,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let irisClient = this._engine.irisClientManager.getIrisClient();
       irisClient.irisClientVariables.clientRoleType = role;
 
-      let client = this._engine.irisClientManager.getIrisClient()
-        ?.agoraRTCClient;
+      let client = irisClient?.agoraRTCClient;
       client &&
         (await this._engine.clientHelper.setClientRole(
           client,
@@ -1408,7 +1407,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   stopEffect(soundId: number): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      let irisClient = this._engine.irisClientManager.getIrisClient();
       let bufferSourceAudioTrackPackage: BufferSourceAudioTrackPackage = this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(
         IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
       )[0] as BufferSourceAudioTrackPackage;
@@ -2459,7 +2457,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     captureParams: NATIVE_RTC.ScreenCaptureParameters2
   ): CallApiReturnType {
     let process = async () => {
-      let irisClient = this._engine.irisClientManager.getIrisClient();
       if (this._engine.irisClientManager.getScreenCaptureStatus()) {
         AgoraConsole.error('you have already startScreenCapture');
         return this._engine.returnResult(false);

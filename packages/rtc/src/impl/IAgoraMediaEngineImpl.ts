@@ -247,14 +247,14 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
       irisContainer.appendChild(canvas);
       document.body.appendChild(irisContainer);
       const stream = canvas.captureStream();
+      let mediaStreamTrack = stream.getVideoTracks()[0];
 
       let videoType = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM;
       let videoTrackPackage: VideoTrackPackage;
       try {
         videoTrackPackage = await this._engine.implHelper.createCustomVideoTrack(
           videoType,
-          stream.getVideoTracks()[0],
-          null
+          mediaStreamTrack
         );
       } catch (err) {
         err && AgoraConsole.error(err);

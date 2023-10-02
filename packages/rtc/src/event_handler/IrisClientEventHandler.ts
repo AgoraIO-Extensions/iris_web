@@ -212,7 +212,10 @@ export class IrisClientEventHandler {
     // if (this._engine.irisClientManager.getRemoteUser(con2) != user)
     //     return;
 
-    this._irisClient.removetrackEventHandlerByRemoteUser(user, 'all');
+    this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
+      user,
+      'all'
+    );
   }
 
   onEventUserPublished(
@@ -272,7 +275,9 @@ export class IrisClientEventHandler {
               this._engine
             );
 
-            this._irisClient.addTrackEventHandler(trackEventHandler);
+            this._engine.irisClientManager.addTrackEventHandler(
+              trackEventHandler
+            );
           })
           .catch(() => {
             console.log('onEventUserPublished subcribe audio failed');
@@ -318,7 +323,9 @@ export class IrisClientEventHandler {
               this._engine
             );
 
-            this._irisClient.addTrackEventHandler(trackEventHandler);
+            this._engine.irisClientManager.addTrackEventHandler(
+              trackEventHandler
+            );
           })
           .catch(() => {
             console.log('onEventUserPublished subcribe video failed');
@@ -343,7 +350,10 @@ export class IrisClientEventHandler {
     // if (this._engine.irisClientManager.getRemoteUser(con2) != user)
     //     return;
 
-    this._irisClient.removetrackEventHandlerByRemoteUser(user, mediaType);
+    this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
+      user,
+      mediaType
+    );
   }
 
   onEventUserInfoUpdated(

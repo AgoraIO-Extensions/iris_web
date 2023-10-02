@@ -1,5 +1,7 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import {
+  IAgoraRTCClient,
+  IAgoraRTCRemoteUser,
   IBufferSourceAudioTrack,
   ILocalAudioTrack,
   ILocalTrack,
@@ -7,6 +9,7 @@ import {
   IMicrophoneAudioTrack,
   IRemoteAudioTrack,
   IRemoteVideoTrack,
+  ITrack,
   UID,
 } from 'agora-rtc-sdk-ng';
 
@@ -17,6 +20,9 @@ import {
   VideoParams,
   VideoViewHolder,
 } from '../base/BaseType';
+import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
+
+import { AgoraConsole } from '../util';
 
 import { IrisClient, IrisClientType } from './IrisClient';
 import { IrisClientObserver } from './IrisClientObserver';
@@ -168,6 +174,9 @@ export class IrisClientManager {
   localVideoTrackPackages: VideoTrackPackage[] = [];
   localAudioTrackPackages: MultiAudioTrackPackage[] = [];
   irisClientObserver: IrisClientObserver;
+  trackEventHandlers: Array<IrisTrackEventHandler> = new Array<
+    IrisTrackEventHandler
+  >();
 
   //all local tracks
   private _remoteVideoViewHolders: Array<VideoViewHolder> = new Array<
@@ -192,6 +201,7 @@ export class IrisClientManager {
         trackPackage.type == trackPackage.type
       ) {
         this.localVideoTrackPackages.splice(i, 1);
+        i--;
         this.irisClientObserver.removeVideoTrackPackageObserver(
           videoTrackPackage
         );
@@ -246,6 +256,7 @@ export class IrisClientManager {
         trackPackage.type == trackPackage.type
       ) {
         this.localAudioTrackPackages.splice(i, 1);
+        i--;
         this.irisClientObserver.removeAudioTrackPackageObserver(
           audioTrackPackage
         );
@@ -388,6 +399,135 @@ export class IrisClientManager {
     return result;
   }
 
+  addTrackEventHandler(trackEventHandler: IrisTrackEventHandler) {
+    this.trackEventHandlers.push(trackEventHandler);
+  }
+
+  removeTrackEventHandlerByTrack(track: ITrack) {
+    for (let i = 0; i < this.trackEventHandlers.length; i++) {
+      let trackEventHandler = this.trackEventHandlers[i];
+      if (trackEventHandler.getTrack() == track) {
+        trackEventHandler.release();
+        this.trackEventHandlers.splice(i, 1);
+        i--;
+        break;
+      }
+    }
+  }
+
+  removetrackEventHandlerByRemoteUser(
+    user: IAgoraRTCRemoteUser,
+    mediaType: 'audio' | 'video' | 'all'
+  ) {
+    this.trackEventHandlers = this.trackEventHandlers.filter(
+      (trackEventHandler: IrisTrackEventHandler) => {
+        if (trackEventHandler.getRemoteUser() != user) return true;
+
+        if (mediaType == 'all') {
+          trackEventHandler.release();
+          return false;
+        }
+
+        if (
+          mediaType == 'audio' &&
+          trackEventHandler.getTrackType() == 'IRemoteTrack'
+        ) {
+          trackEventHandler.release();
+          return false;
+        }
+
+        if (
+          mediaType == 'video' &&
+          trackEventHandler.getTrackType() == 'IRemoteVideoTrack'
+        ) {
+          trackEventHandler.release();
+          return false;
+        }
+
+        return true;
+      }
+    );
+  }
+
+  async processBufferSourceAudioTrackClose(
+    bufferSourceAudioTrackPackage: BufferSourceAudioTrackPackage,
+    agoraRTCClient: IAgoraRTCClient
+  ) {
+    let track = bufferSourceAudioTrackPackage.track;
+    if (agoraRTCClient && agoraRTCClient.localTracks.indexOf(track) != -1) {
+      try {
+        await agoraRTCClient.unpublish(track);
+        AgoraConsole.log('unpublish success');
+      } catch (e) {
+        this._engine.returnResult(false);
+        throw e;
+      }
+    }
+
+    //删除完毕后进行stop,close
+    track.stopProcessAudioBuffer();
+    track.close();
+
+    this.removeTrackEventHandlerByTrack(track);
+  }
+
+  async processAudioTrackClose(
+    audioTrackPackage: AudioTrackPackage,
+    agoraRTCClient: IAgoraRTCClient
+  ) {
+    let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
+    if (
+      agoraRTCClient &&
+      agoraRTCClient.localTracks.indexOf(audioTrack) != -1
+    ) {
+      try {
+        await agoraRTCClient.unpublish(audioTrack);
+        AgoraConsole.log('unpublish success');
+      } catch (e) {
+        this._engine.returnResult(false);
+        throw e;
+      }
+    }
+    //删除完毕后进行stop
+    if (audioTrack.isPlaying) {
+      this._engine.trackHelper.stop(audioTrack);
+    }
+    if (!audioTrack.muted) {
+      await this._engine.trackHelper.setEnabled(audioTrack, false);
+    }
+    this.removeTrackEventHandlerByTrack(audioTrack);
+  }
+
+  async processVideoTrackClose(
+    videoTrackPackage: VideoTrackPackage,
+    agoraRTCClient: IAgoraRTCClient
+  ) {
+    let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
+    if (
+      agoraRTCClient &&
+      agoraRTCClient.localTracks.indexOf(videoTrack) != -1
+    ) {
+      try {
+        await agoraRTCClient.unpublish(videoTrack);
+        AgoraConsole.log('unpublish success');
+      } catch (e) {
+        this._engine.returnResult(false);
+        throw e;
+      }
+    }
+
+    //如果isPreview是false则停止播放以及设置为不可用
+    if (!videoTrackPackage.isPreview) {
+      if (videoTrack.isPlaying) {
+        this._engine.trackHelper.stop(videoTrack);
+      }
+      if (!videoTrack.muted) {
+        await this._engine.trackHelper.setEnabled(videoTrack, false);
+      }
+    }
+    this.removeTrackEventHandlerByTrack(videoTrack);
+  }
+
   async release() {
     this._engine.clearIrisInterval();
     //销毁iris html element
@@ -405,10 +545,16 @@ export class IrisClientManager {
       await irisClient.release();
     }
 
+    //trackEvent
+    this.trackEventHandlers.forEach((element) => {
+      element.release();
+    });
+
     //重置IrisClientManager状态
     this.irisClientList = [];
     this.localAudioTrackPackages = [];
     this.localVideoTrackPackages = [];
+    this.trackEventHandlers = [];
     this.irisClientObserver.release();
     this.mainIrisClient = null;
   }

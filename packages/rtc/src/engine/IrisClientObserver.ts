@@ -202,6 +202,7 @@ export class IrisClientObserver {
   }
 
   async stopTrack(trackPackage: TrackPackage) {
+    let irisClientManager = this._engine.irisClientManager;
     try {
       if (!trackPackage.track) {
         return;
@@ -211,11 +212,12 @@ export class IrisClientObserver {
       //还没有分配给对应的irisClient时,track会放到mainClient,所以用mainClient处理
       let irisClient = trackPackage.irisClient;
       if (!trackPackage.irisClient) {
-        irisClient = this._engine.irisClientManager.mainIrisClient;
+        irisClient = irisClientManager.mainIrisClient;
       }
       if (this._engine.implHelper.isAudio(trackPackage.type)) {
-        await irisClient.processAudioTrackClose(
-          trackPackage as AudioTrackPackage
+        await irisClientManager.processAudioTrackClose(
+          trackPackage as AudioTrackPackage,
+          irisClient.agoraRTCClient
         );
         if (
           trackPackage.type ===
@@ -226,36 +228,35 @@ export class IrisClientObserver {
               .LOCAL_AUDIO_STREAM_STATE_STOPPED,
             0
           );
-          this._engine.irisClientManager.removeLocalAudioTrackPackage(
-            trackPackage
-          );
+          irisClientManager.removeLocalAudioTrackPackage(trackPackage);
           irisClient.removeLocalAudioTrack(trackPackage);
         }
       } else if (
         IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio ===
         trackPackage.type
       ) {
-        await irisClient.processBufferSourceAudioTrackClose(
-          trackPackage as BufferSourceAudioTrackPackage
+        await irisClientManager.processBufferSourceAudioTrackClose(
+          trackPackage as BufferSourceAudioTrackPackage,
+          irisClient.agoraRTCClient
         );
         irisClient.removeLocalAudioTrack(trackPackage);
-        this._engine.irisClientManager.removeLocalAudioTrackPackage(
-          trackPackage
-        );
+        irisClientManager.removeLocalAudioTrackPackage(trackPackage);
       } else if (this._engine.implHelper.isVideoCamera(trackPackage.type)) {
-        await irisClient.processVideoTrackClose(
-          trackPackage as VideoTrackPackage
+        await irisClientManager.processVideoTrackClose(
+          trackPackage as VideoTrackPackage,
+          irisClient?.agoraRTCClient
         );
       } else if (this._engine.implHelper.isScreenCapture(trackPackage.type)) {
-        await irisClient.processVideoTrackClose(
-          trackPackage as VideoTrackPackage
+        await irisClientManager.processVideoTrackClose(
+          trackPackage as VideoTrackPackage,
+          irisClient?.agoraRTCClient
         );
         this._engine.rtcEngineEventHandler.onLocalVideoStateChanged(
           trackPackage.type as NATIVE_RTC.VIDEO_SOURCE_TYPE,
           NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_STOPPED,
           0
         );
-        this._engine.irisClientManager.removeLocalVideoTrackPackage(
+        irisClientManager.removeLocalVideoTrackPackage(
           trackPackage as VideoTrackPackage
         );
         irisClient.clearLocalVideoTrack();
