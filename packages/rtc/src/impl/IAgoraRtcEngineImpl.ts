@@ -16,7 +16,7 @@ import {
 } from 'iris-web-core';
 
 import { IrisAudioSourceType } from '../base/BaseType';
-import { IrisClient, IrisClientType } from '../engine/IrisClient';
+import { IrisClient } from '../engine/IrisClient';
 import {
   BufferSourceAudioTrackPackage,
   VideoTrackPackage,
@@ -67,18 +67,14 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   initialize(context: NATIVE_RTC.RtcEngineContext): CallApiReturnType {
     if (this._engine.irisClientManager.irisClientList.length > 0) {
-      AgoraConsole.error('you have already initialize');
-      return this._engine.returnResult(
-        false,
-        -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED
+      return this._engine.irisRtcErrorHandler.failed(
+        'you have already initialized'
       );
     }
     let processFunc = async () => {
-      //创建irisClient,由于是RtcEngine创建,所以是main类型
-      let irisClient = new IrisClient(this._engine, IrisClientType.MAIN);
+      new IrisClient(this._engine);
 
       this._engine.globalVariables.rtcEngineContext = context;
-      irisClient.irisClientVariables.channelProfile = context.channelProfile;
 
       this._engine.globalVariables.AgoraRTC.setArea([
         AgoraTranslate.NATIVE_RTCAREA_CODE2AREAS(context.areaCode),
@@ -180,21 +176,16 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
     let globalVariables = this._engine.globalVariables;
-    let irisClientManager = this._engine.irisClientManager;
     let processJoinChannel = async (): Promise<CallIrisApiResult> => {
       let irisClient = this._engine.irisClientManager.getIrisClient();
-      //创建agoraRTCClient,如果没有main irisClient则创建
-      if (!irisClient) {
-        irisClient = new IrisClient(this._engine, IrisClientType.MAIN);
-      }
+
       irisClient.createClient(options);
       options = irisClient.irisClientVariables;
       irisClient.irisClientVariables.token = token;
 
-      let irisClientVariables = irisClient.irisClientVariables;
       let agoraRTCClient = irisClient.agoraRTCClient;
       try {
-        let _uid = await agoraRTCClient.join(
+        await agoraRTCClient.join(
           globalVariables.rtcEngineContext.appId,
           channelId,
           token ? token : null,
@@ -439,7 +430,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         }
       }
 
-      //mainClient的远端用户
+      //远端用户
       this._engine.irisClientManager.irisClientList.map((irisClient) => {
         let agoraRTCClient = irisClient.agoraRTCClient;
         if (agoraRTCClient && agoraRTCClient.channelName) {
@@ -3293,23 +3284,26 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
   }
   setDevice(deviceIdUTF8: string): CallApiReturnType {
     let process = async () => {
-      for (let irisClient of this._engine.irisClientManager.irisClientList) {
-        irisClient.irisClientVariables.videoDeviceId = deviceIdUTF8;
-        let videoTrack = irisClient.videoTrackPackage;
-        if (
-          videoTrack.type ==
-            NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY ||
-          videoTrack.type ==
-            NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY ||
-          videoTrack.type ==
-            NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD ||
-          videoTrack.type ==
-            NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH
-        ) {
-          await this._engine.trackHelper.setDevice(
-            videoTrack.track as ICameraVideoTrack,
-            deviceIdUTF8
-          );
+      this._engine.globalVariables.videoDeviceId = deviceIdUTF8;
+
+      for (let videoTrackPackage of this._engine.irisClientManager
+        .localVideoTrackPackages) {
+        if (videoTrackPackage.track) {
+          if (
+            videoTrackPackage.type ==
+              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY ||
+            videoTrackPackage.type ==
+              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY ||
+            videoTrackPackage.type ==
+              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD ||
+            videoTrackPackage.type ==
+              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH
+          ) {
+            await this._engine.trackHelper.setDevice(
+              videoTrackPackage.track as ICameraVideoTrack,
+              deviceIdUTF8
+            );
+          }
         }
       }
 
@@ -3321,11 +3315,8 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
     let process = async () => {
       let list: MediaDeviceInfo[] = [];
       let deviceId = '';
-      let irisClient = this._engine.irisClientManager.getIrisClient();
-      if (irisClient.irisClientVariables.videoDeviceId) {
-        deviceId = irisClient.irisClientVariables.videoDeviceId;
-      } else if (this._engine.globalVariables.deviceEnumerated) {
-        deviceId = this._engine.globalVariables.videoDevices[0]?.deviceId || '';
+      if (this._engine.globalVariables.videoDeviceId) {
+        deviceId = this._engine.globalVariables.videoDeviceId;
       } else {
         try {
           list = await this._engine.globalVariables.AgoraRTC.getCameras();
@@ -3386,7 +3377,6 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
       engine.globalVariables.playbackDevices = new Array();
       engine.globalVariables.recordingDevices = new Array();
       engine.globalVariables.videoDevices = new Array();
-      engine.globalVariables.deviceEnumerated = false;
       return this._engine.returnResult();
     };
     return this._engine.execute(process);

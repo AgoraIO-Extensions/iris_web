@@ -207,7 +207,7 @@ export class IrisClientEventHandler {
 
     //过滤掉情况 2，3
 
-    if (this._engine.irisClientManager.getIrisClient(con2)) return;
+    if (this._engine.irisClientManager.getIrisClientByConnection(con2)) return;
 
     // if (this._engine.irisClientManager.getRemoteUser(con2) != user)
     //     return;
@@ -228,7 +228,7 @@ export class IrisClientEventHandler {
     };
 
     //过滤掉情况 2，3
-    if (this._engine.irisClientManager.getIrisClient(con2)) return;
+    if (this._engine.irisClientManager.getIrisClientByConnection(con2)) return;
 
     //这里有bug。 如果A(不订阅)， B（订阅先后加入频道）
     //那么A先捕获到C，并且不订阅
@@ -344,7 +344,7 @@ export class IrisClientEventHandler {
     };
 
     //过滤掉情况 2，3
-    if (this._engine.irisClientManager.getIrisClient(con2)) return;
+    if (this._engine.irisClientManager.getIrisClientByConnection(con2)) return;
 
     //在情况1下。C触发了第二次发布流。但是此时的容器里存放的是前一个触发回调的user。所以自己不做处理了。
     // if (this._engine.irisClientManager.getRemoteUser(con2) != user)

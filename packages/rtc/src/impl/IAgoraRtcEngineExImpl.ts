@@ -1,7 +1,7 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
-import { IrisClient, IrisClientType } from '../engine/IrisClient';
+import { IrisClient } from '../engine/IrisClient';
 import { NotifyType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -33,11 +33,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
     let processJoinChannel = async (): Promise<CallIrisApiResult> => {
-      let irisClient = new IrisClient(
-        this._engine,
-        IrisClientType.SUB,
-        connection
-      );
+      let irisClient = new IrisClient(this._engine, connection);
       irisClient.createClient(options);
       irisClient.irisClientVariables.token = token;
       let agoraRTCClient = irisClient.agoraRTCClient;
@@ -79,7 +75,9 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         return this._engine.returnResult();
       }
 
-      let irisClient = this._engine.irisClientManager.getIrisClient(connection);
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
 
       await this._engine.irisClientManager.irisClientObserver.notify(
         NotifyType.STOP_TRACK,

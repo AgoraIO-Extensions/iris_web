@@ -229,19 +229,7 @@ export class ImplHelper {
   //当一个audioTrack被创建的时候，要拆解这些参数
   public async processScreenShareAudioTrack(audioTrack: ILocalAudioTrack) {
     let globalVariables = this._engine.globalVariables;
-    let irisClient = this._engine.irisClientManager.getIrisClient();
 
-    //audio
-    if (irisClient.irisClientVariables.playbackDeviceId) {
-      audioTrack
-        .setPlaybackDevice(irisClient.irisClientVariables.playbackDeviceId)
-        .then(() => {})
-        .catch((reason) => {
-          AgoraConsole.error('audio track setPlaybackDevice failed');
-          reason && AgoraConsole.error(reason);
-        })
-        .finally(() => {});
-    }
     if (globalVariables.enabledAudio) {
       this._engine.trackHelper.play(audioTrack);
     }
@@ -343,7 +331,6 @@ export class ImplHelper {
     this._engine.globalVariables.playbackDevices = playbackDevices;
     this._engine.globalVariables.recordingDevices = recordingDevices;
     this._engine.globalVariables.videoDevices = videoDevices;
-    this._engine.globalVariables.deviceEnumerated = true;
     return {
       playbackDevices: playbackDevices,
       recordingDevices: recordingDevices,
@@ -355,8 +342,8 @@ export class ImplHelper {
     options: NATIVE_RTC.ChannelMediaOptions,
     connection?: NATIVE_RTC.RtcConnection
   ) {
-    let irisClientManager = this._engine.irisClientManager;
-    let irisClient = irisClientManager.getIrisClient(connection);
+    const irisClientManager = this._engine.irisClientManager;
+    const irisClient = irisClientManager.getIrisClientByConnection(connection);
 
     let agoraRTCClient = irisClient?.agoraRTCClient;
     if (!agoraRTCClient) {

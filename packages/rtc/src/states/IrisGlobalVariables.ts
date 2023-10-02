@@ -67,10 +67,12 @@ export class IrisGlobalVariables {
   cloudProxy: NATIVE_RTC.CLOUD_PROXY_TYPE = null;
 
   //devicesInfo
-  deviceEnumerated: boolean = false;
   playbackDevices: DeviceInfo[] = new Array();
   recordingDevices: DeviceInfo[] = new Array();
   videoDevices: DeviceInfo[] = new Array();
+
+  //setDevice() : videoDevice
+  videoDeviceId: string = null;
 
   //enableAudioVolumeIndication
   enableAudioVolumeIndication: boolean = false;

@@ -13,13 +13,15 @@ import { AgoraConsole, AgoraTranslate } from '../util';
 import { AudioTrackPackage, VideoTrackPackage } from './IrisClientManager';
 import { IrisRtcEngine } from './IrisRtcEngine';
 
-export enum IrisClientType {
-  MAIN,
-  SUB,
-}
+/**
+ * 通过engine.initialize创建的client将会是默认的一个client
+ * 默认固定在this._engine.irisClientManager.irisClientList[0]
+ * engineEx.joinChannelEx不会使用,只有engine.joinChannel才会使用
+ * 轨道发布在哪个channel不受此逻辑影响,轨道是否发布只看client的irisClientVariables配置来
+ */
 
 export class IrisClient {
-  clientType: IrisClientType;
+  id: string;
   agoraRTCClient: IAgoraRTCClient;
   _engine: IrisRtcEngine;
   irisClientVariables: IrisClientVariables;
@@ -30,20 +32,15 @@ export class IrisClient {
 
   connection: NATIVE_RTC.RtcConnection;
 
-  constructor(
-    engine: IrisRtcEngine,
-    clientType = IrisClientType.SUB,
-    connection?: NATIVE_RTC.RtcConnection
-  ) {
-    this.clientType = clientType;
+  constructor(engine: IrisRtcEngine, connection?: NATIVE_RTC.RtcConnection) {
     this._engine = engine;
-    this.irisClientVariables = new IrisClientVariables();
-    if (this.clientType === IrisClientType.MAIN) {
-      this._engine.irisClientManager.setMainIrisClient(this);
-    } else {
+    this.irisClientVariables = new IrisClientVariables(
+      this._engine.globalVariables
+    );
+    if (connection) {
       this.connection = connection;
     }
-
+    this.id = `irisClient_${Math.floor(Math.random() * new Date().getTime())}`;
     this._engine.irisClientManager.irisClientList.push(this);
   }
 
@@ -257,8 +254,12 @@ export class IrisClient {
     this.audioTrackPackages = [];
     this.videoTrackPackage = null;
     this.agoraRTCClient = null;
-    this._engine.irisClientManager.irisClientList = this._engine.irisClientManager.irisClientList.filter(
-      (item) => item != this
-    );
+    this.connection = null;
+    //不删除通过engine.initialize创建的client
+    if (this._engine.irisClientManager.irisClientList[0]?.id !== this.id) {
+      this._engine.irisClientManager.irisClientList = this._engine.irisClientManager.irisClientList.filter(
+        (item) => item.id != this.id
+      );
+    }
   }
 }

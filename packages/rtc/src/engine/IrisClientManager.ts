@@ -24,7 +24,7 @@ import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 
 import { AgoraConsole } from '../util';
 
-import { IrisClient, IrisClientType } from './IrisClient';
+import { IrisClient } from './IrisClient';
 import { IrisClientObserver } from './IrisClientObserver';
 import { IrisRtcEngine } from './IrisRtcEngine';
 
@@ -170,7 +170,6 @@ export class IrisClientManager {
   private _engine: IrisRtcEngine = null;
 
   irisClientList: IrisClient[] = [];
-  mainIrisClient: IrisClient = null;
   localVideoTrackPackages: VideoTrackPackage[] = [];
   localAudioTrackPackages: MultiAudioTrackPackage[] = [];
   irisClientObserver: IrisClientObserver;
@@ -360,17 +359,18 @@ export class IrisClientManager {
     return null;
   }
 
-  setMainIrisClient(mainIrisClient: IrisClient) {
-    this.mainIrisClient = mainIrisClient;
+  getIrisClient() {
+    if (this.irisClientList.length == 0) {
+      this._engine.irisRtcErrorHandler.notInitialized();
+    } else {
+      return this.irisClientList[0];
+    }
   }
 
-  getIrisClient(connection?: NATIVE_RTC.RtcConnection): IrisClient | null {
-    if (!connection) {
-      return this.irisClientList.filter(
-        (irisClient: IrisClient) =>
-          irisClient.clientType === IrisClientType.MAIN
-      )[0];
-    } else {
+  getIrisClientByConnection(
+    connection: NATIVE_RTC.RtcConnection
+  ): IrisClient | null {
+    if (connection) {
       return this.irisClientList.filter((irisClient: IrisClient) => {
         if (
           irisClient.connection?.channelId == connection.channelId &&
@@ -379,6 +379,8 @@ export class IrisClientManager {
           return irisClient;
         }
       })[0];
+    } else {
+      return this.getIrisClient();
     }
   }
 
@@ -399,9 +401,7 @@ export class IrisClientManager {
     return result;
   }
 
-  addTrackEventHandler(trackEventHandler: IrisTrackEventHandler) {
-    this.trackEventHandlers.push(trackEventHandler);
-  }
+  addTrackEventHandler(trackEventHandler: IrisTrackEventHandler) {}
 
   removeTrackEventHandlerByTrack(track: ITrack) {
     for (let i = 0; i < this.trackEventHandlers.length; i++) {
@@ -556,6 +556,5 @@ export class IrisClientManager {
     this.localVideoTrackPackages = [];
     this.trackEventHandlers = [];
     this.irisClientObserver.release();
-    this.mainIrisClient = null;
   }
 }

@@ -1,6 +1,8 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { UID } from 'agora-rtc-sdk-ng';
 
+import { IrisGlobalVariables } from './IrisGlobalVariables';
+
 //Record the intermediate status of the client
 export class IrisClientVariables {
   //public role: NATIVE_RTC.CLIENT_ROLE_TYPE = NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE;
@@ -82,14 +84,6 @@ export class IrisClientVariables {
 
   isAudioFilterable?: boolean;
 
-  mergeChannelMediaOptions(
-    options: NATIVE_RTC.ChannelMediaOptions | NATIVE_RTC.LeaveChannelOptions
-  ) {
-    for (let key in options) {
-      this[key] = options[key];
-    }
-  }
-
   //setClientOptions()
   public clientRoleOptions?: NATIVE_RTC.ClientRoleOptions = null;
 
@@ -137,9 +131,6 @@ export class IrisClientVariables {
     reportVad: boolean;
   } = null;
 
-  //setDevice() : videoDevice
-  videoDeviceId: string = null;
-
   //setPlaybackDevice: audiDevice
   playbackDeviceId: string = null;
   //setRecordingDevice: recordingDevice
@@ -153,4 +144,18 @@ export class IrisClientVariables {
 
   //用来记录暂停或者恢复的
   currChannelMediaRelayconfiguration: NATIVE_RTC.ChannelMediaRelayConfiguration = null;
+
+  constructor(globalVariables: IrisGlobalVariables) {
+    if (globalVariables.rtcEngineContext?.channelProfile) {
+      this.channelProfile = globalVariables.rtcEngineContext.channelProfile;
+    }
+  }
+
+  mergeChannelMediaOptions(
+    options: NATIVE_RTC.ChannelMediaOptions | NATIVE_RTC.LeaveChannelOptions
+  ) {
+    for (let key in options) {
+      this[key] = options[key];
+    }
+  }
 }

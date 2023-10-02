@@ -47,6 +47,7 @@ import { TrackHelper } from '../helper/TrackHelper';
 import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
 import { AgoraActionQueue } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
+import IrisRtcErrorHandler from '../util/ErrorHandler';
 
 import { IrisClientManager } from './IrisClientManager';
 
@@ -81,6 +82,9 @@ export class IrisRtcEngine implements ApiInterceptor {
     type: IrisIntervalType;
     interval: NodeJS.Timeout;
   }[] = [];
+  public irisRtcErrorHandler: IrisRtcErrorHandler = new IrisRtcErrorHandler(
+    this
+  );
 
   constructor(
     irisEventHandlerManager: IrisEventHandlerManager,

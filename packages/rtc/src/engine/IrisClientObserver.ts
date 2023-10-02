@@ -47,6 +47,7 @@ export class IrisClientObserver {
     );
   }
 
+  //根据每个irisClient的options,分配对应的轨道,如果irisClient的agoraRTCClient已经加入频道,则发布轨道
   async publishTrack(trackPackage: TrackPackage, irisClientList: IrisClient[]) {
     let publishTrack: ILocalTrack;
     let globalVariables = this._engine.globalVariables;
@@ -209,10 +210,10 @@ export class IrisClientObserver {
       }
 
       AgoraConsole.debug(`stopTrack ${trackPackage.track}`);
-      //还没有分配给对应的irisClient时,track会放到mainClient,所以用mainClient处理
+      //还没有分配给对应的irisClient时,track会放到engine.initialize创建的client
       let irisClient = trackPackage.irisClient;
       if (!trackPackage.irisClient) {
-        irisClient = irisClientManager.mainIrisClient;
+        irisClient = irisClientManager.irisClientList[0];
       }
       if (this._engine.implHelper.isAudio(trackPackage.type)) {
         await irisClientManager.processAudioTrackClose(
