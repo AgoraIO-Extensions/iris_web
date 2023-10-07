@@ -51,7 +51,7 @@ export class IrisEventHandlerImpl implements IrisEventHandler {
 export class IrisApiEngineImpl implements IrisApiEngine {
   // private static instance: IrisApiEngine;
 
-  private apiInterceptors: Array<ApiInterceptor>;
+  public apiInterceptors: Array<ApiInterceptor>;
 
   private irisEventHandlerManager: IrisEventHandlerManager;
 

@@ -34,11 +34,7 @@ interface ClazzMethodUserData {
   bindingExtensionList: [];
 }
 
-export default function (
-  terraContext: TerraContext,
-  args: any,
-  parseResult: ParseResult
-) {
+export function binding(parseResult: ParseResult) {
   let cxxfiles = parseResult.nodes as CXXFile[];
   //移除不需要的文件
   let view = filterFile(cxxfiles).map((cxxfile: CXXFile) => {
@@ -109,6 +105,15 @@ export default function (
       }).length > 0
     );
   });
+  return view;
+}
+
+export default function (
+  terraContext: TerraContext,
+  args: any,
+  parseResult: ParseResult
+) {
+  let view = binding(parseResult);
   return renderWithConfiguration({
     fileNameTemplatePath: path.join(
       __dirname,

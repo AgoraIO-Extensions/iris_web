@@ -101,11 +101,13 @@ export default function (
     fileNameTemplatePath: path.join(
       __dirname,
       'templates',
+      'impl',
       'file_name.mustache'
     ),
     fileContentTemplatePath: path.join(
       __dirname,
       'templates',
+      'impl',
       'file_content.mustache'
     ),
     view,

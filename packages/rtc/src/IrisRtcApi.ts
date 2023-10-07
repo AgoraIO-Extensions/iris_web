@@ -11,11 +11,14 @@ export function initIrisRtc(
   irisApiEngine: IrisApiEngine,
   options?: InitIrisRtcOptions
 ) {
-  irisApiEngine.addApiInterceptor(
+  return irisApiEngine.addApiInterceptor(
     new IrisRtcEngine(irisApiEngine.getIrisEventHandlerManager(), options)
   );
 }
 
 export let AgoraWrapper = {
   initIrisRtc: initIrisRtc,
+  // getIrisRtcEngine: (irisApiEngine: IrisApiEngine) => {
+  //   return irisApiEngine.getApiInterceptor();
+  // }
 };
