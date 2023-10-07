@@ -9,8 +9,8 @@
     "build": "NODE_ENV=production webpack",
     "watch": "webpack --watch",
     "start": "webpack serve --open",
-    "lint": "eslint --ext .ts ./src/binding",
-    "lint:fix": "eslint --fix --ext .ts ./src/binding"
+    "lint": "eslint --ext .ts ./src/binding ./test/binding",
+    "lint:fix": "eslint --fix --ext .ts ./src/binding ./test/binding"
   },
   "author": "",
   "license": "ISC",

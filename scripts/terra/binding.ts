@@ -25,6 +25,7 @@ interface TerraNodeUserData {
   isCallback: boolean;
   classPrefix: string;
   hasBaseClazzs: boolean;
+  prefix_name: string;
 }
 
 interface ClazzMethodUserData {
@@ -80,6 +81,7 @@ export function binding(parseResult: ParseResult) {
         isStruct: node.__TYPE === CXXTYPE.Struct,
         isEnumz: node.__TYPE === CXXTYPE.Enumz,
         isClazz: node.__TYPE === CXXTYPE.Clazz,
+        prefix_name: node.name.replace(new RegExp('^I(.*)'), '$1'),
         classPrefix:
           node.name === 'IRtcEngineEventHandlerEx'
             ? 'RtcEngineEventHandler_'

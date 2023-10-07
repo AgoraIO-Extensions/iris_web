@@ -1,5 +1,3 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
-
 import { ApiParam } from 'iris-web-core';
 
 import { IrisApiType } from '../base/IrisApiType';
@@ -11,7 +9,9 @@ export function callApiBufferExtension(
 ): ApiParam {
   switch (func_name) {
     case IrisApiType.FUNC_MEDIAENGINE_PUSHVIDEOFRAME:
-      (data.frame as NATIVE_RTC.ExternalVideoFrame).buffer = buffer;
+      if (data?.frame?.buffer) {
+        data.frame.buffer = buffer;
+      }
       break;
   }
   return data;

@@ -57,7 +57,6 @@ export class {{name}}Dispatch{
     {{#user_data.isRegisterMethod}}
     let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
     if (eventHandler === undefined) throw 'eventHandler is undefined';
-    return this._impl.registerEventHandler(eventHandler);
     {{/user_data.isRegisterMethod}}
     {{^user_data.isRegisterMethod}}
     {{#user_data.hasParameters}}
@@ -71,8 +70,8 @@ export class {{name}}Dispatch{
     if ({{name}} === undefined) throw "{{name}} is undefined";
     {{/parameters}}
 
-    return this._impl.{{name}}({{#parameters}}{{name}},{{/parameters}});
     {{/user_data.isRegisterMethod}}
+    return this._impl.{{name}}({{#parameters}}{{name}},{{/parameters}});
   }
 
 {{/methods}}
