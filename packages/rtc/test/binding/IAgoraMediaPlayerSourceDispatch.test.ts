@@ -10,6 +10,8 @@ import {
 import { initIrisRtc } from '../../src/index';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
+const bindingAPI = require('../../src/binding/IAgoraMediaPlayerSourceDispatch');
+
 let apiEnginePtr: IrisApiEngine;
 let irisRtcEngine: IrisRtcEngine;
 beforeAll(() => {
@@ -20,4 +22,132 @@ beforeAll(() => {
 
 afterAll(() => {
   IrisCore.disposeIrisApiEngine(apiEnginePtr);
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+describe('IMediaPlayerSourceObserver', () => {
+  test('onPlayerSourceStateChanged impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onPlayerSourceStateChanged(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onPlayerSourceStateChanged');
+  });
+  test('onPositionChanged impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onPositionChanged(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onPositionChanged');
+  });
+  test('onPlayerEvent impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onPlayerEvent(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onPlayerEvent');
+  });
+  test('onMetaData impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onMetaData(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onMetaData');
+  });
+  test('onPlayBufferUpdated impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onPlayBufferUpdated(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onPlayBufferUpdated');
+  });
+  test('onPreloadEvent impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onPreloadEvent(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onPreloadEvent');
+  });
+  test('onCompleted impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onCompleted();
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onCompleted');
+  });
+  test('onAgoraCDNTokenWillExpire impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onAgoraCDNTokenWillExpire();
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onAgoraCDNTokenWillExpire');
+  });
+  test('onPlayerSrcInfoChanged impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onPlayerSrcInfoChanged(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onPlayerSrcInfoChanged');
+  });
+  test('onPlayerInfoUpdated impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onPlayerInfoUpdated(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onPlayerInfoUpdated');
+  });
+  test('onAudioVolumeIndication impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onAudioVolumeIndication(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onAudioVolumeIndication');
+  });
 });

@@ -10,6 +10,8 @@ import {
 import { initIrisRtc } from '../../src/index';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
+const bindingAPI = require('../../src/binding/IAgoraRtcEngineExDispatch');
+
 let apiEnginePtr: IrisApiEngine;
 let irisRtcEngine: IrisRtcEngine;
 beforeAll(() => {
@@ -22,6 +24,653 @@ afterAll(() => {
   IrisCore.disposeIrisApiEngine(apiEnginePtr);
 });
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+describe('IRtcEngineEventHandlerEx', () => {
+  test('onJoinChannelSuccessEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onJoinChannelSuccessEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onJoinChannelSuccessEx');
+  });
+  test('onRejoinChannelSuccessEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onRejoinChannelSuccessEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onRejoinChannelSuccessEx');
+  });
+  test('onAudioQualityEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onAudioQualityEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onAudioQualityEx');
+  });
+  test('onAudioVolumeIndicationEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onAudioVolumeIndicationEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onAudioVolumeIndicationEx');
+  });
+  test('onLeaveChannelEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onLeaveChannelEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onLeaveChannelEx');
+  });
+  test('onRtcStatsEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onRtcStatsEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onRtcStatsEx');
+  });
+  test('onNetworkQualityEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onNetworkQualityEx(undefined, undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onNetworkQualityEx');
+  });
+  test('onIntraRequestReceivedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onIntraRequestReceivedEx(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onIntraRequestReceivedEx');
+  });
+  test('onFirstRemoteVideoDecodedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onFirstRemoteVideoDecodedEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onFirstRemoteVideoDecodedEx');
+  });
+  test('onVideoSizeChangedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onVideoSizeChangedEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onVideoSizeChangedEx');
+  });
+  test('onRemoteVideoStateChangedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onRemoteVideoStateChangedEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onRemoteVideoStateChangedEx');
+  });
+  test('onFirstRemoteVideoFrameEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onFirstRemoteVideoFrameEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onFirstRemoteVideoFrameEx');
+  });
+  test('onUserJoinedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onUserJoinedEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onUserJoinedEx');
+  });
+  test('onUserOfflineEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onUserOfflineEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onUserOfflineEx');
+  });
+  test('onUserMuteAudioEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onUserMuteAudioEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onUserMuteAudioEx');
+  });
+  test('onUserMuteVideoEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onUserMuteVideoEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onUserMuteVideoEx');
+  });
+  test('onUserEnableVideoEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onUserEnableVideoEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onUserEnableVideoEx');
+  });
+  test('onUserEnableLocalVideoEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onUserEnableLocalVideoEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onUserEnableLocalVideoEx');
+  });
+  test('onUserStateChangedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onUserStateChangedEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onUserStateChangedEx');
+  });
+  test('onLocalAudioStatsEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onLocalAudioStatsEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onLocalAudioStatsEx');
+  });
+  test('onRemoteAudioStatsEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onRemoteAudioStatsEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onRemoteAudioStatsEx');
+  });
+  test('onRemoteVideoStatsEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onRemoteVideoStatsEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onRemoteVideoStatsEx');
+  });
+  test('onConnectionLostEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onConnectionLostEx(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onConnectionLostEx');
+  });
+  test('onConnectionInterruptedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onConnectionInterruptedEx(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onConnectionInterruptedEx');
+  });
+  test('onConnectionBannedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onConnectionBannedEx(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onConnectionBannedEx');
+  });
+  test('onStreamMessageEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onStreamMessageEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onStreamMessageEx');
+  });
+  test('onStreamMessageErrorEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onStreamMessageErrorEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onStreamMessageErrorEx');
+  });
+  test('onRequestTokenEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onRequestTokenEx(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onRequestTokenEx');
+  });
+  test('onLicenseValidationFailureEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onLicenseValidationFailureEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith(
+      'onLicenseValidationFailureEx'
+    );
+  });
+  test('onTokenPrivilegeWillExpireEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onTokenPrivilegeWillExpireEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith(
+      'onTokenPrivilegeWillExpireEx'
+    );
+  });
+  test('onFirstLocalAudioFramePublishedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onFirstLocalAudioFramePublishedEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith(
+      'onFirstLocalAudioFramePublishedEx'
+    );
+  });
+  test('onFirstRemoteAudioFrameEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onFirstRemoteAudioFrameEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onFirstRemoteAudioFrameEx');
+  });
+  test('onFirstRemoteAudioDecodedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onFirstRemoteAudioDecodedEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onFirstRemoteAudioDecodedEx');
+  });
+  test('onLocalAudioStateChangedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onLocalAudioStateChangedEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onLocalAudioStateChangedEx');
+  });
+  test('onRemoteAudioStateChangedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onRemoteAudioStateChangedEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onRemoteAudioStateChangedEx');
+  });
+  test('onActiveSpeakerEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onActiveSpeakerEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onActiveSpeakerEx');
+  });
+  test('onClientRoleChangedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onClientRoleChangedEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onClientRoleChangedEx');
+  });
+  test('onClientRoleChangeFailedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onClientRoleChangeFailedEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onClientRoleChangeFailedEx');
+  });
+  test('onRemoteAudioTransportStatsEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onRemoteAudioTransportStatsEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith(
+      'onRemoteAudioTransportStatsEx'
+    );
+  });
+  test('onRemoteVideoTransportStatsEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onRemoteVideoTransportStatsEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith(
+      'onRemoteVideoTransportStatsEx'
+    );
+  });
+  test('onConnectionStateChangedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onConnectionStateChangedEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onConnectionStateChangedEx');
+  });
+  test('onWlAccMessageEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onWlAccMessageEx(undefined, undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onWlAccMessageEx');
+  });
+  test('onWlAccStatsEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onWlAccStatsEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onWlAccStatsEx');
+  });
+  test('onNetworkTypeChangedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onNetworkTypeChangedEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onNetworkTypeChangedEx');
+  });
+  test('onEncryptionErrorEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onEncryptionErrorEx(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onEncryptionErrorEx');
+  });
+  test('onUploadLogResultEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onUploadLogResultEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onUploadLogResultEx');
+  });
+  test('onUserAccountUpdatedEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onUserAccountUpdatedEx(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onUserAccountUpdatedEx');
+  });
+  test('onSnapshotTakenEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onSnapshotTakenEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onSnapshotTakenEx');
+  });
+  test('onVideoRenderingTracingResultEx impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandlerEx(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onVideoRenderingTracingResultEx(
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith(
+      'onVideoRenderingTracingResultEx'
+    );
+  });
+});
 describe('IRtcEngineEx', () => {
   test('joinChannelEx parameter', async () => {
     let nParam = {

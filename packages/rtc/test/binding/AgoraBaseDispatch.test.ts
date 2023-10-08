@@ -10,6 +10,8 @@ import {
 import { initIrisRtc } from '../../src/index';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
+const bindingAPI = require('../../src/binding/AgoraBaseDispatch');
+
 let apiEnginePtr: IrisApiEngine;
 let irisRtcEngine: IrisRtcEngine;
 beforeAll(() => {
@@ -20,4 +22,44 @@ beforeAll(() => {
 
 afterAll(() => {
   IrisCore.disposeIrisApiEngine(apiEnginePtr);
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
+describe('IAudioEncodedFrameObserver', () => {
+  test('onRecordAudioEncodedFrame impl call', async () => {
+    let eventHandler = new bindingAPI.IAudioEncodedFrameObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onRecordAudioEncodedFrame(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onRecordAudioEncodedFrame');
+  });
+  test('onPlaybackAudioEncodedFrame impl call', async () => {
+    let eventHandler = new bindingAPI.IAudioEncodedFrameObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onPlaybackAudioEncodedFrame(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onPlaybackAudioEncodedFrame');
+  });
+  test('onMixedAudioEncodedFrame impl call', async () => {
+    let eventHandler = new bindingAPI.IAudioEncodedFrameObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onMixedAudioEncodedFrame(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onMixedAudioEncodedFrame');
+  });
 });

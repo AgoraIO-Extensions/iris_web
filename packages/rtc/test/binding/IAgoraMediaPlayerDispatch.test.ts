@@ -10,6 +10,8 @@ import {
 import { initIrisRtc } from '../../src/index';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
+const bindingAPI = require('../../src/binding/IAgoraMediaPlayerDispatch');
+
 let apiEnginePtr: IrisApiEngine;
 let irisRtcEngine: IrisRtcEngine;
 beforeAll(() => {
@@ -20,6 +22,10 @@ beforeAll(() => {
 
 afterAll(() => {
   IrisCore.disposeIrisApiEngine(apiEnginePtr);
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
 });
 
 describe('IMediaPlayer', () => {

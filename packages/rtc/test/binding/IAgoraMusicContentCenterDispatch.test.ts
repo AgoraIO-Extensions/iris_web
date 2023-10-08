@@ -10,6 +10,8 @@ import {
 import { initIrisRtc } from '../../src/index';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
+const bindingAPI = require('../../src/binding/IAgoraMusicContentCenterDispatch');
+
 let apiEnginePtr: IrisApiEngine;
 let irisRtcEngine: IrisRtcEngine;
 beforeAll(() => {
@@ -20,6 +22,10 @@ beforeAll(() => {
 
 afterAll(() => {
   IrisCore.disposeIrisApiEngine(apiEnginePtr);
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
 });
 
 describe('MusicChartCollection', () => {
@@ -258,7 +264,85 @@ describe('MusicCollection', () => {
     ).toBeCalledWith('test');
   });
 });
-
+describe('IMusicContentCenterEventHandler', () => {
+  test('onMusicChartsResult impl call', async () => {
+    let eventHandler = new bindingAPI.IMusicContentCenterEventHandler(
+      irisRtcEngine
+    );
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onMusicChartsResult(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onMusicChartsResult');
+  });
+  test('onMusicCollectionResult impl call', async () => {
+    let eventHandler = new bindingAPI.IMusicContentCenterEventHandler(
+      irisRtcEngine
+    );
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onMusicCollectionResult(undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onMusicCollectionResult');
+  });
+  test('onLyricResult impl call', async () => {
+    let eventHandler = new bindingAPI.IMusicContentCenterEventHandler(
+      irisRtcEngine
+    );
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onLyricResult(undefined, undefined, undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onLyricResult');
+  });
+  test('onSongSimpleInfoResult impl call', async () => {
+    let eventHandler = new bindingAPI.IMusicContentCenterEventHandler(
+      irisRtcEngine
+    );
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onSongSimpleInfoResult(
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onSongSimpleInfoResult');
+  });
+  test('onPreLoadEvent impl call', async () => {
+    let eventHandler = new bindingAPI.IMusicContentCenterEventHandler(
+      irisRtcEngine
+    );
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.onPreLoadEvent(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onPreLoadEvent');
+  });
+});
 describe('IMusicPlayer', () => {});
 describe('IMusicContentCenter', () => {
   test('initialize parameter', async () => {

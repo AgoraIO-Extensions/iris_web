@@ -7,6 +7,8 @@ import {
   IrisCore,
 } from 'iris-web-core';
 
+const bindingAPI = require('../../src/binding/{{&user_data.fileName}}Dispatch');
+
 import { initIrisRtc } from '../../src/index';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
@@ -22,12 +24,28 @@ afterAll(() => {
   IrisCore.disposeIrisApiEngine(apiEnginePtr);
 });
 
-{{#nodes}}
-{{#user_data.isCallback}}
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
+{{#nodes}}
+describe('{{name}}', () => {
+{{#user_data.isCallback}}
+  {{#methods}}
+  test('{{name}}{{user_data._prefix}} impl call', async () => {
+    let eventHandler = new bindingAPI.{{parent.name}}(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest.spyOn(eventHandler, 'eventKey');
+    eventHandler.{{name}}{{user_data._prefix}}({{#parameters}}undefined,{{/parameters}});
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('{{name}}{{user_data._prefix}}');
+  });
+  {{/methods}}
 {{/user_data.isCallback}}
 {{^user_data.isCallback}}
-describe('{{name}}', () => {
   {{#methods}}
   {{#user_data.hasParameters}}
   test('{{name}} parameter', async () => {
@@ -88,6 +106,6 @@ describe('{{name}}', () => {
     ).toBeCalledWith({{#parameters}}'test',{{/parameters}});
   });
   {{/methods}}
-});
 {{/user_data.isCallback}}
+});
 {{/nodes}}
