@@ -1,14 +1,12 @@
 import { ApiParam } from 'iris-web-core';
 
-import { IrisApiType } from '../base/IrisApiType';
-
 export function callApiBufferExtension(
-  func_name: IrisApiType,
+  func_name: string,
   data: any,
   buffer: Array<any>
 ): ApiParam {
   switch (func_name) {
-    case IrisApiType.FUNC_MEDIAENGINE_PUSHVIDEOFRAME:
+    case 'MediaEngine_pushVideoFrame':
       if (data?.frame?.buffer) {
         data.frame.buffer = buffer;
       }

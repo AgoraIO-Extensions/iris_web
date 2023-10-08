@@ -4,7 +4,6 @@ import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
 import { VideoTrackPackage } from 'src/engine/IrisClientManager';
 
-import { IrisApiType } from '../base/IrisApiType';
 import { NotifyType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -220,7 +219,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
       if (!irisContainer) {
         irisContainer = this._engine.irisElement.createIrisElement();
       }
-      let canvasID = `${IrisApiType.FUNC_MEDIAENGINE_PUSHVIDEOFRAME}_CANVAS`;
+      let canvasID = `MediaEngine_pushVideoFrame_CANVAS`;
       let canvas: HTMLCanvasElement = document.querySelector(`#${canvasID}`);
       if (!canvas) {
         canvas = document.createElement('canvas');
