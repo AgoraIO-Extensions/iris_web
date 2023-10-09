@@ -177,7 +177,6 @@ export class IrisClientManager {
     IrisTrackEventHandler
   >();
 
-  //all local tracks
   private _remoteVideoViewHolders: Array<VideoViewHolder> = new Array<
     VideoViewHolder
   >();

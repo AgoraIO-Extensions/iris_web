@@ -403,6 +403,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       this._engine.irisClientManager.irisClientList.map((irisCLient) => {
         irisCLient.irisClientVariables.publishCameraTrack = true;
+        irisCLient.irisClientVariables.autoSubscribeVideo = true;
       });
 
       //找到本地video
@@ -2156,7 +2157,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     );
   }
   switchCamera(): CallApiReturnType {
-    AgoraConsole.warn('isCameraZoomSupported not supported in this platform!');
+    AgoraConsole.warn('switchCamera not supported in this platform!');
     return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
