@@ -7,7 +7,7 @@ export function callApiBufferExtension(
 ): ApiParam {
   switch (func_name) {
     case 'MediaEngine_pushVideoFrame':
-      if (data?.frame?.buffer) {
+      if (typeof data?.frame === 'object') {
         data.frame.buffer = buffer;
       }
       break;
