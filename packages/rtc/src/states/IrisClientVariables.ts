@@ -49,9 +49,9 @@ export class IrisClientVariables {
 
   publishTranscodedVideoTrack?: boolean;
 
-  autoSubscribeAudio?: boolean = true;
+  autoSubscribeAudio?: boolean;
 
-  autoSubscribeVideo?: boolean = true;
+  autoSubscribeVideo?: boolean;
 
   enableAudioRecordingOrPlayout?: boolean;
 
