@@ -283,6 +283,14 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             localUid: agoraRTCClient.uid as number,
           };
 
+          agoraRTCClient.remoteUsers.map((remoteUser) => {
+            this._engine.rtcEngineEventHandler.onUserOfflineEx(
+              irisClient.connection ?? con,
+              remoteUser.uid as number,
+              NATIVE_RTC.USER_OFFLINE_REASON_TYPE.USER_OFFLINE_DROPPED
+            );
+          });
+
           try {
             // webSDK在leave的时候会直接reset client 没有release方法
             await agoraRTCClient.leave();
