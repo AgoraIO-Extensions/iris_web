@@ -138,7 +138,13 @@ export class IrisRtcEngine implements ApiInterceptor {
     let className = array[0];
     let funName = array[1];
 
-    AgoraConsole.log(`[callIrisApiAsync][start] ${JSON.stringify(apiParam)}`);
+    AgoraConsole.log(
+      `[callIrisApiAsync][start] ${(() => {
+        let printData = JSON.parse(JSON.stringify(apiParam));
+        delete printData?.buffer;
+        return JSON.stringify(printData);
+      })()}`
+    );
     let obj = this.implDispatchesMap.get(className);
     if (obj) {
       let callApiFun = obj[funName];
