@@ -7,6 +7,8 @@ import { IrisGlobalVariables } from './IrisGlobalVariables';
 export class IrisClientVariables {
   //public role: NATIVE_RTC.CLIENT_ROLE_TYPE = NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE;
 
+  _globalVariables: IrisGlobalVariables = null;
+
   //LeaveChannelOptions
   stopAudioMixing?: boolean = true;
   stopAllEffect?: boolean = true;
@@ -146,6 +148,7 @@ export class IrisClientVariables {
   currChannelMediaRelayconfiguration: NATIVE_RTC.ChannelMediaRelayConfiguration = null;
 
   constructor(globalVariables: IrisGlobalVariables) {
+    this._globalVariables = globalVariables;
     if (globalVariables.rtcEngineContext?.channelProfile) {
       this.channelProfile = globalVariables.rtcEngineContext.channelProfile;
     }
@@ -156,6 +159,21 @@ export class IrisClientVariables {
   ) {
     for (let key in options) {
       this[key] = options[key];
+    }
+    if (
+      this.publishCustomVideoTrack &&
+      this._globalVariables.pushVideoFrameEnabled
+    ) {
+      this.publishCameraTrack = false;
+      this.publishEncodedVideoTrack = false;
+      this.publishSecondaryCameraTrack = false;
+      this.publishThirdCameraTrack = false;
+      this.publishFourthCameraTrack = false;
+      this.publishScreenTrack = false;
+      this.publishSecondaryScreenTrack = false;
+      this.publishThirdScreenTrack = false;
+      this.publishFourthScreenTrack = false;
+      this.publishMediaPlayerVideoTrack = false;
     }
   }
 }
