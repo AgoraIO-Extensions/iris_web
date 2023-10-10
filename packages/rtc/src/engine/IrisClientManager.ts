@@ -18,7 +18,6 @@ import {
   IrisAudioSourceType,
   IrisVideoFrameBufferConfig,
   VideoParams,
-  VideoViewHolder,
 } from '../base/BaseType';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 
@@ -29,6 +28,53 @@ import { IrisClientObserver } from './IrisClientObserver';
 import { IrisRtcEngine } from './IrisRtcEngine';
 
 export type WalkILocalVideoPackageTrackFun = (track: VideoTrackPackage) => void;
+
+export class RemoteUserPackage {
+  connection: NATIVE_RTC.RtcConnection;
+  element?: string;
+  uid?: UID;
+  videoSourceType?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
+  audioSourceType?: IrisAudioSourceType;
+
+  constructor(
+    connection: NATIVE_RTC.RtcConnection,
+    element?: string,
+    uid?: UID,
+    videoSourceType?: NATIVE_RTC.VIDEO_SOURCE_TYPE,
+    audioSourceType?: IrisAudioSourceType
+  ) {
+    this.connection = connection;
+    this.element = element;
+    this.uid = uid;
+    this.videoSourceType = videoSourceType;
+    this.audioSourceType = audioSourceType;
+  }
+
+  update({
+    element = this.element,
+    uid = this.uid,
+    videoSourceType = this.videoSourceType,
+    audioSourceType = this.audioSourceType,
+  }: {
+    element?: string;
+    uid?: UID;
+    videoSourceType?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
+    audioSourceType?: IrisAudioSourceType;
+  }) {
+    this.element = element;
+    this.uid = uid;
+    this.videoSourceType = videoSourceType;
+    this.audioSourceType = audioSourceType;
+  }
+
+  dispose() {
+    this.connection = null;
+    this.element = null;
+    this.uid = null;
+    this.videoSourceType = null;
+    this.audioSourceType = null;
+  }
+}
 
 export class VideoTrackPackage {
   element?: string;
@@ -177,8 +223,8 @@ export class IrisClientManager {
     IrisTrackEventHandler
   >();
 
-  private _remoteVideoViewHolders: Array<VideoViewHolder> = new Array<
-    VideoViewHolder
+  public remoteUserPackages: Array<RemoteUserPackage> = new Array<
+    RemoteUserPackage
   >();
 
   constructor(engine: IrisRtcEngine) {
@@ -265,26 +311,29 @@ export class IrisClientManager {
     }
   }
 
-  getRemoteVideoViewHolders(): Array<VideoViewHolder> {
-    return this._remoteVideoViewHolders;
+  getRemoteUserPackageByUid(uid: UID): RemoteUserPackage {
+    return this.remoteUserPackages.filter((remoteUserPackage) => {
+      return remoteUserPackage.uid == uid;
+    })[0];
   }
 
-  addOrUpdateRemoteVideoViewHolder(viewHolder: VideoViewHolder) {
-    let item = this._remoteVideoViewHolders.find((value) => {
-      return (
-        value.uid == viewHolder.uid &&
-        value.channelId == viewHolder.channelId &&
-        value.type == viewHolder.type
-      );
-    });
+  addRemoteUserPackage(remoteUserPackage: RemoteUserPackage) {
+    this.remoteUserPackages.push(remoteUserPackage);
+    this.irisClientObserver.addRemoteUserPackageObserver(remoteUserPackage);
+  }
 
-    // Update the exist one
-    if (item) {
-      Object.assign(item, viewHolder);
-      return;
+  removeRemoteUserPackage(uid: UID) {
+    for (let i = 0; i < this.remoteUserPackages.length; i++) {
+      let userPackage = this.remoteUserPackages[i];
+      if (userPackage.uid == uid) {
+        this.remoteUserPackages.splice(i, 1);
+        i--;
+        this.irisClientObserver.removeRemoteUserPackageObserver(userPackage);
+        userPackage.dispose();
+
+        break;
+      }
     }
-
-    this._remoteVideoViewHolders.push(viewHolder);
   }
 
   public getVideoFrame(uid: UID, channel_id: string): VideoParams {

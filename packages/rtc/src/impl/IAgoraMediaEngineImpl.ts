@@ -2,7 +2,7 @@ import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { ILocalVideoTrack } from 'agora-rtc-sdk-ng';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
-import { VideoTrackPackage } from 'src/engine/IrisClientManager';
+import { VideoTrackPackage } from '../engine/IrisClientManager';
 
 import { NotifyType } from '../engine/IrisClientObserver';
 
@@ -268,8 +268,8 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
         if (!videoTrack.isPlaying && videoTrackPackage.element) {
           this._engine.trackHelper.play(videoTrack, videoTrackPackage.element);
         }
-        this._engine.irisClientManager.irisClientObserver.notify(
-          NotifyType.START_TRACK,
+        this._engine.irisClientManager.irisClientObserver.notifyLocal(
+          NotifyType.PUBLISH_TRACK,
           [videoTrackPackage],
           this._engine.irisClientManager.irisClientList
         );

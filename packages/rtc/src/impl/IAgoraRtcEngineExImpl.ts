@@ -2,7 +2,9 @@ import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
 import { IrisClient } from '../engine/IrisClient';
-import { NotifyType } from '../engine/IrisClientObserver';
+import { RemoteUserPackage } from '../engine/IrisClientManager';
+
+import { NotifyRemoteType, NotifyType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
@@ -54,9 +56,10 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         irisClient.release();
         return this._engine.returnResult(false);
       }
+      this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(connection, 0);
 
-      await this._engine.irisClientManager.irisClientObserver.notify(
-        NotifyType.START_TRACK,
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        NotifyType.PUBLISH_TRACK,
         [
           ...this._engine.irisClientManager.localAudioTrackPackages,
           ...this._engine.irisClientManager.localVideoTrackPackages,
@@ -64,7 +67,6 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         [irisClient]
       );
 
-      this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(connection, 0);
       return this._engine.returnResult();
     };
     return this._engine.execute(processJoinChannel);
@@ -79,7 +81,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         connection
       );
 
-      await this._engine.irisClientManager.irisClientObserver.notify(
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         NotifyType.STOP_TRACK,
         [
           ...this._engine.irisClientManager.localAudioTrackPackages,
@@ -103,9 +105,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           connection,
           new NATIVE_RTC.RtcStats()
         );
-        console.log(this._engine.irisClientManager.irisClientList, 888);
         irisClient.release();
-        console.log(this._engine.irisClientManager.irisClientList.length, 999);
       }
 
       return this._engine.returnResult();
@@ -154,13 +154,26 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
-      let holder = {
-        element: canvas.view,
-        channelId: connection.channelId,
-        uid: canvas.uid,
-        type: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
-      };
-      this._engine.irisClientManager.addOrUpdateRemoteVideoViewHolder(holder);
+      let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
+        canvas.uid
+      );
+      if (remoteUser) {
+        remoteUser.update({
+          element: canvas.view,
+        });
+        this._engine.irisClientManager.irisClientObserver.notifyRemote(
+          NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
+          [remoteUser]
+        );
+      } else {
+        let userPackage = new RemoteUserPackage(
+          connection,
+          canvas.view,
+          canvas.uid,
+          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE
+        );
+        this._engine.irisClientManager.addRemoteUserPackage(userPackage);
+      }
 
       return this._engine.returnResult();
     };

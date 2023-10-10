@@ -2,6 +2,10 @@ import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { ILocalTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 
 import { IrisAudioSourceType } from '../base/BaseType';
+import {
+  IrisTrackEventHandler,
+  IrisTrackEventHandlerParam,
+} from '../event_handler/IrisTrackEventHandler';
 
 import { AgoraConsole } from '../util';
 
@@ -9,25 +13,32 @@ import { IrisClient } from './IrisClient';
 import {
   AudioTrackPackage,
   BufferSourceAudioTrackPackage,
+  RemoteUserPackage,
   TrackPackage,
   VideoTrackPackage,
 } from './IrisClientManager';
 import { IrisRtcEngine } from './IrisRtcEngine';
 
 export enum NotifyType {
-  'START_TRACK',
+  'PUBLISH_TRACK',
   'STOP_TRACK',
   'UPDATE_TRACK',
+}
+export enum NotifyRemoteType {
+  'SUBSCRIBE_VIDEO_TRACK',
+  'SUBSCRIBE_AUDIO_TRACK',
 }
 
 export class IrisClientObserver {
   audioTrackPackageObservers: AudioTrackPackage[];
   videoTrackPackageObservers: VideoTrackPackage[];
+  remoteUserPackageObservers: RemoteUserPackage[];
   _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this.audioTrackPackageObservers = [];
     this.videoTrackPackageObservers = [];
+    this.remoteUserPackageObservers = [];
     this._engine = engine;
   }
   addAudioTrackPackageObserver(observer: AudioTrackPackage) {
@@ -35,6 +46,14 @@ export class IrisClientObserver {
   }
   addVideoTrackPackageObserver(observer: VideoTrackPackage) {
     this.videoTrackPackageObservers.push(observer);
+  }
+  addRemoteUserPackageObserver(observer: RemoteUserPackage) {
+    this.remoteUserPackageObservers.push(observer);
+  }
+  removeRemoteUserPackageObserver(observer: RemoteUserPackage) {
+    this.remoteUserPackageObservers = this.remoteUserPackageObservers.filter(
+      (item) => item !== observer
+    );
   }
   removeAudioTrackPackageObserver(observer: AudioTrackPackage) {
     this.audioTrackPackageObservers = this.audioTrackPackageObservers.filter(
@@ -62,7 +81,6 @@ export class IrisClientObserver {
               trackPackage.type ===
                 IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary)
           ) {
-            console.log(this._engine.irisClientManager.localAudioTrackPackages);
             this._engine.trackHelper.setMuted(
               trackPackage.track as IMicrophoneAudioTrack,
               false
@@ -271,14 +289,14 @@ export class IrisClientObserver {
 
   async updateTrack(trackPackage: TrackPackage) {}
 
-  async notify(
+  async notifyLocal(
     type: NotifyType,
     scopePackages: TrackPackage[],
     irisClientList?: IrisClient[]
   ) {
     for (let scopePackage of scopePackages) {
       switch (type) {
-        case NotifyType.START_TRACK:
+        case NotifyType.PUBLISH_TRACK:
           if (scopePackage) {
             await this.publishTrack(scopePackage, irisClientList);
           }
@@ -297,8 +315,93 @@ export class IrisClientObserver {
     }
   }
 
+  subscribeVideoTrack(userPackage: RemoteUserPackage) {
+    let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+      userPackage.connection
+    );
+    if (!irisClient) {
+      return;
+    }
+    let autoSubscribeVideo: boolean =
+      irisClient.irisClientVariables.autoSubscribeVideo;
+    let enableVideo: boolean = this._engine.globalVariables.enabledVideo;
+    if (enableVideo && autoSubscribeVideo && irisClient.agoraRTCClient) {
+      let user = irisClient.agoraRTCClient.remoteUsers.find(
+        (item) => item.uid === userPackage.uid
+      );
+      if (!user || !user.hasVideo) {
+        return;
+      }
+      irisClient.agoraRTCClient.subscribe(user, 'video').then(() => {
+        AgoraConsole.debug('onEventUserPublished subscribe video success');
+        if (userPackage.element) {
+          this._engine.trackHelper.play(user.videoTrack, userPackage.element);
+        }
+        let param: IrisTrackEventHandlerParam = {
+          channelName: irisClient.agoraRTCClient.channelName,
+          client: irisClient.agoraRTCClient,
+          remoteUser: user,
+          track: user.videoTrack,
+          trackType: 'IRemoteVideoTrack',
+        };
+        let trackEventHandler = new IrisTrackEventHandler(param, this._engine);
+        this._engine.irisClientManager.addTrackEventHandler(trackEventHandler);
+      });
+    }
+  }
+  subscribeAudioTrack(userPackage: RemoteUserPackage) {
+    let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+      userPackage.connection
+    );
+    if (!irisClient) {
+      return;
+    }
+    let autoSubscribeAudio: boolean =
+      irisClient.irisClientVariables.autoSubscribeAudio;
+    let enableAudio: boolean = this._engine.globalVariables.enabledAudio;
+    if (enableAudio && autoSubscribeAudio && irisClient.agoraRTCClient) {
+      let user = irisClient.agoraRTCClient.remoteUsers.find(
+        (item) => item.uid === userPackage.uid
+      );
+      if (!user || !user.hasAudio) {
+        return;
+      }
+      irisClient.agoraRTCClient.subscribe(user, 'audio').then(() => {
+        AgoraConsole.debug('onEventUserPublished subcribe audio success');
+        this._engine.trackHelper.play(user.audioTrack);
+        let param: IrisTrackEventHandlerParam = {
+          channelName: irisClient.agoraRTCClient.channelName,
+          client: irisClient.agoraRTCClient,
+          remoteUser: user,
+          track: user.audioTrack,
+          trackType: 'IRemoteTrack',
+        };
+        let trackEventHandler = new IrisTrackEventHandler(param, this._engine);
+        this._engine.irisClientManager.addTrackEventHandler(trackEventHandler);
+      });
+    }
+  }
+
+  notifyRemote(type: NotifyRemoteType, scopePackages: RemoteUserPackage[]) {
+    for (let scopePackage of scopePackages) {
+      switch (type) {
+        case NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK:
+          if (scopePackage) {
+            this.subscribeVideoTrack(scopePackage);
+          }
+          break;
+        case NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK:
+          if (scopePackage) {
+            this.subscribeAudioTrack(scopePackage);
+          }
+          break;
+      }
+    }
+  }
+
   release() {
     this.audioTrackPackageObservers = [];
     this.videoTrackPackageObservers = [];
+    this.remoteUserPackageObservers = [];
   }
 }

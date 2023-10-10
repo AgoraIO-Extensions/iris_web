@@ -254,6 +254,22 @@ export class IrisClient {
     this.audioTrackPackages = [];
     this.videoTrackPackage = null;
     this.agoraRTCClient = null;
+    for (
+      let i = 0;
+      i < this._engine.irisClientManager.remoteUserPackages.length;
+      i++
+    ) {
+      let remoteUserPackage = this._engine.irisClientManager.remoteUserPackages[
+        i
+      ];
+      if (
+        remoteUserPackage.connection?.channelId == this.connection?.channelId &&
+        remoteUserPackage.connection?.localUid == this.connection?.localUid
+      ) {
+        this._engine.irisClientManager.remoteUserPackages.splice(i, 1);
+        i--;
+      }
+    }
     this.connection = null;
     //不删除通过engine.initialize创建的client
     if (this._engine.irisClientManager.irisClientList[0]?.id !== this.id) {

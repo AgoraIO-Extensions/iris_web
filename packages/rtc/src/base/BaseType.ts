@@ -14,7 +14,8 @@ export enum IrisAudioSourceType {
   kAudioSourceTypeScreenCapture = 2003,
   kAudioSourceTypeCustom = 2004,
   kAudioSourceTypeBufferSourceAudio = 2005,
-  kAudioSourceTypeUnknown = 2006,
+  kAudioSourceTypeRemote = 2006,
+  kAudioSourceTypeUnknown = 2007,
 }
 
 export interface IrisVideoFrameBufferConfig {
@@ -44,11 +45,4 @@ export interface VideoParams {
 export interface Size {
   width: number;
   height: number;
-}
-
-export interface VideoViewHolder {
-  element?: string;
-  channelId?: string;
-  uid?: UID;
-  type?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
 }

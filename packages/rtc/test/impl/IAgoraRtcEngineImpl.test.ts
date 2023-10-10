@@ -1,8 +1,7 @@
 import { IrisApiEngine, IrisCore } from 'iris-web-core';
 
-import { IrisRtcEngine } from 'src/engine/IrisRtcEngine';
-
 import { initIrisRtc } from '../../src/index';
+import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 let apiEnginePtr: IrisApiEngine;
 let irisRtcEngine: IrisRtcEngine;

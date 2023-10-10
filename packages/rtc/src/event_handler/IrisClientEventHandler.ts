@@ -13,15 +13,14 @@ import {
   UID,
 } from 'agora-rtc-sdk-ng';
 
+import { IrisAudioSourceType } from '../base/BaseType';
+
 import { IrisClient } from '../engine/IrisClient';
+import { RemoteUserPackage } from '../engine/IrisClientManager';
+import { NotifyRemoteType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraTranslate } from '../util/AgoraTranslate';
-
-import {
-  IrisTrackEventHandler,
-  IrisTrackEventHandlerParam,
-} from './IrisTrackEventHandler';
 
 export class IrisClientEventHandler {
   private _irisClient: IrisClient;
@@ -32,7 +31,6 @@ export class IrisClientEventHandler {
     this._irisClient = irisClient;
     this._engine = engine;
     this.agoraRTCClient = irisClient.agoraRTCClient;
-
     this.agoraRTCClient.on(
       'connection-state-change',
       this.onEventConnectionStateChange.bind(this)
@@ -178,7 +176,7 @@ export class IrisClientEventHandler {
   onEventUserJoined(user: IAgoraRTCRemoteUser): void {
     let connection: NATIVE_RTC.RtcConnection = {
       channelId: this.agoraRTCClient.channelName,
-      localUid: user.uid as number,
+      localUid: this.agoraRTCClient.uid as number,
     };
     let remoteUid = user.uid;
     let elapsed = 0;
@@ -187,6 +185,24 @@ export class IrisClientEventHandler {
       remoteUid as number,
       elapsed
     );
+
+    let userPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
+      user.uid
+    );
+    if (!userPackage) {
+      userPackage = new RemoteUserPackage(
+        connection,
+        null,
+        user.uid,
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
+        IrisAudioSourceType.kAudioSourceTypeRemote
+      );
+      this._engine.irisClientManager.addRemoteUserPackage(userPackage);
+    } else {
+      userPackage.update({
+        uid: user.uid,
+      });
+    }
   }
 
   onEventUserLeft(user: IAgoraRTCRemoteUser, reason: string): void {
@@ -200,6 +216,8 @@ export class IrisClientEventHandler {
       reason2
     );
 
+    this._engine.irisClientManager.removeRemoteUserPackage(user.uid);
+
     this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
       user,
       'all'
@@ -210,98 +228,20 @@ export class IrisClientEventHandler {
     user: IAgoraRTCRemoteUser,
     mediaType: 'audio' | 'video'
   ): void {
-    let enableAudio: boolean = this._engine.globalVariables.enabledAudio;
-    let enableVideo: boolean = this._engine.globalVariables.enabledVideo;
-
-    if (mediaType == 'audio' && enableAudio) {
-      let autoSubscribeAudio: boolean = this._irisClient.irisClientVariables
-        .autoSubscribeAudio;
-
-      if (autoSubscribeAudio) {
-        this.agoraRTCClient
-          .subscribe(user, mediaType)
-          .then(() => {
-            console.log('onEventUserPublished subcribe audio success');
-            if (
-              this._engine.globalVariables.playbackSignalVolumes.has(user.uid)
-            ) {
-              user.audioTrack.setVolume(
-                this._engine.globalVariables.playbackSignalVolumes.get(user.uid)
-              );
-            } else {
-              user.audioTrack.setVolume(
-                this._engine.globalVariables.playbackSignalVolume
-              );
-            }
-            this._engine.trackHelper.play(user.audioTrack);
-
-            let param: IrisTrackEventHandlerParam = {
-              channelName: this.agoraRTCClient.channelName,
-              client: this.agoraRTCClient,
-              remoteUser: user,
-              track: user.audioTrack,
-              trackType: 'IRemoteTrack',
-            };
-            let trackEventHandler = new IrisTrackEventHandler(
-              param,
-              this._engine
-            );
-
-            this._engine.irisClientManager.addTrackEventHandler(
-              trackEventHandler
-            );
-          })
-          .catch(() => {
-            console.log('onEventUserPublished subcribe audio failed');
-          });
-      }
-    } else if (mediaType == 'video' && enableVideo) {
-      //video
-      let autoSubscribeVideo: boolean = this._irisClient.irisClientVariables
-        .autoSubscribeVideo;
-
-      if (autoSubscribeVideo) {
-        this.agoraRTCClient
-          .subscribe(user, mediaType)
-          .then(() => {
-            console.log('onEventUserPublished subscribe video success');
-
-            this._engine.irisClientManager.addOrUpdateRemoteVideoViewHolder({
-              channelId: this.agoraRTCClient.channelName,
-              uid: user.uid,
-              type: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
-            });
-            for (let holder of this._engine.irisClientManager.getRemoteVideoViewHolders()) {
-              if (
-                holder.element &&
-                holder.channelId == this.agoraRTCClient.channelName &&
-                holder.uid == user.uid
-              ) {
-                this._engine.trackHelper.play(user.videoTrack, holder.element);
-
-                break;
-              }
-            }
-
-            let param: IrisTrackEventHandlerParam = {
-              channelName: this.agoraRTCClient.channelName,
-              client: this.agoraRTCClient,
-              remoteUser: user,
-              track: user.videoTrack,
-              trackType: 'IRemoteVideoTrack',
-            };
-            let trackEventHandler = new IrisTrackEventHandler(
-              param,
-              this._engine
-            );
-
-            this._engine.irisClientManager.addTrackEventHandler(
-              trackEventHandler
-            );
-          })
-          .catch(() => {
-            console.log('onEventUserPublished subcribe video failed');
-          });
+    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
+      user.uid
+    );
+    if (remoteUser) {
+      if (mediaType == 'audio') {
+        this._engine.irisClientManager.irisClientObserver.notifyRemote(
+          NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
+          [remoteUser]
+        );
+      } else if (mediaType == 'video') {
+        this._engine.irisClientManager.irisClientObserver.notifyRemote(
+          NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
+          [remoteUser]
+        );
       }
     }
   }

@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import AgoraRTC, { IAgoraRTC, UID } from 'agora-rtc-sdk-ng';
+import AgoraRTC, { IAgoraRTC } from 'agora-rtc-sdk-ng';
 
 export interface DeviceInfo {
   deviceName: string;
@@ -31,11 +31,6 @@ export class IrisGlobalVariables {
 
   public enabledVideo: boolean = false;
   public pausedVideo: boolean = false;
-
-  //远端用户的 playback signal volume， 总设置
-  playbackSignalVolume: number = 100;
-  //每个远端用户的 playback signal volume 对应uid
-  playbackSignalVolumes: Map<UID, number> = new Map();
 
   // recording Signal Volume
   recordingSignalVolume: number = 100;
