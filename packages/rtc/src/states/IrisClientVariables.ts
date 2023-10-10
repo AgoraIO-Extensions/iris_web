@@ -152,6 +152,8 @@ export class IrisClientVariables {
     if (globalVariables.rtcEngineContext?.channelProfile) {
       this.channelProfile = globalVariables.rtcEngineContext.channelProfile;
     }
+    //当加入频道前调用enableVideo时,需要在createIrisClient时更新autoSubscribeVideo
+    this.autoSubscribeVideo = globalVariables.autoSubscribeVideo;
   }
 
   mergeChannelMediaOptions(

@@ -408,9 +408,11 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   enableVideo(): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
       this._engine.globalVariables.enabledVideo = true;
+      this._engine.globalVariables.autoSubscribeVideo = true;
 
       this._engine.irisClientManager.irisClientList.map((irisCLient) => {
         irisCLient.irisClientVariables.publishCameraTrack = true;
+        //当autoSubscribeVideo改变为true时,通过观察者模式来触发play逻辑。
         irisCLient.irisClientVariables.autoSubscribeVideo = true;
       });
 

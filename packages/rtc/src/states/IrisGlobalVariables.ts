@@ -82,6 +82,8 @@ export class IrisGlobalVariables {
     reportVad: false,
   };
 
+  public autoSubscribeVideo: boolean = false;
+
   reset() {
     this.enabledAudio = true;
     this.pausedAudio = false;
