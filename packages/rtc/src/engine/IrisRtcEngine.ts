@@ -149,6 +149,16 @@ export class IrisRtcEngine implements ApiInterceptor {
     if (obj) {
       let callApiFun = obj[funName];
       if (callApiFun) {
+        if (
+          func_name !== 'RtcEngine_initialize' &&
+          this.irisClientManager.irisClientList.length == 0
+        ) {
+          AgoraConsole.error('you have not initialize yet');
+          return new CallIrisApiResult(
+            -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_INITIALIZED,
+            ''
+          );
+        }
         let ret = await callApiFun.call(obj, apiParam);
         AgoraConsole.log(
           `[callIrisApiAsync][result] ${func_name} ret ${ret.code}`

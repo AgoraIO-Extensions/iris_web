@@ -3,9 +3,7 @@ import {
   AudioSourceOptions,
   BufferSourceAudioTrackInitConfig,
   IAgoraRTCClient,
-  IAgoraRTCRemoteUser,
   ICameraVideoTrack,
-  ILocalAudioTrack,
   ILocalVideoTrack,
   IMicrophoneAudioTrack,
 } from 'agora-rtc-sdk-ng';
@@ -85,17 +83,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(context?.logConfig?.level)
         );
       }
-      try {
-        //音频模块默认是开启的,所以默认创建音频轨道
-        await this._engine.implHelper.createAudioTrack(
-          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
-        );
-        await this._engine.implHelper.createVideoTrack(
-          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
-        );
-      } catch (e) {
-        AgoraConsole.error(e);
-      }
+      //音频模块默认是开启的,所以默认创建音频轨道
+      await this._engine.implHelper.createAudioTrack(
+        IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+      );
 
       let result = this._engine.globalVariables.AgoraRTC.checkSystemRequirements();
       return this._engine.returnResult(result);
@@ -104,7 +95,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processFunc);
   }
   getVersion(): CallApiReturnType {
-    AgoraConsole.warn('getVersion not supported in this platform!');
     return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
@@ -250,7 +240,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-        NotifyType.STOP_TRACK,
+        NotifyType.UNPUBLISH_TRACK,
         [
           ...this._engine.irisClientManager.localAudioTrackPackages,
           ...this._engine.irisClientManager.localVideoTrackPackages,
@@ -413,30 +403,25 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalVariables.enabledVideo = true;
       this._engine.globalVariables.autoSubscribeVideo = true;
 
+      //local
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        NotifyType.ENABLE_TRACK,
+        [...this._engine.irisClientManager.localVideoTrackPackages]
+      );
       for (let irisClient of this._engine.irisClientManager.irisClientList) {
-        if (irisClient.irisClientVariables.autoSubscribeVideo !== false) {
-          irisClient.irisClientVariables.autoSubscribeVideo = true;
-        }
+        irisClient.irisClientVariables.autoSubscribeVideo = true;
         await this._engine.irisClientManager.irisClientObserver.notifyLocal(
           NotifyType.PUBLISH_TRACK,
-          [
-            ...this._engine.irisClientManager.localAudioTrackPackages,
-            ...this._engine.irisClientManager.localVideoTrackPackages,
-          ],
+          [...this._engine.irisClientManager.localVideoTrackPackages],
           [irisClient]
         );
       }
+
+      //remote
       this._engine.irisClientManager.irisClientObserver.notifyRemote(
         NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
         this._engine.irisClientManager.remoteUserPackages
       );
-
-      //找到本地video
-      for (let trackPackage of this._engine.irisClientManager
-        .localVideoTrackPackages) {
-        let track = trackPackage.track as ILocalVideoTrack;
-        await this._engine.trackHelper.setEnabled(track, true);
-      }
 
       return this._engine.returnResult();
     };
@@ -446,33 +431,27 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   disableVideo(): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
       this._engine.globalVariables.enabledVideo = false;
+      this._engine.globalVariables.autoSubscribeVideo = false;
 
-      //找到本端video
-      for (let trackPackage of this._engine.irisClientManager
-        .localVideoTrackPackages) {
-        let track = trackPackage.track as ILocalVideoTrack;
-        if (track.enabled) {
-          await this._engine.trackHelper.setEnabled(track, false);
-        }
+      //local
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        NotifyType.UNABLE_TRACK,
+        [...this._engine.irisClientManager.localVideoTrackPackages]
+      );
+      for (let irisClient of this._engine.irisClientManager.irisClientList) {
+        irisClient.irisClientVariables.autoSubscribeVideo = false;
+        await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+          NotifyType.UNPUBLISH_TRACK,
+          [...this._engine.irisClientManager.localVideoTrackPackages],
+          [irisClient]
+        );
       }
 
-      //远端用户
-      this._engine.irisClientManager.irisClientList.map((irisClient) => {
-        let agoraRTCClient = irisClient.agoraRTCClient;
-        if (agoraRTCClient && agoraRTCClient.channelName) {
-          let remoteUsers = agoraRTCClient.remoteUsers;
-          for (let remoteUser of remoteUsers) {
-            //todo 远端用户发流的时候。我不订阅，那么他的hasVideo为true， 但是他们的videoTrack是null
-            if (
-              remoteUser.hasVideo &&
-              remoteUser.videoTrack &&
-              remoteUser.videoTrack.isPlaying
-            ) {
-              this._engine.trackHelper.stop(remoteUser?.videoTrack);
-            }
-          }
-        }
-      });
+      //remote
+      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK,
+        this._engine.irisClientManager.remoteUserPackages
+      );
 
       return this._engine.returnResult();
     };
@@ -504,20 +483,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         sourceType
       )[0];
       if (!videoTrackPackage) {
-        videoTrackPackage = new VideoTrackPackage(null, sourceType, null);
+        let cTrack = null;
+        if (this._engine.implHelper.isVideoCamera(sourceType)) {
+          cTrack = await this._engine.implHelper.createVideoCameraTrack();
+        }
+        videoTrackPackage = new VideoTrackPackage(null, sourceType, cTrack);
         this._engine.irisClientManager.addLocalVideoTrackPackage(
           videoTrackPackage
         );
       }
       videoTrackPackage.setPreview(true);
-
       try {
         let track = videoTrackPackage?.track as ILocalVideoTrack;
-
         if (track) {
-          if (!track.enabled) {
-            await this._engine.trackHelper.setEnabled(track, true);
-          }
+          await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+            NotifyType.ENABLE_TRACK,
+            [videoTrackPackage]
+          );
           if (videoTrackPackage.element) {
             this._engine.trackHelper.play(track, videoTrackPackage.element);
           }
@@ -561,9 +543,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         let track = videoTrackPackage?.track as ILocalVideoTrack;
 
         if (track) {
-          if (!track.enabled) {
-            await this._engine.trackHelper.setEnabled(track, false);
-          }
+          await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+            NotifyType.UNABLE_TRACK,
+            [videoTrackPackage]
+          );
           if (videoTrackPackage.element) {
             this._engine.trackHelper.play(
               videoTrackPackage.track,
@@ -700,16 +683,21 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         sourceType
       )[0];
       if (!trackPackage) {
-        trackPackage = new VideoTrackPackage(canvas.view, sourceType, null);
+        let cTrack = null;
+        if (this._engine.implHelper.isVideoCamera(sourceType)) {
+          cTrack = await this._engine.implHelper.createVideoCameraTrack();
+        }
+        trackPackage = new VideoTrackPackage(canvas.view, sourceType, cTrack);
         this._engine.irisClientManager.addLocalVideoTrackPackage(trackPackage);
       }
       trackPackage.update({ type: sourceType, element: canvas.view });
 
       let track = trackPackage.track as ILocalVideoTrack;
       if (track) {
-        if (!track.enabled) {
-          await this._engine.trackHelper.setEnabled(track, true);
-        }
+        await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+          NotifyType.ENABLE_TRACK,
+          [trackPackage]
+        );
 
         if (trackPackage.element && trackPackage.isPreview) {
           this._engine.trackHelper.play(track, trackPackage.element);
@@ -733,23 +721,24 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let processAudioTracks = async (): Promise<CallIrisApiResult> => {
       this._engine.globalVariables.enabledAudio = true;
 
-      //找到本地audio
-      for (let trackPackage of this._engine.irisClientManager
-        .localAudioTrackPackages) {
-        let track = trackPackage.track as ILocalAudioTrack;
-        await this._engine.trackHelper.setEnabled(track, true);
+      //local
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        NotifyType.ENABLE_TRACK,
+        this._engine.irisClientManager.localAudioTrackPackages
+      );
+      for (let irisClient of this._engine.irisClientManager.irisClientList) {
+        await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+          NotifyType.PUBLISH_TRACK,
+          [...this._engine.irisClientManager.localAudioTrackPackages],
+          [irisClient]
+        );
       }
 
-      //找到远端audio
-      this._engine.irisClientManager.irisClientList.map((irisClient) => {
-        irisClient.irisClientVariables.publishMicrophoneTrack = true;
-        let remoteUsers = irisClient.agoraRTCClient?.remoteUsers;
-        remoteUsers?.map((remoteUser: IAgoraRTCRemoteUser) => {
-          if (remoteUser.audioTrack && !remoteUser.audioTrack.isPlaying) {
-            this._engine.trackHelper.play(remoteUser.audioTrack);
-          }
-        });
-      });
+      //remote
+      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
+        this._engine.irisClientManager.remoteUserPackages
+      );
 
       return this._engine.returnResult();
     };
@@ -757,11 +746,32 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processAudioTracks);
   }
   disableAudio(): CallApiReturnType {
-    AgoraConsole.warn('disableAudio not supported in this platform!');
-    return this._engine.returnResult(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    let processAudioTracks = async (): Promise<CallIrisApiResult> => {
+      this._engine.globalVariables.enabledAudio = false;
+
+      //local
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        NotifyType.UNABLE_TRACK,
+        this._engine.irisClientManager.localAudioTrackPackages
+      );
+      for (let irisClient of this._engine.irisClientManager.irisClientList) {
+        await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+          NotifyType.UNPUBLISH_TRACK,
+          [...this._engine.irisClientManager.localAudioTrackPackages],
+          [irisClient]
+        );
+      }
+
+      //remote
+      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
+        this._engine.irisClientManager.remoteUserPackages
+      );
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processAudioTracks);
   }
   setAudioProfile(
     profile: NATIVE_RTC.AUDIO_PROFILE_TYPE,
@@ -800,14 +810,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalVariables.enabledLocalAudio = enabled;
 
       //找到本地audio
-      for (let trackPackage of this._engine.irisClientManager
-        .localAudioTrackPackages) {
-        let track = trackPackage.track as ILocalAudioTrack;
-        await this._engine.trackHelper.setEnabled(track, enabled);
-      }
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        enabled ? NotifyType.ENABLE_TRACK : NotifyType.UNABLE_TRACK,
+        this._engine.irisClientManager.localAudioTrackPackages
+      );
 
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-        enabled ? NotifyType.PUBLISH_TRACK : NotifyType.STOP_TRACK,
+        enabled ? NotifyType.PUBLISH_TRACK : NotifyType.UNPUBLISH_TRACK,
         this._engine.irisClientManager.localAudioTrackPackages,
         this._engine.irisClientManager.irisClientList
       );
@@ -1436,7 +1445,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         return this._engine.returnResult();
       }
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-        NotifyType.STOP_TRACK,
+        NotifyType.UNPUBLISH_TRACK,
         [bufferSourceAudioTrackPackage]
       );
 
@@ -2557,7 +2566,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-        NotifyType.STOP_TRACK,
+        NotifyType.UNPUBLISH_TRACK,
         [...videoPackages, ...audioPackages]
       );
 

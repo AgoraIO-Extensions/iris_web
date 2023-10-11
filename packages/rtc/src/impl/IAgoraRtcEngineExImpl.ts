@@ -82,7 +82,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       );
 
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-        NotifyType.STOP_TRACK,
+        NotifyType.UNPUBLISH_TRACK,
         [
           ...this._engine.irisClientManager.localAudioTrackPackages,
           ...this._engine.irisClientManager.localVideoTrackPackages,

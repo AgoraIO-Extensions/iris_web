@@ -14,10 +14,24 @@ const bindingAPI = require('../../src/binding/AgoraBaseDispatch');
 
 let apiEnginePtr: IrisApiEngine;
 let irisRtcEngine: IrisRtcEngine;
-beforeAll(() => {
+beforeAll(async () => {
   apiEnginePtr = IrisCore.createIrisApiEngine();
   initIrisRtc(apiEnginePtr);
   irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
+  irisRtcEngine.implHelper.createAudioTrack = jest.fn();
+  let nParam = {
+    context: 'test',
+  };
+  let apiParam = new EventParam(
+    'RtcEngine_initialize',
+    JSON.stringify(nParam),
+    0,
+    '',
+    ['test'],
+    [],
+    1
+  );
+  await IrisCore.callIrisApi(apiEnginePtr, apiParam);
 });
 
 afterAll(() => {

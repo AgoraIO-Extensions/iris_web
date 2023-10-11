@@ -206,18 +206,27 @@ export class IrisClientEventHandler {
   }
 
   onEventUserLeft(user: IAgoraRTCRemoteUser, reason: string): void {
-    let remoteUid = user.uid;
+    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
+      user.uid
+    );
     let reason2 = AgoraTranslate.string2NATIVE_RTCUSER_OFFLINE_REASON_TYPE(
       reason
     );
     this._engine.rtcEngineEventHandler.onUserOfflineEx(
       this._irisClient.connection,
-      remoteUid as number,
+      user.uid as number,
       reason2
     );
 
+    this._engine.irisClientManager.irisClientObserver.notifyRemote(
+      NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
+      [remoteUser]
+    );
+    this._engine.irisClientManager.irisClientObserver.notifyRemote(
+      NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
+      [remoteUser]
+    );
     this._engine.irisClientManager.removeRemoteUserPackage(user.uid);
-
     this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
       user,
       'all'
@@ -250,10 +259,22 @@ export class IrisClientEventHandler {
     user: IAgoraRTCRemoteUser,
     mediaType: 'audio' | 'video'
   ): void {
-    this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
-      user,
-      mediaType
+    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
+      user.uid
     );
+    if (remoteUser) {
+      if (mediaType == 'audio') {
+        this._engine.irisClientManager.irisClientObserver.notifyRemote(
+          NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
+          [remoteUser]
+        );
+      } else if (mediaType == 'video') {
+        this._engine.irisClientManager.irisClientObserver.notifyRemote(
+          NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK,
+          [remoteUser]
+        );
+      }
+    }
   }
 
   onEventUserInfoUpdated(

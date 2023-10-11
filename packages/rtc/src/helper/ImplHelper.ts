@@ -208,9 +208,8 @@ export class ImplHelper {
     return audioTrackPackage;
   }
 
-  public async createVideoTrack(videoType: NATIVE_RTC.VIDEO_SOURCE_TYPE) {
+  public async createVideoCameraTrack(): Promise<ICameraVideoTrack> {
     let videoTrack: ICameraVideoTrack = null;
-    let videoTrackPackage: VideoTrackPackage;
     try {
       videoTrack = await this._engine.globalVariables.AgoraRTC.createCameraVideoTrack();
       //受全局enabledVideo控制
@@ -220,10 +219,8 @@ export class ImplHelper {
       AgoraConsole.error(e);
     }
 
-    videoTrackPackage = new VideoTrackPackage(null, videoType, videoTrack);
     await this.processVideoTrack(videoTrack);
-    this._engine.irisClientManager.addLocalVideoTrackPackage(videoTrackPackage);
-    return videoTrackPackage;
+    return videoTrack;
   }
 
   //当一个audioTrack被创建的时候，要拆解这些参数
@@ -356,7 +353,7 @@ export class ImplHelper {
     let audioTrackPackages = irisClient.audioTrackPackages;
     let videoTrackPackage = irisClient.videoTrackPackage;
     let irisClientObserver = irisClientManager.irisClientObserver;
-    irisClientObserver.notifyLocal(NotifyType.STOP_TRACK, [
+    irisClientObserver.notifyLocal(NotifyType.UNPUBLISH_TRACK, [
       ...audioTrackPackages,
       videoTrackPackage,
     ]);
