@@ -1,6 +1,6 @@
 *.txt
 *.pcm
-coverage
+**/coverage/*
 *.log
 sdk
 tmp

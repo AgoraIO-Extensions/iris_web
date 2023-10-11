@@ -45,7 +45,6 @@ import { IrisElement } from '../helper/DomHelper';
 import { ImplHelper } from '../helper/ImplHelper';
 import { TrackHelper } from '../helper/TrackHelper';
 import { IrisGlobalState } from '../state/IrisGlobalState';
-import { AgoraActionQueue } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
 import IrisRtcErrorHandler from '../util/ErrorHandler';
 
@@ -74,7 +73,6 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   public globalState: IrisGlobalState = null;
   public agoraEventHandler: IrisAgoraEventHandler = null;
-  public actionQueue: AgoraActionQueue = null;
   public executor: CallApiExecutor = null;
   public irisEventHandlerManager: IrisEventHandlerManager = null;
   public irisElement: IrisElement = null;
@@ -111,7 +109,6 @@ export class IrisRtcEngine implements ApiInterceptor {
       this.implDispatchesMap.set(key, value)
     );
 
-    this.actionQueue = new AgoraActionQueue();
     this.rtcEngineEventHandler = new IRtcEngineEventHandlerEx(this);
     this.globalState = new IrisGlobalState();
     this.irisElement = new IrisElement();
