@@ -24,10 +24,10 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     encodedVideoOption: NATIVE_RTC.SenderOptions
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.pushVideoFrameEnabled = enabled;
-      this._engine.globalVariables.pushVideoFrameUseTexture = useTexture;
-      this._engine.globalVariables.pushVideoFrameSourceType = sourceType;
-      this._engine.globalVariables.pushVideoFrameEncodedVideoOption = encodedVideoOption;
+      this._engine.globalState.pushVideoFrameEnabled = enabled;
+      this._engine.globalState.pushVideoFrameUseTexture = useTexture;
+      this._engine.globalState.pushVideoFrameSourceType = sourceType;
+      this._engine.globalState.pushVideoFrameEncodedVideoOption = encodedVideoOption;
 
       return this._engine.returnResult();
     };
@@ -204,11 +204,11 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
   ): CallApiReturnType {
     //调用engine.release后才会创建新的track
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      if (this._engine.globalVariables.enabledVideo == false) {
+      if (this._engine.globalState.enabledVideo == false) {
         AgoraConsole.error('call enableVideo(true) before startPreview');
         return this._engine.returnResult(false);
       }
-      if (!this._engine.globalVariables.pushVideoFrameEnabled) {
+      if (!this._engine.globalState.pushVideoFrameEnabled) {
         AgoraConsole.error(
           'pushVideoFrameEnabled is disabled , call setExternalVideoSource first'
         );

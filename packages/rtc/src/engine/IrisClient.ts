@@ -7,7 +7,7 @@ import {
 
 import { IrisClientEventHandler } from '../event_handler/IrisClientEventHandler';
 
-import { IrisClientVariables } from '../states/IrisClientVariables';
+import { IrisClientState } from '../state/IrisClientState';
 import { AgoraConsole, AgoraTranslate } from '../util';
 
 import { AudioTrackPackage, VideoTrackPackage } from './IrisClientManager';
@@ -17,14 +17,14 @@ import { IrisRtcEngine } from './IrisRtcEngine';
  * 通过engine.initialize创建的client将会是默认的一个client
  * 默认固定在this._engine.irisClientManager.irisClientList[0]
  * engineEx.joinChannelEx不会使用,只有engine.joinChannel才会使用
- * 轨道发布在哪个channel不受此逻辑影响,轨道是否发布只看client的irisClientVariables配置来
+ * 轨道发布在哪个channel不受此逻辑影响,轨道是否发布只看client的irisClientState配置来
  */
 
 export class IrisClient {
   id: string;
   agoraRTCClient: IAgoraRTCClient;
   _engine: IrisRtcEngine;
-  irisClientVariables: IrisClientVariables;
+  irisClientState: IrisClientState;
   clientEventHandler: IrisClientEventHandler;
 
   audioTrackPackages: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
@@ -34,9 +34,7 @@ export class IrisClient {
 
   constructor(engine: IrisRtcEngine, connection?: NATIVE_RTC.RtcConnection) {
     this._engine = engine;
-    this.irisClientVariables = new IrisClientVariables(
-      this._engine.globalVariables
-    );
+    this.irisClientState = new IrisClientState(this._engine.globalState);
     if (connection) {
       this.connection = connection;
     }
@@ -49,28 +47,28 @@ export class IrisClient {
   }
 
   setClientConfig(): ClientConfig {
-    let irisClientVariables = this.irisClientVariables;
+    let irisClientState = this.irisClientState;
     let config: ClientConfig = {
       codec:
-        irisClientVariables.videoEncoderConfiguration != null
+        irisClientState.videoEncoderConfiguration != null
           ? AgoraTranslate.NATIVE_RTCVIDEO_CODEC_TYPE2SDK_CODEC(
-              irisClientVariables.videoEncoderConfiguration.codecType
+              irisClientState.videoEncoderConfiguration.codecType
             )
           : 'vp8',
-      mode: irisClientVariables.channelProfile
+      mode: irisClientState.channelProfile
         ? AgoraTranslate.NATIVE_RTC_CHANNEL_PROFILE_TYPE2SDK_MODE(
-            irisClientVariables.channelProfile
+            irisClientState.channelProfile
           )
         : 'live',
     };
-    if (irisClientVariables.clientRoleType != null) {
+    if (irisClientState.clientRoleType != null) {
       config.role = AgoraTranslate.NATIVE_RTC_CLIENT_ROLE_TYPE2ClientRole(
-        irisClientVariables.clientRoleType
+        irisClientState.clientRoleType
       );
     }
-    if (irisClientVariables.clientRoleOptions != null) {
+    if (irisClientState.clientRoleOptions != null) {
       config.clientRoleOptions = AgoraTranslate.NATIVE_RTCClientRoleOptions2ClientRoleOptions(
-        irisClientVariables.clientRoleOptions
+        irisClientState.clientRoleOptions
       );
     }
     return config;
@@ -78,23 +76,23 @@ export class IrisClient {
 
   createClient(options: NATIVE_RTC.ChannelMediaOptions) {
     if (options) {
-      this.irisClientVariables.mergeChannelMediaOptions(options);
+      this.irisClientState.mergeChannelMediaOptions(options);
     }
 
-    let irisClientVariables = this.irisClientVariables;
-    let globalVariables = this._engine.globalVariables;
+    let irisClientState = this.irisClientState;
+    let globalState = this._engine.globalState;
 
     let config = this.setClientConfig();
-    this.agoraRTCClient = this._engine.globalVariables.AgoraRTC.createClient(
+    this.agoraRTCClient = this._engine.globalState.AgoraRTC.createClient(
       config
     );
 
     //设置远端默认是 大流还是小流
-    if (irisClientVariables.remoteDefaultVideoStreamType != null) {
+    if (irisClientState.remoteDefaultVideoStreamType != null) {
       this.agoraRTCClient
         .setRemoteDefaultVideoStreamType(
           AgoraTranslate.NATIVE_RTCVIDEO_STREAM_TYPE2RemoteStreamType(
-            irisClientVariables.remoteDefaultVideoStreamType
+            irisClientState.remoteDefaultVideoStreamType
           )
         )
         .then(() => {})
@@ -102,7 +100,7 @@ export class IrisClient {
         .finally(() => {});
     }
     //设置指定的远端uid具体是大流还是小流
-    for (let e of irisClientVariables.remoteVideoStreamTypes) {
+    for (let e of irisClientState.remoteVideoStreamTypes) {
       this.agoraRTCClient
         .setRemoteVideoStreamType(
           e[0],
@@ -115,20 +113,20 @@ export class IrisClient {
 
     //
     let videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE;
-    if (irisClientVariables.publishCameraTrack == true) {
+    if (irisClientState.publishCameraTrack == true) {
       videoSourceType =
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY;
-    } else if (irisClientVariables.publishSecondaryCameraTrack == true) {
+    } else if (irisClientState.publishSecondaryCameraTrack == true) {
       videoSourceType =
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY;
-    } else if (irisClientVariables.publishScreenCaptureVideo == true) {
+    } else if (irisClientState.publishScreenCaptureVideo == true) {
       videoSourceType =
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
     }
 
     //如果当前轨道被特别指定了，那么就设置一下
-    if (irisClientVariables.enabledDualStreamModes.has(videoSourceType)) {
-      let steamMode = irisClientVariables.enabledDualStreamModes.get(
+    if (irisClientState.enabledDualStreamModes.has(videoSourceType)) {
+      let steamMode = irisClientState.enabledDualStreamModes.get(
         videoSourceType
       );
       if (steamMode.enabled) {
@@ -153,7 +151,7 @@ export class IrisClient {
           .finally(() => {});
       }
     } else {
-      if (irisClientVariables.enabledDualStreamMode) {
+      if (irisClientState.enabledDualStreamMode) {
         this.agoraRTCClient
           .enableDualStream()
           .then(() => {})
@@ -163,15 +161,15 @@ export class IrisClient {
     }
 
     //设置是否报告说话的人
-    if (irisClientVariables.enabledAudioVolumeIndication) {
+    if (irisClientState.enabledAudioVolumeIndication) {
       this.agoraRTCClient.enableAudioVolumeIndicator();
-      irisClientVariables.enabledAudioVolumeIndication = null;
+      irisClientState.enabledAudioVolumeIndication = null;
     }
 
     //是否开启了加密
-    if (irisClientVariables.encryptionConfig?.enabled) {
+    if (irisClientState.encryptionConfig?.enabled) {
       let encryptionConfig: NATIVE_RTC.EncryptionConfig =
-        irisClientVariables.encryptionConfig.config;
+        irisClientState.encryptionConfig.config;
       let encryptionMode: EncryptionMode = AgoraTranslate.NATIVE_RTCENCRYPTION_MODE2EncryptionMode(
         encryptionConfig.encryptionMode
       );
@@ -182,15 +180,15 @@ export class IrisClient {
         salt
       );
       //加密只有一次生效
-      irisClientVariables.encryptionConfig.enabled = false;
+      irisClientState.encryptionConfig.enabled = false;
     }
 
     //是否开启了鉴黄
-    if (irisClientVariables.contentInspect != null) {
+    if (irisClientState.contentInspect != null) {
       this.agoraRTCClient
         .enableContentInspect(
           AgoraTranslate.NATIVE_RTCContentInspectConfig2InspectConfiguration(
-            irisClientVariables.contentInspect
+            irisClientState.contentInspect
           )
         )
         .then(() => {})
@@ -199,8 +197,8 @@ export class IrisClient {
     }
 
     //是否开启了cloudProxy
-    if (globalVariables.cloudProxy != null) {
-      let proxyType = globalVariables.cloudProxy;
+    if (globalState.cloudProxy != null) {
+      let proxyType = globalState.cloudProxy;
       if (proxyType == NATIVE_RTC.CLOUD_PROXY_TYPE.UDP_PROXY) {
         this.agoraRTCClient.startProxyServer(3);
       } else if (proxyType == NATIVE_RTC.CLOUD_PROXY_TYPE.TCP_PROXY) {

@@ -11,7 +11,7 @@ export function initIrisRtc(
   irisApiEngine: IrisApiEngine,
   options?: InitIrisRtcOptions
 ) {
-  return irisApiEngine.addApiInterceptor(
+  irisApiEngine.addApiInterceptor(
     new IrisRtcEngine(irisApiEngine.getIrisEventHandlerManager(), options)
   );
 }

@@ -73,10 +73,10 @@ export class IrisClientObserver {
   //根据每个irisClient的options,分配对应的轨道,如果irisClient的agoraRTCClient已经加入频道,则发布轨道
   async publishTrack(trackPackage: TrackPackage, irisClientList: IrisClient[]) {
     let publishTrack: ILocalTrack;
-    let globalVariables = this._engine.globalVariables;
+    let globalState = this._engine.globalState;
     for (let irisClient of irisClientList) {
-      let options = irisClient.irisClientVariables;
-      if (globalVariables.enabledAudio && globalVariables.enabledLocalAudio) {
+      let options = irisClient.irisClientState;
+      if (globalState.enabledAudio && globalState.enabledLocalAudio) {
         if (options.publishMicrophoneTrack) {
           if (
             trackPackage.track &&
@@ -104,7 +104,7 @@ export class IrisClientObserver {
           }
         }
       }
-      if (globalVariables.enabledVideo && globalVariables.enabledLocalVideo) {
+      if (globalState.enabledVideo && globalState.enabledLocalVideo) {
         if (options.publishScreenCaptureVideo) {
           if (options.publishScreenTrack) {
             if (
@@ -358,8 +358,8 @@ export class IrisClientObserver {
       return;
     }
     let autoSubscribeVideo: boolean =
-      irisClient.irisClientVariables.autoSubscribeVideo;
-    let enableVideo: boolean = this._engine.globalVariables.enabledVideo;
+      irisClient.irisClientState.autoSubscribeVideo;
+    let enableVideo: boolean = this._engine.globalState.enabledVideo;
     if (enableVideo && autoSubscribeVideo && irisClient.agoraRTCClient) {
       let user = irisClient.agoraRTCClient.remoteUsers.find(
         (item) => item.uid === userPackage.uid
@@ -392,8 +392,8 @@ export class IrisClientObserver {
       return;
     }
     let autoSubscribeAudio: boolean =
-      irisClient.irisClientVariables.autoSubscribeAudio;
-    let enableAudio: boolean = this._engine.globalVariables.enabledAudio;
+      irisClient.irisClientState.autoSubscribeAudio;
+    let enableAudio: boolean = this._engine.globalState.enabledAudio;
     if (enableAudio && autoSubscribeAudio && irisClient.agoraRTCClient) {
       let user = irisClient.agoraRTCClient.remoteUsers.find(
         (item) => item.uid === userPackage.uid

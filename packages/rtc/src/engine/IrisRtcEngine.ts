@@ -44,7 +44,7 @@ import { ClientHelper } from '../helper/ClientHelper';
 import { IrisElement } from '../helper/DomHelper';
 import { ImplHelper } from '../helper/ImplHelper';
 import { TrackHelper } from '../helper/TrackHelper';
-import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
+import { IrisGlobalState } from '../state/IrisGlobalState';
 import { AgoraActionQueue } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
 import IrisRtcErrorHandler from '../util/ErrorHandler';
@@ -72,7 +72,7 @@ export class IrisRtcEngine implements ApiInterceptor {
   public irisClientManager: IrisClientManager = new IrisClientManager(this);
   public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandlerEx = null;
 
-  public globalVariables: IrisGlobalVariables = null;
+  public globalState: IrisGlobalState = null;
   public agoraEventHandler: IrisAgoraEventHandler = null;
   public actionQueue: AgoraActionQueue = null;
   public executor: CallApiExecutor = null;
@@ -113,7 +113,7 @@ export class IrisRtcEngine implements ApiInterceptor {
 
     this.actionQueue = new AgoraActionQueue();
     this.rtcEngineEventHandler = new IRtcEngineEventHandlerEx(this);
-    this.globalVariables = new IrisGlobalVariables();
+    this.globalState = new IrisGlobalState();
     this.irisElement = new IrisElement();
     this.agoraEventHandler = new IrisAgoraEventHandler(this);
 
@@ -122,7 +122,7 @@ export class IrisRtcEngine implements ApiInterceptor {
 
     if (options && options.fakeAgoraRTC) {
       AgoraConsole.debug('use fake agora rtc');
-      this.globalVariables.AgoraRTC = options.fakeAgoraRTC;
+      this.globalState.AgoraRTC = options.fakeAgoraRTC;
     }
   }
 

@@ -111,7 +111,7 @@ export interface IrisApiEngine {
   dispose(): Promise<void>;
 }
 
-export function createIrisApiEngine(): IrisApiEngineImpl {
+export function createIrisApiEngine(): IrisApiEngine {
   return new IrisApiEngineImpl();
 }
 

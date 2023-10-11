@@ -1,13 +1,13 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { UID } from 'agora-rtc-sdk-ng';
 
-import { IrisGlobalVariables } from './IrisGlobalVariables';
+import { IrisGlobalState } from './IrisGlobalState';
 
 //Record the intermediate status of the client
-export class IrisClientVariables {
+export class IrisClientState {
   //public role: NATIVE_RTC.CLIENT_ROLE_TYPE = NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE;
 
-  _globalVariables: IrisGlobalVariables = null;
+  _globalState: IrisGlobalState = null;
 
   //LeaveChannelOptions
   stopAudioMixing?: boolean = true;
@@ -147,13 +147,13 @@ export class IrisClientVariables {
   //用来记录暂停或者恢复的
   currChannelMediaRelayconfiguration: NATIVE_RTC.ChannelMediaRelayConfiguration = null;
 
-  constructor(globalVariables: IrisGlobalVariables) {
-    this._globalVariables = globalVariables;
-    if (globalVariables.rtcEngineContext?.channelProfile) {
-      this.channelProfile = globalVariables.rtcEngineContext.channelProfile;
+  constructor(globalState: IrisGlobalState) {
+    this._globalState = globalState;
+    if (globalState.rtcEngineContext?.channelProfile) {
+      this.channelProfile = globalState.rtcEngineContext.channelProfile;
     }
-    if (globalVariables.autoSubscribeVideo) {
-      this.autoSubscribeVideo = globalVariables.autoSubscribeVideo;
+    if (globalState.autoSubscribeVideo) {
+      this.autoSubscribeVideo = globalState.autoSubscribeVideo;
     }
   }
 
@@ -165,7 +165,7 @@ export class IrisClientVariables {
     }
     if (
       this.publishCustomVideoTrack &&
-      this._globalVariables.pushVideoFrameEnabled
+      this._globalState.pushVideoFrameEnabled
     ) {
       this.publishCameraTrack = false;
       this.publishEncodedVideoTrack = false;

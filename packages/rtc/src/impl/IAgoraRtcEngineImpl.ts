@@ -56,7 +56,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   setAppType(appType: number): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.AgoraRTC.setAppType(appType);
+      this._engine.globalState.AgoraRTC.setAppType(appType);
       return this._engine.returnResult();
     };
 
@@ -72,14 +72,14 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let processFunc = async () => {
       new IrisClient(this._engine);
 
-      this._engine.globalVariables.rtcEngineContext = context;
+      this._engine.globalState.rtcEngineContext = context;
 
-      this._engine.globalVariables.AgoraRTC.setArea([
+      this._engine.globalState.AgoraRTC.setArea([
         AgoraTranslate.NATIVE_RTCAREA_CODE2AREAS(context.areaCode),
       ]);
 
       if (context?.logConfig?.level) {
-        this._engine.globalVariables.AgoraRTC.setLogLevel(
+        this._engine.globalState.AgoraRTC.setLogLevel(
           AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(context?.logConfig?.level)
         );
       }
@@ -88,7 +88,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
       );
 
-      let result = this._engine.globalVariables.AgoraRTC.checkSystemRequirements();
+      let result = this._engine.globalState.AgoraRTC.checkSystemRequirements();
       return this._engine.returnResult(result);
     };
 
@@ -155,12 +155,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     uid: number
   ): CallApiReturnType {
     let irisClient = this._engine.irisClientManager.getIrisClient();
-    return this.joinChannel2(
-      token,
-      channelId,
-      uid,
-      irisClient.irisClientVariables
-    );
+    return this.joinChannel2(token, channelId, uid, irisClient.irisClientState);
   }
   joinChannel2(
     token: string,
@@ -168,18 +163,18 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     uid: number,
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
-    let globalVariables = this._engine.globalVariables;
+    let globalState = this._engine.globalState;
     let processJoinChannel = async (): Promise<CallIrisApiResult> => {
       let irisClient = this._engine.irisClientManager.getIrisClient();
 
       irisClient.createClient(options);
-      options = irisClient.irisClientVariables;
-      irisClient.irisClientVariables.token = token;
+      options = irisClient.irisClientState;
+      irisClient.irisClientState.token = token;
 
       let agoraRTCClient = irisClient.agoraRTCClient;
       try {
         await agoraRTCClient.join(
-          globalVariables.rtcEngineContext.appId,
+          globalState.rtcEngineContext.appId,
           channelId,
           token ? token : null,
           uid
@@ -234,7 +229,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   leaveChannel2(options: NATIVE_RTC.LeaveChannelOptions): CallApiReturnType {
     let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
       //离开频道后重置参数
-      // this._engine.globalVariables.reset();
+      // this._engine.globalState.reset();
       if (this._engine.irisClientManager.irisClientList.length === 0) {
         return this._engine.returnResult();
       }
@@ -248,9 +243,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       );
 
       for (let irisClient of this._engine.irisClientManager.irisClientList) {
-        irisClient.irisClientVariables.mergeChannelMediaOptions(options);
+        irisClient.irisClientState.mergeChannelMediaOptions(options);
         let agoraRTCClient = irisClient.agoraRTCClient;
-        options = irisClient.irisClientVariables;
+        options = irisClient.irisClientState;
 
         if (agoraRTCClient) {
           //读取 options
@@ -340,7 +335,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       let irisClient = this._engine.irisClientManager.getIrisClient();
-      irisClient.irisClientVariables.clientRoleType = role;
+      irisClient.irisClientState.clientRoleType = role;
 
       let client = irisClient?.agoraRTCClient;
       client &&
@@ -400,8 +395,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   enableVideo(): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.enabledVideo = true;
-      this._engine.globalVariables.autoSubscribeVideo = true;
+      this._engine.globalState.enabledVideo = true;
+      this._engine.globalState.autoSubscribeVideo = true;
 
       //local
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
@@ -409,7 +404,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         [...this._engine.irisClientManager.localVideoTrackPackages]
       );
       for (let irisClient of this._engine.irisClientManager.irisClientList) {
-        irisClient.irisClientVariables.autoSubscribeVideo = true;
+        irisClient.irisClientState.autoSubscribeVideo = true;
         await this._engine.irisClientManager.irisClientObserver.notifyLocal(
           NotifyType.PUBLISH_TRACK,
           [...this._engine.irisClientManager.localVideoTrackPackages],
@@ -430,8 +425,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   disableVideo(): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.enabledVideo = false;
-      this._engine.globalVariables.autoSubscribeVideo = false;
+      this._engine.globalState.enabledVideo = false;
+      this._engine.globalState.autoSubscribeVideo = false;
 
       //local
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
@@ -439,7 +434,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         [...this._engine.irisClientManager.localVideoTrackPackages]
       );
       for (let irisClient of this._engine.irisClientManager.irisClientList) {
-        irisClient.irisClientVariables.autoSubscribeVideo = false;
+        irisClient.irisClientState.autoSubscribeVideo = false;
         await this._engine.irisClientManager.irisClientObserver.notifyLocal(
           NotifyType.UNPUBLISH_TRACK,
           [...this._engine.irisClientManager.localVideoTrackPackages],
@@ -462,7 +457,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   startPreview2(sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE): CallApiReturnType {
     let process = async (): Promise<CallIrisApiResult> => {
-      if (this._engine.globalVariables.enabledVideo == false) {
+      if (this._engine.globalState.enabledVideo == false) {
         AgoraConsole.error('call enableVideo(true) before startPreview');
         return this._engine.returnResult(false);
       }
@@ -587,7 +582,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     config: NATIVE_RTC.VideoEncoderConfiguration
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.videoEncoderConfiguration = config;
+      this._engine.globalState.videoEncoderConfiguration = config;
 
       for (let videoTrackPackage of this._engine.irisClientManager
         .localVideoTrackPackages) {
@@ -719,7 +714,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   enableAudio(): CallApiReturnType {
     let processAudioTracks = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.enabledAudio = true;
+      this._engine.globalState.enabledAudio = true;
 
       //local
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
@@ -747,7 +742,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   disableAudio(): CallApiReturnType {
     let processAudioTracks = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.enabledAudio = false;
+      this._engine.globalState.enabledAudio = false;
 
       //local
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
@@ -778,8 +773,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     scenario: NATIVE_RTC.AUDIO_SCENARIO_TYPE
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.audioProfile = profile;
-      this._engine.globalVariables.rtcEngineContext.audioScenario = scenario;
+      this._engine.globalState.audioProfile = profile;
+      this._engine.globalState.rtcEngineContext.audioScenario = scenario;
 
       return this._engine.returnResult();
     };
@@ -789,7 +784,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   setAudioProfile2(profile: NATIVE_RTC.AUDIO_PROFILE_TYPE): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.audioProfile = profile;
+      this._engine.globalState.audioProfile = profile;
 
       return this._engine.returnResult();
     };
@@ -807,7 +802,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   enableLocalAudio(enabled: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.enabledLocalAudio = enabled;
+      this._engine.globalState.enabledLocalAudio = enabled;
 
       //找到本地audio
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
@@ -985,8 +980,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     reportVad: boolean
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.enableAudioVolumeIndicationConfig = {
-        ...this._engine.globalVariables.enableAudioVolumeIndicationConfig,
+      this._engine.globalState.enableAudioVolumeIndicationConfig = {
+        ...this._engine.globalState.enableAudioVolumeIndicationConfig,
         ...(interval && { interval }),
         ...(smooth && { smooth }),
         ...(reportVad && { reportVad }),
@@ -995,7 +990,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let agoraRTCClient: IAgoraRTCClient = this._engine.irisClientManager.getIrisClient()
         ?.agoraRTCClient;
 
-      if (!this._engine.globalVariables.enableAudioVolumeIndication) {
+      if (!this._engine.globalState.enableAudioVolumeIndication) {
         let intervalFunction = setInterval(() => {
           if (agoraRTCClient) {
             const localStats = agoraRTCClient.getLocalAudioStats();
@@ -1046,7 +1041,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           intervalFunction
         );
       }
-      this._engine.globalVariables.enableAudioVolumeIndication = true;
+      this._engine.globalState.enableAudioVolumeIndication = true;
       return this._engine.returnResult();
     };
     return this._engine.execute(processFunc);
@@ -1311,8 +1306,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       if (
-        !this._engine.globalVariables.enabledAudio ||
-        !this._engine.globalVariables.enabledLocalAudio
+        !this._engine.globalState.enabledAudio ||
+        !this._engine.globalState.enabledLocalAudio
       ) {
         AgoraConsole.error('please enableAudio first');
         return this._engine.returnResult(false);
@@ -1696,7 +1691,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let numberLevel: number = AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(
         level
       );
-      this._engine.globalVariables.AgoraRTC.setLogLevel(numberLevel);
+      this._engine.globalState.AgoraRTC.setLogLevel(numberLevel);
       return this._engine.returnResult();
     };
 
@@ -3319,7 +3314,7 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
   }
   setDevice(deviceIdUTF8: string): CallApiReturnType {
     let process = async () => {
-      this._engine.globalVariables.videoDeviceId = deviceIdUTF8;
+      this._engine.globalState.videoDeviceId = deviceIdUTF8;
 
       for (let videoTrackPackage of this._engine.irisClientManager
         .localVideoTrackPackages) {
@@ -3350,11 +3345,11 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
     let process = async () => {
       let list: MediaDeviceInfo[] = [];
       let deviceId = '';
-      if (this._engine.globalVariables.videoDeviceId) {
-        deviceId = this._engine.globalVariables.videoDeviceId;
+      if (this._engine.globalState.videoDeviceId) {
+        deviceId = this._engine.globalState.videoDeviceId;
       } else {
         try {
-          list = await this._engine.globalVariables.AgoraRTC.getCameras();
+          list = await this._engine.globalState.AgoraRTC.getCameras();
         } catch (e) {
           return this._engine.returnResult(false);
         }
@@ -3409,9 +3404,9 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
   release(): CallApiReturnType {
     let process = async () => {
       let engine = this._engine;
-      engine.globalVariables.playbackDevices = new Array();
-      engine.globalVariables.recordingDevices = new Array();
-      engine.globalVariables.videoDevices = new Array();
+      engine.globalState.playbackDevices = new Array();
+      engine.globalState.recordingDevices = new Array();
+      engine.globalState.videoDevices = new Array();
       return this._engine.returnResult();
     };
     return this._engine.execute(process);

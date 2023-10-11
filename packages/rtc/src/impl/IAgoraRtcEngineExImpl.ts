@@ -37,12 +37,12 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     let processJoinChannel = async (): Promise<CallIrisApiResult> => {
       let irisClient = new IrisClient(this._engine, connection);
       irisClient.createClient(options);
-      irisClient.irisClientVariables.token = token;
+      irisClient.irisClientState.token = token;
       let agoraRTCClient = irisClient.agoraRTCClient;
 
       try {
         await agoraRTCClient.join(
-          this._engine.globalVariables.rtcEngineContext.appId,
+          this._engine.globalState.rtcEngineContext.appId,
           connection.channelId,
           token ? token : null,
           connection.localUid

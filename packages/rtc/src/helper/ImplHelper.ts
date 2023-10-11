@@ -21,7 +21,7 @@ import { NotifyType } from '../engine/IrisClientObserver';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 
-import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
+import { IrisGlobalState } from '../state/IrisGlobalState';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { AgoraTranslate } from '../util/AgoraTranslate';
 
@@ -38,7 +38,7 @@ export class ImplHelper {
     let bufferSourceAudioTrack: IBufferSourceAudioTrack = null;
 
     try {
-      bufferSourceAudioTrack = await this._engine.globalVariables.AgoraRTC.createBufferSourceAudioTrack(
+      bufferSourceAudioTrack = await this._engine.globalState.AgoraRTC.createBufferSourceAudioTrack(
         bufferSourceAudioTrackInitConfig
       );
     } catch (e) {
@@ -85,7 +85,7 @@ export class ImplHelper {
     }
     //如果没有track，但是有package，就需要创建track
     try {
-      videoTrack = this._engine.globalVariables.AgoraRTC.createCustomVideoTrack(
+      videoTrack = this._engine.globalState.AgoraRTC.createCustomVideoTrack(
         config
       );
     } catch (e) {
@@ -132,7 +132,7 @@ export class ImplHelper {
     let screenTrack = [null, null];
     try {
       let conf: ScreenVideoTrackInitConfig = this.generateScreenVideoTrackInitConfig();
-      let result = await this._engine.globalVariables.AgoraRTC.createScreenVideoTrack(
+      let result = await this._engine.globalState.AgoraRTC.createScreenVideoTrack(
         conf,
         captureParams.captureAudio ? 'disable' : 'auto'
       );
@@ -194,7 +194,7 @@ export class ImplHelper {
     let audioTrackPackage: AudioTrackPackage;
     let audioTrack: IMicrophoneAudioTrack = null;
     try {
-      audioTrack = await this._engine.globalVariables.AgoraRTC.createMicrophoneAudioTrack();
+      audioTrack = await this._engine.globalState.AgoraRTC.createMicrophoneAudioTrack();
       //受全局enabledAudio控制
       await this._engine.trackHelper.setEnabled(audioTrack, false);
     } catch (e) {
@@ -211,7 +211,7 @@ export class ImplHelper {
   public async createVideoCameraTrack(): Promise<ICameraVideoTrack> {
     let videoTrack: ICameraVideoTrack = null;
     try {
-      videoTrack = await this._engine.globalVariables.AgoraRTC.createCameraVideoTrack();
+      videoTrack = await this._engine.globalState.AgoraRTC.createCameraVideoTrack();
       //受全局enabledVideo控制
       await this._engine.trackHelper.setEnabled(videoTrack, false);
     } catch (e) {
@@ -225,27 +225,27 @@ export class ImplHelper {
 
   //当一个audioTrack被创建的时候，要拆解这些参数
   public async processScreenShareAudioTrack(audioTrack: ILocalAudioTrack) {
-    let globalVariables = this._engine.globalVariables;
+    let globalState = this._engine.globalState;
 
-    if (globalVariables.enabledAudio) {
+    if (globalState.enabledAudio) {
       this._engine.trackHelper.play(audioTrack);
     }
-    if (globalVariables.pausedAudio) {
+    if (globalState.pausedAudio) {
       await this._engine.trackHelper.setEnabled(audioTrack, false);
     }
 
-    if (globalVariables.mutedLocalAudioStream) {
+    if (globalState.mutedLocalAudioStream) {
       await this._engine.trackHelper.setMuted(audioTrack, true);
     }
   }
 
   public async processScreenShareVideoTrack(videoTrack: ILocalVideoTrack) {
-    let globalVariables = this._engine.globalVariables;
+    let globalState = this._engine.globalState;
 
-    if (globalVariables.pausedVideo) {
+    if (globalState.pausedVideo) {
       await this._engine.trackHelper.setEnabled(videoTrack, false);
     }
-    if (globalVariables.mutedLocalVideoStream) {
+    if (globalState.mutedLocalVideoStream) {
       await this._engine.trackHelper.setMuted(videoTrack, true);
     }
   }
@@ -253,11 +253,11 @@ export class ImplHelper {
   public async processAudioTrack(
     audioTrack: IMicrophoneAudioTrack | IBufferSourceAudioTrack
   ) {
-    let globalVariables = this._engine.globalVariables;
-    if (globalVariables.pausedAudio) {
+    let globalState = this._engine.globalState;
+    if (globalState.pausedAudio) {
       await this._engine.trackHelper.setEnabled(audioTrack, false);
     }
-    if (globalVariables.mutedLocalAudioStream) {
+    if (globalState.mutedLocalAudioStream) {
       await this._engine.trackHelper.setMuted(audioTrack, true);
     }
   }
@@ -265,12 +265,12 @@ export class ImplHelper {
   public async processVideoTrack(
     videoTrack: ICameraVideoTrack | ILocalVideoTrack
   ) {
-    let globalVariables = this._engine.globalVariables;
+    let globalState = this._engine.globalState;
 
-    if (globalVariables.pausedVideo) {
+    if (globalState.pausedVideo) {
       await this._engine.trackHelper.setEnabled(videoTrack, false);
     }
-    if (globalVariables.mutedLocalVideoStream) {
+    if (globalState.mutedLocalVideoStream) {
       await this._engine.trackHelper.setMuted(videoTrack, true);
     }
   }
@@ -278,20 +278,20 @@ export class ImplHelper {
   public generateScreenVideoTrackInitConfig(): ScreenVideoTrackInitConfig {
     let videoConfig: CameraVideoTrackInitConfig = {};
     let conf: ScreenVideoTrackInitConfig = {};
-    let globalVariables: IrisGlobalVariables = this._engine.globalVariables;
+    let globalState: IrisGlobalState = this._engine.globalState;
     if (
-      globalVariables.screenCaptureContentHint != null &&
-      globalVariables.screenCaptureContentHint !=
+      globalState.screenCaptureContentHint != null &&
+      globalState.screenCaptureContentHint !=
         NATIVE_RTC.VIDEO_CONTENT_HINT.CONTENT_HINT_NONE
     ) {
       conf.optimizationMode = AgoraTranslate.NATIVE_RTCVIDEO_CONTENT_HINT2string(
-        globalVariables.screenCaptureContentHint
+        globalState.screenCaptureContentHint
       );
     }
 
-    if (globalVariables.screenCaptureParameters2 != null) {
+    if (globalState.screenCaptureParameters2 != null) {
       conf.encoderConfig = AgoraTranslate.NATIVE_RTCScreenCaptureParameters2VideoEncoderConfiguration(
-        globalVariables.screenCaptureParameters2
+        globalState.screenCaptureParameters2
       );
     }
     return conf;
@@ -302,7 +302,7 @@ export class ImplHelper {
     recordingDevices: NATIVE_RTC.DeviceInfo[];
     videoDevices: NATIVE_RTC.DeviceInfo[];
   }> {
-    let info = await this._engine.globalVariables.AgoraRTC.getDevices();
+    let info = await this._engine.globalState.AgoraRTC.getDevices();
     let playbackDevices: any[] = [];
     let recordingDevices: any[] = [];
     let videoDevices: any[] = [];
@@ -325,9 +325,9 @@ export class ImplHelper {
       }
     }
 
-    this._engine.globalVariables.playbackDevices = playbackDevices;
-    this._engine.globalVariables.recordingDevices = recordingDevices;
-    this._engine.globalVariables.videoDevices = videoDevices;
+    this._engine.globalState.playbackDevices = playbackDevices;
+    this._engine.globalState.recordingDevices = recordingDevices;
+    this._engine.globalState.videoDevices = videoDevices;
     return {
       playbackDevices: playbackDevices,
       recordingDevices: recordingDevices,
@@ -358,18 +358,18 @@ export class ImplHelper {
       videoTrackPackage,
     ]);
 
-    let irisClientVariables = irisClient.irisClientVariables;
-    irisClientVariables.mergeChannelMediaOptions(options);
-    if (irisClientVariables.clientRoleType) {
+    let irisClientState = irisClient.irisClientState;
+    irisClientState.mergeChannelMediaOptions(options);
+    if (irisClientState.clientRoleType) {
       await this._engine.clientHelper.setClientRole(
         agoraRTCClient,
-        irisClientVariables.clientRoleType,
-        irisClientVariables.audienceLatencyLevel
+        irisClientState.clientRoleType,
+        irisClientState.audienceLatencyLevel
       );
     }
-    if (irisClientVariables.token) {
+    if (irisClientState.token) {
       try {
-        await agoraRTCClient.renewToken(irisClientVariables.token);
+        await agoraRTCClient.renewToken(irisClientState.token);
       } catch (e) {
         return this._engine.returnResult(false);
       }

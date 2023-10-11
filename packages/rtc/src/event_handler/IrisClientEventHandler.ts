@@ -430,7 +430,7 @@ export class IrisClientEventHandler {
   }
 
   onEventTokenPrivilegeWillExpire(): void {
-    let token: string = this._irisClient.irisClientVariables.token;
+    let token: string = this._irisClient.irisClientState.token;
     this._engine.rtcEngineEventHandler.onTokenPrivilegeWillExpireEx(
       this._irisClient.connection,
       token

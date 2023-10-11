@@ -6,7 +6,7 @@ export interface DeviceInfo {
   deviceId: string;
 }
 
-export class IrisGlobalVariables {
+export class IrisGlobalState {
   public rtcEngineContext: NATIVE_RTC.RtcEngineContext;
 
   //C++ SetAudioProfile() initialize()

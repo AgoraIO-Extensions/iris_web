@@ -71,9 +71,9 @@ export class IrisAgoraEventHandler {
   }
 
   release() {
-    this._engine.globalVariables.AgoraRTC.onAutoplayFailed = undefined;
-    this._engine.globalVariables.AgoraRTC.onCameraChanged = undefined;
-    this._engine.globalVariables.AgoraRTC.onMicrophoneChanged = undefined;
-    this._engine.globalVariables.AgoraRTC.onPlaybackDeviceChanged = undefined;
+    this._engine.globalState.AgoraRTC.onAutoplayFailed = undefined;
+    this._engine.globalState.AgoraRTC.onCameraChanged = undefined;
+    this._engine.globalState.AgoraRTC.onMicrophoneChanged = undefined;
+    this._engine.globalState.AgoraRTC.onPlaybackDeviceChanged = undefined;
   }
 }
