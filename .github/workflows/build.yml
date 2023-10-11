@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build-and-upload-artifact:
     runs-on: ubuntu-latest
     environment: github-pages
     steps:
@@ -17,7 +17,8 @@ jobs:
 
       - name: Build 🔧
         env:
-          AGORA_APPID: ${{ secrets.AGORA_APPID }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         run: |
           pnpm install
           pnpm run lint

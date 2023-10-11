@@ -48,6 +48,9 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Setup Dependencies 💚
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
         run: |
           pnpm install
 
