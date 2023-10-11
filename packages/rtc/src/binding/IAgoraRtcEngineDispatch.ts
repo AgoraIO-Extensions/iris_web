@@ -3813,7 +3813,7 @@ export class IRtcEngineDispatch {
   unregisterEventHandler(apiParam: ApiParam): CallApiReturnType {
     let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
     if (eventHandler === undefined) throw 'eventHandler is undefined';
-    return this._impl.registerEventHandler(eventHandler);
+    return this._impl.unregisterEventHandler(eventHandler);
   }
 
   setRemoteUserPriority(apiParam: ApiParam): CallApiReturnType {

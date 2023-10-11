@@ -253,7 +253,7 @@ export class AgoraTranslate {
     config: NATIVE_RTC.ChannelMediaRelayConfiguration,
     engine: IrisRtcEngine
   ): IChannelMediaRelayConfiguration {
-    let ret: IChannelMediaRelayConfiguration = engine.globalVariables.AgoraRTC.createChannelMediaRelayConfiguration();
+    let ret: IChannelMediaRelayConfiguration = engine.globalState.AgoraRTC.createChannelMediaRelayConfiguration();
     for (let i = 0; i < config.srcInfo.length; i++) {
       ret.addDestChannelInfo(
         AgoraTranslate.NATIVE_RTCChannelMediaInfo2ChannelMediaRelayInfo(

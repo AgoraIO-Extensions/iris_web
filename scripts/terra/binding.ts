@@ -25,6 +25,7 @@ interface TerraNodeUserData {
   isCallback: boolean;
   classPrefix: string;
   hasBaseClazzs: boolean;
+  prefix_name: string;
 }
 
 interface ClazzMethodUserData {
@@ -34,11 +35,7 @@ interface ClazzMethodUserData {
   bindingExtensionList: [];
 }
 
-export default function (
-  terraContext: TerraContext,
-  args: any,
-  parseResult: ParseResult
-) {
+export function binding(parseResult: ParseResult) {
   let cxxfiles = parseResult.nodes as CXXFile[];
   //移除不需要的文件
   let view = filterFile(cxxfiles).map((cxxfile: CXXFile) => {
@@ -84,6 +81,7 @@ export default function (
         isStruct: node.__TYPE === CXXTYPE.Struct,
         isEnumz: node.__TYPE === CXXTYPE.Enumz,
         isClazz: node.__TYPE === CXXTYPE.Clazz,
+        prefix_name: node.name.replace(new RegExp('^I(.*)'), '$1'),
         classPrefix:
           node.name === 'IRtcEngineEventHandlerEx'
             ? 'RtcEngineEventHandler_'
@@ -109,6 +107,15 @@ export default function (
       }).length > 0
     );
   });
+  return view;
+}
+
+export default function (
+  terraContext: TerraContext,
+  args: any,
+  parseResult: ParseResult
+) {
+  let view = binding(parseResult);
   return renderWithConfiguration({
     fileNameTemplatePath: path.join(
       __dirname,

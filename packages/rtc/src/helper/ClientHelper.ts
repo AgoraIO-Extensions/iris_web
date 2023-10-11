@@ -2,11 +2,18 @@ import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { ClientRole, IAgoraRTCClient } from 'agora-rtc-sdk-ng';
 import { CallIrisApiResult } from 'iris-web-core';
 
+import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+
 import { AgoraConsole } from '../util/AgoraConsole';
 import { AgoraTranslate } from '../util/AgoraTranslate';
 
 export class ClientHelper {
-  public static async setClientRole(
+  _engine: IrisRtcEngine;
+  constructor(engine: IrisRtcEngine) {
+    this._engine = engine;
+  }
+
+  public async setClientRole(
     client: IAgoraRTCClient,
     role: NATIVE_RTC.CLIENT_ROLE_TYPE,
     audienceLatencyLevel: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE

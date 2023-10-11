@@ -1,5 +1,4 @@
-import "@testing-library/jest-dom";
-
+import '@testing-library/jest-dom';
 
 /**
  * started agora-rtc-sdk-ng@17.0.0, need mock RTCPeerConnection.
@@ -19,15 +18,13 @@ HTMLMediaElement.prototype.pause = jest.fn().mockReturnValue(Promise.resolve());
  *
  */
 const mockPromise = jest.fn(async () => {
-  return new Promise<void>(resolve => {
+  return new Promise<void>((resolve) => {
     resolve();
   });
 });
-Object.defineProperty(global.navigator, "mediaDevices", {
+Object.defineProperty(global.navigator, 'mediaDevices', {
   value: {
     getUserMedia: mockPromise,
     enumerateDevices: mockPromise,
   },
 });
-
-

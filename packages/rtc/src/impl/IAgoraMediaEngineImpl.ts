@@ -1,42 +1,20 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import { ILocalAudioTrack, ILocalVideoTrack } from 'agora-rtc-sdk-ng';
-import {
-  AsyncTaskType,
-  CallApiReturnType,
-  CallIrisApiResult,
-} from 'iris-web-core';
+import { ILocalVideoTrack } from 'agora-rtc-sdk-ng';
+import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
-import { IrisAudioSourceType, IrisClientType } from '../base/BaseType';
-import { IrisApiType } from '../base/IrisApiType';
+import { VideoTrackPackage } from '../engine/IrisClientManager';
+
+import { NotifyType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
-import { TrackHelper } from '../helper/TrackHelper';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { drawRGBABufferToCanvas } from '../util/BufferConvert';
-
-import { ImplHelper } from './ImplHelper';
 
 export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
   private _engine: IrisRtcEngine;
 
   public constructor(engine: IrisRtcEngine) {
     this._engine = engine;
-  }
-
-  private execute(task: AsyncTaskType): CallApiReturnType {
-    return this._engine.executor.execute(task);
-  }
-
-  private returnResult(
-    isSuccess: boolean = true,
-    code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
-    data: string = '{"result": 0}'
-  ): Promise<CallIrisApiResult> {
-    if (!isSuccess) {
-      code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
-    }
-    return Promise.resolve(new CallIrisApiResult(code, data));
   }
 
   setExternalVideoSource(
@@ -46,14 +24,14 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     encodedVideoOption: NATIVE_RTC.SenderOptions
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalVariables.pushVideoFrameEnabled = enabled;
-      this._engine.globalVariables.pushVideoFrameUseTexture = useTexture;
-      this._engine.globalVariables.pushVideoFrameSourceType = sourceType;
-      this._engine.globalVariables.pushVideoFrameEncodedVideoOption = encodedVideoOption;
+      this._engine.globalState.pushVideoFrameEnabled = enabled;
+      this._engine.globalState.pushVideoFrameUseTexture = useTexture;
+      this._engine.globalState.pushVideoFrameSourceType = sourceType;
+      this._engine.globalState.pushVideoFrameEncodedVideoOption = encodedVideoOption;
 
-      return this.returnResult();
+      return this._engine.returnResult();
     };
-    return this.execute(processFunc);
+    return this._engine.execute(processFunc);
   }
   registerVideoEncodedFrameObserver(
     observer: NATIVE_RTC.IVideoEncodedFrameObserver
@@ -61,7 +39,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     AgoraConsole.warn(
       'registerVideoEncodedFrameObserver not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -71,7 +49,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     trackId: number
   ): CallApiReturnType {
     AgoraConsole.warn('pushAudioFrame not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -84,7 +62,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     publish: boolean
   ): CallApiReturnType {
     AgoraConsole.warn('setExternalAudioSource not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -94,7 +72,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     config: NATIVE_RTC.AudioTrackConfig
   ): CallApiReturnType {
     AgoraConsole.warn('createCustomAudioTrack not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -103,7 +81,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     AgoraConsole.warn(
       'destroyCustomAudioTrack not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -114,7 +92,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     channels: number
   ): CallApiReturnType {
     AgoraConsole.warn('setExternalAudioSink not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -126,7 +104,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     AgoraConsole.warn(
       'enableCustomAudioLocalPlayback not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -138,14 +116,14 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     videoTrackId: number
   ): CallApiReturnType {
     AgoraConsole.warn('pushEncodedVideoImage not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   }
   release(): CallApiReturnType {
     AgoraConsole.warn('release not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -157,7 +135,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     AgoraConsole.warn(
       'registerAudioFrameObserver not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -169,7 +147,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     AgoraConsole.warn(
       'registerVideoFrameObserver not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -177,7 +155,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
 
   pushCaptureAudioFrame(frame: NATIVE_RTC.AudioFrame): CallApiReturnType {
     AgoraConsole.warn('pushCaptureAudioFrame not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -185,7 +163,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
 
   pushReverseAudioFrame(frame: NATIVE_RTC.AudioFrame): CallApiReturnType {
     AgoraConsole.warn('pushReverseAudioFrame not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -193,7 +171,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
 
   pushDirectAudioFrame(frame: NATIVE_RTC.AudioFrame): CallApiReturnType {
     AgoraConsole.warn('pushDirectAudioFrame not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -201,7 +179,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
 
   pullAudioFrame(frame: NATIVE_RTC.AudioFrame): CallApiReturnType {
     AgoraConsole.warn('pullAudioFrame not supported in this platform!');
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -214,7 +192,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     AgoraConsole.warn(
       'setDirectExternalAudioSource not supported in this platform!'
     );
-    return this.returnResult(
+    return this._engine.returnResult(
       false,
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
@@ -226,18 +204,22 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
   ): CallApiReturnType {
     //调用engine.release后才会创建新的track
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      if (!this._engine.globalVariables.pushVideoFrameEnabled) {
+      if (this._engine.globalState.enabledVideo == false) {
+        AgoraConsole.error('call enableVideo(true) before startPreview');
+        return this._engine.returnResult(false);
+      }
+      if (!this._engine.globalState.pushVideoFrameEnabled) {
         AgoraConsole.error(
           'pushVideoFrameEnabled is disabled , call setExternalVideoSource first'
         );
-        return this.returnResult(false);
+        return this._engine.returnResult(false);
       }
       //创建custom track的html element
       let irisContainer = this._engine.irisElement.getIrisElement();
       if (!irisContainer) {
         irisContainer = this._engine.irisElement.createIrisElement();
       }
-      let canvasID = `${IrisApiType.FUNC_MEDIAENGINE_PUSHVIDEOFRAME}_CANVAS`;
+      let canvasID = `MediaEngine_pushVideoFrame_CANVAS`;
       let canvas: HTMLCanvasElement = document.querySelector(`#${canvasID}`);
       if (!canvas) {
         canvas = document.createElement('canvas');
@@ -249,7 +231,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
         frame.format !== NATIVE_RTC.VIDEO_PIXEL_FORMAT.VIDEO_PIXEL_RGBA
       ) {
         AgoraConsole.error(`format${frame.format} not supported`);
-        return this.returnResult(
+        return this._engine.returnResult(
           false,
           -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
         );
@@ -264,63 +246,37 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
       irisContainer.appendChild(canvas);
       document.body.appendChild(irisContainer);
       const stream = canvas.captureStream();
+      let mediaStreamTrack = stream.getVideoTracks()[0];
 
-      let audioType = IrisAudioSourceType.kAudioSourceTypeUnknown;
       let videoType = NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM;
-      let clientType = IrisClientType.kClientMain;
-
-      let trackArray: [ILocalAudioTrack, ILocalVideoTrack] = [null, null];
+      let videoTrackPackage: VideoTrackPackage;
       try {
-        trackArray = await ImplHelper.getOrCreateCustomAudioAndVideoTrackAsync(
-          this._engine,
-          audioType,
+        videoTrackPackage = await this._engine.implHelper.createCustomVideoTrack(
           videoType,
-          stream.getVideoTracks()[0],
-          clientType,
-          null
+          mediaStreamTrack
         );
       } catch (err) {
         err && AgoraConsole.error(err);
-        return this.returnResult(false);
+        return this._engine.returnResult(false);
       }
-      let videoTrack: ILocalVideoTrack = trackArray[1] as ILocalVideoTrack;
+      let videoTrack: ILocalVideoTrack = videoTrackPackage.track as ILocalVideoTrack;
       if (videoTrack) {
-        let videoPackage = this._engine.entitiesContainer.getLocalVideoTrackByType(
-          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM
-        );
         if (!videoTrack.enabled) {
-          await TrackHelper.setEnabled(videoTrack, true);
+          await this._engine.trackHelper.setEnabled(videoTrack, true);
         }
-
         //如果没有播放，需要play
-        if (!videoTrack.isPlaying) {
-          videoTrack.play(videoPackage.element);
+        if (!videoTrack.isPlaying && videoTrackPackage.element) {
+          this._engine.trackHelper.play(videoTrack, videoTrackPackage.element);
         }
-        //如果已经加入频道，需要publish
-        if (this._engine.globalVariables.isJoinChannel) {
-          let mainClient = this._engine.entitiesContainer.getMainClient();
-          try {
-            await mainClient.publish(videoTrack);
-          } catch (reason) {
-            AgoraConsole.error(reason);
-          }
-          let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
-            {
-              channelName: mainClient.channelName,
-              client: mainClient,
-              track: videoTrack,
-              trackType: 'ILocalVideoTrack',
-            },
-            this._engine
-          );
-          this._engine.entitiesContainer.addMainClientTrackEventHandler(
-            trackEventHandler
-          );
-        }
+        this._engine.irisClientManager.irisClientObserver.notifyLocal(
+          NotifyType.PUBLISH_TRACK,
+          [videoTrackPackage],
+          this._engine.irisClientManager.irisClientList
+        );
       }
 
-      return this.returnResult();
+      return this._engine.returnResult();
     };
-    return this.execute(processFunc);
+    return this._engine.execute(processFunc);
   }
 }

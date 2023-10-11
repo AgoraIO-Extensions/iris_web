@@ -1,18 +1,18 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import { UID } from 'agora-rtc-sdk-ng';
 
+import { UID } from 'agora-rtc-sdk-ng';
 import {
   ApiInterceptor,
   ApiInterceptorReturnType,
   ApiParam,
+  AsyncTaskType,
   CallApiExecutor,
+  CallApiReturnType,
   CallIrisApiResult,
-  IrisEventHandler,
   IrisEventHandlerManager,
 } from 'iris-web-core';
 
 import { InitIrisRtcOptions } from '../IrisRtcApi';
-
 import { IrisVideoFrameBufferConfig, VideoParams } from '../base/BaseType';
 
 import { IMediaEngineDispatch } from '../binding/IAgoraMediaEngineDispatch';
@@ -40,52 +40,39 @@ import { IAudioDeviceManagerDispatch } from '../binding/IAudioDeviceManagerDispa
 
 import { IrisAgoraEventHandler } from '../event_handler/IrisAgoraEventHandler';
 import { RtcEngineDispatchExtensions } from '../extensions/IAgoraRtcEngineExtensions';
+import { ClientHelper } from '../helper/ClientHelper';
 import { IrisElement } from '../helper/DomHelper';
-import { IrisGlobalVariables } from '../states/IrisGlobalVariables';
-import { IrisMainClientVariables } from '../states/IrisMainClientVariables';
-import { IrisSubClientVariables } from '../states/IrisSubClientVariables';
+import { ImplHelper } from '../helper/ImplHelper';
+import { TrackHelper } from '../helper/TrackHelper';
+import { IrisGlobalState } from '../state/IrisGlobalState';
 import { AgoraActionQueue } from '../util/AgoraActionQueue';
 import { AgoraConsole } from '../util/AgoraConsole';
+import IrisRtcErrorHandler from '../util/ErrorHandler';
 
-import { IrisEntitiesContainer } from './IrisEntitiesContainer';
+import { IrisClientManager } from './IrisClientManager';
 
-export type CallApiType = (
-  params: string,
-  paramLength: number,
-  buffer: Array<Uint8ClampedArray>,
-  bufferLength: number,
-  result: any
-) => number;
-export type CallApiAsyncType = (
-  params: string,
-  paramLength: number,
-  buffer: Array<Uint8ClampedArray>,
-  bufferLength: number,
-  result: any
-) => Promise<CallIrisApiResult>;
-export type GenerateVideoTrackLabelOrHtmlElementCb = (
-  channelName: string,
-  uid: number,
-  type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
-) => string;
+// export type GenerateVideoTrackLabelOrHtmlElementCb = (
+//   channelName: string,
+//   uid: number,
+//   type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
+// ) => string;
 
 export enum IrisIntervalType {
   enableAudioVolumeIndication = 0,
 }
 
 export class IrisRtcEngine implements ApiInterceptor {
-  //EventHandler
-  private _eventHandler: IrisEventHandler = null;
+  // private _generateVideoTrackLabelOrHtmlElementCb: GenerateVideoTrackLabelOrHtmlElementCb = null;
 
-  private _generateVideoTrackLabelOrHtmlElementCb: GenerateVideoTrackLabelOrHtmlElementCb = null;
+  public implDispatchesMap: Map<string, any> = new Map();
+  public implHelper: ImplHelper = new ImplHelper(this);
+  public trackHelper: TrackHelper = new TrackHelper(this);
+  public clientHelper: ClientHelper = new ClientHelper(this);
 
-  public implDispatchsMap: Map<string, any> = null;
-  public entitiesContainer: IrisEntitiesContainer = null;
+  public irisClientManager: IrisClientManager = new IrisClientManager(this);
   public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandlerEx = null;
 
-  public globalVariables: IrisGlobalVariables = null;
-  public mainClientVariables: IrisMainClientVariables = null;
-  public subClientVariables: IrisSubClientVariables = null;
+  public globalState: IrisGlobalState = null;
   public agoraEventHandler: IrisAgoraEventHandler = null;
   public actionQueue: AgoraActionQueue = null;
   public executor: CallApiExecutor = null;
@@ -95,64 +82,39 @@ export class IrisRtcEngine implements ApiInterceptor {
     type: IrisIntervalType;
     interval: NodeJS.Timeout;
   }[] = [];
+  public irisRtcErrorHandler: IrisRtcErrorHandler = new IrisRtcErrorHandler(
+    this
+  );
 
   constructor(
     irisEventHandlerManager: IrisEventHandlerManager,
     options: InitIrisRtcOptions
   ) {
-    this.implDispatchsMap = new Map();
-    this.implDispatchsMap.set('MediaPlayer', new IMediaPlayerDispatch(this));
-    this.implDispatchsMap.set(
-      'MediaPlayerCacheManager',
-      new IMediaPlayerCacheManagerDispatch(this)
-    );
-    this.implDispatchsMap.set('MediaEngine', new IMediaEngineDispatch(this));
-    this.implDispatchsMap.set(
-      'MediaRecorder',
-      new IMediaRecorderDispatch(this)
-    );
-    this.implDispatchsMap.set(
-      'MusicChartCollection',
-      new MusicChartCollectionDispatch(this)
-    );
-    this.implDispatchsMap.set(
-      'MusicCollection',
-      new MusicCollectionDispatch(this)
-    );
-    this.implDispatchsMap.set('MusicPlayer', new IMusicPlayerDispatch(this));
-    this.implDispatchsMap.set(
-      'MusicContentCenter',
-      new IMusicContentCenterDispatch(this)
-    );
-    this.implDispatchsMap.set(
-      'AudioDeviceManager',
-      new IAudioDeviceManagerDispatch(this)
-    );
-    this.implDispatchsMap.set(
-      'VideoDeviceManager',
-      new IVideoDeviceManagerDispatch(this)
-    );
-    this.implDispatchsMap.set(
-      'RtcEngine',
-      new RtcEngineDispatchExtensions(this)
-    );
-    this.implDispatchsMap.set('RtcEngineEx', new IRtcEngineExDispatch(this));
-    this.implDispatchsMap.set(
-      'BaseSpatialAudioEngine',
-      new IBaseSpatialAudioEngineDispatch(this)
-    );
-    this.implDispatchsMap.set(
-      'LocalSpatialAudioEngine',
-      new ILocalSpatialAudioEngineDispatch(this)
+    const mapData = [
+      ['MediaPlayer', new IMediaPlayerDispatch(this)],
+      ['MediaPlayerCacheManager', new IMediaPlayerCacheManagerDispatch(this)],
+      ['MediaEngine', new IMediaEngineDispatch(this)],
+      ['MediaRecorder', new IMediaRecorderDispatch(this)],
+      ['MusicChartCollection', new MusicChartCollectionDispatch(this)],
+      ['MusicCollection', new MusicCollectionDispatch(this)],
+      ['MusicPlayer', new IMusicPlayerDispatch(this)],
+      ['MusicContentCenter', new IMusicContentCenterDispatch(this)],
+      ['AudioDeviceManager', new IAudioDeviceManagerDispatch(this)],
+      ['VideoDeviceManager', new IVideoDeviceManagerDispatch(this)],
+      ['RtcEngine', new RtcEngineDispatchExtensions(this)],
+      ['RtcEngineEx', new IRtcEngineExDispatch(this)],
+      ['BaseSpatialAudioEngine', new IBaseSpatialAudioEngineDispatch(this)],
+      ['LocalSpatialAudioEngine', new ILocalSpatialAudioEngineDispatch(this)],
+    ];
+
+    mapData.forEach(([key, value]: [string, any]) =>
+      this.implDispatchesMap.set(key, value)
     );
 
     this.actionQueue = new AgoraActionQueue();
     this.rtcEngineEventHandler = new IRtcEngineEventHandlerEx(this);
-    this.entitiesContainer = new IrisEntitiesContainer(this);
-    this.globalVariables = new IrisGlobalVariables();
+    this.globalState = new IrisGlobalState();
     this.irisElement = new IrisElement();
-    this.mainClientVariables = new IrisMainClientVariables();
-    this.subClientVariables = new IrisSubClientVariables();
     this.agoraEventHandler = new IrisAgoraEventHandler(this);
 
     this.executor = new CallApiExecutor(true);
@@ -160,56 +122,12 @@ export class IrisRtcEngine implements ApiInterceptor {
 
     if (options && options.fakeAgoraRTC) {
       AgoraConsole.debug('use fake agora rtc');
-      this.globalVariables.AgoraRTC = options.fakeAgoraRTC;
+      this.globalState.AgoraRTC = options.fakeAgoraRTC;
     }
   }
 
   intercept(apiParam: ApiParam): ApiInterceptorReturnType {
     return this.callIrisApiAsync(apiParam);
-  }
-
-  public callIrisApi(apiParam: ApiParam): number {
-    let func_name = apiParam.event;
-    let params: string = apiParam.data;
-    let paramLength: number = apiParam.data_size;
-    let buffer: Array<any> = apiParam.buffer;
-    let bufferLength: Array<any> = apiParam.length;
-    let buffer_count = apiParam.buffer_count;
-    let result: any = apiParam.result;
-    let resultObj: any = {};
-
-    let array = func_name.split('_');
-    let className = array[0];
-    let funName = array[1];
-
-    AgoraConsole.log(`[callIrisApi][start] ${JSON.stringify(apiParam)}`);
-
-    let obj = this.implDispatchsMap.get(className);
-    if (obj) {
-      let callApiFun: CallApiType = obj[funName];
-      if (callApiFun) {
-        let ret = callApiFun.call(
-          obj,
-          params,
-          paramLength,
-          buffer,
-          bufferLength,
-          resultObj
-        );
-        AgoraConsole.log(`[callIrisApi][result] ${func_name} ret ${ret.code}`);
-        return ret;
-      } else {
-        AgoraConsole.error(
-          `[callIrisApi][result] ${func_name} not found in ${className}Dispatch`
-        );
-        return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
-      }
-    } else {
-      AgoraConsole.error(
-        `[callIrisApi][result] ${className} not found in DispatchsMap`
-      );
-      return -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
-    }
   }
 
   public async callIrisApiAsync(
@@ -219,15 +137,30 @@ export class IrisRtcEngine implements ApiInterceptor {
     let array = func_name.split('_');
     let className = array[0];
     let funName = array[1];
-    let buffer = apiParam.buffer;
 
-    AgoraConsole.log(`[callIrisApiAsync][start] ${JSON.stringify(apiParam)}`);
-    let obj = this.implDispatchsMap.get(className);
+    AgoraConsole.log(
+      `[callIrisApiAsync][start] ${(() => {
+        let printData = JSON.parse(JSON.stringify(apiParam));
+        delete printData?.buffer;
+        return JSON.stringify(printData);
+      })()}`
+    );
+    let obj = this.implDispatchesMap.get(className);
     if (obj) {
-      let callApiFun: CallApiAsyncType = obj[funName];
+      let callApiFun = obj[funName];
       if (callApiFun) {
+        if (
+          func_name !== 'RtcEngine_initialize' &&
+          this.irisClientManager.irisClientList.length == 0
+        ) {
+          AgoraConsole.error('you have not initialize yet');
+          return new CallIrisApiResult(
+            -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_INITIALIZED,
+            ''
+          );
+        }
         let ret = await callApiFun.call(obj, apiParam);
-        AgoraConsole.debug(
+        AgoraConsole.log(
           `[callIrisApiAsync][result] ${func_name} ret ${ret.code}`
         );
         return ret;
@@ -248,62 +181,57 @@ export class IrisRtcEngine implements ApiInterceptor {
     }
   }
 
-  public setEventHandler(event_handler: IrisEventHandler) {
-    console.log(`IrisRtcEngine setEventHandler ${event_handler}`);
-    console.log(`IrisRtcEngine setEventHandler 3333 ${event_handler}`);
-    this._eventHandler = event_handler;
-  }
-
-  public setGenerateVideoTrackLabelOrHtmlElementCb(
-    cb: GenerateVideoTrackLabelOrHtmlElementCb
-  ) {
-    this._generateVideoTrackLabelOrHtmlElementCb = cb;
-  }
-
-  public getEventHandler(): IrisEventHandler {
-    return this._eventHandler;
-  }
-
   public getVideoFrame(uid: UID, channel_id: string): VideoParams {
-    return this.entitiesContainer.getVideoFrame(uid, channel_id);
+    return this.irisClientManager.getVideoFrame(uid, channel_id);
   }
 
   public getVideoFrameByConfig(
     config: IrisVideoFrameBufferConfig
   ): VideoParams {
-    return this.entitiesContainer.getVideoFrameByConfig(config);
+    return this.irisClientManager.getVideoFrameByConfig(config);
   }
 
-  public destruction() {
-    this.agoraEventHandler.destruction();
-
-    this.actionQueue.putAction({
-      fun: (next) => {
-        let process = async () => {
-          await this.entitiesContainer.destruction();
-          next();
-        };
-        setTimeout(process, 0);
-      },
-      args: [],
-    });
+  public execute(task: AsyncTaskType): CallApiReturnType {
+    return this.executor.execute(task);
   }
 
-  public generateVideoTrackLabelOrHtmlElement(
-    channelName: string,
-    uid: number,
-    type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
-  ): string {
-    if (this._generateVideoTrackLabelOrHtmlElementCb) {
-      return this._generateVideoTrackLabelOrHtmlElementCb(
-        channelName,
-        uid,
-        type
-      );
+  // public setGenerateVideoTrackLabelOrHtmlElementCb(
+  //   cb: GenerateVideoTrackLabelOrHtmlElementCb
+  // ) {
+  //   this._generateVideoTrackLabelOrHtmlElementCb = cb;
+  // }
+
+  public returnResult(
+    isSuccess: boolean = true,
+    code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
+    data: string = '{"result": 0}'
+  ): Promise<CallIrisApiResult> {
+    if (!isSuccess) {
+      code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
     }
-
-    return channelName + '_' + uid + '_' + type;
+    return Promise.resolve(new CallIrisApiResult(code, data));
   }
+
+  public async release() {
+    this.agoraEventHandler.release();
+    await this.irisClientManager.release();
+  }
+
+  // public generateVideoTrackLabelOrHtmlElement(
+  //   channelName: string,
+  //   uid: number,
+  //   type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
+  // ): string {
+  //   if (this._generateVideoTrackLabelOrHtmlElementCb) {
+  //     return this._generateVideoTrackLabelOrHtmlElementCb(
+  //       channelName,
+  //       uid,
+  //       type
+  //     );
+  //   }
+
+  //   return channelName + '_' + uid + '_' + type;
+  // }
 
   public addIrisInterval(type: IrisIntervalType, interval: NodeJS.Timeout) {
     this.irisIntervalList.push({
@@ -327,8 +255,8 @@ export class IrisRtcEngine implements ApiInterceptor {
     });
   }
 
-  dispose(): Promise<void> {
-    this.destruction();
+  async dispose(): Promise<void> {
+    await this.release();
     return Promise.resolve();
   }
 }

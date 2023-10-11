@@ -18,4 +18,7 @@ export function initIrisRtc(
 
 export let AgoraWrapper = {
   initIrisRtc: initIrisRtc,
+  // getIrisRtcEngine: (irisApiEngine: IrisApiEngine) => {
+  //   return irisApiEngine.getApiInterceptor();
+  // }
 };

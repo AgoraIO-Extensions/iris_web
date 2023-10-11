@@ -10,6 +10,10 @@ import {
   ITrack,
 } from 'agora-rtc-sdk-ng';
 
+import { IrisAudioSourceType } from '../base/BaseType';
+
+import { BufferSourceAudioTrackPackage } from '../engine/IrisClientManager';
+
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import { CheckVideoVisibleResult } from '../web_sdk';
@@ -33,7 +37,6 @@ export interface IrisTrackEventHandlerParam {
 
 //一个track可能被多个Client发布出去，所以一个track可以同事存在多个TrackEventHandler
 export class IrisTrackEventHandler {
-  private _channelName: string = null;
   private _client: IAgoraRTCClient = null;
   private _remoteUser: IAgoraRTCRemoteUser = null;
   private _track: ITrack | IBufferSourceAudioTrack = null;
@@ -52,7 +55,6 @@ export class IrisTrackEventHandler {
   private __onEventSourceStateChange = null;
 
   constructor(params: IrisTrackEventHandlerParam, engine: IrisRtcEngine) {
-    this._channelName = params.channelName;
     this._client = params.client;
     this._remoteUser = params.remoteUser;
     this._track = params.track;
@@ -111,10 +113,11 @@ export class IrisTrackEventHandler {
       case 'ILocalTrack':
         // 屏幕共享的case
         if (
-          this._videoSourceType ===
-          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
+          this._engine.implHelper.isScreenCapture(
+            this._videoSourceType as NATIVE_RTC.VIDEO_SOURCE_TYPE
+          )
         ) {
-          this._engine.implDispatchsMap
+          this._engine.implDispatchesMap
             .get('RtcEngine')
             ._impl.stopScreenCapture();
         }
@@ -126,9 +129,9 @@ export class IrisTrackEventHandler {
 
   onEventSourceStateChange() {
     if (this._trackType === 'IBufferSourceAudioTrack') {
-      let soundId = this._engine.entitiesContainer.getLocalBufferSourceAudioTrackSoundIdByTrack(
-        this._track as IBufferSourceAudioTrack
-      );
+      let soundId = (this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+        IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
+      )[0] as BufferSourceAudioTrackPackage).soundId;
       this._engine.rtcEngineEventHandler.onAudioEffectFinished(soundId);
     }
   }
@@ -206,7 +209,7 @@ export class IrisTrackEventHandler {
     return this._trackType;
   }
 
-  destruction() {
+  release() {
     if (this._trackType == 'ILocalTrack') {
       let track = this._track as ILocalTrack;
       track.off('track-ended', this.__onEventTrackEnded);

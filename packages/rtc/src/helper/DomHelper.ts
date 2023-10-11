@@ -24,7 +24,7 @@ export class IrisElement {
     this.containerElement = null;
   }
 
-  dispose() {
+  release() {
     this.remove();
   }
 }

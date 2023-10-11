@@ -51,7 +51,7 @@ export default function (
       let isCallback = isMatch(node.name, 'isCallback');
 
       if (node.name === 'VIDEO_SOURCE_TYPE') {
-        debugger;
+        // debugger;
       }
 
       if (node.__TYPE === CXXTYPE.Clazz) {
@@ -101,11 +101,13 @@ export default function (
     fileNameTemplatePath: path.join(
       __dirname,
       'templates',
+      'impl',
       'file_name.mustache'
     ),
     fileContentTemplatePath: path.join(
       __dirname,
       'templates',
+      'impl',
       'file_content.mustache'
     ),
     view,

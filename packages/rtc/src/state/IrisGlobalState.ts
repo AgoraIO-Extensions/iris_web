@@ -1,14 +1,13 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import AgoraRTC, { IAgoraRTC, UID } from 'agora-rtc-sdk-ng';
+import AgoraRTC, { IAgoraRTC } from 'agora-rtc-sdk-ng';
 
 export interface DeviceInfo {
   deviceName: string;
   deviceId: string;
 }
 
-export class IrisGlobalVariables {
+export class IrisGlobalState {
   public rtcEngineContext: NATIVE_RTC.RtcEngineContext;
-  isJoinChannel: boolean = false;
 
   //C++ SetAudioProfile() initialize()
   public audioProfile: NATIVE_RTC.AUDIO_PROFILE_TYPE;
@@ -33,11 +32,6 @@ export class IrisGlobalVariables {
   public enabledVideo: boolean = false;
   public pausedVideo: boolean = false;
 
-  //远端用户的 playback signal volume， 总设置
-  playbackSignalVolume: number = 100;
-  //每个远端用户的 playback signal volume 对应uid
-  playbackSignalVolumes: Map<UID, number> = new Map();
-
   // recording Signal Volume
   recordingSignalVolume: number = 100;
 
@@ -58,13 +52,9 @@ export class IrisGlobalVariables {
   //setVideoEncoderConfiguration
   videoEncoderConfiguration: NATIVE_RTC.VideoEncoderConfiguration = null;
 
-  cameraDirection: NATIVE_RTC.CAMERA_DIRECTION = null;
-
   fallbackOption: NATIVE_RTC.STREAM_FALLBACK_OPTIONS = null;
 
   screenCaptureContentHint: NATIVE_RTC.VIDEO_CONTENT_HINT = null;
-
-  isScreenSharing: boolean = false;
 
   // screenCaptureParameters: NATIVE_RTC.ScreenCaptureParameters = null;
   screenCaptureParameters2: NATIVE_RTC.ScreenCaptureParameters2 = null;
@@ -72,10 +62,12 @@ export class IrisGlobalVariables {
   cloudProxy: NATIVE_RTC.CLOUD_PROXY_TYPE = null;
 
   //devicesInfo
-  deviceEnumerated: boolean = false;
   playbackDevices: DeviceInfo[] = new Array();
   recordingDevices: DeviceInfo[] = new Array();
   videoDevices: DeviceInfo[] = new Array();
+
+  //setDevice() : videoDevice
+  videoDeviceId: string = null;
 
   //enableAudioVolumeIndication
   enableAudioVolumeIndication: boolean = false;
@@ -84,6 +76,15 @@ export class IrisGlobalVariables {
     smooth: 3,
     reportVad: false,
   };
+
+  public autoSubscribeVideo: boolean = false;
+
+  reset() {
+    this.enabledAudio = true;
+    this.pausedAudio = false;
+    this.enabledLocalAudio = true;
+    this.mutedLocalAudioStream = false;
+  }
 
   //fake
   AgoraRTC: IAgoraRTC = AgoraRTC;
