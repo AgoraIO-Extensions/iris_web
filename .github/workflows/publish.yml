@@ -22,7 +22,7 @@ on:
         type: boolean
       cdn:
         description: 'upload to cdn'
-        default: true
+        default: false
         type: boolean
       release_type:
         description: 'The release type of CDN'
@@ -53,6 +53,16 @@ jobs:
 
         run: |
           pnpm install
+          pnpm run lint
+          pnpm run build
+          MY_PATH=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
+          echo "MY_PATH=$MY_PATH" >> $GITHUB_ENV
+
+      - name: Upload Artifact ⬆️
+        uses: actions/upload-artifact@v3
+        with:
+          name: iris-web-rtc
+          path: ./packages/rtc/dist/${{ env.MY_PATH }}
 
       - name: CDN Publish
         if: ${{ inputs.cdn }}
@@ -79,11 +89,9 @@ jobs:
           git config --global user.name "${{ github.actor }}"
 
       - name: Update CHANGELOG.md
-        if: ${{ inputs.npm }}
         run: |
           pnpm release ${{ inputs.version }} --ci --no-git.tag --no-github.release --npm.allowSameVersion
 
-      - name: NPM Publish
-        if: ${{ inputs.npm }}
+      - name: Release and Publish
         run: |
-          pnpm -F ${{ inputs.package }} release ${{ inputs.version }} --ci --github.release=${{ inputs.releases }}
+          pnpm release ${{ steps.package-info.outputs.version }} --ci --npm.publish=${{ inputs.npm }} --github.update --github.assets=./packages/rtc/dist/${{ env.MY_PATH }}

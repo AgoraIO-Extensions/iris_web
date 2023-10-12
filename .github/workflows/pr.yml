@@ -35,7 +35,6 @@ jobs:
         run: |
           pnpm install
           pnpm run lint
-          pnpm run test
 
       - name: Report Coverage for iris-web-rtc 🟢
         uses: ArtiomTr/jest-coverage-report-action@v2
