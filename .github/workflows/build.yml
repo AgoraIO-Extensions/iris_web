@@ -34,10 +34,9 @@ jobs:
           pnpm run build
           MY_PATH=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
           echo "::set-output name=dist_path::${MY_PATH}"
-          echo ${MY_PATH}
 
       - name: Upload Artifact ⬆️
         uses: actions/upload-artifact@v3
         with:
           name: iris-web-rtc
-          path: ${{steps.dist.outputs.dist_path}}
+          path: ./packages/rtc/dist/${{steps.dist.outputs.dist_path}}
