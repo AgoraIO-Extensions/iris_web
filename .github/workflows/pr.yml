@@ -1,10 +1,10 @@
 on: ['pull_request']
 
-name: Build and Test PR
+name: Test PR
 
 jobs:
   build:
-    name: Build
+    name: Test PR
     runs-on: ubuntu-latest
 
     permissions:
@@ -21,7 +21,7 @@ jobs:
       - name: Setup 🛠️
         uses: ./.github/actions/setup
 
-      - name: Build 🔧
+      - name: TEST 🔧
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -29,7 +29,6 @@ jobs:
           pnpm install
           pnpm run lint
           pnpm run test
-          pnpm run build
 
       - name: Report Coverage for agora-rtc-react 🟢
         if: always() # Also generate the report if tests are failing
