@@ -4,11 +4,6 @@ description: Setup Node.js and pnpm
 runs:
   using: composite
   steps:
-    - name: Add SSH key to chekout a private repo
-      uses: webfactory/ssh-agent@v0.5.4
-      with:
-        ssh-private-key: ${{ secrets.REPO_SSH_KEY }}
-
     - name: Install pnpm 🤏🏻
       uses: pnpm/action-setup@v2.2.4
       with:
