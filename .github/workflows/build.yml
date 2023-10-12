@@ -16,6 +16,11 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
+      - name: Add SSH key to chekout a private repo
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.REPO_SSH_KEY }}
+
       - name: Setup 🛠️
         uses: ./.github/actions/setup
 
@@ -30,7 +35,7 @@ jobs:
           MY_PATH=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
           echo "::set-output name=dist_path::${MY_PATH}"
           echo ${MY_PATH}
-        
+
       - name: Upload Artifact ⬆️
         uses: actions/upload-artifact@v3
         with:
