@@ -15,4 +15,6 @@ Then add the `http://localhost:8080/lib-iris-web.js` to your html `srcipt`, e.g.
 <script src="http://localhost:8080/lib-iris-web.js" type="application/javascript"></script>
 ```
 
+## License
 
+The project is under the MIT license.
