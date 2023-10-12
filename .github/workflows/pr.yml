@@ -1,0 +1,44 @@
+on: ['pull_request']
+
+name: Test PR
+
+jobs:
+  build:
+    name: Test PR
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    permissions:
+      contents: write
+      pull-requests: write
+      packages: read
+      checks: write
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Add SSH key to chekout a private repo
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.REPO_SSH_KEY }}
+
+      - name: Setup 🛠️
+        uses: ./.github/actions/setup
+
+      - name: TEST 🔧
+
+        run: |
+          pnpm install
+          pnpm run lint
+
+      - name: Report Coverage for iris-web-rtc 🟢
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          custom-title: Coverage report for iris-web-rtc
+          package-manager: pnpm
+          working-directory: './packages/rtc'

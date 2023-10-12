@@ -3,6 +3,8 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
+const pkg = require('./package.json');
+
 const environment = process.env.NODE_ENV;
 
 config = {
@@ -11,7 +13,7 @@ config = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'this',
-    filename: 'iris-web-rtc.js',
+    filename: `iris-web-rtc_${pkg.version}.js`,
     environment: {
       arrowFunction: false,
     },

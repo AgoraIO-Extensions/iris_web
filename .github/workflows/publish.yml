@@ -1,0 +1,97 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        type: choice
+        description: 'choose package'
+        default: 'iris-web-rtc'
+        required: true
+        options:
+          - iris-web-rtc
+          - iris-web-rtm
+      version:
+        description: 'x.x.x-semver.x, semver: dev,build'
+        required: true
+        default: 'patch'
+        type: string
+      releases:
+        description: 'create Releases, choose false if specify version'
+        default: true
+        type: boolean
+      cdn:
+        description: 'upload to cdn'
+        default: false
+        type: boolean
+      release_type:
+        description: 'The release type of CDN'
+        default: 'staging'
+        type: string
+      npm:
+        description: 'upload to npm'
+        default: false
+        type: boolean
+
+jobs:
+  release-it:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Setup Dependencies 💚
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        run: |
+          pnpm install
+          pnpm run lint
+          pnpm run build
+          MY_PATH=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
+          echo "MY_PATH=$MY_PATH" >> $GITHUB_ENV
+
+      - name: Upload Artifact ⬆️
+        uses: actions/upload-artifact@v3
+        with:
+          name: iris-web-rtc
+          path: ./packages/rtc/dist/${{ env.MY_PATH }}
+
+      - name: CDN Publish
+        if: ${{ inputs.cdn }}
+        run: |
+          UPLOAD_CDN_INTERNAL_JENKINS_HOOK=${{ inputs.upload_cdn_internal_jenkins_hook }}
+          UPLOAD_URL=${{ inputs.url }}
+          RELEASE_TYPE=${{ inputs.release_type }}
+
+          curl -X POST ${UPLOAD_CDN_INTERNAL_JENKINS_HOOK} \
+              -H "Content-Type: application/json" \
+              -H "Accept: application/json" \
+              -d "{ \"release\": { \"assets\": [ { \"browser_download_url\": \"${UPLOAD_URL}\", \"release_type\": \"${RELEASE_TYPE}\" } ] }}"
+        shell: bash
+
+      - name: Setup NPM auth token
+        if: ${{ inputs.npm }}
+        run: |
+          npm set "//registry.npmjs.org/:_authToken" ${{ secrets.NPM_TOKEN }}
+
+      - name: Config Git
+        if: ${{ inputs.npm }}
+        run: |
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+
+      - name: Update CHANGELOG.md
+        run: |
+          pnpm release ${{ inputs.version }} --ci --no-git.tag --no-github.release --npm.allowSameVersion
+
+      - name: Release and Publish
+        run: |
+          pnpm release ${{ steps.package-info.outputs.version }} --ci --npm.publish=${{ inputs.npm }} --github.update --github.assets=./packages/rtc/dist/${{ env.MY_PATH }}
