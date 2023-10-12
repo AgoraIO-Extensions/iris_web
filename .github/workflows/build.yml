@@ -7,7 +7,6 @@ on:
 jobs:
   build-and-upload-artifact:
     runs-on: ubuntu-latest
-    environment: github-pages
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -30,5 +29,5 @@ jobs:
       - name: Upload Artifact ⬆️
         uses: actions/upload-artifact@v3
         with:
-          name: agora-rtc-react-docs.zip
+          name: iris-web-rtc
           path: ${{steps.dist.outputs.dist_path}}
