@@ -5,31 +5,31 @@ on:
     inputs:
       package:
         type: choice
-        description: choose package
+        description: 'choose package'
         default: 'iris-web-rtc'
         required: true
         options:
           - iris-web-rtc
           - iris-web-rtm
       version:
-        description: x.x.x-semver.x, semver: dev,build
+        description: 'x.x.x-semver.x, semver: dev,build'
         required: true
         default: 'patch'
         type: string
       releases:
-        description: create Releases, choose false if specify version
+        description: 'create Releases, choose false if specify version'
         default: true
         type: boolean
       cdn:
-        description: upload to cdn
+        description: 'upload to cdn'
         default: true
         type: boolean
       release_type:
-        description: The release type of CDN
+        description: 'The release type of CDN'
         default: 'staging'
         type: string
       npm:
-        description: upload to npm
+        description: 'upload to npm'
         default: false
         type: boolean
 
@@ -50,7 +50,7 @@ jobs:
       - name: Setup Dependencies 💚
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
         run: |
           pnpm install
 

@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     permissions:
       contents: read
@@ -24,7 +23,7 @@ jobs:
 
         run: |
 
-          npm set "//registry.npmjs.org/:_authToken" ${{ secrets.NPM_TOKEN }}
+          npm set "//registry.npmjs.org/:_authToken" ${{ secrets.SSH_KEY }}
           pnpm install
           pnpm run lint
           pnpm run test
