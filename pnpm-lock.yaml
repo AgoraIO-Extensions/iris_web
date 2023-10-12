@@ -128,7 +128,7 @@ importers:
         specifier: latest
         version: 0.1.2
       '@agoraio-extensions/terra_shared_configs':
-        specifier: git+https://github.com/AgoraIO-Extensions/terra_shared_configs.git
+        specifier: git+ssh://git@github.com:AgoraIO-Extensions/terra_shared_configs.git
         version: github.com/AgoraIO-Extensions/terra_shared_configs/8848cc92af5973d1efb3fa2dc635007554163896
       ts-node:
         specifier: ^10.9.1
