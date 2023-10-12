@@ -2,7 +2,7 @@
 
 cross platform support in web
 
-## Install
+## Environment Install
 
 npm install -g pnpm
 
@@ -18,7 +18,7 @@ pnpm build
 
 The output file will be placed in `packages/rtc/dist`
 
-## How to install iris_web to your cross platform
+## installation of cross platform
 
 prepare a [Live Server](https://github.com/ritwickdey/vscode-live-server-plus-plus)
 
@@ -30,3 +30,7 @@ add the `iris-web-rtc_x.x.x-x.x.js` to your html `srcipt`, e.g.,
   type="application/javascript"
 ></script>
 ```
+
+## License
+
+The project is under the MIT license.
