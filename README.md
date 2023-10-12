@@ -1,22 +1,32 @@
 # iris_web
 
-project srouce: [project/iris](/project/iris)
+cross platform support in web
 
-## build
+## Install
 
-### Build for production
+npm install -g pnpm
 
-Run [build.sh](build.sh)
+## QuickStart
 
-### Build for local dev
+pnpm start
 
-Run [build_local_dev.sh](build_local_dev.sh)
+this command can watch files and recompile whenever they change.
 
-Then add the `http://localhost:8080/lib-iris-web.js` to your html `srcipt`, e.g.,
+## Build
+
+pnpm build
+
+The output file will be placed in `packages/rtc/dist`
+
+## How to install iris_web to your cross platform
+
+prepare a [Live Server](https://github.com/ritwickdey/vscode-live-server-plus-plus)
+
+add the `iris-web-rtc_x.x.x-x.x.js` to your html `srcipt`, e.g.,
 
 ```html
 <script
-  src="http://localhost:8080/lib-iris-web.js"
+  src="http://127.0.0.1:5500/lib-iris-web.js"
   type="application/javascript"
 ></script>
 ```
