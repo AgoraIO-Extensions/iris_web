@@ -26,19 +26,16 @@ jobs:
 
       - name: Build 🔧
 
-        id: dist
         run: |
           pnpm install
           pnpm run lint
           pnpm run test
           pnpm run build
           MY_PATH=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
-
-        outputs:
-          dist_path: ${{ steps.dist.outputs.MY_PATH }}
+          echo "MY_PATH=$MY_PATH" >> $GITHUB_ENV
 
       - name: Upload Artifact ⬆️
         uses: actions/upload-artifact@v3
         with:
           name: iris-web-rtc
-          path: ./packages/rtc/dist/${{steps.dist.outputs.dist_path}}
+          path: ./packages/rtc/dist/${{ env.MY_PATH }}
