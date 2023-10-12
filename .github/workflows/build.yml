@@ -37,5 +37,5 @@ jobs:
       - name: Upload Artifact ⬆️
         uses: actions/upload-artifact@v3
         with:
-          name: iris-web-rtc
+          name: ${{ env.MY_PATH }}
           path: ./packages/rtc/dist/${{ env.MY_PATH }}
