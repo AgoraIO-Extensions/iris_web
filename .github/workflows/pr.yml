@@ -6,6 +6,8 @@ jobs:
   build:
     name: Test PR
     runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     permissions:
       contents: read
@@ -22,8 +24,6 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: TEST 🔧
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         run: |
           pnpm install
@@ -31,7 +31,6 @@ jobs:
           pnpm run test
 
       - name: Report Coverage for iris-web-rtc 🟢
-        if: always() # Also generate the report if tests are failing
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           custom-title: Coverage report for iris-web-rtc
