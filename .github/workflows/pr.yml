@@ -30,7 +30,7 @@ jobs:
           pnpm run lint
           pnpm run test
 
-      - name: Report Coverage for agora-rtc-react 🟢
+      - name: Report Coverage for iris-web-rtc 🟢
         if: always() # Also generate the report if tests are failing
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:

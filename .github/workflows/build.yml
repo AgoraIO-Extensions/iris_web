@@ -6,6 +6,9 @@ on:
 jobs:
   build-and-upload-artifact:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
