@@ -11,27 +11,14 @@ on:
         options:
           - iris-web-rtc
           - iris-web-rtm
-      version:
-        description: 'x.x.x-semver.x, semver: dev,build'
-        required: true
-        default: 'patch'
-        type: string
-      releases:
-        description: 'create Releases, choose false if specify version'
-        default: true
-        type: boolean
       cdn:
         description: 'upload to cdn'
-        default: false
+        default: true
         type: boolean
       release_type:
         description: 'The release type of CDN'
         default: 'staging'
         type: string
-      npm:
-        description: 'upload to npm'
-        default: false
-        type: boolean
 
 jobs:
   release-it:
@@ -47,51 +34,54 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Setup Dependencies 💚
+      - name: Setup Dependencies and Build💚
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         run: |
           pnpm install
-          pnpm run lint
           pnpm run build
-          MY_PATH=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
-          echo "MY_PATH=$MY_PATH" >> $GITHUB_ENV
-
-      - name: Upload Artifact ⬆️
-        uses: actions/upload-artifact@v3
-        with:
-          name: iris-web-rtc
-          path: ./packages/rtc/dist/${{ env.MY_PATH }}
-
-      - name: CDN Publish
-        if: ${{ inputs.cdn }}
-        run: |
-          UPLOAD_CDN_INTERNAL_JENKINS_HOOK=${{ inputs.upload_cdn_internal_jenkins_hook }}
-          UPLOAD_URL=${{ inputs.url }}
-          RELEASE_TYPE=${{ inputs.release_type }}
-
-          curl -X POST ${UPLOAD_CDN_INTERNAL_JENKINS_HOOK} \
-              -H "Content-Type: application/json" \
-              -H "Accept: application/json" \
-              -d "{ \"release\": { \"assets\": [ { \"browser_download_url\": \"${UPLOAD_URL}\", \"release_type\": \"${RELEASE_TYPE}\" } ] }}"
-        shell: bash
+          OUTPUT_ARTIFACT_FILE_NAME=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
+          echo "OUTPUT_ARTIFACT_FILE_NAME=$OUTPUT_ARTIFACT_FILE_NAME" >> $GITHUB_ENV
 
       - name: Setup NPM auth token
-        if: ${{ inputs.npm }}
         run: |
           npm set "//registry.npmjs.org/:_authToken" ${{ secrets.NPM_TOKEN }}
 
       - name: Config Git
-        if: ${{ inputs.npm }}
         run: |
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git config --global user.name "${{ github.actor }}"
 
-      - name: Update CHANGELOG.md
+      - name: Get Package Info
+        if: ${{ inputs.package == 'iris-web-rtc' }}
         run: |
-          pnpm release ${{ inputs.version }} --ci --no-git.tag --no-github.release --npm.allowSameVersion
+          version=$(node -p "require('./packages/rtc/package.json').version")
+          echo "version=${version}" >> $GITHUB_ENV
 
-      - name: Release and Publish
+      - name: Get Package Info
+        if: ${{ inputs.package == 'iris-web-rtm' }}
         run: |
-          pnpm release ${{ steps.package-info.outputs.version }} --ci --npm.publish=${{ inputs.npm }} --github.update --github.assets=./packages/rtc/dist/${{ env.MY_PATH }}
+          version=$(node -p "require('./packages/rtm/package.json').version")
+          echo "version=${version}" >> $GITHUB_ENV
+
+      - name: Update CHANGELOG.md and Create Release
+        run: |
+          pnpm release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./packages/rtc/dist/${{ env.OUTPUT_ARTIFACT_FILE_NAME }}
+
+      - name: Prepare CDN Publish
+        if: ${{ inputs.cdn }}
+        run: |
+          GITHUB_RELEASE_DOWNLOAD_PREFIX=https://github.com/AgoraIO-Extensions/iris_web/releases/download
+          GITHUB_RELEASE_DOWNLOAD_URL="${GITHUB_RELEASE_DOWNLOAD_PREFIX}/v${{ env.version }}/${{ env.OUTPUT_ARTIFACT_FILE_NAME }}"
+          echo "GITHUB_RELEASE_DOWNLOAD_URL=${GITHUB_RELEASE_DOWNLOAD_URL}" >> $GITHUB_ENV
+
+      - name: CDN Publish
+        if: ${{ inputs.cdn }}
+        env:
+          UPLOAD_CDN_INTERNAL_JENKINS_HOOK: ${{ secrets.UPLOAD_CDN_INTERNAL_JENKINS_HOOK }}
+        uses: AgoraIO-Extensions/actions/.github/actions/upload_cdn_internal@main
+        with:
+          upload_cdn_internal_jenkins_hook: ${{ env.UPLOAD_CDN_INTERNAL_JENKINS_HOOK }}
+          url: ${{ env.GITHUB_RELEASE_DOWNLOAD_URL }}
+          release_type: ${{ inputs.release_type }}
