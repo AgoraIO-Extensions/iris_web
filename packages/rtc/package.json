@@ -13,7 +13,7 @@
     "lint:fix": "eslint --fix --ext .ts ./src/binding ./test/binding",
     "release": "release-it"
   },
-  "author": "guoxianzhe",
+  "author": "AgoraIO-Extensions",
   "license": "ISC",
   "dependencies": {
     "@iris/native-rtc-binding": "workspace: *",
