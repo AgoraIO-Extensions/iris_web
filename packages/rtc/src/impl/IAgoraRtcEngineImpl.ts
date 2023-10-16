@@ -64,12 +64,15 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
 
   initialize(context: NATIVE_RTC.RtcEngineContext): CallApiReturnType {
-    if (this._engine.irisClientManager.irisClientList.length > 0) {
-      return this._engine.irisRtcErrorHandler.failed(
-        'you have already initialized'
-      );
-    }
     let processFunc = async () => {
+      // Return OK if already initialized.
+      if (this._engine.irisClientManager.irisClientList.length > 0) {
+        return this._engine.returnResult(
+          true,
+          NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK
+        );
+      }
+
       new IrisClient(this._engine);
 
       this._engine.globalState.rtcEngineContext = context;
