@@ -94,10 +94,20 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     speakerNumber: number,
     totalVolume: number
   ): void {
-    AgoraConsole.warn(
-      'onAudioVolumeIndication not supported in this platform!'
+    let _obj = {
+      connection,
+      speakers,
+      speakerNumber,
+      totalVolume,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioVolumeIndicationEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onAudioVolumeIndicationEx eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onLeaveChannelEx(connection: RtcConnection, stats: RtcStats): void {
@@ -142,10 +152,21 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     height: number,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'onFirstRemoteVideoDecoded not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      width,
+      height,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstRemoteVideoDecodedEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onFirstRemoteVideoDecodedEx eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onVideoSizeChangedEx(
@@ -180,10 +201,21 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     height: number,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'onFirstRemoteVideoFrame not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      width,
+      height,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstRemoteVideoFrameEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onFirstRemoteVideoFrameEx eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onUserJoinedEx(
@@ -229,8 +261,19 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     muted: boolean
   ): void {
-    AgoraConsole.warn('onUserMuteAudio not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      connection,
+      remoteUid,
+      muted,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserMuteAudioEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onUserMuteAudioEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onUserMuteVideoEx(
@@ -238,8 +281,19 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     muted: boolean
   ): void {
-    AgoraConsole.warn('onUserMuteVideo not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      connection,
+      remoteUid,
+      muted,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserMuteVideoEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onUserMuteVideoEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onUserEnableVideoEx(
@@ -256,8 +310,19 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     enabled: boolean
   ): void {
-    AgoraConsole.warn('onUserEnableLocalVideo not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      connection,
+      remoteUid,
+      enabled,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserEnableLocalVideoEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onUserEnableLocalVideoEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onUserStateChangedEx(
@@ -265,8 +330,19 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     state: number
   ): void {
-    AgoraConsole.warn('onUserStateChanged not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      connection,
+      remoteUid,
+      state,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onUserStateChangedEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onUserStateChangedEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onLocalAudioStatsEx(connection: RtcConnection, stats: LocalAudioStats): void {
@@ -291,20 +367,45 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
   }
 
   onConnectionLostEx(connection: RtcConnection): void {
-    AgoraConsole.warn('onConnectionLost not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      connection,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onConnectionLostEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onConnectionLostEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onConnectionInterruptedEx(connection: RtcConnection): void {
-    AgoraConsole.warn(
-      'onConnectionInterrupted not supported in this platform!'
+    let _obj = {
+      connection,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onConnectionInterruptedEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onConnectionInterruptedEx eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onConnectionBannedEx(connection: RtcConnection): void {
-    AgoraConsole.warn('onConnectionBanned not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      connection,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onConnectionBannedEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onConnectionBannedEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onStreamMessageEx(
@@ -332,8 +433,17 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
   }
 
   onRequestTokenEx(connection: RtcConnection): void {
-    AgoraConsole.warn('onRequestToken not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      connection,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRequestTokenEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onRequestTokenEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onLicenseValidationFailureEx(
@@ -347,10 +457,18 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
   }
 
   onTokenPrivilegeWillExpireEx(connection: RtcConnection, token: string): void {
-    AgoraConsole.warn(
-      'onTokenPrivilegeWillExpire not supported in this platform!'
+    let _obj = {
+      connection,
+      token,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onTokenPrivilegeWillExpireEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onTokenPrivilegeWillExpireEx eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onFirstLocalAudioFramePublishedEx(
@@ -368,10 +486,19 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     userId: number,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'onFirstRemoteAudioFrame not supported in this platform!'
+    let _obj = {
+      connection,
+      userId,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstRemoteAudioFrameEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onFirstRemoteAudioFrameEx eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onFirstRemoteAudioDecodedEx(
@@ -379,10 +506,19 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     uid: number,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'onFirstRemoteAudioDecoded not supported in this platform!'
+    let _obj = {
+      connection,
+      uid,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstRemoteAudioDecodedEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onFirstRemoteAudioDecodedEx eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onLocalAudioStateChangedEx(
@@ -466,10 +602,19 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     state: CONNECTION_STATE_TYPE,
     reason: CONNECTION_CHANGED_REASON_TYPE
   ): void {
-    AgoraConsole.warn(
-      'onConnectionStateChanged not supported in this platform!'
+    let _obj = {
+      connection,
+      state,
+      reason,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onConnectionStateChangedEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onConnectionStateChangedEx eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onWlAccMessageEx(
@@ -500,8 +645,18 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     connection: RtcConnection,
     errorType: ENCRYPTION_ERROR_TYPE
   ): void {
-    AgoraConsole.warn('onEncryptionError not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      connection,
+      errorType,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onEncryptionErrorEx');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onEncryptionErrorEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onUploadLogResultEx(

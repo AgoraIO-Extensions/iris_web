@@ -33,6 +33,7 @@ export class ImplHelper {
 
   public async createBufferSourceAudioTrack(
     soundId: number,
+    publish: boolean,
     bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig
   ): Promise<BufferSourceAudioTrackPackage> {
     let bufferSourceAudioTrack: IBufferSourceAudioTrack = null;
@@ -49,7 +50,8 @@ export class ImplHelper {
     let bufferSourceAudioTrackPackage = new BufferSourceAudioTrackPackage(
       IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio,
       bufferSourceAudioTrack,
-      soundId
+      soundId,
+      publish
     );
     this._engine.irisClientManager.addLocalAudioTrackPackage(
       bufferSourceAudioTrackPackage
