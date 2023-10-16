@@ -27,12 +27,8 @@ export class IAudioDeviceManagerDispatch {
     return this._impl.setPlaybackDevice(deviceId);
   }
 
-  getPlaybackDevice(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let deviceId = obj.deviceId;
-    if (deviceId === undefined) throw 'deviceId is undefined';
-
-    return this._impl.getPlaybackDevice(deviceId);
+  getPlaybackDevice(): CallApiReturnType {
+    return this._impl.getPlaybackDevice();
   }
 
   getPlaybackDeviceInfo(): CallApiReturnType {
@@ -47,12 +43,8 @@ export class IAudioDeviceManagerDispatch {
     return this._impl.setPlaybackDeviceVolume(volume);
   }
 
-  getPlaybackDeviceVolume(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let volume = obj.volume;
-    if (volume === undefined) throw 'volume is undefined';
-
-    return this._impl.getPlaybackDeviceVolume(volume);
+  getPlaybackDeviceVolume(): CallApiReturnType {
+    return this._impl.getPlaybackDeviceVolume();
   }
 
   setRecordingDevice(apiParam: ApiParam): CallApiReturnType {

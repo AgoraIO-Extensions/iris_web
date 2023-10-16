@@ -152,30 +152,6 @@ describe('IAudioDeviceManager', () => {
         .setPlaybackDevice
     ).toBeCalledWith('test');
   });
-  test('getPlaybackDevice parameter', async () => {
-    let nParam = {
-      deviceId: undefined,
-    };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new EventParam(
-            'AudioDeviceManager_getPlaybackDevice',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
-    }
-  });
 
   test('getPlaybackDevice impl call', async () => {
     jest
@@ -184,9 +160,7 @@ describe('IAudioDeviceManager', () => {
         'getPlaybackDevice'
       )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    let nParam = {
-      deviceId: 'test',
-    };
+    let nParam = {};
     let apiParam = new EventParam(
       'AudioDeviceManager_getPlaybackDevice',
       JSON.stringify(nParam),
@@ -204,7 +178,7 @@ describe('IAudioDeviceManager', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl
         .getPlaybackDevice
-    ).toBeCalledWith('test');
+    ).toBeCalledWith();
   });
 
   test('getPlaybackDeviceInfo impl call', async () => {
@@ -288,30 +262,6 @@ describe('IAudioDeviceManager', () => {
         .setPlaybackDeviceVolume
     ).toBeCalledWith('test');
   });
-  test('getPlaybackDeviceVolume parameter', async () => {
-    let nParam = {
-      volume: undefined,
-    };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new EventParam(
-            'AudioDeviceManager_getPlaybackDeviceVolume',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
-    }
-  });
 
   test('getPlaybackDeviceVolume impl call', async () => {
     jest
@@ -320,9 +270,7 @@ describe('IAudioDeviceManager', () => {
         'getPlaybackDeviceVolume'
       )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    let nParam = {
-      volume: 'test',
-    };
+    let nParam = {};
     let apiParam = new EventParam(
       'AudioDeviceManager_getPlaybackDeviceVolume',
       JSON.stringify(nParam),
@@ -340,7 +288,7 @@ describe('IAudioDeviceManager', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl
         .getPlaybackDeviceVolume
-    ).toBeCalledWith('test');
+    ).toBeCalledWith();
   });
   test('setRecordingDevice parameter', async () => {
     let nParam = {
