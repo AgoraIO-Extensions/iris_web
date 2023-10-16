@@ -165,16 +165,23 @@ export class IrisRtcEngine implements ApiInterceptor {
         AgoraConsole.error(
           `[callIrisApiAsync][result] ${func_name} not found in ${className}Dispatch`
         );
-        return new CallIrisApiResult(
-          -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED,
-          ''
+
+        // TODO(guoxianze): Temporarily return ERR_NOT_SUPPORTED, for not implemented api.
+        return this.returnResult(
+          true,
+          -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
         );
       }
     } else {
       AgoraConsole.error(
         `[callIrisApiAsync][result] ${className} not found in DispatchsMap`
       );
-      return new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, '');
+
+      // TODO(guoxianze): Temporarily return ERR_NOT_SUPPORTED, for not implemented module.
+      return this.returnResult(
+        true,
+        -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+      );
     }
   }
 
