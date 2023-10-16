@@ -13,13 +13,13 @@ export interface IAudioDeviceManager {
 
   setPlaybackDevice(deviceId: string[]): CallApiReturnType;
 
-  getPlaybackDevice(deviceId: string): CallApiReturnType;
+  getPlaybackDevice(): CallApiReturnType;
 
   getPlaybackDeviceInfo(): CallApiReturnType;
 
   setPlaybackDeviceVolume(volume: number): CallApiReturnType;
 
-  getPlaybackDeviceVolume(volume: number[]): CallApiReturnType;
+  getPlaybackDeviceVolume(): CallApiReturnType;
 
   setRecordingDevice(deviceId: string[]): CallApiReturnType;
 

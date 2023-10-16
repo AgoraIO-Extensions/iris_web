@@ -39,7 +39,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     );
   }
 
-  getPlaybackDevice(deviceId: string): CallApiReturnType {
+  getPlaybackDevice(): CallApiReturnType {
     AgoraConsole.warn('getPlaybackDevice not supported in this platform!');
     return this._engine.returnResult(
       false,
@@ -65,7 +65,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     );
   }
 
-  getPlaybackDeviceVolume(volume: number[]): CallApiReturnType {
+  getPlaybackDeviceVolume(): CallApiReturnType {
     AgoraConsole.warn(
       'getPlaybackDeviceVolume not supported in this platform!'
     );
