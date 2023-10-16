@@ -13,7 +13,6 @@ find ${OUTPUT_DIR}/test/binding -type f -delete
 npm run build -- run \
     --config ${MY_PATH}/config/binding_configs.yaml \
     --output-dir=${OUTPUT_DIR} \
-    --cache \
 
 cd ${OUTPUT_DIR} 
 

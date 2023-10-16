@@ -4,6 +4,7 @@ import {
   AudioFrame,
   AudioPcmFrame,
   AudioSpectrumData,
+  ERROR_CODE_TYPE,
   EncodedVideoFrameInfo,
   RecorderErrorCode,
   RecorderInfo,
@@ -35,15 +36,8 @@ export class IAudioPcmFrameSink {
   }
 
   onFrame(frame: AudioPcmFrame[]): void {
-    let _obj = {
-      frame,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onFrame');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(`onFrame eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onFrame not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
 
@@ -65,62 +59,25 @@ export class IAudioFrameObserverBase {
   }
 
   onRecordAudioFrame(channelId: string, audioFrame: AudioFrame): void {
-    let _obj = {
-      channelId,
-      audioFrame,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRecordAudioFrame');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRecordAudioFrame eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onRecordAudioFrame not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onPlaybackAudioFrame(channelId: string, audioFrame: AudioFrame): void {
-    let _obj = {
-      channelId,
-      audioFrame,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onPlaybackAudioFrame');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onPlaybackAudioFrame eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onPlaybackAudioFrame not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onMixedAudioFrame(channelId: string, audioFrame: AudioFrame): void {
-    let _obj = {
-      channelId,
-      audioFrame,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onMixedAudioFrame');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onMixedAudioFrame eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onMixedAudioFrame not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onEarMonitoringAudioFrame(audioFrame: AudioFrame): void {
-    let _obj = {
-      audioFrame,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onEarMonitoringAudioFrame');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onEarMonitoringAudioFrame eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onEarMonitoringAudioFrame not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
 
@@ -147,21 +104,10 @@ export class IAudioFrameObserver extends IAudioFrameObserverBase {
     uid: number,
     audioFrame: AudioFrame
   ): void {
-    let _obj = {
-      channelId,
-      uid,
-      audioFrame,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onPlaybackAudioFrameBeforeMixing');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onPlaybackAudioFrameBeforeMixing eventParam ${JSON.stringify(
-        eventParam
-      )}`
+    AgoraConsole.warn(
+      'onPlaybackAudioFrameBeforeMixing not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
 
@@ -183,35 +129,16 @@ export class IAudioSpectrumObserver {
   }
 
   onLocalAudioSpectrum(data: AudioSpectrumData): void {
-    let _obj = {
-      data,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onLocalAudioSpectrum');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onLocalAudioSpectrum eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onLocalAudioSpectrum not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onRemoteAudioSpectrum(
     spectrums: UserAudioSpectrumInfo[],
     spectrumNumber: number
   ): void {
-    let _obj = {
-      spectrums,
-      spectrumNumber,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteAudioSpectrum');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRemoteAudioSpectrum eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onRemoteAudioSpectrum not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
 
@@ -238,20 +165,10 @@ export class IVideoEncodedFrameObserver {
     length: number,
     videoEncodedFrameInfo: EncodedVideoFrameInfo
   ): void {
-    let _obj = {
-      uid,
-      imageBuffer,
-      length,
-      videoEncodedFrameInfo,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onEncodedVideoFrameReceived');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onEncodedVideoFrameReceived eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onEncodedVideoFrameReceived not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
 
@@ -276,51 +193,23 @@ export class IVideoFrameObserver {
     sourceType: VIDEO_SOURCE_TYPE,
     videoFrame: VideoFrame
   ): void {
-    let _obj = {
-      sourceType,
-      videoFrame,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onCaptureVideoFrame');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onCaptureVideoFrame eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onCaptureVideoFrame not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onPreEncodeVideoFrame(
     sourceType: VIDEO_SOURCE_TYPE,
     videoFrame: VideoFrame
   ): void {
-    let _obj = {
-      sourceType,
-      videoFrame,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onPreEncodeVideoFrame');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onPreEncodeVideoFrame eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onPreEncodeVideoFrame not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onMediaPlayerVideoFrame(videoFrame: VideoFrame, mediaPlayerId: number): void {
-    let _obj = {
-      videoFrame,
-      mediaPlayerId,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onMediaPlayerVideoFrame');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onMediaPlayerVideoFrame eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onMediaPlayerVideoFrame not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onRenderVideoFrame(
@@ -328,33 +217,13 @@ export class IVideoFrameObserver {
     remoteUid: number,
     videoFrame: VideoFrame
   ): void {
-    let _obj = {
-      channelId,
-      remoteUid,
-      videoFrame,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRenderVideoFrame');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRenderVideoFrame eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onRenderVideoFrame not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onTranscodedVideoFrame(videoFrame: VideoFrame): void {
-    let _obj = {
-      videoFrame,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onTranscodedVideoFrame');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onTranscodedVideoFrame eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onTranscodedVideoFrame not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
 
@@ -381,20 +250,8 @@ export class IMediaRecorderObserver {
     state: RecorderState,
     error: RecorderErrorCode
   ): void {
-    let _obj = {
-      channelId,
-      uid,
-      state,
-      error,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRecorderStateChanged');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRecorderStateChanged eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onRecorderStateChanged not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onRecorderInfoUpdated(
@@ -402,18 +259,7 @@ export class IMediaRecorderObserver {
     uid: number,
     info: RecorderInfo
   ): void {
-    let _obj = {
-      channelId,
-      uid,
-      info,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRecorderInfoUpdated');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRecorderInfoUpdated eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onRecorderInfoUpdated not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
