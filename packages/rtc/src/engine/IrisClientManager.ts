@@ -189,16 +189,29 @@ export class BufferSourceAudioTrackPackage extends AudioTrackPackage {
   soundId: number;
   type: IrisAudioSourceType;
   track: IBufferSourceAudioTrack;
+  needPublish: boolean;
+  isPublished: boolean;
+
+  setIsPublished(isPublished: boolean) {
+    this.isPublished = isPublished;
+  }
 
   constructor(
     type?: IrisAudioSourceType,
     track?: IBufferSourceAudioTrack,
-    soundId?: number
+    soundId?: number,
+    needPublish?: boolean
   ) {
     super();
     this.type = type;
     this.track = track;
     this.soundId = soundId;
+    this.needPublish = needPublish;
+  }
+
+  dispose(): void {
+    super.dispose();
+    this.needPublish = false;
   }
 }
 

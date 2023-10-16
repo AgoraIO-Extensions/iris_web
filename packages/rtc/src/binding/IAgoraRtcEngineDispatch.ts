@@ -158,10 +158,19 @@ export class IRtcEngineEventHandler {
     deviceType: number,
     deviceState: number
   ): void {
-    AgoraConsole.warn(
-      'onAudioDeviceStateChanged not supported in this platform!'
+    let _obj = {
+      deviceId,
+      deviceType,
+      deviceState,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioDeviceStateChanged');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onAudioDeviceStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onAudioMixingPositionChanged(position: number): void {
@@ -177,8 +186,17 @@ export class IRtcEngineEventHandler {
   }
 
   onAudioEffectFinished(soundId: number): void {
-    AgoraConsole.warn('onAudioEffectFinished not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      soundId,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onAudioEffectFinished');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onAudioEffectFinished eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onVideoDeviceStateChanged(
@@ -186,10 +204,19 @@ export class IRtcEngineEventHandler {
     deviceType: number,
     deviceState: number
   ): void {
-    AgoraConsole.warn(
-      'onVideoDeviceStateChanged not supported in this platform!'
+    let _obj = {
+      deviceId,
+      deviceType,
+      deviceState,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onVideoDeviceStateChanged');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onVideoDeviceStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onNetworkQuality(uid: number, txQuality: number, rxQuality: number): void {
@@ -522,10 +549,18 @@ export class IRtcEngineEventHandler {
     state: LOCAL_AUDIO_STREAM_STATE,
     error: LOCAL_AUDIO_STREAM_ERROR
   ): void {
-    AgoraConsole.warn(
-      'onLocalAudioStateChanged not supported in this platform!'
+    let _obj = {
+      state,
+      error,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onLocalAudioStateChanged');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onLocalAudioStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onRemoteAudioStateChanged(
@@ -546,8 +581,17 @@ export class IRtcEngineEventHandler {
   }
 
   onContentInspectResult(result: CONTENT_INSPECT_RESULT): void {
-    AgoraConsole.warn('onContentInspectResult not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      result,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onContentInspectResult');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onContentInspectResult eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onSnapshotTaken(
@@ -618,17 +662,32 @@ export class IRtcEngineEventHandler {
   }
 
   onChannelMediaRelayStateChanged(state: number, code: number): void {
-    AgoraConsole.warn(
-      'onChannelMediaRelayStateChanged not supported in this platform!'
+    let _obj = {
+      state,
+      code,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onChannelMediaRelayStateChanged');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onChannelMediaRelayStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onChannelMediaRelayEvent(code: number): void {
-    AgoraConsole.warn(
-      'onChannelMediaRelayEvent not supported in this platform!'
+    let _obj = {
+      code,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onChannelMediaRelayEvent');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onChannelMediaRelayEvent eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onLocalPublishFallbackToAudioOnly(isFallbackOrRecover: boolean): void {
@@ -642,10 +701,20 @@ export class IRtcEngineEventHandler {
     uid: number,
     isFallbackOrRecover: boolean
   ): void {
-    AgoraConsole.warn(
-      'onRemoteSubscribeFallbackToAudioOnly not supported in this platform!'
+    let _obj = {
+      uid,
+      isFallbackOrRecover,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteSubscribeFallbackToAudioOnly');
+
+    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onRemoteSubscribeFallbackToAudioOnly eventParam ${JSON.stringify(
+        eventParam
+      )}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onRemoteAudioTransportStats(

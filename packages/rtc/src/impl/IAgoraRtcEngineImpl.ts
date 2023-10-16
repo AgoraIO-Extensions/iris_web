@@ -1314,11 +1314,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       let irisClient = this._engine.irisClientManager.getIrisClient();
-      let agoraRTCClient = irisClient?.agoraRTCClient;
-      if (!agoraRTCClient.channelName) {
-        AgoraConsole.log('please join channel first');
-        return this._engine.returnResult(false);
-      }
 
       let bufferSourceAudioTrackPackage: BufferSourceAudioTrackPackage = null;
       let bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig = {
@@ -1334,6 +1329,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       try {
         bufferSourceAudioTrackPackage = await this._engine.implHelper.createBufferSourceAudioTrack(
           soundId,
+          publish,
           bufferSourceAudioTrackInitConfig
         );
         AgoraConsole.log('createBufferSourceAudioTrack success');
@@ -1341,7 +1337,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         err && AgoraConsole.error(err);
         return this._engine.returnResult(false);
       }
-      if (publish && bufferSourceAudioTrackPackage.track) {
+      if (bufferSourceAudioTrackPackage.track) {
         //设置音效
         if (gain) {
           bufferSourceAudioTrackPackage.track.setVolume(gain);
@@ -1362,11 +1358,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             config.startPlayTime = Math.floor(startPos / 1000);
           }
           bufferSourceAudioTrackPackage.track.startProcessAudioBuffer(config);
-          await agoraRTCClient.publish(bufferSourceAudioTrackPackage.track);
+          bufferSourceAudioTrackPackage.track.play();
         } catch (reason) {
           AgoraConsole.error(reason);
         }
       }
+      if (publish) {
+        await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+          NotifyType.PUBLISH_TRACK,
+          [bufferSourceAudioTrackPackage],
+          [irisClient]
+        );
+      }
+
       return this._engine.returnResult();
     };
     return this._engine.execute(processFunc);

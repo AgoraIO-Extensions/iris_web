@@ -103,6 +103,26 @@ export class IrisClientObserver {
             irisClient.addLocalAudioTrack(trackPackage);
           }
         }
+
+        //engine.playEffect创建的track可以在加入频道前调用,也可以在加入频道后调用
+        //needPublish通过调用engine.playEffect时绑定
+        //当已加入频道时engine.playEffect调用会立刻publish
+        //当没有加入频道时,engine.playEffect调用不会publish,会等到加入频道后publish
+        //publish后, 会设置isPublished为true,避免重复publish
+        //当离开频道或者release时,轨道会关闭并unpublish
+        if (
+          trackPackage.track &&
+          trackPackage.type ===
+            IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
+        ) {
+          if (
+            (trackPackage as BufferSourceAudioTrackPackage).needPublish &&
+            !(trackPackage as BufferSourceAudioTrackPackage).isPublished
+          ) {
+            publishTrack = trackPackage.track as ILocalTrack;
+            irisClient.addLocalAudioTrack(trackPackage);
+          }
+        }
       }
       if (globalState.enabledVideo && globalState.enabledLocalVideo) {
         if (options.publishScreenCaptureVideo) {
@@ -219,6 +239,13 @@ export class IrisClientObserver {
           await irisClient.agoraRTCClient.publish(publishTrack);
         } catch (reason) {
           AgoraConsole.error(reason);
+        }
+
+        if (
+          trackPackage.type ===
+          IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
+        ) {
+          (trackPackage as BufferSourceAudioTrackPackage).setIsPublished(true);
         }
       }
     }
