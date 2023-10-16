@@ -8,6 +8,7 @@ import {
   CONNECTION_STATE_TYPE,
   ClientRoleOptions,
   ENCRYPTION_ERROR_TYPE,
+  ERROR_CODE_TYPE,
   LICENSE_ERROR_TYPE,
   LOCAL_AUDIO_STREAM_ERROR,
   LOCAL_AUDIO_STREAM_STATE,
@@ -72,18 +73,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
   }
 
   onRejoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void {
-    let _obj = {
-      connection,
-      elapsed,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRejoinChannelSuccessEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRejoinChannelSuccessEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onRejoinChannelSuccess not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onAudioQualityEx(
@@ -93,21 +84,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     delay: number,
     lost: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      quality,
-      delay,
-      lost,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onAudioQualityEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onAudioQualityEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onAudioQuality not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onAudioVolumeIndicationEx(
@@ -116,20 +94,10 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     speakerNumber: number,
     totalVolume: number
   ): void {
-    let _obj = {
-      connection,
-      speakers,
-      speakerNumber,
-      totalVolume,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onAudioVolumeIndicationEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onAudioVolumeIndicationEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onAudioVolumeIndication not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onLeaveChannelEx(connection: RtcConnection, stats: RtcStats): void {
@@ -148,16 +116,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
   }
 
   onRtcStatsEx(connection: RtcConnection, stats: RtcStats): void {
-    let _obj = {
-      connection,
-      stats,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRtcStatsEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(`onRtcStatsEx eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onRtcStats not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onNetworkQualityEx(
@@ -166,34 +126,13 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     txQuality: number,
     rxQuality: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      txQuality,
-      rxQuality,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onNetworkQualityEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onNetworkQualityEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onNetworkQuality not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onIntraRequestReceivedEx(connection: RtcConnection): void {
-    let _obj = {
-      connection,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onIntraRequestReceivedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onIntraRequestReceivedEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onIntraRequestReceived not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onFirstRemoteVideoDecodedEx(
@@ -203,21 +142,10 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     height: number,
     elapsed: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      width,
-      height,
-      elapsed,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onFirstRemoteVideoDecodedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onFirstRemoteVideoDecodedEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onFirstRemoteVideoDecoded not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onVideoSizeChangedEx(
@@ -228,22 +156,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     height: number,
     rotation: number
   ): void {
-    let _obj = {
-      connection,
-      sourceType,
-      uid,
-      width,
-      height,
-      rotation,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onVideoSizeChangedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onVideoSizeChangedEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onVideoSizeChanged not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onRemoteVideoStateChangedEx(
@@ -253,21 +167,10 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     reason: REMOTE_VIDEO_STATE_REASON,
     elapsed: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      state,
-      reason,
-      elapsed,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteVideoStateChangedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRemoteVideoStateChangedEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onRemoteVideoStateChanged not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onFirstRemoteVideoFrameEx(
@@ -277,21 +180,10 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     height: number,
     elapsed: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      width,
-      height,
-      elapsed,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onFirstRemoteVideoFrameEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onFirstRemoteVideoFrameEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onFirstRemoteVideoFrame not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onUserJoinedEx(
@@ -337,19 +229,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     muted: boolean
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      muted,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserMuteAudioEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onUserMuteAudioEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onUserMuteAudio not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onUserMuteVideoEx(
@@ -357,19 +238,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     muted: boolean
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      muted,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserMuteVideoEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onUserMuteVideoEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onUserMuteVideo not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onUserEnableVideoEx(
@@ -377,19 +247,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     enabled: boolean
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      enabled,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserEnableVideoEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onUserEnableVideoEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onUserEnableVideo not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onUserEnableLocalVideoEx(
@@ -397,19 +256,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     enabled: boolean
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      enabled,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserEnableLocalVideoEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onUserEnableLocalVideoEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onUserEnableLocalVideo not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onUserStateChangedEx(
@@ -417,112 +265,46 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     state: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      state,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserStateChangedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onUserStateChangedEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onUserStateChanged not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onLocalAudioStatsEx(connection: RtcConnection, stats: LocalAudioStats): void {
-    let _obj = {
-      connection,
-      stats,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onLocalAudioStatsEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onLocalAudioStatsEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onLocalAudioStats not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onRemoteAudioStatsEx(
     connection: RtcConnection,
     stats: RemoteAudioStats
   ): void {
-    let _obj = {
-      connection,
-      stats,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteAudioStatsEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRemoteAudioStatsEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onRemoteAudioStats not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onRemoteVideoStatsEx(
     connection: RtcConnection,
     stats: RemoteVideoStats
   ): void {
-    let _obj = {
-      connection,
-      stats,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteVideoStatsEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRemoteVideoStatsEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onRemoteVideoStats not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onConnectionLostEx(connection: RtcConnection): void {
-    let _obj = {
-      connection,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onConnectionLostEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onConnectionLostEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onConnectionLost not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onConnectionInterruptedEx(connection: RtcConnection): void {
-    let _obj = {
-      connection,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onConnectionInterruptedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onConnectionInterruptedEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onConnectionInterrupted not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onConnectionBannedEx(connection: RtcConnection): void {
-    let _obj = {
-      connection,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onConnectionBannedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onConnectionBannedEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onConnectionBanned not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onStreamMessageEx(
@@ -533,22 +315,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     length: number,
     sentTs: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      streamId,
-      data,
-      length,
-      sentTs,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onStreamMessageEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onStreamMessageEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onStreamMessage not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onStreamMessageErrorEx(
@@ -559,89 +327,40 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     missed: number,
     cached: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      streamId,
-      code,
-      missed,
-      cached,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onStreamMessageErrorEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onStreamMessageErrorEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onStreamMessageError not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onRequestTokenEx(connection: RtcConnection): void {
-    let _obj = {
-      connection,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRequestTokenEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRequestTokenEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onRequestToken not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onLicenseValidationFailureEx(
     connection: RtcConnection,
     reason: LICENSE_ERROR_TYPE
   ): void {
-    let _obj = {
-      connection,
-      reason,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onLicenseValidationFailureEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onLicenseValidationFailureEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onLicenseValidationFailure not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onTokenPrivilegeWillExpireEx(connection: RtcConnection, token: string): void {
-    let _obj = {
-      connection,
-      token,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onTokenPrivilegeWillExpireEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onTokenPrivilegeWillExpireEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onTokenPrivilegeWillExpire not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onFirstLocalAudioFramePublishedEx(
     connection: RtcConnection,
     elapsed: number
   ): void {
-    let _obj = {
-      connection,
-      elapsed,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onFirstLocalAudioFramePublishedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onFirstLocalAudioFramePublishedEx eventParam ${JSON.stringify(
-        eventParam
-      )}`
+    AgoraConsole.warn(
+      'onFirstLocalAudioFramePublished not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onFirstRemoteAudioFrameEx(
@@ -649,19 +368,10 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     userId: number,
     elapsed: number
   ): void {
-    let _obj = {
-      connection,
-      userId,
-      elapsed,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onFirstRemoteAudioFrameEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onFirstRemoteAudioFrameEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onFirstRemoteAudioFrame not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onFirstRemoteAudioDecodedEx(
@@ -669,19 +379,10 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     uid: number,
     elapsed: number
   ): void {
-    let _obj = {
-      connection,
-      uid,
-      elapsed,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onFirstRemoteAudioDecodedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onFirstRemoteAudioDecodedEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onFirstRemoteAudioDecoded not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onLocalAudioStateChangedEx(
@@ -689,19 +390,10 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     state: LOCAL_AUDIO_STREAM_STATE,
     error: LOCAL_AUDIO_STREAM_ERROR
   ): void {
-    let _obj = {
-      connection,
-      state,
-      error,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onLocalAudioStateChangedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onLocalAudioStateChangedEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onLocalAudioStateChanged not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onRemoteAudioStateChangedEx(
@@ -711,36 +403,15 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     reason: REMOTE_AUDIO_STATE_REASON,
     elapsed: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      state,
-      reason,
-      elapsed,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteAudioStateChangedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRemoteAudioStateChangedEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onRemoteAudioStateChanged not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onActiveSpeakerEx(connection: RtcConnection, uid: number): void {
-    let _obj = {
-      connection,
-      uid,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onActiveSpeakerEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onActiveSpeakerEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onActiveSpeaker not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onClientRoleChangedEx(
@@ -749,20 +420,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     newRole: CLIENT_ROLE_TYPE,
     newRoleOptions: ClientRoleOptions
   ): void {
-    let _obj = {
-      connection,
-      oldRole,
-      newRole,
-      newRoleOptions,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onClientRoleChangedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onClientRoleChangedEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onClientRoleChanged not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onClientRoleChangeFailedEx(
@@ -770,19 +429,10 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     reason: CLIENT_ROLE_CHANGE_FAILED_REASON,
     currentRole: CLIENT_ROLE_TYPE
   ): void {
-    let _obj = {
-      connection,
-      reason,
-      currentRole,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onClientRoleChangeFailedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onClientRoleChangeFailedEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onClientRoleChangeFailed not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onRemoteAudioTransportStatsEx(
@@ -792,21 +442,10 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     lost: number,
     rxKBitRate: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      delay,
-      lost,
-      rxKBitRate,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteAudioTransportStatsEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRemoteAudioTransportStatsEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onRemoteAudioTransportStats not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onRemoteVideoTransportStatsEx(
@@ -816,21 +455,10 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     lost: number,
     rxKBitRate: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      delay,
-      lost,
-      rxKBitRate,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onRemoteVideoTransportStatsEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onRemoteVideoTransportStatsEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onRemoteVideoTransportStats not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onConnectionStateChangedEx(
@@ -838,19 +466,10 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     state: CONNECTION_STATE_TYPE,
     reason: CONNECTION_CHANGED_REASON_TYPE
   ): void {
-    let _obj = {
-      connection,
-      state,
-      reason,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onConnectionStateChangedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onConnectionStateChangedEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onConnectionStateChanged not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onWlAccMessageEx(
@@ -859,20 +478,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     action: WLACC_SUGGEST_ACTION,
     wlAccMsg: string
   ): void {
-    let _obj = {
-      connection,
-      reason,
-      action,
-      wlAccMsg,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onWlAccMessageEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onWlAccMessageEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onWlAccMessage not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onWlAccStatsEx(
@@ -880,50 +487,21 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     currentStats: WlAccStats,
     averageStats: WlAccStats
   ): void {
-    let _obj = {
-      connection,
-      currentStats,
-      averageStats,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onWlAccStatsEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(`onWlAccStatsEx eventParam ${JSON.stringify(eventParam)}`);
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onWlAccStats not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onNetworkTypeChangedEx(connection: RtcConnection, type: NETWORK_TYPE): void {
-    let _obj = {
-      connection,
-      type,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onNetworkTypeChangedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onNetworkTypeChangedEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onNetworkTypeChanged not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onEncryptionErrorEx(
     connection: RtcConnection,
     errorType: ENCRYPTION_ERROR_TYPE
   ): void {
-    let _obj = {
-      connection,
-      errorType,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onEncryptionErrorEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onEncryptionErrorEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onEncryptionError not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onUploadLogResultEx(
@@ -932,20 +510,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     success: boolean,
     reason: UPLOAD_ERROR_REASON
   ): void {
-    let _obj = {
-      connection,
-      requestId,
-      success,
-      reason,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUploadLogResultEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onUploadLogResultEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onUploadLogResult not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onUserAccountUpdatedEx(
@@ -953,19 +519,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     userAccount: string
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      userAccount,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onUserAccountUpdatedEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onUserAccountUpdatedEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onUserAccountUpdated not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onSnapshotTakenEx(
@@ -976,22 +531,8 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     height: number,
     errCode: number
   ): void {
-    let _obj = {
-      connection,
-      uid,
-      filePath,
-      width,
-      height,
-      errCode,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onSnapshotTakenEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onSnapshotTakenEx eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    AgoraConsole.warn('onSnapshotTaken not supported in this platform!');
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onVideoRenderingTracingResultEx(
@@ -1000,28 +541,20 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     currentEvent: MEDIA_TRACE_EVENT,
     tracingInfo: VideoRenderingTracingInfo
   ): void {
-    let _obj = {
-      connection,
-      uid,
-      currentEvent,
-      tracingInfo,
-    };
-    let _json = JSON.stringify(_obj);
-    let _key = this.eventKey('onVideoRenderingTracingResultEx');
-
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
-    AgoraConsole.log(
-      `onVideoRenderingTracingResultEx eventParam ${JSON.stringify(eventParam)}`
+    AgoraConsole.warn(
+      'onVideoRenderingTracingResult not supported in this platform!'
     );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
 
 export class IRtcEngineExDispatch {
   _impl: IRtcEngineExImpl;
+  _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
     this._impl = new IRtcEngineExImpl(engine);
+    this._engine = engine;
   }
   joinChannelEx(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
@@ -1044,13 +577,8 @@ export class IRtcEngineExDispatch {
   }
 
   leaveChannelEx2(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-    let options = obj.options;
-    if (options === undefined) throw 'options is undefined';
-
-    return this._impl.leaveChannelEx2(connection, options);
+    AgoraConsole.warn('leaveChannelEx2 not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   updateChannelMediaOptionsEx(apiParam: ApiParam): CallApiReturnType {
@@ -1064,13 +592,10 @@ export class IRtcEngineExDispatch {
   }
 
   setVideoEncoderConfigurationEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let config = obj.config;
-    if (config === undefined) throw 'config is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setVideoEncoderConfigurationEx(config, connection);
+    AgoraConsole.warn(
+      'setVideoEncoderConfigurationEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setupRemoteVideoEx(apiParam: ApiParam): CallApiReturnType {
@@ -1084,590 +609,290 @@ export class IRtcEngineExDispatch {
   }
 
   muteRemoteAudioStreamEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uid = obj.uid;
-    if (uid === undefined) throw 'uid is undefined';
-    let mute = obj.mute;
-    if (mute === undefined) throw 'mute is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.muteRemoteAudioStreamEx(uid, mute, connection);
+    AgoraConsole.warn(
+      'muteRemoteAudioStreamEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   muteRemoteVideoStreamEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uid = obj.uid;
-    if (uid === undefined) throw 'uid is undefined';
-    let mute = obj.mute;
-    if (mute === undefined) throw 'mute is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.muteRemoteVideoStreamEx(uid, mute, connection);
+    AgoraConsole.warn(
+      'muteRemoteVideoStreamEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setRemoteVideoStreamTypeEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uid = obj.uid;
-    if (uid === undefined) throw 'uid is undefined';
-    let streamType = obj.streamType;
-    if (streamType === undefined) throw 'streamType is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setRemoteVideoStreamTypeEx(uid, streamType, connection);
+    AgoraConsole.warn(
+      'setRemoteVideoStreamTypeEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   muteLocalAudioStreamEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let mute = obj.mute;
-    if (mute === undefined) throw 'mute is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.muteLocalAudioStreamEx(mute, connection);
+    AgoraConsole.warn('muteLocalAudioStreamEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   muteLocalVideoStreamEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let mute = obj.mute;
-    if (mute === undefined) throw 'mute is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.muteLocalVideoStreamEx(mute, connection);
+    AgoraConsole.warn('muteLocalVideoStreamEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   muteAllRemoteAudioStreamsEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let mute = obj.mute;
-    if (mute === undefined) throw 'mute is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.muteAllRemoteAudioStreamsEx(mute, connection);
+    AgoraConsole.warn(
+      'muteAllRemoteAudioStreamsEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   muteAllRemoteVideoStreamsEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let mute = obj.mute;
-    if (mute === undefined) throw 'mute is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.muteAllRemoteVideoStreamsEx(mute, connection);
+    AgoraConsole.warn(
+      'muteAllRemoteVideoStreamsEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setSubscribeAudioBlocklistEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uidList = obj.uidList;
-    if (uidList === undefined) throw 'uidList is undefined';
-    let uidNumber = obj.uidNumber;
-    if (uidNumber === undefined) throw 'uidNumber is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setSubscribeAudioBlocklistEx(
-      uidList,
-      uidNumber,
-      connection
+    AgoraConsole.warn(
+      'setSubscribeAudioBlocklistEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setSubscribeAudioAllowlistEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uidList = obj.uidList;
-    if (uidList === undefined) throw 'uidList is undefined';
-    let uidNumber = obj.uidNumber;
-    if (uidNumber === undefined) throw 'uidNumber is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setSubscribeAudioAllowlistEx(
-      uidList,
-      uidNumber,
-      connection
+    AgoraConsole.warn(
+      'setSubscribeAudioAllowlistEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setSubscribeVideoBlocklistEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uidList = obj.uidList;
-    if (uidList === undefined) throw 'uidList is undefined';
-    let uidNumber = obj.uidNumber;
-    if (uidNumber === undefined) throw 'uidNumber is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setSubscribeVideoBlocklistEx(
-      uidList,
-      uidNumber,
-      connection
+    AgoraConsole.warn(
+      'setSubscribeVideoBlocklistEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setSubscribeVideoAllowlistEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uidList = obj.uidList;
-    if (uidList === undefined) throw 'uidList is undefined';
-    let uidNumber = obj.uidNumber;
-    if (uidNumber === undefined) throw 'uidNumber is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setSubscribeVideoAllowlistEx(
-      uidList,
-      uidNumber,
-      connection
+    AgoraConsole.warn(
+      'setSubscribeVideoAllowlistEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setRemoteVideoSubscriptionOptionsEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uid = obj.uid;
-    if (uid === undefined) throw 'uid is undefined';
-    let options = obj.options;
-    if (options === undefined) throw 'options is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setRemoteVideoSubscriptionOptionsEx(
-      uid,
-      options,
-      connection
+    AgoraConsole.warn(
+      'setRemoteVideoSubscriptionOptionsEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setRemoteVoicePositionEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uid = obj.uid;
-    if (uid === undefined) throw 'uid is undefined';
-    let pan = obj.pan;
-    if (pan === undefined) throw 'pan is undefined';
-    let gain = obj.gain;
-    if (gain === undefined) throw 'gain is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setRemoteVoicePositionEx(uid, pan, gain, connection);
+    AgoraConsole.warn(
+      'setRemoteVoicePositionEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setRemoteUserSpatialAudioParamsEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uid = obj.uid;
-    if (uid === undefined) throw 'uid is undefined';
-    let params = obj.params;
-    if (params === undefined) throw 'params is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setRemoteUserSpatialAudioParamsEx(
-      uid,
-      params,
-      connection
+    AgoraConsole.warn(
+      'setRemoteUserSpatialAudioParamsEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setRemoteRenderModeEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uid = obj.uid;
-    if (uid === undefined) throw 'uid is undefined';
-    let renderMode = obj.renderMode;
-    if (renderMode === undefined) throw 'renderMode is undefined';
-    let mirrorMode = obj.mirrorMode;
-    if (mirrorMode === undefined) throw 'mirrorMode is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setRemoteRenderModeEx(
-      uid,
-      renderMode,
-      mirrorMode,
-      connection
-    );
+    AgoraConsole.warn('setRemoteRenderModeEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   enableLoopbackRecordingEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-    let enabled = obj.enabled;
-    if (enabled === undefined) throw 'enabled is undefined';
-    let deviceName = obj.deviceName;
-    if (deviceName === undefined) throw 'deviceName is undefined';
-
-    return this._impl.enableLoopbackRecordingEx(
-      connection,
-      enabled,
-      deviceName
+    AgoraConsole.warn(
+      'enableLoopbackRecordingEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   adjustRecordingSignalVolumeEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let volume = obj.volume;
-    if (volume === undefined) throw 'volume is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.adjustRecordingSignalVolumeEx(volume, connection);
+    AgoraConsole.warn(
+      'adjustRecordingSignalVolumeEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   muteRecordingSignalEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let mute = obj.mute;
-    if (mute === undefined) throw 'mute is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.muteRecordingSignalEx(mute, connection);
+    AgoraConsole.warn('muteRecordingSignalEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   adjustUserPlaybackSignalVolumeEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uid = obj.uid;
-    if (uid === undefined) throw 'uid is undefined';
-    let volume = obj.volume;
-    if (volume === undefined) throw 'volume is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.adjustUserPlaybackSignalVolumeEx(uid, volume, connection);
+    AgoraConsole.warn(
+      'adjustUserPlaybackSignalVolumeEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   getConnectionStateEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.getConnectionStateEx(connection);
+    AgoraConsole.warn('getConnectionStateEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   enableEncryptionEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-    let enabled = obj.enabled;
-    if (enabled === undefined) throw 'enabled is undefined';
-    let config = obj.config;
-    if (config === undefined) throw 'config is undefined';
-
-    return this._impl.enableEncryptionEx(connection, enabled, config);
+    AgoraConsole.warn('enableEncryptionEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   createDataStreamEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let streamId = obj.streamId;
-    if (streamId === undefined) throw 'streamId is undefined';
-    let reliable = obj.reliable;
-    if (reliable === undefined) throw 'reliable is undefined';
-    let ordered = obj.ordered;
-    if (ordered === undefined) throw 'ordered is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.createDataStreamEx(
-      streamId,
-      reliable,
-      ordered,
-      connection
-    );
+    AgoraConsole.warn('createDataStreamEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   createDataStreamEx2(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let streamId = obj.streamId;
-    if (streamId === undefined) throw 'streamId is undefined';
-    let config = obj.config;
-    if (config === undefined) throw 'config is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.createDataStreamEx2(streamId, config, connection);
+    AgoraConsole.warn('createDataStreamEx2 not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   sendStreamMessageEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let streamId = obj.streamId;
-    if (streamId === undefined) throw 'streamId is undefined';
-    let data = obj.data;
-    if (data === undefined) throw 'data is undefined';
-    let length = obj.length;
-    if (length === undefined) throw 'length is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.sendStreamMessageEx(streamId, data, length, connection);
+    AgoraConsole.warn('sendStreamMessageEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   addVideoWatermarkEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let watermarkUrl = obj.watermarkUrl;
-    if (watermarkUrl === undefined) throw 'watermarkUrl is undefined';
-    let options = obj.options;
-    if (options === undefined) throw 'options is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.addVideoWatermarkEx(watermarkUrl, options, connection);
+    AgoraConsole.warn('addVideoWatermarkEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   clearVideoWatermarkEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.clearVideoWatermarkEx(connection);
+    AgoraConsole.warn('clearVideoWatermarkEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   sendCustomReportMessageEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let id = obj.id;
-    if (id === undefined) throw 'id is undefined';
-    let category = obj.category;
-    if (category === undefined) throw 'category is undefined';
-    let event = obj.event;
-    if (event === undefined) throw 'event is undefined';
-    let label = obj.label;
-    if (label === undefined) throw 'label is undefined';
-    let value = obj.value;
-    if (value === undefined) throw 'value is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.sendCustomReportMessageEx(
-      id,
-      category,
-      event,
-      label,
-      value,
-      connection
+    AgoraConsole.warn(
+      'sendCustomReportMessageEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   enableAudioVolumeIndicationEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let interval = obj.interval;
-    if (interval === undefined) throw 'interval is undefined';
-    let smooth = obj.smooth;
-    if (smooth === undefined) throw 'smooth is undefined';
-    let reportVad = obj.reportVad;
-    if (reportVad === undefined) throw 'reportVad is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.enableAudioVolumeIndicationEx(
-      interval,
-      smooth,
-      reportVad,
-      connection
+    AgoraConsole.warn(
+      'enableAudioVolumeIndicationEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   startRtmpStreamWithoutTranscodingEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let url = obj.url;
-    if (url === undefined) throw 'url is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.startRtmpStreamWithoutTranscodingEx(url, connection);
+    AgoraConsole.warn(
+      'startRtmpStreamWithoutTranscodingEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   startRtmpStreamWithTranscodingEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let url = obj.url;
-    if (url === undefined) throw 'url is undefined';
-    let transcoding = obj.transcoding;
-    if (transcoding === undefined) throw 'transcoding is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.startRtmpStreamWithTranscodingEx(
-      url,
-      transcoding,
-      connection
+    AgoraConsole.warn(
+      'startRtmpStreamWithTranscodingEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   updateRtmpTranscodingEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let transcoding = obj.transcoding;
-    if (transcoding === undefined) throw 'transcoding is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.updateRtmpTranscodingEx(transcoding, connection);
+    AgoraConsole.warn(
+      'updateRtmpTranscodingEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   stopRtmpStreamEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let url = obj.url;
-    if (url === undefined) throw 'url is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.stopRtmpStreamEx(url, connection);
+    AgoraConsole.warn('stopRtmpStreamEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   startOrUpdateChannelMediaRelayEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let configuration = obj.configuration;
-    if (configuration === undefined) throw 'configuration is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.startOrUpdateChannelMediaRelayEx(
-      configuration,
-      connection
+    AgoraConsole.warn(
+      'startOrUpdateChannelMediaRelayEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   startChannelMediaRelayEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let configuration = obj.configuration;
-    if (configuration === undefined) throw 'configuration is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.startChannelMediaRelayEx(configuration, connection);
+    AgoraConsole.warn(
+      'startChannelMediaRelayEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   updateChannelMediaRelayEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let configuration = obj.configuration;
-    if (configuration === undefined) throw 'configuration is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.updateChannelMediaRelayEx(configuration, connection);
+    AgoraConsole.warn(
+      'updateChannelMediaRelayEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   stopChannelMediaRelayEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.stopChannelMediaRelayEx(connection);
+    AgoraConsole.warn(
+      'stopChannelMediaRelayEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   pauseAllChannelMediaRelayEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.pauseAllChannelMediaRelayEx(connection);
+    AgoraConsole.warn(
+      'pauseAllChannelMediaRelayEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   resumeAllChannelMediaRelayEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.resumeAllChannelMediaRelayEx(connection);
+    AgoraConsole.warn(
+      'resumeAllChannelMediaRelayEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   getUserInfoByUserAccountEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let userAccount = obj.userAccount;
-    if (userAccount === undefined) throw 'userAccount is undefined';
-    let userInfo = obj.userInfo;
-    if (userInfo === undefined) throw 'userInfo is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.getUserInfoByUserAccountEx(
-      userAccount,
-      userInfo,
-      connection
+    AgoraConsole.warn(
+      'getUserInfoByUserAccountEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   getUserInfoByUidEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uid = obj.uid;
-    if (uid === undefined) throw 'uid is undefined';
-    let userInfo = obj.userInfo;
-    if (userInfo === undefined) throw 'userInfo is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.getUserInfoByUidEx(uid, userInfo, connection);
+    AgoraConsole.warn('getUserInfoByUidEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   enableDualStreamModeEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let enabled = obj.enabled;
-    if (enabled === undefined) throw 'enabled is undefined';
-    let streamConfig = obj.streamConfig;
-    if (streamConfig === undefined) throw 'streamConfig is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.enableDualStreamModeEx(enabled, streamConfig, connection);
+    AgoraConsole.warn('enableDualStreamModeEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setDualStreamModeEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let mode = obj.mode;
-    if (mode === undefined) throw 'mode is undefined';
-    let streamConfig = obj.streamConfig;
-    if (streamConfig === undefined) throw 'streamConfig is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setDualStreamModeEx(mode, streamConfig, connection);
+    AgoraConsole.warn('setDualStreamModeEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   setHighPriorityUserListEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let uidList = obj.uidList;
-    if (uidList === undefined) throw 'uidList is undefined';
-    let uidNum = obj.uidNum;
-    if (uidNum === undefined) throw 'uidNum is undefined';
-    let option = obj.option;
-    if (option === undefined) throw 'option is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.setHighPriorityUserListEx(
-      uidList,
-      uidNum,
-      option,
-      connection
+    AgoraConsole.warn(
+      'setHighPriorityUserListEx not supported in this platform!'
     );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   takeSnapshotEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-    let uid = obj.uid;
-    if (uid === undefined) throw 'uid is undefined';
-    let filePath = obj.filePath;
-    if (filePath === undefined) throw 'filePath is undefined';
-
-    return this._impl.takeSnapshotEx(connection, uid, filePath);
+    AgoraConsole.warn('takeSnapshotEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   enableContentInspectEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let enabled = obj.enabled;
-    if (enabled === undefined) throw 'enabled is undefined';
-    let config = obj.config;
-    if (config === undefined) throw 'config is undefined';
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.enableContentInspectEx(enabled, config, connection);
+    AgoraConsole.warn('enableContentInspectEx not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   startMediaRenderingTracingEx(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
-
-    return this._impl.startMediaRenderingTracingEx(connection);
+    AgoraConsole.warn(
+      'startMediaRenderingTracingEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }

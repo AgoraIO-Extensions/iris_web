@@ -27,6 +27,7 @@ export class {{name}} {{#base_clazzs}}extends {{.}}{{/base_clazzs}}{
 
   {{#methods}}
     {{name}}{{user_data._prefix}}({{#parameters}}{{name}}:{{type.source}},{{/parameters}}): void {
+      {{#user_data.isSupport}}
       let _obj = {
         {{#parameters}}{{name}},{{/parameters}}
       };
@@ -36,6 +37,11 @@ export class {{name}} {{#base_clazzs}}extends {{.}}{{/base_clazzs}}{
       let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
       AgoraConsole.log(`{{name}}{{user_data._prefix}} eventParam ${JSON.stringify(eventParam)}`);
       this.notifyEvent(eventParam);
+      {{/user_data.isSupport}}
+      {{^user_data.isSupport}}
+      AgoraConsole.warn('{{name}} not supported in this platform!');
+      this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+      {{/user_data.isSupport}}
     }
 
   {{/methods}}
@@ -45,15 +51,18 @@ export class {{name}} {{#base_clazzs}}extends {{.}}{{/base_clazzs}}{
 {{^user_data.isCallback}}
 export class {{name}}Dispatch{
     _impl: {{name}}Impl;
+    _engine: IrisRtcEngine = null;
     
     constructor(engine: IrisRtcEngine) {
       this._impl = new {{name}}Impl(engine);
+      this._engine = engine;
     }
 {{#methods}}
   {{name}}(
     {{#user_data.isRegisterMethod}}apiParam: ApiParam{{/user_data.isRegisterMethod}}
     {{^user_data.isRegisterMethod}}{{#user_data.hasParameters}}apiParam: ApiParam{{/user_data.hasParameters}}{{/user_data.isRegisterMethod}}
     ): CallApiReturnType {
+    {{#user_data.isSupport}}
     {{#user_data.isRegisterMethod}}
     let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
     if (eventHandler === undefined) throw 'eventHandler is undefined';
@@ -72,6 +81,11 @@ export class {{name}}Dispatch{
 
     {{/user_data.isRegisterMethod}}
     return this._impl.{{name}}({{#parameters}}{{name}},{{/parameters}});
+    {{/user_data.isSupport}}
+    {{^user_data.isSupport}}
+    AgoraConsole.warn('{{name}} not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    {{/user_data.isSupport}}
   }
 
 {{/methods}}

@@ -8,6 +8,8 @@ import { renderWithConfiguration } from '@agoraio-extensions/terra_shared_config
 
 import bindingExtensionList = require('./config/binding_extension_list.json');
 
+import supportList = require('./config/support_list.json');
+
 import {
   appendNumberToDuplicateMemberFunction,
   filterFile,
@@ -31,6 +33,7 @@ interface TerraNodeUserData {
 interface ClazzMethodUserData {
   hasParameters: boolean;
   isRegisterMethod: boolean;
+  isSupport: boolean;
   _prefix: string;
   bindingExtensionList: [];
 }
@@ -52,7 +55,7 @@ export function binding(parseResult: ParseResult) {
     });
 
     cxxfile.nodes = nodes.map((node: CXXTerraNode) => {
-      if (node.name === 'IRtcEngineEventHandlerEx') {
+      if (node.name === 'IRtcEngine') {
         // debugger;
       }
 
@@ -64,6 +67,7 @@ export function binding(parseResult: ParseResult) {
       node.asClazz().methods.map((method) => {
         const clazzMethodUserData: ClazzMethodUserData = {
           hasParameters: method.parameters.length > 0,
+          isSupport: supportList.includes(method.fullName),
           isRegisterMethod: new RegExp('registerEventHandler').test(
             method.name
           ),

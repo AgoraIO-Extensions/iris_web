@@ -11,7 +11,6 @@ find ${OUTPUT_DIR} -type f -delete
 npm run build -- run \
     --config ${MY_PATH}/config/types_configs.yaml \
     --output-dir=${OUTPUT_DIR} \
-    --cache \
 
 cd ${OUTPUT_DIR}/..    
 
