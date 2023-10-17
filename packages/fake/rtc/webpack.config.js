@@ -10,18 +10,28 @@ const environment = process.env.NODE_ENV;
 config = {
   entry: './index.ts',
   externals: {
-    'iris-web-rtc': 'iris-web-rtc',
+    'AgoraWrapper': 'iris-web-rtc',
     'agora-rtc-sdk-ng': 'agora-rtc-sdk-ng',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    libraryTarget: 'this',
+    libraryTarget: 'umd',
+    library: {
+      name: 'AgoraWrapperFake',
+      type: 'umd',
+      umdNamedDefine: true,
+    },
     filename: `iris-web-rtc-fake_${pkg.version}.js`,
+    globalObject: 'this',
     environment: {
       arrowFunction: false,
     },
   },
   resolve: {
+    fallback: {
+      crypto: require.resolve('crypto-browserify'),
+      stream: require.resolve('stream-browserify'),
+    },
     extensions: ['.ts', '.js'],
   },
 
@@ -32,6 +42,7 @@ config = {
         use: {
           loader: 'ts-loader',
         },
+        exclude: /node_modules|\.d\.ts$/,
       },
     ],
   },

@@ -11,8 +11,14 @@ config = {
   entry: './src/index.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    libraryTarget: 'this',
+    libraryTarget: 'umd',
+    library: {
+      name: 'AgoraWrapper',
+      type: 'umd',
+      umdNamedDefine: true,
+    },
     filename: `iris-web-rtc_${pkg.version}.js`,
+    globalObject: 'this',
     environment: {
       arrowFunction: false,
     },
