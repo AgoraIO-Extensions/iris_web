@@ -1,3 +1,4 @@
+import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { AREAS, IAgoraRTC } from 'agora-rtc-sdk-ng';
 import { EventParam, IrisApiEngine, IrisCore } from 'iris-web-core';
 
@@ -16,8 +17,9 @@ beforeAll(async () => {
   AgoraRTCMock = irisRtcEngine.globalState.AgoraRTC;
   jest.spyOn(AgoraRTCMock, 'setArea');
   jest.spyOn(AgoraRTCMock, 'setLogLevel');
-  jest.spyOn(AgoraRTCMock, 'checkSystemRequirements');
+  jest.spyOn(AgoraRTCMock, 'checkSystemRequirements').mockReturnValue(true);
   jest.spyOn(irisRtcEngine.implHelper, 'createAudioTrack');
+  jest.spyOn(irisRtcEngine, 'returnResult');
 
   irisRtcEngine.implHelper.createAudioTrack = jest.fn();
   let nParam = {
@@ -59,9 +61,10 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(irisRtcEngine.implHelper.createAudioTrack).toBeCalledWith(
       IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
     );
+    expect(irisRtcEngine.returnResult).toBeCalledWith(true);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
 
     //check if already initialized
-    jest.spyOn(irisRtcEngine.irisRtcErrorHandler, 'failed');
     let nParam = {
       context: 'test',
     };
@@ -75,10 +78,11 @@ describe('IAgoraRtcEngineImpl', () => {
       1
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
-    expect(irisRtcEngine.irisRtcErrorHandler.failed).toBeCalledTimes(1);
-    expect(irisRtcEngine.irisRtcErrorHandler.failed).toBeCalledWith(
-      'you have already initialized'
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      true,
+      NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK
     );
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(2);
   });
   test('joinChannel', () => {
     console.log('joinChannel');
