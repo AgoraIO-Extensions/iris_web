@@ -4,7 +4,9 @@ import { IrisApiEngine } from 'iris-web-core';
 import { IrisRtcEngine } from './engine/IrisRtcEngine';
 
 export interface InitIrisRtcOptions {
-  fakeAgoraRTC: IAgoraRTC;
+  agoraRTC?: IAgoraRTC;
+  irisRtcEngine?: IrisRtcEngine;
+  // irisRtmEngine: IrisApiEngine;
 }
 
 export function initIrisRtc(
@@ -12,13 +14,11 @@ export function initIrisRtc(
   options?: InitIrisRtcOptions
 ) {
   irisApiEngine.addApiInterceptor(
-    new IrisRtcEngine(irisApiEngine.getIrisEventHandlerManager(), options)
+    options?.irisRtcEngine ??
+      new IrisRtcEngine(irisApiEngine.getIrisEventHandlerManager(), options)
   );
 }
 
 export let AgoraWrapper = {
   initIrisRtc: initIrisRtc,
-  // getIrisRtcEngine: (irisApiEngine: IrisApiEngine) => {
-  //   return irisApiEngine.getApiInterceptor();
-  // }
 };
