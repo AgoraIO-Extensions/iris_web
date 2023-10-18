@@ -25,22 +25,30 @@ export function getIrisRtcEngineFake() {
 export function triggerEventWithFakeApiEngine(
   func_name: string,
   parameters: any
-) {
+): number {
   let array = func_name.split('_');
   let className = array[0];
   let funName = array[1];
-  const isSupport = supportList.find((name) => {
-    return name.indexOf(className) != -1 && name.indexOf(funName) != -1;
+  const isSupportModule = supportList.find((name) => {
+    return name.indexOf(className) != -1;
   });
-  if (isSupport) {
+  if (isSupportModule) {
     if (!irisRtcEngine.rtcEngineEventHandler[funName]) {
       AgoraConsole.error(`${func_name} not found in ${className}Dispatch`);
-      irisRtcEngine.returnResult(false, -ERROR_CODE_TYPE.ERR_MODULE_NOT_FOUND);
+      irisRtcEngine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+
+      return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     } else {
-      irisRtcEngine.rtcEngineEventHandler[funName](parameters);
+      let { ...rest } = JSON.parse(parameters.data);
+      const values = Object.values({ ...rest });
+
+      irisRtcEngine.rtcEngineEventHandler[funName](...values);
+      return ERROR_CODE_TYPE.ERR_OK;
     }
   } else {
-    AgoraConsole.error('not support yet');
-    irisRtcEngine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    AgoraConsole.error(`not support module yet: ${func_name}`);
+    irisRtcEngine.returnResult(false, -ERROR_CODE_TYPE.ERR_MODULE_NOT_FOUND);
+
+    return -ERROR_CODE_TYPE.ERR_MODULE_NOT_FOUND;
   }
 }
