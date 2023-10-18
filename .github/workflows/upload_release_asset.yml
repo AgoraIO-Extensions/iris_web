@@ -2,10 +2,11 @@ name: Upload Release Asset
 
 on:
   release:
-    types: [prereleased]
+    types: [prereleased, released, published]
 
 jobs:
   upload-assets:
+    if: ${{ !github.event.release.deleted }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
