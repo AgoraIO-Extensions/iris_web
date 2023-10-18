@@ -57,7 +57,7 @@ import {
   WLACC_SUGGEST_ACTION,
   WlAccStats,
 } from '@iris/native-rtc-binding';
-import { ApiParam, CallApiReturnType, EventParam } from 'iris-web-core';
+import { ApiParam, CallApiReturnType, IrisCore } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import {
@@ -79,7 +79,7 @@ export class IRtcEngineEventHandler {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -112,7 +112,7 @@ export class IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onError');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(`onError eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -166,7 +166,7 @@ export class IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onAudioDeviceStateChanged');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onAudioDeviceStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -192,7 +192,7 @@ export class IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onAudioEffectFinished');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onAudioEffectFinished eventParam ${JSON.stringify(eventParam)}`
     );
@@ -212,7 +212,7 @@ export class IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onVideoDeviceStateChanged');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onVideoDeviceStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -228,7 +228,7 @@ export class IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onNetworkQuality');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onNetworkQuality eventParam ${JSON.stringify(eventParam)}`
     );
@@ -315,7 +315,7 @@ export class IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onLocalVideoStateChanged');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onLocalVideoStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -556,7 +556,7 @@ export class IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onLocalAudioStateChanged');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onLocalAudioStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -587,7 +587,7 @@ export class IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onContentInspectResult');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onContentInspectResult eventParam ${JSON.stringify(eventParam)}`
     );
@@ -669,7 +669,7 @@ export class IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onChannelMediaRelayStateChanged');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onChannelMediaRelayStateChanged eventParam ${JSON.stringify(eventParam)}`
     );
@@ -683,7 +683,7 @@ export class IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onChannelMediaRelayEvent');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onChannelMediaRelayEvent eventParam ${JSON.stringify(eventParam)}`
     );
@@ -708,7 +708,7 @@ export class IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onRemoteSubscribeFallbackToAudioOnly');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onRemoteSubscribeFallbackToAudioOnly eventParam ${JSON.stringify(
         eventParam
@@ -969,7 +969,7 @@ export class IMetadataObserver {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -992,7 +992,7 @@ export class IDirectCdnStreamingEventHandler {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 

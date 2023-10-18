@@ -4,7 +4,7 @@ import {
   ERROR_CODE_TYPE,
   EncodedAudioFrameInfo,
 } from '@iris/native-rtc-binding';
-import { EventParam } from 'iris-web-core';
+import { ApiParam } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -22,7 +22,7 @@ export class IAudioEncodedFrameObserver {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 

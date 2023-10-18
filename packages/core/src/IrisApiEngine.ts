@@ -66,7 +66,7 @@ export interface ApiInterceptor {
   dispose(): Promise<void>;
 }
 
-export class EventParam {
+class EventParam {
   constructor(
     event: string,
     data: string,
@@ -111,24 +111,24 @@ export interface IrisApiEngine {
   dispose(): Promise<void>;
 }
 
-export function createIrisApiEngine(): IrisApiEngine {
+function createIrisApiEngine(): IrisApiEngine {
   return new IrisApiEngineImpl();
 }
 
-export function disposeIrisApiEngine(engine_ptr: IrisApiEngine): number {
+function disposeIrisApiEngine(engine_ptr: IrisApiEngine): number {
   engine_ptr.dispose();
   // IrisApiEngine.instance = null;
   return 0;
 }
 
-export function callIrisApi(
+function callIrisApi(
   apiEngine: IrisApiEngine,
   apiParam: ApiParam
 ): Promise<CallIrisApiResult> {
   return apiEngine.callIrisApi(apiParam);
 }
 
-export function createIrisEventHandler(
+function createIrisEventHandler(
   event_handler: IrisEventHandlerFunc
 ): IrisEventHandler {
   return IrisEventHandlerImpl.create(event_handler);

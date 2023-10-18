@@ -13,7 +13,7 @@ import {
   VIDEO_SOURCE_TYPE,
   VideoFrame,
 } from '@iris/native-rtc-binding';
-import { EventParam } from 'iris-web-core';
+import { ApiParam } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -31,7 +31,7 @@ export class IAudioPcmFrameSink {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -54,7 +54,7 @@ export class IAudioFrameObserverBase {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -95,7 +95,7 @@ export class IAudioFrameObserver extends IAudioFrameObserverBase {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -124,7 +124,7 @@ export class IAudioSpectrumObserver {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -155,7 +155,7 @@ export class IVideoEncodedFrameObserver {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -185,7 +185,7 @@ export class IVideoFrameObserver {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -240,7 +240,7 @@ export class IMediaRecorderObserver {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 

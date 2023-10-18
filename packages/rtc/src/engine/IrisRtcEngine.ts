@@ -50,19 +50,11 @@ import IrisRtcErrorHandler from '../util/ErrorHandler';
 
 import { IrisClientManager } from './IrisClientManager';
 
-// export type GenerateVideoTrackLabelOrHtmlElementCb = (
-//   channelName: string,
-//   uid: number,
-//   type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
-// ) => string;
-
 export enum IrisIntervalType {
   enableAudioVolumeIndication = 0,
 }
 
 export class IrisRtcEngine implements ApiInterceptor {
-  // private _generateVideoTrackLabelOrHtmlElementCb: GenerateVideoTrackLabelOrHtmlElementCb = null;
-
   public implDispatchesMap: Map<string, any> = new Map();
   public implHelper: ImplHelper = new ImplHelper(this);
   public trackHelper: TrackHelper = new TrackHelper(this);
@@ -117,9 +109,9 @@ export class IrisRtcEngine implements ApiInterceptor {
     this.executor = new CallApiExecutor(true);
     this.irisEventHandlerManager = irisEventHandlerManager;
 
-    if (options && options.fakeAgoraRTC) {
-      AgoraConsole.debug('use fake agora rtc');
-      this.globalState.AgoraRTC = options.fakeAgoraRTC;
+    if (options && options.agoraRTC) {
+      AgoraConsole.debug('use agoraRTC from initIrisRtc');
+      this.globalState.AgoraRTC = options.agoraRTC;
     }
   }
 
@@ -199,12 +191,6 @@ export class IrisRtcEngine implements ApiInterceptor {
     return this.executor.execute(task);
   }
 
-  // public setGenerateVideoTrackLabelOrHtmlElementCb(
-  //   cb: GenerateVideoTrackLabelOrHtmlElementCb
-  // ) {
-  //   this._generateVideoTrackLabelOrHtmlElementCb = cb;
-  // }
-
   public returnResult(
     isSuccess: boolean = true,
     code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
@@ -220,22 +206,6 @@ export class IrisRtcEngine implements ApiInterceptor {
     this.agoraEventHandler.release();
     await this.irisClientManager.release();
   }
-
-  // public generateVideoTrackLabelOrHtmlElement(
-  //   channelName: string,
-  //   uid: number,
-  //   type: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE
-  // ): string {
-  //   if (this._generateVideoTrackLabelOrHtmlElementCb) {
-  //     return this._generateVideoTrackLabelOrHtmlElementCb(
-  //       channelName,
-  //       uid,
-  //       type
-  //     );
-  //   }
-
-  //   return channelName + '_' + uid + '_' + type;
-  // }
 
   public addIrisInterval(type: IrisIntervalType, interval: NodeJS.Timeout) {
     this.irisIntervalList.push({

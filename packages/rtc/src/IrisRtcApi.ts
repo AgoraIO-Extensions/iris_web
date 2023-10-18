@@ -2,23 +2,26 @@ import { IAgoraRTC } from 'agora-rtc-sdk-ng';
 import { IrisApiEngine } from 'iris-web-core';
 
 import { IrisRtcEngine } from './engine/IrisRtcEngine';
+import { AgoraConsole } from './util';
 
 export interface InitIrisRtcOptions {
-  fakeAgoraRTC: IAgoraRTC;
+  agoraRTC?: IAgoraRTC;
+  irisRtcEngine?: IrisRtcEngine;
+  // irisRtmEngine: IrisApiEngine;
 }
 
-export function initIrisRtc(
+function initIrisRtc(
   irisApiEngine: IrisApiEngine,
   options?: InitIrisRtcOptions
 ) {
   irisApiEngine.addApiInterceptor(
-    new IrisRtcEngine(irisApiEngine.getIrisEventHandlerManager(), options)
+    options?.irisRtcEngine ??
+      new IrisRtcEngine(irisApiEngine.getIrisEventHandlerManager(), options)
   );
 }
 
-export let AgoraWrapper = {
+export let IrisWebRtc = {
+  IrisRtcEngine: IrisRtcEngine,
+  AgoraConsole: AgoraConsole,
   initIrisRtc: initIrisRtc,
-  // getIrisRtcEngine: (irisApiEngine: IrisApiEngine) => {
-  //   return irisApiEngine.getApiInterceptor();
-  // }
 };

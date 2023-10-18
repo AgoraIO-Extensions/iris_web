@@ -8,11 +8,14 @@ const pkg = require('./package.json');
 const environment = process.env.NODE_ENV;
 
 config = {
-  entry: './src/index.ts',
+  entry: './index.ts',
+  externals: {
+    'iris-web-rtc': 'IrisWebRtc',
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'umd',
-    filename: `${pkg.name}_${pkg.version}.js`,
+    filename: `iris-web-rtc-fake_${pkg.version}.js`,
     environment: {
       arrowFunction: false,
     },

@@ -28,7 +28,7 @@ jobs:
       - name: Setup 🛠️
         uses: ./.github/actions/setup
 
-      - name: TEST 🔧
+      - name: PREPARE TEST
 
         run: |
           pnpm install

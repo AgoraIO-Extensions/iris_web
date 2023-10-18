@@ -3,7 +3,7 @@
   "private": true,
   "description": "iris web",
   "scripts": {
-    "build": "pnpm -F iris-web-rtc run build",
+    "build": "pnpm -F iris-web-rtc run build && pnpm -F iris-web-rtc-fake run build",
     "test": "pnpm -F iris-web-rtc run test",
     "lint": "eslint --ext .ts,.tsx . && prettier --check .",
     "lint:fix": "eslint --fix --ext .ts,.tsx . && prettier --write .",

@@ -31,7 +31,7 @@ import {
   WLACC_SUGGEST_ACTION,
   WlAccStats,
 } from '@iris/native-rtc-binding';
-import { ApiParam, CallApiReturnType, EventParam } from 'iris-web-core';
+import { ApiParam, CallApiReturnType, IrisCore } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IRtcEngineExImpl } from '../impl/IAgoraRtcEngineExImpl';
@@ -53,7 +53,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
@@ -65,7 +65,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onJoinChannelSuccessEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onJoinChannelSuccessEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -103,7 +103,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onAudioVolumeIndicationEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onAudioVolumeIndicationEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -118,7 +118,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onLeaveChannelEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onLeaveChannelEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -162,7 +162,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onFirstRemoteVideoDecodedEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onFirstRemoteVideoDecodedEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -211,7 +211,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onFirstRemoteVideoFrameEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onFirstRemoteVideoFrameEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -231,7 +231,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onUserJoinedEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(`onUserJoinedEx eventParam ${JSON.stringify(eventParam)}`);
     this.notifyEvent(eventParam);
   }
@@ -249,7 +249,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onUserOfflineEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onUserOfflineEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -269,7 +269,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onUserMuteAudioEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onUserMuteAudioEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -289,7 +289,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onUserMuteVideoEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onUserMuteVideoEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -318,7 +318,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onUserEnableLocalVideoEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onUserEnableLocalVideoEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -338,7 +338,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onUserStateChangedEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onUserStateChangedEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -373,7 +373,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onConnectionLostEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onConnectionLostEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -387,7 +387,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onConnectionInterruptedEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onConnectionInterruptedEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -401,7 +401,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onConnectionBannedEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onConnectionBannedEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -439,7 +439,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onRequestTokenEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onRequestTokenEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -464,7 +464,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onTokenPrivilegeWillExpireEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onTokenPrivilegeWillExpireEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -494,7 +494,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onFirstRemoteAudioFrameEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onFirstRemoteAudioFrameEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -514,7 +514,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onFirstRemoteAudioDecodedEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onFirstRemoteAudioDecodedEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -610,7 +610,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onConnectionStateChangedEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onConnectionStateChangedEx eventParam ${JSON.stringify(eventParam)}`
     );
@@ -652,7 +652,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     let _json = JSON.stringify(_obj);
     let _key = this.eventKey('onEncryptionErrorEx');
 
-    let eventParam = new EventParam(_key, _json, 0, '', [], [], 0);
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
     AgoraConsole.log(
       `onEncryptionErrorEx eventParam ${JSON.stringify(eventParam)}`
     );

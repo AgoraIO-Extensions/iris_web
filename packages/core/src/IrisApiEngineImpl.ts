@@ -2,8 +2,8 @@ import {
   ApiInterceptor,
   ApiParam,
   CallIrisApiResult,
-  EventParam,
   IrisApiEngine,
+  IrisCore,
   IrisEventHandler,
   IrisEventHandlerFunc,
   IrisEventHandlerManager,
@@ -28,10 +28,10 @@ export class IrisEventHandlerImpl implements IrisEventHandler {
     this._eventHandler = eventHandler;
   }
 
-  public onEvent(param: EventParam): void {
+  public onEvent(param: ApiParam): void {
     param.eventHandle = this.eventId.toString();
 
-    let newParam = new EventParam(
+    let newParam = new IrisCore.EventParam(
       param.event,
       param.data,
       param.data_size,

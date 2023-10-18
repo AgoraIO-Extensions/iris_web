@@ -1,6 +1,6 @@
 {
   "name": "iris-web-rtc",
-  "version": "0.1.1-dev.1",
+  "version": "0.1.2-dev.1",
   "description": "wait",
   "main": "./src/index.ts",
   "scripts": {
@@ -14,7 +14,7 @@
     "release": "release-it"
   },
   "author": "AgoraIO-Extensions",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@iris/native-rtc-binding": "workspace: *",
     "agora-rtc-sdk-ng": "^4.18.2",
