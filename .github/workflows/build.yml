@@ -29,24 +29,19 @@ jobs:
           pnpm run lint
           pnpm run test
           pnpm run build
-          MY_PATH=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
-          echo "MY_PATH=$MY_PATH" >> $GITHUB_ENV
+          RTC_PACKAGE_PATH=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
+          echo "RTC_PACKAGE_PATH=$RTC_PACKAGE_PATH" >> $GITHUB_ENV
+          RTC_FAKE_PACKAGE_PATH=$(ls packages/fake/rtc/dist | awk -F/ '{print $NF}')
+          echo "RTC_FAKE_PACKAGE_PATH=$RTC_FAKE_PACKAGE_PATH" >> $GITHUB_ENV
 
-      - name: Upload Artifact ⬆️
+      - name: Upload iris-rtc-web Artifact ⬆️
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.MY_PATH }}
-          path: ./packages/rtc/dist/${{ env.MY_PATH }}
+          name: ${{ env.RTC_PACKAGE_PATH }}
+          path: ./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }}
 
-      - name: Build 🔧
-
-        run: |
-          pnpm run build
-          MY_PATH=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
-          echo "MY_PATH=$MY_PATH" >> $GITHUB_ENV
-
-      - name: Upload Artifact ⬆️
+      - name: Upload iris-rtc-web-fake Artifact ⬆️
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.MY_PATH }}
-          path: ./packages/rtc/dist/${{ env.MY_PATH }}
+          name: ${{ env.RTC_FAKE_PACKAGE_PATH }}
+          path: ./packages/fake/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }}

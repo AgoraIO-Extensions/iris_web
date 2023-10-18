@@ -41,8 +41,10 @@ jobs:
         run: |
           pnpm install
           pnpm run build
-          OUTPUT_ARTIFACT_FILE_NAME=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
-          echo "OUTPUT_ARTIFACT_FILE_NAME=$OUTPUT_ARTIFACT_FILE_NAME" >> $GITHUB_ENV
+          RTC_PACKAGE_PATH=$(ls packages/rtc/dist | awk -F/ '{print $NF}')
+          echo "RTC_PACKAGE_PATH=$RTC_PACKAGE_PATH" >> $GITHUB_ENV
+          RTC_FAKE_PACKAGE_PATH=$(ls packages/fake/rtc/dist | awk -F/ '{print $NF}')
+          echo "RTC_FAKE_PACKAGE_PATH=$RTC_FAKE_PACKAGE_PATH" >> $GITHUB_ENV
 
       - name: Setup NPM auth token
         run: |
@@ -67,21 +69,55 @@ jobs:
 
       - name: Update CHANGELOG.md and Create Release
         run: |
-          pnpm release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./packages/rtc/dist/${{ env.OUTPUT_ARTIFACT_FILE_NAME }}
+          pnpm release ${{ env.version }} --ci --npm.allowSameVersion
 
-      - name: Prepare CDN Publish
+
+      - name: Update Artifact to Github Releases
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }}
+          asset_name: ${{ env.RTC_PACKAGE_PATH }}
+          asset_content_type: application/javascript
+
+      - name: Update Artifact to Github Releases
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./packages/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }}
+          asset_name: ${{ env.RTC_FAKE_PACKAGE_PATH }}
+          asset_content_type: application/javascript
+
+      - name: Prepare CDN Publish iris-web-rtc
         if: ${{ inputs.cdn }}
         run: |
           GITHUB_RELEASE_DOWNLOAD_PREFIX=https://github.com/AgoraIO-Extensions/iris_web/releases/download
-          GITHUB_RELEASE_DOWNLOAD_URL="${GITHUB_RELEASE_DOWNLOAD_PREFIX}/v${{ env.version }}/${{ env.OUTPUT_ARTIFACT_FILE_NAME }}"
-          echo "GITHUB_RELEASE_DOWNLOAD_URL=${GITHUB_RELEASE_DOWNLOAD_URL}" >> $GITHUB_ENV
+          GITHUB_RELEASE_RTC_PACKAGE_DOWNLOAD_URL="${GITHUB_RELEASE_DOWNLOAD_PREFIX}/v${{ env.version }}/${{ env.RTC_PACKAGE_PATH }}"
+          echo "GITHUB_RELEASE_RTC_PACKAGE_DOWNLOAD_URL=${GITHUB_RELEASE_RTC_PACKAGE_DOWNLOAD_URL}" >> $GITHUB_ENV
 
-      - name: CDN Publish
+      - name: CDN Publish iris-web-rtc
         if: ${{ inputs.cdn }}
         env:
           UPLOAD_CDN_INTERNAL_JENKINS_HOOK: ${{ secrets.UPLOAD_CDN_INTERNAL_JENKINS_HOOK }}
         uses: AgoraIO-Extensions/actions/.github/actions/upload_cdn_internal@main
         with:
           upload_cdn_internal_jenkins_hook: ${{ env.UPLOAD_CDN_INTERNAL_JENKINS_HOOK }}
-          url: ${{ env.GITHUB_RELEASE_DOWNLOAD_URL }}
+          url: ${{ env.GITHUB_RELEASE_RTC_PACKAGE_DOWNLOAD_URL }}
+          release_type: ${{ inputs.release_type }}
+
+      - name: Prepare CDN Publish iris-web-rtc
+        if: ${{ inputs.cdn }}
+        run: |
+          GITHUB_RELEASE_DOWNLOAD_PREFIX=https://github.com/AgoraIO-Extensions/iris_web/releases/download
+          GITHUB_RELEASE_RTC_FAKE_PACKAGE_DOWNLOAD_URL="${GITHUB_RELEASE_DOWNLOAD_PREFIX}/v${{ env.version }}/${{ env.RTC_FAKE_PACKAGE_PATH }}"
+          echo "GITHUB_RELEASE_RTC_FAKE_PACKAGE_DOWNLOAD_URL=${GITHUB_RELEASE_RTC_FAKE_PACKAGE_DOWNLOAD_URL}" >> $GITHUB_ENV
+
+      - name: CDN Publish iris-web-rtc-fake
+        if: ${{ inputs.cdn }}
+        env:
+          UPLOAD_CDN_INTERNAL_JENKINS_HOOK: ${{ secrets.UPLOAD_CDN_INTERNAL_JENKINS_HOOK }}
+        uses: AgoraIO-Extensions/actions/.github/actions/upload_cdn_internal@main
+        with:
+          upload_cdn_internal_jenkins_hook: ${{ env.UPLOAD_CDN_INTERNAL_JENKINS_HOOK }}
+          url: ${{ env.GITHUB_RELEASE_RTC_FAKE_PACKAGE_DOWNLOAD_URL }}
           release_type: ${{ inputs.release_type }}
