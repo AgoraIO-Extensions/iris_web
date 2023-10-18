@@ -34,7 +34,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Setup Dependencies and Build💚
+      - name: Setup Dependencies and Build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -70,22 +70,6 @@ jobs:
       - name: Update CHANGELOG.md and Create Release
         run: |
           pnpm release ${{ env.version }} --ci --npm.allowSameVersion
-
-      - name: Update Artifact to Github Releases
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }}
-          asset_name: ${{ env.RTC_PACKAGE_PATH }}
-          asset_content_type: application/javascript
-
-      - name: Update Artifact to Github Releases
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./packages/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }}
-          asset_name: ${{ env.RTC_FAKE_PACKAGE_PATH }}
-          asset_content_type: application/javascript
 
       - name: Prepare CDN Publish iris-web-rtc
         if: ${{ inputs.cdn }}
