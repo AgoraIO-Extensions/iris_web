@@ -12,6 +12,8 @@ export function createIrisRtcEngineFake(irisApiEngine: IrisApiEngine) {
       agoraRTC,
     }
   );
+
+  return irisRtcEngine;
 }
 
 export function getIrisRtcEngineFake() {
@@ -37,9 +39,3 @@ export function triggerEventWithFakeApiEngine(
     irisRtcEngine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
-
-export let AgoraWrapperFake = {
-  createIrisRtcEngineFake: createIrisRtcEngineFake,
-  getIrisRtcEngineFake: getIrisRtcEngineFake,
-  triggerEventWithFakeApiEngine: triggerEventWithFakeApiEngine,
-};

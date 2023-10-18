@@ -10,7 +10,7 @@ export interface InitIrisRtcOptions {
   // irisRtmEngine: IrisApiEngine;
 }
 
-export function initIrisRtc(
+function initIrisRtc(
   irisApiEngine: IrisApiEngine,
   options?: InitIrisRtcOptions
 ) {
@@ -20,11 +20,8 @@ export function initIrisRtc(
   );
 }
 
-export let AgoraWrapper = {
-  initIrisRtc: initIrisRtc,
-};
-
 export let IrisWebRtc = {
   IrisRtcEngine: IrisRtcEngine,
   AgoraConsole: AgoraConsole,
+  initIrisRtc: initIrisRtc,
 };
