@@ -1,0 +1,36 @@
+name: Generate Code
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Generate
+
+        run: |
+          pnpm install
+          export LLVM_DOWNLOAD_URL=https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+          pnpm terra
+
+      - name: Create PR
+        uses: AgoraIO-Extensions/actions/.github/actions/pr@main
+        with:
+          target-repo: ${{ github.workspace }}
+          target-branch: ${{ github.ref_name }}
+          target-branch-name-surffix: |
+            terra-update
+          pull-request-title: |
+            [AUTO] Generate code by terra
+          add-paths: ts
+          github-token: ${{ secrets.GH_TOKEN }}
