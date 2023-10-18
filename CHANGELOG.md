@@ -1,5 +1,8 @@
 # IRIS_WEB
 
+* chore: ci (60898bc)
+* chore: ci (3b688f0)
+
 ## [0.1.2-dev.1](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.1.1-dev.1...v0.1.2-dev.1) (2023-10-18)
 
 
