@@ -1,5 +1,5 @@
 import {
-  EventParam,
+  ApiParam,
   IrisEventHandler,
   IrisEventHandlerManager,
 } from './IrisApiEngine';
@@ -7,7 +7,7 @@ import {
 export class IrisEventHandlerManagerImpl implements IrisEventHandlerManager {
   private eventHandlersMap: Map<string, Array<IrisEventHandler>> = new Map();
 
-  notifyEvent(key: string, param: EventParam): void {
+  notifyEvent(key: string, param: ApiParam): void {
     let eventHandlers = this.eventHandlersMap.get(key);
     if (!eventHandlers) {
       return;

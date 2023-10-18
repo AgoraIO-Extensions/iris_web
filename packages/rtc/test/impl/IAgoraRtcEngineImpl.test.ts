@@ -1,6 +1,6 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { AREAS, IAgoraRTC } from 'agora-rtc-sdk-ng';
-import { EventParam, IrisApiEngine, IrisCore } from 'iris-web-core';
+import { IrisApiEngine, IrisCore } from 'iris-web-core';
 
 import { IrisAudioSourceType } from '../../src/base/BaseType';
 
@@ -30,7 +30,7 @@ beforeAll(async () => {
       },
     },
   };
-  let apiParam = new EventParam(
+  let apiParam = new IrisCore.EventParam(
     'RtcEngine_initialize',
     JSON.stringify(nParam),
     0,
@@ -68,7 +68,7 @@ describe('IAgoraRtcEngineImpl', () => {
     let nParam = {
       context: 'test',
     };
-    let apiParam = new EventParam(
+    let apiParam = new IrisCore.EventParam(
       'RtcEngine_initialize',
       JSON.stringify(nParam),
       0,

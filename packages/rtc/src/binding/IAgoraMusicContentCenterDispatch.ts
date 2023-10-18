@@ -7,7 +7,7 @@ import {
   MusicContentCenterStatusCode,
   PreloadStatusCode,
 } from '@iris/native-rtc-binding';
-import { ApiParam, CallApiReturnType, EventParam } from 'iris-web-core';
+import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import {
@@ -84,7 +84,7 @@ export class IMusicContentCenterEventHandler {
     return `${this.classPrefix}${event}`;
   }
 
-  notifyEvent(param: EventParam): void {
+  notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 

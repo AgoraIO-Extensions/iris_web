@@ -1,6 +1,6 @@
 import { ERROR_CODE_TYPE } from '@iris/native-rtc-binding';
 
-import FakeAgoraRTCWrapper from 'agora-rtc-sdk-ng-fake/agora-rtc-sdk-ng-fake.js';
+import FakeAgoraRTCWrapper from 'agora-rtc-sdk-ng-fake';
 import { AgoraConsole, IrisApiEngine, IrisRtcEngine } from 'iris-web-rtc';
 
 let irisRtcEngine: IrisRtcEngine;
