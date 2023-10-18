@@ -481,14 +481,15 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         sourceType
       )[0];
       if (!videoTrackPackage) {
-        let cTrack = null;
-        if (this._engine.implHelper.isVideoCamera(sourceType)) {
-          cTrack = await this._engine.implHelper.createVideoCameraTrack();
-        }
-        videoTrackPackage = new VideoTrackPackage(null, sourceType, cTrack);
+        videoTrackPackage = new VideoTrackPackage(null, sourceType, null);
         this._engine.irisClientManager.addLocalVideoTrackPackage(
           videoTrackPackage
         );
+        if (this._engine.implHelper.isVideoCamera(sourceType)) {
+          let cTrack = null;
+          cTrack = await this._engine.implHelper.createVideoCameraTrack();
+          videoTrackPackage.update({ track: cTrack });
+        }
       }
       videoTrackPackage.setPreview(true);
       try {
@@ -681,12 +682,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         sourceType
       )[0];
       if (!trackPackage) {
-        let cTrack = null;
-        if (this._engine.implHelper.isVideoCamera(sourceType)) {
-          cTrack = await this._engine.implHelper.createVideoCameraTrack();
-        }
-        trackPackage = new VideoTrackPackage(canvas.view, sourceType, cTrack);
+        trackPackage = new VideoTrackPackage(canvas.view, sourceType, null);
         this._engine.irisClientManager.addLocalVideoTrackPackage(trackPackage);
+        if (this._engine.implHelper.isVideoCamera(sourceType)) {
+          let cTrack = null;
+          cTrack = await this._engine.implHelper.createVideoCameraTrack();
+          trackPackage.update({ track: cTrack });
+        }
       }
       trackPackage.update({ type: sourceType, element: canvas.view });
 
