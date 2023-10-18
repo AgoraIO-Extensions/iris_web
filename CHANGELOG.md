@@ -1,5 +1,12 @@
 # IRIS_WEB
 
+## [0.1.2-dev.1](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.1.1-dev.1...v0.1.2-dev.1) (2023-10-18)
+
+
+### Bug Fixes
+
+* Add some bugfix ([#10](https://github.com/AgoraIO-Extensions/iris_web/issues/10)) ([9f17395](https://github.com/AgoraIO-Extensions/iris_web/commit/9f17395c6030e38d1da76c7d6c23405b40f9e1a6))
+
 ## 0.1.1-dev.1 (2023-10-13)
 
 
