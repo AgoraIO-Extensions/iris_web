@@ -71,7 +71,6 @@ jobs:
         run: |
           pnpm release ${{ env.version }} --ci --npm.allowSameVersion
 
-
       - name: Update Artifact to Github Releases
         uses: actions/upload-release-asset@v1
         with:
