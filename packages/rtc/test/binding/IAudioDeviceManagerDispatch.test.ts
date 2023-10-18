@@ -3,7 +3,7 @@
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { CallIrisApiResult, IrisApiEngine, IrisCore } from 'iris-web-core';
 
-import { initIrisRtc } from '../../src/index';
+import { IrisWebRtc } from '../../src/IrisRtcApi';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 const bindingAPI = require('../../src/binding/IAudioDeviceManagerDispatch');
@@ -12,7 +12,7 @@ let apiEnginePtr: IrisApiEngine;
 let irisRtcEngine: IrisRtcEngine;
 beforeAll(async () => {
   apiEnginePtr = IrisCore.createIrisApiEngine();
-  initIrisRtc(apiEnginePtr);
+  IrisWebRtc.initIrisRtc(apiEnginePtr);
   irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
   irisRtcEngine.implHelper.createAudioTrack = jest.fn();
   let nParam = {

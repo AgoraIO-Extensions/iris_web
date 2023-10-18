@@ -5,14 +5,14 @@ import { CallIrisApiResult, IrisApiEngine, IrisCore } from 'iris-web-core';
 
 const bindingAPI = require('../../src/binding/{{&user_data.fileName}}Dispatch');
 
-import { initIrisRtc } from '../../src/index';
+import { IrisWebRtc } from '../../src/IrisRtcApi';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 let apiEnginePtr: IrisApiEngine;
 let irisRtcEngine: IrisRtcEngine;
 beforeAll(async () => {
   apiEnginePtr = IrisCore.createIrisApiEngine();
-  initIrisRtc(apiEnginePtr);
+  IrisWebRtc.initIrisRtc(apiEnginePtr);
   irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
   irisRtcEngine.implHelper.createAudioTrack = jest.fn();
   let nParam = {

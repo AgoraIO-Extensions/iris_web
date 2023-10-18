@@ -2,9 +2,9 @@ import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { AREAS, IAgoraRTC } from 'agora-rtc-sdk-ng';
 import { IrisApiEngine, IrisCore } from 'iris-web-core';
 
+import { IrisWebRtc } from '../../src/IrisRtcApi';
 import { IrisAudioSourceType } from '../../src/base/BaseType';
 
-import { AgoraTranslate, initIrisRtc } from '../../src/index';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 let apiEnginePtr: IrisApiEngine;
@@ -12,7 +12,7 @@ let irisRtcEngine: IrisRtcEngine;
 let AgoraRTCMock: IAgoraRTC;
 beforeAll(async () => {
   apiEnginePtr = IrisCore.createIrisApiEngine();
-  initIrisRtc(apiEnginePtr);
+  IrisWebRtc.initIrisRtc(apiEnginePtr);
   irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
   AgoraRTCMock = irisRtcEngine.globalState.AgoraRTC;
   jest.spyOn(AgoraRTCMock, 'setArea');
