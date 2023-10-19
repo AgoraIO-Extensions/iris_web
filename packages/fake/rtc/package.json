@@ -14,7 +14,7 @@
   "dependencies": {
     "@iris/native-rtc-binding": "workspace: *",
     "agora-rtc-sdk-ng": "^4.18.2",
-    "agora-rtc-sdk-ng-fake": "https://github.com/AgoraIO-Extensions/agora-rtc-sdk-ng-fake/releases/download/v1.0.1/agora-rtc-sdk-ng-fake.tar.gz",
+    "@agoraio-extensions/agora-rtc-sdk-ng-fake": "latest",
     "iris-web-rtc": "workspace: *"
   },
   "devDependencies": {

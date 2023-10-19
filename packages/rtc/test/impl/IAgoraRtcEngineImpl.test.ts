@@ -1,8 +1,11 @@
+import { FakeAgoraRTCWrapper } from '@agoraio-extensions/agora-rtc-sdk-ng-fake';
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
 import { AREAS, IAgoraRTC } from 'agora-rtc-sdk-ng';
+
 import { IrisApiEngine, IrisCore } from 'iris-web-core';
 
 import { IrisWebRtc } from '../../src/IrisRtcApi';
+
 import { IrisAudioSourceType } from '../../src/base/BaseType';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -12,7 +15,9 @@ let irisRtcEngine: IrisRtcEngine;
 let AgoraRTCMock: IAgoraRTC;
 beforeAll(async () => {
   apiEnginePtr = IrisCore.createIrisApiEngine();
-  IrisWebRtc.initIrisRtc(apiEnginePtr);
+  IrisWebRtc.initIrisRtc(apiEnginePtr, {
+    agoraRTC: FakeAgoraRTCWrapper.getFakeAgoraRTC(),
+  });
   irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
   AgoraRTCMock = irisRtcEngine.globalState.AgoraRTC;
   jest.spyOn(AgoraRTCMock, 'setArea');
@@ -21,7 +26,7 @@ beforeAll(async () => {
   jest.spyOn(irisRtcEngine.implHelper, 'createAudioTrack');
   jest.spyOn(irisRtcEngine, 'returnResult');
 
-  irisRtcEngine.implHelper.createAudioTrack = jest.fn();
+  // irisRtcEngine.implHelper.createAudioTrack = jest.fn();
   let nParam = {
     context: {
       areaCode: 1,
@@ -84,8 +89,27 @@ describe('IAgoraRtcEngineImpl', () => {
     );
     expect(irisRtcEngine.returnResult).toBeCalledTimes(2);
   });
-  test('joinChannel', () => {
-    console.log('joinChannel');
-    //call create engine
+  test('release', async () => {
+    jest.spyOn(irisRtcEngine.irisClientManager, 'release');
+    expect(
+      irisRtcEngine.irisClientManager.irisClientList.length === 1
+    ).toBeTruthy();
+    let apiParam = new IrisCore.EventParam(
+      'RtcEngine_release',
+      JSON.stringify({ sync: false }),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(irisRtcEngine.irisClientManager.release).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.irisClientManager.irisClientList.length === 0
+    ).toBeTruthy();
+    expect(
+      irisRtcEngine.irisClientManager.irisClientList.length === 0
+    ).toBeTruthy();
   });
 });
