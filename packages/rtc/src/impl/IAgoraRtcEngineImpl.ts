@@ -87,9 +87,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         );
       }
       //音频模块默认是开启的,所以默认创建音频轨道
-      await this._engine.implHelper.createAudioTrack(
-        IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
-      );
+      try {
+        await this._engine.implHelper.createAudioTrack(
+          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+        );
+      } catch (e) {
+        AgoraConsole.warn(`createAudioTrack error: ${e}`);
+      }
 
       let result = this._engine.globalState.AgoraRTC.checkSystemRequirements();
       return this._engine.returnResult(result);
