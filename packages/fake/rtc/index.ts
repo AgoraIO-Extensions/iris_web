@@ -1,6 +1,6 @@
+import { FakeAgoraRTCWrapper } from '@agoraio-extensions/agora-rtc-sdk-ng-fake';
 import { ERROR_CODE_TYPE } from '@iris/native-rtc-binding';
 
-import FakeAgoraRTCWrapper from 'agora-rtc-sdk-ng-fake';
 import { AgoraConsole, IrisApiEngine, IrisRtcEngine } from 'iris-web-rtc';
 
 import supportList = require('../../../scripts/terra/config/support_list.json');
