@@ -220,7 +220,10 @@ export class IrisClientObserver {
       }
 
       //发布轨道必须保证该client的options满足条件,并且client已经加入频道,并且该轨道没有被发布过
-      if (irisClient.agoraRTCClient?.channelName) {
+      if (
+        irisClient.agoraRTCClient?.channelName &&
+        irisClient.agoraRTCClient.localTracks
+      ) {
         for (let i = 0; i < irisClient.agoraRTCClient.localTracks.length; i++) {
           let localTrack = irisClient.agoraRTCClient.localTracks[i];
           if (localTrack === publishTrack) {

@@ -193,11 +193,15 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   public returnResult(
     isSuccess: boolean = true,
-    code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
+    code?: number,
     data: string = '{"result": 0}'
   ): Promise<CallIrisApiResult> {
-    if (!isSuccess && typeof code !== 'number') {
-      code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
+    if (isSuccess) {
+      code = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK;
+    } else {
+      if (typeof code !== 'number') {
+        code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
+      }
     }
     return Promise.resolve(new CallIrisApiResult(code, data));
   }

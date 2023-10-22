@@ -57,6 +57,7 @@
   "agora::rtc::IRtcEngineEventHandlerEx.onUserOffline",
   "agora::rtc::IRtcEngineEventHandlerEx.onUserMuteAudio",
   "agora::rtc::IRtcEngineEventHandlerEx.onUserStateChanged",
+  "agora::rtc::IRtcEngineEventHandlerEx.onClientRoleChanged",
   "agora::rtc::IRtcEngineEventHandlerEx.onUserMuteVideo",
   "agora::rtc::IRtcEngineEventHandlerEx.onUserEnableLocalVideo",
   "agora::rtc::IRtcEngineEventHandlerEx.onAudioVolumeIndication",
