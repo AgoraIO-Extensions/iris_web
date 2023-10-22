@@ -74,7 +74,7 @@ importers:
     dependencies:
       '@agoraio-extensions/agora-rtc-sdk-ng-fake':
         specifier: latest
-        version: 1.0.3
+        version: 1.0.5
       '@iris/native-rtc-binding':
         specifier: 'workspace: *'
         version: link:../../@iris/rtc
@@ -129,7 +129,7 @@ importers:
     dependencies:
       '@agoraio-extensions/agora-rtc-sdk-ng-fake':
         specifier: latest
-        version: 1.0.3
+        version: 1.0.5
       '@iris/native-rtc-binding':
         specifier: 'workspace: *'
         version: link:../@iris/rtc
@@ -212,8 +212,8 @@ packages:
     resolution: {integrity: sha512-/62yikz7NLScCGAAST5SHdnjaDJQBDq0M2muyRTpf2VQhw6StBg2ALiu73zSJQ4fMVLA+0uBhBHAle7Wg+2kSg==}
     dev: true
 
-  /@agoraio-extensions/agora-rtc-sdk-ng-fake@1.0.3:
-    resolution: {integrity: sha512-I1L3ZwIKVo4nw04juTP4NGNLFMvgZ3DBxP1qeVaGvMJx0jEjWRB6sLHJEXKp0kmtTEDJU8pNFkBK8bkZoZHw0g==, tarball: https://npm.pkg.github.com/download/@agoraio-extensions/agora-rtc-sdk-ng-fake/1.0.3/76beea688ccd2d69ee5e9255950a3b4aab35493e}
+  /@agoraio-extensions/agora-rtc-sdk-ng-fake@1.0.5:
+    resolution: {integrity: sha512-2iwDOdvnal749m4Fk7l+BEUZ09a/skRaugxU91Ao/wwkM8++igCtgPABY9PrT2k++8va9GUj/WM+a08qElwAvw==, tarball: https://npm.pkg.github.com/download/@agoraio-extensions/agora-rtc-sdk-ng-fake/1.0.5/aa1434e7a4856f3e96879b04497b401479a41d30}
     dev: false
 
   /@agoraio-extensions/cxx-parser@0.1.7(@agoraio-extensions/terra-core@0.1.2):
