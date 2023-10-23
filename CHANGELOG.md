@@ -7,6 +7,13 @@
 
 * onNetworkQuality ([a27ed1d](https://github.com/AgoraIO-Extensions/iris_web/commit/a27ed1d61a0745f517a32d8c0f1572122947117a))
 
+## [0.1.2-dev.3](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.1.2-dev.2...v0.1.2-dev.3) (2023-10-23)
+
+
+### Features
+
+* onNetworkQuality ([a27ed1d](https://github.com/AgoraIO-Extensions/iris_web/commit/a27ed1d61a0745f517a32d8c0f1572122947117a))
+
 ## [0.1.2-dev.2](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.1.2-dev.1...v0.1.2-dev.2) (2023-10-19)
 
 
