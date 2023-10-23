@@ -257,6 +257,7 @@ describe('IAgoraRtcEngineImpl', () => {
   test('joinChannel', async () => {
     jest.spyOn(rtcEngineImpl, 'joinChannel2');
 
+    expect(irisRtcEngine.irisIntervalList.length == 0).toBeTruthy();
     await joinChannel(apiEnginePtr, null);
 
     expect(rtcEngineImpl.joinChannel2).toBeCalledWith(
@@ -265,6 +266,7 @@ describe('IAgoraRtcEngineImpl', () => {
       TEST_UID,
       irisRtcEngine.irisClientManager.getIrisClient().irisClientState
     );
+    expect(irisRtcEngine.irisIntervalList.length == 1).toBeTruthy();
   });
 
   test('joinChannel', async () => {
@@ -332,7 +334,8 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(
       irisRtcEngine.globalState.enableAudioVolumeIndicationConfig.smooth
     ).toBe(param.smooth);
-    expect(irisRtcEngine.irisIntervalList.length == 1).toBeTruthy();
+    //irisIntervalList是因为一个是远端的onnetworkquality 一个是enableAudioVolumeIndication的
+    expect(irisRtcEngine.irisIntervalList.length == 2).toBeTruthy();
     expect(irisRtcEngine.globalState.enableAudioVolumeIndication).toBeTruthy();
     jest.advanceTimersByTime(param.interval);
     expect(
@@ -342,9 +345,11 @@ describe('IAgoraRtcEngineImpl', () => {
 
   test('leaveChannel', async () => {
     await joinChannel(apiEnginePtr, null);
+    expect(irisRtcEngine.irisIntervalList.length == 1).toBeTruthy();
     jest.spyOn(rtcEngineImpl, 'leaveChannel2');
     await callIris(apiEnginePtr, 'RtcEngine_leaveChannel');
     expect(rtcEngineImpl.leaveChannel2).toBeCalled();
+    expect(irisRtcEngine.irisIntervalList.length == 0).toBeTruthy();
   });
 
   test('leaveChannel2', async () => {

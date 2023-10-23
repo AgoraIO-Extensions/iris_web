@@ -197,7 +197,10 @@ export class IrisClientEventHandler {
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
         IrisAudioSourceType.kAudioSourceTypeRemote
       );
-      this._engine.irisClientManager.addRemoteUserPackage(userPackage);
+      this._engine.irisClientManager.addRemoteUserPackage(
+        userPackage,
+        this.agoraRTCClient
+      );
     } else {
       userPackage.update({
         uid: user.uid,
@@ -444,8 +447,16 @@ export class IrisClientEventHandler {
   }
 
   onEventNetworkQuality(stats: NetworkQuality): void {
-    //不能对应 onNetworkQuality, 因为这里是得到自己的网络状况，而 onNetworkQuality 是别人的网络状况
-    //暂时没有找到对应的回调
+    let connection: NATIVE_RTC.RtcConnection = {
+      channelId: this.agoraRTCClient.channelName,
+      localUid: this.agoraRTCClient.uid as number,
+    };
+    this._engine.rtcEngineEventHandler.onNetworkQualityEx(
+      connection,
+      0,
+      stats.downlinkNetworkQuality,
+      stats.uplinkNetworkQuality
+    );
   }
 
   //todo 后边再做

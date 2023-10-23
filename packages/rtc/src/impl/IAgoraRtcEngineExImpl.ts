@@ -172,7 +172,13 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           canvas.uid,
           NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE
         );
-        this._engine.irisClientManager.addRemoteUserPackage(userPackage);
+        let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+          connection
+        );
+        this._engine.irisClientManager.addRemoteUserPackage(
+          userPackage,
+          irisClient?.agoraRTCClient
+        );
       }
 
       return this._engine.returnResult();

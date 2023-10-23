@@ -25,7 +25,7 @@ import { AgoraConsole } from '../util';
 
 import { IrisClient } from './IrisClient';
 import { IrisClientObserver } from './IrisClientObserver';
-import { IrisRtcEngine } from './IrisRtcEngine';
+import { IrisIntervalType, IrisRtcEngine } from './IrisRtcEngine';
 
 export type WalkILocalVideoPackageTrackFun = (track: VideoTrackPackage) => void;
 
@@ -330,9 +330,32 @@ export class IrisClientManager {
     })[0];
   }
 
-  addRemoteUserPackage(remoteUserPackage: RemoteUserPackage) {
+  addRemoteUserPackage(
+    remoteUserPackage: RemoteUserPackage,
+    agoraRTCClient: IAgoraRTCClient
+  ) {
     this.remoteUserPackages.push(remoteUserPackage);
     this.irisClientObserver.addRemoteUserPackageObserver(remoteUserPackage);
+    if (agoraRTCClient) {
+      let intervalFunction = setInterval(() => {
+        let stats = agoraRTCClient.getRemoteNetworkQuality();
+        let connection: NATIVE_RTC.RtcConnection = {
+          channelId: agoraRTCClient.channelName,
+          localUid: agoraRTCClient.uid as number,
+        };
+        this._engine.rtcEngineEventHandler.onNetworkQualityEx(
+          connection,
+          remoteUserPackage.uid as number,
+          stats[remoteUserPackage.uid].downlinkNetworkQuality,
+          stats[remoteUserPackage.uid].uplinkNetworkQuality
+        );
+      }, this._engine.globalState.networkQualityInterval);
+      this._engine.addIrisInterval(
+        IrisIntervalType.networkQuality,
+        intervalFunction,
+        remoteUserPackage.uid
+      );
+    }
   }
 
   removeRemoteUserPackage(uid: UID) {
@@ -342,6 +365,7 @@ export class IrisClientManager {
         this.remoteUserPackages.splice(i, 1);
         i--;
         this.irisClientObserver.removeRemoteUserPackageObserver(userPackage);
+        this._engine.removeIrisIntervalByUid(uid);
         userPackage.dispose();
 
         break;

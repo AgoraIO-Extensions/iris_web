@@ -52,6 +52,7 @@ import { IrisClientManager } from './IrisClientManager';
 
 export enum IrisIntervalType {
   enableAudioVolumeIndication = 0,
+  networkQuality = 1,
 }
 
 export class IrisRtcEngine implements ApiInterceptor {
@@ -71,6 +72,7 @@ export class IrisRtcEngine implements ApiInterceptor {
   public irisIntervalList: {
     type: IrisIntervalType;
     interval: NodeJS.Timeout;
+    uid: UID;
   }[] = [];
   public irisRtcErrorHandler: IrisRtcErrorHandler = new IrisRtcErrorHandler(
     this
@@ -211,10 +213,16 @@ export class IrisRtcEngine implements ApiInterceptor {
     await this.irisClientManager.release();
   }
 
-  public addIrisInterval(type: IrisIntervalType, interval: NodeJS.Timeout) {
+  public addIrisInterval(
+    type: IrisIntervalType,
+    interval: NodeJS.Timeout,
+    uid: UID
+  ) {
+    //如果添加的是远端用户的轮训,uid用远端的
     this.irisIntervalList.push({
       type,
       interval,
+      uid,
     });
   }
 
@@ -222,8 +230,24 @@ export class IrisRtcEngine implements ApiInterceptor {
     this.irisIntervalList.filter((a) => type == a.type);
   }
 
+  public removeIrisIntervalByUid(uid: UID) {
+    this.irisIntervalList.filter((a) => {
+      if (uid == a.uid) {
+        a.interval && clearInterval(a.interval);
+      } else {
+        return a;
+      }
+    });
+  }
+
   public removeIrisIntervalByType(type: IrisIntervalType) {
-    this.irisIntervalList.filter((a) => type != a.type);
+    this.irisIntervalList.filter((a) => {
+      if (type == a.type) {
+        a.interval && clearInterval(a.interval);
+      } else {
+        return a;
+      }
+    });
   }
 
   public clearIrisInterval() {

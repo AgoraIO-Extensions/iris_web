@@ -9,6 +9,8 @@ export interface DeviceInfo {
 export class IrisGlobalState {
   public rtcEngineContext: NATIVE_RTC.RtcEngineContext;
 
+  public networkQualityInterval: number = 2000;
+
   //C++ SetAudioProfile() initialize()
   public audioProfile: NATIVE_RTC.AUDIO_PROFILE_TYPE;
 
