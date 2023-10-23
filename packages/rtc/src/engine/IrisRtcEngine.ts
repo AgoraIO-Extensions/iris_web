@@ -231,23 +231,25 @@ export class IrisRtcEngine implements ApiInterceptor {
   }
 
   public removeIrisIntervalByUid(uid: UID) {
-    this.irisIntervalList.filter((a) => {
-      if (uid == a.uid) {
-        a.interval && clearInterval(a.interval);
-      } else {
-        return a;
+    for (let i = 0; i < this.irisIntervalList.length; i++) {
+      let item = this.irisIntervalList[i];
+      if (item.uid == uid) {
+        item.interval && clearInterval(item.interval);
+        this.irisIntervalList.splice(i, 1);
+        break;
       }
-    });
+    }
   }
 
   public removeIrisIntervalByType(type: IrisIntervalType) {
-    this.irisIntervalList.filter((a) => {
-      if (type == a.type) {
-        a.interval && clearInterval(a.interval);
-      } else {
-        return a;
+    for (let i = 0; i < this.irisIntervalList.length; i++) {
+      let item = this.irisIntervalList[i];
+      if (item.type == type) {
+        item.interval && clearInterval(item.interval);
+        this.irisIntervalList.splice(i, 1);
+        i--;
       }
-    });
+    }
   }
 
   public clearIrisInterval() {

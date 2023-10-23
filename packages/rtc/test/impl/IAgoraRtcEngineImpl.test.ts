@@ -334,7 +334,7 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(
       irisRtcEngine.globalState.enableAudioVolumeIndicationConfig.smooth
     ).toBe(param.smooth);
-    //irisIntervalList是因为一个是远端的onnetworkquality 一个是enableAudioVolumeIndication的
+    //irisIntervalList是因为一个是远端的onNetworkQuality 一个是enableAudioVolumeIndication的
     expect(irisRtcEngine.irisIntervalList.length == 2).toBeTruthy();
     expect(irisRtcEngine.globalState.enableAudioVolumeIndication).toBeTruthy();
     jest.advanceTimersByTime(param.interval);
