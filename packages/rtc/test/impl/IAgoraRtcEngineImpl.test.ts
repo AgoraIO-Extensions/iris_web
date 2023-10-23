@@ -10,6 +10,8 @@ import { IrisApiEngine, IrisCore } from 'iris-web-core';
 import { IrisWebRtc } from '../../src/IrisRtcApi';
 
 import { IrisAudioSourceType } from '../../src/base/BaseType';
+import { BufferSourceAudioTrackPackage } from '../../src/engine/IrisClientManager';
+import { AgoraConsole } from '../../src/util';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import {
@@ -270,7 +272,6 @@ describe('IAgoraRtcEngineImpl', () => {
 
     await joinChannel(apiEnginePtr, null);
     let irisClient = irisRtcEngine.irisClientManager.getIrisClient();
-    jest.spyOn(irisClient, 'setConnection');
 
     expect(irisClient.irisClientState.token).toBe(null);
     expect(irisClient.connection.localUid).toBe(irisClient.agoraRTCClient.uid);
@@ -556,5 +557,206 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(
       irisRtcEngine.irisClientManager.localVideoTrackPackages[0].track.isPlaying
     ).toBeTruthy();
+  });
+  test('setLogLevel', async () => {
+    let param = {
+      level: 3,
+    };
+    await callIris(apiEnginePtr, 'RtcEngine_setLogLevel', param);
+    //由于initialize时已经调用过一次setLogLevel，所以这里调用次数为2
+    expect(AgoraRTCMock.setLogLevel).toBeCalledTimes(2);
+  });
+  test('startScreenCapture', async () => {
+    let param = {
+      captureParams: {
+        captureAudio: true,
+        captureVideo: false,
+      },
+    };
+    let result = await callIrisWithoutCheck(
+      apiEnginePtr,
+      'RtcEngine_startScreenCapture',
+      param
+    );
+    expect(result.code).toBe(NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK);
+    let param2 = {
+      captureParams: {
+        captureAudio: true,
+        captureVideo: true,
+      },
+    };
+    await callIris(apiEnginePtr, 'RtcEngine_startScreenCapture', param2);
+    expect(
+      irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
+      ).length
+    ).toBe(1);
+    //由于initialize时已经创建了一个microphone track，所以这里是2
+    expect(
+      irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+        IrisAudioSourceType.kAudioSourceTypeScreenCapture
+      ).length
+    ).toBe(1);
+    let result2 = await callIrisWithoutCheck(
+      apiEnginePtr,
+      'RtcEngine_startScreenCapture',
+      param2
+    );
+    expect(result2.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
+  });
+  test('stopScreenCapture', async () => {
+    jest.spyOn(rtcEngineImpl, 'stopScreenCapture2');
+    await callIris(apiEnginePtr, 'RtcEngine_stopScreenCapture', null);
+    expect(rtcEngineImpl.stopScreenCapture2).toBeCalledWith(
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
+    );
+  });
+  test('stopScreenCapture2', async () => {
+    jest.spyOn(AgoraConsole, 'warn');
+    let param = {
+      sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY,
+    };
+    await callIris(apiEnginePtr, 'RtcEngine_stopScreenCapture2', param);
+    expect(AgoraConsole.warn).toBeCalledWith('screenCapture is not start');
+
+    let param2 = {
+      captureParams: {
+        captureAudio: true,
+        captureVideo: true,
+      },
+    };
+    await callIris(apiEnginePtr, 'RtcEngine_startScreenCapture', param2);
+    await callIris(apiEnginePtr, 'RtcEngine_stopScreenCapture2', param);
+    expect(
+      irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
+      ).length
+    ).toBe(0);
+    //由于initialize时已经创建了一个microphone track，所以这里是1
+    expect(
+      irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+        IrisAudioSourceType.kAudioSourceTypeScreenCapture
+      ).length
+    ).toBe(0);
+  });
+  test('playEffect', async () => {
+    jest.spyOn(AgoraConsole, 'error');
+    jest.spyOn(AgoraRTCMock, 'createBufferSourceAudioTrack');
+    let param = {
+      soundId: 1,
+      filePath: 'test-file-path',
+      loopCount: 2,
+      pitch: 1,
+      pan: 2,
+      gain: 5,
+      publish: true,
+      startPos: 6,
+    };
+    await callIris(apiEnginePtr, 'RtcEngine_disableAudio', null);
+    let result = await callIrisWithoutCheck(
+      apiEnginePtr,
+      'RtcEngine_playEffect',
+      param
+    );
+    expect(AgoraConsole.error).toBeCalledWith('please enableAudio first');
+    expect(result.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+    await callIris(apiEnginePtr, 'RtcEngine_playEffect', param);
+    expect(AgoraRTCMock.createBufferSourceAudioTrack).toBeCalledTimes(1);
+    expect(AgoraRTCMock.createBufferSourceAudioTrack).toBeCalledWith({
+      source: `${location.origin}/${param.filePath}`,
+    });
+    expect(
+      irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+        IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
+      ).length
+    ).toBe(1);
+    expect(
+      (irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+        IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
+      )[0] as BufferSourceAudioTrackPackage).needPublish
+    ).toBe(param.publish);
+    expect(
+      (irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+        IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
+      )[0] as BufferSourceAudioTrackPackage).soundId
+    ).toBe(param.soundId);
+    expect(
+      (irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+        IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
+      )[0] as BufferSourceAudioTrackPackage).track.getVolumeLevel()
+    ).toBe(param.gain / 100);
+    expect(
+      (irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+        IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
+      )[0] as BufferSourceAudioTrackPackage).track.isPlaying
+    ).toBeTruthy();
+  });
+  test('stopEffect', async () => {
+    jest.spyOn(AgoraConsole, 'error');
+    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onError');
+
+    let param = {
+      soundId: 1,
+      filePath: 'test-file-path',
+      loopCount: 2,
+      pitch: 1,
+      pan: 2,
+      gain: 5,
+      publish: true,
+      startPos: 6,
+    };
+    let errorParam = {
+      soundId: 666,
+    };
+    await callIris(apiEnginePtr, 'RtcEngine_stopEffect', errorParam);
+    expect(irisRtcEngine.rtcEngineEventHandler.onError).toBeCalledWith(
+      NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED,
+      `soundId:${errorParam.soundId} not found`
+    );
+    await callIris(apiEnginePtr, 'RtcEngine_playEffect', param);
+    await callIris(apiEnginePtr, 'RtcEngine_stopEffect', {
+      soundId: param.soundId,
+    });
+    expect(
+      irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+        IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
+      ).length
+    ).toBe(0);
+  });
+  test('stopAllEffects', async () => {
+    jest.spyOn(AgoraConsole, 'error');
+    jest.spyOn(rtcEngineImpl, 'stopEffect');
+
+    let param = {
+      soundId: 1,
+      filePath: 'test-file-path',
+      loopCount: 2,
+      pitch: 1,
+      pan: 2,
+      gain: 5,
+      publish: true,
+      startPos: 6,
+    };
+    let param2 = {
+      soundId: 2,
+      filePath: 'test-file-path',
+      loopCount: 2,
+      pitch: 1,
+      pan: 2,
+      gain: 5,
+      publish: true,
+      startPos: 6,
+    };
+    await callIris(apiEnginePtr, 'RtcEngine_playEffect', param);
+    await callIris(apiEnginePtr, 'RtcEngine_playEffect', param2);
+    let bufferSourceAudioTrackPackageListLength = irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+      IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
+    ).length;
+    expect(bufferSourceAudioTrackPackageListLength).toBe(2);
+    await callIris(apiEnginePtr, 'RtcEngine_stopAllEffects', param2);
+    expect(rtcEngineImpl.stopEffect).toBeCalledTimes(
+      bufferSourceAudioTrackPackageListLength
+    );
   });
 });

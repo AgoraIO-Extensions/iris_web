@@ -35,7 +35,6 @@
   "agora::rtc::IRtcEngineEx.leaveChannelEx",
   "agora::rtc::IRtcEngineEx.updateChannelMediaOptionsEx",
   "agora::rtc::IRtcEngineEx.setupRemoteVideoEx",
-  "agora::rtc::IRtcEngineEx.setupRemoteVideoEx",
   "agora::rtc::IRtcEngineEventHandler.onError",
   "agora::rtc::IRtcEngineEventHandler.onAudioEffectFinished",
   "agora::rtc::IRtcEngineEventHandler.onLocalAudioStateChanged",

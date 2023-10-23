@@ -136,7 +136,7 @@ export class ImplHelper {
       let conf: ScreenVideoTrackInitConfig = this.generateScreenVideoTrackInitConfig();
       let result = await this._engine.globalState.AgoraRTC.createScreenVideoTrack(
         conf,
-        captureParams.captureAudio ? 'disable' : 'auto'
+        captureParams.captureAudio ? 'auto' : 'disable'
       );
       if (Array.isArray(result)) {
         screenTrack = result;

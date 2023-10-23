@@ -73,8 +73,8 @@ importers:
   packages/fake/rtc:
     dependencies:
       '@agoraio-extensions/agora-rtc-sdk-ng-fake':
-        specifier: latest
-        version: 1.0.5
+        specifier: ^1.0.6
+        version: 1.0.6
       '@iris/native-rtc-binding':
         specifier: 'workspace: *'
         version: link:../../@iris/rtc
@@ -128,8 +128,8 @@ importers:
   packages/rtc:
     dependencies:
       '@agoraio-extensions/agora-rtc-sdk-ng-fake':
-        specifier: latest
-        version: 1.0.5
+        specifier: ^1.0.6
+        version: 1.0.6
       '@iris/native-rtc-binding':
         specifier: 'workspace: *'
         version: link:../@iris/rtc
@@ -155,6 +155,9 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@18.17.9)
+      jest-canvas-mock:
+        specifier: ^2.5.2
+        version: 2.5.2
       jest-environment-jsdom:
         specifier: ^29.7.0
         version: 29.7.0
@@ -212,8 +215,8 @@ packages:
     resolution: {integrity: sha512-/62yikz7NLScCGAAST5SHdnjaDJQBDq0M2muyRTpf2VQhw6StBg2ALiu73zSJQ4fMVLA+0uBhBHAle7Wg+2kSg==}
     dev: true
 
-  /@agoraio-extensions/agora-rtc-sdk-ng-fake@1.0.5:
-    resolution: {integrity: sha512-2iwDOdvnal749m4Fk7l+BEUZ09a/skRaugxU91Ao/wwkM8++igCtgPABY9PrT2k++8va9GUj/WM+a08qElwAvw==, tarball: https://npm.pkg.github.com/download/@agoraio-extensions/agora-rtc-sdk-ng-fake/1.0.5/aa1434e7a4856f3e96879b04497b401479a41d30}
+  /@agoraio-extensions/agora-rtc-sdk-ng-fake@1.0.6:
+    resolution: {integrity: sha512-3XHsgnE5iSrnlOp9oaxOSTeNeln3+jTh4gkQZU7oSqtIZ8ueoFN2qNv42AShiiFUyVidKeTb/jTpoH5STC59og==, tarball: https://npm.pkg.github.com/download/@agoraio-extensions/agora-rtc-sdk-ng-fake/1.0.6/df5a9f1fa279ca4040e508d18df111ed71558a26}
     dev: false
 
   /@agoraio-extensions/cxx-parser@0.1.7(@agoraio-extensions/terra-core@0.1.2):
@@ -3150,6 +3153,10 @@ packages:
     resolution: {integrity: sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==}
     dev: true
 
+  /cssfontparser@1.2.1:
+    resolution: {integrity: sha512-6tun4LoZnj7VN6YeegOVb67KBX/7JJsqvj+pv3ZA7F878/eN33AbGa5b/S/wXxS/tcp8nc40xRUrsPlxIyNUPg==}
+    dev: true
+
   /cssom@0.3.8:
     resolution: {integrity: sha512-b0tGHbfegbhPJpxpiBPU2sCkigAqtM9O121le6bbOlgyV+NyGyCmVfJ6QW9eRjz8CpNfWEOYBIMIGRYkLwsIYg==}
     dev: true
@@ -5422,6 +5429,13 @@ packages:
       '@pkgjs/parseargs': 0.11.0
     dev: false
 
+  /jest-canvas-mock@2.5.2:
+    resolution: {integrity: sha512-vgnpPupjOL6+L5oJXzxTxFrlGEIbHdZqFU+LFNdtLxZ3lRDCl17FlTMM7IatoRQkrcyOTMlDinjUguqmQ6bR2A==}
+    dependencies:
+      cssfontparser: 1.2.1
+      moo-color: 1.0.3
+    dev: true
+
   /jest-changed-files@29.7.0:
     resolution: {integrity: sha512-fEArFiwf1BpQ+4bXSprcDc3/x4HSzL4al2tozwVpDFpsxALjLYdyiIK4e5Vz66GQJIbXJ82+35PtysofptNX2w==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -6322,6 +6336,12 @@ packages:
     resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
     engines: {node: '>=10'}
     hasBin: true
+    dev: true
+
+  /moo-color@1.0.3:
+    resolution: {integrity: sha512-i/+ZKXMDf6aqYtBhuOcej71YSlbjT3wCO/4H1j8rPvxDJEifdwgg5MaFyu6iYAT8GBZJg2z0dkgK4YMzvURALQ==}
+    dependencies:
+      color-name: 1.1.4
     dev: true
 
   /ms@2.0.0:
