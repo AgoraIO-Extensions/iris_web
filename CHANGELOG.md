@@ -1,5 +1,12 @@
 # IRIS_WEB
 
+## [0.1.2-dev.2](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.1.2-dev.1...v0.1.2-dev.2) (2023-10-19)
+
+
+### Bug Fixes
+
+* Allow createAudioTrack failed when initialize ([#16](https://github.com/AgoraIO-Extensions/iris_web/issues/16)) ([1588b7f](https://github.com/AgoraIO-Extensions/iris_web/commit/1588b7f0e4591f89d90e128796b45b6080a240c5))
+
 ## [0.1.2-dev.1](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.1.1-dev.1...v0.1.2-dev.1) (2023-10-18)
 
 
