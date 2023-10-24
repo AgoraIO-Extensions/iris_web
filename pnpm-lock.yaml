@@ -21,6 +21,9 @@ importers:
       '@types/eslint':
         specifier: ^8.44.2
         version: 8.44.2
+      '@types/js-yaml':
+        specifier: ^4.0.8
+        version: 4.0.8
       '@types/node':
         specifier: ^18.17.9
         version: 18.17.9
@@ -48,6 +51,9 @@ importers:
       eslint-plugin-unused-imports:
         specifier: ^3.0.0
         version: 3.0.0(@typescript-eslint/eslint-plugin@6.0.0)(eslint@8.4.1)
+      js-yaml:
+        specifier: ^4.1.0
+        version: 4.1.0
       prettier:
         specifier: ^2.0.5
         version: 2.0.5
@@ -79,7 +85,7 @@ importers:
         specifier: 'workspace: *'
         version: link:../../@iris/rtc
       agora-rtc-sdk-ng:
-        specifier: ^4.18.2
+        specifier: 4.18.2
         version: 4.18.2
       iris-web-rtc:
         specifier: 'workspace: *'
@@ -134,7 +140,7 @@ importers:
         specifier: 'workspace: *'
         version: link:../@iris/rtc
       agora-rtc-sdk-ng:
-        specifier: ^4.18.2
+        specifier: 4.18.2
         version: 4.18.2
       iris-web-core:
         specifier: 'workspace: *'
@@ -1597,6 +1603,10 @@ packages:
     dependencies:
       expect: 29.7.0
       pretty-format: 29.7.0
+    dev: true
+
+  /@types/js-yaml@4.0.8:
+    resolution: {integrity: sha512-m6jnPk1VhlYRiLFm3f8X9Uep761f+CK8mHyS65LutH2OhmBF0BeMEjHgg05usH8PLZMWWc/BUR9RPmkvpWnyRA==}
     dev: true
 
   /@types/jsdom@20.0.1:
