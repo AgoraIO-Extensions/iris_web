@@ -218,7 +218,8 @@ export class IrisRtcEngine implements ApiInterceptor {
     interval: NodeJS.Timeout,
     uid: UID
   ) {
-    //如果添加的是远端用户的轮训,uid用远端的
+    //如果添加的是远端用户的轮询,uid用远端的
+    //如果添加的是本地用户的轮询,uid固定为0
     this.irisIntervalList.push({
       type,
       interval,

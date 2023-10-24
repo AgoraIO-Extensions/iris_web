@@ -1064,7 +1064,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         this._engine.addIrisInterval(
           IrisIntervalType.enableAudioVolumeIndication,
           intervalFunction,
-          agoraRTCClient.uid
+          0
         );
       }
       this._engine.globalState.enableAudioVolumeIndication = true;
