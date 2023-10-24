@@ -445,19 +445,19 @@ describe('IAgoraRtcEngineImpl', () => {
     };
     await setupLocalVideo(apiEnginePtr, null);
     jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onLocalVideoStateChanged');
+    jest.spyOn(AgoraConsole, 'error');
 
-    let result = await callIrisWithoutCheck(
-      apiEnginePtr,
-      'RtcEngine_startPreview2',
-      param
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview2', param);
+    expect(AgoraConsole.error).toBeCalledWith(
+      'call enableVideo(true) before startPreview'
     );
-    expect(result.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
-    let result2 = await callIrisWithoutCheck(
-      apiEnginePtr,
-      'RtcEngine_startPreview2',
-      { sourceType: 100 }
+    jest.clearAllMocks();
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview2', {
+      sourceType: 100,
+    });
+    expect(AgoraConsole.error).toBeCalledWith(
+      'call enableVideo(true) before startPreview'
     );
-    expect(result2.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     await callIris(apiEnginePtr, 'RtcEngine_startPreview2', param);
     expect(

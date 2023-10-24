@@ -107,23 +107,13 @@ describe('IAgoraRtcEngineImpl', () => {
     };
     jest.spyOn(AgoraConsole, 'error');
 
-    let result = await callIrisWithoutCheck(
-      apiEnginePtr,
-      'MediaEngine_pushVideoFrame',
-      param2
-    );
-    expect(result.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
+    await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame', param2);
     expect(AgoraConsole.error).toBeCalledWith(
       'call enableVideo(true) before startPreview'
     );
     jest.clearAllMocks();
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
-    let result2 = await callIrisWithoutCheck(
-      apiEnginePtr,
-      'MediaEngine_pushVideoFrame',
-      param2
-    );
-    expect(result2.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
+    await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame', param2);
     expect(AgoraConsole.error).toBeCalledWith(
       'pushVideoFrameEnabled is disabled , call setExternalVideoSource first'
     );
