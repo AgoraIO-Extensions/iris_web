@@ -1,6 +1,6 @@
 {
   "name": "iris-web-rtc",
-  "version": "0.1.2-dev.4",
+  "version": "0.2.0-build.1",
   "description": "wait",
   "main": "./src/index.ts",
   "scripts": {
@@ -18,7 +18,7 @@
   "dependencies": {
     "@agoraio-extensions/agora-rtc-sdk-ng-fake": "^1.0.6",
     "@iris/native-rtc-binding": "workspace: *",
-    "agora-rtc-sdk-ng": "^4.18.2",
+    "agora-rtc-sdk-ng": "4.18.2",
     "iris-web-core": "workspace: *"
   },
   "files": [

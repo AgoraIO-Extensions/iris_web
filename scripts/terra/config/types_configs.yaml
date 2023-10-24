@@ -37,3 +37,5 @@ parsers:
 
 renderers:
   - path: ../index.ts
+
+version: 4.2.3

@@ -3,8 +3,12 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
+const NATIVE_RTC_PKG = require('../@iris/rtc/package.json');
+
 const pkg = require('./package.json');
 
+const nativeSdkVersion = NATIVE_RTC_PKG.nativeSdkVersion.replace(/\./g, '');
+const webSdkVersion = pkg.dependencies['agora-rtc-sdk-ng'].replace(/\./g, '');
 const environment = process.env.NODE_ENV;
 
 config = {
@@ -12,7 +16,7 @@ config = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'umd',
-    filename: `${pkg.name}_${pkg.version}.js`,
+    filename: `${pkg.name}_n${nativeSdkVersion}_w${webSdkVersion}_${pkg.version}.js`,
     environment: {
       arrowFunction: false,
     },

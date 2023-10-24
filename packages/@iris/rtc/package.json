@@ -10,5 +10,6 @@
   },
   "dependencies": {
     "iris-web-core": "workspace:*"
-  }
+  },
+  "nativeSdkVersion": "4.2.3"
 }
