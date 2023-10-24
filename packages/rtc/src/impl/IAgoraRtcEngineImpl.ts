@@ -480,7 +480,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let process = async (): Promise<CallIrisApiResult> => {
       if (this._engine.globalState.enabledVideo == false) {
         AgoraConsole.error('call enableVideo(true) before startPreview');
-        return this._engine.returnResult(false);
+        return this._engine.returnResult();
       }
 
       if (sourceType >= 5) {

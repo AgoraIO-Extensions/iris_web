@@ -206,13 +206,13 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       if (this._engine.globalState.enabledVideo == false) {
         AgoraConsole.error('call enableVideo(true) before startPreview');
-        return this._engine.returnResult(false);
+        return this._engine.returnResult();
       }
       if (!this._engine.globalState.pushVideoFrameEnabled) {
         AgoraConsole.error(
           'pushVideoFrameEnabled is disabled , call setExternalVideoSource first'
         );
-        return this._engine.returnResult(false);
+        return this._engine.returnResult();
       }
       //创建custom track的html element
       let irisContainer = this._engine.irisElement.getIrisElement();
