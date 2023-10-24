@@ -556,8 +556,20 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     newRole: CLIENT_ROLE_TYPE,
     newRoleOptions: ClientRoleOptions
   ): void {
-    AgoraConsole.warn('onClientRoleChanged not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      connection,
+      oldRole,
+      newRole,
+      newRoleOptions,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onClientRoleChangedEx');
+
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onClientRoleChangedEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onClientRoleChangeFailedEx(

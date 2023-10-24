@@ -6,7 +6,7 @@ const config: Config = {
   silent: true,
   testEnvironment: 'jsdom',
   testMatch: ['**/test/impl/*.[jt]s?(x)', '**/test/binding/*.[jt]s?(x)'],
-  setupFilesAfterEnv: ['./test/setup.ts'],
+  setupFilesAfterEnv: ['./test/setup.ts', 'jest-canvas-mock'],
 };
 
 export default config;

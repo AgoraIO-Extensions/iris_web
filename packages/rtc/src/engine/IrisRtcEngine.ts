@@ -52,6 +52,7 @@ import { IrisClientManager } from './IrisClientManager';
 
 export enum IrisIntervalType {
   enableAudioVolumeIndication = 0,
+  networkQuality = 1,
 }
 
 export class IrisRtcEngine implements ApiInterceptor {
@@ -71,6 +72,7 @@ export class IrisRtcEngine implements ApiInterceptor {
   public irisIntervalList: {
     type: IrisIntervalType;
     interval: NodeJS.Timeout;
+    uid: UID;
   }[] = [];
   public irisRtcErrorHandler: IrisRtcErrorHandler = new IrisRtcErrorHandler(
     this
@@ -193,11 +195,15 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   public returnResult(
     isSuccess: boolean = true,
-    code: number = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
+    code?: number,
     data: string = '{"result": 0}'
   ): Promise<CallIrisApiResult> {
-    if (!isSuccess && typeof code !== 'number') {
-      code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
+    if (isSuccess) {
+      code = NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK;
+    } else {
+      if (typeof code !== 'number') {
+        code = -NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED;
+      }
     }
     return Promise.resolve(new CallIrisApiResult(code, data));
   }
@@ -207,10 +213,17 @@ export class IrisRtcEngine implements ApiInterceptor {
     await this.irisClientManager.release();
   }
 
-  public addIrisInterval(type: IrisIntervalType, interval: NodeJS.Timeout) {
+  public addIrisInterval(
+    type: IrisIntervalType,
+    interval: NodeJS.Timeout,
+    uid: UID
+  ) {
+    //如果添加的是远端用户的轮询,uid用远端的
+    //如果添加的是本地用户的轮询,uid固定为0
     this.irisIntervalList.push({
       type,
       interval,
+      uid,
     });
   }
 
@@ -218,8 +231,26 @@ export class IrisRtcEngine implements ApiInterceptor {
     this.irisIntervalList.filter((a) => type == a.type);
   }
 
+  public removeIrisIntervalByUid(uid: UID) {
+    for (let i = 0; i < this.irisIntervalList.length; i++) {
+      let item = this.irisIntervalList[i];
+      if (item.uid == uid) {
+        item.interval && clearInterval(item.interval);
+        this.irisIntervalList.splice(i, 1);
+        break;
+      }
+    }
+  }
+
   public removeIrisIntervalByType(type: IrisIntervalType) {
-    this.irisIntervalList.filter((a) => type != a.type);
+    for (let i = 0; i < this.irisIntervalList.length; i++) {
+      let item = this.irisIntervalList[i];
+      if (item.type == type) {
+        item.interval && clearInterval(item.interval);
+        this.irisIntervalList.splice(i, 1);
+        i--;
+      }
+    }
   }
 
   public clearIrisInterval() {

@@ -51,7 +51,7 @@ export class IrisClientState {
 
   publishTranscodedVideoTrack?: boolean;
 
-  autoSubscribeAudio?: boolean;
+  autoSubscribeAudio?: boolean = true;
 
   autoSubscribeVideo?: boolean;
 

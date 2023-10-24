@@ -342,6 +342,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       let irisClient = this._engine.irisClientManager.getIrisClient();
+      let oldRole = irisClient.irisClientState.clientRoleType;
       irisClient.irisClientState.clientRoleType = role;
 
       let client = irisClient?.agoraRTCClient;
@@ -351,6 +352,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           role,
           options.audienceLatencyLevel
         ));
+
+      //todo1 需要确认这个api是不是会改变所有connection的role,目前只改变了irisClientList[0]的
+      //todo2 需要追加调用 muteLocalAudioStream 和 muteLocalVideoStream 修改发布状态。 这2个api都还没做
+
+      //如果已经加入频道
+      if (client?.channelName) {
+        this._engine.rtcEngineEventHandler.onClientRoleChangedEx(
+          irisClient.connection,
+          oldRole,
+          role,
+          options
+        );
+      }
 
       return this._engine.returnResult();
     };
@@ -466,7 +480,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let process = async (): Promise<CallIrisApiResult> => {
       if (this._engine.globalState.enabledVideo == false) {
         AgoraConsole.error('call enableVideo(true) before startPreview');
-        return this._engine.returnResult(false);
+        return this._engine.returnResult();
       }
 
       if (sourceType >= 5) {
@@ -731,6 +745,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         this._engine.irisClientManager.localAudioTrackPackages
       );
       for (let irisClient of this._engine.irisClientManager.irisClientList) {
+        irisClient.irisClientState.autoSubscribeAudio = true;
         await this._engine.irisClientManager.irisClientObserver.notifyLocal(
           NotifyType.PUBLISH_TRACK,
           [...this._engine.irisClientManager.localAudioTrackPackages],
@@ -759,6 +774,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         this._engine.irisClientManager.localAudioTrackPackages
       );
       for (let irisClient of this._engine.irisClientManager.irisClientList) {
+        irisClient.irisClientState.autoSubscribeAudio = false;
         await this._engine.irisClientManager.irisClientObserver.notifyLocal(
           NotifyType.UNPUBLISH_TRACK,
           [...this._engine.irisClientManager.localAudioTrackPackages],
@@ -1013,13 +1029,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
                 [
                   {
                     uid: agoraRTCClient.uid as number,
-                    volume: localStats.sendVolumeLevel,
-                    vad: localStats.sendVolumeLevel > 0 ? 1 : 0,
+                    volume: localStats?.sendVolumeLevel,
+                    vad: localStats?.sendVolumeLevel > 0 ? 1 : 0,
                     // voicePitch: number,  web没有
                   },
                 ],
                 1,
-                localStats.sendVolumeLevel
+                localStats?.sendVolumeLevel
               );
             }
             const remoteStats = agoraRTCClient.getRemoteAudioStats();
@@ -1032,11 +1048,11 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
                 // voicePitch: number,  web没有
               });
             }
-            let biggestVolumeRemoteSpeaker = remoteSpeakers.reduce(
-              (prev, curr) => {
+            let biggestVolumeRemoteSpeaker =
+              remoteSpeakers.length > 0 ??
+              remoteSpeakers.reduce((prev, curr) => {
                 return curr.receiveLevel > prev.receiveLevel ? curr : prev;
-              }
-            );
+              });
             this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(
               connection,
               remoteSpeakers,
@@ -1047,7 +1063,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         }, interval);
         this._engine.addIrisInterval(
           IrisIntervalType.enableAudioVolumeIndication,
-          intervalFunction
+          intervalFunction,
+          0
         );
       }
       this._engine.globalState.enableAudioVolumeIndication = true;

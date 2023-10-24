@@ -15,7 +15,7 @@ config = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'umd',
-    filename: `iris-web-rtc-fake_${pkg.version}.js`,
+    filename: `${pkg.name}_${pkg.version}.js`,
     environment: {
       arrowFunction: false,
     },

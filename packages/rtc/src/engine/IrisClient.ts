@@ -264,7 +264,9 @@ export class IrisClient {
         remoteUserPackage.connection?.channelId == this.connection?.channelId &&
         remoteUserPackage.connection?.localUid == this.connection?.localUid
       ) {
-        this._engine.irisClientManager.remoteUserPackages.splice(i, 1);
+        this._engine.irisClientManager.removeRemoteUserPackage(
+          remoteUserPackage.uid
+        );
         i--;
       }
     }
