@@ -346,8 +346,8 @@ export class IrisClientManager {
         this._engine.rtcEngineEventHandler.onNetworkQualityEx(
           connection,
           remoteUserPackage.uid as number,
-          stats[remoteUserPackage.uid].downlinkNetworkQuality,
-          stats[remoteUserPackage.uid].uplinkNetworkQuality
+          stats[remoteUserPackage.uid]?.downlinkNetworkQuality,
+          stats[remoteUserPackage.uid]?.uplinkNetworkQuality
         );
       }, this._engine.globalState.networkQualityInterval);
       this._engine.addIrisInterval(
