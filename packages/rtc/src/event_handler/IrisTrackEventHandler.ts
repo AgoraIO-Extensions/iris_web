@@ -49,7 +49,6 @@ export class IrisTrackEventHandler {
 
   private __onEventTrackEnded = null;
   private __onEventBeautyEffectOverload = null;
-  private __onEventVideoElementVisibleStatus2 = null;
   private __onEventFirstFrameDecoded = null;
   private __onEventVideoElementVisibleStatus = null;
   private __onEventSourceStateChange = null;
@@ -72,12 +71,12 @@ export class IrisTrackEventHandler {
         this.__onEventBeautyEffectOverload = this.onEventBeautyEffectOverload.bind(
           this
         );
-        this.__onEventVideoElementVisibleStatus2 = this.onEventVideoElementVisibleStatus2.bind(
+        this.__onEventVideoElementVisibleStatus = this.onEventVideoElementVisibleStatus.bind(
           this
         );
         this._track.on(
           'video-element-visible-status',
-          this.__onEventVideoElementVisibleStatus2
+          this.__onEventVideoElementVisibleStatus
         );
         break;
       case 'IRemoteTrack':
@@ -141,11 +140,12 @@ export class IrisTrackEventHandler {
   }
 
   onEventVideoElementVisibleStatus(data?: CheckVideoVisibleResult): void {
-    //目前没有找到对应的回调
-  }
-
-  onEventVideoElementVisibleStatus2(data?: CheckVideoVisibleResult): void {
-    //目前没有找到对应的回调
+    this._engine.rtcEngineEventHandler.onFirstLocalVideoFrame(
+      this._videoSourceType as NATIVE_RTC.VIDEO_SOURCE_TYPE,
+      null,
+      null,
+      null
+    );
   }
 
   onEventFirstFrameDecoded() {
@@ -218,7 +218,7 @@ export class IrisTrackEventHandler {
       track.off('track-ended', this.__onEventTrackEnded);
       track.off(
         'video-element-visible-status',
-        this.__onEventVideoElementVisibleStatus2
+        this.__onEventVideoElementVisibleStatus
       );
     } else if (this._trackType == 'IRemoteTrack') {
       let track = this._track as IRemoteTrack;

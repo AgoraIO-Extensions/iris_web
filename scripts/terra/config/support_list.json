@@ -42,6 +42,7 @@
   "agora::rtc::IRtcEngineEventHandler.onVideoDeviceStateChanged",
   "agora::rtc::IRtcEngineEventHandler.onAudioDeviceStateChanged",
   "agora::rtc::IRtcEngineEventHandler.onNetworkQuality",
+  "agora::rtc::IRtcEngineEventHandler.onFirstLocalVideoFrame",
   "agora::rtc::IRtcEngineEventHandler.onRemoteSubscribeFallbackToAudioOnly",
   "agora::rtc::IRtcEngineEventHandler.onChannelMediaRelayStateChanged",
   "agora::rtc::IRtcEngineEventHandler.onChannelMediaRelayEvent",

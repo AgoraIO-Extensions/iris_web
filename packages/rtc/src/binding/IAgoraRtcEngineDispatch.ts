@@ -265,8 +265,20 @@ export class IRtcEngineEventHandler {
     height: number,
     elapsed: number
   ): void {
-    AgoraConsole.warn('onFirstLocalVideoFrame not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      source,
+      width,
+      height,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onFirstLocalVideoFrame');
+
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onFirstLocalVideoFrame eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onFirstLocalVideoFramePublished(
