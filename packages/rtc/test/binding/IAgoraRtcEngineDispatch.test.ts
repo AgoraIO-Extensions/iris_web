@@ -356,9 +356,6 @@ describe('IRtcEngineEventHandler', () => {
     let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest.spyOn(eventHandler, 'eventKey');
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
     eventHandler.onFirstLocalVideoFrame(
       undefined,
       undefined,
@@ -367,13 +364,9 @@ describe('IRtcEngineEventHandler', () => {
     );
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
-    ).toBeCalledTimes(0);
-    expect(eventHandler.eventKey).toBeCalledTimes(0);
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    ).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledTimes(1);
+    expect(eventHandler.eventKey).toBeCalledWith('onFirstLocalVideoFrame');
   });
   test('onFirstLocalVideoFramePublished impl call', async () => {
     let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
