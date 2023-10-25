@@ -73,7 +73,9 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
   }
 
   onRejoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void {
-    AgoraConsole.warn('onRejoinChannelSuccess not supported in this platform!');
+    AgoraConsole.warn(
+      'onRejoinChannelSuccessEx not supported in this platform!'
+    );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -84,7 +86,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     delay: number,
     lost: number
   ): void {
-    AgoraConsole.warn('onAudioQuality not supported in this platform!');
+    AgoraConsole.warn('onAudioQualityEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -126,7 +128,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
   }
 
   onRtcStatsEx(connection: RtcConnection, stats: RtcStats): void {
-    AgoraConsole.warn('onRtcStats not supported in this platform!');
+    AgoraConsole.warn('onRtcStatsEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -136,12 +138,26 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     txQuality: number,
     rxQuality: number
   ): void {
-    AgoraConsole.warn('onNetworkQuality not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      connection,
+      remoteUid,
+      txQuality,
+      rxQuality,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onNetworkQualityEx');
+
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onNetworkQualityEx eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onIntraRequestReceivedEx(connection: RtcConnection): void {
-    AgoraConsole.warn('onIntraRequestReceived not supported in this platform!');
+    AgoraConsole.warn(
+      'onIntraRequestReceivedEx not supported in this platform!'
+    );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -177,7 +193,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     height: number,
     rotation: number
   ): void {
-    AgoraConsole.warn('onVideoSizeChanged not supported in this platform!');
+    AgoraConsole.warn('onVideoSizeChangedEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -189,7 +205,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     elapsed: number
   ): void {
     AgoraConsole.warn(
-      'onRemoteVideoStateChanged not supported in this platform!'
+      'onRemoteVideoStateChangedEx not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -301,7 +317,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     enabled: boolean
   ): void {
-    AgoraConsole.warn('onUserEnableVideo not supported in this platform!');
+    AgoraConsole.warn('onUserEnableVideoEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -346,7 +362,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
   }
 
   onLocalAudioStatsEx(connection: RtcConnection, stats: LocalAudioStats): void {
-    AgoraConsole.warn('onLocalAudioStats not supported in this platform!');
+    AgoraConsole.warn('onLocalAudioStatsEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -354,7 +370,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     connection: RtcConnection,
     stats: RemoteAudioStats
   ): void {
-    AgoraConsole.warn('onRemoteAudioStats not supported in this platform!');
+    AgoraConsole.warn('onRemoteAudioStatsEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -362,7 +378,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     connection: RtcConnection,
     stats: RemoteVideoStats
   ): void {
-    AgoraConsole.warn('onRemoteVideoStats not supported in this platform!');
+    AgoraConsole.warn('onRemoteVideoStatsEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -416,7 +432,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     length: number,
     sentTs: number
   ): void {
-    AgoraConsole.warn('onStreamMessage not supported in this platform!');
+    AgoraConsole.warn('onStreamMessageEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -428,7 +444,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     missed: number,
     cached: number
   ): void {
-    AgoraConsole.warn('onStreamMessageError not supported in this platform!');
+    AgoraConsole.warn('onStreamMessageErrorEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -451,7 +467,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     reason: LICENSE_ERROR_TYPE
   ): void {
     AgoraConsole.warn(
-      'onLicenseValidationFailure not supported in this platform!'
+      'onLicenseValidationFailureEx not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -476,7 +492,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     elapsed: number
   ): void {
     AgoraConsole.warn(
-      'onFirstLocalAudioFramePublished not supported in this platform!'
+      'onFirstLocalAudioFramePublishedEx not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -527,7 +543,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     error: LOCAL_AUDIO_STREAM_ERROR
   ): void {
     AgoraConsole.warn(
-      'onLocalAudioStateChanged not supported in this platform!'
+      'onLocalAudioStateChangedEx not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -540,13 +556,13 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     elapsed: number
   ): void {
     AgoraConsole.warn(
-      'onRemoteAudioStateChanged not supported in this platform!'
+      'onRemoteAudioStateChangedEx not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onActiveSpeakerEx(connection: RtcConnection, uid: number): void {
-    AgoraConsole.warn('onActiveSpeaker not supported in this platform!');
+    AgoraConsole.warn('onActiveSpeakerEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -578,7 +594,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     currentRole: CLIENT_ROLE_TYPE
   ): void {
     AgoraConsole.warn(
-      'onClientRoleChangeFailed not supported in this platform!'
+      'onClientRoleChangeFailedEx not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -591,7 +607,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     rxKBitRate: number
   ): void {
     AgoraConsole.warn(
-      'onRemoteAudioTransportStats not supported in this platform!'
+      'onRemoteAudioTransportStatsEx not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -604,7 +620,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     rxKBitRate: number
   ): void {
     AgoraConsole.warn(
-      'onRemoteVideoTransportStats not supported in this platform!'
+      'onRemoteVideoTransportStatsEx not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -635,7 +651,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     action: WLACC_SUGGEST_ACTION,
     wlAccMsg: string
   ): void {
-    AgoraConsole.warn('onWlAccMessage not supported in this platform!');
+    AgoraConsole.warn('onWlAccMessageEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -644,12 +660,12 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     currentStats: WlAccStats,
     averageStats: WlAccStats
   ): void {
-    AgoraConsole.warn('onWlAccStats not supported in this platform!');
+    AgoraConsole.warn('onWlAccStatsEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onNetworkTypeChangedEx(connection: RtcConnection, type: NETWORK_TYPE): void {
-    AgoraConsole.warn('onNetworkTypeChanged not supported in this platform!');
+    AgoraConsole.warn('onNetworkTypeChangedEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -677,7 +693,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     success: boolean,
     reason: UPLOAD_ERROR_REASON
   ): void {
-    AgoraConsole.warn('onUploadLogResult not supported in this platform!');
+    AgoraConsole.warn('onUploadLogResultEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -686,7 +702,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     remoteUid: number,
     userAccount: string
   ): void {
-    AgoraConsole.warn('onUserAccountUpdated not supported in this platform!');
+    AgoraConsole.warn('onUserAccountUpdatedEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -698,7 +714,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     height: number,
     errCode: number
   ): void {
-    AgoraConsole.warn('onSnapshotTaken not supported in this platform!');
+    AgoraConsole.warn('onSnapshotTakenEx not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -709,7 +725,7 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     tracingInfo: VideoRenderingTracingInfo
   ): void {
     AgoraConsole.warn(
-      'onVideoRenderingTracingResult not supported in this platform!'
+      'onVideoRenderingTracingResultEx not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
