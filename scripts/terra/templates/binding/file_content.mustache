@@ -39,7 +39,7 @@ export class {{name}} {{#base_clazzs}}extends {{.}}{{/base_clazzs}}{
       this.notifyEvent(eventParam);
       {{/user_data.isSupport}}
       {{^user_data.isSupport}}
-      AgoraConsole.warn('{{name}} not supported in this platform!');
+      AgoraConsole.warn('{{name}}{{user_data._prefix}} not supported in this platform!');
       this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
       {{/user_data.isSupport}}
     }
