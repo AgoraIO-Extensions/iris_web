@@ -1,5 +1,7 @@
 # IRIS_WEB
 
+## [0.3.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.2.0-build.2...v0.3.0) (2023-10-25)
+
 ## [0.2.0-build.2](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.1.2-dev.2...v0.2.0-build.2) (2023-10-25)
 
 
