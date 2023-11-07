@@ -4,20 +4,22 @@
   "description": "generate code by terra",
   "license": "MIT",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
     "build": "terra",
-    "terra": "pnpm terra-types && pnpm terra-binding",
+    "terra": "yarn terra-types && yarn terra-binding",
     "terra-types": "sh terra-types.sh",
     "terra-binding": "sh terra-binding.sh"
   },
   "dependencies": {
-    "@agoraio-extensions/cxx-parser": "latest",
-    "@agoraio-extensions/terra": "latest",
-    "@agoraio-extensions/terra-core": "latest",
-    "@agoraio-extensions/terra_shared_configs": "git+ssh://git@github.com:AgoraIO-Extensions/terra_shared_configs.git",
+    "@agoraio-extensions/cxx-parser": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=cxx-parser",
+    "@agoraio-extensions/terra": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=terra",
+    "@agoraio-extensions/terra-core": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=terra-core",
+    "@agoraio-extensions/terra_shared_configs": "git@github.com:AgoraIO-Extensions/terra_shared_configs.git#head=dev/fix-ts-default-export-error",
+    "@types/node": "^18.17.9",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
-  }
+  },
+  "packageManager": "yarn@4.0.1"
 }

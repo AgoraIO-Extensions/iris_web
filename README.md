@@ -31,6 +31,14 @@ add the `iris-web-rtc_x.x.x-x.x.js` to your html `srcipt`, e.g.,
 ></script>
 ```
 
+## Terra Environment
+
+pnpm install-terra (first time only)
+
+## Code Generate
+
+pnpm terra
+
 ## License
 
 The project is under the MIT license.

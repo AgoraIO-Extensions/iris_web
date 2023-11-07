@@ -7,7 +7,8 @@
     "test": "pnpm -F iris-web-rtc run test",
     "lint": "eslint --ext .ts,.tsx . && prettier --check .",
     "lint:fix": "eslint --fix --ext .ts,.tsx . && prettier --write .",
-    "terra": "pnpm -F terra-generate run terra",
+    "install-terra": "cd scripts/terra && sh install.sh",
+    "terra": "cd scripts/terra &&yarn terra",
     "start": "sh ./scripts/build_local_dev.sh",
     "release": "release-it"
   },
@@ -27,13 +28,13 @@
     }
   },
   "devDependencies": {
+    "@release-it/conventional-changelog": "^7.0.1",
     "@types/eslint": "^8.44.2",
-    "@types/node": "^18.17.9",
     "@types/js-yaml": "^4.0.8",
+    "@types/node": "^18.17.9",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.4.1",
-    "tsup": "^7.1.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-auto-import": "^0.1.1",
     "eslint-plugin-import": "^2.27.5",
@@ -42,7 +43,7 @@
     "js-yaml": "^4.1.0",
     "prettier": "^2.0.5",
     "release-it": "^16.1.3",
-    "@release-it/conventional-changelog": "^7.0.1"
+    "tsup": "^7.1.0"
   },
   "release-it": {
     "git": {
