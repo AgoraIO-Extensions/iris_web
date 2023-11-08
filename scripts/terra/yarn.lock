@@ -7,7 +7,7 @@ __metadata:
 
 "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=cxx-parser":
   version: 0.1.9
-  resolution: "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#workspace=cxx-parser&commit=523f4512464141e19ba12ed817ca47e801145d20"
+  resolution: "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#workspace=cxx-parser&commit=1aa9ab532f4a324001e75aea3a7c140ad451ed88"
   dependencies:
     glob: "npm:^10.3.4"
     yaml: "npm:^2.1.3"
@@ -19,14 +19,14 @@ __metadata:
 
 "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=terra-core":
   version: 0.1.5
-  resolution: "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra-core&commit=523f4512464141e19ba12ed817ca47e801145d20"
+  resolution: "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra-core&commit=1aa9ab532f4a324001e75aea3a7c140ad451ed88"
   checksum: 8020c45db48fde6359ff1692f71a9c3cf5eb7613bea2e92edf3bd8a81e2ae82d351df68cad4cf8911fad4d0488b115daec183bfc2cffc7778bbb6ddaf9531cc6
   languageName: node
   linkType: hard
 
 "@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=terra":
   version: 0.1.5
-  resolution: "@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra&commit=523f4512464141e19ba12ed817ca47e801145d20"
+  resolution: "@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra&commit=1aa9ab532f4a324001e75aea3a7c140ad451ed88"
   dependencies:
     commander: "npm:^9.4.1"
     mustache: "npm:^4.2.0"
@@ -35,7 +35,7 @@ __metadata:
     "@agoraio-extensions/terra-core": "*"
   bin:
     terra: ./bin/terra
-  checksum: a9ba9adc556a0b37adbe8b9e5483e6876e7134c70d63c19a7075a0a7ebd649a06b04de64479d8eb4e666a7869d25e039e40a17991df3be463f1cac933a76f6f2
+  checksum: d420b9a57f001928a3e1ff86941284d162ac7c4f963f96dfc032e78093c378e0201faabd7f26c7e094156c040a852e76a07a1f1eee60ea013f64312ef5b15cca
   languageName: node
   linkType: hard
 
@@ -133,11 +133,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:^18.17.9":
-  version: 18.18.8
-  resolution: "@types/node@npm:18.18.8"
+  version: 18.18.9
+  resolution: "@types/node@npm:18.18.9"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 6a8592675bfc0895c0a3ed1b942344d56538c178c0acab8fcbaf069a6bdeef6f8a416d5aa297a8ced34232919caf7658a4dd4eabf33a9ae1a755eeef9ea8e681
+  checksum: 8d58fba5eede0df009412ee188bc96f4baf340f4fafbda1bc66fb680fa775aedc88f0cb154a2455966443d9538af402fff022fb0632bddb1bd0648e5a86e5db9
   languageName: node
   linkType: hard
 
