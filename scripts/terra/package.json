@@ -13,9 +13,9 @@
     "terra-binding": "sh terra-binding.sh"
   },
   "dependencies": {
-    "@agoraio-extensions/cxx-parser": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=cxx-parser",
-    "@agoraio-extensions/terra": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=terra",
-    "@agoraio-extensions/terra-core": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=terra-core",
+    "@agoraio-extensions/cxx-parser": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/add-tsconfig&workspace=cxx-parser",
+    "@agoraio-extensions/terra": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/add-tsconfig&workspace=terra",
+    "@agoraio-extensions/terra-core": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/add-tsconfig&workspace=terra-core",
     "@agoraio-extensions/terra_shared_configs": "git@github.com:AgoraIO-Extensions/terra_shared_configs.git#head=dev/fix-ts-default-export-error",
     "@types/node": "^18.17.9",
     "ts-node": "^10.9.1",

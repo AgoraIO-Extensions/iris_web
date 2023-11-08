@@ -5,6 +5,18 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
+"@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#head=dev/add-tsconfig&workspace=cxx-parser":
+  version: 0.1.9
+  resolution: "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#workspace=cxx-parser&commit=d1572592322bfd2b20885b25ed20114e06bee371"
+  dependencies:
+    glob: "npm:^10.3.4"
+    yaml: "npm:^2.1.3"
+  peerDependencies:
+    "@agoraio-extensions/terra-core": "*"
+  checksum: 76de086e8ac273cb341cc6f9968f797580499396c5dc4409a5bd321892013edb04afb40448922d86ea2bb2bed815831792aa8f5aae1476cd862a86ddcaa3c341
+  languageName: node
+  linkType: hard
+
 "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=cxx-parser":
   version: 0.1.9
   resolution: "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#workspace=cxx-parser&commit=1aa9ab532f4a324001e75aea3a7c140ad451ed88"
@@ -17,6 +29,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#head=dev/add-tsconfig&workspace=terra-core":
+  version: 0.1.5
+  resolution: "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra-core&commit=d1572592322bfd2b20885b25ed20114e06bee371"
+  checksum: 673c3b6246e097d180d40a899fdce23fdad80aa92f2b593173baba2aecc5d103a2d74ac346486c6a2349a1016ade82d48dd618c0860e6a29c680f471d1aea06a
+  languageName: node
+  linkType: hard
+
 "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=terra-core":
   version: 0.1.5
   resolution: "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra-core&commit=1aa9ab532f4a324001e75aea3a7c140ad451ed88"
@@ -24,9 +43,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=terra":
+"@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#head=dev/add-tsconfig&workspace=terra":
   version: 0.1.5
-  resolution: "@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra&commit=1aa9ab532f4a324001e75aea3a7c140ad451ed88"
+  resolution: "@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra&commit=d1572592322bfd2b20885b25ed20114e06bee371"
   dependencies:
     commander: "npm:^9.4.1"
     mustache: "npm:^4.2.0"
@@ -35,7 +54,7 @@ __metadata:
     "@agoraio-extensions/terra-core": "*"
   bin:
     terra: ./bin/terra
-  checksum: d420b9a57f001928a3e1ff86941284d162ac7c4f963f96dfc032e78093c378e0201faabd7f26c7e094156c040a852e76a07a1f1eee60ea013f64312ef5b15cca
+  checksum: f86bfecb341fec2016aa0f2b7f65f4fce8f0e5eeb481929cd7d99088e13bc2443ea24f8445982d56ea24cad253cfd83e81d0f98e5ffd5d3a757367905d1d2cf9
   languageName: node
   linkType: hard
 
@@ -454,9 +473,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "terra-generate@workspace:."
   dependencies:
-    "@agoraio-extensions/cxx-parser": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=cxx-parser"
-    "@agoraio-extensions/terra": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=terra"
-    "@agoraio-extensions/terra-core": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-ts-default-export-error&workspace=terra-core"
+    "@agoraio-extensions/cxx-parser": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/add-tsconfig&workspace=cxx-parser"
+    "@agoraio-extensions/terra": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/add-tsconfig&workspace=terra"
+    "@agoraio-extensions/terra-core": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/add-tsconfig&workspace=terra-core"
     "@agoraio-extensions/terra_shared_configs": "git@github.com:AgoraIO-Extensions/terra_shared_configs.git#head=dev/fix-ts-default-export-error"
     "@types/node": "npm:^18.17.9"
     ts-node: "npm:^10.9.1"
