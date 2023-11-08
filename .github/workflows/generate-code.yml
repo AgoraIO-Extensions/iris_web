@@ -25,6 +25,7 @@ jobs:
 
         run: |
           pnpm install-terra
+          yarn config set nodeLinker=node-modules
           export LLVM_DOWNLOAD_URL=https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz
           pnpm terra
 
