@@ -33,6 +33,7 @@ add the `iris-web-rtc_x.x.x-x.x.js` to your html `srcipt`, e.g.,
 
 ## Terra Environment
 
+yarn config set httpsProxy="http://127.0.0.1:7890" (change to your proxy)
 pnpm install-terra (first time only)
 
 ## Code Generate
