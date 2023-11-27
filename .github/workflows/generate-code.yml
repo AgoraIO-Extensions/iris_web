@@ -25,9 +25,10 @@ jobs:
       - name: Generate
         run: |
           pnpm install
-          pnpm install-terra
+          cd scripts/terra
+          yarn
           export LLVM_DOWNLOAD_URL=https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-          pnpm terra
+          yarn terra
 
       - name: Create PR
         uses: AgoraIO-Extensions/actions/.github/actions/pr@main

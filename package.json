@@ -7,7 +7,6 @@
     "test": "pnpm -F iris-web-rtc run test",
     "lint": "eslint --ext .ts,.tsx . && prettier --check .",
     "lint:fix": "eslint --fix --ext .ts,.tsx . && prettier --write .",
-    "install-terra": "cd scripts/terra && sh install.sh",
     "terra": "cd scripts/terra &&yarn terra",
     "start": "sh ./scripts/build_local_dev.sh",
     "release": "release-it"
