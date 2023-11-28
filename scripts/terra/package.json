@@ -12,9 +12,9 @@
     "terra-binding": "sh terra-binding.sh"
   },
   "dependencies": {
-    "@agoraio-extensions/cxx-parser": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/ci-test&workspace=cxx-parser",
-    "@agoraio-extensions/terra": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/ci-test&workspace=terra",
-    "@agoraio-extensions/terra-core": "git@github.com:AgoraIO-Extensions/terra.git#head=dev/ci-test&workspace=terra-core",
+    "@agoraio-extensions/cxx-parser": "git@github.com:AgoraIO-Extensions/terra.git#head=main&workspace=cxx-parser",
+    "@agoraio-extensions/terra": "git@github.com:AgoraIO-Extensions/terra.git#head=main&workspace=terra",
+    "@agoraio-extensions/terra-core": "git@github.com:AgoraIO-Extensions/terra.git#head=main&workspace=terra-core",
     "@agoraio-extensions/terra_shared_configs": "git@github.com:AgoraIO-Extensions/terra_shared_configs.git#head=main",
     "@types/js-yaml": "^4.0.8",
     "@types/node": "^18.17.9",
