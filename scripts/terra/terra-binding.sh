@@ -10,7 +10,7 @@ find ${OUTPUT_DIR}/test/binding -type f -delete
 
 
 
-npm run build -- run \
+npm exec terra -- run \
     --config ${MY_PATH}/config/binding_configs.yaml \
     --output-dir=${OUTPUT_DIR} \
 
