@@ -54,6 +54,11 @@ export function binding(parseResult: ParseResult) {
       return node.__TYPE === CXXTYPE.Clazz;
     });
 
+    //移除没有名字的node
+    cxxfile.nodes = cxxfile.nodes.filter((node) => {
+      return node.name !== '';
+    });
+
     cxxfile.nodes = nodes.map((node: CXXTerraNode) => {
       if (node.name === 'IRtcEngine') {
         // debugger;

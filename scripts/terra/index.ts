@@ -47,6 +47,11 @@ export default function (
     };
     cxxfile.user_data = cxxUserData;
 
+    //移除没有名字的node
+    cxxfile.nodes = cxxfile.nodes.filter((node) => {
+      return node.name !== '';
+    });
+
     cxxfile.nodes = cxxfile.nodes.map((node: CXXTerraNode) => {
       let isCallback = isMatch(node.name, 'isCallback');
 
