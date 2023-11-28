@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 set -e
 set -x
-export LLVM_DOWNLOAD_URL=https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz
 MY_PATH=$(realpath $(dirname "$0"))
 OUTPUT_DIR=$(realpath ${MY_PATH}/../../packages/@iris/rtc/generate)
-
+echo ${LLVM_DOWNLOAD_URL}
 find ${OUTPUT_DIR} -type f -delete
 
 # packages/@iris/rtc/generate
