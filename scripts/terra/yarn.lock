@@ -7,13 +7,13 @@ __metadata:
 
 "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-build-script&workspace=cxx-parser":
   version: 0.1.9
-  resolution: "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#workspace=cxx-parser&commit=33c6530e19ea310b97d7509067f0afa6acfda14c"
+  resolution: "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#workspace=cxx-parser&commit=d301ddc7c8c838ba8f38d034c7308106d1a05d58"
   dependencies:
     glob: "npm:^10.3.4"
     yaml: "npm:^2.1.3"
   peerDependencies:
     "@agoraio-extensions/terra-core": "*"
-  checksum: c5726764b48c7188b5904747a95b8d6875c6bd16600a630cccbc1891d7e2b079bda95eb9fcfc0b8fa709b7a8562ee1576641d77b2e7ac4e4636027dafbc38720
+  checksum: e2d5fb569d660dce54aa0ff58b1daaa20ccff5158ae91da59d0613982ef24903b0c1b13af37f1ce6123113eb3f20734fcd4640348cac872d9a6d42453c7834f8
   languageName: node
   linkType: hard
 
@@ -31,7 +31,7 @@ __metadata:
 
 "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-build-script&workspace=terra-core":
   version: 0.1.5
-  resolution: "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra-core&commit=33c6530e19ea310b97d7509067f0afa6acfda14c"
+  resolution: "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra-core&commit=d301ddc7c8c838ba8f38d034c7308106d1a05d58"
   checksum: d7113225ab004b2ff09de3c3718262925dc335f5ffb8ac2800bb96bfb2ad67a307063a425bd14654356d804586a785efe3856462e1087472463eb233a6793e44
   languageName: node
   linkType: hard
@@ -45,7 +45,7 @@ __metadata:
 
 "@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#head=dev/fix-build-script&workspace=terra":
   version: 0.1.5
-  resolution: "@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra&commit=33c6530e19ea310b97d7509067f0afa6acfda14c"
+  resolution: "@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra&commit=d301ddc7c8c838ba8f38d034c7308106d1a05d58"
   dependencies:
     commander: "npm:^9.4.1"
     mustache: "npm:^4.2.0"
