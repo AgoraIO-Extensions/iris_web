@@ -31,6 +31,12 @@ add the `iris-web-rtc_x.x.x-x.x.js` to your html `srcipt`, e.g.,
 ></script>
 ```
 
+## Code Generate
+
+cd scripts/terra
+yarn
+yarn terra
+
 ## License
 
 The project is under the MIT license.

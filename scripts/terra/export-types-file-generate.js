@@ -22,7 +22,7 @@ const outputPath = args[0].substring(12);
 console.log(outputPath);
 
 const fileContents = fs.readFileSync(
-  __dirname + '/terra/config/types_configs.yaml',
+  __dirname + '/config/types_configs.yaml',
   'utf8'
 );
 

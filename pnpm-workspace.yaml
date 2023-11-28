@@ -3,4 +3,3 @@ packages:
   - packages/core
   - packages/@iris/rtc
   - packages/fake/rtc
-  - scripts/terra
