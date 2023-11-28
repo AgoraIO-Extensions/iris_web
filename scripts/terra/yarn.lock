@@ -7,13 +7,13 @@ __metadata:
 
 "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#head=dev/ci-test&workspace=cxx-parser":
   version: 0.1.9
-  resolution: "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#workspace=cxx-parser&commit=f5f19611ea6c4206bc2d1e1cca1218aa7c59a4e0"
+  resolution: "@agoraio-extensions/cxx-parser@git@github.com:AgoraIO-Extensions/terra.git#workspace=cxx-parser&commit=80ae9f0f90424cff029e4e6c1edc4275ed544ec9"
   dependencies:
     glob: "npm:^10.3.4"
     yaml: "npm:^2.1.3"
   peerDependencies:
     "@agoraio-extensions/terra-core": "*"
-  checksum: dc7ae569e5da94068c20c614f67b4980f4506f3dd5735cdb3c2bb8c71de3c77fb2f0f51ea6a9bf257fcc19bb7ff0c1fc655c1556587b43e49af83335aff0d751
+  checksum: 8bdfcf28bb025512aa5afdb8153ca222a98c081b0e5f3082a0318f64843a11825e5cbe49799bd1ecfa9f10dc24844abc6637938329ad0ee7b4bc0ef2cf92f883
   languageName: node
   linkType: hard
 
@@ -31,7 +31,7 @@ __metadata:
 
 "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#head=dev/ci-test&workspace=terra-core":
   version: 0.1.5
-  resolution: "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra-core&commit=f5f19611ea6c4206bc2d1e1cca1218aa7c59a4e0"
+  resolution: "@agoraio-extensions/terra-core@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra-core&commit=80ae9f0f90424cff029e4e6c1edc4275ed544ec9"
   checksum: d7113225ab004b2ff09de3c3718262925dc335f5ffb8ac2800bb96bfb2ad67a307063a425bd14654356d804586a785efe3856462e1087472463eb233a6793e44
   languageName: node
   linkType: hard
@@ -45,7 +45,7 @@ __metadata:
 
 "@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#head=dev/ci-test&workspace=terra":
   version: 0.1.5
-  resolution: "@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra&commit=f5f19611ea6c4206bc2d1e1cca1218aa7c59a4e0"
+  resolution: "@agoraio-extensions/terra@git@github.com:AgoraIO-Extensions/terra.git#workspace=terra&commit=80ae9f0f90424cff029e4e6c1edc4275ed544ec9"
   dependencies:
     commander: "npm:^9.4.1"
     mustache: "npm:^4.2.0"
