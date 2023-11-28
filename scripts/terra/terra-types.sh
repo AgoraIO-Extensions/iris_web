@@ -3,7 +3,6 @@ set -e
 set -x
 MY_PATH=$(realpath $(dirname "$0"))
 OUTPUT_DIR=$(realpath ${MY_PATH}/../../packages/@iris/rtc/generate)
-echo ${LLVM_DOWNLOAD_URL}
 find ${OUTPUT_DIR} -type f -delete
 
 # packages/@iris/rtc/generate

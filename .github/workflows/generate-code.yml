@@ -29,11 +29,9 @@ jobs:
           generate-code: true
           generate-comment: false
           generate-code-command: |
+            echo ${LLVM_DOWNLOAD_URL}
             sh terra-types.sh
             sh terra-binding.sh
-        env:
-          LLVM_DOWNLOAD_URL: |
-            https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.6/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04.tar.xz
 
       - name: Create PR
         uses: AgoraIO-Extensions/actions/.github/actions/pr@main
