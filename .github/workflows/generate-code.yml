@@ -29,7 +29,6 @@ jobs:
           generate-code: true
           generate-comment: false
           generate-code-command: |
-            echo ${LLVM_DOWNLOAD_URL}
             sh terra-types.sh
             sh terra-binding.sh
 
