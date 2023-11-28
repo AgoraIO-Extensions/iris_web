@@ -29,7 +29,8 @@ jobs:
           generate-code: true
           generate-comment: false
           generate-code-command: |
-            yarn terra
+            sh terra-types.sh
+            sh terra-binding.sh
 
       - name: Create PR
         uses: AgoraIO-Extensions/actions/.github/actions/pr@main
