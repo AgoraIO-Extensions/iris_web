@@ -1,3 +1,7 @@
+### VisualStudioCode template
+.vscode
+*.code-workspace
+
 *.txt
 *.pcm
 **/coverage/*
@@ -16,3 +20,4 @@ nohup.out
 js/
 docs/
 __temp
+
