@@ -13,6 +13,7 @@
   "agora::rtc::IRtcEngine.joinChannel2",
   "agora::rtc::IRtcEngine.updateChannelMediaOptions",
   "agora::rtc::IRtcEngine.enableAudioVolumeIndication",
+  "agora::rtc::IRtcEngine.setParameters",
   "agora::rtc::IRtcEngine.leaveChannel",
   "agora::rtc::IRtcEngine.leaveChannel2",
   "agora::rtc::IRtcEngine.enableLocalAudio",

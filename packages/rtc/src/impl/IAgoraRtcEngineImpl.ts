@@ -3303,11 +3303,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     );
   }
   setParameters(parameters: string): CallApiReturnType {
-    AgoraConsole.warn('setParameters not supported in this platform!');
-    return this._engine.returnResult(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    let fun = async () => {
+      try {
+        let json = JSON.parse(parameters);
+        let keyList = Object.keys(json);
+        for (let i = 0; i < keyList.length; i++) {
+          (this._engine.globalState.AgoraRTC as any).setParameter(
+            keyList[i],
+            json[keyList[i]]
+          );
+        }
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
   }
   startMediaRenderingTracing(): CallApiReturnType {
     AgoraConsole.warn(

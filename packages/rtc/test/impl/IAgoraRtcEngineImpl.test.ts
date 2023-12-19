@@ -838,4 +838,13 @@ describe('IAgoraRtcEngineImpl', () => {
     });
     expect(remoteUsers[0].audioTrack).not.toBeUndefined();
   });
+  test('setParameters', async () => {
+    let params = JSON.stringify({
+      'rtc.audio.force_bluetooth_a2dp': true,
+      'rtc.video.test': [true, false],
+    });
+    await callIris(apiEnginePtr, 'RtcEngine_setParameters', {
+      parameters: params,
+    });
+  });
 });

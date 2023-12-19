@@ -11971,15 +11971,37 @@ describe('IRtcEngine', () => {
     );
   });
 
+  test('setParameters parameter', async () => {
+    let nParam = {
+      parameters: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngine_setParameters',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
+  });
+
   test('setParameters impl call', async () => {
     jest
       .spyOn(
         irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
         'setParameters'
       )
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       parameters: 'test',
@@ -11996,12 +12018,10 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl.setParameters
-    ).toBeCalledTimes(0);
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl.setParameters
+    ).toBeCalledWith('test');
   });
 
   test('startMediaRenderingTracing impl call', async () => {

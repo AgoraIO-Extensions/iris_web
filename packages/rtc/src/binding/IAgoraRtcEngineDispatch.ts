@@ -2758,8 +2758,11 @@ export class IRtcEngineDispatch {
   }
 
   setParameters(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('setParameters not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let parameters = obj.parameters;
+    if (parameters === undefined) throw 'parameters is undefined';
+
+    return this._impl.setParameters(parameters);
   }
 
   startMediaRenderingTracing(): CallApiReturnType {
