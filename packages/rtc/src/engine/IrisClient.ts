@@ -71,6 +71,12 @@ export class IrisClient {
         irisClientState.clientRoleOptions
       );
     }
+    //如果调用过engine.setChannelProfile,整个频道的mode都将被这个值覆盖
+    if (this._engine.globalState.channelProfile != null) {
+      config.mode = AgoraTranslate.NATIVE_RTC_CHANNEL_PROFILE_TYPE2SDK_MODE(
+        this._engine.globalState.channelProfile
+      );
+    }
     return config;
   }
 

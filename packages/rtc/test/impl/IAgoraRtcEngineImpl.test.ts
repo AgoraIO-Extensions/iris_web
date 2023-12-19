@@ -3,7 +3,12 @@ import {
   FakeAgoraRTCWrapper,
 } from '@agoraio-extensions/agora-rtc-sdk-ng-fake';
 import * as NATIVE_RTC from '@iris/native-rtc-binding';
-import { AREAS, IAgoraRTC } from 'agora-rtc-sdk-ng';
+import {
+  AREAS,
+  IAgoraRTC,
+  ILocalAudioTrack,
+  ILocalTrack,
+} from 'agora-rtc-sdk-ng';
 
 import { IrisApiEngine, IrisCore } from 'iris-web-core';
 
@@ -15,6 +20,7 @@ import { AgoraConsole } from '../../src/util';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import {
+  TEST_REMOTE_UID,
   TEST_UID,
   callIris,
   callIrisWithoutCheck,
@@ -763,5 +769,73 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(rtcEngineImpl.stopEffect).toBeCalledTimes(
       bufferSourceAudioTrackPackageListLength
     );
+  });
+  test('setChannelProfile', async () => {
+    jest.spyOn(rtcEngineImpl, 'setChannelProfile');
+
+    let param = {
+      profile: 1,
+    };
+    await callIris(apiEnginePtr, 'RtcEngine_setChannelProfile', param);
+    expect(irisRtcEngine.globalState.channelProfile).toBe(param.profile);
+  });
+  test('muteLocalAudioStream', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteLocalAudioStream');
+    await joinChannel(apiEnginePtr, null);
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+    let localAudioTrackPackage = irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+      IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+    );
+    expect(localAudioTrackPackage.length).toBe(1);
+    expect(localAudioTrackPackage[0].track.isPlaying).toBe(true);
+    expect((localAudioTrackPackage[0].track as ILocalTrack).muted).toBe(false);
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteLocalAudioStream', {
+      mute: true,
+    });
+    expect((localAudioTrackPackage[0].track as ILocalTrack).muted).toBe(true);
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteLocalAudioStream', {
+      mute: false,
+    });
+    expect((localAudioTrackPackage[0].track as ILocalTrack).muted).toBe(false);
+  });
+  test('muteAllRemoteAudioStreams', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteAllRemoteAudioStreams');
+    await joinChannel(apiEnginePtr, null);
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+    let remoteUsers =
+      irisRtcEngine.irisClientManager.irisClientList[0]?.agoraRTCClient
+        .remoteUsers;
+    expect(remoteUsers[0].audioTrack.isPlaying).toBe(true);
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteAllRemoteAudioStreams', {
+      mute: true,
+    });
+    expect(remoteUsers[0].audioTrack).toBeUndefined();
+    await callIris(apiEnginePtr, 'RtcEngine_muteAllRemoteAudioStreams', {
+      mute: false,
+    });
+    expect(remoteUsers[0].audioTrack).not.toBeUndefined();
+  });
+  test('muteRemoteAudioStream', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteRemoteAudioStream');
+    await joinChannel(apiEnginePtr, null);
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+    let remoteUsers =
+      irisRtcEngine.irisClientManager.irisClientList[0]?.agoraRTCClient
+        .remoteUsers;
+    expect(remoteUsers[0].audioTrack.isPlaying).toBe(true);
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteAudioStream', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+    });
+    expect(remoteUsers[0].audioTrack).toBeUndefined();
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteAudioStream', {
+      mute: false,
+      uid: TEST_REMOTE_UID,
+    });
+    expect(remoteUsers[0].audioTrack).not.toBeUndefined();
   });
 });

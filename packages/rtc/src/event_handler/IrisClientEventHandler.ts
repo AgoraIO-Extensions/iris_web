@@ -304,6 +304,13 @@ export class IrisClientEventHandler {
           remoteUid,
           NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_AUDIO
         );
+        this._engine.rtcEngineEventHandler.onRemoteAudioStateChangedEx(
+          this._irisClient.connection,
+          remoteUid,
+          null,
+          NATIVE_RTC.REMOTE_AUDIO_STATE_REASON.REMOTE_AUDIO_REASON_REMOTE_MUTED,
+          null
+        );
         break;
       case 'mute-video':
         this._engine.rtcEngineEventHandler.onUserMuteVideoEx(
@@ -323,6 +330,14 @@ export class IrisClientEventHandler {
           this._irisClient.connection,
           remoteUid,
           false
+        );
+        this._engine.rtcEngineEventHandler.onRemoteAudioStateChangedEx(
+          this._irisClient.connection,
+          remoteUid,
+          null,
+          NATIVE_RTC.REMOTE_AUDIO_STATE_REASON
+            .REMOTE_AUDIO_REASON_REMOTE_UNMUTED,
+          null
         );
         break;
       case 'unmute-video':

@@ -79,6 +79,9 @@ export class IrisGlobalState {
     reportVad: false,
   };
 
+  channelProfile: NATIVE_RTC.CHANNEL_PROFILE_TYPE =
+    NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING;
+
   public autoSubscribeVideo: boolean = false;
 
   reset() {

@@ -2666,15 +2666,37 @@ describe('IRtcEngine', () => {
     );
   });
 
+  test('setChannelProfile parameter', async () => {
+    let nParam = {
+      profile: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngine_setChannelProfile',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
+  });
+
   test('setChannelProfile impl call', async () => {
     jest
       .spyOn(
         irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
         'setChannelProfile'
       )
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       profile: 'test',
@@ -2691,12 +2713,10 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl.setChannelProfile
-    ).toBeCalledTimes(0);
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl.setChannelProfile
+    ).toBeCalledWith('test');
   });
 
   test('setClientRole parameter', async () => {
@@ -3846,15 +3866,37 @@ describe('IRtcEngine', () => {
     ).toBeCalledWith('test');
   });
 
+  test('muteLocalAudioStream parameter', async () => {
+    let nParam = {
+      mute: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngine_muteLocalAudioStream',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
+  });
+
   test('muteLocalAudioStream impl call', async () => {
     jest
       .spyOn(
         irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
         'muteLocalAudioStream'
       )
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       mute: 'test',
@@ -3872,12 +3914,36 @@ describe('IRtcEngine', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
         .muteLocalAudioStream
-    ).toBeCalledTimes(0);
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .muteLocalAudioStream
+    ).toBeCalledWith('test');
+  });
+
+  test('muteAllRemoteAudioStreams parameter', async () => {
+    let nParam = {
+      mute: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngine_muteAllRemoteAudioStreams',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
   });
 
   test('muteAllRemoteAudioStreams impl call', async () => {
@@ -3886,9 +3952,6 @@ describe('IRtcEngine', () => {
         irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
         'muteAllRemoteAudioStreams'
       )
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       mute: 'test',
@@ -3906,12 +3969,11 @@ describe('IRtcEngine', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
         .muteAllRemoteAudioStreams
-    ).toBeCalledTimes(0);
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .muteAllRemoteAudioStreams
+    ).toBeCalledWith('test');
   });
 
   test('setDefaultMuteAllRemoteAudioStreams impl call', async () => {
@@ -3948,15 +4010,38 @@ describe('IRtcEngine', () => {
     );
   });
 
+  test('muteRemoteAudioStream parameter', async () => {
+    let nParam = {
+      uid: undefined,
+      mute: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngine_muteRemoteAudioStream',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
+  });
+
   test('muteRemoteAudioStream impl call', async () => {
     jest
       .spyOn(
         irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
         'muteRemoteAudioStream'
       )
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       uid: 'test',
@@ -3975,12 +4060,11 @@ describe('IRtcEngine', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
         .muteRemoteAudioStream
-    ).toBeCalledTimes(0);
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .muteRemoteAudioStream
+    ).toBeCalledWith('test', 'test');
   });
 
   test('muteLocalVideoStream impl call', async () => {
