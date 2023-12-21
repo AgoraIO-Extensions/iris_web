@@ -319,11 +319,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   setChannelProfile(
     profile: NATIVE_RTC.CHANNEL_PROFILE_TYPE
   ): CallApiReturnType {
-    AgoraConsole.warn('setChannelProfile not supported in this platform!');
-    return this._engine.returnResult(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    let processFunc = async () => {
+      // Return OK if already initialized.
+      if (profile == null || profile == undefined) {
+        return this._engine.returnResult(
+          false,
+          -NATIVE_RTC.ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT
+        );
+      }
+      this._engine.globalState.channelProfile = profile;
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
   }
 
   //可以在加入频道前后调用
@@ -354,8 +362,11 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         ));
 
       //todo1 需要确认这个api是不是会改变所有connection的role,目前只改变了irisClientList[0]的
-      //todo2 需要追加调用 muteLocalAudioStream 和 muteLocalVideoStream 修改发布状态。 这2个api都还没做
-
+      //todo2 需要追加调用 muteLocalVideoStream 修改发布状态。 这个api都还没做
+      if (role === NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE) {
+        this.muteLocalAudioStream(true);
+        // this.muteLocalVideoStream(true);
+      }
       //如果已经加入频道
       if (client?.channelName) {
         this._engine.rtcEngineEventHandler.onClientRoleChangedEx(
@@ -754,10 +765,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       //remote
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
-        NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
-        this._engine.irisClientManager.remoteUserPackages
-      );
+      this.muteAllRemoteAudioStreams(false);
 
       return this._engine.returnResult();
     };
@@ -783,10 +791,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       //remote
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
-        NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
-        this._engine.irisClientManager.remoteUserPackages
-      );
+      this.muteAllRemoteAudioStreams(true);
 
       return this._engine.returnResult();
     };
@@ -835,10 +840,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         this._engine.irisClientManager.localAudioTrackPackages
       );
 
+      this.muteLocalAudioStream(!enabled);
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
+  }
+  muteLocalAudioStream(mute: boolean): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-        enabled ? NotifyType.PUBLISH_TRACK : NotifyType.UNPUBLISH_TRACK,
-        this._engine.irisClientManager.localAudioTrackPackages,
-        this._engine.irisClientManager.irisClientList
+        mute ? NotifyType.MUTE_TRACK : NotifyType.UNMUTE_TRACK,
+        this._engine.irisClientManager.localAudioTrackPackages
       );
 
       return this._engine.returnResult();
@@ -846,20 +858,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  muteLocalAudioStream(mute: boolean): CallApiReturnType {
-    return this._engine.returnResult(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
-  }
   muteAllRemoteAudioStreams(mute: boolean): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteAllRemoteAudioStreams not supported in this platform!'
-    );
-    return this._engine.returnResult(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        mute
+          ? NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK
+          : NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
+        this._engine.irisClientManager.remoteUserPackages
+      );
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
   }
   setDefaultMuteAllRemoteAudioStreams(mute: boolean): CallApiReturnType {
     AgoraConsole.warn(
@@ -871,11 +882,21 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     );
   }
   muteRemoteAudioStream(uid: number, mute: boolean): CallApiReturnType {
-    AgoraConsole.warn('muteRemoteAudioStream not supported in this platform!');
-    return this._engine.returnResult(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      let remoteUserPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
+        uid
+      );
+      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        mute
+          ? NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK
+          : NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
+        [remoteUserPackage]
+      );
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
   }
   muteLocalVideoStream(mute: boolean): CallApiReturnType {
     AgoraConsole.warn('muteLocalVideoStream not supported in this platform!');
@@ -3284,11 +3305,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     );
   }
   setParameters(parameters: string): CallApiReturnType {
-    AgoraConsole.warn('setParameters not supported in this platform!');
-    return this._engine.returnResult(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    let fun = async () => {
+      try {
+        let json = JSON.parse(parameters);
+        let keyList = Object.keys(json);
+        for (let i = 0; i < keyList.length; i++) {
+          (this._engine.globalState.AgoraRTC as any).setParameter(
+            keyList[i],
+            json[keyList[i]]
+          );
+        }
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
   }
   startMediaRenderingTracing(): CallApiReturnType {
     AgoraConsole.warn(

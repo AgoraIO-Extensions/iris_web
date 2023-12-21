@@ -284,6 +284,18 @@ export class IrisClientManager {
     });
   }
 
+  getLocalVideoTrackPackageByConnection(
+    connection: NATIVE_RTC.RtcConnection
+  ): VideoTrackPackage[] {
+    return this.localVideoTrackPackages.filter((trackPackage) => {
+      return (
+        trackPackage?.irisClient?.connection?.channelId ===
+          connection.channelId &&
+        trackPackage?.irisClient?.connection?.localUid === connection.localUid
+      );
+    });
+  }
+
   addLocalAudioTrackPackage(audioTrackPackage: MultiAudioTrackPackage) {
     this.localAudioTrackPackages.push(audioTrackPackage);
     this.irisClientObserver.addAudioTrackPackageObserver(audioTrackPackage);
@@ -302,6 +314,18 @@ export class IrisClientManager {
       } else {
         return trackPackage.type == sourceType;
       }
+    });
+  }
+
+  getLocalAudioTrackPackageByConnection(
+    connection: NATIVE_RTC.RtcConnection
+  ): MultiAudioTrackPackage[] {
+    return this.localAudioTrackPackages.filter((trackPackage) => {
+      return (
+        trackPackage?.irisClient?.connection?.channelId ===
+          connection.channelId &&
+        trackPackage?.irisClient?.connection?.localUid === connection.localUid
+      );
     });
   }
 
@@ -328,6 +352,14 @@ export class IrisClientManager {
     return this.remoteUserPackages.filter((remoteUserPackage) => {
       return remoteUserPackage.uid == uid;
     })[0];
+  }
+
+  getRemoteUserPackagesByConnection(
+    connection: NATIVE_RTC.RtcConnection
+  ): RemoteUserPackage[] {
+    return this.remoteUserPackages.filter((remoteUserPackage) => {
+      return remoteUserPackage.connection?.channelId === connection.channelId;
+    });
   }
 
   addRemoteUserPackage(
