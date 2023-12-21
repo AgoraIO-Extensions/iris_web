@@ -508,7 +508,7 @@ export class IrisClientObserver {
       let user = irisClient.agoraRTCClient.remoteUsers.find(
         (item) => item.uid === userPackage.uid
       );
-      if (!user || !user.videoTrack) {
+      if (!user || !user.audioTrack) {
         return;
       }
       irisClient.agoraRTCClient.unsubscribe(user, 'audio').then(() => {

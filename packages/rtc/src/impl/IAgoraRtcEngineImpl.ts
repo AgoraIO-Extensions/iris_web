@@ -363,8 +363,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       //todo1 需要确认这个api是不是会改变所有connection的role,目前只改变了irisClientList[0]的
       //todo2 需要追加调用 muteLocalVideoStream 修改发布状态。 这个api都还没做
-      this.muteLocalAudioStream(true);
-      // this.muteLocalVideoStream(true);
+      if (role === NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE) {
+        this.muteLocalAudioStream(true);
+        // this.muteLocalVideoStream(true);
+      }
       //如果已经加入频道
       if (client?.channelName) {
         this._engine.rtcEngineEventHandler.onClientRoleChangedEx(
@@ -838,7 +840,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         this._engine.irisClientManager.localAudioTrackPackages
       );
 
-      this.muteLocalAudioStream(enabled);
+      this.muteLocalAudioStream(!enabled);
       return this._engine.returnResult();
     };
 
