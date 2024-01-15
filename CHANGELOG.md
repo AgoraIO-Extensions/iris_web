@@ -2,8 +2,6 @@
 
 ## [0.4.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.3.1...v0.4.0) (2023-12-21)
 
-## [0.3.1](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.3.0...v0.3.1) (2023-12-19)
-
 
 ### Features
 
