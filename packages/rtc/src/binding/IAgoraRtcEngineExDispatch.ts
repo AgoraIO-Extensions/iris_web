@@ -555,10 +555,21 @@ export class IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
     reason: REMOTE_AUDIO_STATE_REASON,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'onRemoteAudioStateChangedEx not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      state,
+      reason,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let _key = this.eventKey('onRemoteAudioStateChangedEx');
+
+    let eventParam = new IrisCore.EventParam(_key, _json, 0, '', [], [], 0);
+    AgoraConsole.log(
+      `onRemoteAudioStateChangedEx eventParam ${JSON.stringify(eventParam)}`
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onActiveSpeakerEx(connection: RtcConnection, uid: number): void {
@@ -792,10 +803,15 @@ export class IRtcEngineExDispatch {
   }
 
   muteRemoteAudioStreamEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteRemoteAudioStreamEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) throw 'uid is undefined';
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.muteRemoteAudioStreamEx(uid, mute, connection);
   }
 
   muteRemoteVideoStreamEx(apiParam: ApiParam): CallApiReturnType {
@@ -813,8 +829,13 @@ export class IRtcEngineExDispatch {
   }
 
   muteLocalAudioStreamEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('muteLocalAudioStreamEx not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.muteLocalAudioStreamEx(mute, connection);
   }
 
   muteLocalVideoStreamEx(apiParam: ApiParam): CallApiReturnType {
@@ -823,10 +844,13 @@ export class IRtcEngineExDispatch {
   }
 
   muteAllRemoteAudioStreamsEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteAllRemoteAudioStreamsEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.muteAllRemoteAudioStreamsEx(mute, connection);
   }
 
   muteAllRemoteVideoStreamsEx(apiParam: ApiParam): CallApiReturnType {

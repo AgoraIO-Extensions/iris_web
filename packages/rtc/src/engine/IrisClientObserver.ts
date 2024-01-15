@@ -25,6 +25,8 @@ export enum NotifyType {
   'ENABLE_TRACK',
   'UNABLE_TRACK',
   'UPDATE_TRACK',
+  'MUTE_TRACK',
+  'UNMUTE_TRACK',
 }
 export enum NotifyRemoteType {
   'SUBSCRIBE_VIDEO_TRACK',
@@ -274,6 +276,26 @@ export class IrisClientObserver {
     }
   }
 
+  async muteTrack(trackPackage: TrackPackage) {
+    let track = trackPackage.track as ILocalTrack;
+    if (!track?.muted) {
+      await this._engine.trackHelper.setMuted(
+        trackPackage.track as ILocalTrack,
+        true
+      );
+    }
+  }
+
+  async unmuteTrack(trackPackage: TrackPackage) {
+    let track = trackPackage.track as ILocalTrack;
+    if (track?.muted) {
+      await this._engine.trackHelper.setMuted(
+        trackPackage.track as ILocalTrack,
+        false
+      );
+    }
+  }
+
   async stopTrack(trackPackage: TrackPackage) {
     let irisClientManager = this._engine.irisClientManager;
     try {
@@ -363,6 +385,16 @@ export class IrisClientObserver {
         case NotifyType.UNABLE_TRACK:
           if (scopePackage) {
             await this.unableTrack(scopePackage);
+          }
+          break;
+        case NotifyType.MUTE_TRACK:
+          if (scopePackage) {
+            await this.muteTrack(scopePackage);
+          }
+          break;
+        case NotifyType.UNMUTE_TRACK:
+          if (scopePackage) {
+            await this.unmuteTrack(scopePackage);
           }
           break;
 
@@ -476,7 +508,7 @@ export class IrisClientObserver {
       let user = irisClient.agoraRTCClient.remoteUsers.find(
         (item) => item.uid === userPackage.uid
       );
-      if (!user || !user.videoTrack) {
+      if (!user || !user.audioTrack) {
         return;
       }
       irisClient.agoraRTCClient.unsubscribe(user, 'audio').then(() => {

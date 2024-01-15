@@ -1137,8 +1137,11 @@ export class IRtcEngineDispatch {
   }
 
   setChannelProfile(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('setChannelProfile not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let profile = obj.profile;
+    if (profile === undefined) throw 'profile is undefined';
+
+    return this._impl.setChannelProfile(profile);
   }
 
   setClientRole(apiParam: ApiParam): CallApiReturnType {
@@ -1323,15 +1326,19 @@ export class IRtcEngineDispatch {
   }
 
   muteLocalAudioStream(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('muteLocalAudioStream not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+
+    return this._impl.muteLocalAudioStream(mute);
   }
 
   muteAllRemoteAudioStreams(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteAllRemoteAudioStreams not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+
+    return this._impl.muteAllRemoteAudioStreams(mute);
   }
 
   setDefaultMuteAllRemoteAudioStreams(apiParam: ApiParam): CallApiReturnType {
@@ -1342,8 +1349,13 @@ export class IRtcEngineDispatch {
   }
 
   muteRemoteAudioStream(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('muteRemoteAudioStream not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) throw 'uid is undefined';
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+
+    return this._impl.muteRemoteAudioStream(uid, mute);
   }
 
   muteLocalVideoStream(apiParam: ApiParam): CallApiReturnType {
@@ -2746,8 +2758,11 @@ export class IRtcEngineDispatch {
   }
 
   setParameters(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('setParameters not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let parameters = obj.parameters;
+    if (parameters === undefined) throw 'parameters is undefined';
+
+    return this._impl.setParameters(parameters);
   }
 
   startMediaRenderingTracing(): CallApiReturnType {

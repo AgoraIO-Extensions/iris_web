@@ -191,13 +191,24 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteRemoteAudioStreamEx not supported in this platform!'
-    );
-    return this._engine.returnResult(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      let remoteUserPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
+        connection
+      );
+      let remoteUsers = remoteUserPackages.filter((userPackage) => {
+        return userPackage.uid == uid;
+      });
+      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        mute
+          ? NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK
+          : NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
+        remoteUsers
+      );
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
   }
   muteRemoteVideoStreamEx(
     uid: number,
@@ -229,11 +240,19 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn('muteLocalAudioStreamEx not supported in this platform!');
-    return this._engine.returnResult(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      let localAudioTrackPackages = this._engine.irisClientManager.getLocalAudioTrackPackageByConnection(
+        connection
+      );
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        mute ? NotifyType.MUTE_TRACK : NotifyType.UNMUTE_TRACK,
+        localAudioTrackPackages
+      );
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
   }
   muteLocalVideoStreamEx(
     mute: boolean,
@@ -249,13 +268,21 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteAllRemoteAudioStreamsEx not supported in this platform!'
-    );
-    return this._engine.returnResult(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      let remoteUserPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
+        connection
+      );
+      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        mute
+          ? NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK
+          : NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
+        remoteUserPackages
+      );
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
   }
   muteAllRemoteVideoStreamsEx(
     mute: boolean,

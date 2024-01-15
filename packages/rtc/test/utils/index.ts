@@ -9,6 +9,7 @@ import {
   CLIENT_ROLE_TYPE,
   ChannelMediaOptions,
   ERROR_CODE_TYPE,
+  RtcConnection,
   VIDEO_SOURCE_TYPE,
   VideoCanvas,
 } from '@iris/native-rtc-binding';
@@ -109,6 +110,43 @@ export async function joinChannel(apiEnginePtr: IrisApiEngine, options?: any) {
   // triggerCallback(irisRtcEngine, 'onEventUserJoined', user);
   dispatchRTCEvent(agoraRTCClient, 'user-joined', user[0]);
   agoraRTCClient.remoteUsers = user;
+}
+
+export async function joinChannelEx(
+  apiEnginePtr: IrisApiEngine
+): Promise<RtcConnection> {
+  let param = {
+    token: '1234',
+    connection: {
+      channelId: FAKE_CHANNEL_NAME,
+      localUid: TEST_UID,
+    },
+    options: {
+      channelProfile: CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+      clientRoleType: CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+    },
+  };
+  let result = await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', param);
+  expect(result.code).toBe(0);
+  let irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
+  let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+    param.connection
+  );
+  let agoraRTCClient = irisClient.agoraRTCClient;
+  let user = [
+    {
+      uid: TEST_REMOTE_UID,
+      hasAudio: true,
+      hasVideo: true,
+      audioTrack: FakeLocalAudioTrack.create(),
+      videoTrack: FakeLocalVideoTrack.create(),
+    } as IAgoraRTCRemoteUser,
+  ];
+  // triggerCallback(irisRtcEngine, 'onEventUserJoined', user);
+  dispatchRTCEvent(agoraRTCClient, 'user-joined', user[0]);
+  agoraRTCClient.remoteUsers = user;
+  irisClient.connection.localUid = agoraRTCClient.uid;
+  return irisClient.connection;
 }
 
 export async function setupLocalVideo(
