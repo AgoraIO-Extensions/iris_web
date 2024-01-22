@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import {
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
@@ -156,12 +156,12 @@ export class IrisTrackEventHandler {
       };
       let remoteUid = (this._remoteUser?.uid as number) || -1;
       let elaspsed = 0;
-      this._engine.rtcEngineEventHandler.onFirstRemoteAudioDecodedEx(
+      this._engine.rtcEngineEventHandler.onFirstRemoteAudioDecoded_4efdcced(
         connection,
         remoteUid,
         elaspsed
       );
-      this._engine.rtcEngineEventHandler.onFirstRemoteAudioFrameEx(
+      this._engine.rtcEngineEventHandler.onFirstRemoteAudioFrame_39970124(
         connection,
         remoteUid,
         elaspsed
@@ -180,14 +180,14 @@ export class IrisTrackEventHandler {
         width = imageData?.width || -1;
         height = imageData?.height || -1;
       }
-      this._engine.rtcEngineEventHandler.onFirstRemoteVideoDecodedEx(
+      this._engine.rtcEngineEventHandler.onFirstRemoteVideoDecoded_3703c048(
         connection,
         remoteUid,
         width,
         height,
         elaspsed
       );
-      this._engine.rtcEngineEventHandler.onFirstRemoteVideoFrameEx(
+      this._engine.rtcEngineEventHandler.onFirstRemoteVideoFrame_40b0ae7f(
         connection,
         remoteUid,
         width,

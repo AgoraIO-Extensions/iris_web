@@ -17,9 +17,9 @@ import { IMediaPlayerSourceObserver } from './IAgoraMediaPlayerSource';
 export interface IMediaPlayer {
   getMediaPlayerId(): CallApiReturnType;
 
-  open(url: string, startPos: number): CallApiReturnType;
+  open_e43f201(url: string, startPos: number): CallApiReturnType;
 
-  openWithMediaSource(source: MediaSource): CallApiReturnType;
+  openWithMediaSource_3c11499(source: MediaSource): CallApiReturnType;
 
   play(): CallApiReturnType;
 
@@ -29,115 +29,124 @@ export interface IMediaPlayer {
 
   resume(): CallApiReturnType;
 
-  seek(newPos: number): CallApiReturnType;
+  seek_f631116(newPos: number): CallApiReturnType;
 
-  setAudioPitch(pitch: number): CallApiReturnType;
+  setAudioPitch_46f8ab7(pitch: number): CallApiReturnType;
 
-  getDuration(duration: number): CallApiReturnType;
+  getDuration_b12f121(duration: number): CallApiReturnType;
 
-  getPlayPosition(pos: number): CallApiReturnType;
+  getPlayPosition_b12f121(pos: number): CallApiReturnType;
 
-  getStreamCount(count: number): CallApiReturnType;
+  getStreamCount_b12f121(count: number): CallApiReturnType;
 
-  getStreamInfo(index: number, info: PlayerStreamInfo[]): CallApiReturnType;
+  getStreamInfo_0fa63fa(
+    index: number,
+    info: PlayerStreamInfo
+  ): CallApiReturnType;
 
-  setLoopCount(loopCount: number): CallApiReturnType;
+  setLoopCount_46f8ab7(loopCount: number): CallApiReturnType;
 
-  setPlaybackSpeed(speed: number): CallApiReturnType;
+  setPlaybackSpeed_46f8ab7(speed: number): CallApiReturnType;
 
-  selectAudioTrack(index: number): CallApiReturnType;
+  selectAudioTrack_46f8ab7(index: number): CallApiReturnType;
 
-  setPlayerOption(key: string, value: number): CallApiReturnType;
+  setPlayerOption_4d05d29(key: string, value: number): CallApiReturnType;
 
-  setPlayerOption2(key: string, value: string): CallApiReturnType;
+  setPlayerOption_ccad422(key: string, value: string): CallApiReturnType;
 
-  takeScreenshot(filename: string): CallApiReturnType;
+  takeScreenshot_3a2037f(filename: string): CallApiReturnType;
 
-  selectInternalSubtitle(index: number): CallApiReturnType;
+  selectInternalSubtitle_46f8ab7(index: number): CallApiReturnType;
 
-  setExternalSubtitle(url: string): CallApiReturnType;
+  setExternalSubtitle_3a2037f(url: string): CallApiReturnType;
 
   getState(): CallApiReturnType;
 
-  mute(muted: boolean): CallApiReturnType;
+  mute_5039d15(muted: boolean): CallApiReturnType;
 
-  getMute(muted: boolean): CallApiReturnType;
+  getMute_c93e9d4(muted: boolean): CallApiReturnType;
 
-  adjustPlayoutVolume(volume: number): CallApiReturnType;
+  adjustPlayoutVolume_46f8ab7(volume: number): CallApiReturnType;
 
-  getPlayoutVolume(volume: number): CallApiReturnType;
+  getPlayoutVolume_9cfaa7e(volume: number): CallApiReturnType;
 
-  adjustPublishSignalVolume(volume: number): CallApiReturnType;
+  adjustPublishSignalVolume_46f8ab7(volume: number): CallApiReturnType;
 
-  getPublishSignalVolume(volume: number): CallApiReturnType;
+  getPublishSignalVolume_9cfaa7e(volume: number): CallApiReturnType;
 
-  setView(view: any): CallApiReturnType;
+  setView_cb1a81f(view: any): CallApiReturnType;
 
-  setRenderMode(renderMode: RENDER_MODE_TYPE): CallApiReturnType;
+  setRenderMode_bedb5ae(renderMode: RENDER_MODE_TYPE): CallApiReturnType;
 
-  registerPlayerSourceObserver(
+  registerPlayerSourceObserver_15621d7(
     observer: IMediaPlayerSourceObserver
   ): CallApiReturnType;
 
-  unregisterPlayerSourceObserver(
+  unregisterPlayerSourceObserver_15621d7(
     observer: IMediaPlayerSourceObserver
   ): CallApiReturnType;
 
-  registerAudioFrameObserver(observer: IAudioPcmFrameSink): CallApiReturnType;
+  registerAudioFrameObserver_89ab9b5(
+    observer: IAudioPcmFrameSink
+  ): CallApiReturnType;
 
-  registerAudioFrameObserver2(
+  registerAudioFrameObserver_a5b510b(
     observer: IAudioPcmFrameSink,
     mode: RAW_AUDIO_FRAME_OP_MODE_TYPE
   ): CallApiReturnType;
 
-  unregisterAudioFrameObserver(observer: IAudioPcmFrameSink): CallApiReturnType;
+  unregisterAudioFrameObserver_89ab9b5(
+    observer: IAudioPcmFrameSink
+  ): CallApiReturnType;
 
-  registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
-
-  unregisterVideoFrameObserver(
+  registerVideoFrameObserver_833bd8d(
     observer: IVideoFrameObserver
   ): CallApiReturnType;
 
-  registerMediaPlayerAudioSpectrumObserver(
+  unregisterVideoFrameObserver_5165d4c(
+    observer: IVideoFrameObserver
+  ): CallApiReturnType;
+
+  registerMediaPlayerAudioSpectrumObserver_226bb48(
     observer: IAudioSpectrumObserver,
     intervalInMS: number
   ): CallApiReturnType;
 
-  unregisterMediaPlayerAudioSpectrumObserver(
+  unregisterMediaPlayerAudioSpectrumObserver_09064ce(
     observer: IAudioSpectrumObserver
   ): CallApiReturnType;
 
-  setAudioDualMonoMode(mode: AUDIO_DUAL_MONO_MODE): CallApiReturnType;
+  setAudioDualMonoMode_30c9672(mode: AUDIO_DUAL_MONO_MODE): CallApiReturnType;
 
   getPlayerSdkVersion(): CallApiReturnType;
 
   getPlaySrc(): CallApiReturnType;
 
-  openWithAgoraCDNSrc(src: string, startPos: number): CallApiReturnType;
+  openWithAgoraCDNSrc_e43f201(src: string, startPos: number): CallApiReturnType;
 
   getAgoraCDNLineCount(): CallApiReturnType;
 
-  switchAgoraCDNLineByIndex(index: number): CallApiReturnType;
+  switchAgoraCDNLineByIndex_46f8ab7(index: number): CallApiReturnType;
 
   getCurrentAgoraCDNIndex(): CallApiReturnType;
 
-  enableAutoSwitchAgoraCDN(enable: boolean): CallApiReturnType;
+  enableAutoSwitchAgoraCDN_5039d15(enable: boolean): CallApiReturnType;
 
-  renewAgoraCDNSrcToken(token: string, ts: number): CallApiReturnType;
+  renewAgoraCDNSrcToken_e43f201(token: string, ts: number): CallApiReturnType;
 
-  switchAgoraCDNSrc(src: string, syncPts: boolean): CallApiReturnType;
+  switchAgoraCDNSrc_7a174df(src: string, syncPts: boolean): CallApiReturnType;
 
-  switchSrc(src: string, syncPts: boolean): CallApiReturnType;
+  switchSrc_7a174df(src: string, syncPts: boolean): CallApiReturnType;
 
-  preloadSrc(src: string, startPos: number): CallApiReturnType;
+  preloadSrc_e43f201(src: string, startPos: number): CallApiReturnType;
 
-  playPreloadedSrc(src: string): CallApiReturnType;
+  playPreloadedSrc_3a2037f(src: string): CallApiReturnType;
 
-  unloadSrc(src: string): CallApiReturnType;
+  unloadSrc_3a2037f(src: string): CallApiReturnType;
 
-  setSpatialAudioParams(params: SpatialAudioParams): CallApiReturnType;
+  setSpatialAudioParams_5035667(params: SpatialAudioParams): CallApiReturnType;
 
-  setSoundPositionParams(pan: number, gain: number): CallApiReturnType;
+  setSoundPositionParams_f282d50(pan: number, gain: number): CallApiReturnType;
 }
 
 export interface IMediaPlayerCacheManager {
@@ -145,17 +154,17 @@ export interface IMediaPlayerCacheManager {
 
   removeOldCache(): CallApiReturnType;
 
-  removeCacheByUri(uri: string): CallApiReturnType;
+  removeCacheByUri_3a2037f(uri: string): CallApiReturnType;
 
-  setCacheDir(path: string): CallApiReturnType;
+  setCacheDir_3a2037f(path: string): CallApiReturnType;
 
-  setMaxCacheFileCount(count: number): CallApiReturnType;
+  setMaxCacheFileCount_46f8ab7(count: number): CallApiReturnType;
 
-  setMaxCacheFileSize(cacheSize: number): CallApiReturnType;
+  setMaxCacheFileSize_f631116(cacheSize: number): CallApiReturnType;
 
-  enableAutoRemoveCache(enable: boolean): CallApiReturnType;
+  enableAutoRemoveCache_5039d15(enable: boolean): CallApiReturnType;
 
-  getCacheDir(path: string, length: number): CallApiReturnType;
+  getCacheDir_c9551e8(path: string, length: number): CallApiReturnType;
 
   getMaxCacheFileCount(): CallApiReturnType;
 

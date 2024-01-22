@@ -82,5 +82,6 @@
         "infile": "CHANGELOG.md"
       }
     }
-  }
+  },
+  "packageManager": "yarn@4.0.1"
 }

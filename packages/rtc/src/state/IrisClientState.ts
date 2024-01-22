@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import { UID } from 'agora-rtc-sdk-ng';
 
 import { IrisGlobalState } from './IrisGlobalState';

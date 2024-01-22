@@ -12,7 +12,7 @@ import {
   RtcConnection,
   VIDEO_SOURCE_TYPE,
   VideoCanvas,
-} from '@iris/native-rtc-binding';
+} from '@iris/native-rtc';
 import { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { IrisApiEngine, IrisCore } from 'iris-web-core';
 import { AgoraConsole, IrisRtcEngine } from 'src';
@@ -93,7 +93,11 @@ export async function joinChannel(apiEnginePtr: IrisApiEngine, options?: any) {
       clientRoleType: CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
     };
   }
-  let result = await callIris(apiEnginePtr, 'RtcEngine_joinChannel', options);
+  let result = await callIris(
+    apiEnginePtr,
+    'RtcEngine_joinChannel_2edb6aea',
+    options
+  );
   expect(result.code).toBe(0);
   let irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
   let agoraRTCClient =

@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import {
   AREAS,
   AudienceLatencyLevelType,
@@ -254,13 +254,11 @@ export class AgoraTranslate {
     engine: IrisRtcEngine
   ): IChannelMediaRelayConfiguration {
     let ret: IChannelMediaRelayConfiguration = engine.globalState.AgoraRTC.createChannelMediaRelayConfiguration();
-    for (let i = 0; i < config.srcInfo.length; i++) {
-      ret.addDestChannelInfo(
-        AgoraTranslate.NATIVE_RTCChannelMediaInfo2ChannelMediaRelayInfo(
-          config.srcInfo[i]
-        )
-      );
-    }
+    ret.addDestChannelInfo(
+      AgoraTranslate.NATIVE_RTCChannelMediaInfo2ChannelMediaRelayInfo(
+        config.srcInfo
+      )
+    );
     for (let i = 0; i < config.destInfos.length; i++) {
       ret.addDestChannelInfo(
         AgoraTranslate.NATIVE_RTCChannelMediaInfo2ChannelMediaRelayInfo(
@@ -291,7 +289,7 @@ export class AgoraTranslate {
       inspectType: [],
     };
 
-    let module: NATIVE_RTC.ContentInspectModule = config.modules;
+    let module: NATIVE_RTC.ContentInspectModule = config.modules[0];
     ret.interval = module.interval;
     switch (module.type) {
       case NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_INVALID:

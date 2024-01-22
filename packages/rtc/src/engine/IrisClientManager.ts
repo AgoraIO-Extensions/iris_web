@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import {
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
@@ -375,7 +375,7 @@ export class IrisClientManager {
           channelId: agoraRTCClient.channelName,
           localUid: agoraRTCClient.uid as number,
         };
-        this._engine.rtcEngineEventHandler.onNetworkQualityEx(
+        this._engine.rtcEngineEventHandler.onNetworkQuality_467640db(
           connection,
           remoteUserPackage.uid as number,
           stats[remoteUserPackage.uid]?.downlinkNetworkQuality,

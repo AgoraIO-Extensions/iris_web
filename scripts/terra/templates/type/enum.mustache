@@ -1,6 +1,8 @@
 
+{{#name}}
 export enum {{name}} {
 {{#enum_constants}}
-  {{name}} = {{value}},
+  {{name}} = {{{value}}},
 {{/enum_constants}}
 }
+{{/name}}

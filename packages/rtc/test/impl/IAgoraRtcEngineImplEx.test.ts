@@ -2,7 +2,7 @@ import {
   FAKE_CHANNEL_NAME,
   FakeAgoraRTCWrapper,
 } from '@agoraio-extensions/agora-rtc-sdk-ng-fake';
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import { AREAS, IAgoraRTC, ILocalTrack } from 'agora-rtc-sdk-ng';
 
 import { IrisApiEngine, IrisCore } from 'iris-web-core';
@@ -11,6 +11,7 @@ import { IrisWebRtc } from '../../src/IrisRtcApi';
 import { IrisAudioSourceType } from '../../src/base/BaseType';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+
 import {
   TEST_REMOTE_UID,
   TEST_UID,
@@ -54,7 +55,10 @@ afterEach(() => {
 
 describe('IAgoraRtcEngineImpl', () => {
   test('joinChannelEx', async () => {
-    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onJoinChannelSuccessEx');
+    jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onJoinChannelSuccess_7cc1c731'
+    );
 
     let param = {
       token: '1234',
@@ -80,7 +84,7 @@ describe('IAgoraRtcEngineImpl', () => {
       irisClient.agoraRTCClient.channelName
     );
     expect(
-      irisRtcEngine.rtcEngineEventHandler.onJoinChannelSuccessEx
+      irisRtcEngine.rtcEngineEventHandler.onJoinChannelSuccess_7cc1c731
     ).toBeCalledTimes(1);
   });
   test('leaveChannelEx', async () => {
@@ -104,7 +108,11 @@ describe('IAgoraRtcEngineImpl', () => {
     let leaveParam = {
       connection: param.connection,
     };
-    await callIris(apiEnginePtr, 'RtcEngineEx_leaveChannelEx', leaveParam);
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_leaveChannelEx_7b5e4af9',
+      leaveParam
+    );
     expect(irisClient.agoraRTCClient).toBeNull();
   });
   test('updateChannelMediaOptionsEx', async () => {
@@ -182,7 +190,7 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(
       irisRtcEngine.irisClientManager.remoteUserPackages[0].connection.localUid
     ).toBe(param2.connection.localUid);
-    await callIris(apiEnginePtr, 'RtcEngineEx_leaveChannelEx', param);
+    await callIris(apiEnginePtr, 'RtcEngineEx_leaveChannelEx_7b5e4af9', param);
     expect(irisRtcEngine.irisClientManager.remoteUserPackages.length).toBe(0);
   });
   test('muteLocalAudioStreamEx', async () => {

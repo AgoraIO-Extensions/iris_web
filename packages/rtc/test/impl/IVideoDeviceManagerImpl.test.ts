@@ -3,7 +3,7 @@ import {
   FakeAgoraRTCWrapper,
   FakeLocalVideoTrack,
 } from '@agoraio-extensions/agora-rtc-sdk-ng-fake';
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import 'jest-canvas-mock';
 
 import { ICameraVideoTrack } from 'agora-rtc-sdk-ng';
@@ -12,6 +12,7 @@ import { IrisApiEngine, IrisCore } from 'iris-web-core';
 import { IrisWebRtc } from '../../src/IrisRtcApi';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+
 import { callIris, callIrisWithoutCheck, setupLocalVideo } from '../utils';
 
 import { IVideoDeviceManagerImpl } from './IAgoraRtcEngineImpl';
@@ -93,10 +94,13 @@ describe('IAgoraRtcEngineImpl', () => {
   });
   test('getDevice', async () => {
     jest.spyOn(irisRtcEngine.globalState.AgoraRTC, 'getCameras');
+    let param = {
+      deviceIdUTF8: 1,
+    };
     let result = await callIrisWithoutCheck(
       apiEnginePtr,
       'VideoDeviceManager_getDevice',
-      null
+      param
     );
     expect(result.code).toBe(NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK);
     expect(JSON.parse(result.data).deviceIdUTF8).toBe(
@@ -104,11 +108,8 @@ describe('IAgoraRtcEngineImpl', () => {
     );
     expect(irisRtcEngine.globalState.AgoraRTC.getCameras).toBeCalledTimes(1);
     jest.clearAllMocks();
-    let param = {
-      deviceIdUTF8: 1,
-    };
     await callIris(apiEnginePtr, 'VideoDeviceManager_setDevice', param);
-    await callIris(apiEnginePtr, 'VideoDeviceManager_getDevice', null);
+    await callIris(apiEnginePtr, 'VideoDeviceManager_getDevice', param);
     expect(irisRtcEngine.globalState.AgoraRTC.getCameras).toBeCalledTimes(0);
   });
   test('release', async () => {

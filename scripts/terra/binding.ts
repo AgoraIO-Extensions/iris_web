@@ -6,15 +6,16 @@ import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
 import { renderWithConfiguration } from '@agoraio-extensions/terra_shared_configs';
 
-import bindingExtensionList = require('./config/binding_extension_list.json');
-
-import supportList = require('./config/support_list.json');
-
 import {
-  appendNumberToDuplicateMemberFunction,
   filterFile,
+  getIrisApiIdForWrapperFunc,
   isMatch,
 } from './utils';
+
+const bindingExtensionList = require('./config/binding_extension_list.json');
+
+const supportList = require('./config/support_list.json');
+
 
 interface CXXFileUserData {
   fileName: string;
@@ -25,8 +26,8 @@ interface TerraNodeUserData {
   isEnumz: boolean;
   isClazz: boolean;
   isCallback: boolean;
-  classPrefix: string;
   hasBaseClazzs: boolean;
+  hasSupportApi: boolean;
   prefix_name: string;
 }
 
@@ -34,7 +35,6 @@ interface ClazzMethodUserData {
   hasParameters: boolean;
   isRegisterMethod: boolean;
   isSupport: boolean;
-  _prefix: string;
   bindingExtensionList: [];
 }
 
@@ -60,28 +60,24 @@ export function binding(parseResult: ParseResult) {
     });
 
     cxxfile.nodes = nodes.map((node: CXXTerraNode) => {
-      if (node.name === 'IRtcEngine') {
+      if (node.name === 'IRtcEngineEventHandler') {
         // debugger;
       }
 
-      //重载函数重命名, 自动末尾+数字
-      //['joinChannel', 'joinChannel'] => ['joinChannel', 'joinChannel2']
-      node.asClazz().methods = appendNumberToDuplicateMemberFunction(
-        node.asClazz().methods
-      );
+      let hasSupportApi = false;
       node.asClazz().methods.map((method) => {
+        method.name = getIrisApiIdForWrapperFunc(method);
+        if(!hasSupportApi && supportList.includes(method.fullName)){
+          hasSupportApi = true;
+        }
         const clazzMethodUserData: ClazzMethodUserData = {
           hasParameters: method.parameters.length > 0,
           isSupport: supportList.includes(method.fullName),
           isRegisterMethod: new RegExp('registerEventHandler').test(
             method.name
           ),
-          _prefix:
-            method.parent.asClazz().name === 'IRtcEngineEventHandlerEx' &&
-            !method.name.endsWith('Ex')
-              ? 'Ex'
-              : '',
           bindingExtensionList: bindingExtensionList[method.fullName],
+          ...method.user_data,
         };
         method.user_data = clazzMethodUserData;
       });
@@ -91,12 +87,10 @@ export function binding(parseResult: ParseResult) {
         isEnumz: node.__TYPE === CXXTYPE.Enumz,
         isClazz: node.__TYPE === CXXTYPE.Clazz,
         prefix_name: node.name.replace(new RegExp('^I(.*)'), '$1'),
-        classPrefix:
-          node.name === 'IRtcEngineEventHandlerEx'
-            ? 'RtcEngineEventHandler_'
-            : node.name.replace(new RegExp('^I(.*)'), '$1_'),
         hasBaseClazzs: node.asClazz().base_clazzs.length > 0,
         isCallback: isMatch(node.name, 'isCallback'),
+        hasSupportApi: hasSupportApi,
+        ...node.user_data,
       };
       node.user_data = terraNodeUserData;
 

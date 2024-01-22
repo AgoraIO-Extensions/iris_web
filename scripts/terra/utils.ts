@@ -1,12 +1,14 @@
-import path = require('path');
+import { CXXFile, Clazz, MemberFunction } from '@agoraio-extensions/cxx-parser';
+import { ParseResult } from '@agoraio-extensions/terra-core';
+import { getIrisApiIdValue } from '@agoraio-extensions/terra_shared_configs';
 
-import { CXXFile, MemberFunction } from '@agoraio-extensions/cxx-parser';
+const path = require('path');
 
 let regMap = {
   isCallback: '.*(Observer|Handler|Callback|Receiver|Sink).*',
 };
 
-import filterFileList = require('./config/filter_file_list.json');
+const filterFileList = require('./config/filter_file_list.json');
 
 export function filterFile(cxxfiles: CXXFile[]): CXXFile[] {
   return cxxfiles.filter((file) => {
@@ -25,20 +27,8 @@ export function isMatch(str: string, type: string): boolean {
   return result;
 }
 
-export function appendNumberToDuplicateMemberFunction(
-  arr: MemberFunction[]
-): MemberFunction[] {
-  const count = {};
-  arr.forEach((item: MemberFunction) => {
-    if (count[item.name] === undefined) {
-      count[item.name] = 1;
-    } else {
-      count[item.name]++;
-    }
-
-    if (count[item.name] > 1) {
-      item.name += count[item.name];
-    }
-  });
-  return arr;
+export function getIrisApiIdForWrapperFunc(
+  memberFunc: MemberFunction
+) {
+  return getIrisApiIdValue(memberFunc, true);
 }

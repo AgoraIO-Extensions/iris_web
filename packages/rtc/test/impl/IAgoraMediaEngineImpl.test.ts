@@ -2,7 +2,7 @@ import {
   FakeAgoraRTCWrapper,
   FakeLocalVideoTrack,
 } from '@agoraio-extensions/agora-rtc-sdk-ng-fake';
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import 'jest-canvas-mock';
 
 import { IrisApiEngine, IrisCore } from 'iris-web-core';
@@ -11,6 +11,7 @@ import { IrisWebRtc } from '../../src/IrisRtcApi';
 import { AgoraConsole } from '../../src/util';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+
 import { callIris, callIrisWithoutCheck, setupLocalVideo } from '../utils';
 
 import { IMediaEngineImpl } from './IAgoraMediaEngineImpl';

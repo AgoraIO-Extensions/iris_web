@@ -5,21 +5,21 @@ import { CallApiReturnType } from 'iris-web-core';
 import { RtcConnection } from './IAgoraRtcEngineEx';
 
 export class RemoteVoicePositionInfo {
-  position?: number;
+  position?: number[];
 
-  forward?: number;
+  forward?: number[];
 }
 
 export class SpatialAudioZone {
   zoneSetId?: number;
 
-  position?: number;
+  position?: number[];
 
-  forward?: number;
+  forward?: number[];
 
-  right?: number;
+  right?: number[];
 
-  up?: number;
+  up?: number[];
 
   forwardLength?: number;
 
@@ -33,75 +33,78 @@ export class SpatialAudioZone {
 export interface IBaseSpatialAudioEngine {
   release(): CallApiReturnType;
 
-  setMaxAudioRecvCount(maxCount: number): CallApiReturnType;
+  setMaxAudioRecvCount_46f8ab7(maxCount: number): CallApiReturnType;
 
-  setAudioRecvRange(range: number): CallApiReturnType;
+  setAudioRecvRange_685e803(range: number): CallApiReturnType;
 
-  setDistanceUnit(unit: number): CallApiReturnType;
+  setDistanceUnit_685e803(unit: number): CallApiReturnType;
 
-  updateSelfPosition(
-    position: number,
-    axisForward: number,
-    axisRight: number,
-    axisUp: number
+  updateSelfPosition_2487f19(
+    position: number[],
+    axisForward: number[],
+    axisRight: number[],
+    axisUp: number[]
   ): CallApiReturnType;
 
-  updateSelfPositionEx(
-    position: number,
-    axisForward: number,
-    axisRight: number,
-    axisUp: number,
+  updateSelfPositionEx_564d6f9(
+    position: number[],
+    axisForward: number[],
+    axisRight: number[],
+    axisUp: number[],
     connection: RtcConnection
   ): CallApiReturnType;
 
-  updatePlayerPositionInfo(
+  updatePlayerPositionInfo_b37c59d(
     playerId: number,
     positionInfo: RemoteVoicePositionInfo
   ): CallApiReturnType;
 
-  setParameters(params: string): CallApiReturnType;
+  setParameters_3a2037f(params: string): CallApiReturnType;
 
-  muteLocalAudioStream(mute: boolean): CallApiReturnType;
+  muteLocalAudioStream_5039d15(mute: boolean): CallApiReturnType;
 
-  muteAllRemoteAudioStreams(mute: boolean): CallApiReturnType;
+  muteAllRemoteAudioStreams_5039d15(mute: boolean): CallApiReturnType;
 
-  setZones(zones: SpatialAudioZone[], zoneCount: number): CallApiReturnType;
+  setZones_414a27e(
+    zones: SpatialAudioZone,
+    zoneCount: number
+  ): CallApiReturnType;
 
-  setPlayerAttenuation(
+  setPlayerAttenuation_a15bc51(
     playerId: number,
     attenuation: number,
     forceSet: boolean
   ): CallApiReturnType;
 
-  muteRemoteAudioStream(uid: number, mute: boolean): CallApiReturnType;
+  muteRemoteAudioStream_dbdc15a(uid: number, mute: boolean): CallApiReturnType;
 }
 
 export interface ILocalSpatialAudioEngine {
   initialize(): CallApiReturnType;
 
-  updateRemotePosition(
+  updateRemotePosition_adc0909(
     uid: number,
     posInfo: RemoteVoicePositionInfo
   ): CallApiReturnType;
 
-  updateRemotePositionEx(
+  updateRemotePositionEx_f0252d9(
     uid: number,
     posInfo: RemoteVoicePositionInfo,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  removeRemotePosition(uid: number): CallApiReturnType;
+  removeRemotePosition_c8d091a(uid: number): CallApiReturnType;
 
-  removeRemotePositionEx(
+  removeRemotePositionEx_58a9850(
     uid: number,
     connection: RtcConnection
   ): CallApiReturnType;
 
   clearRemotePositions(): CallApiReturnType;
 
-  clearRemotePositionsEx(connection: RtcConnection): CallApiReturnType;
+  clearRemotePositionsEx_c81e1a4(connection: RtcConnection): CallApiReturnType;
 
-  setRemoteAudioAttenuation(
+  setRemoteAudioAttenuation_74c3e98(
     uid: number,
     attenuation: number,
     forceSet: boolean

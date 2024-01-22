@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import {
   BufferSourceAudioTrackInitConfig,
   CameraVideoTrackInitConfig,

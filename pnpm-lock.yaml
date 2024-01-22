@@ -79,7 +79,7 @@ importers:
       '@agoraio-extensions/agora-rtc-sdk-ng-fake':
         specifier: ^1.0.8
         version: 1.0.8
-      '@iris/native-rtc-binding':
+      '@iris/native-rtc':
         specifier: 'workspace: *'
         version: link:../../@iris/rtc
       agora-rtc-sdk-ng:
@@ -134,7 +134,7 @@ importers:
       '@agoraio-extensions/agora-rtc-sdk-ng-fake':
         specifier: ^1.0.8
         version: 1.0.8
-      '@iris/native-rtc-binding':
+      '@iris/native-rtc':
         specifier: 'workspace: *'
         version: link:../@iris/rtc
       agora-rtc-sdk-ng:

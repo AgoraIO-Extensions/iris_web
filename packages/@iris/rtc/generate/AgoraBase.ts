@@ -1363,19 +1363,19 @@ export class AudioEncodedFrameObserverConfig {
 }
 
 export interface IAudioEncodedFrameObserver {
-  onRecordAudioEncodedFrame(
+  onRecordAudioEncodedFrame_d930ddc(
     frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void;
 
-  onPlaybackAudioEncodedFrame(
+  onPlaybackAudioEncodedFrame_d930ddc(
     frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void;
 
-  onMixedAudioEncodedFrame(
+  onMixedAudioEncodedFrame_d930ddc(
     frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
@@ -1452,7 +1452,7 @@ export class ChannelMediaInfo {
 }
 
 export class ChannelMediaRelayConfiguration {
-  srcInfo?: ChannelMediaInfo[];
+  srcInfo?: ChannelMediaInfo;
 
   destInfos?: ChannelMediaInfo[];
 
@@ -1502,7 +1502,7 @@ export class EncryptionConfig {
 
   encryptionKey?: string;
 
-  encryptionKdfSalt?: number;
+  encryptionKdfSalt?: number[];
 }
 
 export enum ENCRYPTION_ERROR_TYPE {

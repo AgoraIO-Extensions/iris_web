@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 
 import { UID } from 'agora-rtc-sdk-ng';
 import {
@@ -14,6 +14,7 @@ import {
 
 import { InitIrisRtcOptions } from '../IrisRtcApi';
 import { IrisVideoFrameBufferConfig, VideoParams } from '../base/BaseType';
+import { IH265TranscoderDispatch } from '../binding/IAgoraH265TranscoderDispatch';
 
 import { IMediaEngineDispatch } from '../binding/IAgoraMediaEngineDispatch';
 import {
@@ -27,11 +28,11 @@ import {
   MusicChartCollectionDispatch,
   MusicCollectionDispatch,
 } from '../binding/IAgoraMusicContentCenterDispatch';
-import { IVideoDeviceManagerDispatch } from '../binding/IAgoraRtcEngineDispatch';
 import {
-  IRtcEngineEventHandlerEx,
-  IRtcEngineExDispatch,
-} from '../binding/IAgoraRtcEngineExDispatch';
+  IRtcEngineEventHandler,
+  IVideoDeviceManagerDispatch,
+} from '../binding/IAgoraRtcEngineDispatch';
+import { IRtcEngineExDispatch } from '../binding/IAgoraRtcEngineExDispatch';
 import {
   IBaseSpatialAudioEngineDispatch,
   ILocalSpatialAudioEngineDispatch,
@@ -62,7 +63,7 @@ export class IrisRtcEngine implements ApiInterceptor {
   public clientHelper: ClientHelper = new ClientHelper(this);
 
   public irisClientManager: IrisClientManager = new IrisClientManager(this);
-  public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandlerEx = null;
+  public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandler = null;
 
   public globalState: IrisGlobalState = null;
   public agoraEventHandler: IrisAgoraEventHandler = null;
@@ -90,6 +91,7 @@ export class IrisRtcEngine implements ApiInterceptor {
       ['MusicChartCollection', new MusicChartCollectionDispatch(this)],
       ['MusicCollection', new MusicCollectionDispatch(this)],
       ['MusicPlayer', new IMusicPlayerDispatch(this)],
+      ['H265Transcoder', new IH265TranscoderDispatch(this)],
       ['MusicContentCenter', new IMusicContentCenterDispatch(this)],
       ['AudioDeviceManager', new IAudioDeviceManagerDispatch(this)],
       ['VideoDeviceManager', new IVideoDeviceManagerDispatch(this)],
@@ -103,7 +105,7 @@ export class IrisRtcEngine implements ApiInterceptor {
       this.implDispatchesMap.set(key, value)
     );
 
-    this.rtcEngineEventHandler = new IRtcEngineEventHandlerEx(this);
+    this.rtcEngineEventHandler = new IRtcEngineEventHandler(this);
     this.globalState = new IrisGlobalState();
     this.irisElement = new IrisElement();
     this.agoraEventHandler = new IrisAgoraEventHandler(this);
@@ -127,7 +129,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     let func_name = apiParam.event;
     let array = func_name.split('_');
     let className = array[0];
-    let funName = array[1];
+    let funName = array.slice(1).join('_');
 
     AgoraConsole.log(
       `[callIrisApiAsync][start] ${(() => {
@@ -139,6 +141,9 @@ export class IrisRtcEngine implements ApiInterceptor {
     let obj = this.implDispatchesMap.get(className);
     if (obj) {
       let callApiFun = obj[funName];
+      // if (apiParam.event === 'RtcEngine_joinChannelWithUserAccount_670ae7c3') {
+      //   debugger;
+      // }
       if (callApiFun) {
         if (
           func_name !== 'RtcEngine_initialize' &&
