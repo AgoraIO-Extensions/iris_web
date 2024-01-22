@@ -68,10 +68,7 @@ import {
 import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import {
-  IRtcEngineImpl,
-  IVideoDeviceManagerImpl,
-} from '../impl/IAgoraRtcEngineImpl';
+import { IRtcEngineImpl } from '../impl/IAgoraRtcEngineImpl';
 import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IRtcEngineEventHandler {
@@ -1428,17 +1425,15 @@ export class IRtcEngineEventHandler {
 }
 
 export class IVideoDeviceManagerDispatch implements IVideoDeviceManager {
-  // @ts-ignore
-  _impl: IVideoDeviceManagerImpl;
   _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new IVideoDeviceManagerImpl(engine);
     this._engine = engine;
   }
   // @ts-ignore
   enumerateVideoDevices(): CallApiReturnType {
-    return this._impl.enumerateVideoDevices();
+    AgoraConsole.warn('enumerateVideoDevices not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -1483,7 +1478,8 @@ export class IVideoDeviceManagerDispatch implements IVideoDeviceManager {
 
   // @ts-ignore
   release(): CallApiReturnType {
-    return this._impl.release();
+    AgoraConsole.warn('release not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
 
@@ -1553,8 +1549,11 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   initialize_0320339(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('initialize_0320339 not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let context = obj.context;
+    if (context === undefined) throw 'context is undefined';
+
+    return this._impl.initialize_0320339(context);
   }
 
   // @ts-ignore
@@ -1691,12 +1690,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   enableVideo(): CallApiReturnType {
-    return this._impl.enableVideo();
+    AgoraConsole.warn('enableVideo not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   disableVideo(): CallApiReturnType {
-    return this._impl.disableVideo();
+    AgoraConsole.warn('disableVideo not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -2275,7 +2276,8 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   stopAllEffects(): CallApiReturnType {
-    return this._impl.stopAllEffects();
+    AgoraConsole.warn('stopAllEffects not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -3264,18 +3266,16 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   registerEventHandler_5fc0465(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'registerEventHandler_5fc0465 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
+    if (eventHandler === undefined) throw 'eventHandler is undefined';
+    return this._impl.registerEventHandler_5fc0465(eventHandler);
   }
 
   // @ts-ignore
   unregisterEventHandler_5fc0465(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'unregisterEventHandler_5fc0465 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
+    if (eventHandler === undefined) throw 'eventHandler is undefined';
+    return this._impl.unregisterEventHandler_5fc0465(eventHandler);
   }
 
   // @ts-ignore

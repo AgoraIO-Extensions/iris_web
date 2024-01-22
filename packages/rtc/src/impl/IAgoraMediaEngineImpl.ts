@@ -35,7 +35,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     return this._engine.execute(processFunc);
   }
 
-  pushVideoFrame(
+  pushVideoFrame_4e544e2(
     frame: NATIVE_RTC.ExternalVideoFrame,
     videoTrackId: number
   ): CallApiReturnType {

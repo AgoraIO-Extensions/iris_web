@@ -130,7 +130,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         );
       } catch (reason) {
         AgoraConsole.error(reason);
-        this._engine.rtcEngineEventHandler.onError(
+        this._engine.rtcEngineEventHandler.onError_d26c0fd(
           NATIVE_RTC.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED,
           ''
         );
@@ -142,7 +142,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         localUid: agoraRTCClient.uid as number,
       };
       irisClient.setConnection(con);
-      this._engine.rtcEngineEventHandler.onJoinChannelSuccess_7cc1c731(con, 0);
+      this._engine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd(con, 0);
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         NotifyType.PUBLISH_TRACK,
         [
@@ -223,7 +223,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           };
 
           agoraRTCClient.remoteUsers.map((remoteUser) => {
-            this._engine.rtcEngineEventHandler.onUserOffline_4482b252(
+            this._engine.rtcEngineEventHandler.onUserOffline_0a32aac(
               irisClient.connection ?? con,
               remoteUser.uid as number,
               NATIVE_RTC.USER_OFFLINE_REASON_TYPE.USER_OFFLINE_DROPPED
@@ -236,12 +236,12 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             AgoraConsole.log(`leaveChannel success`);
           } catch (e) {
             AgoraConsole.error(`leaveChannel failed:${e}`);
-            this._engine.rtcEngineEventHandler.onError(
+            this._engine.rtcEngineEventHandler.onError_d26c0fd(
               NATIVE_RTC.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED,
               ''
             );
           }
-          this._engine.rtcEngineEventHandler.onLeaveChannel_984843a(
+          this._engine.rtcEngineEventHandler.onLeaveChannel_c8e730d(
             irisClient.connection ?? con,
             new NATIVE_RTC.RtcStats()
           );
@@ -306,7 +306,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
       //如果已经加入频道
       if (client?.channelName) {
-        this._engine.rtcEngineEventHandler.onClientRoleChanged_bb90b96(
+        this._engine.rtcEngineEventHandler.onClientRoleChanged_2acaf10(
           irisClient.connection,
           oldRole,
           role,
@@ -716,7 +716,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               localUid: agoraRTCClient.uid as number,
             };
             if (reportVad) {
-              this._engine.rtcEngineEventHandler.onAudioVolumeIndication_4719309(
+              this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
                 connection,
                 [
                   {
@@ -745,7 +745,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               remoteSpeakers.reduce((prev, curr) => {
                 return curr.receiveLevel > prev.receiveLevel ? curr : prev;
               });
-            this._engine.rtcEngineEventHandler.onAudioVolumeIndication_4719309(
+            this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
               connection,
               remoteSpeakers,
               remoteSpeakers.length,
@@ -852,7 +852,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       )[0] as BufferSourceAudioTrackPackage;
       if (!bufferSourceAudioTrackPackage?.track) {
         AgoraConsole.error(`soundId:${soundId} not found`);
-        this._engine.rtcEngineEventHandler.onError(
+        this._engine.rtcEngineEventHandler.onError_d26c0fd(
           NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED,
           `soundId:${soundId} not found`
         );

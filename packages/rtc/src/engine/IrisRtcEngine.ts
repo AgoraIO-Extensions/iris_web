@@ -146,7 +146,7 @@ export class IrisRtcEngine implements ApiInterceptor {
       // }
       if (callApiFun) {
         if (
-          func_name !== 'RtcEngine_initialize' &&
+          func_name !== 'RtcEngine_initialize_0320339' &&
           this.irisClientManager.irisClientList.length == 0
         ) {
           AgoraConsole.error('you have not initialize yet');

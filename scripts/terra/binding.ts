@@ -4,10 +4,9 @@ import { CXXFile, CXXTYPE, CXXTerraNode } from '@agoraio-extensions/cxx-parser';
 
 import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
-import { renderWithConfiguration } from '@agoraio-extensions/terra_shared_configs';
+import { IrisApiIdParserUserData, renderWithConfiguration } from '@agoraio-extensions/terra_shared_configs';
 
 import {
-  filterFile,
   getIrisApiIdForWrapperFunc,
   isMatch,
 } from './utils';
@@ -17,11 +16,11 @@ const bindingExtensionList = require('./config/binding_extension_list.json');
 const supportList = require('./config/support_list.json');
 
 
-interface CXXFileUserData {
+type CXXFileUserData = {
   fileName: string;
 }
 
-interface TerraNodeUserData {
+type TerraNodeUserData = {
   isStruct: boolean;
   isEnumz: boolean;
   isClazz: boolean;
@@ -31,7 +30,7 @@ interface TerraNodeUserData {
   prefix_name: string;
 }
 
-interface ClazzMethodUserData {
+type ClazzMethodUserData = IrisApiIdParserUserData & {
   hasParameters: boolean;
   isRegisterMethod: boolean;
   isSupport: boolean;
@@ -40,8 +39,7 @@ interface ClazzMethodUserData {
 
 export function binding(parseResult: ParseResult) {
   let cxxfiles = parseResult.nodes as CXXFile[];
-  //移除不需要的文件
-  let view = filterFile(cxxfiles).map((cxxfile: CXXFile) => {
+  let view = cxxfiles.map((cxxfile: CXXFile) => {
     const cxxUserData: CXXFileUserData = {
       fileName: path.basename(
         cxxfile.file_path,
@@ -67,16 +65,17 @@ export function binding(parseResult: ParseResult) {
       let hasSupportApi = false;
       node.asClazz().methods.map((method) => {
         method.name = getIrisApiIdForWrapperFunc(method);
-        if(!hasSupportApi && supportList.includes(method.fullName)){
+        let methodIrisApiIdValue = (method.user_data as ClazzMethodUserData).IrisApiIdParser.value;
+        if(!hasSupportApi && supportList.includes(methodIrisApiIdValue)){
           hasSupportApi = true;
         }
         const clazzMethodUserData: ClazzMethodUserData = {
           hasParameters: method.parameters.length > 0,
-          isSupport: supportList.includes(method.fullName),
+          isSupport: supportList.includes(methodIrisApiIdValue),
           isRegisterMethod: new RegExp('registerEventHandler').test(
             method.name
           ),
-          bindingExtensionList: bindingExtensionList[method.fullName],
+          bindingExtensionList: bindingExtensionList[methodIrisApiIdValue],
           ...method.user_data,
         };
         method.user_data = clazzMethodUserData;
@@ -98,7 +97,7 @@ export function binding(parseResult: ParseResult) {
     });
     return cxxfile;
   });
-  //移除不含有Clazz,Enumz,Struct的文件
+  //remove Clazz/Enumz/Struct doesn't exist file
   view = view.filter((cxxfile) => {
     return (
       cxxfile.nodes.filter((node) => {

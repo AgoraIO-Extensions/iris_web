@@ -1,4 +1,5 @@
 module.exports = [
+  "IAgoraParameter.h",
   'AgoraOptional.h',
   'AgoraRefPtr.h',
   'agora::rtc::',

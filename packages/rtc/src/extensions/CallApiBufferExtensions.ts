@@ -6,7 +6,7 @@ export function callApiBufferExtension(
   buffer: Array<any>
 ): ApiParam {
   switch (func_name) {
-    case 'MediaEngine_pushVideoFrame':
+    case 'MediaEngine_pushVideoFrame_4e544e2':
       if (typeof data?.frame === 'object') {
         data.frame.buffer = buffer;
       }

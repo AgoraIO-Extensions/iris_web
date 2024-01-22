@@ -45,3 +45,4 @@ parsers:
 renderers:
   - path: ../binding.ts
   - path: ../binding_test.ts
+  - path: ../api-type.ts

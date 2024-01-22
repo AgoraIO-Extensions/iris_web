@@ -38,14 +38,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         );
       } catch (reason) {
         AgoraConsole.error(reason);
-        this._engine.rtcEngineEventHandler.onError(
+        this._engine.rtcEngineEventHandler.onError_d26c0fd(
           NATIVE_RTC.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED,
           ''
         );
         irisClient.release();
         return this._engine.returnResult(false);
       }
-      this._engine.rtcEngineEventHandler.onJoinChannelSuccess_7cc1c731(
+      this._engine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd(
         connection,
         0
       );
@@ -90,12 +90,12 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         } catch (e) {
           AgoraConsole.error(e);
           this._engine.returnResult(false);
-          this._engine.rtcEngineEventHandler.onError(
+          this._engine.rtcEngineEventHandler.onError_d26c0fd(
             NATIVE_RTC.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED,
             ''
           );
         }
-        this._engine.rtcEngineEventHandler.onLeaveChannel_984843a(
+        this._engine.rtcEngineEventHandler.onLeaveChannel_c8e730d(
           connection,
           new NATIVE_RTC.RtcStats()
         );

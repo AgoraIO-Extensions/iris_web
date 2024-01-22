@@ -19,7 +19,7 @@ beforeAll(async () => {
     context: 'test',
   };
   let apiParam = new IrisCore.EventParam(
-    'RtcEngine_initialize',
+    'RtcEngine_initialize_0320339',
     JSON.stringify(nParam),
     0,
     '',

@@ -215,7 +215,7 @@ export class IrisClientEventHandler {
     let reason2 = AgoraTranslate.string2NATIVE_RTCUSER_OFFLINE_REASON_TYPE(
       reason
     );
-    this._engine.rtcEngineEventHandler.onUserOffline_4482b252(
+    this._engine.rtcEngineEventHandler.onUserOffline_0a32aac(
       this._irisClient.connection,
       user.uid as number,
       reason2
@@ -430,7 +430,7 @@ export class IrisClientEventHandler {
      * of all the remote speakers.
      */
     let totalVolume = 0;
-    this._engine.rtcEngineEventHandler.onAudioVolumeIndication_4719309(
+    this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
       this._irisClient.connection,
       speakers,
       speakerNumber,
@@ -497,7 +497,7 @@ export class IrisClientEventHandler {
   }
 
   onEventContentInspectError(error?: IAgoraRTCError): void {
-    this._engine.rtcEngineEventHandler.onError(
+    this._engine.rtcEngineEventHandler.onError_d26c0fd(
       NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED,
       error?.message || 'Content Inspect Error'
     );

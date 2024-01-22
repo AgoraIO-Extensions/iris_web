@@ -4,12 +4,17 @@ import { ERROR_CODE_TYPE, IMediaEngine } from '@iris/native-rtc';
 import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { callApiBufferExtension } from '../extensions/CallApiBufferExtensions';
+import { IMediaEngineImpl } from '../impl/IAgoraMediaEngineImpl';
 import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IMediaEngineDispatch implements IMediaEngine {
+  // @ts-ignore
+  _impl: IMediaEngineImpl;
   _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
+    this._impl = new IMediaEngineImpl(engine);
     this._engine = engine;
   }
   // @ts-ignore
@@ -102,8 +107,14 @@ export class IMediaEngineDispatch implements IMediaEngine {
 
   // @ts-ignore
   pushVideoFrame_4e544e2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('pushVideoFrame_4e544e2 not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    obj = callApiBufferExtension(apiParam.event, obj, apiParam.buffer);
+    let frame = obj.frame;
+    if (frame === undefined) throw 'frame is undefined';
+    let videoTrackId = obj.videoTrackId;
+    if (videoTrackId === undefined) throw 'videoTrackId is undefined';
+
+    return this._impl.pushVideoFrame_4e544e2(frame, videoTrackId);
   }
 
   // @ts-ignore
