@@ -14,6 +14,7 @@ import {
 
 import { InitIrisRtcOptions } from '../IrisRtcApi';
 import { IrisVideoFrameBufferConfig, VideoParams } from '../base/BaseType';
+import { IVideoFrameMetaInfoDispatch } from '../binding/AgoraMediaBaseDispatch';
 import { IH265TranscoderDispatch } from '../binding/IAgoraH265TranscoderDispatch';
 
 import { IMediaEngineDispatch } from '../binding/IAgoraMediaEngineDispatch';
@@ -94,6 +95,7 @@ export class IrisRtcEngine implements ApiInterceptor {
       ['VideoDeviceManager', new IVideoDeviceManagerDispatch(this)],
       ['RtcEngine', new RtcEngineDispatchExtensions(this)],
       ['RtcEngineEx', new IRtcEngineExDispatch(this)],
+      ['VideoFrameMetaInfo', new IVideoFrameMetaInfoDispatch(this)],
       ['LocalSpatialAudioEngine', new ILocalSpatialAudioEngineDispatch(this)],
     ];
 

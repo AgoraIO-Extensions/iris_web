@@ -48,7 +48,7 @@ afterEach(() => {
 });
 
 describe('IAgoraRtcEngineImpl', () => {
-  test('setExternalVideoSource', async () => {
+  test('setExternalVideoSource_fff99b6', async () => {
     let param = {
       enabled: true,
       useTexture: true,
@@ -59,7 +59,11 @@ describe('IAgoraRtcEngineImpl', () => {
         targetBitrate: 1,
       },
     };
-    await callIris(apiEnginePtr, 'MediaEngine_setExternalVideoSource', param);
+    await callIris(
+      apiEnginePtr,
+      'MediaEngine_setExternalVideoSource_fff99b6',
+      param
+    );
     expect(irisRtcEngine.globalState.pushVideoFrameEnabled).toBe(param.enabled);
     expect(irisRtcEngine.globalState.pushVideoFrameUseTexture).toBe(
       param.useTexture
@@ -116,9 +120,13 @@ describe('IAgoraRtcEngineImpl', () => {
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame_4e544e2', param2);
     expect(AgoraConsole.error).toBeCalledWith(
-      'pushVideoFrameEnabled is disabled , call setExternalVideoSource first'
+      'pushVideoFrameEnabled is disabled , call setExternalVideoSource_fff99b6 first'
     );
-    await callIris(apiEnginePtr, 'MediaEngine_setExternalVideoSource', param);
+    await callIris(
+      apiEnginePtr,
+      'MediaEngine_setExternalVideoSource_fff99b6',
+      param
+    );
     await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame_4e544e2', param2);
     expect(
       irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(

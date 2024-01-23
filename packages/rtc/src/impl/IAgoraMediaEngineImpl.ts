@@ -47,7 +47,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
       }
       if (!this._engine.globalState.pushVideoFrameEnabled) {
         AgoraConsole.error(
-          'pushVideoFrameEnabled is disabled , call setExternalVideoSource first'
+          'pushVideoFrameEnabled is disabled , call setExternalVideoSource_fff99b6 first'
         );
         return this._engine.returnResult();
       }

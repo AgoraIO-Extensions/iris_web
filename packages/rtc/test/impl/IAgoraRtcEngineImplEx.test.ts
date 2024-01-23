@@ -222,26 +222,6 @@ describe('IAgoraRtcEngineImpl', () => {
     });
     expect((localAudioTrackPackage[0].track as ILocalTrack).muted).toBe(false);
   });
-  test('muteAllRemoteAudioStreamsEx', async () => {
-    let connection = await joinChannelEx(apiEnginePtr);
-    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
-    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
-      connection
-    );
-    let remoteUsers = irisClient.agoraRTCClient.remoteUsers;
-    expect(remoteUsers[0].audioTrack.isPlaying).toBe(true);
-
-    await callIris(apiEnginePtr, 'RtcEngineEx_muteAllRemoteAudioStreamsEx', {
-      mute: true,
-      connection,
-    });
-    expect(remoteUsers[0].audioTrack).toBeUndefined();
-    await callIris(apiEnginePtr, 'RtcEngineEx_muteAllRemoteAudioStreamsEx', {
-      mute: false,
-      connection,
-    });
-    expect(remoteUsers[0].audioTrack).not.toBeUndefined();
-  });
   test('muteAllRemoteAudioStreamsEx_3cf17a4', async () => {
     let connection = await joinChannelEx(apiEnginePtr);
     await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
@@ -256,7 +236,6 @@ describe('IAgoraRtcEngineImpl', () => {
       'RtcEngineEx_muteAllRemoteAudioStreamsEx_3cf17a4',
       {
         mute: true,
-        uid: TEST_REMOTE_UID,
         connection,
       }
     );
@@ -264,6 +243,35 @@ describe('IAgoraRtcEngineImpl', () => {
     await callIris(
       apiEnginePtr,
       'RtcEngineEx_muteAllRemoteAudioStreamsEx_3cf17a4',
+      {
+        mute: false,
+        connection,
+      }
+    );
+    expect(remoteUsers[0].audioTrack).not.toBeUndefined();
+  });
+  test('muteRemoteAudioStreamEx_6d93082', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    let remoteUsers = irisClient.agoraRTCClient.remoteUsers;
+    expect(remoteUsers[0].audioTrack.isPlaying).toBe(true);
+
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_muteRemoteAudioStreamEx_6d93082',
+      {
+        mute: true,
+        uid: TEST_REMOTE_UID,
+        connection,
+      }
+    );
+    expect(remoteUsers[0].audioTrack).toBeUndefined();
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_muteRemoteAudioStreamEx_6d93082',
       {
         mute: false,
         uid: TEST_REMOTE_UID,

@@ -95,7 +95,7 @@ export async function joinChannel(apiEnginePtr: IrisApiEngine, options?: any) {
   }
   let result = await callIris(
     apiEnginePtr,
-    'RtcEngine_joinChannel_cdbb747',
+    'RtcEngine_joinChannel_f097389',
     options
   );
   expect(result.code).toBe(0);
