@@ -164,7 +164,7 @@ export interface IRtcEngineEx {
     connection: RtcConnection
   ): CallApiReturnType;
 
-  adjustUserPlaybackSignalVolumeEx_9634cfd(
+  adjustUserPlaybackSignalVolumeEx_adbd29c(
     uid: number,
     volume: number,
     connection: RtcConnection
@@ -185,7 +185,7 @@ export interface IRtcEngineEx {
     connection: RtcConnection
   ): CallApiReturnType;
 
-  createDataStreamEx_894331f(
+  createDataStreamEx_9f641b6(
     streamId: number,
     config: DataStreamConfig,
     connection: RtcConnection
@@ -248,16 +248,6 @@ export interface IRtcEngineEx {
     connection: RtcConnection
   ): CallApiReturnType;
 
-  startChannelMediaRelayEx_4ad39a8(
-    configuration: ChannelMediaRelayConfiguration,
-    connection: RtcConnection
-  ): CallApiReturnType;
-
-  updateChannelMediaRelayEx_4ad39a8(
-    configuration: ChannelMediaRelayConfiguration,
-    connection: RtcConnection
-  ): CallApiReturnType;
-
   stopChannelMediaRelayEx_c81e1a4(connection: RtcConnection): CallApiReturnType;
 
   pauseAllChannelMediaRelayEx_c81e1a4(
@@ -313,5 +303,10 @@ export interface IRtcEngineEx {
 
   startMediaRenderingTracingEx_c81e1a4(
     connection: RtcConnection
+  ): CallApiReturnType;
+
+  setParametersEx_8225ea3(
+    connection: RtcConnection,
+    parameters: string
   ): CallApiReturnType;
 }

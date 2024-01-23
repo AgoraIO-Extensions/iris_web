@@ -37,9 +37,9 @@ export interface IMediaEngine {
     observer: IVideoEncodedFrameObserver
   ): CallApiReturnType;
 
-  pushAudioFrame_8dfac8c(frame: AudioFrame, trackId: number): CallApiReturnType;
+  pushAudioFrame_c71f4ab(frame: AudioFrame, trackId: number): CallApiReturnType;
 
-  pullAudioFrame_28bed4b(frame: AudioFrame): CallApiReturnType;
+  pullAudioFrame_2c74a9c(frame: AudioFrame): CallApiReturnType;
 
   setExternalVideoSource_fff99b6(
     enabled: boolean,
@@ -79,7 +79,7 @@ export interface IMediaEngine {
     videoTrackId: number
   ): CallApiReturnType;
 
-  pushEncodedVideoImage_f854c56(
+  pushEncodedVideoImage_e71452b(
     imageBuffer: Uint8Array,
     length: number,
     videoEncodedFrameInfo: EncodedVideoFrameInfo,

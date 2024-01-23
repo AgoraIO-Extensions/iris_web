@@ -47,7 +47,7 @@ export default function (
     });
   });
   return [{
-    file_name: path.join('src/util', 'iris_rtc_api_type.ts'),
+    file_name: path.join('src/util', 'iris_rtc_api_type_gen.ts'),
     file_content: renderList.join('\n'),
   }];
 }

@@ -18,7 +18,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
     this._engine = engine;
   }
 
-  setExternalVideoSource(
+  setExternalVideoSource_fff99b6(
     enabled: boolean,
     useTexture: boolean,
     sourceType: NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,

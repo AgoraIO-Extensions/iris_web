@@ -318,7 +318,7 @@ export class IrisClientObserver {
           trackPackage.type ===
           IrisAudioSourceType.kAudioSourceTypeScreenCapture
         ) {
-          this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f428c19(
+          this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f33d789(
             NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
               .LOCAL_AUDIO_STREAM_STATE_STOPPED,
             0
@@ -346,7 +346,7 @@ export class IrisClientObserver {
           trackPackage as VideoTrackPackage,
           irisClient?.agoraRTCClient
         );
-        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_9e9b3c6(
+        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a(
           trackPackage.type as NATIVE_RTC.VIDEO_SOURCE_TYPE,
           NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_STOPPED,
           0

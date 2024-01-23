@@ -38,7 +38,7 @@ beforeEach(async () => {
       },
     },
   };
-  await callIris(apiEnginePtr, 'RtcEngine_initialize', nParam);
+  await callIris(apiEnginePtr, 'RtcEngine_initialize_0320339', nParam);
 });
 
 afterEach(() => {
@@ -108,18 +108,18 @@ describe('IAgoraRtcEngineImpl', () => {
     };
     jest.spyOn(AgoraConsole, 'error');
 
-    await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame', param2);
+    await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame_4e544e2', param2);
     expect(AgoraConsole.error).toBeCalledWith(
       'call enableVideo(true) before startPreview'
     );
     jest.clearAllMocks();
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
-    await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame', param2);
+    await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame_4e544e2', param2);
     expect(AgoraConsole.error).toBeCalledWith(
       'pushVideoFrameEnabled is disabled , call setExternalVideoSource first'
     );
     await callIris(apiEnginePtr, 'MediaEngine_setExternalVideoSource', param);
-    await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame', param2);
+    await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame_4e544e2', param2);
     expect(
       irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM
@@ -136,7 +136,7 @@ describe('IAgoraRtcEngineImpl', () => {
         sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM,
       },
     });
-    await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame', param2);
+    await callIris(apiEnginePtr, 'MediaEngine_pushVideoFrame_4e544e2', param2);
     expect(
       irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM

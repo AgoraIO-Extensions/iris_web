@@ -95,7 +95,7 @@ export async function joinChannel(apiEnginePtr: IrisApiEngine, options?: any) {
   }
   let result = await callIris(
     apiEnginePtr,
-    'RtcEngine_joinChannel_2edb6aea',
+    'RtcEngine_joinChannel_cdbb747',
     options
   );
   expect(result.code).toBe(0);
@@ -130,7 +130,11 @@ export async function joinChannelEx(
       clientRoleType: CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
     },
   };
-  let result = await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', param);
+  let result = await callIris(
+    apiEnginePtr,
+    'RtcEngineEx_joinChannelEx_89b2aa1',
+    param
+  );
   expect(result.code).toBe(0);
   let irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
   let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
@@ -168,7 +172,7 @@ export async function setupLocalVideo(
   }
   let result = await callIris(
     apiEnginePtr,
-    'RtcEngine_setupLocalVideo',
+    'RtcEngine_setupLocalVideo_acc9c38',
     options
   );
   expect(result.code).toBe(0);
@@ -196,7 +200,7 @@ export async function setupRemoteVideo(
   }
   let result = await callIris(
     apiEnginePtr,
-    'RtcEngineEx_setupRemoteVideoEx',
+    'RtcEngineEx_setupRemoteVideoEx_522a409',
     options
   );
   expect(result.code).toBe(0);

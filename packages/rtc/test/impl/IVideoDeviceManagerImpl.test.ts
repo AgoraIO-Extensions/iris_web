@@ -41,7 +41,7 @@ beforeEach(async () => {
       },
     },
   };
-  await callIris(apiEnginePtr, 'RtcEngine_initialize', nParam);
+  await callIris(apiEnginePtr, 'RtcEngine_initialize_0320339', nParam);
 });
 
 afterEach(() => {

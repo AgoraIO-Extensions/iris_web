@@ -92,7 +92,6 @@ module.exports = [
   'agora::rtc::IAudioDeviceManager.getPlaybackDeviceInfo.deviceName',
   'agora::rtc::IAudioDeviceManager.getRecordingDeviceInfo.deviceId',
   'agora::rtc::IAudioDeviceManager.getRecordingDeviceInfo.deviceName',
-  'agora::rtc::IRtcEngineEx.joinChannelEx.eventHandler',
   'agora::rtc::IRtcEngine.joinChannelWithUserAccountEx.eventHandler',
   'agora::rtc::IRtcEngine.getVersion.build',
   'agora::rtc::IRtcEngine.takeSnapshot.callback',

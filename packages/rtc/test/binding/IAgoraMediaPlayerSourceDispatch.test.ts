@@ -39,13 +39,13 @@ afterEach(() => {
 });
 
 describe('IMediaPlayerSourceObserver', () => {
-  test('MediaPlayerSourceObserver_onPlayerSourceStateChanged_9572693 impl call', async () => {
+  test('MediaPlayerSourceObserver_onPlayerSourceStateChanged_7fb38f1 impl call', async () => {
     let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onPlayerSourceStateChanged_9572693(undefined, undefined);
+    eventHandler.onPlayerSourceStateChanged_7fb38f1(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -55,13 +55,13 @@ describe('IMediaPlayerSourceObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('MediaPlayerSourceObserver_onPositionChanged_f631116 impl call', async () => {
+  test('MediaPlayerSourceObserver_onPositionChanged_303b92e impl call', async () => {
     let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onPositionChanged_f631116(undefined);
+    eventHandler.onPositionChanged_303b92e(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -190,6 +190,38 @@ describe('IMediaPlayerSourceObserver', () => {
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     eventHandler.onPlayerInfoUpdated_0e902a8(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+  test('MediaPlayerSourceObserver_onPlayerCacheStats_0145940 impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.onPlayerCacheStats_0145940(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+  test('MediaPlayerSourceObserver_onPlayerPlaybackStats_ffa466f impl call', async () => {
+    let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.onPlayerPlaybackStats_ffa466f(undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);

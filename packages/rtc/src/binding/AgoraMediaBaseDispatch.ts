@@ -6,17 +6,31 @@ import {
   AudioSpectrumData,
   ERROR_CODE_TYPE,
   EncodedVideoFrameInfo,
-  RecorderErrorCode,
+  IVideoFrameMetaInfo,
   RecorderInfo,
+  RecorderReasonCode,
   RecorderState,
   UserAudioSpectrumInfo,
   VIDEO_SOURCE_TYPE,
   VideoFrame,
 } from '@iris/native-rtc';
-import { ApiParam } from 'iris-web-core';
+import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
+
+export class IVideoFrameMetaInfoDispatch implements IVideoFrameMetaInfo {
+  _engine: IrisRtcEngine = null;
+
+  constructor(engine: IrisRtcEngine) {
+    this._engine = engine;
+  }
+  // @ts-ignore
+  getMetaInfoStr_c81192f(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('getMetaInfoStr_c81192f not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+}
 
 export class IAudioPcmFrameSink {
   _engine: IrisRtcEngine = null;
@@ -257,14 +271,14 @@ export class IMediaRecorderObserver {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
-  onRecorderStateChanged_e1716bb(
+  onRecorderStateChanged_c38849f(
     channelId: string,
     uid: number,
     state: RecorderState,
-    error: RecorderErrorCode
+    reason: RecorderReasonCode
   ): void {
     AgoraConsole.warn(
-      'onRecorderStateChanged_e1716bb not supported in this platform!'
+      'onRecorderStateChanged_c38849f not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

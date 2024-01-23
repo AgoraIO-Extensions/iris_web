@@ -4,16 +4,20 @@ import { ERROR_CODE_TYPE, IRtcEngineEx } from '@iris/native-rtc';
 import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { IRtcEngineExImpl } from '../impl/IAgoraRtcEngineExImpl';
 import { AgoraConsole } from '../util/AgoraConsole';
 
 import { IRtcEngineDispatch } from './IAgoraRtcEngineDispatch';
 
 export class IRtcEngineExDispatch extends IRtcEngineDispatch
   implements IRtcEngineEx {
+  // @ts-ignore
+  _impl: IRtcEngineExImpl;
   _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
     super(engine);
+    this._impl = new IRtcEngineExImpl(engine);
     this._engine = engine;
   }
   // @ts-ignore
@@ -24,8 +28,11 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   leaveChannelEx_c81e1a4(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('leaveChannelEx_c81e1a4 not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.leaveChannelEx_c81e1a4(connection);
   }
 
   // @ts-ignore
@@ -36,10 +43,13 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   updateChannelMediaOptionsEx_457bb35(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'updateChannelMediaOptionsEx_457bb35 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let options = obj.options;
+    if (options === undefined) throw 'options is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.updateChannelMediaOptionsEx_457bb35(options, connection);
   }
 
   // @ts-ignore
@@ -54,18 +64,26 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   setupRemoteVideoEx_522a409(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'setupRemoteVideoEx_522a409 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let canvas = obj.canvas;
+    if (canvas === undefined) throw 'canvas is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.setupRemoteVideoEx_522a409(canvas, connection);
   }
 
   // @ts-ignore
   muteRemoteAudioStreamEx_6d93082(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteRemoteAudioStreamEx_6d93082 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) throw 'uid is undefined';
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.muteRemoteAudioStreamEx_6d93082(uid, mute, connection);
   }
 
   // @ts-ignore
@@ -86,10 +104,13 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   muteLocalAudioStreamEx_3cf17a4(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteLocalAudioStreamEx_3cf17a4 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.muteLocalAudioStreamEx_3cf17a4(mute, connection);
   }
 
   // @ts-ignore
@@ -102,10 +123,13 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   muteAllRemoteAudioStreamsEx_3cf17a4(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteAllRemoteAudioStreamsEx_3cf17a4 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.muteAllRemoteAudioStreamsEx_3cf17a4(mute, connection);
   }
 
   // @ts-ignore
@@ -209,11 +233,11 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   }
 
   // @ts-ignore
-  adjustUserPlaybackSignalVolumeEx_9634cfd(
+  adjustUserPlaybackSignalVolumeEx_adbd29c(
     apiParam: ApiParam
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'adjustUserPlaybackSignalVolumeEx_9634cfd not supported in this platform!'
+      'adjustUserPlaybackSignalVolumeEx_adbd29c not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -243,9 +267,9 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   }
 
   // @ts-ignore
-  createDataStreamEx_894331f(apiParam: ApiParam): CallApiReturnType {
+  createDataStreamEx_9f641b6(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'createDataStreamEx_894331f not supported in this platform!'
+      'createDataStreamEx_9f641b6 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -337,22 +361,6 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   }
 
   // @ts-ignore
-  startChannelMediaRelayEx_4ad39a8(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'startChannelMediaRelayEx_4ad39a8 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  // @ts-ignore
-  updateChannelMediaRelayEx_4ad39a8(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'updateChannelMediaRelayEx_4ad39a8 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  // @ts-ignore
   stopChannelMediaRelayEx_c81e1a4(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'stopChannelMediaRelayEx_c81e1a4 not supported in this platform!'
@@ -434,6 +442,14 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   startMediaRenderingTracingEx_c81e1a4(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'startMediaRenderingTracingEx_c81e1a4 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  setParametersEx_8225ea3(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'setParametersEx_8225ea3 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

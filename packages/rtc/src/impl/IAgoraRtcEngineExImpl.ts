@@ -63,7 +63,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     };
     return this._engine.execute(processJoinChannel);
   }
-  leaveChannelEx_7b5e4af9(
+  leaveChannelEx_c81e1a4(
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
@@ -106,7 +106,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     };
     return this._engine.execute(processFunc);
   }
-  updateChannelMediaOptionsEx(
+  updateChannelMediaOptionsEx_457bb35(
     options: NATIVE_RTC.ChannelMediaOptions,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
@@ -121,7 +121,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processInSequence);
   }
-  setupRemoteVideoEx(
+  setupRemoteVideoEx_522a409(
     canvas: NATIVE_RTC.VideoCanvas,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
@@ -158,7 +158,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processVideoTrack);
   }
-  muteRemoteAudioStreamEx(
+  muteRemoteAudioStreamEx_6d93082(
     uid: number,
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
@@ -182,7 +182,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processFunc);
   }
-  muteLocalAudioStreamEx(
+  muteLocalAudioStreamEx_3cf17a4(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
@@ -200,7 +200,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processFunc);
   }
-  muteAllRemoteAudioStreamsEx(
+  muteAllRemoteAudioStreamsEx_3cf17a4(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {

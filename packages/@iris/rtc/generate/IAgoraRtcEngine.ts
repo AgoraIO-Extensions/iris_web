@@ -17,7 +17,6 @@ import {
   BeautyOptions,
   CAPTURE_BRIGHTNESS_LEVEL_TYPE,
   CHANNEL_MEDIA_RELAY_ERROR,
-  CHANNEL_MEDIA_RELAY_EVENT,
   CHANNEL_MEDIA_RELAY_STATE,
   CHANNEL_PROFILE_TYPE,
   CLIENT_ROLE_CHANGE_FAILED_REASON,
@@ -39,9 +38,9 @@ import {
   HEADPHONE_EQUALIZER_PRESET,
   IAudioEncodedFrameObserver,
   LICENSE_ERROR_TYPE,
-  LOCAL_AUDIO_STREAM_ERROR,
+  LOCAL_AUDIO_STREAM_REASON,
   LOCAL_AUDIO_STREAM_STATE,
-  LOCAL_VIDEO_STREAM_ERROR,
+  LOCAL_VIDEO_STREAM_REASON,
   LOCAL_VIDEO_STREAM_STATE,
   LastmileProbeConfig,
   LastmileProbeResult,
@@ -57,10 +56,11 @@ import {
   QUALITY_TYPE,
   REMOTE_AUDIO_STATE,
   REMOTE_AUDIO_STATE_REASON,
+  REMOTE_USER_STATE,
   REMOTE_VIDEO_STATE,
   REMOTE_VIDEO_STATE_REASON,
   RTMP_STREAMING_EVENT,
-  RTMP_STREAM_PUBLISH_ERROR_TYPE,
+  RTMP_STREAM_PUBLISH_REASON,
   RTMP_STREAM_PUBLISH_STATE,
   RecorderStreamInfo,
   Rectangle,
@@ -87,6 +87,7 @@ import {
   VIDEO_CONTENT_HINT,
   VIDEO_MIRROR_MODE_TYPE,
   VIDEO_ORIENTATION,
+  VIDEO_QOE_PREFERENCE_TYPE,
   VIDEO_STREAM_TYPE,
   VIDEO_TRANSCODER_ERROR,
   VOICE_BEAUTIFIER_PRESET,
@@ -95,6 +96,7 @@ import {
   VideoDenoiserOptions,
   VideoEncoderConfiguration,
   VideoFormat,
+  VideoLayout,
   VideoRenderingTracingInfo,
   VideoSubscriptionOptions,
   VirtualBackgroundSource,
@@ -118,7 +120,7 @@ import { IMediaPlayer } from './IAgoraMediaPlayer';
 import { IMediaRecorder } from './IAgoraMediaRecorder';
 import {
   AgoraRhythmPlayerConfig,
-  RHYTHM_PLAYER_ERROR_TYPE,
+  RHYTHM_PLAYER_REASON,
   RHYTHM_PLAYER_STATE_TYPE,
 } from './IAgoraRhythmPlayer';
 import { RtcConnection } from './IAgoraRtcEngineEx';
@@ -539,6 +541,8 @@ export class ChannelMediaOptions {
 
   publishTranscodedVideoTrack?: boolean;
 
+  publishMixedAudioTrack?: boolean;
+
   autoSubscribeAudio?: boolean;
 
   autoSubscribeVideo?: boolean;
@@ -696,10 +700,10 @@ export interface IRtcEngineEventHandler {
     rotation: number
   ): void;
 
-  onLocalVideoStateChanged_9e9b3c6(
+  onLocalVideoStateChanged_a44228a(
     source: VIDEO_SOURCE_TYPE,
     state: LOCAL_VIDEO_STREAM_STATE,
-    error: LOCAL_VIDEO_STREAM_ERROR
+    reason: LOCAL_VIDEO_STREAM_REASON
   ): void;
 
   onRemoteVideoStateChanged_815ab69(
@@ -710,7 +714,7 @@ export interface IRtcEngineEventHandler {
   ): void;
 
   onFirstRemoteVideoFrame_58b686c(
-    userId: number,
+    uid: number,
     width: number,
     height: number,
     elapsed: number
@@ -722,17 +726,17 @@ export interface IRtcEngineEventHandler {
 
   onUserMuteAudio_dbdc15a(uid: number, muted: boolean): void;
 
-  onUserMuteVideo_dbdc15a(userId: number, muted: boolean): void;
+  onUserMuteVideo_dbdc15a(uid: number, muted: boolean): void;
 
   onUserEnableVideo_dbdc15a(uid: number, enabled: boolean): void;
 
-  onUserStateChanged_6bd0e74(uid: number, state: number): void;
+  onUserStateChanged_c63723e(uid: number, state: REMOTE_USER_STATE): void;
 
   onUserEnableLocalVideo_dbdc15a(uid: number, enabled: boolean): void;
 
-  onLocalAudioStats_8fcb8ec(stats: LocalAudioStats): void;
-
   onRemoteAudioStats_4aba4cc(stats: RemoteAudioStats): void;
+
+  onLocalAudioStats_8fcb8ec(stats: LocalAudioStats): void;
 
   onLocalVideoStats_baa96c8(
     source: VIDEO_SOURCE_TYPE,
@@ -772,9 +776,9 @@ export interface IRtcEngineEventHandler {
     reason: AUDIO_MIXING_REASON_TYPE
   ): void;
 
-  onRhythmPlayerStateChanged_28c4cdd(
+  onRhythmPlayerStateChanged_09360d2(
     state: RHYTHM_PLAYER_STATE_TYPE,
-    errorCode: RHYTHM_PLAYER_ERROR_TYPE
+    reason: RHYTHM_PLAYER_REASON
   ): void;
 
   onConnectionLost(): void;
@@ -784,7 +788,7 @@ export interface IRtcEngineEventHandler {
   onConnectionBanned(): void;
 
   onStreamMessage_6f90bce(
-    userId: number,
+    uid: number,
     streamId: number,
     data: string,
     length: number,
@@ -792,7 +796,7 @@ export interface IRtcEngineEventHandler {
   ): void;
 
   onStreamMessageError_21e5c1a(
-    userId: number,
+    uid: number,
     streamId: number,
     code: number,
     missed: number,
@@ -807,13 +811,13 @@ export interface IRtcEngineEventHandler {
 
   onFirstLocalAudioFramePublished_46f8ab7(elapsed: number): void;
 
-  onFirstRemoteAudioFrame_88641bf(uid: number, elapsed: number): void;
-
   onFirstRemoteAudioDecoded_88641bf(uid: number, elapsed: number): void;
 
-  onLocalAudioStateChanged_f428c19(
+  onFirstRemoteAudioFrame_88641bf(uid: number, elapsed: number): void;
+
+  onLocalAudioStateChanged_f33d789(
     state: LOCAL_AUDIO_STREAM_STATE,
-    error: LOCAL_AUDIO_STREAM_ERROR
+    reason: LOCAL_AUDIO_STREAM_REASON
   ): void;
 
   onRemoteAudioStateChanged_f1532dd(
@@ -823,7 +827,7 @@ export interface IRtcEngineEventHandler {
     elapsed: number
   ): void;
 
-  onActiveSpeaker_c8d091a(userId: number): void;
+  onActiveSpeaker_c8d091a(uid: number): void;
 
   onContentInspectResult_ba185c8(result: CONTENT_INSPECT_RESULT): void;
 
@@ -852,10 +856,10 @@ export interface IRtcEngineEventHandler {
     muted: boolean
   ): void;
 
-  onRtmpStreamingStateChanged_08571ff(
+  onRtmpStreamingStateChanged_1f07503(
     url: string,
     state: RTMP_STREAM_PUBLISH_STATE,
-    errCode: RTMP_STREAM_PUBLISH_ERROR_TYPE
+    reason: RTMP_STREAM_PUBLISH_REASON
   ): void;
 
   onRtmpStreamingEvent_2e48ef5(
@@ -871,8 +875,6 @@ export interface IRtcEngineEventHandler {
     state: CHANNEL_MEDIA_RELAY_STATE,
     code: CHANNEL_MEDIA_RELAY_ERROR
   ): void;
-
-  onChannelMediaRelayEvent_46f8ab7(code: CHANNEL_MEDIA_RELAY_EVENT): void;
 
   onLocalPublishFallbackToAudioOnly_5039d15(isFallbackOrRecover: boolean): void;
 
@@ -906,7 +908,7 @@ export interface IRtcEngineEventHandler {
     wlAccMsg: string
   ): void;
 
-  onWlAccStats_8f5541b(
+  onWlAccStats_94ee38e(
     currentStats: WlAccStats,
     averageStats: WlAccStats
   ): void;
@@ -920,6 +922,19 @@ export interface IRtcEngineEventHandler {
   onLocalUserRegistered_1922dd1(uid: number, userAccount: string): void;
 
   onUserInfoUpdated_2120245(uid: number, info: UserInfo): void;
+
+  onUserAccountUpdated_1922dd1(uid: number, userAccount: string): void;
+
+  onVideoRenderingTracingResult_76e2449(
+    uid: number,
+    currentEvent: MEDIA_TRACE_EVENT,
+    tracingInfo: VideoRenderingTracingInfo
+  ): void;
+
+  onLocalVideoTranscoderError_83e3a9c(
+    stream: TranscodingVideoStream,
+    error: VIDEO_TRANSCODER_ERROR
+  ): void;
 
   onUploadLogResult_eef29d2(
     requestId: string,
@@ -958,6 +973,14 @@ export interface IRtcEngineEventHandler {
     elapseSinceLastState: number
   ): void;
 
+  onTranscodedStreamLayoutInfo_3bfb91b(
+    uid: number,
+    width: number,
+    height: number,
+    layoutCount: number,
+    layoutlist: VideoLayout[]
+  ): void;
+
   onExtensionEvent_062d13c(
     provider: string,
     extension: string,
@@ -976,18 +999,7 @@ export interface IRtcEngineEventHandler {
     message: string
   ): void;
 
-  onUserAccountUpdated_1922dd1(uid: number, userAccount: string): void;
-
-  onLocalVideoTranscoderError_83e3a9c(
-    stream: TranscodingVideoStream,
-    error: VIDEO_TRANSCODER_ERROR
-  ): void;
-
-  onVideoRenderingTracingResult_76e2449(
-    uid: number,
-    currentEvent: MEDIA_TRACE_EVENT,
-    tracingInfo: VideoRenderingTracingInfo
-  ): void;
+  onSetRtmFlagResult_46f8ab7(code: number): void;
 
   onJoinChannelSuccess_263e4cd(
     connection: RtcConnection,
@@ -1170,10 +1182,10 @@ export interface IRtcEngineEventHandler {
     elapsed: number
   ): void;
 
-  onLocalAudioStateChanged_6d655b4(
+  onLocalAudioStateChanged_13b6c02(
     connection: RtcConnection,
     state: LOCAL_AUDIO_STREAM_STATE,
-    error: LOCAL_AUDIO_STREAM_ERROR
+    reason: LOCAL_AUDIO_STREAM_REASON
   ): void;
 
   onRemoteAudioStateChanged_056772e(
@@ -1254,7 +1266,7 @@ export interface IRtcEngineEventHandler {
   onUserAccountUpdated_de1c015(
     connection: RtcConnection,
     remoteUid: number,
-    userAccount: string
+    remoteUserAccount: string
   ): void;
 
   onSnapshotTaken_5a6a693(
@@ -1271,6 +1283,17 @@ export interface IRtcEngineEventHandler {
     uid: number,
     currentEvent: MEDIA_TRACE_EVENT,
     tracingInfo: VideoRenderingTracingInfo
+  ): void;
+
+  onSetRtmFlagResult_263e4cd(connection: RtcConnection, code: number): void;
+
+  onTranscodedStreamLayoutInfo_48f6419(
+    connection: RtcConnection,
+    uid: number,
+    width: number,
+    height: number,
+    layoutCount: number,
+    layoutlist: VideoLayout[]
   ): void;
 }
 
@@ -1343,13 +1366,13 @@ export interface IMetadataObserver {
   onMetadataReceived_cb7661d(metadata: Metadata): void;
 }
 
-export enum DIRECT_CDN_STREAMING_ERROR {
-  DIRECT_CDN_STREAMING_ERROR_OK = 0,
-  DIRECT_CDN_STREAMING_ERROR_FAILED = 1,
-  DIRECT_CDN_STREAMING_ERROR_AUDIO_PUBLICATION = 2,
-  DIRECT_CDN_STREAMING_ERROR_VIDEO_PUBLICATION = 3,
-  DIRECT_CDN_STREAMING_ERROR_NET_CONNECT = 4,
-  DIRECT_CDN_STREAMING_ERROR_BAD_NAME = 5,
+export enum DIRECT_CDN_STREAMING_REASON {
+  DIRECT_CDN_STREAMING_REASON_OK = 0,
+  DIRECT_CDN_STREAMING_REASON_FAILED = 1,
+  DIRECT_CDN_STREAMING_REASON_AUDIO_PUBLICATION = 2,
+  DIRECT_CDN_STREAMING_REASON_VIDEO_PUBLICATION = 3,
+  DIRECT_CDN_STREAMING_REASON_NET_CONNECT = 4,
+  DIRECT_CDN_STREAMING_REASON_BAD_NAME = 5,
 }
 
 export enum DIRECT_CDN_STREAMING_STATE {
@@ -1373,9 +1396,9 @@ export class DirectCdnStreamingStats {
 }
 
 export interface IDirectCdnStreamingEventHandler {
-  onDirectCdnStreamingStateChanged_2a6b2f2(
+  onDirectCdnStreamingStateChanged_40f1fa3(
     state: DIRECT_CDN_STREAMING_STATE,
-    error: DIRECT_CDN_STREAMING_ERROR,
+    reason: DIRECT_CDN_STREAMING_REASON,
     message: string
   ): void;
 
@@ -1409,8 +1432,6 @@ export class ExtensionInfo {
 }
 
 export interface IRtcEngine {
-  release_5039d15(sync: boolean): CallApiReturnType;
-
   initialize_0320339(context: RtcEngineContext): CallApiReturnType;
 
   getVersion(): CallApiReturnType;
@@ -1422,13 +1443,15 @@ export interface IRtcEngine {
     size: number
   ): CallApiReturnType;
 
+  queryDeviceScore(): CallApiReturnType;
+
   preloadChannel_a0779eb(
     token: string,
     channelId: string,
     uid: number
   ): CallApiReturnType;
 
-  preloadChannel_0e4f59e(
+  preloadChannelWithUserAccount_0e4f59e(
     token: string,
     channelId: string,
     userAccount: string
@@ -1543,6 +1566,10 @@ export interface IRtcEngine {
     scenarioType: VIDEO_APPLICATION_SCENARIO_TYPE
   ): CallApiReturnType;
 
+  setVideoQoEPreference_c4a3d9f(
+    qoePreference: VIDEO_QOE_PREFERENCE_TYPE
+  ): CallApiReturnType;
+
   enableAudio(): CallApiReturnType;
 
   disableAudio(): CallApiReturnType;
@@ -1574,6 +1601,10 @@ export interface IRtcEngine {
 
   setDefaultMuteAllRemoteVideoStreams_5039d15(mute: boolean): CallApiReturnType;
 
+  setRemoteDefaultVideoStreamType_5a94eb0(
+    streamType: VIDEO_STREAM_TYPE
+  ): CallApiReturnType;
+
   muteRemoteVideoStream_dbdc15a(uid: number, mute: boolean): CallApiReturnType;
 
   setRemoteVideoStreamType_9e6406e(
@@ -1584,10 +1615,6 @@ export interface IRtcEngine {
   setRemoteVideoSubscriptionOptions_0b6b258(
     uid: number,
     options: VideoSubscriptionOptions
-  ): CallApiReturnType;
-
-  setRemoteDefaultVideoStreamType_5a94eb0(
-    streamType: VIDEO_STREAM_TYPE
   ): CallApiReturnType;
 
   setSubscribeAudioBlocklist_2d31fd5(
@@ -1910,7 +1937,7 @@ export interface IRtcEngine {
 
   adjustPlaybackSignalVolume_46f8ab7(volume: number): CallApiReturnType;
 
-  adjustUserPlaybackSignalVolume_3cba5ae(
+  adjustUserPlaybackSignalVolume_88641bf(
     uid: number,
     volume: number
   ): CallApiReturnType;
@@ -1927,6 +1954,30 @@ export interface IRtcEngine {
     uidList: number[],
     uidNum: number,
     option: STREAM_FALLBACK_OPTIONS
+  ): CallApiReturnType;
+
+  enableExtension_d8b3874(
+    provider: string,
+    extension: string,
+    extensionInfo: ExtensionInfo,
+    enable: boolean
+  ): CallApiReturnType;
+
+  setExtensionProperty_f746b51(
+    provider: string,
+    extension: string,
+    extensionInfo: ExtensionInfo,
+    key: string,
+    value: string
+  ): CallApiReturnType;
+
+  getExtensionProperty_18768d4(
+    provider: string,
+    extension: string,
+    extensionInfo: ExtensionInfo,
+    key: string,
+    value: string,
+    buf_len: number
   ): CallApiReturnType;
 
   enableLoopbackRecording_0b8eb79(
@@ -1969,13 +2020,6 @@ export interface IRtcEngine {
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  enableExtension_d8b3874(
-    provider: string,
-    extension: string,
-    extensionInfo: ExtensionInfo,
-    enable: boolean
-  ): CallApiReturnType;
-
   setExtensionProperty_520ac55(
     provider: string,
     extension: string,
@@ -1991,23 +2035,6 @@ export interface IRtcEngine {
     value: string,
     buf_len: number,
     type: MEDIA_SOURCE_TYPE
-  ): CallApiReturnType;
-
-  setExtensionProperty_f746b51(
-    provider: string,
-    extension: string,
-    extensionInfo: ExtensionInfo,
-    key: string,
-    value: string
-  ): CallApiReturnType;
-
-  getExtensionProperty_18768d4(
-    provider: string,
-    extension: string,
-    extensionInfo: ExtensionInfo,
-    key: string,
-    value: string,
-    buf_len: number
   ): CallApiReturnType;
 
   setCameraCapturerConfiguration_afa93b3(
@@ -2159,8 +2186,6 @@ export interface IRtcEngine {
     transcoding: LiveTranscoding
   ): CallApiReturnType;
 
-  stopRtmpStream_3a2037f(url: string): CallApiReturnType;
-
   startLocalVideoTranscoder_90f9e33(
     config: LocalTranscoderConfiguration
   ): CallApiReturnType;
@@ -2168,6 +2193,8 @@ export interface IRtcEngine {
   updateLocalTranscoderConfiguration_90f9e33(
     config: LocalTranscoderConfiguration
   ): CallApiReturnType;
+
+  stopRtmpStream_3a2037f(url: string): CallApiReturnType;
 
   stopLocalVideoTranscoder(): CallApiReturnType;
 
@@ -2225,7 +2252,7 @@ export interface IRtcEngine {
     ordered: boolean
   ): CallApiReturnType;
 
-  createDataStream_81d7315(
+  createDataStream_5862815(
     streamId: number,
     config: DataStreamConfig
   ): CallApiReturnType;
@@ -2271,7 +2298,7 @@ export interface IRtcEngine {
 
   startAudioFrameDump_aad7331(
     channel_id: string,
-    user_id: number,
+    uid: number,
     location: string,
     uuid: string,
     passwd: string,
@@ -2281,7 +2308,7 @@ export interface IRtcEngine {
 
   stopAudioFrameDump_a4c9af4(
     channel_id: string,
-    user_id: number,
+    uid: number,
     location: string
   ): CallApiReturnType;
 
@@ -2323,14 +2350,6 @@ export interface IRtcEngine {
   getUserInfoByUid_6b7aee8(uid: number, userInfo: UserInfo): CallApiReturnType;
 
   startOrUpdateChannelMediaRelay_e68f0a4(
-    configuration: ChannelMediaRelayConfiguration
-  ): CallApiReturnType;
-
-  startChannelMediaRelay_e68f0a4(
-    configuration: ChannelMediaRelayConfiguration
-  ): CallApiReturnType;
-
-  updateChannelMediaRelay_e68f0a4(
     configuration: ChannelMediaRelayConfiguration
   ): CallApiReturnType;
 

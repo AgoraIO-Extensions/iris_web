@@ -2,22 +2,22 @@
 
 import { CallApiReturnType } from 'iris-web-core';
 
-export enum PreloadStatusCode {
-  kPreloadStatusCompleted = 0,
-  kPreloadStatusFailed = 1,
-  kPreloadStatusPreloading = 2,
-  kPreloadStatusRemoved = 3,
+export enum PreloadState {
+  kPreloadStateCompleted = 0,
+  kPreloadStateFailed = 1,
+  kPreloadStatePreloading = 2,
+  kPreloadStateRemoved = 3,
 }
 
-export enum MusicContentCenterStatusCode {
-  kMusicContentCenterStatusOk = 0,
-  kMusicContentCenterStatusErr = 1,
-  kMusicContentCenterStatusErrGateway = 2,
-  kMusicContentCenterStatusErrPermissionAndResource = 3,
-  kMusicContentCenterStatusErrInternalDataParse = 4,
-  kMusicContentCenterStatusErrMusicLoading = 5,
-  kMusicContentCenterStatusErrMusicDecryption = 6,
-  kMusicContentCenterStatusErrHttpInternalError = 7,
+export enum MusicContentCenterStateReason {
+  kMusicContentCenterReasonOk = 0,
+  kMusicContentCenterReasonError = 1,
+  kMusicContentCenterReasonGateway = 2,
+  kMusicContentCenterReasonPermissionAndResource = 3,
+  kMusicContentCenterReasonInternalDataParse = 4,
+  kMusicContentCenterReasonMusicLoading = 5,
+  kMusicContentCenterReasonMusicDecryption = 6,
+  kMusicContentCenterReasonHttpInternalError = 7,
 }
 
 export class MusicChartInfo {
@@ -98,39 +98,39 @@ export interface MusicCollection {
 }
 
 export interface IMusicContentCenterEventHandler {
-  onMusicChartsResult_3597d7e(
+  onMusicChartsResult_fb18135(
     requestId: string,
     result: MusicChartInfo[],
-    errorCode: MusicContentCenterStatusCode
+    reason: MusicContentCenterStateReason
   ): void;
 
-  onMusicCollectionResult_1517101(
+  onMusicCollectionResult_c30c2e6(
     requestId: string,
     result: MusicCollection,
-    errorCode: MusicContentCenterStatusCode
+    reason: MusicContentCenterStateReason
   ): void;
 
-  onLyricResult_981e37c(
+  onLyricResult_9ad9c90(
     requestId: string,
     songCode: number,
     lyricUrl: string,
-    errorCode: MusicContentCenterStatusCode
+    reason: MusicContentCenterStateReason
   ): void;
 
-  onSongSimpleInfoResult_981e37c(
+  onSongSimpleInfoResult_9ad9c90(
     requestId: string,
     songCode: number,
     simpleInfo: string,
-    errorCode: MusicContentCenterStatusCode
+    reason: MusicContentCenterStateReason
   ): void;
 
-  onPreLoadEvent_562c799(
+  onPreLoadEvent_20170bc(
     requestId: string,
     songCode: number,
     percent: number,
     lyricUrl: string,
-    status: PreloadStatusCode,
-    errorCode: MusicContentCenterStatusCode
+    state: PreloadState,
+    reason: MusicContentCenterStateReason
   ): void;
 }
 

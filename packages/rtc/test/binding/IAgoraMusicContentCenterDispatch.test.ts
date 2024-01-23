@@ -223,7 +223,7 @@ describe('MusicCollection', () => {
   });
 });
 describe('IMusicContentCenterEventHandler', () => {
-  test('MusicContentCenterEventHandler_onMusicChartsResult_3597d7e impl call', async () => {
+  test('MusicContentCenterEventHandler_onMusicChartsResult_fb18135 impl call', async () => {
     let eventHandler = new bindingAPI.IMusicContentCenterEventHandler(
       irisRtcEngine
     );
@@ -231,7 +231,7 @@ describe('IMusicContentCenterEventHandler', () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onMusicChartsResult_3597d7e(undefined, undefined, undefined);
+    eventHandler.onMusicChartsResult_fb18135(undefined, undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -241,7 +241,7 @@ describe('IMusicContentCenterEventHandler', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('MusicContentCenterEventHandler_onMusicCollectionResult_1517101 impl call', async () => {
+  test('MusicContentCenterEventHandler_onMusicCollectionResult_c30c2e6 impl call', async () => {
     let eventHandler = new bindingAPI.IMusicContentCenterEventHandler(
       irisRtcEngine
     );
@@ -249,7 +249,7 @@ describe('IMusicContentCenterEventHandler', () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onMusicCollectionResult_1517101(
+    eventHandler.onMusicCollectionResult_c30c2e6(
       undefined,
       undefined,
       undefined
@@ -263,7 +263,7 @@ describe('IMusicContentCenterEventHandler', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('MusicContentCenterEventHandler_onLyricResult_981e37c impl call', async () => {
+  test('MusicContentCenterEventHandler_onLyricResult_9ad9c90 impl call', async () => {
     let eventHandler = new bindingAPI.IMusicContentCenterEventHandler(
       irisRtcEngine
     );
@@ -271,30 +271,7 @@ describe('IMusicContentCenterEventHandler', () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onLyricResult_981e37c(
-      undefined,
-      undefined,
-      undefined,
-      undefined
-    );
-    expect(
-      eventHandler._engine.irisEventHandlerManager.notifyEvent
-    ).toBeCalledTimes(0);
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
-  });
-  test('MusicContentCenterEventHandler_onSongSimpleInfoResult_981e37c impl call', async () => {
-    let eventHandler = new bindingAPI.IMusicContentCenterEventHandler(
-      irisRtcEngine
-    );
-    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onSongSimpleInfoResult_981e37c(
+    eventHandler.onLyricResult_9ad9c90(
       undefined,
       undefined,
       undefined,
@@ -309,7 +286,7 @@ describe('IMusicContentCenterEventHandler', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('MusicContentCenterEventHandler_onPreLoadEvent_562c799 impl call', async () => {
+  test('MusicContentCenterEventHandler_onSongSimpleInfoResult_9ad9c90 impl call', async () => {
     let eventHandler = new bindingAPI.IMusicContentCenterEventHandler(
       irisRtcEngine
     );
@@ -317,7 +294,30 @@ describe('IMusicContentCenterEventHandler', () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onPreLoadEvent_562c799(
+    eventHandler.onSongSimpleInfoResult_9ad9c90(
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+  test('MusicContentCenterEventHandler_onPreLoadEvent_20170bc impl call', async () => {
+    let eventHandler = new bindingAPI.IMusicContentCenterEventHandler(
+      irisRtcEngine
+    );
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.onPreLoadEvent_20170bc(
       undefined,
       undefined,
       undefined,

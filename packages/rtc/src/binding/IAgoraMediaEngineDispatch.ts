@@ -44,23 +44,36 @@ export class IMediaEngineDispatch implements IMediaEngine {
   }
 
   // @ts-ignore
-  pushAudioFrame_8dfac8c(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('pushAudioFrame_8dfac8c not supported in this platform!');
+  pushAudioFrame_c71f4ab(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('pushAudioFrame_c71f4ab not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  pullAudioFrame_28bed4b(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('pullAudioFrame_28bed4b not supported in this platform!');
+  pullAudioFrame_2c74a9c(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('pullAudioFrame_2c74a9c not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   setExternalVideoSource_fff99b6(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'setExternalVideoSource_fff99b6 not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let enabled = obj.enabled;
+    if (enabled === undefined) throw 'enabled is undefined';
+    let useTexture = obj.useTexture;
+    if (useTexture === undefined) throw 'useTexture is undefined';
+    let sourceType = obj.sourceType;
+    if (sourceType === undefined) throw 'sourceType is undefined';
+    let encodedVideoOption = obj.encodedVideoOption;
+    if (encodedVideoOption === undefined)
+      throw 'encodedVideoOption is undefined';
+
+    return this._impl.setExternalVideoSource_fff99b6(
+      enabled,
+      useTexture,
+      sourceType,
+      encodedVideoOption
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -118,9 +131,9 @@ export class IMediaEngineDispatch implements IMediaEngine {
   }
 
   // @ts-ignore
-  pushEncodedVideoImage_f854c56(apiParam: ApiParam): CallApiReturnType {
+  pushEncodedVideoImage_e71452b(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'pushEncodedVideoImage_f854c56 not supported in this platform!'
+      'pushEncodedVideoImage_e71452b not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

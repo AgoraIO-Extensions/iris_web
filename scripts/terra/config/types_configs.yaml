@@ -4,13 +4,13 @@ parsers:
     package: '@agoraio-extensions/cxx-parser'
     args:
       includeHeaderDirs:
-        - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include'
+        - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.3.0/include'
       parseFiles:
         include:
-          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/*.h'
+          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.3.0/include/*.h'
         exclude:
-          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/time_utils.h'
-          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/IAgoraMediaComponentFactory.h'
+          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.3.0/include/time_utils.h'
+          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.3.0/include/IAgoraMediaComponentFactory.h'
 
   - name: RemoveNodeParser
     package: '@agoraio-extensions/terra_shared_configs'

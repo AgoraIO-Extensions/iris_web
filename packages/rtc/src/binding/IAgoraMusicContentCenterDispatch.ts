@@ -7,8 +7,8 @@ import {
   MusicChartCollection,
   MusicChartInfo,
   MusicCollection,
-  MusicContentCenterStatusCode,
-  PreloadStatusCode,
+  MusicContentCenterStateReason,
+  PreloadState,
 } from '@iris/native-rtc';
 import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
@@ -84,59 +84,59 @@ export class IMusicContentCenterEventHandler {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
-  onMusicChartsResult_3597d7e(
+  onMusicChartsResult_fb18135(
     requestId: string,
     result: MusicChartInfo[],
-    errorCode: MusicContentCenterStatusCode
+    reason: MusicContentCenterStateReason
   ): void {
     AgoraConsole.warn(
-      'onMusicChartsResult_3597d7e not supported in this platform!'
+      'onMusicChartsResult_fb18135 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onMusicCollectionResult_1517101(
+  onMusicCollectionResult_c30c2e6(
     requestId: string,
     result: MusicCollection,
-    errorCode: MusicContentCenterStatusCode
+    reason: MusicContentCenterStateReason
   ): void {
     AgoraConsole.warn(
-      'onMusicCollectionResult_1517101 not supported in this platform!'
+      'onMusicCollectionResult_c30c2e6 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onLyricResult_981e37c(
+  onLyricResult_9ad9c90(
     requestId: string,
     songCode: number,
     lyricUrl: string,
-    errorCode: MusicContentCenterStatusCode
+    reason: MusicContentCenterStateReason
   ): void {
-    AgoraConsole.warn('onLyricResult_981e37c not supported in this platform!');
+    AgoraConsole.warn('onLyricResult_9ad9c90 not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onSongSimpleInfoResult_981e37c(
+  onSongSimpleInfoResult_9ad9c90(
     requestId: string,
     songCode: number,
     simpleInfo: string,
-    errorCode: MusicContentCenterStatusCode
+    reason: MusicContentCenterStateReason
   ): void {
     AgoraConsole.warn(
-      'onSongSimpleInfoResult_981e37c not supported in this platform!'
+      'onSongSimpleInfoResult_9ad9c90 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onPreLoadEvent_562c799(
+  onPreLoadEvent_20170bc(
     requestId: string,
     songCode: number,
     percent: number,
     lyricUrl: string,
-    status: PreloadStatusCode,
-    errorCode: MusicContentCenterStatusCode
+    state: PreloadState,
+    reason: MusicContentCenterStateReason
   ): void {
-    AgoraConsole.warn('onPreLoadEvent_562c799 not supported in this platform!');
+    AgoraConsole.warn('onPreLoadEvent_20170bc not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }

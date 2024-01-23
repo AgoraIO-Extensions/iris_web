@@ -5,11 +5,11 @@ MY_PATH=$(realpath $(dirname "$0"))
 PROJECT_ROOT=$(realpath ${MY_PATH}/../..)
 
 # treated as a completely separate project (not even a workspace), create an empty yarn.lock file in it.
-# touch yarn.lock
-# rm -rf node_modules
-# rm -rf .terra
-# yarn install
-# rm yarn.lock
+touch yarn.lock
+rm -rf node_modules
+rm -rf .terra
+yarn install
+rm yarn.lock
 
 npm exec terra -- run \
     --config ${MY_PATH}/config/types_configs.yaml \
@@ -24,4 +24,3 @@ cd ${PROJECT_ROOT}
 node scripts/terra/export-types-file-generate.js output-path=packages/@iris/rtc/index.ts
 
 npm run lint:fix
-# npm run build
