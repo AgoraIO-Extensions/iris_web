@@ -1170,10 +1170,18 @@ describe('IRtcEngineEventHandler', () => {
   test('RtcEngineEventHandler_onChannelMediaRelayStateChanged_4e92b3c impl call', async () => {
     let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
     eventHandler.onChannelMediaRelayStateChanged_4e92b3c(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
-    ).toBeCalledTimes(1);
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   });
   test('RtcEngineEventHandler_onLocalPublishFallbackToAudioOnly_5039d15 impl call', async () => {
     let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
@@ -2786,13 +2794,13 @@ describe('IRtcEngine', () => {
     ).toBeCalledWith('test');
   });
 
-  test('RtcEngine_getVersion impl call', async () => {
+  test('RtcEngine_getVersion_915cb25 impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'RtcEngine_getVersion',
+      'RtcEngine_getVersion_915cb25',
       JSON.stringify(nParam),
       0,
       '',
@@ -2802,7 +2810,7 @@ describe('IRtcEngine', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl?.getVersion
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl?.getVersion_915cb25
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -10471,7 +10479,7 @@ describe('IRtcEngine', () => {
     );
   });
 
-  test('RtcEngine_joinChannelWithUserAccountEx_4685af9 impl call', async () => {
+  test('RtcEngine_joinChannelWithUserAccountEx_268b977 impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -10482,7 +10490,7 @@ describe('IRtcEngine', () => {
       options: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'RtcEngine_joinChannelWithUserAccountEx_4685af9',
+      'RtcEngine_joinChannelWithUserAccountEx_268b977',
       JSON.stringify(nParam),
       0,
       '',
@@ -10493,7 +10501,7 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
-        ?.joinChannelWithUserAccountEx_4685af9
+        ?.joinChannelWithUserAccountEx_268b977
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(

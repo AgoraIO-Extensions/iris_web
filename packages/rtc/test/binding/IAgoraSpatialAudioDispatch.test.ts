@@ -65,13 +65,13 @@ describe('ILocalSpatialAudioEngine', () => {
     );
   });
 
-  test('LocalSpatialAudioEngine_initialize impl call', async () => {
+  test('LocalSpatialAudioEngine_initialize_cf94fbf impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'LocalSpatialAudioEngine_initialize',
+      'LocalSpatialAudioEngine_initialize_cf94fbf',
       JSON.stringify(nParam),
       0,
       '',
@@ -82,7 +82,7 @@ describe('ILocalSpatialAudioEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('LocalSpatialAudioEngine')._impl
-        ?.initialize
+        ?.initialize_cf94fbf
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(

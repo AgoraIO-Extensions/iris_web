@@ -18,7 +18,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     this._engine = engine;
   }
 
-  joinChannelEx(
+  joinChannelEx_a3cd08c(
     token: string,
     connection: NATIVE_RTC.RtcConnection,
     options: NATIVE_RTC.ChannelMediaOptions

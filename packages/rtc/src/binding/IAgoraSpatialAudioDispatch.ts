@@ -20,8 +20,8 @@ export class ILocalSpatialAudioEngineDispatch
   }
 
   // @ts-ignore
-  initialize(): CallApiReturnType {
-    AgoraConsole.warn('initialize not supported in this platform!');
+  initialize_cf94fbf(): CallApiReturnType {
+    AgoraConsole.warn('initialize_cf94fbf not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 

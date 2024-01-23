@@ -15,7 +15,7 @@ export interface IAudioDeviceManager {
 
   getPlaybackDevice_73b9872(deviceId: string): CallApiReturnType;
 
-  getPlaybackDeviceInfo(): CallApiReturnType;
+  getPlaybackDeviceInfo_5540658(): CallApiReturnType;
 
   setPlaybackDeviceVolume_46f8ab7(volume: number): CallApiReturnType;
 
@@ -25,7 +25,7 @@ export interface IAudioDeviceManager {
 
   getRecordingDevice_73b9872(deviceId: string): CallApiReturnType;
 
-  getRecordingDeviceInfo(): CallApiReturnType;
+  getRecordingDeviceInfo_5540658(): CallApiReturnType;
 
   setRecordingDeviceVolume_46f8ab7(volume: number): CallApiReturnType;
 

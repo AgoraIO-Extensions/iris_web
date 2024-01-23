@@ -132,7 +132,7 @@ export async function joinChannelEx(
   };
   let result = await callIris(
     apiEnginePtr,
-    'RtcEngineEx_joinChannelEx_89b2aa1',
+    'RtcEngineEx_joinChannelEx_a3cd08c',
     param
   );
   expect(result.code).toBe(0);

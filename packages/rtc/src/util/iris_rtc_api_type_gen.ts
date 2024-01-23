@@ -596,7 +596,7 @@ export const IDIRECTCDNSTREAMINGEVENTHANDLER_ONDIRECTCDNSTREAMINGSTATECHANGED_40
 export const IDIRECTCDNSTREAMINGEVENTHANDLER_ONDIRECTCDNSTREAMINGSTATS_d50595f =
   'DirectCdnStreamingEventHandler_onDirectCdnStreamingStats_d50595f';
 export const IRTCENGINE_INITIALIZE_0320339 = 'RtcEngine_initialize_0320339';
-export const IRTCENGINE_GETVERSION = 'RtcEngine_getVersion';
+export const IRTCENGINE_GETVERSION_915cb25 = 'RtcEngine_getVersion_915cb25';
 export const IRTCENGINE_GETERRORDESCRIPTION_46f8ab7 =
   'RtcEngine_getErrorDescription_46f8ab7';
 export const IRTCENGINE_QUERYCODECCAPABILITY_ddf4f31 =
@@ -1046,8 +1046,8 @@ export const IRTCENGINE_JOINCHANNELWITHUSERACCOUNT_0e4f59e =
   'RtcEngine_joinChannelWithUserAccount_0e4f59e';
 export const IRTCENGINE_JOINCHANNELWITHUSERACCOUNT_4685af9 =
   'RtcEngine_joinChannelWithUserAccount_4685af9';
-export const IRTCENGINE_JOINCHANNELWITHUSERACCOUNTEX_4685af9 =
-  'RtcEngine_joinChannelWithUserAccountEx_4685af9';
+export const IRTCENGINE_JOINCHANNELWITHUSERACCOUNTEX_268b977 =
+  'RtcEngine_joinChannelWithUserAccountEx_268b977';
 export const IRTCENGINE_GETUSERINFOBYUSERACCOUNT_c6a8f08 =
   'RtcEngine_getUserInfoByUserAccount_c6a8f08';
 export const IRTCENGINE_GETUSERINFOBYUID_6b7aee8 =
@@ -1106,8 +1106,8 @@ export const IRTCENGINE_ENABLEINSTANTMEDIARENDERING =
 export const IRTCENGINE_GETNTPWALLTIMEINMS = 'RtcEngine_getNtpWallTimeInMs';
 export const IRTCENGINE_ISFEATUREAVAILABLEONDEVICE_a694b62 =
   'RtcEngine_isFeatureAvailableOnDevice_a694b62';
-export const IRTCENGINEEX_JOINCHANNELEX_89b2aa1 =
-  'RtcEngineEx_joinChannelEx_89b2aa1';
+export const IRTCENGINEEX_JOINCHANNELEX_a3cd08c =
+  'RtcEngineEx_joinChannelEx_a3cd08c';
 export const IRTCENGINEEX_LEAVECHANNELEX_c81e1a4 =
   'RtcEngineEx_leaveChannelEx_c81e1a4';
 export const IRTCENGINEEX_LEAVECHANNELEX_b03ee9a =
@@ -1210,8 +1210,8 @@ export const IRTCENGINEEX_SETPARAMETERSEX_8225ea3 =
   'RtcEngineEx_setParametersEx_8225ea3';
 export const ILOCALSPATIALAUDIOENGINE_RELEASE =
   'LocalSpatialAudioEngine_release';
-export const ILOCALSPATIALAUDIOENGINE_INITIALIZE =
-  'LocalSpatialAudioEngine_initialize';
+export const ILOCALSPATIALAUDIOENGINE_INITIALIZE_cf94fbf =
+  'LocalSpatialAudioEngine_initialize_cf94fbf';
 export const ILOCALSPATIALAUDIOENGINE_UPDATEREMOTEPOSITION_adc0909 =
   'LocalSpatialAudioEngine_updateRemotePosition_adc0909';
 export const ILOCALSPATIALAUDIOENGINE_UPDATEREMOTEPOSITIONEX_f0252d9 =
@@ -1258,8 +1258,8 @@ export const IAUDIODEVICEMANAGER_SETPLAYBACKDEVICE_4ad5f6e =
   'AudioDeviceManager_setPlaybackDevice_4ad5f6e';
 export const IAUDIODEVICEMANAGER_GETPLAYBACKDEVICE_73b9872 =
   'AudioDeviceManager_getPlaybackDevice_73b9872';
-export const IAUDIODEVICEMANAGER_GETPLAYBACKDEVICEINFO =
-  'AudioDeviceManager_getPlaybackDeviceInfo';
+export const IAUDIODEVICEMANAGER_GETPLAYBACKDEVICEINFO_5540658 =
+  'AudioDeviceManager_getPlaybackDeviceInfo_5540658';
 export const IAUDIODEVICEMANAGER_SETPLAYBACKDEVICEVOLUME_46f8ab7 =
   'AudioDeviceManager_setPlaybackDeviceVolume_46f8ab7';
 export const IAUDIODEVICEMANAGER_GETPLAYBACKDEVICEVOLUME_915cb25 =
@@ -1268,8 +1268,8 @@ export const IAUDIODEVICEMANAGER_SETRECORDINGDEVICE_4ad5f6e =
   'AudioDeviceManager_setRecordingDevice_4ad5f6e';
 export const IAUDIODEVICEMANAGER_GETRECORDINGDEVICE_73b9872 =
   'AudioDeviceManager_getRecordingDevice_73b9872';
-export const IAUDIODEVICEMANAGER_GETRECORDINGDEVICEINFO =
-  'AudioDeviceManager_getRecordingDeviceInfo';
+export const IAUDIODEVICEMANAGER_GETRECORDINGDEVICEINFO_5540658 =
+  'AudioDeviceManager_getRecordingDeviceInfo_5540658';
 export const IAUDIODEVICEMANAGER_SETRECORDINGDEVICEVOLUME_46f8ab7 =
   'AudioDeviceManager_setRecordingDeviceVolume_46f8ab7';
 export const IAUDIODEVICEMANAGER_GETRECORDINGDEVICEVOLUME_915cb25 =

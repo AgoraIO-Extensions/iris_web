@@ -54,7 +54,7 @@ afterEach(() => {
 });
 
 describe('IAgoraRtcEngineImpl', () => {
-  test('joinChannelEx', async () => {
+  test('joinChannelEx_a3cd08c', async () => {
     jest.spyOn(
       irisRtcEngine.rtcEngineEventHandler,
       'onJoinChannelSuccess_263e4cd'
@@ -72,7 +72,7 @@ describe('IAgoraRtcEngineImpl', () => {
         clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
       },
     };
-    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_89b2aa1', param);
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_a3cd08c', param);
 
     let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
       param.connection
@@ -100,7 +100,7 @@ describe('IAgoraRtcEngineImpl', () => {
         clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
       },
     };
-    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_89b2aa1', param);
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_a3cd08c', param);
     let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
       param.connection
     );
@@ -128,7 +128,7 @@ describe('IAgoraRtcEngineImpl', () => {
         clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
       },
     };
-    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_89b2aa1', param);
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_a3cd08c', param);
     let agoraRTCClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
       param.connection
     ).agoraRTCClient;
@@ -167,7 +167,7 @@ describe('IAgoraRtcEngineImpl', () => {
         clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
       },
     };
-    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_89b2aa1', param);
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_a3cd08c', param);
     let param2 = {
       canvas: {
         uid: TEST_REMOTE_UID,

@@ -33,7 +33,7 @@ export class SpatialAudioZone {
 export interface ILocalSpatialAudioEngine {
   release(): CallApiReturnType;
 
-  initialize(): CallApiReturnType;
+  initialize_cf94fbf(): CallApiReturnType;
 
   updateRemotePosition_adc0909(
     uid: number,

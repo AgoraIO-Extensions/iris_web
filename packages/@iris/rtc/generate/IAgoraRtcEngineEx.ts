@@ -32,7 +32,7 @@ export class RtcConnection {
 }
 
 export interface IRtcEngineEx {
-  joinChannelEx_89b2aa1(
+  joinChannelEx_a3cd08c(
     token: string,
     connection: RtcConnection,
     options: ChannelMediaOptions

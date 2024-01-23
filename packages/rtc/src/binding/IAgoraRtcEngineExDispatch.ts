@@ -21,9 +21,16 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
     this._engine = engine;
   }
   // @ts-ignore
-  joinChannelEx_89b2aa1(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('joinChannelEx_89b2aa1 not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  joinChannelEx_a3cd08c(apiParam: ApiParam): CallApiReturnType {
+    let obj = JSON.parse(apiParam.data) as any;
+    let token = obj.token;
+    if (token === undefined) throw 'token is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+    let options = obj.options;
+    if (options === undefined) throw 'options is undefined';
+
+    return this._impl.joinChannelEx_a3cd08c(token, connection, options);
   }
 
   // @ts-ignore

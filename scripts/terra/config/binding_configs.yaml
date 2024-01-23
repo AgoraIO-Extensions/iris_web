@@ -12,14 +12,14 @@ parsers:
           - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.3.0/include/time_utils.h'
           - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.3.0/include/IAgoraMediaComponentFactory.h'
 
+  - name: IrisApiIdParser
+    package: '@agoraio-extensions/terra_shared_configs'
   - name: RemoveNodeParser
     package: '@agoraio-extensions/terra_shared_configs'
     args:
       ignoreDefaultConfig: true
       configFilePath: ./remove_node_list.ts
   - name: PointerToArrayParser
-    package: '@agoraio-extensions/terra_shared_configs'
-  - name: IrisApiIdParser
     package: '@agoraio-extensions/terra_shared_configs'
   - name: UpdateSimpleTypeParser
     package: '@agoraio-extensions/terra_shared_configs'

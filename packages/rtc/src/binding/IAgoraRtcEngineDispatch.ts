@@ -760,26 +760,10 @@ export class IRtcEngineEventHandler {
     state: CHANNEL_MEDIA_RELAY_STATE,
     code: CHANNEL_MEDIA_RELAY_ERROR
   ): void {
-    let _obj = {
-      state,
-      code,
-    };
-    let _json = JSON.stringify(_obj);
-    let eventParam = new IrisCore.EventParam(
-      'RtcEngineEventHandler_onChannelMediaRelayStateChanged_4e92b3c',
-      _json,
-      0,
-      '',
-      [],
-      [],
-      0
+    AgoraConsole.warn(
+      'onChannelMediaRelayStateChanged_4e92b3c not supported in this platform!'
     );
-    AgoraConsole.log(
-      `onChannelMediaRelayStateChanged_4e92b3c eventParam ${JSON.stringify(
-        eventParam
-      )}`
-    );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onLocalPublishFallbackToAudioOnly_5039d15(
@@ -2097,8 +2081,8 @@ export class IRtcEngineDispatch implements IRtcEngine {
   }
 
   // @ts-ignore
-  getVersion(): CallApiReturnType {
-    AgoraConsole.warn('getVersion not supported in this platform!');
+  getVersion_915cb25(): CallApiReturnType {
+    AgoraConsole.warn('getVersion_915cb25 not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -4090,9 +4074,9 @@ export class IRtcEngineDispatch implements IRtcEngine {
   }
 
   // @ts-ignore
-  joinChannelWithUserAccountEx_4685af9(apiParam: ApiParam): CallApiReturnType {
+  joinChannelWithUserAccountEx_268b977(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'joinChannelWithUserAccountEx_4685af9 not supported in this platform!'
+      'joinChannelWithUserAccountEx_268b977 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

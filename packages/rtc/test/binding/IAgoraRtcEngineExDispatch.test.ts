@@ -39,9 +39,39 @@ afterEach(() => {
 });
 
 describe('IRtcEngineEx', () => {
-  test('RtcEngineEx_joinChannelEx_89b2aa1 impl call', async () => {
+  test('RtcEngineEx_joinChannelEx_a3cd08c parameter', async () => {
+    let nParam = {
+      token: undefined,
+      connection: undefined,
+      options: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngineEx_joinChannelEx_a3cd08c',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
+  });
+
+  test('RtcEngineEx_joinChannelEx_a3cd08c impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl,
+        'joinChannelEx_a3cd08c'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       token: 'test',
@@ -49,7 +79,7 @@ describe('IRtcEngineEx', () => {
       options: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'RtcEngineEx_joinChannelEx_89b2aa1',
+      'RtcEngineEx_joinChannelEx_a3cd08c',
       JSON.stringify(nParam),
       0,
       '',
@@ -60,13 +90,12 @@ describe('IRtcEngineEx', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
-        ?.joinChannelEx_89b2aa1
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .joinChannelEx_a3cd08c
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
+        .joinChannelEx_a3cd08c
+    ).toBeCalledWith('test', 'test', 'test');
   });
 
   test('RtcEngineEx_leaveChannelEx_c81e1a4 parameter', async () => {

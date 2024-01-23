@@ -1434,7 +1434,7 @@ export class ExtensionInfo {
 export interface IRtcEngine {
   initialize_0320339(context: RtcEngineContext): CallApiReturnType;
 
-  getVersion(): CallApiReturnType;
+  getVersion_915cb25(): CallApiReturnType;
 
   getErrorDescription_46f8ab7(code: number): CallApiReturnType;
 
@@ -2335,7 +2335,7 @@ export interface IRtcEngine {
     options: ChannelMediaOptions
   ): CallApiReturnType;
 
-  joinChannelWithUserAccountEx_4685af9(
+  joinChannelWithUserAccountEx_268b977(
     token: string,
     channelId: string,
     userAccount: string,
