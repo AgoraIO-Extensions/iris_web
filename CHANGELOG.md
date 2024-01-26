@@ -1,5 +1,12 @@
 # IRIS_WEB
 
+## [0.5.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.3.0...v0.5.0) (2024-01-26)
+
+
+### Features
+
+* adapt native 4.3.0 ([#26](https://github.com/AgoraIO-Extensions/iris_web/issues/26)) ([2b5128e](https://github.com/AgoraIO-Extensions/iris_web/commit/2b5128e7c977156cc201260b491e2fea65e3d7a4))
+
 ## [0.4.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.3.1...v0.4.0) (2023-12-21)
 
 
