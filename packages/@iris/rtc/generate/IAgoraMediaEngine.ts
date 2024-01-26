@@ -25,26 +25,30 @@ export enum AUDIO_MIXING_DUAL_MONO_MODE {
 }
 
 export interface IMediaEngine {
-  registerAudioFrameObserver(observer: IAudioFrameObserver): CallApiReturnType;
+  registerAudioFrameObserver_d873a64(
+    observer: IAudioFrameObserver
+  ): CallApiReturnType;
 
-  registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
+  registerVideoFrameObserver_2cc0ef1(
+    observer: IVideoFrameObserver
+  ): CallApiReturnType;
 
-  registerVideoEncodedFrameObserver(
+  registerVideoEncodedFrameObserver_d45d579(
     observer: IVideoEncodedFrameObserver
   ): CallApiReturnType;
 
-  pushAudioFrame(frame: AudioFrame, trackId: number): CallApiReturnType;
+  pushAudioFrame_c71f4ab(frame: AudioFrame, trackId: number): CallApiReturnType;
 
-  pullAudioFrame(frame: AudioFrame): CallApiReturnType;
+  pullAudioFrame_2c74a9c(frame: AudioFrame): CallApiReturnType;
 
-  setExternalVideoSource(
+  setExternalVideoSource_fff99b6(
     enabled: boolean,
     useTexture: boolean,
     sourceType: EXTERNAL_VIDEO_SOURCE_TYPE,
     encodedVideoOption: SenderOptions
   ): CallApiReturnType;
 
-  setExternalAudioSource(
+  setExternalAudioSource_e6538be(
     enabled: boolean,
     sampleRate: number,
     channels: number,
@@ -52,30 +56,30 @@ export interface IMediaEngine {
     publish: boolean
   ): CallApiReturnType;
 
-  createCustomAudioTrack(
+  createCustomAudioTrack_5a0bf1a(
     trackType: AUDIO_TRACK_TYPE,
     config: AudioTrackConfig
   ): CallApiReturnType;
 
-  destroyCustomAudioTrack(trackId: number): CallApiReturnType;
+  destroyCustomAudioTrack_6178b5d(trackId: number): CallApiReturnType;
 
-  setExternalAudioSink(
+  setExternalAudioSink_d275ce0(
     enabled: boolean,
     sampleRate: number,
     channels: number
   ): CallApiReturnType;
 
-  enableCustomAudioLocalPlayback(
+  enableCustomAudioLocalPlayback_5f38e8a(
     trackId: number,
     enabled: boolean
   ): CallApiReturnType;
 
-  pushVideoFrame(
+  pushVideoFrame_4e544e2(
     frame: ExternalVideoFrame,
     videoTrackId: number
   ): CallApiReturnType;
 
-  pushEncodedVideoImage(
+  pushEncodedVideoImage_e71452b(
     imageBuffer: Uint8Array,
     length: number,
     videoEncodedFrameInfo: EncodedVideoFrameInfo,

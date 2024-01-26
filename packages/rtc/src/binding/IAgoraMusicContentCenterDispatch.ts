@@ -2,247 +2,270 @@
 
 import {
   ERROR_CODE_TYPE,
+  IMusicContentCenter,
+  IMusicPlayer,
   MusicChartCollection,
+  MusicChartInfo,
   MusicCollection,
-  MusicContentCenterStatusCode,
-  PreloadStatusCode,
-} from '@iris/native-rtc-binding';
+  MusicContentCenterStateReason,
+  PreloadState,
+} from '@iris/native-rtc';
 import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import {
-  IMusicContentCenterImpl,
-  IMusicPlayerImpl,
-  MusicChartCollectionImpl,
-  MusicCollectionImpl,
-} from '../impl/IAgoraMusicContentCenterImpl';
 import { AgoraConsole } from '../util/AgoraConsole';
 
-export class MusicChartCollectionDispatch {
-  _impl: MusicChartCollectionImpl;
+import { IMediaPlayerDispatch } from './IAgoraMediaPlayerDispatch';
+
+export class MusicChartCollectionDispatch implements MusicChartCollection {
   _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new MusicChartCollectionImpl(engine);
     this._engine = engine;
   }
+  // @ts-ignore
   getCount(): CallApiReturnType {
     AgoraConsole.warn('getCount not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  get(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('get not supported in this platform!');
+  // @ts-ignore
+  get_46f8ab7(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('get_46f8ab7 not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
 
-export class MusicCollectionDispatch {
-  _impl: MusicCollectionImpl;
+export class MusicCollectionDispatch implements MusicCollection {
   _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new MusicCollectionImpl(engine);
     this._engine = engine;
   }
+  // @ts-ignore
   getCount(): CallApiReturnType {
     AgoraConsole.warn('getCount not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
+  // @ts-ignore
   getTotal(): CallApiReturnType {
     AgoraConsole.warn('getTotal not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
+  // @ts-ignore
   getPage(): CallApiReturnType {
     AgoraConsole.warn('getPage not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
+  // @ts-ignore
   getPageSize(): CallApiReturnType {
     AgoraConsole.warn('getPageSize not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  getMusic(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('getMusic not supported in this platform!');
+  // @ts-ignore
+  getMusic_8fcdcef(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('getMusic_8fcdcef not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
 
 export class IMusicContentCenterEventHandler {
-  classPrefix: string = 'MusicContentCenterEventHandler_';
-
   _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
-  }
-
-  eventKey(event: string): string {
-    return `${this.classPrefix}${event}`;
   }
 
   notifyEvent(param: ApiParam): void {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
-  onMusicChartsResult(
+  onMusicChartsResult_fb18135(
     requestId: string,
-    result: MusicChartCollection,
-    errorCode: MusicContentCenterStatusCode
-  ): void {
-    AgoraConsole.warn('onMusicChartsResult not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  onMusicCollectionResult(
-    requestId: string,
-    result: MusicCollection,
-    errorCode: MusicContentCenterStatusCode
+    result: MusicChartInfo[],
+    reason: MusicContentCenterStateReason
   ): void {
     AgoraConsole.warn(
-      'onMusicCollectionResult not supported in this platform!'
+      'onMusicChartsResult_fb18135 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onLyricResult(
+  onMusicCollectionResult_c30c2e6(
+    requestId: string,
+    result: MusicCollection,
+    reason: MusicContentCenterStateReason
+  ): void {
+    AgoraConsole.warn(
+      'onMusicCollectionResult_c30c2e6 not supported in this platform!'
+    );
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  onLyricResult_9ad9c90(
     requestId: string,
     songCode: number,
     lyricUrl: string,
-    errorCode: MusicContentCenterStatusCode
+    reason: MusicContentCenterStateReason
   ): void {
-    AgoraConsole.warn('onLyricResult not supported in this platform!');
+    AgoraConsole.warn('onLyricResult_9ad9c90 not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onSongSimpleInfoResult(
+  onSongSimpleInfoResult_9ad9c90(
     requestId: string,
     songCode: number,
     simpleInfo: string,
-    errorCode: MusicContentCenterStatusCode
+    reason: MusicContentCenterStateReason
   ): void {
-    AgoraConsole.warn('onSongSimpleInfoResult not supported in this platform!');
+    AgoraConsole.warn(
+      'onSongSimpleInfoResult_9ad9c90 not supported in this platform!'
+    );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onPreLoadEvent(
+  onPreLoadEvent_20170bc(
     requestId: string,
     songCode: number,
     percent: number,
     lyricUrl: string,
-    status: PreloadStatusCode,
-    errorCode: MusicContentCenterStatusCode
+    state: PreloadState,
+    reason: MusicContentCenterStateReason
   ): void {
-    AgoraConsole.warn('onPreLoadEvent not supported in this platform!');
+    AgoraConsole.warn('onPreLoadEvent_20170bc not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
 
-export class IMusicPlayerDispatch {
-  _impl: IMusicPlayerImpl;
+export class IMusicPlayerDispatch extends IMediaPlayerDispatch
+  implements IMusicPlayer {
   _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new IMusicPlayerImpl(engine);
+    super(engine);
     this._engine = engine;
   }
 }
 
-export class IMusicContentCenterDispatch {
-  _impl: IMusicContentCenterImpl;
+export class IMusicContentCenterDispatch implements IMusicContentCenter {
   _engine: IrisRtcEngine = null;
 
   constructor(engine: IrisRtcEngine) {
-    this._impl = new IMusicContentCenterImpl(engine);
     this._engine = engine;
   }
-  initialize(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('initialize not supported in this platform!');
+  // @ts-ignore
+  initialize_df70304(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('initialize_df70304 not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  renewToken(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('renewToken not supported in this platform!');
+  // @ts-ignore
+  renewToken_3a2037f(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('renewToken_3a2037f not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
+  // @ts-ignore
   release(): CallApiReturnType {
     AgoraConsole.warn('release not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  registerEventHandler(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('registerEventHandler not supported in this platform!');
+  // @ts-ignore
+  registerEventHandler_ae49451(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'registerEventHandler_ae49451 not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
+  // @ts-ignore
   unregisterEventHandler(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn('unregisterEventHandler not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
+  // @ts-ignore
   createMusicPlayer(): CallApiReturnType {
     AgoraConsole.warn('createMusicPlayer not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  getMusicCharts(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('getMusicCharts not supported in this platform!');
+  // @ts-ignore
+  getMusicCharts_66d4ecd(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('getMusicCharts_66d4ecd not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  getMusicCollectionByMusicChartId(apiParam: ApiParam): CallApiReturnType {
+  // @ts-ignore
+  getMusicCollectionByMusicChartId_8cd0b4d(
+    apiParam: ApiParam
+  ): CallApiReturnType {
     AgoraConsole.warn(
-      'getMusicCollectionByMusicChartId not supported in this platform!'
+      'getMusicCollectionByMusicChartId_8cd0b4d not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  searchMusic(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('searchMusic not supported in this platform!');
+  // @ts-ignore
+  searchMusic_3f8cf09(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('searchMusic_3f8cf09 not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  preload(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('preload not supported in this platform!');
+  // @ts-ignore
+  preload_bd5a5a3(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('preload_bd5a5a3 not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  preload2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('preload2 not supported in this platform!');
+  // @ts-ignore
+  preload_d3baeab(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('preload_d3baeab not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  removeCache(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('removeCache not supported in this platform!');
+  // @ts-ignore
+  removeCache_f631116(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('removeCache_f631116 not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  getCaches(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('getCaches not supported in this platform!');
+  // @ts-ignore
+  getCaches_c4f9978(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('getCaches_c4f9978 not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  isPreloaded(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('isPreloaded not supported in this platform!');
+  // @ts-ignore
+  isPreloaded_f631116(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('isPreloaded_f631116 not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  getLyric(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('getLyric not supported in this platform!');
+  // @ts-ignore
+  getLyric_5ab5efd(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('getLyric_5ab5efd not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  getSongSimpleInfo(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('getSongSimpleInfo not supported in this platform!');
+  // @ts-ignore
+  getSongSimpleInfo_d3baeab(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'getSongSimpleInfo_d3baeab not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  getInternalSongCode(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('getInternalSongCode not supported in this platform!');
+  // @ts-ignore
+  getInternalSongCode_3a3d1e7(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'getInternalSongCode_3a3d1e7 not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }

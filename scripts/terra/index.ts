@@ -3,33 +3,32 @@ import * as path from 'path';
 import { CXXFile, CXXTYPE, CXXTerraNode } from '@agoraio-extensions/cxx-parser';
 import {
   ParseResult,
-  Parser,
   RenderResult,
   TerraContext,
 } from '@agoraio-extensions/terra-core';
 
-import { renderWithConfiguration } from '@agoraio-extensions/terra_shared_configs';
-
 import {
-  appendNumberToDuplicateMemberFunction,
-  filterFile,
-  isMatch,
-} from './utils';
+  IrisApiIdParserUserData,
+  renderWithConfiguration,
+} from '@agoraio-extensions/terra_shared_configs';
 
-interface CXXFileUserData {
+import { getIrisApiIdForWrapperFunc, isMatch } from './utils';
+
+type CXXFileUserData = {
   fileName: string;
-}
+};
 
-interface TerraNodeUserData {
+type TerraNodeUserData = IrisApiIdParserUserData & {
   isStruct: boolean;
   isEnumz: boolean;
   isClazz: boolean;
   isCallback: boolean;
-}
+};
 
-interface ClazzMethodUserData {
-  _prefix: string;
-}
+type ClazzMethodUserData = IrisApiIdParserUserData & {
+  output: string;
+  input: string;
+};
 
 export default function (
   terraContext: TerraContext,
@@ -37,8 +36,7 @@ export default function (
   parseResult: ParseResult
 ): RenderResult[] {
   let cxxfiles = parseResult.nodes as CXXFile[];
-  //移除不需要的文件
-  let view = filterFile(cxxfiles).map((cxxfile: CXXFile) => {
+  let view = cxxfiles.map((cxxfile: CXXFile) => {
     const cxxUserData: CXXFileUserData = {
       fileName: path.basename(
         cxxfile.file_path,
@@ -47,33 +45,47 @@ export default function (
     };
     cxxfile.user_data = cxxUserData;
 
-    //移除没有名字的node
-    cxxfile.nodes = cxxfile.nodes.filter((node) => {
-      return node.name !== '';
-    });
-
     cxxfile.nodes = cxxfile.nodes.map((node: CXXTerraNode) => {
       let isCallback = isMatch(node.name, 'isCallback');
 
-      if (node.name === 'VIDEO_SOURCE_TYPE') {
-        // debugger;
-      }
-
       if (node.__TYPE === CXXTYPE.Clazz) {
-        //重载函数重命名, 自动末尾+数字
-        //['joinChannel', 'joinChannel'] => ['joinChannel', 'joinChannel2']
-        node.asClazz().methods = appendNumberToDuplicateMemberFunction(
-          node.asClazz().methods
-        );
-
         node.asClazz().methods.map((method) => {
+          method.name = getIrisApiIdForWrapperFunc(method);
           const clazzMethodUserData: ClazzMethodUserData = {
-            _prefix:
-              method.parent.asClazz().name === 'IRtcEngineEventHandlerEx' &&
-              !method.name.endsWith('Ex')
-                ? 'Ex'
-                : '',
+            output: '',
+            input: '',
+            ...method.user_data,
           };
+          let output_params: string[] = [];
+          let input_params: string[] = [];
+          method.asMemberFunction().parameters.map((param) => {
+            if (param.is_output) {
+              output_params.push(`${param.name}: ${param.type.name}`);
+            } else {
+              // if (param.default_value) {
+              //   input_params.push(`${param.name}?: ${param.type.name}`);
+              // } else {
+                // input_params.push(`${param.name}: ${param.type.name}`);
+              // }
+            }
+            input_params.push(`${param.name}: ${param.type.name}`);
+          });
+          if (output_params.length > 0) {
+            if (
+              method.asMemberFunction().return_type.name !== 'void' &&
+              method.asMemberFunction().return_type.name !== 'number'
+            ) {
+              output_params.push(`result: ${method.return_type.name},`);
+            }
+          }
+          clazzMethodUserData.input = input_params.join(',');
+          if (output_params.length > 1) {
+            clazzMethodUserData.output = `{${output_params.join(',')}}`;
+          } else if (output_params.length == 1) {
+            clazzMethodUserData.output = output_params[0]?.split(': ')[1]!;
+          } else {
+            clazzMethodUserData.output = `${method.return_type.name}`;
+          }
           method.user_data = clazzMethodUserData;
         });
       }
@@ -82,6 +94,7 @@ export default function (
         isEnumz: node.__TYPE === CXXTYPE.Enumz,
         isClazz: node.__TYPE === CXXTYPE.Clazz,
         isCallback: isCallback,
+        ...node.user_data,
       };
       node.user_data = terraNodeUserData;
 
@@ -90,7 +103,7 @@ export default function (
 
     return cxxfile;
   });
-  //移除不含有Clazz,Enumz,Struct的文件
+  //remove Clazz/Enumz/Struct doesn't exist file
   view = view.filter((cxxfile) => {
     return (
       cxxfile.nodes.filter((node) => {
@@ -106,13 +119,13 @@ export default function (
     fileNameTemplatePath: path.join(
       __dirname,
       'templates',
-      'impl',
+      'type',
       'file_name.mustache'
     ),
     fileContentTemplatePath: path.join(
       __dirname,
       'templates',
-      'impl',
+      'type',
       'file_content.mustache'
     ),
     view,

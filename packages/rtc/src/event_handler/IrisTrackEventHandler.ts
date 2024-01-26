@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import {
   IAgoraRTCClient,
   IAgoraRTCRemoteUser,
@@ -131,7 +131,7 @@ export class IrisTrackEventHandler {
       let soundId = (this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(
         IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
       )[0] as BufferSourceAudioTrackPackage).soundId;
-      this._engine.rtcEngineEventHandler.onAudioEffectFinished(soundId);
+      this._engine.rtcEngineEventHandler.onAudioEffectFinished_46f8ab7(soundId);
     }
   }
 
@@ -140,7 +140,7 @@ export class IrisTrackEventHandler {
   }
 
   onEventVideoElementVisibleStatus(data?: CheckVideoVisibleResult): void {
-    this._engine.rtcEngineEventHandler.onFirstLocalVideoFrame(
+    this._engine.rtcEngineEventHandler.onFirstLocalVideoFrame_ebdfd19(
       this._videoSourceType as NATIVE_RTC.VIDEO_SOURCE_TYPE,
       null,
       null,
@@ -156,12 +156,12 @@ export class IrisTrackEventHandler {
       };
       let remoteUid = (this._remoteUser?.uid as number) || -1;
       let elaspsed = 0;
-      this._engine.rtcEngineEventHandler.onFirstRemoteAudioDecodedEx(
+      this._engine.rtcEngineEventHandler.onFirstRemoteAudioDecoded_c5499bd(
         connection,
         remoteUid,
         elaspsed
       );
-      this._engine.rtcEngineEventHandler.onFirstRemoteAudioFrameEx(
+      this._engine.rtcEngineEventHandler.onFirstRemoteAudioFrame_c5499bd(
         connection,
         remoteUid,
         elaspsed
@@ -180,14 +180,14 @@ export class IrisTrackEventHandler {
         width = imageData?.width || -1;
         height = imageData?.height || -1;
       }
-      this._engine.rtcEngineEventHandler.onFirstRemoteVideoDecodedEx(
+      this._engine.rtcEngineEventHandler.onFirstRemoteVideoDecoded_a68170a(
         connection,
         remoteUid,
         width,
         height,
         elaspsed
       );
-      this._engine.rtcEngineEventHandler.onFirstRemoteVideoFrameEx(
+      this._engine.rtcEngineEventHandler.onFirstRemoteVideoFrame_a68170a(
         connection,
         remoteUid,
         width,

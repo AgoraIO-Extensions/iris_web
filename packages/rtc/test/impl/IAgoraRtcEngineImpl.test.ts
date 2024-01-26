@@ -2,7 +2,7 @@ import {
   FAKE_CHANNEL_NAME,
   FakeAgoraRTCWrapper,
 } from '@agoraio-extensions/agora-rtc-sdk-ng-fake';
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import {
   AREAS,
   IAgoraRTC,
@@ -19,6 +19,7 @@ import { BufferSourceAudioTrackPackage } from '../../src/engine/IrisClientManage
 import { AgoraConsole } from '../../src/util';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+
 import {
   TEST_REMOTE_UID,
   TEST_UID,
@@ -59,7 +60,7 @@ beforeEach(async () => {
       },
     },
   };
-  await callIris(apiEnginePtr, 'RtcEngine_initialize', nParam);
+  await callIris(apiEnginePtr, 'RtcEngine_initialize_0320339', nParam);
 });
 
 afterEach(() => {
@@ -69,7 +70,7 @@ afterEach(() => {
 });
 
 describe('IAgoraRtcEngineImpl', () => {
-  test('initialize', async () => {
+  test('initialize_0320339', async () => {
     expect(AgoraRTCMock.setArea).toBeCalledTimes(1);
     expect(AgoraRTCMock.setArea).toBeCalledWith([AREAS.CHINA]);
     expect(AgoraRTCMock.setLogLevel).toBeCalledTimes(1);
@@ -86,7 +87,7 @@ describe('IAgoraRtcEngineImpl', () => {
     let nParam = {
       context: 'test',
     };
-    await callIris(apiEnginePtr, 'RtcEngine_initialize', nParam);
+    await callIris(apiEnginePtr, 'RtcEngine_initialize_0320339', nParam);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
       true,
       NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK
@@ -100,7 +101,7 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(irisRtcEngine.irisClientManager.localAudioTrackPackages.length).toBe(
       1
     );
-    await callIris(apiEnginePtr, 'RtcEngine_release', { sync: false });
+    await callIris(apiEnginePtr, 'RtcEngine_release', null);
     expect(irisRtcEngine.irisClientManager.release).toBeCalledTimes(1);
     expect(irisRtcEngine.irisClientManager.localAudioTrackPackages.length).toBe(
       0
@@ -114,9 +115,9 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.irisClientManager.irisClientList.length === 0
     ).toBeTruthy();
   });
-  test('registerEventHandler', async () => {
+  test('registerEventHandler_5fc0465', async () => {
     jest.spyOn(irisRtcEngine.irisEventHandlerManager, 'addEventHandler');
-    await callIris(apiEnginePtr, 'RtcEngine_registerEventHandler', {
+    await callIris(apiEnginePtr, 'RtcEngine_registerEventHandler_5fc0465', {
       eventHandler: 'test',
     });
 
@@ -136,8 +137,8 @@ describe('IAgoraRtcEngineImpl', () => {
       )[0] === 'test'
     ).toBe(true);
   });
-  test('unregisterEventHandler', async () => {
-    await callIris(apiEnginePtr, 'RtcEngine_registerEventHandler', {
+  test('unregisterEventHandler_5fc0465', async () => {
+    await callIris(apiEnginePtr, 'RtcEngine_registerEventHandler_5fc0465', {
       eventHandler: 'test',
     });
     expect(
@@ -145,7 +146,7 @@ describe('IAgoraRtcEngineImpl', () => {
         .length == 1
     ).toBe(true);
     jest.spyOn(irisRtcEngine.irisEventHandlerManager, 'removeEventHandler');
-    await callIris(apiEnginePtr, 'RtcEngine_unregisterEventHandler', {
+    await callIris(apiEnginePtr, 'RtcEngine_unregisterEventHandler_5fc0465', {
       eventHandler: 'test',
     });
     expect(
@@ -192,14 +193,14 @@ describe('IAgoraRtcEngineImpl', () => {
     ).toBeUndefined();
   });
 
-  test('setClientRole', async () => {
-    jest.spyOn(rtcEngineImpl, 'setClientRole2');
+  test('setClientRole_3426fa6', async () => {
+    jest.spyOn(rtcEngineImpl, 'setClientRole_b46cc48');
     let role = NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER;
-    await callIris(apiEnginePtr, 'RtcEngine_setClientRole', {
+    await callIris(apiEnginePtr, 'RtcEngine_setClientRole_3426fa6', {
       role: role,
     });
-    expect(rtcEngineImpl.setClientRole2).toBeCalledTimes(1);
-    expect(rtcEngineImpl.setClientRole2).toBeCalledWith(
+    expect(rtcEngineImpl.setClientRole_b46cc48).toBeCalledTimes(1);
+    expect(rtcEngineImpl.setClientRole_b46cc48).toBeCalledWith(
       NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
       {
         audienceLatencyLevel:
@@ -209,8 +210,11 @@ describe('IAgoraRtcEngineImpl', () => {
     );
   });
 
-  test('setClientRole2', async () => {
-    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onClientRoleChangedEx');
+  test('setClientRole_b46cc48', async () => {
+    jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onClientRoleChanged_2acaf10'
+    );
     jest.spyOn(irisRtcEngine.clientHelper, 'setClientRole');
     let role = NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER;
     let callParam = {
@@ -221,52 +225,52 @@ describe('IAgoraRtcEngineImpl', () => {
             .AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY,
       },
     };
-    await callIris(apiEnginePtr, 'RtcEngine_setClientRole2', callParam);
+    await callIris(apiEnginePtr, 'RtcEngine_setClientRole_b46cc48', callParam);
     expect(
       irisRtcEngine.irisClientManager.getIrisClient().irisClientState
         .clientRoleType
     ).toBe(role);
     expect(irisRtcEngine.clientHelper.setClientRole).toBeCalledTimes(0);
     expect(
-      irisRtcEngine.rtcEngineEventHandler.onClientRoleChangedEx
+      irisRtcEngine.rtcEngineEventHandler.onClientRoleChanged_2acaf10
     ).toBeCalledTimes(0);
 
     await joinChannel(apiEnginePtr, null);
-    await callIris(apiEnginePtr, 'RtcEngine_setClientRole2', callParam);
+    await callIris(apiEnginePtr, 'RtcEngine_setClientRole_b46cc48', callParam);
 
     expect(irisRtcEngine.clientHelper.setClientRole).toBeCalledTimes(1);
     expect(
-      irisRtcEngine.rtcEngineEventHandler.onClientRoleChangedEx
+      irisRtcEngine.rtcEngineEventHandler.onClientRoleChanged_2acaf10
     ).toBeCalledTimes(1);
   });
 
-  test('setAudioProfile', async () => {
+  test('setAudioProfile_d944543', async () => {
     let param = {
       profile: NATIVE_RTC.AUDIO_PROFILE_TYPE.AUDIO_PROFILE_DEFAULT,
       scenario: NATIVE_RTC.AUDIO_SCENARIO_TYPE.AUDIO_SCENARIO_CHATROOM,
     };
-    await callIris(apiEnginePtr, 'RtcEngine_setAudioProfile', param);
+    await callIris(apiEnginePtr, 'RtcEngine_setAudioProfile_d944543', param);
     expect(irisRtcEngine.globalState.audioProfile).toBe(param.profile);
     expect(irisRtcEngine.globalState.rtcEngineContext.audioScenario).toBe(
       param.scenario
     );
   });
 
-  test('setAudioProfile2', async () => {
+  test('setAudioProfile_ac39c15', async () => {
     let param = {
       profile: NATIVE_RTC.AUDIO_PROFILE_TYPE.AUDIO_PROFILE_DEFAULT,
     };
-    await callIris(apiEnginePtr, 'RtcEngine_setAudioProfile2', param);
+    await callIris(apiEnginePtr, 'RtcEngine_setAudioProfile_ac39c15', param);
     expect(irisRtcEngine.globalState.audioProfile).toBe(param.profile);
   });
 
-  test('joinChannel', async () => {
-    jest.spyOn(rtcEngineImpl, 'joinChannel2');
+  test('joinChannel_f097389', async () => {
+    jest.spyOn(rtcEngineImpl, 'joinChannel_cdbb747');
 
     expect(irisRtcEngine.irisIntervalList.length == 0).toBeTruthy();
     await joinChannel(apiEnginePtr, null);
 
-    expect(rtcEngineImpl.joinChannel2).toBeCalledWith(
+    expect(rtcEngineImpl.joinChannel_cdbb747).toBeCalledWith(
       null,
       FAKE_CHANNEL_NAME,
       TEST_UID,
@@ -275,8 +279,11 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(irisRtcEngine.irisIntervalList.length == 1).toBeTruthy();
   });
 
-  test('joinChannel', async () => {
-    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onJoinChannelSuccessEx');
+  test('joinChannel_cdbb747', async () => {
+    jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onJoinChannelSuccess_263e4cd'
+    );
 
     await joinChannel(apiEnginePtr, null);
     let irisClient = irisRtcEngine.irisClientManager.getIrisClient();
@@ -288,11 +295,11 @@ describe('IAgoraRtcEngineImpl', () => {
       irisClient.agoraRTCClient.channelName
     );
     expect(
-      irisRtcEngine.rtcEngineEventHandler.onJoinChannelSuccessEx
+      irisRtcEngine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd
     ).toBeCalledTimes(1);
   });
 
-  test('updateChannelMediaOptions', async () => {
+  test('updateChannelMediaOptions_7bfc1d7', async () => {
     await joinChannel(apiEnginePtr, null);
     let agoraRTCClient = irisRtcEngine.irisClientManager.getIrisClient()
       .agoraRTCClient;
@@ -309,16 +316,20 @@ describe('IAgoraRtcEngineImpl', () => {
         token: '123',
       },
     };
-    await callIris(apiEnginePtr, 'RtcEngine_updateChannelMediaOptions', param);
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_updateChannelMediaOptions_7bfc1d7',
+      param
+    );
     expect(agoraRTCClient.renewToken).toBeCalledTimes(1);
     expect(agoraRTCClient.setClientRole).toBeCalledTimes(1);
   });
 
-  test('enableAudioVolumeIndication', async () => {
+  test('enableAudioVolumeIndication_39794a0', async () => {
     await joinChannel(apiEnginePtr, null);
     jest.spyOn(
       irisRtcEngine.rtcEngineEventHandler,
-      'onAudioVolumeIndicationEx'
+      'onAudioVolumeIndication_781482a'
     );
 
     let param = {
@@ -328,7 +339,7 @@ describe('IAgoraRtcEngineImpl', () => {
     };
     await callIris(
       apiEnginePtr,
-      'RtcEngine_enableAudioVolumeIndication',
+      'RtcEngine_enableAudioVolumeIndication_39794a0',
       param
     );
     expect(
@@ -345,20 +356,20 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(irisRtcEngine.globalState.enableAudioVolumeIndication).toBeTruthy();
     jest.advanceTimersByTime(param.interval);
     expect(
-      irisRtcEngine.rtcEngineEventHandler.onAudioVolumeIndicationEx
+      irisRtcEngine.rtcEngineEventHandler.onAudioVolumeIndication_781482a
     ).toBeCalledTimes(2);
   });
 
   test('leaveChannel', async () => {
     await joinChannel(apiEnginePtr, null);
     expect(irisRtcEngine.irisIntervalList.length == 1).toBeTruthy();
-    jest.spyOn(rtcEngineImpl, 'leaveChannel2');
+    jest.spyOn(rtcEngineImpl, 'leaveChannel_2c0e3aa');
     await callIris(apiEnginePtr, 'RtcEngine_leaveChannel');
-    expect(rtcEngineImpl.leaveChannel2).toBeCalled();
+    expect(rtcEngineImpl.leaveChannel_2c0e3aa).toBeCalled();
     expect(irisRtcEngine.irisIntervalList.length == 0).toBeTruthy();
   });
 
-  test('leaveChannel2', async () => {
+  test('leaveChannel_2c0e3aa', async () => {
     let param = {
       options: {
         stopAudioMixing: true,
@@ -371,28 +382,28 @@ describe('IAgoraRtcEngineImpl', () => {
     await joinChannel(apiEnginePtr, null);
     let agoraRTCClient = irisRtcEngine.irisClientManager.getIrisClient()
       .agoraRTCClient;
-    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onUserOfflineEx');
-    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onLeaveChannelEx');
-    await callIris(apiEnginePtr, 'RtcEngine_leaveChannel2', param);
+    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onUserOffline_0a32aac');
+    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onLeaveChannel_c8e730d');
+    await callIris(apiEnginePtr, 'RtcEngine_leaveChannel_2c0e3aa', param);
     expect(rtcEngineImpl.stopAllEffects).toBeCalledTimes(
       agoraRTCClient.remoteUsers.length
     );
-    expect(irisRtcEngine.rtcEngineEventHandler.onUserOfflineEx).toBeCalledTimes(
-      agoraRTCClient.remoteUsers.length
-    );
     expect(
-      irisRtcEngine.rtcEngineEventHandler.onLeaveChannelEx
+      irisRtcEngine.rtcEngineEventHandler.onUserOffline_0a32aac
+    ).toBeCalledTimes(agoraRTCClient.remoteUsers.length);
+    expect(
+      irisRtcEngine.rtcEngineEventHandler.onLeaveChannel_c8e730d
     ).toBeCalledTimes(1);
     expect(
       irisRtcEngine.irisClientManager.getIrisClient().release
     ).toBeCalledTimes(1);
   });
 
-  test('enableLocalAudio', async () => {
+  test('enableLocalAudio_5039d15', async () => {
     let param = {
       enabled: true,
     };
-    await callIris(apiEnginePtr, 'RtcEngine_enableLocalAudio', param);
+    await callIris(apiEnginePtr, 'RtcEngine_enableLocalAudio_5039d15', param);
     expect(irisRtcEngine.globalState.enabledLocalAudio).toBe(param.enabled);
   });
 
@@ -438,34 +449,37 @@ describe('IAgoraRtcEngineImpl', () => {
   });
   test('startPreview', async () => {
     await joinChannel(apiEnginePtr, null);
-    jest.spyOn(rtcEngineImpl, 'startPreview2');
+    jest.spyOn(rtcEngineImpl, 'startPreview_4fd718e');
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
-    expect(rtcEngineImpl.startPreview2).toBeCalledWith(
+    expect(rtcEngineImpl.startPreview_4fd718e).toBeCalledWith(
       NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA
     );
   });
-  test('startPreview2', async () => {
+  test('startPreview_4fd718e', async () => {
     let param = {
       sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA,
     };
     await setupLocalVideo(apiEnginePtr, null);
-    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onLocalVideoStateChanged');
+    jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onLocalVideoStateChanged_a44228a'
+    );
     jest.spyOn(AgoraConsole, 'error');
 
-    await callIris(apiEnginePtr, 'RtcEngine_startPreview2', param);
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview_4fd718e', param);
     expect(AgoraConsole.error).toBeCalledWith(
       'call enableVideo(true) before startPreview'
     );
     jest.clearAllMocks();
-    await callIris(apiEnginePtr, 'RtcEngine_startPreview2', {
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview_4fd718e', {
       sourceType: 100,
     });
     expect(AgoraConsole.error).toBeCalledWith(
       'call enableVideo(true) before startPreview'
     );
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
-    await callIris(apiEnginePtr, 'RtcEngine_startPreview2', param);
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview_4fd718e', param);
     expect(
       irisRtcEngine.irisClientManager.localVideoTrackPackages[0].track.isPlaying
     ).toBe(true);
@@ -473,35 +487,38 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.irisClientManager.localVideoTrackPackages[0].isPreview
     ).toBeTruthy();
     expect(
-      irisRtcEngine.rtcEngineEventHandler.onLocalVideoStateChanged
+      irisRtcEngine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a
     ).toBeCalled();
   });
   test('stopPreview', async () => {
     await joinChannel(apiEnginePtr, null);
-    jest.spyOn(rtcEngineImpl, 'stopPreview2');
+    jest.spyOn(rtcEngineImpl, 'stopPreview_4fd718e');
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
     await callIris(apiEnginePtr, 'RtcEngine_stopPreview', null);
-    expect(rtcEngineImpl.stopPreview2).toBeCalledWith(
+    expect(rtcEngineImpl.stopPreview_4fd718e).toBeCalledWith(
       NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA
     );
   });
-  test('stopPreview2', async () => {
+  test('stopPreview_4fd718e', async () => {
     let param = {
       sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA,
     };
     await setupLocalVideo(apiEnginePtr, null);
-    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onLocalVideoStateChanged');
+    jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onLocalVideoStateChanged_a44228a'
+    );
 
     let result2 = await callIrisWithoutCheck(
       apiEnginePtr,
-      'RtcEngine_stopPreview2',
+      'RtcEngine_stopPreview_4fd718e',
       { sourceType: 100 }
     );
     expect(result2.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
-    await callIris(apiEnginePtr, 'RtcEngine_stopPreview2', param);
+    await callIris(apiEnginePtr, 'RtcEngine_stopPreview_4fd718e', param);
     expect(
       irisRtcEngine.irisClientManager.localVideoTrackPackages[0].track.isPlaying
     ).toBe(false);
@@ -509,10 +526,10 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.irisClientManager.localVideoTrackPackages[0].isPreview
     ).toBeFalsy();
     expect(
-      irisRtcEngine.rtcEngineEventHandler.onLocalVideoStateChanged
+      irisRtcEngine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a
     ).toBeCalled();
   });
-  test('setVideoEncoderConfiguration', async () => {
+  test('setVideoEncoderConfiguration_89677d8', async () => {
     let param = {
       config: {
         codecType: NATIVE_RTC.VIDEO_CODEC_TYPE.VIDEO_CODEC_VP8,
@@ -538,21 +555,21 @@ describe('IAgoraRtcEngineImpl', () => {
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     await callIris(
       apiEnginePtr,
-      'RtcEngine_setVideoEncoderConfiguration',
+      'RtcEngine_setVideoEncoderConfiguration_89677d8',
       param
     );
     expect(irisRtcEngine.globalState.videoEncoderConfiguration.codecType).toBe(
       param.config.codecType
     );
   });
-  test('setupLocalVideo', async () => {
+  test('setupLocalVideo_acc9c38', async () => {
     let param = {
       canvas: {
         view: 'test-view',
         sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
       },
     };
-    await callIris(apiEnginePtr, 'RtcEngine_setupLocalVideo', param);
+    await callIris(apiEnginePtr, 'RtcEngine_setupLocalVideo_acc9c38', param);
     expect(irisRtcEngine.irisClientManager.localVideoTrackPackages.length).toBe(
       1
     );
@@ -569,15 +586,15 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.irisClientManager.localVideoTrackPackages[0].track.isPlaying
     ).toBeTruthy();
   });
-  test('setLogLevel', async () => {
+  test('setLogLevel_f125d83', async () => {
     let param = {
       level: 3,
     };
-    await callIris(apiEnginePtr, 'RtcEngine_setLogLevel', param);
+    await callIris(apiEnginePtr, 'RtcEngine_setLogLevel_f125d83', param);
     //由于initialize时已经调用过一次setLogLevel，所以这里调用次数为2
     expect(AgoraRTCMock.setLogLevel).toBeCalledTimes(2);
   });
-  test('startScreenCapture', async () => {
+  test('startScreenCapture_270da41', async () => {
     let param = {
       captureParams: {
         captureAudio: true,
@@ -586,7 +603,7 @@ describe('IAgoraRtcEngineImpl', () => {
     };
     let result = await callIrisWithoutCheck(
       apiEnginePtr,
-      'RtcEngine_startScreenCapture',
+      'RtcEngine_startScreenCapture_270da41',
       param
     );
     expect(result.code).toBe(NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK);
@@ -596,7 +613,11 @@ describe('IAgoraRtcEngineImpl', () => {
         captureVideo: true,
       },
     };
-    await callIris(apiEnginePtr, 'RtcEngine_startScreenCapture', param2);
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_startScreenCapture_270da41',
+      param2
+    );
     expect(
       irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
@@ -610,24 +631,24 @@ describe('IAgoraRtcEngineImpl', () => {
     ).toBe(1);
     let result2 = await callIrisWithoutCheck(
       apiEnginePtr,
-      'RtcEngine_startScreenCapture',
+      'RtcEngine_startScreenCapture_270da41',
       param2
     );
     expect(result2.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
   });
   test('stopScreenCapture', async () => {
-    jest.spyOn(rtcEngineImpl, 'stopScreenCapture2');
+    jest.spyOn(rtcEngineImpl, 'stopScreenCapture_4fd718e');
     await callIris(apiEnginePtr, 'RtcEngine_stopScreenCapture', null);
-    expect(rtcEngineImpl.stopScreenCapture2).toBeCalledWith(
+    expect(rtcEngineImpl.stopScreenCapture_4fd718e).toBeCalledWith(
       NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
     );
   });
-  test('stopScreenCapture2', async () => {
+  test('stopScreenCapture_4fd718e', async () => {
     jest.spyOn(AgoraConsole, 'warn');
     let param = {
       sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY,
     };
-    await callIris(apiEnginePtr, 'RtcEngine_stopScreenCapture2', param);
+    await callIris(apiEnginePtr, 'RtcEngine_stopScreenCapture_4fd718e', param);
     expect(AgoraConsole.warn).toBeCalledWith('screenCapture is not start');
 
     let param2 = {
@@ -636,8 +657,12 @@ describe('IAgoraRtcEngineImpl', () => {
         captureVideo: true,
       },
     };
-    await callIris(apiEnginePtr, 'RtcEngine_startScreenCapture', param2);
-    await callIris(apiEnginePtr, 'RtcEngine_stopScreenCapture2', param);
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_startScreenCapture_270da41',
+      param2
+    );
+    await callIris(apiEnginePtr, 'RtcEngine_stopScreenCapture_4fd718e', param);
     expect(
       irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
@@ -650,7 +675,7 @@ describe('IAgoraRtcEngineImpl', () => {
       ).length
     ).toBe(0);
   });
-  test('playEffect', async () => {
+  test('playEffect_531a783', async () => {
     jest.spyOn(AgoraConsole, 'error');
     jest.spyOn(AgoraRTCMock, 'createBufferSourceAudioTrack');
     let param = {
@@ -666,13 +691,13 @@ describe('IAgoraRtcEngineImpl', () => {
     await callIris(apiEnginePtr, 'RtcEngine_disableAudio', null);
     let result = await callIrisWithoutCheck(
       apiEnginePtr,
-      'RtcEngine_playEffect',
+      'RtcEngine_playEffect_531a783',
       param
     );
     expect(AgoraConsole.error).toBeCalledWith('please enableAudio first');
     expect(result.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED);
     await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
-    await callIris(apiEnginePtr, 'RtcEngine_playEffect', param);
+    await callIris(apiEnginePtr, 'RtcEngine_playEffect_531a783', param);
     expect(AgoraRTCMock.createBufferSourceAudioTrack).toBeCalledTimes(1);
     expect(AgoraRTCMock.createBufferSourceAudioTrack).toBeCalledWith({
       source: `${location.origin}/${param.filePath}`,
@@ -705,7 +730,7 @@ describe('IAgoraRtcEngineImpl', () => {
   });
   test('stopEffect', async () => {
     jest.spyOn(AgoraConsole, 'error');
-    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onError');
+    jest.spyOn(irisRtcEngine.rtcEngineEventHandler, 'onError_d26c0fd');
 
     let param = {
       soundId: 1,
@@ -720,13 +745,13 @@ describe('IAgoraRtcEngineImpl', () => {
     let errorParam = {
       soundId: 666,
     };
-    await callIris(apiEnginePtr, 'RtcEngine_stopEffect', errorParam);
-    expect(irisRtcEngine.rtcEngineEventHandler.onError).toBeCalledWith(
+    await callIris(apiEnginePtr, 'RtcEngine_stopEffect_46f8ab7', errorParam);
+    expect(irisRtcEngine.rtcEngineEventHandler.onError_d26c0fd).toBeCalledWith(
       NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED,
       `soundId:${errorParam.soundId} not found`
     );
-    await callIris(apiEnginePtr, 'RtcEngine_playEffect', param);
-    await callIris(apiEnginePtr, 'RtcEngine_stopEffect', {
+    await callIris(apiEnginePtr, 'RtcEngine_playEffect_531a783', param);
+    await callIris(apiEnginePtr, 'RtcEngine_stopEffect_46f8ab7', {
       soundId: param.soundId,
     });
     expect(
@@ -737,7 +762,7 @@ describe('IAgoraRtcEngineImpl', () => {
   });
   test('stopAllEffects', async () => {
     jest.spyOn(AgoraConsole, 'error');
-    jest.spyOn(rtcEngineImpl, 'stopEffect');
+    jest.spyOn(rtcEngineImpl, 'stopEffect_46f8ab7');
 
     let param = {
       soundId: 1,
@@ -759,28 +784,28 @@ describe('IAgoraRtcEngineImpl', () => {
       publish: true,
       startPos: 6,
     };
-    await callIris(apiEnginePtr, 'RtcEngine_playEffect', param);
-    await callIris(apiEnginePtr, 'RtcEngine_playEffect', param2);
+    await callIris(apiEnginePtr, 'RtcEngine_playEffect_531a783', param);
+    await callIris(apiEnginePtr, 'RtcEngine_playEffect_531a783', param2);
     let bufferSourceAudioTrackPackageListLength = irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
       IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
     ).length;
     expect(bufferSourceAudioTrackPackageListLength).toBe(2);
     await callIris(apiEnginePtr, 'RtcEngine_stopAllEffects', param2);
-    expect(rtcEngineImpl.stopEffect).toBeCalledTimes(
+    expect(rtcEngineImpl.stopEffect_46f8ab7).toBeCalledTimes(
       bufferSourceAudioTrackPackageListLength
     );
   });
-  test('setChannelProfile', async () => {
-    jest.spyOn(rtcEngineImpl, 'setChannelProfile');
+  test('setChannelProfile_a78fa4f', async () => {
+    jest.spyOn(rtcEngineImpl, 'setChannelProfile_a78fa4f');
 
     let param = {
       profile: 1,
     };
-    await callIris(apiEnginePtr, 'RtcEngine_setChannelProfile', param);
+    await callIris(apiEnginePtr, 'RtcEngine_setChannelProfile_a78fa4f', param);
     expect(irisRtcEngine.globalState.channelProfile).toBe(param.profile);
   });
-  test('muteLocalAudioStream', async () => {
-    jest.spyOn(rtcEngineImpl, 'muteLocalAudioStream');
+  test('muteLocalAudioStream_5039d15', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteLocalAudioStream_5039d15');
     await joinChannel(apiEnginePtr, null);
     await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
     let localAudioTrackPackage = irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
@@ -790,18 +815,18 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(localAudioTrackPackage[0].track.isPlaying).toBe(true);
     expect((localAudioTrackPackage[0].track as ILocalTrack).muted).toBe(false);
 
-    await callIris(apiEnginePtr, 'RtcEngine_muteLocalAudioStream', {
+    await callIris(apiEnginePtr, 'RtcEngine_muteLocalAudioStream_5039d15', {
       mute: true,
     });
     expect((localAudioTrackPackage[0].track as ILocalTrack).muted).toBe(true);
 
-    await callIris(apiEnginePtr, 'RtcEngine_muteLocalAudioStream', {
+    await callIris(apiEnginePtr, 'RtcEngine_muteLocalAudioStream_5039d15', {
       mute: false,
     });
     expect((localAudioTrackPackage[0].track as ILocalTrack).muted).toBe(false);
   });
-  test('muteAllRemoteAudioStreams', async () => {
-    jest.spyOn(rtcEngineImpl, 'muteAllRemoteAudioStreams');
+  test('muteAllRemoteAudioStreams_5039d15', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteAllRemoteAudioStreams_5039d15');
     await joinChannel(apiEnginePtr, null);
     await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
     let remoteUsers =
@@ -809,17 +834,25 @@ describe('IAgoraRtcEngineImpl', () => {
         .remoteUsers;
     expect(remoteUsers[0].audioTrack.isPlaying).toBe(true);
 
-    await callIris(apiEnginePtr, 'RtcEngine_muteAllRemoteAudioStreams', {
-      mute: true,
-    });
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_muteAllRemoteAudioStreams_5039d15',
+      {
+        mute: true,
+      }
+    );
     expect(remoteUsers[0].audioTrack).toBeUndefined();
-    await callIris(apiEnginePtr, 'RtcEngine_muteAllRemoteAudioStreams', {
-      mute: false,
-    });
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_muteAllRemoteAudioStreams_5039d15',
+      {
+        mute: false,
+      }
+    );
     expect(remoteUsers[0].audioTrack).not.toBeUndefined();
   });
-  test('muteRemoteAudioStream', async () => {
-    jest.spyOn(rtcEngineImpl, 'muteRemoteAudioStream');
+  test('muteRemoteAudioStream_dbdc15a', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteRemoteAudioStream_dbdc15a');
     await joinChannel(apiEnginePtr, null);
     await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
     let remoteUsers =
@@ -827,23 +860,23 @@ describe('IAgoraRtcEngineImpl', () => {
         .remoteUsers;
     expect(remoteUsers[0].audioTrack.isPlaying).toBe(true);
 
-    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteAudioStream', {
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteAudioStream_dbdc15a', {
       mute: true,
       uid: TEST_REMOTE_UID,
     });
     expect(remoteUsers[0].audioTrack).toBeUndefined();
-    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteAudioStream', {
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteAudioStream_dbdc15a', {
       mute: false,
       uid: TEST_REMOTE_UID,
     });
     expect(remoteUsers[0].audioTrack).not.toBeUndefined();
   });
-  test('setParameters', async () => {
+  test('setParameters_3a2037f', async () => {
     let params = JSON.stringify({
       'rtc.audio.force_bluetooth_a2dp': true,
       'rtc.video.test': [true, false],
     });
-    await callIris(apiEnginePtr, 'RtcEngine_setParameters', {
+    await callIris(apiEnginePtr, 'RtcEngine_setParameters_3a2037f', {
       parameters: params,
     });
   });

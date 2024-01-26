@@ -7,9 +7,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "terra": "yarn terra-types && yarn terra-binding",
-    "terra-types": "sh terra-types.sh",
-    "terra-binding": "sh terra-binding.sh"
+    "terra": "sh build.sh"
   },
   "dependencies": {
     "@agoraio-extensions/cxx-parser": "git@github.com:AgoraIO-Extensions/terra.git#head=main&workspace=cxx-parser",

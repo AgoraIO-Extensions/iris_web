@@ -1,9 +1,9 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 
 export const drawRGBABufferToCanvas = (
   width: number,
   height: number,
-  buffer: Array<any>,
+  buffer: any,
   format: NATIVE_RTC.VIDEO_PIXEL_FORMAT,
   canvas: HTMLCanvasElement
 ): void => {

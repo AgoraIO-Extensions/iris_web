@@ -4,44 +4,42 @@ import { CXXFile, CXXTYPE, CXXTerraNode } from '@agoraio-extensions/cxx-parser';
 
 import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 
-import { renderWithConfiguration } from '@agoraio-extensions/terra_shared_configs';
-
-import bindingExtensionList = require('./config/binding_extension_list.json');
-
-import supportList = require('./config/support_list.json');
+import { IrisApiIdParserUserData, renderWithConfiguration } from '@agoraio-extensions/terra_shared_configs';
 
 import {
-  appendNumberToDuplicateMemberFunction,
-  filterFile,
+  getIrisApiIdForWrapperFunc,
   isMatch,
 } from './utils';
 
-interface CXXFileUserData {
+const bindingExtensionList = require('./config/binding_extension_list.json');
+
+const supportList = require('./config/support_list.json');
+
+
+type CXXFileUserData = {
   fileName: string;
 }
 
-interface TerraNodeUserData {
+type TerraNodeUserData = {
   isStruct: boolean;
   isEnumz: boolean;
   isClazz: boolean;
   isCallback: boolean;
-  classPrefix: string;
   hasBaseClazzs: boolean;
+  hasSupportApi: boolean;
   prefix_name: string;
 }
 
-interface ClazzMethodUserData {
+type ClazzMethodUserData = IrisApiIdParserUserData & {
   hasParameters: boolean;
   isRegisterMethod: boolean;
   isSupport: boolean;
-  _prefix: string;
   bindingExtensionList: [];
 }
 
 export function binding(parseResult: ParseResult) {
   let cxxfiles = parseResult.nodes as CXXFile[];
-  //移除不需要的文件
-  let view = filterFile(cxxfiles).map((cxxfile: CXXFile) => {
+  let view = cxxfiles.map((cxxfile: CXXFile) => {
     const cxxUserData: CXXFileUserData = {
       fileName: path.basename(
         cxxfile.file_path,
@@ -60,28 +58,25 @@ export function binding(parseResult: ParseResult) {
     });
 
     cxxfile.nodes = nodes.map((node: CXXTerraNode) => {
-      if (node.name === 'IRtcEngine') {
+      if (node.name === 'IRtcEngineEventHandler') {
         // debugger;
       }
 
-      //重载函数重命名, 自动末尾+数字
-      //['joinChannel', 'joinChannel'] => ['joinChannel', 'joinChannel2']
-      node.asClazz().methods = appendNumberToDuplicateMemberFunction(
-        node.asClazz().methods
-      );
+      let hasSupportApi = false;
       node.asClazz().methods.map((method) => {
+        method.name = getIrisApiIdForWrapperFunc(method);
+        let methodIrisApiIdValue = (method.user_data as ClazzMethodUserData).IrisApiIdParser.value;
+        if(!hasSupportApi && supportList.includes(methodIrisApiIdValue)){
+          hasSupportApi = true;
+        }
         const clazzMethodUserData: ClazzMethodUserData = {
           hasParameters: method.parameters.length > 0,
-          isSupport: supportList.includes(method.fullName),
+          isSupport: supportList.includes(methodIrisApiIdValue),
           isRegisterMethod: new RegExp('registerEventHandler').test(
             method.name
           ),
-          _prefix:
-            method.parent.asClazz().name === 'IRtcEngineEventHandlerEx' &&
-            !method.name.endsWith('Ex')
-              ? 'Ex'
-              : '',
-          bindingExtensionList: bindingExtensionList[method.fullName],
+          bindingExtensionList: bindingExtensionList[methodIrisApiIdValue],
+          ...method.user_data,
         };
         method.user_data = clazzMethodUserData;
       });
@@ -91,12 +86,10 @@ export function binding(parseResult: ParseResult) {
         isEnumz: node.__TYPE === CXXTYPE.Enumz,
         isClazz: node.__TYPE === CXXTYPE.Clazz,
         prefix_name: node.name.replace(new RegExp('^I(.*)'), '$1'),
-        classPrefix:
-          node.name === 'IRtcEngineEventHandlerEx'
-            ? 'RtcEngineEventHandler_'
-            : node.name.replace(new RegExp('^I(.*)'), '$1_'),
         hasBaseClazzs: node.asClazz().base_clazzs.length > 0,
         isCallback: isMatch(node.name, 'isCallback'),
+        hasSupportApi: hasSupportApi,
+        ...node.user_data,
       };
       node.user_data = terraNodeUserData;
 
@@ -104,7 +97,7 @@ export function binding(parseResult: ParseResult) {
     });
     return cxxfile;
   });
-  //移除不含有Clazz,Enumz,Struct的文件
+  //remove Clazz/Enumz/Struct doesn't exist file
   view = view.filter((cxxfile) => {
     return (
       cxxfile.nodes.filter((node) => {

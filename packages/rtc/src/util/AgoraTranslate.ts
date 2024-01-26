@@ -1,11 +1,9 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import {
   AREAS,
   AudienceLatencyLevelType,
   ChannelMediaRelayError,
-  ChannelMediaRelayEvent,
   ChannelMediaRelayInfo,
-  ChannelMediaRelayState,
   ClientRole,
   ClientRoleOptions,
   ConnectionDisconnectedReason,
@@ -254,13 +252,11 @@ export class AgoraTranslate {
     engine: IrisRtcEngine
   ): IChannelMediaRelayConfiguration {
     let ret: IChannelMediaRelayConfiguration = engine.globalState.AgoraRTC.createChannelMediaRelayConfiguration();
-    for (let i = 0; i < config.srcInfo.length; i++) {
-      ret.addDestChannelInfo(
-        AgoraTranslate.NATIVE_RTCChannelMediaInfo2ChannelMediaRelayInfo(
-          config.srcInfo[i]
-        )
-      );
-    }
+    ret.addDestChannelInfo(
+      AgoraTranslate.NATIVE_RTCChannelMediaInfo2ChannelMediaRelayInfo(
+        config.srcInfo
+      )
+    );
     for (let i = 0; i < config.destInfos.length; i++) {
       ret.addDestChannelInfo(
         AgoraTranslate.NATIVE_RTCChannelMediaInfo2ChannelMediaRelayInfo(
@@ -291,7 +287,7 @@ export class AgoraTranslate {
       inspectType: [],
     };
 
-    let module: NATIVE_RTC.ContentInspectModule = config.modules;
+    let module: NATIVE_RTC.ContentInspectModule = config.modules[0];
     ret.interval = module.interval;
     switch (module.type) {
       case NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_INVALID:
@@ -559,21 +555,6 @@ export class AgoraTranslate {
     }
   }
 
-  public static ChannelMediaRelayState2NATIVE_RTCCHANNEL_MEDIA_RELAY_STATE(
-    state: ChannelMediaRelayState
-  ): NATIVE_RTC.CHANNEL_MEDIA_RELAY_STATE {
-    switch (state) {
-      case ChannelMediaRelayState.RELAY_STATE_IDLE:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_STATE.RELAY_STATE_IDLE;
-      case ChannelMediaRelayState.RELAY_STATE_CONNECTING:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_STATE.RELAY_STATE_CONNECTING;
-      case ChannelMediaRelayState.RELAY_STATE_RUNNING:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_STATE.RELAY_STATE_RUNNING;
-      case ChannelMediaRelayState.RELAY_STATE_FAILURE:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_STATE.RELAY_STATE_FAILURE;
-    }
-  }
-
   public static ChannelMediaRelayError2NATIVE_RTCCHANNEL_MEDIA_RELAY_ERROR(
     err: ChannelMediaRelayError
   ): NATIVE_RTC.CHANNEL_MEDIA_RELAY_ERROR {
@@ -589,43 +570,6 @@ export class AgoraTranslate {
       case ChannelMediaRelayError.DEST_TOKEN_EXPIRED:
         return NATIVE_RTC.CHANNEL_MEDIA_RELAY_ERROR
           .RELAY_ERROR_DEST_TOKEN_EXPIRED;
-    }
-  }
-
-  public static ChannelMediaRelayEvent2NATIVE_RTCCHANNEL_MEDIA_RELAY_EVENT(
-    event: ChannelMediaRelayEvent
-  ): NATIVE_RTC.CHANNEL_MEDIA_RELAY_EVENT {
-    switch (event) {
-      case ChannelMediaRelayEvent.NETWORK_DISCONNECTED:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_EVENT
-          .RELAY_EVENT_NETWORK_DISCONNECTED;
-      case ChannelMediaRelayEvent.NETWORK_CONNECTED:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_EVENT
-          .RELAY_EVENT_NETWORK_CONNECTED;
-      case ChannelMediaRelayEvent.PACKET_JOINED_SRC_CHANNEL:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_EVENT
-          .RELAY_EVENT_PACKET_JOINED_SRC_CHANNEL;
-      case ChannelMediaRelayEvent.PACKET_JOINED_DEST_CHANNEL:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_EVENT
-          .RELAY_EVENT_PACKET_JOINED_DEST_CHANNEL;
-      case ChannelMediaRelayEvent.PACKET_SENT_TO_DEST_CHANNEL:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_EVENT
-          .RELAY_EVENT_PACKET_SENT_TO_DEST_CHANNEL;
-      case ChannelMediaRelayEvent.PACKET_RECEIVED_VIDEO_FROM_SRC:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_EVENT
-          .RELAY_EVENT_PACKET_RECEIVED_VIDEO_FROM_SRC;
-      case ChannelMediaRelayEvent.PACKET_RECEIVED_AUDIO_FROM_SRC:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_EVENT
-          .RELAY_EVENT_PACKET_RECEIVED_AUDIO_FROM_SRC;
-      case ChannelMediaRelayEvent.PACKET_UPDATE_DEST_CHANNEL:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_EVENT
-          .RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL;
-      case ChannelMediaRelayEvent.PACKET_UPDATE_DEST_CHANNEL_REFUSED:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_EVENT
-          .RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL_REFUSED;
-      case ChannelMediaRelayEvent.PACKET_UPDATE_DEST_CHANNEL_NOT_CHANGE:
-        return NATIVE_RTC.CHANNEL_MEDIA_RELAY_EVENT
-          .RELAY_EVENT_PACKET_UPDATE_DEST_CHANNEL_NOT_CHANGE;
     }
   }
 

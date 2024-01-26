@@ -3,56 +3,25 @@
 import { CallApiReturnType } from 'iris-web-core';
 
 import {
-  AudioVolumeInfo,
-  CLIENT_ROLE_CHANGE_FAILED_REASON,
-  CLIENT_ROLE_TYPE,
-  CONNECTION_CHANGED_REASON_TYPE,
-  CONNECTION_STATE_TYPE,
   ChannelMediaRelayConfiguration,
-  ClientRoleOptions,
   DataStreamConfig,
-  ENCRYPTION_ERROR_TYPE,
   EncryptionConfig,
-  LICENSE_ERROR_TYPE,
-  LOCAL_AUDIO_STREAM_ERROR,
-  LOCAL_AUDIO_STREAM_STATE,
   LiveTranscoding,
-  LocalAudioStats,
-  MEDIA_TRACE_EVENT,
-  NETWORK_TYPE,
-  REMOTE_AUDIO_STATE,
-  REMOTE_AUDIO_STATE_REASON,
-  REMOTE_VIDEO_STATE,
-  REMOTE_VIDEO_STATE_REASON,
-  RtcStats,
   SIMULCAST_STREAM_MODE,
   SimulcastStreamConfig,
   SpatialAudioParams,
-  UPLOAD_ERROR_REASON,
-  USER_OFFLINE_REASON_TYPE,
   UserInfo,
   VIDEO_MIRROR_MODE_TYPE,
   VIDEO_STREAM_TYPE,
   VideoCanvas,
   VideoEncoderConfiguration,
-  VideoRenderingTracingInfo,
   VideoSubscriptionOptions,
-  WLACC_MESSAGE_REASON,
-  WLACC_SUGGEST_ACTION,
   WatermarkOptions,
-  WlAccStats,
 } from './AgoraBase';
-import {
-  ContentInspectConfig,
-  RENDER_MODE_TYPE,
-  VIDEO_SOURCE_TYPE,
-} from './AgoraMediaBase';
+import { ContentInspectConfig, RENDER_MODE_TYPE } from './AgoraMediaBase';
 import {
   ChannelMediaOptions,
-  IRtcEngineEventHandler,
   LeaveChannelOptions,
-  RemoteAudioStats,
-  RemoteVideoStats,
   STREAM_FALLBACK_OPTIONS,
 } from './IAgoraRtcEngine';
 
@@ -62,453 +31,182 @@ export class RtcConnection {
   localUid?: number;
 }
 
-export interface IRtcEngineEventHandlerEx extends IRtcEngineEventHandler {
-  onJoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void;
-
-  onRejoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void;
-
-  onAudioQualityEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    quality: number,
-    delay: number,
-    lost: number
-  ): void;
-
-  onAudioVolumeIndicationEx(
-    connection: RtcConnection,
-    speakers: AudioVolumeInfo[],
-    speakerNumber: number,
-    totalVolume: number
-  ): void;
-
-  onLeaveChannelEx(connection: RtcConnection, stats: RtcStats): void;
-
-  onRtcStatsEx(connection: RtcConnection, stats: RtcStats): void;
-
-  onNetworkQualityEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    txQuality: number,
-    rxQuality: number
-  ): void;
-
-  onIntraRequestReceivedEx(connection: RtcConnection): void;
-
-  onFirstRemoteVideoDecodedEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    width: number,
-    height: number,
-    elapsed: number
-  ): void;
-
-  onVideoSizeChangedEx(
-    connection: RtcConnection,
-    sourceType: VIDEO_SOURCE_TYPE,
-    uid: number,
-    width: number,
-    height: number,
-    rotation: number
-  ): void;
-
-  onRemoteVideoStateChangedEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    state: REMOTE_VIDEO_STATE,
-    reason: REMOTE_VIDEO_STATE_REASON,
-    elapsed: number
-  ): void;
-
-  onFirstRemoteVideoFrameEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    width: number,
-    height: number,
-    elapsed: number
-  ): void;
-
-  onUserJoinedEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    elapsed: number
-  ): void;
-
-  onUserOfflineEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    reason: USER_OFFLINE_REASON_TYPE
-  ): void;
-
-  onUserMuteAudioEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    muted: boolean
-  ): void;
-
-  onUserMuteVideoEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    muted: boolean
-  ): void;
-
-  onUserEnableVideoEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    enabled: boolean
-  ): void;
-
-  onUserEnableLocalVideoEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    enabled: boolean
-  ): void;
-
-  onUserStateChangedEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    state: number
-  ): void;
-
-  onLocalAudioStatsEx(connection: RtcConnection, stats: LocalAudioStats): void;
-
-  onRemoteAudioStatsEx(
-    connection: RtcConnection,
-    stats: RemoteAudioStats
-  ): void;
-
-  onRemoteVideoStatsEx(
-    connection: RtcConnection,
-    stats: RemoteVideoStats
-  ): void;
-
-  onConnectionLostEx(connection: RtcConnection): void;
-
-  onConnectionInterruptedEx(connection: RtcConnection): void;
-
-  onConnectionBannedEx(connection: RtcConnection): void;
-
-  onStreamMessageEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    streamId: number,
-    data: string,
-    length: number,
-    sentTs: number
-  ): void;
-
-  onStreamMessageErrorEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    streamId: number,
-    code: number,
-    missed: number,
-    cached: number
-  ): void;
-
-  onRequestTokenEx(connection: RtcConnection): void;
-
-  onLicenseValidationFailureEx(
-    connection: RtcConnection,
-    reason: LICENSE_ERROR_TYPE
-  ): void;
-
-  onTokenPrivilegeWillExpireEx(connection: RtcConnection, token: string): void;
-
-  onFirstLocalAudioFramePublishedEx(
-    connection: RtcConnection,
-    elapsed: number
-  ): void;
-
-  onFirstRemoteAudioFrameEx(
-    connection: RtcConnection,
-    userId: number,
-    elapsed: number
-  ): void;
-
-  onFirstRemoteAudioDecodedEx(
-    connection: RtcConnection,
-    uid: number,
-    elapsed: number
-  ): void;
-
-  onLocalAudioStateChangedEx(
-    connection: RtcConnection,
-    state: LOCAL_AUDIO_STREAM_STATE,
-    error: LOCAL_AUDIO_STREAM_ERROR
-  ): void;
-
-  onRemoteAudioStateChangedEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    state: REMOTE_AUDIO_STATE,
-    reason: REMOTE_AUDIO_STATE_REASON,
-    elapsed: number
-  ): void;
-
-  onActiveSpeakerEx(connection: RtcConnection, uid: number): void;
-
-  onClientRoleChangedEx(
-    connection: RtcConnection,
-    oldRole: CLIENT_ROLE_TYPE,
-    newRole: CLIENT_ROLE_TYPE,
-    newRoleOptions: ClientRoleOptions
-  ): void;
-
-  onClientRoleChangeFailedEx(
-    connection: RtcConnection,
-    reason: CLIENT_ROLE_CHANGE_FAILED_REASON,
-    currentRole: CLIENT_ROLE_TYPE
-  ): void;
-
-  onRemoteAudioTransportStatsEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    delay: number,
-    lost: number,
-    rxKBitRate: number
-  ): void;
-
-  onRemoteVideoTransportStatsEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    delay: number,
-    lost: number,
-    rxKBitRate: number
-  ): void;
-
-  onConnectionStateChangedEx(
-    connection: RtcConnection,
-    state: CONNECTION_STATE_TYPE,
-    reason: CONNECTION_CHANGED_REASON_TYPE
-  ): void;
-
-  onWlAccMessageEx(
-    connection: RtcConnection,
-    reason: WLACC_MESSAGE_REASON,
-    action: WLACC_SUGGEST_ACTION,
-    wlAccMsg: string
-  ): void;
-
-  onWlAccStatsEx(
-    connection: RtcConnection,
-    currentStats: WlAccStats,
-    averageStats: WlAccStats
-  ): void;
-
-  onNetworkTypeChangedEx(connection: RtcConnection, type: NETWORK_TYPE): void;
-
-  onEncryptionErrorEx(
-    connection: RtcConnection,
-    errorType: ENCRYPTION_ERROR_TYPE
-  ): void;
-
-  onUploadLogResultEx(
-    connection: RtcConnection,
-    requestId: string,
-    success: boolean,
-    reason: UPLOAD_ERROR_REASON
-  ): void;
-
-  onUserAccountUpdatedEx(
-    connection: RtcConnection,
-    remoteUid: number,
-    userAccount: string
-  ): void;
-
-  onSnapshotTakenEx(
-    connection: RtcConnection,
-    uid: number,
-    filePath: string,
-    width: number,
-    height: number,
-    errCode: number
-  ): void;
-
-  onVideoRenderingTracingResultEx(
-    connection: RtcConnection,
-    uid: number,
-    currentEvent: MEDIA_TRACE_EVENT,
-    tracingInfo: VideoRenderingTracingInfo
-  ): void;
-}
-
 export interface IRtcEngineEx {
-  joinChannelEx(
+  joinChannelEx_a3cd08c(
     token: string,
     connection: RtcConnection,
     options: ChannelMediaOptions
   ): CallApiReturnType;
 
-  leaveChannelEx(connection: RtcConnection): CallApiReturnType;
+  leaveChannelEx_c81e1a4(connection: RtcConnection): CallApiReturnType;
 
-  leaveChannelEx2(
+  leaveChannelEx_b03ee9a(
     connection: RtcConnection,
     options: LeaveChannelOptions
   ): CallApiReturnType;
 
-  updateChannelMediaOptionsEx(
+  updateChannelMediaOptionsEx_457bb35(
     options: ChannelMediaOptions,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setVideoEncoderConfigurationEx(
+  setVideoEncoderConfigurationEx_4670c1e(
     config: VideoEncoderConfiguration,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setupRemoteVideoEx(
+  setupRemoteVideoEx_522a409(
     canvas: VideoCanvas,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  muteRemoteAudioStreamEx(
+  muteRemoteAudioStreamEx_6d93082(
     uid: number,
     mute: boolean,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  muteRemoteVideoStreamEx(
+  muteRemoteVideoStreamEx_6d93082(
     uid: number,
     mute: boolean,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setRemoteVideoStreamTypeEx(
+  setRemoteVideoStreamTypeEx_01dc428(
     uid: number,
     streamType: VIDEO_STREAM_TYPE,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  muteLocalAudioStreamEx(
+  muteLocalAudioStreamEx_3cf17a4(
     mute: boolean,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  muteLocalVideoStreamEx(
+  muteLocalVideoStreamEx_3cf17a4(
     mute: boolean,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  muteAllRemoteAudioStreamsEx(
+  muteAllRemoteAudioStreamsEx_3cf17a4(
     mute: boolean,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  muteAllRemoteVideoStreamsEx(
+  muteAllRemoteVideoStreamsEx_3cf17a4(
     mute: boolean,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setSubscribeAudioBlocklistEx(
-    uidList: number,
+  setSubscribeAudioBlocklistEx_9f1e85c(
+    uidList: number[],
     uidNumber: number,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setSubscribeAudioAllowlistEx(
-    uidList: number,
+  setSubscribeAudioAllowlistEx_9f1e85c(
+    uidList: number[],
     uidNumber: number,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setSubscribeVideoBlocklistEx(
-    uidList: number,
+  setSubscribeVideoBlocklistEx_9f1e85c(
+    uidList: number[],
     uidNumber: number,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setSubscribeVideoAllowlistEx(
-    uidList: number,
+  setSubscribeVideoAllowlistEx_9f1e85c(
+    uidList: number[],
     uidNumber: number,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setRemoteVideoSubscriptionOptionsEx(
+  setRemoteVideoSubscriptionOptionsEx_3cd36bc(
     uid: number,
     options: VideoSubscriptionOptions,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setRemoteVoicePositionEx(
+  setRemoteVoicePositionEx_fc0471c(
     uid: number,
     pan: number,
     gain: number,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setRemoteUserSpatialAudioParamsEx(
+  setRemoteUserSpatialAudioParamsEx_40ca9fb(
     uid: number,
     params: SpatialAudioParams,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setRemoteRenderModeEx(
+  setRemoteRenderModeEx_a72fe4e(
     uid: number,
     renderMode: RENDER_MODE_TYPE,
     mirrorMode: VIDEO_MIRROR_MODE_TYPE,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  enableLoopbackRecordingEx(
+  enableLoopbackRecordingEx_4f41542(
     connection: RtcConnection,
     enabled: boolean,
     deviceName: string
   ): CallApiReturnType;
 
-  adjustRecordingSignalVolumeEx(
+  adjustRecordingSignalVolumeEx_e84d10e(
     volume: number,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  muteRecordingSignalEx(
+  muteRecordingSignalEx_3cf17a4(
     mute: boolean,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  adjustUserPlaybackSignalVolumeEx(
+  adjustUserPlaybackSignalVolumeEx_adbd29c(
     uid: number,
     volume: number,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  getConnectionStateEx(connection: RtcConnection): CallApiReturnType;
+  getConnectionStateEx_c81e1a4(connection: RtcConnection): CallApiReturnType;
 
-  enableEncryptionEx(
+  enableEncryptionEx_10cd872(
     connection: RtcConnection,
     enabled: boolean,
     config: EncryptionConfig
   ): CallApiReturnType;
 
-  createDataStreamEx(
-    streamId: number[],
+  createDataStreamEx_1767167(
+    streamId: number,
     reliable: boolean,
     ordered: boolean,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  createDataStreamEx2(
-    streamId: number[],
+  createDataStreamEx_9f641b6(
+    streamId: number,
     config: DataStreamConfig,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  sendStreamMessageEx(
+  sendStreamMessageEx_0c34857(
     streamId: number,
-    data: string,
+    data: Uint8Array,
     length: number,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  addVideoWatermarkEx(
+  addVideoWatermarkEx_ad7daa3(
     watermarkUrl: string,
     options: WatermarkOptions,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  clearVideoWatermarkEx(connection: RtcConnection): CallApiReturnType;
+  clearVideoWatermarkEx_c81e1a4(connection: RtcConnection): CallApiReturnType;
 
-  sendCustomReportMessageEx(
+  sendCustomReportMessageEx_833b8a5(
     id: string,
     category: string,
     event: string,
@@ -517,94 +215,98 @@ export interface IRtcEngineEx {
     connection: RtcConnection
   ): CallApiReturnType;
 
-  enableAudioVolumeIndicationEx(
+  enableAudioVolumeIndicationEx_ac84f2a(
     interval: number,
     smooth: number,
     reportVad: boolean,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  startRtmpStreamWithoutTranscodingEx(
+  startRtmpStreamWithoutTranscodingEx_e405325(
     url: string,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  startRtmpStreamWithTranscodingEx(
+  startRtmpStreamWithTranscodingEx_ab121b5(
     url: string,
     transcoding: LiveTranscoding,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  updateRtmpTranscodingEx(
+  updateRtmpTranscodingEx_77f3ee8(
     transcoding: LiveTranscoding,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  stopRtmpStreamEx(url: string, connection: RtcConnection): CallApiReturnType;
+  stopRtmpStreamEx_e405325(
+    url: string,
+    connection: RtcConnection
+  ): CallApiReturnType;
 
-  startOrUpdateChannelMediaRelayEx(
+  startOrUpdateChannelMediaRelayEx_4ad39a8(
     configuration: ChannelMediaRelayConfiguration,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  startChannelMediaRelayEx(
-    configuration: ChannelMediaRelayConfiguration,
+  stopChannelMediaRelayEx_c81e1a4(connection: RtcConnection): CallApiReturnType;
+
+  pauseAllChannelMediaRelayEx_c81e1a4(
     connection: RtcConnection
   ): CallApiReturnType;
 
-  updateChannelMediaRelayEx(
-    configuration: ChannelMediaRelayConfiguration,
+  resumeAllChannelMediaRelayEx_c81e1a4(
     connection: RtcConnection
   ): CallApiReturnType;
 
-  stopChannelMediaRelayEx(connection: RtcConnection): CallApiReturnType;
-
-  pauseAllChannelMediaRelayEx(connection: RtcConnection): CallApiReturnType;
-
-  resumeAllChannelMediaRelayEx(connection: RtcConnection): CallApiReturnType;
-
-  getUserInfoByUserAccountEx(
+  getUserInfoByUserAccountEx_ca39cc6(
     userAccount: string,
-    userInfo: UserInfo[],
+    userInfo: UserInfo,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  getUserInfoByUidEx(
+  getUserInfoByUidEx_1e78da1(
     uid: number,
-    userInfo: UserInfo[],
+    userInfo: UserInfo,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  enableDualStreamModeEx(
+  enableDualStreamModeEx_4b18f41(
     enabled: boolean,
     streamConfig: SimulcastStreamConfig,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setDualStreamModeEx(
+  setDualStreamModeEx_622d0f3(
     mode: SIMULCAST_STREAM_MODE,
     streamConfig: SimulcastStreamConfig,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setHighPriorityUserListEx(
-    uidList: number,
+  setHighPriorityUserListEx_8736b5c(
+    uidList: number[],
     uidNum: number,
     option: STREAM_FALLBACK_OPTIONS,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  takeSnapshotEx(
+  takeSnapshotEx_de1c015(
     connection: RtcConnection,
     uid: number,
     filePath: string
   ): CallApiReturnType;
 
-  enableContentInspectEx(
+  enableContentInspectEx_c4e7f69(
     enabled: boolean,
     config: ContentInspectConfig,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  startMediaRenderingTracingEx(connection: RtcConnection): CallApiReturnType;
+  startMediaRenderingTracingEx_c81e1a4(
+    connection: RtcConnection
+  ): CallApiReturnType;
+
+  setParametersEx_8225ea3(
+    connection: RtcConnection,
+    parameters: string
+  ): CallApiReturnType;
 }

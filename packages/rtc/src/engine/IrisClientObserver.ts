@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import { ILocalTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 
 import { IrisAudioSourceType } from '../base/BaseType';
@@ -318,7 +318,7 @@ export class IrisClientObserver {
           trackPackage.type ===
           IrisAudioSourceType.kAudioSourceTypeScreenCapture
         ) {
-          this._engine.rtcEngineEventHandler.onLocalAudioStateChanged(
+          this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f33d789(
             NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
               .LOCAL_AUDIO_STREAM_STATE_STOPPED,
             0
@@ -346,7 +346,7 @@ export class IrisClientObserver {
           trackPackage as VideoTrackPackage,
           irisClient?.agoraRTCClient
         );
-        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged(
+        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a(
           trackPackage.type as NATIVE_RTC.VIDEO_SOURCE_TYPE,
           NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_STOPPED,
           0

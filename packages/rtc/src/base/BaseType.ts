@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import { ILocalVideoTrack, IRemoteVideoTrack, UID } from 'agora-rtc-sdk-ng';
 
 export enum IRIS_VIDEO_PROCESS_ERR {

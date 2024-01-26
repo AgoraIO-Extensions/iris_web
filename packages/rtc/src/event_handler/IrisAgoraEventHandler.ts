@@ -1,4 +1,4 @@
-import * as NATIVE_RTC from '@iris/native-rtc-binding';
+import * as NATIVE_RTC from '@iris/native-rtc';
 import { DeviceInfo } from 'agora-rtc-sdk-ng';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -16,7 +16,7 @@ export class IrisAgoraEventHandler {
   }
 
   onAutoplayFailed() {
-    this._engine.rtcEngineEventHandler.onError(
+    this._engine.rtcEngineEventHandler.onError_d26c0fd(
       NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_READY,
       'auto play failed'
     );
@@ -29,7 +29,7 @@ export class IrisAgoraEventHandler {
     let deviceState = AgoraTranslate.DeviceState2NATIVE_RTCMEDIA_DEVICE_STATE_TYPE(
       info.state
     );
-    this._engine.rtcEngineEventHandler.onVideoDeviceStateChanged(
+    this._engine.rtcEngineEventHandler.onVideoDeviceStateChanged_976d8c3(
       deviceId,
       deviceType,
       deviceState
@@ -45,7 +45,7 @@ export class IrisAgoraEventHandler {
     let deviceState = AgoraTranslate.DeviceState2NATIVE_RTCMEDIA_DEVICE_STATE_TYPE(
       info.state
     );
-    this._engine.rtcEngineEventHandler.onAudioDeviceStateChanged(
+    this._engine.rtcEngineEventHandler.onAudioDeviceStateChanged_976d8c3(
       deviceId,
       deviceType,
       deviceState
@@ -61,7 +61,7 @@ export class IrisAgoraEventHandler {
     let deviceState = AgoraTranslate.DeviceState2NATIVE_RTCMEDIA_DEVICE_STATE_TYPE(
       info.state
     );
-    this._engine.rtcEngineEventHandler.onAudioDeviceStateChanged(
+    this._engine.rtcEngineEventHandler.onAudioDeviceStateChanged_976d8c3(
       deviceId,
       deviceType,
       deviceState

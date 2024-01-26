@@ -11,55 +11,59 @@ export interface IAudioDeviceManager {
 
   enumerateRecordingDevices(): CallApiReturnType;
 
-  setPlaybackDevice(deviceId: string[]): CallApiReturnType;
+  setPlaybackDevice_4ad5f6e(deviceId: string): CallApiReturnType;
 
-  getPlaybackDevice(): CallApiReturnType;
+  getPlaybackDevice_73b9872(deviceId: string): CallApiReturnType;
 
-  getPlaybackDeviceInfo(): CallApiReturnType;
+  getPlaybackDeviceInfo_5540658(): CallApiReturnType;
 
-  setPlaybackDeviceVolume(volume: number): CallApiReturnType;
+  setPlaybackDeviceVolume_46f8ab7(volume: number): CallApiReturnType;
 
-  getPlaybackDeviceVolume(): CallApiReturnType;
+  getPlaybackDeviceVolume_915cb25(volume: number): CallApiReturnType;
 
-  setRecordingDevice(deviceId: string[]): CallApiReturnType;
+  setRecordingDevice_4ad5f6e(deviceId: string): CallApiReturnType;
 
-  getRecordingDevice(deviceId: string): CallApiReturnType;
+  getRecordingDevice_73b9872(deviceId: string): CallApiReturnType;
 
-  getRecordingDeviceInfo(): CallApiReturnType;
+  getRecordingDeviceInfo_5540658(): CallApiReturnType;
 
-  setRecordingDeviceVolume(volume: number): CallApiReturnType;
+  setRecordingDeviceVolume_46f8ab7(volume: number): CallApiReturnType;
 
-  getRecordingDeviceVolume(volume: number[]): CallApiReturnType;
+  getRecordingDeviceVolume_915cb25(volume: number): CallApiReturnType;
 
-  setLoopbackDevice(deviceId: string[]): CallApiReturnType;
+  setLoopbackDevice_4ad5f6e(deviceId: string): CallApiReturnType;
 
-  getLoopbackDevice(deviceId: string): CallApiReturnType;
+  getLoopbackDevice_73b9872(deviceId: string): CallApiReturnType;
 
-  setPlaybackDeviceMute(mute: boolean): CallApiReturnType;
+  setPlaybackDeviceMute_5039d15(mute: boolean): CallApiReturnType;
 
-  getPlaybackDeviceMute(mute: boolean): CallApiReturnType;
+  getPlaybackDeviceMute_d942327(mute: boolean): CallApiReturnType;
 
-  setRecordingDeviceMute(mute: boolean): CallApiReturnType;
+  setRecordingDeviceMute_5039d15(mute: boolean): CallApiReturnType;
 
-  getRecordingDeviceMute(mute: boolean): CallApiReturnType;
+  getRecordingDeviceMute_d942327(mute: boolean): CallApiReturnType;
 
-  startPlaybackDeviceTest(testAudioFilePath: string): CallApiReturnType;
+  startPlaybackDeviceTest_3a2037f(testAudioFilePath: string): CallApiReturnType;
 
   stopPlaybackDeviceTest(): CallApiReturnType;
 
-  startRecordingDeviceTest(indicationInterval: number): CallApiReturnType;
+  startRecordingDeviceTest_46f8ab7(
+    indicationInterval: number
+  ): CallApiReturnType;
 
   stopRecordingDeviceTest(): CallApiReturnType;
 
-  startAudioDeviceLoopbackTest(indicationInterval: number): CallApiReturnType;
+  startAudioDeviceLoopbackTest_46f8ab7(
+    indicationInterval: number
+  ): CallApiReturnType;
 
   stopAudioDeviceLoopbackTest(): CallApiReturnType;
 
-  followSystemPlaybackDevice(enable: boolean): CallApiReturnType;
+  followSystemPlaybackDevice_5039d15(enable: boolean): CallApiReturnType;
 
-  followSystemRecordingDevice(enable: boolean): CallApiReturnType;
+  followSystemRecordingDevice_5039d15(enable: boolean): CallApiReturnType;
 
-  followSystemLoopbackDevice(enable: boolean): CallApiReturnType;
+  followSystemLoopbackDevice_5039d15(enable: boolean): CallApiReturnType;
 
   release(): CallApiReturnType;
 }
