@@ -15,10 +15,6 @@ on:
         description: 'upload to cdn'
         default: true
         type: boolean
-      release_type:
-        description: 'The release type of CDN'
-        default: 'staging'
-        type: string
 
 jobs:
   release-it:
@@ -86,7 +82,7 @@ jobs:
         with:
           upload_cdn_internal_jenkins_hook: ${{ env.UPLOAD_CDN_INTERNAL_JENKINS_HOOK }}
           url: ${{ env.GITHUB_RELEASE_RTC_PACKAGE_DOWNLOAD_URL }}
-          release_type: ${{ inputs.release_type }}
+          release_type: 'sdk'
 
       - name: Prepare CDN Publish iris-web-rtc
         if: ${{ inputs.cdn }}
@@ -103,4 +99,4 @@ jobs:
         with:
           upload_cdn_internal_jenkins_hook: ${{ env.UPLOAD_CDN_INTERNAL_JENKINS_HOOK }}
           url: ${{ env.GITHUB_RELEASE_RTC_FAKE_PACKAGE_DOWNLOAD_URL }}
-          release_type: ${{ inputs.release_type }}
+          release_type: 'sdk'
