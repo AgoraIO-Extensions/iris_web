@@ -2487,31 +2487,6 @@ describe('IVideoDeviceManager', () => {
     ).toBeCalledWith('test');
   });
 
-  test('VideoDeviceManager_getDevice_73b9872 parameter', async () => {
-    let nParam = {
-      deviceIdUTF8: undefined,
-    };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'VideoDeviceManager_getDevice_73b9872',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
-    }
-  });
-
   test('VideoDeviceManager_getDevice_73b9872 impl call', async () => {
     jest
       .spyOn(
@@ -2519,9 +2494,7 @@ describe('IVideoDeviceManager', () => {
         'getDevice_73b9872'
       )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    let nParam = {
-      deviceIdUTF8: 'test',
-    };
+    let nParam = {};
     let apiParam = new IrisCore.EventParam(
       'VideoDeviceManager_getDevice_73b9872',
       JSON.stringify(nParam),
@@ -2539,7 +2512,7 @@ describe('IVideoDeviceManager', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('VideoDeviceManager')._impl
         .getDevice_73b9872
-    ).toBeCalledWith('test');
+    ).toBeCalledWith();
   });
 
   test('VideoDeviceManager_numberOfCapabilities_3a2037f impl call', async () => {

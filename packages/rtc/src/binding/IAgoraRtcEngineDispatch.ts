@@ -1971,12 +1971,8 @@ export class IVideoDeviceManagerDispatch implements IVideoDeviceManager {
   }
 
   // @ts-ignore
-  getDevice_73b9872(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let deviceIdUTF8 = obj.deviceIdUTF8;
-    if (deviceIdUTF8 === undefined) throw 'deviceIdUTF8 is undefined';
-
-    return this._impl.getDevice_73b9872(deviceIdUTF8);
+  getDevice_73b9872(): CallApiReturnType {
+    return this._impl.getDevice_73b9872();
   }
 
   // @ts-ignore
