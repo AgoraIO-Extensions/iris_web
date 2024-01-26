@@ -992,13 +992,20 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   setParameters_3a2037f(parameters: string): CallApiReturnType {
     let fun = async () => {
       try {
-        let json = JSON.parse(parameters);
-        let keyList = Object.keys(json);
-        for (let i = 0; i < keyList.length; i++) {
+        if (typeof parameters === 'string') {
           (this._engine.globalState.AgoraRTC as any).setParameter(
-            keyList[i],
-            json[keyList[i]]
+            undefined,
+            parameters
           );
+        } else {
+          let json = JSON.parse(parameters);
+          let keyList = Object.keys(json);
+          for (let i = 0; i < keyList.length; i++) {
+            (this._engine.globalState.AgoraRTC as any).setParameter(
+              keyList[i],
+              json[keyList[i]]
+            );
+          }
         }
       } catch (e) {
         AgoraConsole.log(e);
@@ -1065,7 +1072,7 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
     };
     return this._engine.execute(process);
   }
-  getDevice_73b9872(deviceIdUTF8: string): CallApiReturnType {
+  getDevice_73b9872(): CallApiReturnType {
     let process = async () => {
       let list: MediaDeviceInfo[] = [];
       let deviceId = '';
