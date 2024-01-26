@@ -1302,7 +1302,7 @@ export interface IVideoDeviceManager {
 
   setDevice_4ad5f6e(deviceIdUTF8: string): CallApiReturnType;
 
-  getDevice_73b9872(deviceIdUTF8: string): CallApiReturnType;
+  getDevice_73b9872(): CallApiReturnType;
 
   numberOfCapabilities_3a2037f(deviceIdUTF8: string): CallApiReturnType;
 
