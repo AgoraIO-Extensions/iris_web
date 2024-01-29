@@ -122,10 +122,13 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   muteLocalVideoStreamEx_3cf17a4(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteLocalVideoStreamEx_3cf17a4 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.muteLocalVideoStreamEx_3cf17a4(mute, connection);
   }
 
   // @ts-ignore
@@ -275,18 +278,35 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   createDataStreamEx_9f641b6(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'createDataStreamEx_9f641b6 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let streamId = obj.streamId;
+    if (streamId === undefined) throw 'streamId is undefined';
+    let config = obj.config;
+    if (config === undefined) throw 'config is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.createDataStreamEx_9f641b6(streamId, config, connection);
   }
 
   // @ts-ignore
   sendStreamMessageEx_0c34857(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'sendStreamMessageEx_0c34857 not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let streamId = obj.streamId;
+    if (streamId === undefined) throw 'streamId is undefined';
+    let data = obj.data;
+    if (data === undefined) throw 'data is undefined';
+    let length = obj.length;
+    if (length === undefined) throw 'length is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.sendStreamMessageEx_0c34857(
+      streamId,
+      data,
+      length,
+      connection
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore

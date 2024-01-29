@@ -1222,10 +1222,29 @@ export class IRtcEngineEventHandler {
     reason: REMOTE_VIDEO_STATE_REASON,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'onRemoteVideoStateChanged_a14e9d1 not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      state,
+      reason,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onRemoteVideoStateChanged_a14e9d1',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    AgoraConsole.log(
+      `onRemoteVideoStateChanged_a14e9d1 eventParam ${JSON.stringify(
+        eventParam
+      )}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onFirstRemoteVideoFrame_a68170a(
@@ -1523,10 +1542,28 @@ export class IRtcEngineEventHandler {
     length: number,
     sentTs: number
   ): void {
-    AgoraConsole.warn(
-      'onStreamMessage_99898cb not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      streamId,
+      data,
+      length,
+      sentTs,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onStreamMessage_99898cb',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    AgoraConsole.log(
+      `onStreamMessage_99898cb eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onStreamMessageError_fe302fc(
@@ -1537,10 +1574,28 @@ export class IRtcEngineEventHandler {
     missed: number,
     cached: number
   ): void {
-    AgoraConsole.warn(
-      'onStreamMessageError_fe302fc not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      streamId,
+      code,
+      missed,
+      cached,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onStreamMessageError_fe302fc',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    AgoraConsole.log(
+      `onStreamMessageError_fe302fc eventParam ${JSON.stringify(eventParam)}`
+    );
+    this.notifyEvent(eventParam);
   }
 
   onRequestToken_c81e1a4(connection: RtcConnection): void {
@@ -2468,10 +2523,11 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   muteLocalVideoStream_5039d15(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteLocalVideoStream_5039d15 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+
+    return this._impl.muteLocalVideoStream_5039d15(mute);
   }
 
   // @ts-ignore
@@ -3941,18 +3997,26 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   createDataStream_5862815(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'createDataStream_5862815 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let streamId = obj.streamId;
+    if (streamId === undefined) throw 'streamId is undefined';
+    let config = obj.config;
+    if (config === undefined) throw 'config is undefined';
+
+    return this._impl.createDataStream_5862815(streamId, config);
   }
 
   // @ts-ignore
   sendStreamMessage_8715a45(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'sendStreamMessage_8715a45 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let streamId = obj.streamId;
+    if (streamId === undefined) throw 'streamId is undefined';
+    let data = obj.data;
+    if (data === undefined) throw 'data is undefined';
+    let length = obj.length;
+    if (length === undefined) throw 'length is undefined';
+
+    return this._impl.sendStreamMessage_8715a45(streamId, data, length);
   }
 
   // @ts-ignore
