@@ -178,7 +178,7 @@ export async function setupLocalVideo(
   expect(result.code).toBe(0);
 }
 
-export async function setupRemoteVideo(
+export async function setupRemoteVideoEx(
   apiEnginePtr: IrisApiEngine,
   options?: any
 ) {

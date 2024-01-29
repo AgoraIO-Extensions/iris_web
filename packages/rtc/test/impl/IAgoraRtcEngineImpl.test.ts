@@ -27,7 +27,7 @@ import {
   callIrisWithoutCheck,
   joinChannel,
   setupLocalVideo,
-  setupRemoteVideo,
+  setupRemoteVideoEx,
 } from '../utils';
 
 import { IRtcEngineImpl } from './IAgoraRtcEngineImpl';
@@ -407,10 +407,18 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(irisRtcEngine.globalState.enabledLocalAudio).toBe(param.enabled);
   });
 
+  test('enableLocalVideo_5039d15', async () => {
+    let param = {
+      enabled: true,
+    };
+    await callIris(apiEnginePtr, 'RtcEngine_enableLocalVideo_5039d15', param);
+    expect(irisRtcEngine.globalState.enabledLocalVideo).toBe(param.enabled);
+  });
+
   test('enableVideo', async () => {
     await joinChannel(apiEnginePtr, null);
     await setupLocalVideo(apiEnginePtr, null);
-    await setupRemoteVideo(apiEnginePtr, null);
+    await setupRemoteVideoEx(apiEnginePtr, null);
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
     expect(irisRtcEngine.globalState.enabledVideo).toBeTruthy();
@@ -430,7 +438,7 @@ describe('IAgoraRtcEngineImpl', () => {
   test('disableVideo', async () => {
     await joinChannel(apiEnginePtr, null);
     await setupLocalVideo(apiEnginePtr, null);
-    await setupRemoteVideo(apiEnginePtr, null);
+    await setupRemoteVideoEx(apiEnginePtr, null);
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
     await callIris(apiEnginePtr, 'RtcEngine_disableVideo', null);
@@ -897,10 +905,8 @@ describe('IAgoraRtcEngineImpl', () => {
   test('muteAllRemoteVideoStreams_5039d15', async () => {
     jest.spyOn(rtcEngineImpl, 'muteAllRemoteVideoStreams_5039d15');
     await joinChannel(apiEnginePtr, null);
-    await setupLocalVideo(apiEnginePtr, null);
-    await setupRemoteVideo(apiEnginePtr, null);
+    await setupRemoteVideoEx(apiEnginePtr, null);
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
-    await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
     let remoteUsers =
       irisRtcEngine.irisClientManager.irisClientList[0]?.agoraRTCClient
         .remoteUsers;
@@ -926,10 +932,8 @@ describe('IAgoraRtcEngineImpl', () => {
   test('muteRemoteVideoStream_dbdc15a', async () => {
     jest.spyOn(rtcEngineImpl, 'muteRemoteVideoStream_dbdc15a');
     await joinChannel(apiEnginePtr, null);
-    await setupLocalVideo(apiEnginePtr, null);
-    await setupRemoteVideo(apiEnginePtr, null);
+    await setupRemoteVideoEx(apiEnginePtr, null);
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
-    await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
     let remoteUsers =
       irisRtcEngine.irisClientManager.irisClientList[0]?.agoraRTCClient
         .remoteUsers;

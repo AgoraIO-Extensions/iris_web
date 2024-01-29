@@ -644,7 +644,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   enableLocalVideo_5039d15(enabled: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalState.enabledLocalAudio = enabled;
+      this._engine.globalState.enabledLocalVideo = enabled;
 
       //找到本地video
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
