@@ -220,4 +220,90 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processFunc);
   }
+
+  muteRemoteVideoStreamEx_6d93082(
+    uid: number,
+    mute: boolean,
+    connection: NATIVE_RTC.RtcConnection
+  ): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      let remoteUserPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
+        connection
+      );
+      let remoteUsers = remoteUserPackages.filter((userPackage) => {
+        return userPackage.uid == uid;
+      });
+      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        mute
+          ? NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK
+          : NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
+        remoteUsers
+      );
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
+  }
+  muteLocalVideoStreamEx_3cf17a4(
+    mute: boolean,
+    connection: NATIVE_RTC.RtcConnection
+  ): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      let localVideoTrackPackages = this._engine.irisClientManager.getLocalVideoTrackPackageByConnection(
+        connection
+      );
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        mute ? NotifyType.MUTE_TRACK : NotifyType.UNMUTE_TRACK,
+        localVideoTrackPackages
+      );
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
+  }
+  muteAllRemoteVideoStreamsEx_3cf17a4(
+    mute: boolean,
+    connection: NATIVE_RTC.RtcConnection
+  ): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      let remoteUserPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
+        connection
+      );
+      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        mute
+          ? NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK
+          : NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
+        remoteUserPackages
+      );
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
+  }
+  createDataStreamEx_9f641b6(
+    streamId: number,
+    config: NATIVE_RTC.DataStreamConfig,
+    connection: NATIVE_RTC.RtcConnection
+  ): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
+  }
+  sendStreamMessageEx_0c34857(
+    streamId: number,
+    data: Uint8Array,
+    length: number,
+    connection: NATIVE_RTC.RtcConnection
+  ): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
+  }
 }

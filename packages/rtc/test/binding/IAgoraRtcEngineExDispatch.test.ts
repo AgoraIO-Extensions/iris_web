@@ -384,9 +384,39 @@ describe('IRtcEngineEx', () => {
     ).toBeCalledWith('test', 'test', 'test');
   });
 
+  test('RtcEngineEx_muteRemoteVideoStreamEx_6d93082 parameter', async () => {
+    let nParam = {
+      uid: undefined,
+      mute: undefined,
+      connection: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngineEx_muteRemoteVideoStreamEx_6d93082',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
+  });
+
   test('RtcEngineEx_muteRemoteVideoStreamEx_6d93082 impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl,
+        'muteRemoteVideoStreamEx_6d93082'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       uid: 'test',
@@ -405,13 +435,12 @@ describe('IRtcEngineEx', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
-        ?.muteRemoteVideoStreamEx_6d93082
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .muteRemoteVideoStreamEx_6d93082
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
+        .muteRemoteVideoStreamEx_6d93082
+    ).toBeCalledWith('test', 'test', 'test');
   });
 
   test('RtcEngineEx_setRemoteVideoStreamTypeEx_01dc428 impl call', async () => {
@@ -615,9 +644,38 @@ describe('IRtcEngineEx', () => {
     ).toBeCalledWith('test', 'test');
   });
 
+  test('RtcEngineEx_muteAllRemoteVideoStreamsEx_3cf17a4 parameter', async () => {
+    let nParam = {
+      mute: undefined,
+      connection: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngineEx_muteAllRemoteVideoStreamsEx_3cf17a4',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
+  });
+
   test('RtcEngineEx_muteAllRemoteVideoStreamsEx_3cf17a4 impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl,
+        'muteAllRemoteVideoStreamsEx_3cf17a4'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       mute: 'test',
@@ -635,13 +693,12 @@ describe('IRtcEngineEx', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
-        ?.muteAllRemoteVideoStreamsEx_3cf17a4
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .muteAllRemoteVideoStreamsEx_3cf17a4
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
+        .muteAllRemoteVideoStreamsEx_3cf17a4
+    ).toBeCalledWith('test', 'test');
   });
 
   test('RtcEngineEx_setSubscribeAudioBlocklistEx_9f1e85c impl call', async () => {

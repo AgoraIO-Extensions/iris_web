@@ -95,10 +95,15 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   muteRemoteVideoStreamEx_6d93082(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteRemoteVideoStreamEx_6d93082 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) throw 'uid is undefined';
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.muteRemoteVideoStreamEx_6d93082(uid, mute, connection);
   }
 
   // @ts-ignore
@@ -144,10 +149,13 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   muteAllRemoteVideoStreamsEx_3cf17a4(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteAllRemoteVideoStreamsEx_3cf17a4 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+    let connection = obj.connection;
+    if (connection === undefined) throw 'connection is undefined';
+
+    return this._impl.muteAllRemoteVideoStreamsEx_3cf17a4(mute, connection);
   }
 
   // @ts-ignore

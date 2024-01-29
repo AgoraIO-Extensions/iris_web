@@ -299,10 +299,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         ));
 
       //todo1 需要确认这个api是不是会改变所有connection的role,目前只改变了irisClientList[0]的
-      //todo2 需要追加调用 muteLocalVideoStream 修改发布状态。 这个api都还没做
       if (role === NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE) {
         this.muteLocalAudioStream_5039d15(true);
-        // this.muteLocalVideoStream(true);
+        this.muteLocalVideoStream_5039d15(true);
       }
       //如果已经加入频道
       if (client?.channelName) {
@@ -340,10 +339,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       //remote
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
-        NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
-        this._engine.irisClientManager.remoteUserPackages
-      );
+      this.muteAllRemoteVideoStreams_5039d15(false);
 
       return this._engine.returnResult();
     };
@@ -370,10 +366,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       //remote
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
-        NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK,
-        this._engine.irisClientManager.remoteUserPackages
-      );
+      this.muteAllRemoteVideoStreams_5039d15(true);
 
       return this._engine.returnResult();
     };
@@ -648,6 +641,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
+
+  enableLocalVideo_5039d15(enabled: boolean): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      this._engine.globalState.enabledLocalAudio = enabled;
+
+      //找到本地video
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        enabled ? NotifyType.ENABLE_TRACK : NotifyType.UNABLE_TRACK,
+        this._engine.irisClientManager.localVideoTrackPackages
+      );
+
+      this.muteLocalVideoStream_5039d15(!enabled);
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
+  }
   muteLocalAudioStream_5039d15(mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
@@ -660,6 +670,72 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
+
+  muteLocalVideoStream_5039d15(mute: boolean): CallApiReturnType {
+    let process = async () => {
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        mute ? NotifyType.MUTE_TRACK : NotifyType.UNMUTE_TRACK,
+        this._engine.irisClientManager.localVideoTrackPackages
+      );
+
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(process);
+  }
+
+  createDataStream_5862815(
+    streamId: number,
+    config: NATIVE_RTC.DataStreamConfig
+  ): CallApiReturnType {
+    let process = async () => {
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(process);
+  }
+
+  sendStreamMessage_8715a45(
+    streamId: number,
+    data: Uint8Array,
+    length: number
+  ): CallApiReturnType {
+    let process = async () => {
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(process);
+  }
+
+  muteAllRemoteVideoStreams_5039d15(mute: boolean): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        mute
+          ? NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK
+          : NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
+        this._engine.irisClientManager.remoteUserPackages
+      );
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
+  }
+  muteRemoteVideoStream_dbdc15a(uid: number, mute: boolean): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      let remoteUserPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
+        uid
+      );
+      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        mute
+          ? NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK
+          : NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
+        [remoteUserPackage]
+      );
+
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
+  }
+
   muteAllRemoteAudioStreams_5039d15(mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.irisClientManager.irisClientObserver.notifyRemote(

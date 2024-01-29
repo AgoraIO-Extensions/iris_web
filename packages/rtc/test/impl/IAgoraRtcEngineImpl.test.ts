@@ -871,6 +871,82 @@ describe('IAgoraRtcEngineImpl', () => {
     });
     expect(remoteUsers[0].audioTrack).not.toBeUndefined();
   });
+
+  test('muteLocalVideoStream_5039d15', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteLocalVideoStream_5039d15');
+    await joinChannel(apiEnginePtr, null);
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
+    let localVideoTrackPackage = irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
+    );
+    expect(localVideoTrackPackage.length).toBe(1);
+    expect(localVideoTrackPackage[0].track.isPlaying).toBe(true);
+    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(false);
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteLocalVideoStream_5039d15', {
+      mute: true,
+    });
+    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(true);
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteLocalVideoStream_5039d15', {
+      mute: false,
+    });
+    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(false);
+  });
+  test('muteAllRemoteVideoStreams_5039d15', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteAllRemoteVideoStreams_5039d15');
+    await joinChannel(apiEnginePtr, null);
+    await setupLocalVideo(apiEnginePtr, null);
+    await setupRemoteVideo(apiEnginePtr, null);
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
+    let remoteUsers =
+      irisRtcEngine.irisClientManager.irisClientList[0]?.agoraRTCClient
+        .remoteUsers;
+    expect(remoteUsers[0].videoTrack.isPlaying).toBe(true);
+
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_muteAllRemoteVideoStreams_5039d15',
+      {
+        mute: true,
+      }
+    );
+    expect(remoteUsers[0].videoTrack).toBeUndefined();
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_muteAllRemoteVideoStreams_5039d15',
+      {
+        mute: false,
+      }
+    );
+    expect(remoteUsers[0].videoTrack).not.toBeUndefined();
+  });
+  test('muteRemoteVideoStream_dbdc15a', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteRemoteVideoStream_dbdc15a');
+    await joinChannel(apiEnginePtr, null);
+    await setupLocalVideo(apiEnginePtr, null);
+    await setupRemoteVideo(apiEnginePtr, null);
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
+    let remoteUsers =
+      irisRtcEngine.irisClientManager.irisClientList[0]?.agoraRTCClient
+        .remoteUsers;
+    expect(remoteUsers[0].videoTrack.isPlaying).toBe(true);
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteVideoStream_dbdc15a', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+    });
+    expect(remoteUsers[0].videoTrack).toBeUndefined();
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteVideoStream_dbdc15a', {
+      mute: false,
+      uid: TEST_REMOTE_UID,
+    });
+    expect(remoteUsers[0].videoTrack).not.toBeUndefined();
+  });
+
   test('setParameters_3a2037f', async () => {
     let params = JSON.stringify({
       'rtc.audio.force_bluetooth_a2dp': true,

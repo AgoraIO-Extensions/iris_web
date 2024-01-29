@@ -2532,18 +2532,20 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   enableLocalVideo_5039d15(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'enableLocalVideo_5039d15 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let enabled = obj.enabled;
+    if (enabled === undefined) throw 'enabled is undefined';
+
+    return this._impl.enableLocalVideo_5039d15(enabled);
   }
 
   // @ts-ignore
   muteAllRemoteVideoStreams_5039d15(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteAllRemoteVideoStreams_5039d15 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+
+    return this._impl.muteAllRemoteVideoStreams_5039d15(mute);
   }
 
   // @ts-ignore
@@ -2568,10 +2570,13 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   muteRemoteVideoStream_dbdc15a(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteRemoteVideoStream_dbdc15a not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) throw 'uid is undefined';
+    let mute = obj.mute;
+    if (mute === undefined) throw 'mute is undefined';
+
+    return this._impl.muteRemoteVideoStream_dbdc15a(uid, mute);
   }
 
   // @ts-ignore
