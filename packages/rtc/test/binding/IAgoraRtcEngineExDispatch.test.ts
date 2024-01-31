@@ -1124,7 +1124,6 @@ describe('IRtcEngineEx', () => {
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
-      streamId: 'test',
       reliable: 'test',
       ordered: 'test',
       connection: 'test',
@@ -1152,7 +1151,6 @@ describe('IRtcEngineEx', () => {
 
   test('RtcEngineEx_createDataStreamEx_9f641b6 parameter', async () => {
     let nParam = {
-      streamId: undefined,
       config: undefined,
       connection: undefined,
     };
@@ -1185,7 +1183,6 @@ describe('IRtcEngineEx', () => {
       )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
-      streamId: 'test',
       config: 'test',
       connection: 'test',
     };
@@ -1206,7 +1203,7 @@ describe('IRtcEngineEx', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
         .createDataStreamEx_9f641b6
-    ).toBeCalledWith('test', 'test', 'test');
+    ).toBeCalledWith('test', 'test');
   });
 
   test('RtcEngineEx_sendStreamMessageEx_0c34857 parameter', async () => {

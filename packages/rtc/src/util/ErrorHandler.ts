@@ -19,6 +19,15 @@ export default class IrisRtcErrorHandler {
     );
   }
 
+  public notInChannel() {
+    let message = 'not in channel, please join channel first';
+    AgoraConsole.error(message);
+    return this._engine.returnResult(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_IN_CHANNEL
+    );
+  }
+
   public failed(msg: string) {
     AgoraConsole.error(msg);
     return this._engine.returnResult(

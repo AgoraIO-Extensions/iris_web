@@ -1,4 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
+import { IAgoraRTCClient } from 'agora-rtc-sdk-ng';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
 import { IrisClient } from '../engine/IrisClient';
@@ -7,6 +8,7 @@ import { RemoteUserPackage } from '../engine/IrisClientManager';
 import { NotifyRemoteType, NotifyType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { SendDataStreamMessage } from '../helper/ClientHelper';
 
 import { AgoraConsole } from '../util/AgoraConsole';
 
@@ -284,11 +286,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     return this._engine.execute(processFunc);
   }
   createDataStreamEx_9f641b6(
-    streamId: number,
     config: NATIVE_RTC.DataStreamConfig,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
+      irisClient.irisClientState.dataStreamConfig = config;
       return this._engine.returnResult();
     };
 
@@ -300,10 +305,24 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     length: number,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    let processFunc = async (): Promise<CallIrisApiResult> => {
+    let process = async () => {
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
+      let agoraRTCClient: IAgoraRTCClient = irisClient?.agoraRTCClient;
+      if (!agoraRTCClient?.channelName) {
+        return this._engine.irisRtcErrorHandler.notInChannel();
+      } else {
+        await this._engine.clientHelper.sendStreamMessage(agoraRTCClient, {
+          payload: data,
+          syncWithAudio:
+            irisClient.irisClientState.dataStreamConfig.syncWithAudio,
+        } as SendDataStreamMessage);
+      }
+
       return this._engine.returnResult();
     };
 
-    return this._engine.execute(processFunc);
+    return this._engine.execute(process);
   }
 }

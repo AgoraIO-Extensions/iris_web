@@ -86,6 +86,8 @@ module.exports = [
   'agora::rtc::IVideoDeviceManager.getDevice.deviceIdUTF8',
   'agora::rtc::IRtcEngineEx.joinChannelEx.eventHandler',
   'agora::rtc::IRtcEngine.joinChannelWithUserAccountEx.eventHandler',
+  'agora::rtc::IRtcEngine.createDataStream.streamId',
+  'agora::rtc::IRtcEngineEx.createDataStreamEx.streamId',
   'agora::rtc::IRtcEngine.getVersion.build',
   'agora::rtc::IRtcEngine.takeSnapshot.callback',
   'agora::rtc::ICloudSpatialAudioEngine.getTeammates.uids',

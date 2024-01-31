@@ -23,6 +23,7 @@ import { NotifyRemoteType, NotifyType } from '../engine/IrisClientObserver';
 import { IrisIntervalType, IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import { IRtcEngineExtensions } from '../extensions/IAgoraRtcEngineExtensions';
+import { SendDataStreamMessage } from '../helper/ClientHelper';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { AgoraTranslate } from '../util/AgoraTranslate';
 
@@ -684,10 +685,12 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
 
   createDataStream_5862815(
-    streamId: number,
     config: NATIVE_RTC.DataStreamConfig
   ): CallApiReturnType {
     let process = async () => {
+      for (let irisClient of this._engine.irisClientManager.irisClientList) {
+        irisClient.irisClientState.dataStreamConfig = config;
+      }
       return this._engine.returnResult();
     };
     return this._engine.execute(process);
@@ -699,6 +702,18 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     length: number
   ): CallApiReturnType {
     let process = async () => {
+      let irisClient = this._engine.irisClientManager.getIrisClient();
+      let agoraRTCClient: IAgoraRTCClient = irisClient?.agoraRTCClient;
+      if (!agoraRTCClient?.channelName) {
+        return this._engine.irisRtcErrorHandler.notInChannel();
+      } else {
+        await this._engine.clientHelper.sendStreamMessage(agoraRTCClient, {
+          payload: data,
+          syncWithAudio:
+            irisClient.irisClientState.dataStreamConfig.syncWithAudio,
+        } as SendDataStreamMessage);
+      }
+
       return this._engine.returnResult();
     };
     return this._engine.execute(process);

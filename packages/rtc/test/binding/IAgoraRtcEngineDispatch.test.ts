@@ -10019,7 +10019,6 @@ describe('IRtcEngine', () => {
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
-      streamId: 'test',
       reliable: 'test',
       ordered: 'test',
     };
@@ -10046,7 +10045,6 @@ describe('IRtcEngine', () => {
 
   test('RtcEngine_createDataStream_5862815 parameter', async () => {
     let nParam = {
-      streamId: undefined,
       config: undefined,
     };
     for (let i in nParam) {
@@ -10078,7 +10076,6 @@ describe('IRtcEngine', () => {
       )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
-      streamId: 'test',
       config: 'test',
     };
     let apiParam = new IrisCore.EventParam(
@@ -10098,7 +10095,7 @@ describe('IRtcEngine', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
         .createDataStream_5862815
-    ).toBeCalledWith('test', 'test');
+    ).toBeCalledWith('test');
   });
 
   test('RtcEngine_sendStreamMessage_8715a45 parameter', async () => {

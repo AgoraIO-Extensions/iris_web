@@ -4003,12 +4003,10 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   createDataStream_5862815(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
-    let streamId = obj.streamId;
-    if (streamId === undefined) throw 'streamId is undefined';
     let config = obj.config;
     if (config === undefined) throw 'config is undefined';
 
-    return this._impl.createDataStream_5862815(streamId, config);
+    return this._impl.createDataStream_5862815(config);
   }
 
   // @ts-ignore

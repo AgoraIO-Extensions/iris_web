@@ -179,14 +179,12 @@ export interface IRtcEngineEx {
   ): CallApiReturnType;
 
   createDataStreamEx_1767167(
-    streamId: number,
     reliable: boolean,
     ordered: boolean,
     connection: RtcConnection
   ): CallApiReturnType;
 
   createDataStreamEx_9f641b6(
-    streamId: number,
     config: DataStreamConfig,
     connection: RtcConnection
   ): CallApiReturnType;

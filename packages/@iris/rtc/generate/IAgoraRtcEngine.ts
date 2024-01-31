@@ -2247,15 +2247,11 @@ export interface IRtcEngine {
   ): CallApiReturnType;
 
   createDataStream_b897a63(
-    streamId: number,
     reliable: boolean,
     ordered: boolean
   ): CallApiReturnType;
 
-  createDataStream_5862815(
-    streamId: number,
-    config: DataStreamConfig
-  ): CallApiReturnType;
+  createDataStream_5862815(config: DataStreamConfig): CallApiReturnType;
 
   sendStreamMessage_8715a45(
     streamId: number,

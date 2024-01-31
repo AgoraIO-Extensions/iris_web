@@ -287,14 +287,12 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   createDataStreamEx_9f641b6(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
-    let streamId = obj.streamId;
-    if (streamId === undefined) throw 'streamId is undefined';
     let config = obj.config;
     if (config === undefined) throw 'config is undefined';
     let connection = obj.connection;
     if (connection === undefined) throw 'connection is undefined';
 
-    return this._impl.createDataStreamEx_9f641b6(streamId, config, connection);
+    return this._impl.createDataStreamEx_9f641b6(config, connection);
   }
 
   // @ts-ignore

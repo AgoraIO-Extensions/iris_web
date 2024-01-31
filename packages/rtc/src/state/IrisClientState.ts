@@ -86,6 +86,15 @@ export class IrisClientState {
 
   isAudioFilterable?: boolean;
 
+  //dataStream
+  dataStreamConfig: {
+    syncWithAudio?: boolean;
+    ordered?: boolean;
+  } = {
+    syncWithAudio: false,
+    ordered: false,
+  };
+
   //setClientOptions()
   public clientRoleOptions?: NATIVE_RTC.ClientRoleOptions = null;
 
