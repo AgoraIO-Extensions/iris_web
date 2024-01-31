@@ -76,7 +76,6 @@
   "RtcEngineEventHandler_onUserStateChanged_65f95a7",
   "RtcEngineEventHandler_onRemoteAudioStateChanged_056772e",
   "RtcEngineEventHandler_onStreamMessage_99898cb",
-  "RtcEngineEventHandler_onStreamMessageError_fe302fc",
   "RtcEngineEventHandler_onRemoteVideoStateChanged_a14e9d1",
   "RtcEngineEventHandler_onClientRoleChanged_2acaf10",
   "RtcEngineEventHandler_onNetworkQuality_34d8b3c",

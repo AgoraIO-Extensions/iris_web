@@ -1982,6 +1982,9 @@ describe('IRtcEngineEventHandler', () => {
   test('RtcEngineEventHandler_onStreamMessageError_fe302fc impl call', async () => {
     let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
     eventHandler.onStreamMessageError_fe302fc(
       undefined,
       undefined,
@@ -1992,7 +1995,12 @@ describe('IRtcEngineEventHandler', () => {
     );
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
-    ).toBeCalledTimes(1);
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   });
   test('RtcEngineEventHandler_onRequestToken_c81e1a4 impl call', async () => {
     let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);

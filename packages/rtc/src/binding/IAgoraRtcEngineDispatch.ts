@@ -1574,28 +1574,10 @@ export class IRtcEngineEventHandler {
     missed: number,
     cached: number
   ): void {
-    let _obj = {
-      connection,
-      remoteUid,
-      streamId,
-      code,
-      missed,
-      cached,
-    };
-    let _json = JSON.stringify(_obj);
-    let eventParam = new IrisCore.EventParam(
-      'RtcEngineEventHandler_onStreamMessageError_fe302fc',
-      _json,
-      0,
-      '',
-      [],
-      [],
-      0
+    AgoraConsole.warn(
+      'onStreamMessageError_fe302fc not supported in this platform!'
     );
-    AgoraConsole.log(
-      `onStreamMessageError_fe302fc eventParam ${JSON.stringify(eventParam)}`
-    );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onRequestToken_c81e1a4(connection: RtcConnection): void {

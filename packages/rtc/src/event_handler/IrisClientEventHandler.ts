@@ -46,6 +46,7 @@ export class IrisClientEventHandler {
       'user-info-updated',
       this.onEventUserInfoUpdated.bind(this)
     );
+    this.agoraRTCClient.on('stream-message', this.onStreamMessage.bind(this));
     this.agoraRTCClient.on(
       'media-reconnect-start',
       this.onEventMediaReconnectStart.bind(this)
@@ -312,7 +313,14 @@ export class IrisClientEventHandler {
           remoteUid,
           NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_VIDEO
         );
-
+        this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
+          this._irisClient.connection,
+          remoteUid,
+          null,
+          NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
+            .REMOTE_VIDEO_STATE_REASON_REMOTE_MUTED,
+          null
+        );
         break;
       case 'unmute-audio':
         this._engine.rtcEngineEventHandler.onUserMuteAudio_0aac2fe(
@@ -335,6 +343,14 @@ export class IrisClientEventHandler {
           remoteUid,
           false
         );
+        this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
+          this._irisClient.connection,
+          remoteUid,
+          null,
+          NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
+            .REMOTE_VIDEO_STATE_REASON_REMOTE_UNMUTED,
+          null
+        );
         break;
       case 'enable-local-video':
         this._engine.rtcEngineEventHandler.onUserEnableLocalVideo_0aac2fe(
@@ -356,6 +372,17 @@ export class IrisClientEventHandler {
         );
         break;
     }
+  }
+
+  onStreamMessage(uid: UID, payload: Uint8Array): void {
+    this._engine.rtcEngineEventHandler.onStreamMessage_99898cb(
+      this._irisClient.connection,
+      uid as number,
+      null,
+      payload,
+      null,
+      null
+    );
   }
 
   onEventMediaReconnectStart(uid: UID): void {
