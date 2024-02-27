@@ -1002,14 +1002,13 @@ describe('IAgoraRtcEngineImpl', () => {
       'RtcEngine_sendStreamMessage_8715a45',
       {
         streamId: '1',
-        data: 'hello world',
         length: 11,
       }
     );
     expect(result2.code).toBe(NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK);
     expect(mockFunction.mock.calls[0][1]).toMatchObject({
       syncWithAudio: true,
-      payload: 'hello world',
+      payload: 'test',
     });
   });
   test('joinChannelWithUserAccount_0e4f59e', async () => {

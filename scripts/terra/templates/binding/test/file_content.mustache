@@ -6,6 +6,7 @@ import { CallIrisApiResult, IrisApiEngine, IrisCore } from 'iris-web-core';
 const bindingAPI = require('../../src/binding/{{&user_data.fileName}}Dispatch');
 
 import { IrisWebRtc } from '../../src/IrisRtcApi';
+import * as bufferExtensions from '../../src/extensions/CallApiBufferExtensions';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 let apiEnginePtr: IrisApiEngine;
@@ -74,32 +75,59 @@ describe('{{name}}', () => {
   {{#methods}}
   {{#user_data.isSupport}}
   {{#user_data.hasParameters}}
+  {{#user_data.bindingExtension}}
+  test('{{{user_data.IrisApiIdParser.value}}} parameter', async () => {
+    let nParam = {
+      {{#parameters}}
+      {{name}}: 'test',
+      {{/parameters}}
+    };
+    jest.spyOn(bufferExtensions, 'callApiBufferExtension');
+    await IrisCore.callIrisApi(
+      apiEnginePtr,
+      new IrisCore.EventParam(
+        '{{{user_data.IrisApiIdParser.value}}}',
+        JSON.stringify(nParam),
+        0,
+        '',
+        ['test'],
+        [],
+        1
+      )
+    );
+    expect(bufferExtensions.callApiBufferExtension).toBeCalledTimes(1);
+  });
+  {{/user_data.bindingExtension}}
+  {{^user_data.bindingExtension}}
   test('{{{user_data.IrisApiIdParser.value}}} parameter', async () => {
     let nParam = {
       {{#parameters}}
       {{name}}: undefined,
       {{/parameters}}
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            '{{{user_data.IrisApiIdParser.value}}}',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
-    }
+    {{#parameters}}
+      {{^is_output}}
+        try {
+          await IrisCore.callIrisApi(
+            apiEnginePtr,
+            new IrisCore.EventParam(
+              '{{{user_data.IrisApiIdParser.value}}}',
+              JSON.stringify(nParam),
+              0,
+              '',
+              ['test'],
+              [],
+              1
+            )
+          );
+        } catch (e) {
+          expect(e).toEqual('{{name}} is undefined');
+        }
+        nParam.{{name}} = 'test';
+      {{/is_output}}
+    {{/parameters}}
   });
+  {{/user_data.bindingExtension}}
   {{/user_data.hasParameters}}
 
   test('{{{user_data.IrisApiIdParser.value}}} impl call', async () => {

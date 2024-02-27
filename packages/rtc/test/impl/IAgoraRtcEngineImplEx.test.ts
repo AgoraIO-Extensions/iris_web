@@ -398,12 +398,11 @@ describe('IAgoraRtcEngineImpl', () => {
     await callIris(apiEnginePtr, 'RtcEngineEx_sendStreamMessageEx_0c34857', {
       connection: connection,
       streamId: '1',
-      data: 'hello world',
       length: 11,
     });
     expect(mockFunction.mock.calls[0][1]).toMatchObject({
       syncWithAudio: true,
-      payload: 'hello world',
+      payload: 'test',
     });
   });
 });

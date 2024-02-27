@@ -4,6 +4,7 @@ import * as NATIVE_RTC from '@iris/native-rtc';
 import { CallIrisApiResult, IrisApiEngine, IrisCore } from 'iris-web-core';
 
 import { IrisWebRtc } from '../../src/IrisRtcApi';
+import * as bufferExtensions from '../../src/extensions/CallApiBufferExtensions';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 const bindingAPI = require('../../src/binding/IAudioDeviceManagerDispatch');

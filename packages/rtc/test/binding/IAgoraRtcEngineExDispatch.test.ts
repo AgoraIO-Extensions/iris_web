@@ -4,6 +4,7 @@ import * as NATIVE_RTC from '@iris/native-rtc';
 import { CallIrisApiResult, IrisApiEngine, IrisCore } from 'iris-web-core';
 
 import { IrisWebRtc } from '../../src/IrisRtcApi';
+import * as bufferExtensions from '../../src/extensions/CallApiBufferExtensions';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 const bindingAPI = require('../../src/binding/IAgoraRtcEngineExDispatch');
@@ -45,25 +46,57 @@ describe('IRtcEngineEx', () => {
       connection: undefined,
       options: undefined,
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_joinChannelEx_a3cd08c',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_joinChannelEx_a3cd08c',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('token is undefined');
     }
+    nParam.token = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_joinChannelEx_a3cd08c',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    nParam.connection = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_joinChannelEx_a3cd08c',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('options is undefined');
+    }
+    nParam.options = 'test';
   });
 
   test('RtcEngineEx_joinChannelEx_a3cd08c impl call', async () => {
@@ -102,25 +135,23 @@ describe('IRtcEngineEx', () => {
     let nParam = {
       connection: undefined,
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_leaveChannelEx_c81e1a4',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_leaveChannelEx_c81e1a4',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
     }
+    nParam.connection = 'test';
   });
 
   test('RtcEngineEx_leaveChannelEx_c81e1a4 impl call', async () => {
@@ -187,25 +218,40 @@ describe('IRtcEngineEx', () => {
       options: undefined,
       connection: undefined,
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_updateChannelMediaOptionsEx_457bb35',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_updateChannelMediaOptionsEx_457bb35',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('options is undefined');
     }
+    nParam.options = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_updateChannelMediaOptionsEx_457bb35',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    nParam.connection = 'test';
   });
 
   test('RtcEngineEx_updateChannelMediaOptionsEx_457bb35 impl call', async () => {
@@ -273,25 +319,40 @@ describe('IRtcEngineEx', () => {
       canvas: undefined,
       connection: undefined,
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_setupRemoteVideoEx_522a409',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_setupRemoteVideoEx_522a409',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('canvas is undefined');
     }
+    nParam.canvas = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_setupRemoteVideoEx_522a409',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    nParam.connection = 'test';
   });
 
   test('RtcEngineEx_setupRemoteVideoEx_522a409 impl call', async () => {
@@ -331,25 +392,57 @@ describe('IRtcEngineEx', () => {
       mute: undefined,
       connection: undefined,
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_muteRemoteAudioStreamEx_6d93082',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteRemoteAudioStreamEx_6d93082',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('uid is undefined');
     }
+    nParam.uid = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteRemoteAudioStreamEx_6d93082',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('mute is undefined');
+    }
+    nParam.mute = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteRemoteAudioStreamEx_6d93082',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    nParam.connection = 'test';
   });
 
   test('RtcEngineEx_muteRemoteAudioStreamEx_6d93082 impl call', async () => {
@@ -390,25 +483,57 @@ describe('IRtcEngineEx', () => {
       mute: undefined,
       connection: undefined,
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_muteRemoteVideoStreamEx_6d93082',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteRemoteVideoStreamEx_6d93082',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('uid is undefined');
     }
+    nParam.uid = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteRemoteVideoStreamEx_6d93082',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('mute is undefined');
+    }
+    nParam.mute = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteRemoteVideoStreamEx_6d93082',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    nParam.connection = 'test';
   });
 
   test('RtcEngineEx_muteRemoteVideoStreamEx_6d93082 impl call', async () => {
@@ -478,25 +603,40 @@ describe('IRtcEngineEx', () => {
       mute: undefined,
       connection: undefined,
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_muteLocalAudioStreamEx_3cf17a4',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteLocalAudioStreamEx_3cf17a4',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('mute is undefined');
     }
+    nParam.mute = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteLocalAudioStreamEx_3cf17a4',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    nParam.connection = 'test';
   });
 
   test('RtcEngineEx_muteLocalAudioStreamEx_3cf17a4 impl call', async () => {
@@ -535,25 +675,40 @@ describe('IRtcEngineEx', () => {
       mute: undefined,
       connection: undefined,
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_muteLocalVideoStreamEx_3cf17a4',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteLocalVideoStreamEx_3cf17a4',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('mute is undefined');
     }
+    nParam.mute = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteLocalVideoStreamEx_3cf17a4',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    nParam.connection = 'test';
   });
 
   test('RtcEngineEx_muteLocalVideoStreamEx_3cf17a4 impl call', async () => {
@@ -592,25 +747,40 @@ describe('IRtcEngineEx', () => {
       mute: undefined,
       connection: undefined,
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_muteAllRemoteAudioStreamsEx_3cf17a4',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteAllRemoteAudioStreamsEx_3cf17a4',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('mute is undefined');
     }
+    nParam.mute = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteAllRemoteAudioStreamsEx_3cf17a4',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    nParam.connection = 'test';
   });
 
   test('RtcEngineEx_muteAllRemoteAudioStreamsEx_3cf17a4 impl call', async () => {
@@ -649,25 +819,40 @@ describe('IRtcEngineEx', () => {
       mute: undefined,
       connection: undefined,
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_muteAllRemoteVideoStreamsEx_3cf17a4',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteAllRemoteVideoStreamsEx_3cf17a4',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('mute is undefined');
     }
+    nParam.mute = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_muteAllRemoteVideoStreamsEx_3cf17a4',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    nParam.connection = 'test';
   });
 
   test('RtcEngineEx_muteAllRemoteVideoStreamsEx_3cf17a4 impl call', async () => {
@@ -1154,25 +1339,40 @@ describe('IRtcEngineEx', () => {
       config: undefined,
       connection: undefined,
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_createDataStreamEx_9f641b6',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_createDataStreamEx_9f641b6',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('config is undefined');
     }
+    nParam.config = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_createDataStreamEx_9f641b6',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    nParam.connection = 'test';
   });
 
   test('RtcEngineEx_createDataStreamEx_9f641b6 impl call', async () => {
@@ -1208,30 +1408,25 @@ describe('IRtcEngineEx', () => {
 
   test('RtcEngineEx_sendStreamMessageEx_0c34857 parameter', async () => {
     let nParam = {
-      streamId: undefined,
-      data: undefined,
-      length: undefined,
-      connection: undefined,
+      streamId: 'test',
+      data: 'test',
+      length: 'test',
+      connection: 'test',
     };
-    for (let i in nParam) {
-      try {
-        await IrisCore.callIrisApi(
-          apiEnginePtr,
-          new IrisCore.EventParam(
-            'RtcEngineEx_sendStreamMessageEx_0c34857',
-            JSON.stringify(nParam),
-            0,
-            '',
-            ['test'],
-            [],
-            1
-          )
-        );
-      } catch (e) {
-        expect(e).toEqual(i + ' is undefined');
-      }
-      nParam[i] = 'test';
-    }
+    jest.spyOn(bufferExtensions, 'callApiBufferExtension');
+    await IrisCore.callIrisApi(
+      apiEnginePtr,
+      new IrisCore.EventParam(
+        'RtcEngineEx_sendStreamMessageEx_0c34857',
+        JSON.stringify(nParam),
+        0,
+        '',
+        ['test'],
+        [],
+        1
+      )
+    );
+    expect(bufferExtensions.callApiBufferExtension).toBeCalledTimes(1);
   });
 
   test('RtcEngineEx_sendStreamMessageEx_0c34857 impl call', async () => {
