@@ -77,8 +77,8 @@ importers:
   packages/fake/rtc:
     dependencies:
       '@agoraio-extensions/agora-rtc-sdk-ng-fake':
-        specifier: ^1.0.9
-        version: 1.0.9
+        specifier: ^1.0.12
+        version: 1.0.12
       '@iris/native-rtc':
         specifier: 'workspace: *'
         version: link:../../@iris/rtc
@@ -132,8 +132,8 @@ importers:
   packages/rtc:
     dependencies:
       '@agoraio-extensions/agora-rtc-sdk-ng-fake':
-        specifier: ^1.0.9
-        version: 1.0.9
+        specifier: ^1.0.12
+        version: 1.0.12
       '@iris/native-rtc':
         specifier: 'workspace: *'
         version: link:../@iris/rtc
@@ -232,8 +232,8 @@ packages:
       - debug
     dev: false
 
-  /@agoraio-extensions/agora-rtc-sdk-ng-fake@1.0.9:
-    resolution: {integrity: sha512-lTEmUaLLSlCackm1qCXjUphs70wP4uRn9wzl5bL+m9oif7KimAiiOsDLnKzdpSgR1PfwRM/SDtB1eHCG6LVKvA==, tarball: https://npm.pkg.github.com/download/@agoraio-extensions/agora-rtc-sdk-ng-fake/1.0.9/00317b53dafdc6fd7a9234286f30db1214dbb073}
+  /@agoraio-extensions/agora-rtc-sdk-ng-fake@1.0.12:
+    resolution: {integrity: sha512-fXKDztmtIe+JwquCKlsEd59ZmvJVtGBaoj6g3QIzy6E8Z/VB6UMEn8thvvHO8wEzZ6CKl+uG2k8OF22kdpRkXQ==, tarball: https://npm.pkg.github.com/download/@agoraio-extensions/agora-rtc-sdk-ng-fake/1.0.12/99350f1d3d2b0ed7d3bd4dd58e39cad252b07ee0}
     dev: false
 
   /@ampproject/remapping@2.2.1:

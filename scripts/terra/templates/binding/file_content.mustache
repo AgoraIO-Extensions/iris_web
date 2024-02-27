@@ -26,13 +26,26 @@ export class {{name}} {{#base_clazzs}}extends {{.}}{{/base_clazzs}}{
       let _obj = {
         {{#parameters}}{{name}},{{/parameters}}
       };
+      {{#user_data.bindingEventExtension}}
+      let bufferList = eventHandlerBufferExtension(
+        "{{{user_data.IrisApiIdParser.value}}}",
+        _obj
+      );
+      {{/user_data.bindingEventExtension}}
       let _json = JSON.stringify(_obj);
-      let eventParam = new IrisCore.EventParam("{{{user_data.IrisApiIdParser.value}}}", _json, 0, '', [], [], 0);
-      AgoraConsole.log(`{{name}} eventParam ${JSON.stringify(eventParam)}`);
+      let eventParam = new IrisCore.EventParam(
+        "{{{user_data.IrisApiIdParser.value}}}", 
+        _json, 
+        0, 
+        '', 
+        {{#user_data.bindingEventExtension}}bufferList as any{{/user_data.bindingEventExtension}}{{^user_data.bindingEventExtension}}[]{{/user_data.bindingEventExtension}},
+        [], 
+        {{#user_data.bindingEventExtension}}bufferList.length{{/user_data.bindingEventExtension}}{{^user_data.bindingEventExtension}}0{{/user_data.bindingEventExtension}},
+      );
       this.notifyEvent(eventParam);
       {{/user_data.isSupport}}
       {{^user_data.isSupport}}
-      AgoraConsole.warn('{{name}} not supported in this platform!');
+      AgoraConsole.warn('{{{user_data.IrisApiIdParser.value}}} not supported in this platform!');
       this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
       {{/user_data.isSupport}}
     }
@@ -67,25 +80,33 @@ export class {{name}}Dispatch {{#base_clazzs}}extends {{.}}Dispatch{{/base_clazz
     {{#user_data.isSupport}}
     {{#user_data.isRegisterMethod}}
     let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
-    if (eventHandler === undefined) throw 'eventHandler is undefined';
+    if (eventHandler === undefined) {
+      AgoraConsole.error('eventHandler is undefined');
+      throw 'eventHandler is undefined';
+    }
     {{/user_data.isRegisterMethod}}
     {{^user_data.isRegisterMethod}}
     {{#user_data.hasParameters}}
     let obj = JSON.parse(apiParam.data) as any;
-    {{#user_data.bindingExtensionList}}
-    {{{.}}}
-    {{/user_data.bindingExtensionList}}
+    {{#user_data.bindingExtension}}
+    obj = callApiBufferExtension(apiParam.event, obj, apiParam.buffer);
+    {{/user_data.bindingExtension}}
     {{/user_data.hasParameters}}
     {{#parameters}}
     let {{name}} = obj.{{name}};
-    if ({{name}} === undefined) throw "{{name}} is undefined";
+    {{^is_output}}
+    if ({{name}} === undefined) {
+      AgoraConsole.error('{{name}} is undefined');
+      throw '{{name}} is undefined';
+    }
+    {{/is_output}}
     {{/parameters}}
 
     {{/user_data.isRegisterMethod}}
     return this._impl.{{name}}({{#parameters}}{{name}},{{/parameters}});
     {{/user_data.isSupport}}
     {{^user_data.isSupport}}
-    AgoraConsole.warn('{{name}} not supported in this platform!');
+    AgoraConsole.warn('{{{user_data.IrisApiIdParser.value}}} not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
     {{/user_data.isSupport}}
   }

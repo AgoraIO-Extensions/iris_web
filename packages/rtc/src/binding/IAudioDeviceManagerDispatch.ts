@@ -15,7 +15,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   enumeratePlaybackDevices(): CallApiReturnType {
     AgoraConsole.warn(
-      'enumeratePlaybackDevices not supported in this platform!'
+      'AudioDeviceManager_enumeratePlaybackDevices not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -23,7 +23,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   enumerateRecordingDevices(): CallApiReturnType {
     AgoraConsole.warn(
-      'enumerateRecordingDevices not supported in this platform!'
+      'AudioDeviceManager_enumerateRecordingDevices not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -31,7 +31,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   setPlaybackDevice_4ad5f6e(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setPlaybackDevice_4ad5f6e not supported in this platform!'
+      'AudioDeviceManager_setPlaybackDevice_4ad5f6e not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -39,7 +39,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   getPlaybackDevice_73b9872(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'getPlaybackDevice_73b9872 not supported in this platform!'
+      'AudioDeviceManager_getPlaybackDevice_73b9872 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -47,7 +47,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   getPlaybackDeviceInfo_5540658(): CallApiReturnType {
     AgoraConsole.warn(
-      'getPlaybackDeviceInfo_5540658 not supported in this platform!'
+      'AudioDeviceManager_getPlaybackDeviceInfo_5540658 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -55,7 +55,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   setPlaybackDeviceVolume_46f8ab7(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setPlaybackDeviceVolume_46f8ab7 not supported in this platform!'
+      'AudioDeviceManager_setPlaybackDeviceVolume_46f8ab7 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -63,7 +63,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   getPlaybackDeviceVolume_915cb25(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'getPlaybackDeviceVolume_915cb25 not supported in this platform!'
+      'AudioDeviceManager_getPlaybackDeviceVolume_915cb25 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -71,7 +71,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   setRecordingDevice_4ad5f6e(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setRecordingDevice_4ad5f6e not supported in this platform!'
+      'AudioDeviceManager_setRecordingDevice_4ad5f6e not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -79,7 +79,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   getRecordingDevice_73b9872(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'getRecordingDevice_73b9872 not supported in this platform!'
+      'AudioDeviceManager_getRecordingDevice_73b9872 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -87,7 +87,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   getRecordingDeviceInfo_5540658(): CallApiReturnType {
     AgoraConsole.warn(
-      'getRecordingDeviceInfo_5540658 not supported in this platform!'
+      'AudioDeviceManager_getRecordingDeviceInfo_5540658 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -95,7 +95,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   setRecordingDeviceVolume_46f8ab7(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setRecordingDeviceVolume_46f8ab7 not supported in this platform!'
+      'AudioDeviceManager_setRecordingDeviceVolume_46f8ab7 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -103,7 +103,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   getRecordingDeviceVolume_915cb25(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'getRecordingDeviceVolume_915cb25 not supported in this platform!'
+      'AudioDeviceManager_getRecordingDeviceVolume_915cb25 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -111,7 +111,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   setLoopbackDevice_4ad5f6e(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setLoopbackDevice_4ad5f6e not supported in this platform!'
+      'AudioDeviceManager_setLoopbackDevice_4ad5f6e not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -119,7 +119,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   getLoopbackDevice_73b9872(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'getLoopbackDevice_73b9872 not supported in this platform!'
+      'AudioDeviceManager_getLoopbackDevice_73b9872 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -127,7 +127,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   setPlaybackDeviceMute_5039d15(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setPlaybackDeviceMute_5039d15 not supported in this platform!'
+      'AudioDeviceManager_setPlaybackDeviceMute_5039d15 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -135,7 +135,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   getPlaybackDeviceMute_d942327(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'getPlaybackDeviceMute_d942327 not supported in this platform!'
+      'AudioDeviceManager_getPlaybackDeviceMute_d942327 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -143,7 +143,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   setRecordingDeviceMute_5039d15(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setRecordingDeviceMute_5039d15 not supported in this platform!'
+      'AudioDeviceManager_setRecordingDeviceMute_5039d15 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -151,7 +151,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   getRecordingDeviceMute_d942327(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'getRecordingDeviceMute_d942327 not supported in this platform!'
+      'AudioDeviceManager_getRecordingDeviceMute_d942327 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -159,21 +159,23 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   startPlaybackDeviceTest_3a2037f(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'startPlaybackDeviceTest_3a2037f not supported in this platform!'
+      'AudioDeviceManager_startPlaybackDeviceTest_3a2037f not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   stopPlaybackDeviceTest(): CallApiReturnType {
-    AgoraConsole.warn('stopPlaybackDeviceTest not supported in this platform!');
+    AgoraConsole.warn(
+      'AudioDeviceManager_stopPlaybackDeviceTest not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   startRecordingDeviceTest_46f8ab7(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'startRecordingDeviceTest_46f8ab7 not supported in this platform!'
+      'AudioDeviceManager_startRecordingDeviceTest_46f8ab7 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -181,7 +183,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   stopRecordingDeviceTest(): CallApiReturnType {
     AgoraConsole.warn(
-      'stopRecordingDeviceTest not supported in this platform!'
+      'AudioDeviceManager_stopRecordingDeviceTest not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -189,7 +191,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   startAudioDeviceLoopbackTest_46f8ab7(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'startAudioDeviceLoopbackTest_46f8ab7 not supported in this platform!'
+      'AudioDeviceManager_startAudioDeviceLoopbackTest_46f8ab7 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -197,7 +199,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   stopAudioDeviceLoopbackTest(): CallApiReturnType {
     AgoraConsole.warn(
-      'stopAudioDeviceLoopbackTest not supported in this platform!'
+      'AudioDeviceManager_stopAudioDeviceLoopbackTest not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -205,7 +207,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   followSystemPlaybackDevice_5039d15(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'followSystemPlaybackDevice_5039d15 not supported in this platform!'
+      'AudioDeviceManager_followSystemPlaybackDevice_5039d15 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -213,7 +215,7 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   followSystemRecordingDevice_5039d15(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'followSystemRecordingDevice_5039d15 not supported in this platform!'
+      'AudioDeviceManager_followSystemRecordingDevice_5039d15 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -221,14 +223,16 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   // @ts-ignore
   followSystemLoopbackDevice_5039d15(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'followSystemLoopbackDevice_5039d15 not supported in this platform!'
+      'AudioDeviceManager_followSystemLoopbackDevice_5039d15 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   release(): CallApiReturnType {
-    AgoraConsole.warn('release not supported in this platform!');
+    AgoraConsole.warn(
+      'AudioDeviceManager_release not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }

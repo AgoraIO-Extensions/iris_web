@@ -335,7 +335,35 @@ describe('IMusicContentCenterEventHandler', () => {
     );
   });
 });
-describe('IMusicPlayer', () => {});
+describe('IMusicPlayer', () => {
+  test('MusicPlayer_open_303b92e impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      songCode: 'test',
+      startPos: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MusicPlayer_open_303b92e',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MusicPlayer')._impl?.open_303b92e
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+});
 describe('IMusicContentCenter', () => {
   test('MusicContentCenter_initialize_df70304 impl call', async () => {
     jest

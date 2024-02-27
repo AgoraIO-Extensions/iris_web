@@ -413,9 +413,6 @@ describe('IRtcEngineEventHandler', () => {
   test('RtcEngineEventHandler_onLocalVideoStateChanged_a44228a impl call', async () => {
     let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
     eventHandler.onLocalVideoStateChanged_a44228a(
       undefined,
       undefined,
@@ -423,12 +420,7 @@ describe('IRtcEngineEventHandler', () => {
     );
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
-    ).toBeCalledTimes(0);
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    ).toBeCalledTimes(1);
   });
   test('RtcEngineEventHandler_onRemoteVideoStateChanged_815ab69 impl call', async () => {
     let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
@@ -1367,18 +1359,10 @@ describe('IRtcEngineEventHandler', () => {
   test('RtcEngineEventHandler_onUserInfoUpdated_2120245 impl call', async () => {
     let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
     eventHandler.onUserInfoUpdated_2120245(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
-    ).toBeCalledTimes(0);
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    ).toBeCalledTimes(1);
   });
   test('RtcEngineEventHandler_onUserAccountUpdated_1922dd1 impl call', async () => {
     let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
@@ -1759,6 +1743,22 @@ describe('IRtcEngineEventHandler', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
+  test('RtcEngineEventHandler_onFirstLocalVideoFramePublished_263e4cd impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.onFirstLocalVideoFramePublished_263e4cd(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
   test('RtcEngineEventHandler_onFirstRemoteVideoDecoded_a68170a impl call', async () => {
     let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
@@ -1783,6 +1783,26 @@ describe('IRtcEngineEventHandler', () => {
       undefined,
       undefined,
       undefined,
+      undefined,
+      undefined,
+      undefined
+    );
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+  test('RtcEngineEventHandler_onLocalVideoStateChanged_b202b1b impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.onLocalVideoStateChanged_b202b1b(
       undefined,
       undefined,
       undefined
@@ -1915,6 +1935,22 @@ describe('IRtcEngineEventHandler', () => {
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     eventHandler.onRemoteAudioStats_ffbde06(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+  test('RtcEngineEventHandler_onLocalVideoStats_3ac0eb4 impl call', async () => {
+    let eventHandler = new bindingAPI.IRtcEngineEventHandler(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.onLocalVideoStats_3ac0eb4(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -2638,6 +2674,38 @@ describe('IVideoDeviceManager', () => {
   });
 });
 describe('IMetadataObserver', () => {
+  test('MetadataObserver_getMaxMetadataSize impl call', async () => {
+    let eventHandler = new bindingAPI.IMetadataObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.getMaxMetadataSize();
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+  test('MetadataObserver_onReadyToSendMetadata_cbf4b59 impl call', async () => {
+    let eventHandler = new bindingAPI.IMetadataObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.onReadyToSendMetadata_cbf4b59(undefined, undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
   test('MetadataObserver_onMetadataReceived_cb7661d impl call', async () => {
     let eventHandler = new bindingAPI.IMetadataObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
@@ -2749,6 +2817,35 @@ describe('IRtcEngine', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl.initialize_0320339
     ).toBeCalledWith('test');
+  });
+
+  test('RtcEngine_queryInterface_257d192 impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      iid: 'test',
+      inter: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'RtcEngine_queryInterface_257d192',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        ?.queryInterface_257d192
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   });
 
   test('RtcEngine_getVersion_915cb25 impl call', async () => {
@@ -9937,6 +10034,34 @@ describe('IRtcEngine', () => {
     );
   });
 
+  test('RtcEngine_registerPacketObserver_f8b44dd impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      observer: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'RtcEngine_registerPacketObserver_f8b44dd',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        ?.registerPacketObserver_f8b44dd
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
   test('RtcEngine_setEncryptionMode_3a2037f impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
@@ -10538,9 +10663,39 @@ describe('IRtcEngine', () => {
     );
   });
 
+  test('RtcEngine_joinChannelWithUserAccount_0e4f59e parameter', async () => {
+    let nParam = {
+      token: undefined,
+      channelId: undefined,
+      userAccount: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngine_joinChannelWithUserAccount_0e4f59e',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
+  });
+
   test('RtcEngine_joinChannelWithUserAccount_0e4f59e impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
+        'joinChannelWithUserAccount_0e4f59e'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       token: 'test',
@@ -10559,18 +10714,48 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
-        ?.joinChannelWithUserAccount_0e4f59e
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .joinChannelWithUserAccount_0e4f59e
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .joinChannelWithUserAccount_0e4f59e
+    ).toBeCalledWith('test', 'test', 'test');
+  });
+
+  test('RtcEngine_joinChannelWithUserAccount_4685af9 parameter', async () => {
+    let nParam = {
+      token: undefined,
+      channelId: undefined,
+      userAccount: undefined,
+      options: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngine_joinChannelWithUserAccount_4685af9',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
   });
 
   test('RtcEngine_joinChannelWithUserAccount_4685af9 impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
+        'joinChannelWithUserAccount_4685af9'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       token: 'test',
@@ -10590,13 +10775,12 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
-        ?.joinChannelWithUserAccount_4685af9
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .joinChannelWithUserAccount_4685af9
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .joinChannelWithUserAccount_4685af9
+    ).toBeCalledWith('test', 'test', 'test', 'test');
   });
 
   test('RtcEngine_joinChannelWithUserAccountEx_268b977 impl call', async () => {
@@ -10630,9 +10814,38 @@ describe('IRtcEngine', () => {
     );
   });
 
+  test('RtcEngine_getUserInfoByUserAccount_c6a8f08 parameter', async () => {
+    let nParam = {
+      userAccount: undefined,
+      userInfo: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngine_getUserInfoByUserAccount_c6a8f08',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
+  });
+
   test('RtcEngine_getUserInfoByUserAccount_c6a8f08 impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
+        'getUserInfoByUserAccount_c6a8f08'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       userAccount: 'test',
@@ -10650,18 +10863,46 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
-        ?.getUserInfoByUserAccount_c6a8f08
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .getUserInfoByUserAccount_c6a8f08
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .getUserInfoByUserAccount_c6a8f08
+    ).toBeCalledWith('test', 'test');
+  });
+
+  test('RtcEngine_getUserInfoByUid_6b7aee8 parameter', async () => {
+    let nParam = {
+      uid: undefined,
+      userInfo: undefined,
+    };
+    for (let i in nParam) {
+      try {
+        await IrisCore.callIrisApi(
+          apiEnginePtr,
+          new IrisCore.EventParam(
+            'RtcEngine_getUserInfoByUid_6b7aee8',
+            JSON.stringify(nParam),
+            0,
+            '',
+            ['test'],
+            [],
+            1
+          )
+        );
+      } catch (e) {
+        expect(e).toEqual(i + ' is undefined');
+      }
+      nParam[i] = 'test';
+    }
   });
 
   test('RtcEngine_getUserInfoByUid_6b7aee8 impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
+        'getUserInfoByUid_6b7aee8'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       uid: 'test',
@@ -10679,13 +10920,12 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
-        ?.getUserInfoByUid_6b7aee8
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .getUserInfoByUid_6b7aee8
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .getUserInfoByUid_6b7aee8
+    ).toBeCalledWith('test', 'test');
   });
 
   test('RtcEngine_startOrUpdateChannelMediaRelay_e68f0a4 impl call', async () => {

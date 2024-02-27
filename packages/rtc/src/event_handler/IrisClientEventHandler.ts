@@ -175,7 +175,21 @@ export class IrisClientEventHandler {
       remoteUid as number,
       elapsed
     );
-
+    //@ts-ignore websdk的私有属性
+    //如果是string uid 登录
+    if (this.agoraRTCClient.isStringUID) {
+      //@ts-ignore websdk的私有属性
+      let _uintid = user._uintid;
+      let userInfo: NATIVE_RTC.UserInfo = {
+        uid: _uintid,
+        userAccount: user.uid as string,
+      };
+      this._engine.rtcEngineEventHandler.onUserInfoUpdated_2120245(
+        _uintid,
+        userInfo
+      );
+      this._engine.irisClientManager.addUserInfo(userInfo);
+    }
     let userPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
       user.uid
     );
@@ -210,6 +224,14 @@ export class IrisClientEventHandler {
       user.uid as number,
       reason2
     );
+
+    //@ts-ignore websdk的私有属性
+    //如果是string uid 登录
+    if (this.agoraRTCClient.isStringUID) {
+      this._engine.irisClientManager.removeUserInfoByUserAccount(
+        user.uid as string
+      );
+    }
 
     this._engine.irisClientManager.irisClientObserver.notifyRemote(
       NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
@@ -378,10 +400,10 @@ export class IrisClientEventHandler {
     this._engine.rtcEngineEventHandler.onStreamMessage_99898cb(
       this._irisClient.connection,
       uid as number,
-      null,
+      this._engine.globalState.streamMessageStreamId,
       payload,
-      null,
-      null
+      payload.length,
+      0
     );
   }
 

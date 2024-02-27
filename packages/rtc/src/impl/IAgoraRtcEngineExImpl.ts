@@ -88,7 +88,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let agoraRTCClient = irisClient?.agoraRTCClient;
       if (agoraRTCClient) {
         try {
-          await agoraRTCClient.leave();
+          await this._engine.clientHelper.leave(agoraRTCClient);
         } catch (e) {
           AgoraConsole.error(e);
           this._engine.returnResult(false);

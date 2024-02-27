@@ -477,6 +477,62 @@ describe('IMediaEngine', () => {
     );
   });
 
+  test('MediaEngine_addVideoFrameRenderer_2cc0ef1 impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      renderer: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MediaEngine_addVideoFrameRenderer_2cc0ef1',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
+        ?.addVideoFrameRenderer_2cc0ef1
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
+  test('MediaEngine_removeVideoFrameRenderer_2cc0ef1 impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      renderer: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MediaEngine_removeVideoFrameRenderer_2cc0ef1',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
+        ?.removeVideoFrameRenderer_2cc0ef1
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
   test('MediaEngine_release impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')

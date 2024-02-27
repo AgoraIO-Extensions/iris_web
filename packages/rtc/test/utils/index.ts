@@ -18,6 +18,8 @@ import { IrisApiEngine, IrisCore } from 'iris-web-core';
 import { AgoraConsole, IrisRtcEngine } from 'src';
 
 export const TEST_UID = 123;
+export const TEST_STRING_UID = 'test-string-uid';
+export const TEST_REMOTE_STRING_UID = 'test-remote-string-uid';
 export const TEST_REMOTE_UID = 456;
 
 export async function callIris(
@@ -111,7 +113,54 @@ export async function joinChannel(apiEnginePtr: IrisApiEngine, options?: any) {
       videoTrack: FakeLocalVideoTrack.create(),
     } as IAgoraRTCRemoteUser,
   ];
-  // triggerCallback(irisRtcEngine, 'onEventUserJoined', user);
+  dispatchRTCEvent(agoraRTCClient, 'user-joined', user[0]);
+  agoraRTCClient.remoteUsers = user;
+}
+
+export async function joinChannelWithUserAccount(
+  apiEnginePtr: IrisApiEngine,
+  options?: any
+) {
+  if (!options) {
+    options = {};
+  }
+  if (!options?.token) {
+    options.token = null;
+  }
+  if (!options?.channelId) {
+    options.channelId = FAKE_CHANNEL_NAME;
+  }
+  if (!options?.userAccount) {
+    options.userAccount = TEST_STRING_UID;
+  }
+  if (!options?.info) {
+    options.info = null;
+  }
+  if (!options?.options) {
+    options.options = {
+      channelProfile: CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+      clientRoleType: CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+    };
+  }
+  let result = await callIris(
+    apiEnginePtr,
+    'RtcEngine_joinChannelWithUserAccount_0e4f59e',
+    options
+  );
+  expect(result.code).toBe(0);
+  let irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
+  let agoraRTCClient =
+    irisRtcEngine.irisClientManager.irisClientList[0].agoraRTCClient;
+  let user = [
+    {
+      _uintid: TEST_REMOTE_UID,
+      uid: TEST_REMOTE_STRING_UID,
+      hasAudio: true,
+      hasVideo: true,
+      audioTrack: FakeLocalAudioTrack.create(),
+      videoTrack: FakeLocalVideoTrack.create(),
+    } as IAgoraRTCRemoteUser,
+  ];
   dispatchRTCEvent(agoraRTCClient, 'user-joined', user[0]);
   agoraRTCClient.remoteUsers = user;
 }

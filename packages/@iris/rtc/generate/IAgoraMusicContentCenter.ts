@@ -146,7 +146,9 @@ export class MusicContentCenterConfiguration {
   mccDomain?: string;
 }
 
-export interface IMusicPlayer {}
+export interface IMusicPlayer {
+  open_303b92e(songCode: number, startPos: number): CallApiReturnType;
+}
 
 export interface IMusicContentCenter {
   initialize_df70304(

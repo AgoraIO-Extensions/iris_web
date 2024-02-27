@@ -21,11 +21,14 @@ import { AgoraConsole } from '../../src/util';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import {
+  TEST_REMOTE_STRING_UID,
   TEST_REMOTE_UID,
+  TEST_STRING_UID,
   TEST_UID,
   callIris,
   callIrisWithoutCheck,
   joinChannel,
+  joinChannelWithUserAccount,
   setupLocalVideo,
   setupRemoteVideoEx,
 } from '../utils';
@@ -1008,5 +1011,82 @@ describe('IAgoraRtcEngineImpl', () => {
       syncWithAudio: true,
       payload: 'hello world',
     });
+  });
+  test('joinChannelWithUserAccount_0e4f59e', async () => {
+    jest.spyOn(rtcEngineImpl, 'joinChannelWithUserAccount_4685af9');
+
+    expect(irisRtcEngine.irisIntervalList.length == 0).toBeTruthy();
+    await joinChannelWithUserAccount(apiEnginePtr);
+
+    expect(rtcEngineImpl.joinChannelWithUserAccount_4685af9).toBeCalledWith(
+      null,
+      FAKE_CHANNEL_NAME,
+      TEST_STRING_UID,
+      irisRtcEngine.irisClientManager.getIrisClient().irisClientState
+    );
+    expect(irisRtcEngine.irisIntervalList.length == 1).toBeTruthy();
+  });
+
+  test('joinChannelWithUserAccount_4685af9', async () => {
+    jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onJoinChannelSuccess_263e4cd'
+    );
+
+    await joinChannelWithUserAccount(apiEnginePtr);
+    let userInfoList = irisRtcEngine.irisClientManager.userInfoList;
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClient();
+
+    expect(irisClient.irisClientState.token).toBe(null);
+    expect(irisClient.agoraRTCClient.channelName).toBe(FAKE_CHANNEL_NAME);
+    expect(irisClient.connection.channelId).toBe(
+      irisClient.agoraRTCClient.channelName
+    );
+    expect(
+      irisRtcEngine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd
+    ).toBeCalledTimes(1);
+  });
+
+  test('getUserInfoByUserAccount_c6a8f08', async () => {
+    await joinChannelWithUserAccount(apiEnginePtr);
+    let userInfoList = irisRtcEngine.irisClientManager.userInfoList;
+
+    expect(userInfoList[0].userAccount).toBe(TEST_STRING_UID);
+    expect(JSON.stringify(userInfoList[1])).toBe(
+      JSON.stringify({
+        uid: TEST_REMOTE_UID,
+        userAccount: TEST_REMOTE_STRING_UID,
+      })
+    );
+    expect(userInfoList.length).toBe(2);
+    let result = await callIris(
+      apiEnginePtr,
+      'RtcEngine_getUserInfoByUserAccount_c6a8f08',
+      {
+        userAccount: TEST_STRING_UID,
+      }
+    );
+    expect(JSON.parse(result.data).userInfo.userAccount).toBe(TEST_STRING_UID);
+  });
+
+  test('getUserInfoByUid_6b7aee8', async () => {
+    await joinChannelWithUserAccount(apiEnginePtr);
+    let userInfoList = irisRtcEngine.irisClientManager.userInfoList;
+    expect(userInfoList[0].userAccount).toBe(TEST_STRING_UID);
+    expect(JSON.stringify(userInfoList[1])).toBe(
+      JSON.stringify({
+        uid: TEST_REMOTE_UID,
+        userAccount: TEST_REMOTE_STRING_UID,
+      })
+    );
+    expect(userInfoList.length).toBe(2);
+    let result = await callIris(
+      apiEnginePtr,
+      'RtcEngine_getUserInfoByUid_6b7aee8',
+      {
+        uid: userInfoList[0].uid,
+      }
+    );
+    expect(JSON.parse(result.data).userInfo.uid).toBe(userInfoList[0].uid);
   });
 });

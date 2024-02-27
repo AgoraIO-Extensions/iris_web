@@ -22,6 +22,22 @@ export class ClientHelper {
     this._engine = engine;
   }
 
+  public async leave(client: IAgoraRTCClient): Promise<void> {
+    //@ts-ignore isStringUID 是websdk的私有属性
+    //如果是string uid 登录
+    if (client?.isStringUID) {
+      let userAccount = '';
+      userAccount = client.uid as string;
+      const index = this._engine.irisClientManager.userInfoList.findIndex(
+        (user) => user.userAccount === userAccount
+      );
+      if (index !== -1) {
+        this._engine.irisClientManager.userInfoList.splice(index, 1);
+      }
+    }
+    await client.leave();
+  }
+
   public async setClientRole(
     client: IAgoraRTCClient,
     role: NATIVE_RTC.CLIENT_ROLE_TYPE,

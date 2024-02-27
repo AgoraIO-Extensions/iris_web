@@ -37,6 +37,8 @@ import {
   EncryptionConfig,
   HEADPHONE_EQUALIZER_PRESET,
   IAudioEncodedFrameObserver,
+  INTERFACE_ID_TYPE,
+  IPacketObserver,
   LICENSE_ERROR_TYPE,
   LOCAL_AUDIO_STREAM_REASON,
   LOCAL_AUDIO_STREAM_STATE,
@@ -1039,6 +1041,11 @@ export interface IRtcEngineEventHandler {
 
   onIntraRequestReceived_c81e1a4(connection: RtcConnection): void;
 
+  onFirstLocalVideoFramePublished_263e4cd(
+    connection: RtcConnection,
+    elapsed: number
+  ): void;
+
   onFirstRemoteVideoDecoded_a68170a(
     connection: RtcConnection,
     remoteUid: number,
@@ -1054,6 +1061,12 @@ export interface IRtcEngineEventHandler {
     width: number,
     height: number,
     rotation: number
+  ): void;
+
+  onLocalVideoStateChanged_b202b1b(
+    connection: RtcConnection,
+    state: LOCAL_VIDEO_STREAM_STATE,
+    reason: LOCAL_VIDEO_STREAM_REASON
   ): void;
 
   onRemoteVideoStateChanged_a14e9d1(
@@ -1122,6 +1135,11 @@ export interface IRtcEngineEventHandler {
   onRemoteAudioStats_ffbde06(
     connection: RtcConnection,
     stats: RemoteAudioStats
+  ): void;
+
+  onLocalVideoStats_3ac0eb4(
+    connection: RtcConnection,
+    stats: LocalVideoStats
   ): void;
 
   onRemoteVideoStats_2f43a70(
@@ -1363,6 +1381,13 @@ export class Metadata {
 }
 
 export interface IMetadataObserver {
+  getMaxMetadataSize(): number;
+
+  onReadyToSendMetadata_cbf4b59(
+    metadata: Metadata,
+    source_type: VIDEO_SOURCE_TYPE
+  ): boolean;
+
   onMetadataReceived_cb7661d(metadata: Metadata): void;
 }
 
@@ -1433,6 +1458,8 @@ export class ExtensionInfo {
 
 export interface IRtcEngine {
   initialize_0320339(context: RtcEngineContext): CallApiReturnType;
+
+  queryInterface_257d192(iid: INTERFACE_ID_TYPE, inter: any): CallApiReturnType;
 
   getVersion_915cb25(): CallApiReturnType;
 
@@ -2236,6 +2263,8 @@ export interface IRtcEngine {
     uid: number,
     userPriority: PRIORITY_TYPE
   ): CallApiReturnType;
+
+  registerPacketObserver_f8b44dd(observer: IPacketObserver): CallApiReturnType;
 
   setEncryptionMode_3a2037f(encryptionMode: string): CallApiReturnType;
 

@@ -86,5 +86,13 @@ export interface IMediaEngine {
     videoTrackId: number
   ): CallApiReturnType;
 
+  addVideoFrameRenderer_2cc0ef1(
+    renderer: IVideoFrameObserver
+  ): CallApiReturnType;
+
+  removeVideoFrameRenderer_2cc0ef1(
+    renderer: IVideoFrameObserver
+  ): CallApiReturnType;
+
   release(): CallApiReturnType;
 }

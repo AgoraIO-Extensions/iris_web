@@ -32,14 +32,14 @@ export class IMediaPlayerSourceObserver {
     reason: MEDIA_PLAYER_REASON
   ): void {
     AgoraConsole.warn(
-      'onPlayerSourceStateChanged_7fb38f1 not supported in this platform!'
+      'MediaPlayerSourceObserver_onPlayerSourceStateChanged_7fb38f1 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onPositionChanged_303b92e(positionMs: number, timestampMs: number): void {
     AgoraConsole.warn(
-      'onPositionChanged_303b92e not supported in this platform!'
+      'MediaPlayerSourceObserver_onPositionChanged_303b92e not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -49,70 +49,78 @@ export class IMediaPlayerSourceObserver {
     elapsedTime: number,
     message: string
   ): void {
-    AgoraConsole.warn('onPlayerEvent_50f16fa not supported in this platform!');
+    AgoraConsole.warn(
+      'MediaPlayerSourceObserver_onPlayerEvent_50f16fa not supported in this platform!'
+    );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onMetaData_469a01b(data: Uint8Array, length: number): void {
-    AgoraConsole.warn('onMetaData_469a01b not supported in this platform!');
+    AgoraConsole.warn(
+      'MediaPlayerSourceObserver_onMetaData_469a01b not supported in this platform!'
+    );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onPlayBufferUpdated_f631116(playCachedBuffer: number): void {
     AgoraConsole.warn(
-      'onPlayBufferUpdated_f631116 not supported in this platform!'
+      'MediaPlayerSourceObserver_onPlayBufferUpdated_f631116 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onPreloadEvent_a1e3596(src: string, event: PLAYER_PRELOAD_EVENT): void {
-    AgoraConsole.warn('onPreloadEvent_a1e3596 not supported in this platform!');
+    AgoraConsole.warn(
+      'MediaPlayerSourceObserver_onPreloadEvent_a1e3596 not supported in this platform!'
+    );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onCompleted(): void {
-    AgoraConsole.warn('onCompleted not supported in this platform!');
+    AgoraConsole.warn(
+      'MediaPlayerSourceObserver_onCompleted not supported in this platform!'
+    );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onAgoraCDNTokenWillExpire(): void {
     AgoraConsole.warn(
-      'onAgoraCDNTokenWillExpire not supported in this platform!'
+      'MediaPlayerSourceObserver_onAgoraCDNTokenWillExpire not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onPlayerSrcInfoChanged_54f3e5a(from: SrcInfo, to: SrcInfo): void {
     AgoraConsole.warn(
-      'onPlayerSrcInfoChanged_54f3e5a not supported in this platform!'
+      'MediaPlayerSourceObserver_onPlayerSrcInfoChanged_54f3e5a not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onPlayerInfoUpdated_0e902a8(info: PlayerUpdatedInfo): void {
     AgoraConsole.warn(
-      'onPlayerInfoUpdated_0e902a8 not supported in this platform!'
+      'MediaPlayerSourceObserver_onPlayerInfoUpdated_0e902a8 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onPlayerCacheStats_0145940(stats: CacheStatistics): void {
     AgoraConsole.warn(
-      'onPlayerCacheStats_0145940 not supported in this platform!'
+      'MediaPlayerSourceObserver_onPlayerCacheStats_0145940 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onPlayerPlaybackStats_ffa466f(stats: PlayerPlaybackStats): void {
     AgoraConsole.warn(
-      'onPlayerPlaybackStats_ffa466f not supported in this platform!'
+      'MediaPlayerSourceObserver_onPlayerPlaybackStats_ffa466f not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onAudioVolumeIndication_46f8ab7(volume: number): void {
     AgoraConsole.warn(
-      'onAudioVolumeIndication_46f8ab7 not supported in this platform!'
+      'MediaPlayerSourceObserver_onAudioVolumeIndication_46f8ab7 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
