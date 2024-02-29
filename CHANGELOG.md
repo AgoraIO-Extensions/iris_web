@@ -1,5 +1,18 @@
 # IRIS_WEB
 
+* chore: optimize (61721e5)
+* chore: optimize (d84559a)
+* chore: optimize (4e50cd4)
+* chore: release 0.6.0 (eb0fa55)
+* chore: optimize (b77cdb3)
+* chore: release 0.6.0 (f649afe)
+* chore: optimize (088b7ba)
+* chore: optimize (8d85f69)
+* chore: release 0.6.0 (e4bd646)
+* Merge branch 'dev/ep-500/0.6.0' of https://github.com/AgoraIO-Extensions/iris_web into dev/ep-500/0.6.0 (4896566)
+* Merge branch 'dev/ep-500/0.6.0' of https://github.com/AgoraIO-Extensions/iris_web into dev/ep-500/0.6.0 (24c5585)
+* chore: optimize (5e4bc50)
+
 ## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
 
 
