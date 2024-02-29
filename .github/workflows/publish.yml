@@ -85,12 +85,12 @@ jobs:
         shell: bash
 
       - name: Update CHANGELOG.md and Create Release
-        if: ${{ env.release-exists == 'false' }}
+        if: ${{ env.release-exists == false }}
         run: |
           pnpm release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }} --github.assets=./packages/fake/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }}
 
       - name: Update Release Assets
-        if: ${{ env.release-exists == 'true' }}
+        if: ${{ env.release-exists == true }}
         run: |
           pnpm release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }} --github.assets=./packages/fake/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }} --no-git --no-increment
 
