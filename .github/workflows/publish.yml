@@ -92,7 +92,7 @@ jobs:
       - name: Update Release Assets
         if: ${{ steps.check-if-release-exists.outputs.release-exists }}
         run: |
-          pnpm release --no-increment --no-git --ci --npm.allowSameVersion --github.assets=./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }} --github.assets=./packages/fake/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }}
+          pnpm release --no-increment --no-git --ci --github.assets=./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }} --github.assets=./packages/fake/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }}
 
       - name: Prepare CDN Publish iris-web-rtc
         if: ${{ inputs.cdn }}
