@@ -89,6 +89,11 @@ jobs:
         run: |
           pnpm release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }} --github.assets=./packages/fake/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }}
 
+      - name: Update Release Assets
+        if: ${{ env.release-exists == 'true' }}
+        run: |
+          pnpm release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }} --github.assets=./packages/fake/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }} --no-git --no-increment
+
       - name: Prepare CDN Publish iris-web-rtc
         if: ${{ inputs.cdn }}
         run: |
