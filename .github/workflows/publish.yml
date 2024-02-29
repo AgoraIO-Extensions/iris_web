@@ -68,8 +68,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Current tag = ${{ env.version }}"
-          RELEASE_TAG="${{ env.version }}"
+          echo "Current tag = v${{ env.version }}"
+          RELEASE_TAG="v${{ env.version }}"
           if [[ "${{ inputs.release-tag }}" != "" ]]; then
             echo "Setting release tag to check to ${{ inputs.release-tag }}"
             RELEASE_TAG="${{ inputs.release-tag }}"
