@@ -3,6 +3,8 @@ import { ERROR_CODE_TYPE } from '@iris/native-rtc';
 
 import { AgoraConsole, IrisApiEngine, IrisRtcEngine } from 'iris-web-rtc';
 
+import { joinChannel } from 'iris-web-rtc/test/utils/index';
+
 import supportList = require('../../../scripts/terra/config/support_list.json');
 
 let irisRtcEngine: IrisRtcEngine;
@@ -16,6 +18,14 @@ export function createIrisRtcEngineFake(irisApiEngine: IrisApiEngine) {
   );
 
   return irisRtcEngine;
+}
+
+export function irisMock() {
+  irisRtcEngine.irisRtcErrorHandler.notInChannel = () => {
+    let message = 'not in channel, please join channel first';
+    AgoraConsole.error(message);
+    return irisRtcEngine.returnResult();
+  };
 }
 
 export function getIrisRtcEngineFake() {

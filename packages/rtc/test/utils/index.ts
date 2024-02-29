@@ -15,7 +15,8 @@ import {
 } from '@iris/native-rtc';
 import { IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { IrisApiEngine, IrisCore } from 'iris-web-core';
-import { AgoraConsole, IrisRtcEngine } from 'src';
+
+import { AgoraConsole, IrisRtcEngine } from '../../src/index';
 
 export const TEST_UID = 123;
 export const TEST_STRING_UID = 'test-string-uid';
