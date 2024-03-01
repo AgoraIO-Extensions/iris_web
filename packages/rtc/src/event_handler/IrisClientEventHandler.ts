@@ -46,6 +46,7 @@ export class IrisClientEventHandler {
       'user-info-updated',
       this.onEventUserInfoUpdated.bind(this)
     );
+    this.agoraRTCClient.on('stream-message', this.onStreamMessage.bind(this));
     this.agoraRTCClient.on(
       'media-reconnect-start',
       this.onEventMediaReconnectStart.bind(this)
@@ -174,7 +175,21 @@ export class IrisClientEventHandler {
       remoteUid as number,
       elapsed
     );
-
+    //@ts-ignore websdk的私有属性
+    //如果是string uid 登录
+    if (this.agoraRTCClient.isStringUID) {
+      //@ts-ignore websdk的私有属性
+      let _uintid = user._uintid;
+      let userInfo: NATIVE_RTC.UserInfo = {
+        uid: _uintid,
+        userAccount: user.uid as string,
+      };
+      this._engine.rtcEngineEventHandler.onUserInfoUpdated_2120245(
+        _uintid,
+        userInfo
+      );
+      this._engine.irisClientManager.addUserInfo(userInfo);
+    }
     let userPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
       user.uid
     );
@@ -209,6 +224,14 @@ export class IrisClientEventHandler {
       user.uid as number,
       reason2
     );
+
+    //@ts-ignore websdk的私有属性
+    //如果是string uid 登录
+    if (this.agoraRTCClient.isStringUID) {
+      this._engine.irisClientManager.removeUserInfoByUserAccount(
+        user.uid as string
+      );
+    }
 
     this._engine.irisClientManager.irisClientObserver.notifyRemote(
       NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
@@ -312,7 +335,14 @@ export class IrisClientEventHandler {
           remoteUid,
           NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_VIDEO
         );
-
+        this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
+          this._irisClient.connection,
+          remoteUid,
+          null,
+          NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
+            .REMOTE_VIDEO_STATE_REASON_REMOTE_MUTED,
+          null
+        );
         break;
       case 'unmute-audio':
         this._engine.rtcEngineEventHandler.onUserMuteAudio_0aac2fe(
@@ -335,6 +365,14 @@ export class IrisClientEventHandler {
           remoteUid,
           false
         );
+        this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
+          this._irisClient.connection,
+          remoteUid,
+          null,
+          NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
+            .REMOTE_VIDEO_STATE_REASON_REMOTE_UNMUTED,
+          null
+        );
         break;
       case 'enable-local-video':
         this._engine.rtcEngineEventHandler.onUserEnableLocalVideo_0aac2fe(
@@ -356,6 +394,17 @@ export class IrisClientEventHandler {
         );
         break;
     }
+  }
+
+  onStreamMessage(uid: UID, payload: Uint8Array): void {
+    this._engine.rtcEngineEventHandler.onStreamMessage_99898cb(
+      this._irisClient.connection,
+      uid as number,
+      this._engine.globalState.streamMessageStreamId,
+      payload,
+      payload.length,
+      0
+    );
   }
 
   onEventMediaReconnectStart(uid: UID): void {

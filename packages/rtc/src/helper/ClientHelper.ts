@@ -7,10 +7,35 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { AgoraTranslate } from '../util/AgoraTranslate';
 
+export type SendDataStreamMessage =
+  | {
+      payload: string | Uint8Array;
+      syncWithAudio?: boolean;
+      // ordered?: boolean; 当前版本暂不支持 ordered
+    }
+  | string
+  | Uint8Array;
+
 export class ClientHelper {
   _engine: IrisRtcEngine;
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
+  }
+
+  public async leave(client: IAgoraRTCClient): Promise<void> {
+    //@ts-ignore isStringUID 是websdk的私有属性
+    //如果是string uid 登录
+    if (client?.isStringUID) {
+      let userAccount = '';
+      userAccount = client.uid as string;
+      const index = this._engine.irisClientManager.userInfoList.findIndex(
+        (user) => user.userAccount === userAccount
+      );
+      if (index !== -1) {
+        this._engine.irisClientManager.userInfoList.splice(index, 1);
+      }
+    }
+    await client.leave();
   }
 
   public async setClientRole(
@@ -31,6 +56,22 @@ export class ClientHelper {
             )
           : null
       );
+    } catch (e) {
+      AgoraConsole.error(e);
+      Promise.resolve(
+        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+      );
+      throw e;
+    }
+  }
+
+  public async sendStreamMessage(
+    client: IAgoraRTCClient,
+    message: SendDataStreamMessage,
+    needRetry: boolean = true
+  ): Promise<void> {
+    try {
+      await (client as any).sendStreamMessage(message);
     } catch (e) {
       AgoraConsole.error(e);
       Promise.resolve(

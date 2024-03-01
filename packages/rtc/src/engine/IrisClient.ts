@@ -248,7 +248,7 @@ export class IrisClient {
 
     if (this.agoraRTCClient?.channelName) {
       try {
-        await this.agoraRTCClient.leave();
+        await this._engine.clientHelper.leave(this.agoraRTCClient);
         AgoraConsole.debug('client leave success');
       } catch (e) {
         throw e;

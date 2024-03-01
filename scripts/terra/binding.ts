@@ -11,7 +11,8 @@ import {
   isMatch,
 } from './utils';
 
-const bindingExtensionList = require('./config/binding_extension_list.json');
+const bindingEventExtensionList = require('./config/binding_event_extension_list.ts');
+const bindingExtensionList = require('./config/binding_extension_list.ts');
 
 const supportList = require('./config/support_list.json');
 
@@ -34,7 +35,8 @@ type ClazzMethodUserData = IrisApiIdParserUserData & {
   hasParameters: boolean;
   isRegisterMethod: boolean;
   isSupport: boolean;
-  bindingExtensionList: [];
+  bindingEventExtension: [];
+  bindingExtension: [];
 }
 
 export function binding(parseResult: ParseResult) {
@@ -75,7 +77,8 @@ export function binding(parseResult: ParseResult) {
           isRegisterMethod: new RegExp('registerEventHandler').test(
             method.name
           ),
-          bindingExtensionList: bindingExtensionList[methodIrisApiIdValue],
+          bindingExtension: bindingExtensionList.includes(methodIrisApiIdValue),
+          bindingEventExtension: bindingEventExtensionList.includes(methodIrisApiIdValue),
           ...method.user_data,
         };
         method.user_data = clazzMethodUserData;

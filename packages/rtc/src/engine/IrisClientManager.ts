@@ -236,6 +236,7 @@ export class IrisClientManager {
     IrisTrackEventHandler
   >();
 
+  userInfoList: Array<NATIVE_RTC.UserInfo> = new Array<NATIVE_RTC.UserInfo>();
   public remoteUserPackages: Array<RemoteUserPackage> = new Array<
     RemoteUserPackage
   >();
@@ -651,6 +652,33 @@ export class IrisClientManager {
     this.removeTrackEventHandlerByTrack(videoTrack);
   }
 
+  addUserInfo(userInfo: NATIVE_RTC.UserInfo) {
+    if (!this.userInfoList.some((user) => user.uid === userInfo.uid)) {
+      this.userInfoList.push(userInfo);
+    }
+  }
+
+  removeUserInfoByUserAccount(userAccount: string) {
+    const index = this.userInfoList.findIndex(
+      (user) => user.userAccount === userAccount
+    );
+    if (index !== -1) {
+      this.userInfoList.splice(index, 1);
+    }
+  }
+
+  getUserInfoByUid(uid: UID): NATIVE_RTC.UserInfo | undefined {
+    return this.userInfoList.find((userInfo) => userInfo.uid === uid);
+  }
+
+  getUserInfoByUserAccount(
+    userAccount: string
+  ): NATIVE_RTC.UserInfo | undefined {
+    return this.userInfoList.find(
+      (userInfo) => userInfo.userAccount === userAccount
+    );
+  }
+
   async release() {
     this._engine.clearIrisInterval();
     //销毁iris html element
@@ -675,6 +703,7 @@ export class IrisClientManager {
 
     //重置IrisClientManager状态
     this.irisClientList = [];
+    this.userInfoList = [];
     this.localAudioTrackPackages = [];
     this.localVideoTrackPackages = [];
     this.trackEventHandlers = [];

@@ -331,6 +331,22 @@ export interface IAudioFrameObserverBase {
   onMixedAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
 
   onEarMonitoringAudioFrame_5405a47(audioFrame: AudioFrame): void;
+
+  onPlaybackAudioFrameBeforeMixing_9215cc7(
+    channelId: string,
+    userId: string,
+    audioFrame: AudioFrame
+  ): void;
+
+  getObservedAudioFramePosition(): number;
+
+  getPlaybackAudioParams(): AudioParams;
+
+  getRecordAudioParams(): AudioParams;
+
+  getMixedAudioParams(): AudioParams;
+
+  getEarMonitoringAudioParams(): AudioParams;
 }
 
 export interface IAudioFrameObserver extends IAudioFrameObserverBase {
@@ -347,6 +363,22 @@ export interface IAudioFrameObserver extends IAudioFrameObserverBase {
   onMixedAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
 
   onEarMonitoringAudioFrame_5405a47(audioFrame: AudioFrame): void;
+
+  onPlaybackAudioFrameBeforeMixing_9215cc7(
+    channelId: string,
+    userId: string,
+    audioFrame: AudioFrame
+  ): void;
+
+  getObservedAudioFramePosition(): number;
+
+  getPlaybackAudioParams(): AudioParams;
+
+  getRecordAudioParams(): AudioParams;
+
+  getMixedAudioParams(): AudioParams;
+
+  getEarMonitoringAudioParams(): AudioParams;
 }
 
 export class AudioSpectrumData {
@@ -407,6 +439,16 @@ export interface IVideoFrameObserver {
   ): void;
 
   onTranscodedVideoFrame_27754d8(videoFrame: VideoFrame): void;
+
+  getVideoFrameProcessMode(): VIDEO_FRAME_PROCESS_MODE;
+
+  getVideoFormatPreference(): VIDEO_PIXEL_FORMAT;
+
+  getRotationApplied(): boolean;
+
+  getMirrorApplied(): boolean;
+
+  getObservedFramePosition(): number;
 }
 
 export enum EXTERNAL_VIDEO_SOURCE_TYPE {

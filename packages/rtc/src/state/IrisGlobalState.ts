@@ -9,6 +9,7 @@ export interface DeviceInfo {
 export class IrisGlobalState {
   public rtcEngineContext: NATIVE_RTC.RtcEngineContext;
 
+  public streamMessageStreamId: number = 1;
   public networkQualityInterval: number = 2000;
 
   //C++ SetAudioProfile() initialize()

@@ -1,5 +1,112 @@
 # IRIS_WEB
 
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.1](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.6.0...v0.6.1) (2024-02-29)
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
+## [0.6.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.6.0) (2024-02-29)
+
+
+### Features
+
+* some new apis ([3bb491f](https://github.com/AgoraIO-Extensions/iris_web/commit/3bb491fab567ea2ebd5a3dff34705e8ca72a8c1e))
+
 ## [0.5.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.3.0...v0.5.0) (2024-01-26)
 
 

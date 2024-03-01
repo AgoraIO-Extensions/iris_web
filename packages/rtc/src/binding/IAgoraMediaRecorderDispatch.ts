@@ -15,20 +15,24 @@ export class IMediaRecorderDispatch implements IMediaRecorder {
   // @ts-ignore
   setMediaRecorderObserver_e1f7340(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setMediaRecorderObserver_e1f7340 not supported in this platform!'
+      'MediaRecorder_setMediaRecorderObserver_e1f7340 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   startRecording_94480b3(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('startRecording_94480b3 not supported in this platform!');
+    AgoraConsole.warn(
+      'MediaRecorder_startRecording_94480b3 not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   stopRecording(): CallApiReturnType {
-    AgoraConsole.warn('stopRecording not supported in this platform!');
+    AgoraConsole.warn(
+      'MediaRecorder_stopRecording not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }

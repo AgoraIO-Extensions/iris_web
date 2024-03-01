@@ -4,6 +4,7 @@ import { ERROR_CODE_TYPE, IRtcEngineEx } from '@iris/native-rtc';
 import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { callApiBufferExtension } from '../extensions/CallApiBufferExtensions';
 import { IRtcEngineExImpl } from '../impl/IAgoraRtcEngineExImpl';
 import { AgoraConsole } from '../util/AgoraConsole';
 
@@ -24,11 +25,20 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   joinChannelEx_a3cd08c(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let token = obj.token;
-    if (token === undefined) throw 'token is undefined';
+    if (token === undefined) {
+      AgoraConsole.error('token is undefined');
+      throw 'token is undefined';
+    }
     let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
     let options = obj.options;
-    if (options === undefined) throw 'options is undefined';
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
 
     return this._impl.joinChannelEx_a3cd08c(token, connection, options);
   }
@@ -37,14 +47,19 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   leaveChannelEx_c81e1a4(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
 
     return this._impl.leaveChannelEx_c81e1a4(connection);
   }
 
   // @ts-ignore
   leaveChannelEx_b03ee9a(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('leaveChannelEx_b03ee9a not supported in this platform!');
+    AgoraConsole.warn(
+      'RtcEngineEx_leaveChannelEx_b03ee9a not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -52,9 +67,15 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   updateChannelMediaOptionsEx_457bb35(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let options = obj.options;
-    if (options === undefined) throw 'options is undefined';
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
     let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
 
     return this._impl.updateChannelMediaOptionsEx_457bb35(options, connection);
   }
@@ -64,7 +85,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
     apiParam: ApiParam
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'setVideoEncoderConfigurationEx_4670c1e not supported in this platform!'
+      'RtcEngineEx_setVideoEncoderConfigurationEx_4670c1e not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -73,9 +94,15 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   setupRemoteVideoEx_522a409(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let canvas = obj.canvas;
-    if (canvas === undefined) throw 'canvas is undefined';
+    if (canvas === undefined) {
+      AgoraConsole.error('canvas is undefined');
+      throw 'canvas is undefined';
+    }
     let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
 
     return this._impl.setupRemoteVideoEx_522a409(canvas, connection);
   }
@@ -84,27 +111,50 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   muteRemoteAudioStreamEx_6d93082(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let uid = obj.uid;
-    if (uid === undefined) throw 'uid is undefined';
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
     let mute = obj.mute;
-    if (mute === undefined) throw 'mute is undefined';
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
     let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
 
     return this._impl.muteRemoteAudioStreamEx_6d93082(uid, mute, connection);
   }
 
   // @ts-ignore
   muteRemoteVideoStreamEx_6d93082(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteRemoteVideoStreamEx_6d93082 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.muteRemoteVideoStreamEx_6d93082(uid, mute, connection);
   }
 
   // @ts-ignore
   setRemoteVideoStreamTypeEx_01dc428(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setRemoteVideoStreamTypeEx_01dc428 not supported in this platform!'
+      'RtcEngineEx_setRemoteVideoStreamTypeEx_01dc428 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -113,44 +163,74 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   muteLocalAudioStreamEx_3cf17a4(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let mute = obj.mute;
-    if (mute === undefined) throw 'mute is undefined';
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
     let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
 
     return this._impl.muteLocalAudioStreamEx_3cf17a4(mute, connection);
   }
 
   // @ts-ignore
   muteLocalVideoStreamEx_3cf17a4(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteLocalVideoStreamEx_3cf17a4 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.muteLocalVideoStreamEx_3cf17a4(mute, connection);
   }
 
   // @ts-ignore
   muteAllRemoteAudioStreamsEx_3cf17a4(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let mute = obj.mute;
-    if (mute === undefined) throw 'mute is undefined';
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
     let connection = obj.connection;
-    if (connection === undefined) throw 'connection is undefined';
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
 
     return this._impl.muteAllRemoteAudioStreamsEx_3cf17a4(mute, connection);
   }
 
   // @ts-ignore
   muteAllRemoteVideoStreamsEx_3cf17a4(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'muteAllRemoteVideoStreamsEx_3cf17a4 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.muteAllRemoteVideoStreamsEx_3cf17a4(mute, connection);
   }
 
   // @ts-ignore
   setSubscribeAudioBlocklistEx_9f1e85c(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setSubscribeAudioBlocklistEx_9f1e85c not supported in this platform!'
+      'RtcEngineEx_setSubscribeAudioBlocklistEx_9f1e85c not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -158,7 +238,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   setSubscribeAudioAllowlistEx_9f1e85c(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setSubscribeAudioAllowlistEx_9f1e85c not supported in this platform!'
+      'RtcEngineEx_setSubscribeAudioAllowlistEx_9f1e85c not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -166,7 +246,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   setSubscribeVideoBlocklistEx_9f1e85c(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setSubscribeVideoBlocklistEx_9f1e85c not supported in this platform!'
+      'RtcEngineEx_setSubscribeVideoBlocklistEx_9f1e85c not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -174,7 +254,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   setSubscribeVideoAllowlistEx_9f1e85c(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setSubscribeVideoAllowlistEx_9f1e85c not supported in this platform!'
+      'RtcEngineEx_setSubscribeVideoAllowlistEx_9f1e85c not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -184,7 +264,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
     apiParam: ApiParam
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'setRemoteVideoSubscriptionOptionsEx_3cd36bc not supported in this platform!'
+      'RtcEngineEx_setRemoteVideoSubscriptionOptionsEx_3cd36bc not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -192,7 +272,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   setRemoteVoicePositionEx_fc0471c(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setRemoteVoicePositionEx_fc0471c not supported in this platform!'
+      'RtcEngineEx_setRemoteVoicePositionEx_fc0471c not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -202,7 +282,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
     apiParam: ApiParam
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'setRemoteUserSpatialAudioParamsEx_40ca9fb not supported in this platform!'
+      'RtcEngineEx_setRemoteUserSpatialAudioParamsEx_40ca9fb not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -210,7 +290,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   setRemoteRenderModeEx_a72fe4e(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setRemoteRenderModeEx_a72fe4e not supported in this platform!'
+      'RtcEngineEx_setRemoteRenderModeEx_a72fe4e not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -218,7 +298,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   enableLoopbackRecordingEx_4f41542(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'enableLoopbackRecordingEx_4f41542 not supported in this platform!'
+      'RtcEngineEx_enableLoopbackRecordingEx_4f41542 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -226,7 +306,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   adjustRecordingSignalVolumeEx_e84d10e(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'adjustRecordingSignalVolumeEx_e84d10e not supported in this platform!'
+      'RtcEngineEx_adjustRecordingSignalVolumeEx_e84d10e not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -234,7 +314,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   muteRecordingSignalEx_3cf17a4(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'muteRecordingSignalEx_3cf17a4 not supported in this platform!'
+      'RtcEngineEx_muteRecordingSignalEx_3cf17a4 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -244,7 +324,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
     apiParam: ApiParam
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'adjustUserPlaybackSignalVolumeEx_adbd29c not supported in this platform!'
+      'RtcEngineEx_adjustUserPlaybackSignalVolumeEx_adbd29c not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -252,7 +332,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   getConnectionStateEx_c81e1a4(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'getConnectionStateEx_c81e1a4 not supported in this platform!'
+      'RtcEngineEx_getConnectionStateEx_c81e1a4 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -260,7 +340,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   enableEncryptionEx_10cd872(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'enableEncryptionEx_10cd872 not supported in this platform!'
+      'RtcEngineEx_enableEncryptionEx_10cd872 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -268,31 +348,65 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   createDataStreamEx_1767167(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'createDataStreamEx_1767167 not supported in this platform!'
+      'RtcEngineEx_createDataStreamEx_1767167 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   createDataStreamEx_9f641b6(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'createDataStreamEx_9f641b6 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let config = obj.config;
+    if (config === undefined) {
+      AgoraConsole.error('config is undefined');
+      throw 'config is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.createDataStreamEx_9f641b6(config, connection);
   }
 
   // @ts-ignore
   sendStreamMessageEx_0c34857(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'sendStreamMessageEx_0c34857 not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    obj = callApiBufferExtension(apiParam.event, obj, apiParam.buffer);
+    let streamId = obj.streamId;
+    if (streamId === undefined) {
+      AgoraConsole.error('streamId is undefined');
+      throw 'streamId is undefined';
+    }
+    let data = obj.data;
+    if (data === undefined) {
+      AgoraConsole.error('data is undefined');
+      throw 'data is undefined';
+    }
+    let length = obj.length;
+    if (length === undefined) {
+      AgoraConsole.error('length is undefined');
+      throw 'length is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.sendStreamMessageEx_0c34857(
+      streamId,
+      data,
+      length,
+      connection
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   addVideoWatermarkEx_ad7daa3(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'addVideoWatermarkEx_ad7daa3 not supported in this platform!'
+      'RtcEngineEx_addVideoWatermarkEx_ad7daa3 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -300,7 +414,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   clearVideoWatermarkEx_c81e1a4(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'clearVideoWatermarkEx_c81e1a4 not supported in this platform!'
+      'RtcEngineEx_clearVideoWatermarkEx_c81e1a4 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -308,7 +422,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   sendCustomReportMessageEx_833b8a5(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'sendCustomReportMessageEx_833b8a5 not supported in this platform!'
+      'RtcEngineEx_sendCustomReportMessageEx_833b8a5 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -316,7 +430,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   enableAudioVolumeIndicationEx_ac84f2a(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'enableAudioVolumeIndicationEx_ac84f2a not supported in this platform!'
+      'RtcEngineEx_enableAudioVolumeIndicationEx_ac84f2a not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -326,7 +440,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
     apiParam: ApiParam
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'startRtmpStreamWithoutTranscodingEx_e405325 not supported in this platform!'
+      'RtcEngineEx_startRtmpStreamWithoutTranscodingEx_e405325 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -336,7 +450,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
     apiParam: ApiParam
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'startRtmpStreamWithTranscodingEx_ab121b5 not supported in this platform!'
+      'RtcEngineEx_startRtmpStreamWithTranscodingEx_ab121b5 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -344,7 +458,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   updateRtmpTranscodingEx_77f3ee8(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'updateRtmpTranscodingEx_77f3ee8 not supported in this platform!'
+      'RtcEngineEx_updateRtmpTranscodingEx_77f3ee8 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -352,7 +466,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   stopRtmpStreamEx_e405325(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'stopRtmpStreamEx_e405325 not supported in this platform!'
+      'RtcEngineEx_stopRtmpStreamEx_e405325 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -362,7 +476,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
     apiParam: ApiParam
   ): CallApiReturnType {
     AgoraConsole.warn(
-      'startOrUpdateChannelMediaRelayEx_4ad39a8 not supported in this platform!'
+      'RtcEngineEx_startOrUpdateChannelMediaRelayEx_4ad39a8 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -370,7 +484,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   stopChannelMediaRelayEx_c81e1a4(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'stopChannelMediaRelayEx_c81e1a4 not supported in this platform!'
+      'RtcEngineEx_stopChannelMediaRelayEx_c81e1a4 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -378,7 +492,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   pauseAllChannelMediaRelayEx_c81e1a4(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'pauseAllChannelMediaRelayEx_c81e1a4 not supported in this platform!'
+      'RtcEngineEx_pauseAllChannelMediaRelayEx_c81e1a4 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -386,7 +500,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   resumeAllChannelMediaRelayEx_c81e1a4(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'resumeAllChannelMediaRelayEx_c81e1a4 not supported in this platform!'
+      'RtcEngineEx_resumeAllChannelMediaRelayEx_c81e1a4 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -394,7 +508,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   getUserInfoByUserAccountEx_ca39cc6(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'getUserInfoByUserAccountEx_ca39cc6 not supported in this platform!'
+      'RtcEngineEx_getUserInfoByUserAccountEx_ca39cc6 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -402,7 +516,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   getUserInfoByUidEx_1e78da1(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'getUserInfoByUidEx_1e78da1 not supported in this platform!'
+      'RtcEngineEx_getUserInfoByUidEx_1e78da1 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -410,7 +524,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   enableDualStreamModeEx_4b18f41(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'enableDualStreamModeEx_4b18f41 not supported in this platform!'
+      'RtcEngineEx_enableDualStreamModeEx_4b18f41 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -418,7 +532,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   setDualStreamModeEx_622d0f3(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setDualStreamModeEx_622d0f3 not supported in this platform!'
+      'RtcEngineEx_setDualStreamModeEx_622d0f3 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -426,21 +540,23 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   setHighPriorityUserListEx_8736b5c(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setHighPriorityUserListEx_8736b5c not supported in this platform!'
+      'RtcEngineEx_setHighPriorityUserListEx_8736b5c not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   takeSnapshotEx_de1c015(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('takeSnapshotEx_de1c015 not supported in this platform!');
+    AgoraConsole.warn(
+      'RtcEngineEx_takeSnapshotEx_de1c015 not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   enableContentInspectEx_c4e7f69(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'enableContentInspectEx_c4e7f69 not supported in this platform!'
+      'RtcEngineEx_enableContentInspectEx_c4e7f69 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -448,7 +564,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   startMediaRenderingTracingEx_c81e1a4(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'startMediaRenderingTracingEx_c81e1a4 not supported in this platform!'
+      'RtcEngineEx_startMediaRenderingTracingEx_c81e1a4 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -456,7 +572,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   setParametersEx_8225ea3(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'setParametersEx_8225ea3 not supported in this platform!'
+      'RtcEngineEx_setParametersEx_8225ea3 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

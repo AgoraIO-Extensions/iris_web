@@ -809,6 +809,16 @@ export class Packet {
   size?: number;
 }
 
+export interface IPacketObserver {
+  onSendAudioPacket_4ad95e3(packet: Packet): boolean;
+
+  onSendVideoPacket_4ad95e3(packet: Packet): boolean;
+
+  onReceiveAudioPacket_4ad95e3(packet: Packet): boolean;
+
+  onReceiveVideoPacket_4ad95e3(packet: Packet): boolean;
+}
+
 export enum AUDIO_SAMPLE_RATE_TYPE {
   AUDIO_SAMPLE_RATE_32000 = 32000,
   AUDIO_SAMPLE_RATE_44100 = 44100,

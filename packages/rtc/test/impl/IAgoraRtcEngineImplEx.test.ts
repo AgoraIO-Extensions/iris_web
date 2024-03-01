@@ -16,8 +16,8 @@ import {
   TEST_REMOTE_UID,
   TEST_UID,
   callIris,
-  joinChannel,
   joinChannelEx,
+  setupRemoteVideoEx,
 } from '../utils';
 
 import { IRtcEngineExImpl } from './IAgoraRtcEngineExImpl';
@@ -279,5 +279,130 @@ describe('IAgoraRtcEngineImpl', () => {
       }
     );
     expect(remoteUsers[0].audioTrack).not.toBeUndefined();
+  });
+
+  test('muteLocalVideoStreamEx_3cf17a4', async () => {
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
+    let connection = await joinChannelEx(apiEnginePtr);
+    let localVideoTrackPackage = irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
+    );
+    expect(localVideoTrackPackage.length).toBe(1);
+    expect(localVideoTrackPackage[0].track.isPlaying).toBe(true);
+    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(false);
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteLocalVideoStreamEx_3cf17a4', {
+      mute: true,
+      connection,
+    });
+    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(true);
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteLocalVideoStreamEx_3cf17a4', {
+      mute: false,
+      connection,
+    });
+    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(false);
+  });
+  test('muteAllRemoteVideoStreamsEx_3cf17a4', async () => {
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    let connection = await joinChannelEx(apiEnginePtr);
+    await setupRemoteVideoEx(apiEnginePtr, null);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    let remoteUsers = irisClient.agoraRTCClient.remoteUsers;
+    expect(remoteUsers[0].videoTrack.isPlaying).toBe(true);
+
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_muteAllRemoteVideoStreamsEx_3cf17a4',
+      {
+        mute: true,
+        connection,
+      }
+    );
+    expect(remoteUsers[0].videoTrack).toBeUndefined();
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_muteAllRemoteVideoStreamsEx_3cf17a4',
+      {
+        mute: false,
+        connection,
+      }
+    );
+    expect(remoteUsers[0].videoTrack).not.toBeUndefined();
+  });
+  test('muteRemoteVideoStreamEx_6d93082', async () => {
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    let connection = await joinChannelEx(apiEnginePtr);
+    await setupRemoteVideoEx(apiEnginePtr, null);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    let remoteUsers = irisClient.agoraRTCClient.remoteUsers;
+    expect(remoteUsers[0].videoTrack.isPlaying).toBe(true);
+
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_muteRemoteVideoStreamEx_6d93082',
+      {
+        mute: true,
+        uid: TEST_REMOTE_UID,
+        connection,
+      }
+    );
+    expect(remoteUsers[0].videoTrack).toBeUndefined();
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_muteRemoteVideoStreamEx_6d93082',
+      {
+        mute: false,
+        uid: TEST_REMOTE_UID,
+        connection,
+      }
+    );
+    expect(remoteUsers[0].videoTrack).not.toBeUndefined();
+  });
+
+  test('createDataStreamEx_9f641b6', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    await callIris(apiEnginePtr, 'RtcEngineEx_createDataStreamEx_9f641b6', {
+      connection,
+      config: {
+        syncWithAudio: true,
+        ordered: true,
+      },
+    });
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    let irisClientState = irisClient.irisClientState;
+    expect(irisClientState.dataStreamConfig.syncWithAudio).toBe(true);
+    expect(irisClientState.dataStreamConfig.ordered).toBe(true);
+  });
+
+  test('sendStreamMessageEx_0c34857', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    await callIris(apiEnginePtr, 'RtcEngineEx_createDataStreamEx_9f641b6', {
+      connection,
+      config: {
+        syncWithAudio: true,
+        ordered: true,
+      },
+    });
+    const mockFunction = jest.spyOn(
+      irisRtcEngine.clientHelper,
+      'sendStreamMessage'
+    );
+    await callIris(apiEnginePtr, 'RtcEngineEx_sendStreamMessageEx_0c34857', {
+      connection: connection,
+      streamId: '1',
+      length: 11,
+    });
+    expect(mockFunction.mock.calls[0][1]).toMatchObject({
+      syncWithAudio: true,
+      payload: 'test',
+    });
   });
 });

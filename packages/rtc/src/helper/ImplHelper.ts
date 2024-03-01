@@ -8,6 +8,7 @@ import {
   ILocalVideoTrack,
   IMicrophoneAudioTrack,
   ScreenVideoTrackInitConfig,
+  UID,
 } from 'agora-rtc-sdk-ng';
 
 import { IrisAudioSourceType } from '../base/BaseType';
@@ -381,6 +382,62 @@ export class ImplHelper {
       [
         ...irisClientManager.localAudioTrackPackages,
         ...irisClientManager.localVideoTrackPackages,
+      ],
+      [irisClient]
+    );
+  }
+
+  public async joinChannel(
+    token: string,
+    channelId: string,
+    uid: UID,
+    options: NATIVE_RTC.ChannelMediaOptions
+  ) {
+    let globalState = this._engine.globalState;
+    let irisClient = this._engine.irisClientManager.getIrisClient();
+
+    irisClient.createClient(options);
+    options = irisClient.irisClientState;
+    irisClient.irisClientState.token = token;
+
+    let agoraRTCClient = irisClient.agoraRTCClient;
+    try {
+      await agoraRTCClient.join(
+        globalState.rtcEngineContext.appId,
+        channelId,
+        token ? token : null,
+        uid
+      );
+    } catch (reason) {
+      AgoraConsole.error(reason);
+      this._engine.rtcEngineEventHandler.onError_d26c0fd(
+        NATIVE_RTC.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED,
+        ''
+      );
+      irisClient.release();
+      return this._engine.returnResult(false);
+    }
+    let con: NATIVE_RTC.RtcConnection = {
+      channelId: channelId,
+      localUid: agoraRTCClient.uid as number,
+    };
+    //@ts-ignore websdk的私有属性
+    //如果是string uid 登录
+    if (agoraRTCClient.isStringUID) {
+      //@ts-ignore
+      con.localUid = agoraRTCClient._joinInfo?.uid;
+      this._engine.irisClientManager.addUserInfo({
+        uid: con.localUid,
+        userAccount: uid as string,
+      });
+    }
+    irisClient.setConnection(con);
+    this._engine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd(con, 0);
+    await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+      NotifyType.PUBLISH_TRACK,
+      [
+        ...this._engine.irisClientManager.localAudioTrackPackages,
+        ...this._engine.irisClientManager.localVideoTrackPackages,
       ],
       [irisClient]
     );

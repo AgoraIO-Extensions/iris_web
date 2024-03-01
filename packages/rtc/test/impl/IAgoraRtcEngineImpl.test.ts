@@ -21,13 +21,16 @@ import { AgoraConsole } from '../../src/util';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import {
+  TEST_REMOTE_STRING_UID,
   TEST_REMOTE_UID,
+  TEST_STRING_UID,
   TEST_UID,
   callIris,
   callIrisWithoutCheck,
   joinChannel,
+  joinChannelWithUserAccount,
   setupLocalVideo,
-  setupRemoteVideo,
+  setupRemoteVideoEx,
 } from '../utils';
 
 import { IRtcEngineImpl } from './IAgoraRtcEngineImpl';
@@ -407,10 +410,18 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(irisRtcEngine.globalState.enabledLocalAudio).toBe(param.enabled);
   });
 
+  test('enableLocalVideo_5039d15', async () => {
+    let param = {
+      enabled: true,
+    };
+    await callIris(apiEnginePtr, 'RtcEngine_enableLocalVideo_5039d15', param);
+    expect(irisRtcEngine.globalState.enabledLocalVideo).toBe(param.enabled);
+  });
+
   test('enableVideo', async () => {
     await joinChannel(apiEnginePtr, null);
     await setupLocalVideo(apiEnginePtr, null);
-    await setupRemoteVideo(apiEnginePtr, null);
+    await setupRemoteVideoEx(apiEnginePtr, null);
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
     expect(irisRtcEngine.globalState.enabledVideo).toBeTruthy();
@@ -430,7 +441,7 @@ describe('IAgoraRtcEngineImpl', () => {
   test('disableVideo', async () => {
     await joinChannel(apiEnginePtr, null);
     await setupLocalVideo(apiEnginePtr, null);
-    await setupRemoteVideo(apiEnginePtr, null);
+    await setupRemoteVideoEx(apiEnginePtr, null);
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
     await callIris(apiEnginePtr, 'RtcEngine_disableVideo', null);
@@ -871,6 +882,78 @@ describe('IAgoraRtcEngineImpl', () => {
     });
     expect(remoteUsers[0].audioTrack).not.toBeUndefined();
   });
+
+  test('muteLocalVideoStream_5039d15', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteLocalVideoStream_5039d15');
+    await joinChannel(apiEnginePtr, null);
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
+    let localVideoTrackPackage = irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
+    );
+    expect(localVideoTrackPackage.length).toBe(1);
+    expect(localVideoTrackPackage[0].track.isPlaying).toBe(true);
+    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(false);
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteLocalVideoStream_5039d15', {
+      mute: true,
+    });
+    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(true);
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteLocalVideoStream_5039d15', {
+      mute: false,
+    });
+    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(false);
+  });
+  test('muteAllRemoteVideoStreams_5039d15', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteAllRemoteVideoStreams_5039d15');
+    await joinChannel(apiEnginePtr, null);
+    await setupRemoteVideoEx(apiEnginePtr, null);
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    let remoteUsers =
+      irisRtcEngine.irisClientManager.irisClientList[0]?.agoraRTCClient
+        .remoteUsers;
+    expect(remoteUsers[0].videoTrack.isPlaying).toBe(true);
+
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_muteAllRemoteVideoStreams_5039d15',
+      {
+        mute: true,
+      }
+    );
+    expect(remoteUsers[0].videoTrack).toBeUndefined();
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_muteAllRemoteVideoStreams_5039d15',
+      {
+        mute: false,
+      }
+    );
+    expect(remoteUsers[0].videoTrack).not.toBeUndefined();
+  });
+  test('muteRemoteVideoStream_dbdc15a', async () => {
+    jest.spyOn(rtcEngineImpl, 'muteRemoteVideoStream_dbdc15a');
+    await joinChannel(apiEnginePtr, null);
+    await setupRemoteVideoEx(apiEnginePtr, null);
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    let remoteUsers =
+      irisRtcEngine.irisClientManager.irisClientList[0]?.agoraRTCClient
+        .remoteUsers;
+    expect(remoteUsers[0].videoTrack.isPlaying).toBe(true);
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteVideoStream_dbdc15a', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+    });
+    expect(remoteUsers[0].videoTrack).toBeUndefined();
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteVideoStream_dbdc15a', {
+      mute: false,
+      uid: TEST_REMOTE_UID,
+    });
+    expect(remoteUsers[0].videoTrack).not.toBeUndefined();
+  });
+
   test('setParameters_3a2037f', async () => {
     let params = JSON.stringify({
       'rtc.audio.force_bluetooth_a2dp': true,
@@ -879,5 +962,130 @@ describe('IAgoraRtcEngineImpl', () => {
     await callIris(apiEnginePtr, 'RtcEngine_setParameters_3a2037f', {
       parameters: params,
     });
+  });
+  test('createDataStream_5862815', async () => {
+    await callIris(apiEnginePtr, 'RtcEngine_createDataStream_5862815', {
+      config: {
+        syncWithAudio: true,
+        ordered: true,
+      },
+    });
+    let irisClientState =
+      irisRtcEngine.irisClientManager.irisClientList[0]?.irisClientState;
+    expect(irisClientState.dataStreamConfig.syncWithAudio).toBe(true);
+    expect(irisClientState.dataStreamConfig.ordered).toBe(true);
+  });
+  test('sendStreamMessage_8715a45', async () => {
+    await callIris(apiEnginePtr, 'RtcEngine_createDataStream_5862815', {
+      config: {
+        syncWithAudio: true,
+        ordered: true,
+      },
+    });
+    let result = await callIrisWithoutCheck(
+      apiEnginePtr,
+      'RtcEngine_sendStreamMessage_8715a45',
+      {
+        streamId: '1',
+        data: 'hello world',
+        length: 11,
+      }
+    );
+    expect(result.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_IN_CHANNEL);
+    const mockFunction = jest.spyOn(
+      irisRtcEngine.clientHelper,
+      'sendStreamMessage'
+    );
+    await joinChannel(apiEnginePtr, null);
+    let result2 = await callIrisWithoutCheck(
+      apiEnginePtr,
+      'RtcEngine_sendStreamMessage_8715a45',
+      {
+        streamId: '1',
+        length: 11,
+      }
+    );
+    expect(result2.code).toBe(NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK);
+    expect(mockFunction.mock.calls[0][1]).toMatchObject({
+      syncWithAudio: true,
+      payload: 'test',
+    });
+  });
+  test('joinChannelWithUserAccount_0e4f59e', async () => {
+    jest.spyOn(rtcEngineImpl, 'joinChannelWithUserAccount_4685af9');
+
+    expect(irisRtcEngine.irisIntervalList.length == 0).toBeTruthy();
+    await joinChannelWithUserAccount(apiEnginePtr);
+
+    expect(rtcEngineImpl.joinChannelWithUserAccount_4685af9).toBeCalledWith(
+      null,
+      FAKE_CHANNEL_NAME,
+      TEST_STRING_UID,
+      irisRtcEngine.irisClientManager.getIrisClient().irisClientState
+    );
+    expect(irisRtcEngine.irisIntervalList.length == 1).toBeTruthy();
+  });
+
+  test('joinChannelWithUserAccount_4685af9', async () => {
+    jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onJoinChannelSuccess_263e4cd'
+    );
+
+    await joinChannelWithUserAccount(apiEnginePtr);
+    let userInfoList = irisRtcEngine.irisClientManager.userInfoList;
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClient();
+
+    expect(irisClient.irisClientState.token).toBe(null);
+    expect(irisClient.agoraRTCClient.channelName).toBe(FAKE_CHANNEL_NAME);
+    expect(irisClient.connection.channelId).toBe(
+      irisClient.agoraRTCClient.channelName
+    );
+    expect(
+      irisRtcEngine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd
+    ).toBeCalledTimes(1);
+  });
+
+  test('getUserInfoByUserAccount_c6a8f08', async () => {
+    await joinChannelWithUserAccount(apiEnginePtr);
+    let userInfoList = irisRtcEngine.irisClientManager.userInfoList;
+
+    expect(userInfoList[0].userAccount).toBe(TEST_STRING_UID);
+    expect(JSON.stringify(userInfoList[1])).toBe(
+      JSON.stringify({
+        uid: TEST_REMOTE_UID,
+        userAccount: TEST_REMOTE_STRING_UID,
+      })
+    );
+    expect(userInfoList.length).toBe(2);
+    let result = await callIris(
+      apiEnginePtr,
+      'RtcEngine_getUserInfoByUserAccount_c6a8f08',
+      {
+        userAccount: TEST_STRING_UID,
+      }
+    );
+    expect(JSON.parse(result.data).userInfo.userAccount).toBe(TEST_STRING_UID);
+  });
+
+  test('getUserInfoByUid_6b7aee8', async () => {
+    await joinChannelWithUserAccount(apiEnginePtr);
+    let userInfoList = irisRtcEngine.irisClientManager.userInfoList;
+    expect(userInfoList[0].userAccount).toBe(TEST_STRING_UID);
+    expect(JSON.stringify(userInfoList[1])).toBe(
+      JSON.stringify({
+        uid: TEST_REMOTE_UID,
+        userAccount: TEST_REMOTE_STRING_UID,
+      })
+    );
+    expect(userInfoList.length).toBe(2);
+    let result = await callIris(
+      apiEnginePtr,
+      'RtcEngine_getUserInfoByUid_6b7aee8',
+      {
+        uid: userInfoList[0].uid,
+      }
+    );
+    expect(JSON.parse(result.data).userInfo.uid).toBe(userInfoList[0].uid);
   });
 });

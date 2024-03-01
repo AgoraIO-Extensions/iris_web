@@ -28,3 +28,6 @@ Object.defineProperty(global.navigator, 'mediaDevices', {
     enumerateDevices: mockPromise,
   },
 });
+
+window.MediaStreamTrack = jest.fn();
+window.RTCIceCandidate = jest.fn();
