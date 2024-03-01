@@ -89,10 +89,28 @@ jobs:
         run: |
           pnpm release ${{ env.version }} --ci --npm.allowSameVersion --github.assets=./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }} --github.assets=./packages/fake/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }}
 
-      - name: Update Release Assets
+      - name: Get Release ID
+        id: get_release
         if: ${{ steps.check-if-release-exists.outputs.release-exists == 1 }}
         run: |
-          pnpm release --no-increment --no-git --ci --github.assets=./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }} --github.assets=./packages/fake/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }}
+          release_id=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/releases/tags/v${{ env.version }} | jq '.id')
+          echo "RELEASE_ID=$release_id" >> $GITHUB_ENV
+
+      - name: Delete All Assets
+        if: ${{ steps.check-if-release-exists.outputs.release-exists == 1 }}
+        run: |
+          assets=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/releases/${{ env.RELEASE_ID }}/assets)
+          for asset_id in $(echo "$assets" | jq -r '.[].id'); do
+            curl -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/releases/assets/$asset_id
+          done
+
+      - name: Upload New Asset
+        if: ${{ steps.check-if-release-exists.outputs.release-exists == 1 }}
+        run: |
+          for asset_path in ./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }} ./packages/fake/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }}; do
+            asset_name=$(basename $asset_path)
+            curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -H "Content-Type: application/zip" --data-binary @$asset_path "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ env.RELEASE_ID }}/assets?name=$asset_name"
+          done
 
       - name: Prepare CDN Publish iris-web-rtc
         if: ${{ inputs.cdn }}
