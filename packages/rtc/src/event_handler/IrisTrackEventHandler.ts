@@ -142,9 +142,9 @@ export class IrisTrackEventHandler {
   onEventVideoElementVisibleStatus(data?: CheckVideoVisibleResult): void {
     this._engine.rtcEngineEventHandler.onFirstLocalVideoFrame_ebdfd19(
       this._videoSourceType as NATIVE_RTC.VIDEO_SOURCE_TYPE,
-      null,
-      null,
-      null
+      0,
+      0,
+      0
     );
   }
 
