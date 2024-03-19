@@ -176,7 +176,7 @@ export class IrisRtcEngine implements ApiInterceptor {
 
       // TODO(guoxianze): Temporarily return ERR_NOT_SUPPORTED, for not implemented module.
       return this.returnResult(
-        true,
+        false,
         -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
       );
     }
