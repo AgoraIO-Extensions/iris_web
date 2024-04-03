@@ -73,7 +73,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         AgoraTranslate.NATIVE_RTCAREA_CODE2AREAS(context.areaCode),
       ]);
 
-      if (context?.logConfig?.level) {
+      if (
+        typeof context?.logConfig?.level === 'number' &&
+        context?.logConfig?.level >= 0
+      ) {
         this._engine.globalState.AgoraRTC.setLogLevel(
           AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(context?.logConfig?.level)
         );
