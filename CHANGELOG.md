@@ -1,5 +1,17 @@
 # IRIS_WEB
 
+## [0.7.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.7.0) (2024-05-08)
+
+
+### Features
+
+* 0.7.0 ([#31](https://github.com/AgoraIO-Extensions/iris_web/issues/31)) ([86f077c](https://github.com/AgoraIO-Extensions/iris_web/commit/86f077c8f21afb8518ffb99827d27c28bf9bb97e))
+
+
+### Bug Fixes
+
+* fix some event can not receive ([#30](https://github.com/AgoraIO-Extensions/iris_web/issues/30)) ([dc46c16](https://github.com/AgoraIO-Extensions/iris_web/commit/dc46c16fbbe2871a19cdc56453f12f5ff9f03093))
+
 ## [0.7.0-pre](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.7.0-pre) (2024-03-19)
 
 
