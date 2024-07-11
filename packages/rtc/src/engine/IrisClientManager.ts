@@ -552,9 +552,7 @@ export class IrisClientManager {
     agoraRTCClient?: IAgoraRTCClient
   ) {
     let track = bufferSourceAudioTrackPackage.track;
-    if (
-      agoraRTCClient?.localTracks?.indexOf(track) != -1
-    ) {
+    if (agoraRTCClient?.localTracks?.indexOf(track) != -1) {
       try {
         await agoraRTCClient?.unpublish(track);
         AgoraConsole.log('unpublish success');
@@ -576,9 +574,7 @@ export class IrisClientManager {
     agoraRTCClient?: IAgoraRTCClient
   ) {
     let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
-    if (
-      agoraRTCClient?.localTracks?.indexOf(audioTrack) != -1
-    ) {
+    if (agoraRTCClient?.localTracks?.indexOf(audioTrack) != -1) {
       try {
         await agoraRTCClient?.unpublish(audioTrack);
         AgoraConsole.log('unpublish success');
@@ -602,9 +598,7 @@ export class IrisClientManager {
     agoraRTCClient?: IAgoraRTCClient
   ) {
     let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
-    if (
-      agoraRTCClient?.localTracks?.indexOf(videoTrack) != -1
-    ) {
+    if (agoraRTCClient?.localTracks?.indexOf(videoTrack) != -1) {
       try {
         await agoraRTCClient?.unpublish(videoTrack);
         AgoraConsole.log('unpublish success');
