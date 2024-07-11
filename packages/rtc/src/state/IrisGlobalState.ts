@@ -53,16 +53,16 @@ export class IrisGlobalState {
   audioProcessingChannels?: number;
 
   //setVideoEncoderConfiguration
-  videoEncoderConfiguration: NATIVE_RTC.VideoEncoderConfiguration = null;
+  videoEncoderConfiguration: NATIVE_RTC.VideoEncoderConfiguration;
 
-  fallbackOption: NATIVE_RTC.STREAM_FALLBACK_OPTIONS = null;
+  fallbackOption: NATIVE_RTC.STREAM_FALLBACK_OPTIONS;
 
-  screenCaptureContentHint: NATIVE_RTC.VIDEO_CONTENT_HINT = null;
+  screenCaptureContentHint: NATIVE_RTC.VIDEO_CONTENT_HINT;
 
   // screenCaptureParameters: NATIVE_RTC.ScreenCaptureParameters = null;
-  screenCaptureParameters2: NATIVE_RTC.ScreenCaptureParameters2 = null;
+  screenCaptureParameters2: NATIVE_RTC.ScreenCaptureParameters2;
 
-  cloudProxy: NATIVE_RTC.CLOUD_PROXY_TYPE = null;
+  cloudProxy: NATIVE_RTC.CLOUD_PROXY_TYPE;
 
   //devicesInfo
   playbackDevices: DeviceInfo[] = new Array();
@@ -70,7 +70,7 @@ export class IrisGlobalState {
   videoDevices: DeviceInfo[] = new Array();
 
   //setDevice() : videoDevice
-  videoDeviceId: string = null;
+  videoDeviceId: string;
 
   //enableAudioVolumeIndication
   enableAudioVolumeIndication: boolean = false;

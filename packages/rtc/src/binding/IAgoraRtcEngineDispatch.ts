@@ -78,7 +78,7 @@ import {
 import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IRtcEngineEventHandler {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -1966,7 +1966,7 @@ export class IRtcEngineEventHandler {
 export class IVideoDeviceManagerDispatch implements IVideoDeviceManager {
   // @ts-ignore
   _impl: IVideoDeviceManagerImpl;
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._impl = new IVideoDeviceManagerImpl(engine);
@@ -2033,7 +2033,7 @@ export class IVideoDeviceManagerDispatch implements IVideoDeviceManager {
 }
 
 export class IMetadataObserver {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -2069,7 +2069,7 @@ export class IMetadataObserver {
 }
 
 export class IDirectCdnStreamingEventHandler {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -2101,7 +2101,7 @@ export class IDirectCdnStreamingEventHandler {
 export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   _impl: IRtcEngineImpl;
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._impl = new IRtcEngineImpl(engine);

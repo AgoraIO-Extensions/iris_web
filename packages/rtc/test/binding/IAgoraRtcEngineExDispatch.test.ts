@@ -62,6 +62,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('token is undefined');
     }
+    //@ts-ignore
     nParam.token = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -79,6 +80,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('connection is undefined');
     }
+    //@ts-ignore
     nParam.connection = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -96,6 +98,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('options is undefined');
     }
+    //@ts-ignore
     nParam.options = 'test';
   });
 
@@ -151,6 +154,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('connection is undefined');
     }
+    //@ts-ignore
     nParam.connection = 'test';
   });
 
@@ -234,6 +238,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('options is undefined');
     }
+    //@ts-ignore
     nParam.options = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -251,6 +256,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('connection is undefined');
     }
+    //@ts-ignore
     nParam.connection = 'test';
   });
 
@@ -335,6 +341,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('canvas is undefined');
     }
+    //@ts-ignore
     nParam.canvas = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -352,6 +359,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('connection is undefined');
     }
+    //@ts-ignore
     nParam.connection = 'test';
   });
 
@@ -408,6 +416,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('uid is undefined');
     }
+    //@ts-ignore
     nParam.uid = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -425,6 +434,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('mute is undefined');
     }
+    //@ts-ignore
     nParam.mute = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -442,6 +452,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('connection is undefined');
     }
+    //@ts-ignore
     nParam.connection = 'test';
   });
 
@@ -499,6 +510,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('uid is undefined');
     }
+    //@ts-ignore
     nParam.uid = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -516,6 +528,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('mute is undefined');
     }
+    //@ts-ignore
     nParam.mute = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -533,6 +546,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('connection is undefined');
     }
+    //@ts-ignore
     nParam.connection = 'test';
   });
 
@@ -619,6 +633,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('mute is undefined');
     }
+    //@ts-ignore
     nParam.mute = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -636,6 +651,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('connection is undefined');
     }
+    //@ts-ignore
     nParam.connection = 'test';
   });
 
@@ -691,6 +707,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('mute is undefined');
     }
+    //@ts-ignore
     nParam.mute = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -708,6 +725,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('connection is undefined');
     }
+    //@ts-ignore
     nParam.connection = 'test';
   });
 
@@ -763,6 +781,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('mute is undefined');
     }
+    //@ts-ignore
     nParam.mute = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -780,6 +799,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('connection is undefined');
     }
+    //@ts-ignore
     nParam.connection = 'test';
   });
 
@@ -835,6 +855,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('mute is undefined');
     }
+    //@ts-ignore
     nParam.mute = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -852,6 +873,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('connection is undefined');
     }
+    //@ts-ignore
     nParam.connection = 'test';
   });
 
@@ -1355,6 +1377,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('config is undefined');
     }
+    //@ts-ignore
     nParam.config = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -1372,6 +1395,7 @@ describe('IRtcEngineEx', () => {
     } catch (e) {
       expect(e).toEqual('connection is undefined');
     }
+    //@ts-ignore
     nParam.connection = 'test';
   });
 

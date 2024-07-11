@@ -1,6 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
 
-import { UID } from 'agora-rtc-sdk-ng';
 import {
   ApiInterceptor,
   ApiInterceptorReturnType,
@@ -61,17 +60,17 @@ export class IrisRtcEngine implements ApiInterceptor {
   public clientHelper: ClientHelper = new ClientHelper(this);
 
   public irisClientManager: IrisClientManager = new IrisClientManager(this);
-  public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandler = null;
+  public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandler;
 
-  public globalState: IrisGlobalState = null;
-  public agoraEventHandler: IrisAgoraEventHandler = null;
-  public executor: CallApiExecutor = null;
-  public irisEventHandlerManager: IrisEventHandlerManager = null;
-  public irisElement: IrisElement = null;
+  public globalState: IrisGlobalState;
+  public agoraEventHandler: IrisAgoraEventHandler;
+  public executor: CallApiExecutor;
+  public irisEventHandlerManager: IrisEventHandlerManager;
+  public irisElement: IrisElement;
   public irisIntervalList: {
     type: IrisIntervalType;
     interval: NodeJS.Timeout;
-    uid: UID;
+    uid: number;
   }[] = [];
   public irisRtcErrorHandler: IrisRtcErrorHandler = new IrisRtcErrorHandler(
     this
@@ -79,7 +78,7 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   constructor(
     irisEventHandlerManager: IrisEventHandlerManager,
-    options: InitIrisRtcOptions
+    options?: InitIrisRtcOptions
   ) {
     const mapData = [
       ['MediaPlayer', new IMediaPlayerDispatch(this)],
@@ -182,7 +181,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     }
   }
 
-  public getVideoFrame(uid: UID, channel_id: string): VideoParams {
+  public getVideoFrame(uid: number, channel_id: string): VideoParams {
     return this.irisClientManager.getVideoFrame(uid, channel_id);
   }
 
@@ -219,7 +218,7 @@ export class IrisRtcEngine implements ApiInterceptor {
   public addIrisInterval(
     type: IrisIntervalType,
     interval: NodeJS.Timeout,
-    uid: UID
+    uid: number
   ) {
     //如果添加的是远端用户的轮询,uid用远端的
     //如果添加的是本地用户的轮询,uid固定为0
@@ -234,7 +233,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     this.irisIntervalList.filter((a) => type == a.type);
   }
 
-  public removeIrisIntervalByUid(uid: UID) {
+  public removeIrisIntervalByUid(uid: number) {
     for (let i = 0; i < this.irisIntervalList.length; i++) {
       let item = this.irisIntervalList[i];
       if (item.uid == uid) {

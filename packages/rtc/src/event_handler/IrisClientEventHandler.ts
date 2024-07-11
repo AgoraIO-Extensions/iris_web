@@ -7,7 +7,6 @@ import {
   IAgoraRTCRemoteUser,
   NetworkQuality,
   RemoteStreamType,
-  UID,
 } from 'agora-rtc-sdk-ng';
 
 import { IrisAudioSourceType } from '../base/BaseType';
@@ -27,7 +26,7 @@ export class IrisClientEventHandler {
   constructor(irisClient: IrisClient, engine: IrisRtcEngine) {
     this._irisClient = irisClient;
     this._engine = engine;
-    this.agoraRTCClient = irisClient.agoraRTCClient;
+    this.agoraRTCClient = irisClient.agoraRTCClient!;
     this.agoraRTCClient.on(
       'connection-state-change',
       this.onEventConnectionStateChange.bind(this)
@@ -118,7 +117,7 @@ export class IrisClientEventHandler {
   ): void {
     if (curState == 'DISCONNECTED')
       this._engine.rtcEngineEventHandler.onConnectionLost_c81e1a4(
-        this._irisClient.connection
+        this._irisClient.connection!
       );
     else if (
       reason == ConnectionDisconnectedReason.CHANNEL_BANNED ||
@@ -126,14 +125,14 @@ export class IrisClientEventHandler {
       reason == ConnectionDisconnectedReason.UID_BANNED
     ) {
       this._engine.rtcEngineEventHandler.onConnectionBanned_c81e1a4(
-        this._irisClient.connection
+        this._irisClient.connection!
       );
     } else if (
       reason == ConnectionDisconnectedReason.NETWORK_ERROR ||
       reason == ConnectionDisconnectedReason.SERVER_ERROR
     ) {
       this._engine.rtcEngineEventHandler.onConnectionInterrupted_c81e1a4(
-        this._irisClient.connection
+        this._irisClient.connection!
       );
     }
 
@@ -150,7 +149,7 @@ export class IrisClientEventHandler {
         );
       }
       this._engine.rtcEngineEventHandler.onConnectionStateChanged_4075a9c(
-        this._irisClient.connection,
+        this._irisClient.connection!,
         state,
         reason2
       );
@@ -168,11 +167,11 @@ export class IrisClientEventHandler {
       channelId: this.agoraRTCClient.channelName,
       localUid: this.agoraRTCClient.uid as number,
     };
-    let remoteUid = user.uid;
+    let remoteUid = user.uid as number;
     let elapsed = 0;
     this._engine.rtcEngineEventHandler.onUserJoined_c5499bd(
       connection,
-      remoteUid as number,
+      remoteUid,
       elapsed
     );
     //@ts-ignore websdk的私有属性
@@ -191,13 +190,13 @@ export class IrisClientEventHandler {
       this._engine.irisClientManager.addUserInfo(userInfo);
     }
     let userPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      user.uid
+      remoteUid
     );
     if (!userPackage) {
       userPackage = new RemoteUserPackage(
         connection,
-        null,
-        user.uid,
+        '',
+        remoteUid,
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
         IrisAudioSourceType.kAudioSourceTypeRemote
       );
@@ -207,14 +206,14 @@ export class IrisClientEventHandler {
       );
     } else {
       userPackage.update({
-        uid: user.uid,
+        uid: remoteUid,
       });
     }
   }
 
   onEventUserLeft(user: IAgoraRTCRemoteUser, reason: string): void {
     let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      user.uid
+      user.uid as number
     );
     let reason2 = AgoraTranslate.string2NATIVE_RTCUSER_OFFLINE_REASON_TYPE(
       reason
@@ -241,7 +240,7 @@ export class IrisClientEventHandler {
       NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
       [remoteUser]
     );
-    this._engine.irisClientManager.removeRemoteUserPackage(user.uid);
+    this._engine.irisClientManager.removeRemoteUserPackage(user.uid as number);
     this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
       user,
       'all'
@@ -253,7 +252,7 @@ export class IrisClientEventHandler {
     mediaType: 'audio' | 'video'
   ): void {
     let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      user.uid
+      user.uid as number
     );
     if (remoteUser) {
       if (mediaType == 'audio') {
@@ -275,7 +274,7 @@ export class IrisClientEventHandler {
     mediaType: 'audio' | 'video'
   ): void {
     let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      user.uid
+      user.uid as number
     );
     if (remoteUser) {
       if (mediaType == 'audio') {
@@ -293,7 +292,7 @@ export class IrisClientEventHandler {
   }
 
   onEventUserInfoUpdated(
-    uid: UID,
+    uid: number,
     msg:
       | 'mute-audio'
       | 'mute-video'
@@ -468,7 +467,7 @@ export class IrisClientEventHandler {
     }
   }
 
-  onStreamMessage(uid: UID, payload: Uint8Array): void {
+  onStreamMessage(uid: number, payload: Uint8Array): void {
     this._engine.rtcEngineEventHandler.onStreamMessage_99898cb(
       this._irisClient.connection,
       uid as number,
@@ -479,19 +478,19 @@ export class IrisClientEventHandler {
     );
   }
 
-  onEventMediaReconnectStart(uid: UID): void {
+  onEventMediaReconnectStart(uid: number): void {
     //暂时没有找到对应的回调
   }
 
-  onEventMediaReconnectEnd(uid: UID): void {
+  onEventMediaReconnectEnd(uid: number): void {
     //展示没有找到合适的回调
   }
-  onEventStreamTypeChanged(uid: UID, streamType: RemoteStreamType): void {
+  onEventStreamTypeChanged(uid: number, streamType: RemoteStreamType): void {
     //展示没有合适的回调
   }
 
   onEventStreamFallback(
-    uid: UID,
+    uid: number,
     isFallbackOrRecover: 'fallback' | 'recover'
   ): void {
     this._engine.rtcEngineEventHandler.onRemoteSubscribeFallbackToAudioOnly_dbdc15a(
@@ -500,7 +499,7 @@ export class IrisClientEventHandler {
     );
   }
 
-  onEventVolumeIndicator(result: { level: number; uid: UID }[]): void {
+  onEventVolumeIndicator(result: { level: number; uid: number }[]): void {
     let speakers: NATIVE_RTC.AudioVolumeInfo[] = [];
     for (let i = 0; i < result.length; i++) {
       speakers.push(
@@ -535,10 +534,9 @@ export class IrisClientEventHandler {
   }
 
   onEventTokenPrivilegeWillExpire(): void {
-    let token: string = this._irisClient.irisClientState.token;
     this._engine.rtcEngineEventHandler.onTokenPrivilegeWillExpire_8225ea3(
       this._irisClient.connection,
-      token
+      this._irisClient.irisClientState.token!
     );
   }
 
@@ -567,7 +565,7 @@ export class IrisClientEventHandler {
   //todo 后边再做
   onEventLiveStreamingWarning(url: string, warning: IAgoraRTCError): void {}
 
-  onEventException(event: { code: number; msg: string; uid: UID }): void {
+  onEventException(event: { code: number; msg: string; uid: number }): void {
     //触发不了onError和onWarning， 错误吗几乎没有重合的部分
   }
 

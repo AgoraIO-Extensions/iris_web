@@ -14,7 +14,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   implements IRtcEngineEx {
   // @ts-ignore
   _impl: IRtcEngineExImpl;
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     super(engine);

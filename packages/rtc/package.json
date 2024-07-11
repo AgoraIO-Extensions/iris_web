@@ -11,6 +11,7 @@
     "start": "webpack serve --open",
     "lint": "eslint --ext .ts ./src/binding ./test/binding",
     "lint:fix": "eslint --fix --ext .ts ./src/binding ./test/binding",
+    "typecheck": "tsc --noEmit",
     "release": "release-it"
   },
   "author": "AgoraIO-Extensions",
@@ -18,7 +19,7 @@
   "dependencies": {
     "@agoraio-extensions/agora-rtc-sdk-ng-fake": "^1.0.12",
     "@iris/native-rtc": "workspace: *",
-    "agora-rtc-sdk-ng": "4.20.0",
+    "agora-rtc-sdk-ng": "4.21.0",
     "iris-web-core": "workspace: *"
   },
   "files": [

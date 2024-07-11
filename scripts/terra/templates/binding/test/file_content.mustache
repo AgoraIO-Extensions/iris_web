@@ -123,6 +123,7 @@ describe('{{name}}', () => {
         } catch (e) {
           expect(e).toEqual('{{name}} is undefined');
         }
+        //@ts-ignore
         nParam.{{name}} = 'test';
       {{/is_output}}
     {{/parameters}}

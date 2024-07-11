@@ -17,7 +17,7 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IMediaPlayerSourceObserver {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;

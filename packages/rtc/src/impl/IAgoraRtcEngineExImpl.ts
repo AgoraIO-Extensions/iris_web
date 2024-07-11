@@ -1,6 +1,7 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { IAgoraRTCClient } from 'agora-rtc-sdk-ng';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
+
+import { IrisAudioSourceType } from '../base/BaseType';
 
 import { IrisClient } from '../engine/IrisClient';
 import { RemoteUserPackage } from '../engine/IrisClientManager';
@@ -11,6 +12,7 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { SendDataStreamMessage } from '../helper/ClientHelper';
 
 import { AgoraConsole } from '../util/AgoraConsole';
+import { isDefined } from '../util/AgoraTool';
 
 //@ts-ignore
 export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
@@ -30,11 +32,10 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       irisClient.createClient(options);
       irisClient.irisClientState.token = token;
       let agoraRTCClient = irisClient.agoraRTCClient;
-
       try {
-        await agoraRTCClient.join(
-          this._engine.globalState.rtcEngineContext.appId,
-          connection.channelId,
+        await agoraRTCClient!.join(
+          this._engine.globalState.rtcEngineContext.appId!,
+          connection.channelId!,
           token ? token : null,
           connection.localUid
         );
@@ -128,34 +129,41 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
-      let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-        canvas.uid
-      );
-      if (remoteUser) {
-        remoteUser.update({
-          element: canvas.view,
-        });
-        this._engine.irisClientManager.irisClientObserver.notifyRemote(
-          NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
-          [remoteUser]
+      if (isDefined(canvas.uid)) {
+        let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
+          canvas.uid
         );
+        if (remoteUser) {
+          remoteUser.update({
+            element: canvas.view,
+          });
+          this._engine.irisClientManager.irisClientObserver.notifyRemote(
+            NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
+            [remoteUser]
+          );
+        } else {
+          let userPackage = new RemoteUserPackage(
+            connection,
+            canvas.view,
+            canvas.uid,
+            NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
+            IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+          );
+          let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+            connection
+          );
+          this._engine.irisClientManager.addRemoteUserPackage(
+            userPackage,
+            irisClient?.agoraRTCClient!
+          );
+        }
+        return this._engine.returnResult();
       } else {
-        let userPackage = new RemoteUserPackage(
-          connection,
-          canvas.view,
-          canvas.uid,
-          NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE
-        );
-        let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
-          connection
-        );
-        this._engine.irisClientManager.addRemoteUserPackage(
-          userPackage,
-          irisClient?.agoraRTCClient
+        return this._engine.returnResult(
+          false,
+          -NATIVE_RTC.ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT
         );
       }
-
-      return this._engine.returnResult();
     };
 
     return this._engine.execute(processVideoTrack);
@@ -309,7 +317,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
         connection
       );
-      let agoraRTCClient: IAgoraRTCClient = irisClient?.agoraRTCClient;
+      let agoraRTCClient = irisClient?.agoraRTCClient;
       if (!agoraRTCClient?.channelName) {
         return this._engine.irisRtcErrorHandler.notInChannel();
       } else {

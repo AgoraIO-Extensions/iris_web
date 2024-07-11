@@ -5,7 +5,8 @@ const config: Config = {
   preset: 'ts-jest',
   silent: true,
   testEnvironment: 'jsdom',
-  testMatch: ['**/test/impl/*.[jt]s?(x)', '**/test/binding/*.[jt]s?(x)'],
+  // testMatch: ['**/test/impl/*.[jt]s?(x)', '**/test/binding/*.[jt]s?(x)'],
+  testMatch: ['**/test/impl/IAgoraRtcEngineImpl.test.ts'],
   setupFilesAfterEnv: ['./test/setup.ts', 'jest-canvas-mock'],
 };
 

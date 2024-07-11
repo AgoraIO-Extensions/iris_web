@@ -79,9 +79,9 @@ describe('IAgoraRtcEngineImpl', () => {
     );
 
     expect(irisClient.irisClientState.token).toBe(param.token);
-    expect(irisClient.agoraRTCClient.channelName).toBe(FAKE_CHANNEL_NAME);
+    expect(irisClient.agoraRTCClient?.channelName).toBe(FAKE_CHANNEL_NAME);
     expect(irisClient.connection.channelId).toBe(
-      irisClient.agoraRTCClient.channelName
+      irisClient.agoraRTCClient?.channelName
     );
     expect(
       irisRtcEngine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd
@@ -104,7 +104,7 @@ describe('IAgoraRtcEngineImpl', () => {
     let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
       param.connection
     );
-    jest.spyOn(irisClient.agoraRTCClient, 'leave');
+    jest.spyOn(irisClient.agoraRTCClient!, 'leave');
     let leaveParam = {
       connection: param.connection,
     };
@@ -113,7 +113,7 @@ describe('IAgoraRtcEngineImpl', () => {
       'RtcEngineEx_leaveChannelEx_c81e1a4',
       leaveParam
     );
-    expect(irisClient.agoraRTCClient).toBeNull();
+    expect(irisClient.agoraRTCClient).toBeUndefined();
   });
   test('updateChannelMediaOptionsEx_457bb35', async () => {
     let param = {
@@ -132,8 +132,8 @@ describe('IAgoraRtcEngineImpl', () => {
     let agoraRTCClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
       param.connection
     ).agoraRTCClient;
-    jest.spyOn(agoraRTCClient, 'renewToken');
-    jest.spyOn(agoraRTCClient, 'setClientRole');
+    jest.spyOn(agoraRTCClient!, 'renewToken');
+    jest.spyOn(agoraRTCClient!, 'setClientRole');
     let param2 = {
       connection: param.connection,
       options: {
@@ -151,8 +151,8 @@ describe('IAgoraRtcEngineImpl', () => {
       'RtcEngineEx_updateChannelMediaOptionsEx_457bb35',
       param2
     );
-    expect(agoraRTCClient.renewToken).toBeCalledTimes(1);
-    expect(agoraRTCClient.setClientRole).toBeCalledTimes(1);
+    expect(agoraRTCClient?.renewToken).toBeCalledTimes(1);
+    expect(agoraRTCClient?.setClientRole).toBeCalledTimes(1);
   });
   test('setupRemoteVideoEx_522a409', async () => {
     let param = {
@@ -228,8 +228,8 @@ describe('IAgoraRtcEngineImpl', () => {
     let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
       connection
     );
-    let remoteUsers = irisClient.agoraRTCClient.remoteUsers;
-    expect(remoteUsers[0].audioTrack.isPlaying).toBe(true);
+    let remoteUsers = irisClient.agoraRTCClient!.remoteUsers;
+    expect(remoteUsers[0].audioTrack!.isPlaying).toBe(true);
 
     await callIris(
       apiEnginePtr,
@@ -256,8 +256,8 @@ describe('IAgoraRtcEngineImpl', () => {
     let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
       connection
     );
-    let remoteUsers = irisClient.agoraRTCClient.remoteUsers;
-    expect(remoteUsers[0].audioTrack.isPlaying).toBe(true);
+    let remoteUsers = irisClient.agoraRTCClient!.remoteUsers;
+    expect(remoteUsers[0].audioTrack!.isPlaying).toBe(true);
 
     await callIris(
       apiEnginePtr,
@@ -289,7 +289,7 @@ describe('IAgoraRtcEngineImpl', () => {
       NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
     );
     expect(localVideoTrackPackage.length).toBe(1);
-    expect(localVideoTrackPackage[0].track.isPlaying).toBe(true);
+    expect(localVideoTrackPackage[0].track?.isPlaying).toBe(true);
     expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(false);
 
     await callIris(apiEnginePtr, 'RtcEngineEx_muteLocalVideoStreamEx_3cf17a4', {
@@ -311,8 +311,8 @@ describe('IAgoraRtcEngineImpl', () => {
     let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
       connection
     );
-    let remoteUsers = irisClient.agoraRTCClient.remoteUsers;
-    expect(remoteUsers[0].videoTrack.isPlaying).toBe(true);
+    let remoteUsers = irisClient.agoraRTCClient!.remoteUsers;
+    expect(remoteUsers[0].videoTrack?.isPlaying).toBe(true);
 
     await callIris(
       apiEnginePtr,
@@ -340,8 +340,8 @@ describe('IAgoraRtcEngineImpl', () => {
     let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
       connection
     );
-    let remoteUsers = irisClient.agoraRTCClient.remoteUsers;
-    expect(remoteUsers[0].videoTrack.isPlaying).toBe(true);
+    let remoteUsers = irisClient.agoraRTCClient!.remoteUsers;
+    expect(remoteUsers[0].videoTrack?.isPlaying).toBe(true);
 
     await callIris(
       apiEnginePtr,

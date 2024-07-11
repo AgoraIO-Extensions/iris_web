@@ -2,7 +2,6 @@ import * as NATIVE_RTC from '@iris/native-rtc';
 import {
   AudioSourceOptions,
   BufferSourceAudioTrackInitConfig,
-  IAgoraRTCClient,
   ICameraVideoTrack,
   ILocalVideoTrack,
   IMicrophoneAudioTrack,
@@ -31,7 +30,7 @@ export const RTCENGINE_KEY = 'RtcEngine';
 
 //@ts-ignore
 export class IRtcEngineImpl implements IRtcEngineExtensions {
-  private _engine: IrisRtcEngine = null;
+  private _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -69,9 +68,11 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       this._engine.globalState.rtcEngineContext = context;
 
-      this._engine.globalState.AgoraRTC.setArea([
-        AgoraTranslate.NATIVE_RTCAREA_CODE2AREAS(context.areaCode),
-      ]);
+      if (context.areaCode) {
+        this._engine.globalState.AgoraRTC.setArea([
+          AgoraTranslate.NATIVE_RTCAREA_CODE2AREAS(context.areaCode),
+        ]);
+      }
 
       if (
         typeof context?.logConfig?.level === 'number' &&
@@ -107,7 +108,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       token,
       channelId,
       uid,
-      irisClient.irisClientState
+      irisClient!.irisClientState
     );
   }
   joinChannel_cdbb747(
@@ -272,8 +273,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       //如果已经加入频道
       if (client?.channelName) {
         this._engine.rtcEngineEventHandler.onClientRoleChanged_2acaf10(
-          irisClient.connection,
-          oldRole,
+          irisClient.connection!,
+          oldRole!,
           role,
           options
         );
@@ -368,12 +369,16 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         sourceType
       )[0];
       if (!videoTrackPackage) {
-        videoTrackPackage = new VideoTrackPackage(null, sourceType, null);
+        videoTrackPackage = new VideoTrackPackage(
+          undefined,
+          sourceType,
+          undefined
+        );
         this._engine.irisClientManager.addLocalVideoTrackPackage(
           videoTrackPackage
         );
         if (this._engine.implHelper.isVideoCamera(sourceType)) {
-          let cTrack = null;
+          let cTrack: ICameraVideoTrack;
           cTrack = await this._engine.implHelper.createVideoCameraTrack();
           videoTrackPackage.update({ track: cTrack });
         }
@@ -437,7 +442,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             NotifyType.UNABLE_TRACK,
             [videoTrackPackage]
           );
-          if (videoTrackPackage.element) {
+          if (videoTrackPackage.element && videoTrackPackage.track) {
             this._engine.trackHelper.play(
               videoTrackPackage.track,
               videoTrackPackage.element
@@ -488,10 +493,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         sourceType
       )[0];
       if (!trackPackage) {
-        trackPackage = new VideoTrackPackage(canvas.view, sourceType, null);
+        trackPackage = new VideoTrackPackage(canvas.view, sourceType);
         this._engine.irisClientManager.addLocalVideoTrackPackage(trackPackage);
         if (this._engine.implHelper.isVideoCamera(sourceType)) {
-          let cTrack = null;
+          let cTrack: ICameraVideoTrack;
           cTrack = await this._engine.implHelper.createVideoCameraTrack();
           trackPackage.update({ track: cTrack });
         }
@@ -675,7 +680,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   ): CallApiReturnType {
     let process = async () => {
       let irisClient = this._engine.irisClientManager.getIrisClient();
-      let agoraRTCClient: IAgoraRTCClient = irisClient?.agoraRTCClient;
+      let agoraRTCClient = irisClient?.agoraRTCClient;
       if (!agoraRTCClient?.channelName) {
         return this._engine.irisRtcErrorHandler.notInChannel();
       } else {
@@ -767,7 +772,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         ...(reportVad && { reportVad }),
       };
       //只有在初次的时候才注册onAudioVolumeIndication事件
-      let agoraRTCClient: IAgoraRTCClient = this._engine.irisClientManager.getIrisClient()
+      let agoraRTCClient = this._engine.irisClientManager.getIrisClient()
         ?.agoraRTCClient;
 
       if (!this._engine.globalState.enableAudioVolumeIndication) {
@@ -794,25 +799,27 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               );
             }
             const remoteStats = agoraRTCClient.getRemoteAudioStats();
-            let remoteSpeakers = [];
+            let remoteSpeakers: {
+              uid: number;
+              volume: number;
+              vad: number;
+            }[] = [];
             for (let uid in remoteStats) {
               remoteSpeakers.push({
-                uid: uid,
+                uid: (uid as unknown) as number,
                 volume: remoteStats[uid].receiveLevel,
                 vad: 1,
-                // voicePitch: number,  web没有
               });
             }
-            let biggestVolumeRemoteSpeaker =
-              remoteSpeakers.length > 0 ??
-              remoteSpeakers.reduce((prev, curr) => {
-                return curr.receiveLevel > prev.receiveLevel ? curr : prev;
-              });
+            let totalVolume: number = 0;
+            remoteSpeakers.forEach((speaker) => {
+              totalVolume += speaker.volume;
+            });
             this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
               connection,
               remoteSpeakers,
               remoteSpeakers.length,
-              biggestVolumeRemoteSpeaker
+              totalVolume
             );
           }
         }, interval);
@@ -848,9 +855,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       let irisClient = this._engine.irisClientManager.getIrisClient();
 
-      let bufferSourceAudioTrackPackage: BufferSourceAudioTrackPackage = null;
+      let bufferSourceAudioTrackPackage: BufferSourceAudioTrackPackage;
       let bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig = {
-        source: null,
+        source: '',
       };
       //如果是带有http或者https的则不拼接,否则拼接origin
       if (filePath.startsWith('https://') || filePath.startsWith('http://')) {
@@ -1154,7 +1161,7 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
   }
 
   enumerateVideoDevices(): CallApiReturnType {
-    let deviceList = [];
+    let deviceList: MediaDeviceInfo[] = [];
     let process = async () => {
       try {
         deviceList = (await this._engine.implHelper.enumerateDevices())

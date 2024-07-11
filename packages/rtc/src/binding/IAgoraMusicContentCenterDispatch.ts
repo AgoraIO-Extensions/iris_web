@@ -18,7 +18,7 @@ import { AgoraConsole } from '../util/AgoraConsole';
 import { IMediaPlayerDispatch } from './IAgoraMediaPlayerDispatch';
 
 export class MusicChartCollectionDispatch implements MusicChartCollection {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -41,7 +41,7 @@ export class MusicChartCollectionDispatch implements MusicChartCollection {
 }
 
 export class MusicCollectionDispatch implements MusicCollection {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -88,7 +88,7 @@ export class MusicCollectionDispatch implements MusicCollection {
 }
 
 export class IMusicContentCenterEventHandler {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -161,7 +161,7 @@ export class IMusicContentCenterEventHandler {
 
 export class IMusicPlayerDispatch extends IMediaPlayerDispatch
   implements IMusicPlayer {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     super(engine);
@@ -177,7 +177,7 @@ export class IMusicPlayerDispatch extends IMediaPlayerDispatch
 }
 
 export class IMusicContentCenterDispatch implements IMusicContentCenter {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;

@@ -11,6 +11,8 @@ import {
   UID,
 } from 'agora-rtc-sdk-ng';
 
+import { IrisClient } from 'src/engine/IrisClient';
+
 import { IrisAudioSourceType } from '../base/BaseType';
 import {
   AudioTrackPackage,
@@ -37,7 +39,7 @@ export class ImplHelper {
     publish: boolean,
     bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig
   ): Promise<BufferSourceAudioTrackPackage> {
-    let bufferSourceAudioTrack: IBufferSourceAudioTrack = null;
+    let bufferSourceAudioTrack: IBufferSourceAudioTrack | undefined = undefined;
 
     try {
       bufferSourceAudioTrack = await this._engine.globalState.AgoraRTC.createBufferSourceAudioTrack(
@@ -45,12 +47,14 @@ export class ImplHelper {
       );
     } catch (e) {
       AgoraConsole.error('createBufferSourceAudioTrack failed');
-      AgoraConsole.error(e);
+      throw e;
     }
-    await this.processAudioTrack(bufferSourceAudioTrack);
+    if (bufferSourceAudioTrack) {
+      await this.processAudioTrack(bufferSourceAudioTrack);
+    }
     let bufferSourceAudioTrackPackage = new BufferSourceAudioTrackPackage(
       IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio,
-      bufferSourceAudioTrack,
+      bufferSourceAudioTrack!,
       soundId,
       publish
     );
@@ -60,7 +64,7 @@ export class ImplHelper {
 
     let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
       {
-        track: bufferSourceAudioTrack,
+        track: bufferSourceAudioTrack!,
         trackType: 'IBufferSourceAudioTrack',
       },
       this._engine
@@ -77,7 +81,7 @@ export class ImplHelper {
     let videoTrackPackage: VideoTrackPackage = this._engine.irisClientManager.getLocalVideoTrackPackageBySourceType(
       videoType
     )[0];
-    let videoTrack: ILocalVideoTrack = null;
+    let videoTrack: ILocalVideoTrack;
     let config = {
       mediaStreamTrack,
     };
@@ -93,12 +97,16 @@ export class ImplHelper {
       );
     } catch (e) {
       AgoraConsole.error('createCustomVideoTrack failed');
-      AgoraConsole.error(e);
+      throw e;
     }
     await this.processVideoTrack(videoTrack);
 
     if (!videoTrackPackage) {
-      videoTrackPackage = new VideoTrackPackage(null, videoType, videoTrack);
+      videoTrackPackage = new VideoTrackPackage(
+        undefined,
+        videoType,
+        videoTrack
+      );
       this._engine.irisClientManager.addLocalVideoTrackPackage(
         videoTrackPackage
       );
@@ -130,9 +138,9 @@ export class ImplHelper {
       return;
     }
     //如果没有track，但是有package，就需要创建track
-    let audioTrack: ILocalAudioTrack = null;
-    let videoTrack: ILocalVideoTrack = null;
-    let screenTrack = [null, null];
+    let audioTrack: ILocalAudioTrack;
+    let videoTrack: ILocalVideoTrack;
+    let screenTrack = new Array(2);
     try {
       let conf: ScreenVideoTrackInitConfig = this.generateScreenVideoTrackInitConfig();
       let result = await this._engine.globalState.AgoraRTC.createScreenVideoTrack(
@@ -142,7 +150,7 @@ export class ImplHelper {
       if (Array.isArray(result)) {
         screenTrack = result;
       } else {
-        screenTrack = [result, null];
+        screenTrack = [result, undefined];
       }
       if (screenTrack) {
         //每一个track都可能是null
@@ -163,7 +171,7 @@ export class ImplHelper {
 
           if (!videoTrackPackage) {
             videoTrackPackage = new VideoTrackPackage(
-              null,
+              undefined,
               videoType,
               videoTrack
             );
@@ -195,7 +203,7 @@ export class ImplHelper {
 
   public async createAudioTrack(audioType: IrisAudioSourceType) {
     let audioTrackPackage: AudioTrackPackage;
-    let audioTrack: IMicrophoneAudioTrack = null;
+    let audioTrack: IMicrophoneAudioTrack;
     try {
       audioTrack = await this._engine.globalState.AgoraRTC.createMicrophoneAudioTrack();
       //受全局enabledAudio控制
@@ -212,14 +220,14 @@ export class ImplHelper {
   }
 
   public async createVideoCameraTrack(): Promise<ICameraVideoTrack> {
-    let videoTrack: ICameraVideoTrack = null;
+    let videoTrack: ICameraVideoTrack;
     try {
       videoTrack = await this._engine.globalState.AgoraRTC.createCameraVideoTrack();
       //受全局enabledVideo控制
       await this._engine.trackHelper.setEnabled(videoTrack, false);
     } catch (e) {
       AgoraConsole.error('createCameraVideoTrack failed');
-      AgoraConsole.error(e);
+      throw e;
     }
 
     await this.processVideoTrack(videoTrack);
@@ -301,9 +309,9 @@ export class ImplHelper {
   }
 
   public async enumerateDevices(): Promise<{
-    playbackDevices: NATIVE_RTC.DeviceInfo[];
-    recordingDevices: NATIVE_RTC.DeviceInfo[];
-    videoDevices: NATIVE_RTC.DeviceInfo[];
+    playbackDevices: MediaDeviceInfo[];
+    recordingDevices: MediaDeviceInfo[];
+    videoDevices: MediaDeviceInfo[];
   }> {
     let info = await this._engine.globalState.AgoraRTC.getDevices();
     let playbackDevices: any[] = [];
@@ -343,7 +351,12 @@ export class ImplHelper {
     connection?: NATIVE_RTC.RtcConnection
   ) {
     const irisClientManager = this._engine.irisClientManager;
-    const irisClient = irisClientManager.getIrisClientByConnection(connection);
+    let irisClient: IrisClient;
+    if (connection) {
+      irisClient = irisClientManager.getIrisClientByConnection(connection);
+    } else {
+      irisClient = irisClientManager.getIrisClient();
+    }
 
     let agoraRTCClient = irisClient?.agoraRTCClient;
     if (!agoraRTCClient) {
@@ -353,8 +366,8 @@ export class ImplHelper {
       );
     }
 
-    let audioTrackPackages = irisClient.audioTrackPackages;
-    let videoTrackPackage = irisClient.videoTrackPackage;
+    let audioTrackPackages = irisClient.audioTrackPackages!;
+    let videoTrackPackage = irisClient.videoTrackPackage!;
     let irisClientObserver = irisClientManager.irisClientObserver;
     irisClientObserver.notifyLocal(NotifyType.UNPUBLISH_TRACK, [
       ...audioTrackPackages,
@@ -400,10 +413,14 @@ export class ImplHelper {
     options = irisClient.irisClientState;
     irisClient.irisClientState.token = token;
 
+    if (!irisClient.agoraRTCClient) {
+      return this._engine.returnResult(false);
+    }
+
     let agoraRTCClient = irisClient.agoraRTCClient;
     try {
       await agoraRTCClient.join(
-        globalState.rtcEngineContext.appId,
+        globalState.rtcEngineContext.appId!,
         channelId,
         token ? token : null,
         uid

@@ -204,6 +204,7 @@ describe('IMediaEngine', () => {
     } catch (e) {
       expect(e).toEqual('enabled is undefined');
     }
+    //@ts-ignore
     nParam.enabled = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -221,6 +222,7 @@ describe('IMediaEngine', () => {
     } catch (e) {
       expect(e).toEqual('useTexture is undefined');
     }
+    //@ts-ignore
     nParam.useTexture = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -238,6 +240,7 @@ describe('IMediaEngine', () => {
     } catch (e) {
       expect(e).toEqual('sourceType is undefined');
     }
+    //@ts-ignore
     nParam.sourceType = 'test';
     try {
       await IrisCore.callIrisApi(
@@ -255,6 +258,7 @@ describe('IMediaEngine', () => {
     } catch (e) {
       expect(e).toEqual('encodedVideoOption is undefined');
     }
+    //@ts-ignore
     nParam.encodedVideoOption = 'test';
   });
 

@@ -41,7 +41,8 @@ export class ClientHelper {
   public async setClientRole(
     client: IAgoraRTCClient,
     role: NATIVE_RTC.CLIENT_ROLE_TYPE,
-    audienceLatencyLevel: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE
+    audienceLatencyLevel: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE = NATIVE_RTC
+      .AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY
   ): Promise<void> {
     try {
       let webRole: ClientRole = AgoraTranslate.NATIVE_RTC_CLIENT_ROLE_TYPE2ClientRole(
@@ -54,7 +55,7 @@ export class ClientHelper {
           ? AgoraTranslate.NATIVE_RTC_AUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(
               audienceLatencyLevel
             )
-          : null
+          : undefined
       );
     } catch (e) {
       AgoraConsole.error(e);

@@ -25,7 +25,6 @@ export type TrackType =
   | 'IBufferSourceAudioTrack'
   | 'IRemoteVideoTrack';
 export interface IrisTrackEventHandlerParam {
-  channelName?: string;
   client?: IAgoraRTCClient;
   remoteUser?: IAgoraRTCRemoteUser;
   track: ITrack;
@@ -37,21 +36,20 @@ export interface IrisTrackEventHandlerParam {
 
 //一个track可能被多个Client发布出去，所以一个track可以同事存在多个TrackEventHandler
 export class IrisTrackEventHandler {
-  private _client: IAgoraRTCClient = null;
-  private _remoteUser: IAgoraRTCRemoteUser = null;
-  private _track: ITrack | IBufferSourceAudioTrack = null;
+  private _client?: IAgoraRTCClient;
+  private _remoteUser?: IAgoraRTCRemoteUser;
+  private _track: ITrack | IBufferSourceAudioTrack;
   private _trackType: TrackType = 'ILocalTrack';
-  private _videoSourceType:
+  private _videoSourceType?:
     | NATIVE_RTC.VIDEO_SOURCE_TYPE
     | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
 
   private _engine: IrisRtcEngine;
 
-  private __onEventTrackEnded = null;
-  private __onEventBeautyEffectOverload = null;
-  private __onEventFirstFrameDecoded = null;
-  private __onEventVideoElementVisibleStatus = null;
-  private __onEventSourceStateChange = null;
+  private __onEventTrackEnded: Function;
+  private __onEventFirstFrameDecoded = Function;
+  private __onEventVideoElementVisibleStatus = Function;
+  private __onEventSourceStateChange = Function;
 
   constructor(params: IrisTrackEventHandlerParam, engine: IrisRtcEngine) {
     this._client = params.client;
@@ -68,9 +66,6 @@ export class IrisTrackEventHandler {
       case 'ILocalVideoTrack':
         this.__onEventTrackEnded = this.onEventTrackEnded.bind(this);
         this._track.on('track-ended', this.__onEventTrackEnded);
-        this.__onEventBeautyEffectOverload = this.onEventBeautyEffectOverload.bind(
-          this
-        );
         this.__onEventVideoElementVisibleStatus = this.onEventVideoElementVisibleStatus.bind(
           this
         );
@@ -111,11 +106,7 @@ export class IrisTrackEventHandler {
     switch (this._trackType) {
       case 'ILocalTrack':
         // 屏幕共享的case
-        if (
-          this._engine.implHelper.isScreenCapture(
-            this._videoSourceType as NATIVE_RTC.VIDEO_SOURCE_TYPE
-          )
-        ) {
+        if (this._engine.implHelper.isScreenCapture(this._videoSourceType!)) {
           this._engine.implDispatchesMap
             .get('RtcEngine')
             ._impl.stopScreenCapture();
@@ -149,22 +140,25 @@ export class IrisTrackEventHandler {
   }
 
   onEventFirstFrameDecoded() {
+    if (!this._client) {
+      return;
+    }
     if (this._trackType == 'IRemoteTrack') {
       let connection: NATIVE_RTC.RtcConnection = {
         channelId: this._client.channelName,
         localUid: this._client.uid as number,
       };
       let remoteUid = (this._remoteUser?.uid as number) || -1;
-      let elaspsed = 0;
+      let elapsed = 0;
       this._engine.rtcEngineEventHandler.onFirstRemoteAudioDecoded_c5499bd(
         connection,
         remoteUid,
-        elaspsed
+        elapsed
       );
       this._engine.rtcEngineEventHandler.onFirstRemoteAudioFrame_c5499bd(
         connection,
         remoteUid,
-        elaspsed
+        elapsed
       );
     } else if (this._trackType == 'IRemoteVideoTrack') {
       let connection: NATIVE_RTC.RtcConnection = {
@@ -172,10 +166,10 @@ export class IrisTrackEventHandler {
         localUid: this._client.uid as number,
       };
       let remoteUid = (this._remoteUser?.uid as number) || -1;
-      let elaspsed = 0;
+      let elapsed = 0;
       let width = -1;
       let height = -1;
-      if (this._remoteUser.hasVideo && this._remoteUser.videoTrack) {
+      if (this._remoteUser?.hasVideo && this._remoteUser.videoTrack) {
         let imageData = this._remoteUser.videoTrack.getCurrentFrameData();
         width = imageData?.width || -1;
         height = imageData?.height || -1;
@@ -185,14 +179,14 @@ export class IrisTrackEventHandler {
         remoteUid,
         width,
         height,
-        elaspsed
+        elapsed
       );
       this._engine.rtcEngineEventHandler.onFirstRemoteVideoFrame_a68170a(
         connection,
         remoteUid,
         width,
         height,
-        elaspsed
+        elapsed
       );
     }
   }
@@ -201,7 +195,7 @@ export class IrisTrackEventHandler {
     return this._track;
   }
 
-  getRemoteUser(): IAgoraRTCRemoteUser {
+  getRemoteUser(): IAgoraRTCRemoteUser | undefined {
     return this._remoteUser;
   }
 

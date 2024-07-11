@@ -57,7 +57,9 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
         irisContainer = this._engine.irisElement.createIrisElement();
       }
       let canvasID = `MediaEngine_pushVideoFrame_CANVAS`;
-      let canvas: HTMLCanvasElement = document.querySelector(`#${canvasID}`);
+      let canvas: HTMLCanvasElement | null = document.querySelector(
+        `#${canvasID}`
+      );
       if (!canvas) {
         canvas = document.createElement('canvas');
         canvas.id = canvasID;
@@ -74,9 +76,9 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
         );
       }
       drawRGBABufferToCanvas(
-        frame.stride,
-        frame.height,
-        frame.buffer,
+        frame.stride!,
+        frame.height!,
+        frame.buffer!,
         frame.format,
         canvas
       );

@@ -7,7 +7,7 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;

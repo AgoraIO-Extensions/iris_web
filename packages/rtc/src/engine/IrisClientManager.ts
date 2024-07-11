@@ -10,7 +10,6 @@ import {
   IRemoteAudioTrack,
   IRemoteVideoTrack,
   ITrack,
-  UID,
 } from 'agora-rtc-sdk-ng';
 
 import {
@@ -31,17 +30,17 @@ export type WalkILocalVideoPackageTrackFun = (track: VideoTrackPackage) => void;
 
 export class RemoteUserPackage {
   connection: NATIVE_RTC.RtcConnection;
-  element?: string;
-  uid?: UID;
-  videoSourceType?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
-  audioSourceType?: IrisAudioSourceType;
+  element: string;
+  uid: number;
+  videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE;
+  audioSourceType: IrisAudioSourceType;
 
   constructor(
     connection: NATIVE_RTC.RtcConnection,
-    element?: string,
-    uid?: UID,
-    videoSourceType?: NATIVE_RTC.VIDEO_SOURCE_TYPE,
-    audioSourceType?: IrisAudioSourceType
+    element: string,
+    uid: number,
+    videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
+    audioSourceType: IrisAudioSourceType
   ) {
     this.connection = connection;
     this.element = element;
@@ -57,7 +56,7 @@ export class RemoteUserPackage {
     audioSourceType = this.audioSourceType,
   }: {
     element?: string;
-    uid?: UID;
+    uid?: number;
     videoSourceType?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
     audioSourceType?: IrisAudioSourceType;
   }) {
@@ -67,13 +66,7 @@ export class RemoteUserPackage {
     this.audioSourceType = audioSourceType;
   }
 
-  dispose() {
-    this.connection = null;
-    this.element = null;
-    this.uid = null;
-    this.videoSourceType = null;
-    this.audioSourceType = null;
-  }
+  dispose() {}
 }
 
 export class VideoTrackPackage {
@@ -116,8 +109,6 @@ export class VideoTrackPackage {
   }
 
   dispose() {
-    this.element = null;
-    this.type = null;
     this.isPreview = false;
     try {
       if (this.track) {
@@ -129,8 +120,6 @@ export class VideoTrackPackage {
         }
       }
     } catch {}
-    this.track = null;
-    this.irisClient = null;
   }
 }
 
@@ -144,8 +133,8 @@ export class AudioTrackPackage {
   irisClient: IrisClient;
 
   constructor(
-    type?: IrisAudioSourceType,
-    track?: ILocalAudioTrack | IRemoteAudioTrack
+    type: IrisAudioSourceType,
+    track: ILocalAudioTrack | IRemoteAudioTrack
   ) {
     this.type = type;
     this.track = track;
@@ -171,7 +160,6 @@ export class AudioTrackPackage {
   }
 
   dispose() {
-    this.type = null;
     try {
       if (this.track) {
         if (this.track.isPlaying) {
@@ -180,8 +168,6 @@ export class AudioTrackPackage {
         (this.track as ILocalTrack).close();
       }
     } catch {}
-    this.irisClient = null;
-    this.track = null;
   }
 }
 
@@ -197,12 +183,12 @@ export class BufferSourceAudioTrackPackage extends AudioTrackPackage {
   }
 
   constructor(
-    type?: IrisAudioSourceType,
-    track?: IBufferSourceAudioTrack,
-    soundId?: number,
-    needPublish?: boolean
+    type: IrisAudioSourceType,
+    track: IBufferSourceAudioTrack,
+    soundId: number,
+    needPublish: boolean
   ) {
-    super();
+    super(type, track);
     this.type = type;
     this.track = track;
     this.soundId = soundId;
@@ -226,7 +212,7 @@ export type TrackPackage =
 
 // 存放一堆东西的
 export class IrisClientManager {
-  private _engine: IrisRtcEngine = null;
+  private _engine: IrisRtcEngine;
 
   irisClientList: IrisClient[] = [];
   localVideoTrackPackages: VideoTrackPackage[] = [];
@@ -349,7 +335,7 @@ export class IrisClientManager {
     }
   }
 
-  getRemoteUserPackageByUid(uid: UID): RemoteUserPackage {
+  getRemoteUserPackageByUid(uid: number): RemoteUserPackage {
     return this.remoteUserPackages.filter((remoteUserPackage) => {
       return remoteUserPackage.uid == uid;
     })[0];
@@ -391,7 +377,7 @@ export class IrisClientManager {
     }
   }
 
-  removeRemoteUserPackage(uid: UID) {
+  removeRemoteUserPackage(uid: number) {
     for (let i = 0; i < this.remoteUserPackages.length; i++) {
       let userPackage = this.remoteUserPackages[i];
       if (userPackage.uid == uid) {
@@ -406,15 +392,15 @@ export class IrisClientManager {
     }
   }
 
-  public getVideoFrame(uid: UID, channel_id: string): VideoParams {
+  public getVideoFrame(uid: number, channel_id: string): VideoParams {
     this._engine.irisClientManager.irisClientList.map((irisClient) => {
       //当存在于本地
       if (
-        irisClient.agoraRTCClient.channelName == channel_id &&
+        irisClient.agoraRTCClient?.channelName == channel_id &&
         irisClient.agoraRTCClient.uid == uid
       ) {
         return {
-          video_track: irisClient.videoTrackPackage.track,
+          video_track: irisClient.videoTrackPackage?.track,
           is_new_frame: true, //todo  how to know is a new frame
           process_err: IRIS_VIDEO_PROCESS_ERR.ERR_OK,
         };
@@ -437,7 +423,7 @@ export class IrisClientManager {
       }
     });
 
-    return null;
+    return (null as unknown) as VideoParams;
   }
 
   public getVideoFrameByConfig(
@@ -474,20 +460,14 @@ export class IrisClientManager {
       }
     });
 
-    return null;
+    return (null as unknown) as VideoParams;
   }
 
-  getIrisClient() {
-    if (this.irisClientList.length == 0) {
-      this._engine.irisRtcErrorHandler.notInitialized();
-    } else {
-      return this.irisClientList[0];
-    }
+  getIrisClient(): IrisClient {
+    return this.irisClientList[0];
   }
 
-  getIrisClientByConnection(
-    connection: NATIVE_RTC.RtcConnection
-  ): IrisClient | null {
+  getIrisClientByConnection(connection: NATIVE_RTC.RtcConnection): IrisClient {
     if (connection) {
       return this.irisClientList.filter((irisClient: IrisClient) => {
         if (
@@ -599,7 +579,6 @@ export class IrisClientManager {
   ) {
     let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
     if (
-      agoraRTCClient &&
       agoraRTCClient.localTracks &&
       agoraRTCClient.localTracks.indexOf(audioTrack) != -1
     ) {
@@ -627,7 +606,6 @@ export class IrisClientManager {
   ) {
     let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
     if (
-      agoraRTCClient &&
       agoraRTCClient.localTracks &&
       agoraRTCClient.localTracks.indexOf(videoTrack) != -1
     ) {
@@ -667,7 +645,7 @@ export class IrisClientManager {
     }
   }
 
-  getUserInfoByUid(uid: UID): NATIVE_RTC.UserInfo | undefined {
+  getUserInfoByUid(uid: number): NATIVE_RTC.UserInfo | undefined {
     return this.userInfoList.find((userInfo) => userInfo.uid === uid);
   }
 

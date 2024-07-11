@@ -1,13 +1,10 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { UID } from 'agora-rtc-sdk-ng';
 
 import { IrisGlobalState } from './IrisGlobalState';
 
 //Record the intermediate status of the client
 export class IrisClientState {
-  //public role: NATIVE_RTC.CLIENT_ROLE_TYPE = NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE;
-
-  _globalState: IrisGlobalState = null;
+  _globalState: IrisGlobalState;
 
   //LeaveChannelOptions
   stopAudioMixing?: boolean = true;
@@ -27,35 +24,35 @@ export class IrisClientState {
 
   publishScreenCaptureVideo?: boolean;
 
-  publishScreenCaptureAudio?: boolean;
+  publishScreenCaptureAudio: boolean = false;
 
-  publishScreenTrack?: boolean;
+  publishScreenTrack: boolean = false;
 
-  publishSecondaryScreenTrack?: boolean;
+  publishSecondaryScreenTrack: boolean = false;
 
-  publishThirdScreenTrack?: boolean;
+  publishThirdScreenTrack: boolean = false;
 
-  publishFourthScreenTrack?: boolean;
+  publishFourthScreenTrack: boolean = false;
 
-  publishCustomAudioTrack?: boolean;
+  publishCustomAudioTrack: boolean = false;
 
   publishCustomAudioTrackId?: number;
 
-  publishCustomVideoTrack?: boolean;
+  publishCustomVideoTrack: boolean = false;
 
-  publishEncodedVideoTrack?: boolean;
+  publishEncodedVideoTrack: boolean = false;
 
-  publishMediaPlayerAudioTrack?: boolean;
+  publishMediaPlayerAudioTrack: boolean = false;
 
-  publishMediaPlayerVideoTrack?: boolean;
+  publishMediaPlayerVideoTrack: boolean = false;
 
-  publishTranscodedVideoTrack?: boolean;
+  publishTranscodedVideoTrack: boolean = false;
 
-  autoSubscribeAudio?: boolean = true;
+  autoSubscribeAudio: boolean = true;
 
-  autoSubscribeVideo?: boolean;
+  autoSubscribeVideo: boolean = false;
 
-  enableAudioRecordingOrPlayout?: boolean;
+  enableAudioRecordingOrPlayout: boolean = false;
 
   publishMediaPlayerId?: number;
 
@@ -96,17 +93,17 @@ export class IrisClientState {
   };
 
   //setClientOptions()
-  public clientRoleOptions?: NATIVE_RTC.ClientRoleOptions = null;
+  public clientRoleOptions: NATIVE_RTC.ClientRoleOptions;
 
   //mute 远端的用户流
-  mutedRemoteAudioStreams: Map<UID, boolean> = new Map<UID, boolean>();
-  mutedRemoteVideoStreams: Map<UID, boolean> = new Map<UID, boolean>();
+  mutedRemoteAudioStreams: Map<number, boolean> = new Map<number, boolean>();
+  mutedRemoteVideoStreams: Map<number, boolean> = new Map<number, boolean>();
 
   videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE =
     NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA;
 
   //SetVideoEncoderConfiguration
-  videoEncoderConfiguration: NATIVE_RTC.VideoEncoderConfiguration = null;
+  videoEncoderConfiguration: NATIVE_RTC.VideoEncoderConfiguration;
 
   //是否开启大小流
   enabledDualStreamMode: boolean = false;
@@ -119,13 +116,14 @@ export class IrisClientState {
   >();
 
   //远端的大小流
-  remoteVideoStreamTypes: Map<UID, NATIVE_RTC.VIDEO_STREAM_TYPE> = new Map<
-    UID,
+  remoteVideoStreamTypes: Map<number, NATIVE_RTC.VIDEO_STREAM_TYPE> = new Map<
+    number,
     NATIVE_RTC.VIDEO_STREAM_TYPE
   >();
 
   //远端默认流
-  remoteDefaultVideoStreamType: NATIVE_RTC.VIDEO_STREAM_TYPE = null;
+  remoteDefaultVideoStreamType: NATIVE_RTC.VIDEO_STREAM_TYPE =
+    NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH;
 
   encryptionConfig: {
     enabled: boolean;
@@ -140,21 +138,21 @@ export class IrisClientState {
     interval: number;
     smooth: number;
     reportVad: boolean;
-  } = null;
+  };
 
   //setPlaybackDevice: audiDevice
-  playbackDeviceId: string = null;
+  playbackDeviceId: string = '';
   //setRecordingDevice: recordingDevice
-  recordingDeviceId: string = null;
+  recordingDeviceId: string = '';
 
   //SetContentInspect
-  contentInspect: NATIVE_RTC.ContentInspectConfig = null;
+  contentInspect?: NATIVE_RTC.ContentInspectConfig;
 
   // startPreviewed 似乎没有用处
   // startPreviewed: boolean = false;
 
   //用来记录暂停或者恢复的
-  currChannelMediaRelayconfiguration: NATIVE_RTC.ChannelMediaRelayConfiguration = null;
+  currChannelMediaRelayConfiguration: NATIVE_RTC.ChannelMediaRelayConfiguration = new NATIVE_RTC.ChannelMediaRelayConfiguration();
 
   constructor(globalState: IrisGlobalState) {
     this._globalState = globalState;

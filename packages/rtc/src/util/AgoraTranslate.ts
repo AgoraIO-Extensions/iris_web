@@ -3,29 +3,22 @@ import {
   AREAS,
   AudienceLatencyLevelType,
   ChannelMediaRelayError,
-  ChannelMediaRelayInfo,
   ClientRole,
   ClientRoleOptions,
   ConnectionDisconnectedReason,
   ConnectionState,
   DeviceState,
   EncryptionMode,
-  IChannelMediaRelayConfiguration,
   InjectStreamConfig,
   InspectConfiguration,
-  LiveStreamingTranscodingConfig,
-  LiveStreamingTranscodingImage,
   LiveStreamingTranscodingUser,
   LowStreamParameter,
   RemoteStreamFallbackType,
   RemoteStreamType,
   SDK_CODEC,
   SDK_MODE,
-  UID,
   VideoEncoderConfiguration,
 } from 'agora-rtc-sdk-ng';
-
-import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import { AgoraConsole } from './AgoraConsole';
 
@@ -126,11 +119,15 @@ export class AgoraTranslate {
         return {
           level: AudienceLatencyLevelType.AUDIENCE_LEVEL_ULTRA_LOW_LATENCY,
         };
+      default:
+        return {
+          level: AudienceLatencyLevelType.AUDIENCE_LEVEL_ULTRA_LOW_LATENCY,
+        };
     }
   }
 
   public static NATIVE_RTC_AUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(
-    level: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE
+    level: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE | undefined
   ): ClientRoleOptions {
     switch (level) {
       case NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE
@@ -141,6 +138,10 @@ export class AgoraTranslate {
         return {
           level: AudienceLatencyLevelType.AUDIENCE_LEVEL_ULTRA_LOW_LATENCY,
         };
+      default:
+        return {
+          level: AudienceLatencyLevelType.AUDIENCE_LEVEL_ULTRA_LOW_LATENCY,
+        };
     }
   }
 
@@ -148,8 +149,8 @@ export class AgoraTranslate {
     conf: NATIVE_RTC.VideoEncoderConfiguration
   ): VideoEncoderConfiguration {
     return {
-      width: conf.dimensions.width,
-      height: conf.dimensions.height,
+      width: conf.dimensions?.width,
+      height: conf.dimensions?.height,
       frameRate: conf.frameRate,
       bitrateMax: conf.bitrate,
       bitrateMin: conf.minBitrate,
@@ -180,9 +181,11 @@ export class AgoraTranslate {
   public static NATIVE_RTCSimulcastStreamConfig2LowStreamParameter(
     config: NATIVE_RTC.SimulcastStreamConfig
   ): LowStreamParameter {
+    let width = config.dimensions ? config.dimensions.width! : 0;
+    let height = config.dimensions ? config.dimensions.height! : 0;
     let ret: LowStreamParameter = {
-      width: config.dimensions.width,
-      height: config.dimensions.height,
+      width: width,
+      height: height,
       framerate: {
         ideal: config.framerate,
       },
@@ -228,6 +231,8 @@ export class AgoraTranslate {
         return 'aes-128-gcm2';
       case NATIVE_RTC.ENCRYPTION_MODE.AES_256_GCM2:
         return 'aes-256-gcm2';
+      default:
+        return 'none';
     }
   }
 
@@ -247,60 +252,37 @@ export class AgoraTranslate {
     return ret;
   }
 
-  public static NATIVE_RTCChannelMediaRelayConfiguration2IChannelMediaRelayConfiguration(
-    config: NATIVE_RTC.ChannelMediaRelayConfiguration,
-    engine: IrisRtcEngine
-  ): IChannelMediaRelayConfiguration {
-    let ret: IChannelMediaRelayConfiguration = engine.globalState.AgoraRTC.createChannelMediaRelayConfiguration();
-    ret.addDestChannelInfo(
-      AgoraTranslate.NATIVE_RTCChannelMediaInfo2ChannelMediaRelayInfo(
-        config.srcInfo
-      )
-    );
-    for (let i = 0; i < config.destInfos.length; i++) {
-      ret.addDestChannelInfo(
-        AgoraTranslate.NATIVE_RTCChannelMediaInfo2ChannelMediaRelayInfo(
-          config.destInfos[i]
-        )
-      );
-    }
-    return ret;
-  }
-
-  public static NATIVE_RTCChannelMediaInfo2ChannelMediaRelayInfo(
-    info: NATIVE_RTC.ChannelMediaInfo
-  ): ChannelMediaRelayInfo {
-    let ret: ChannelMediaRelayInfo = {
-      channelName: info.channelName,
-      token: info.token,
-      uid: info.uid,
-    };
-    return ret;
-  }
-
   public static NATIVE_RTCContentInspectConfig2InspectConfiguration(
     config: NATIVE_RTC.ContentInspectConfig
   ): InspectConfiguration {
+    let defaultInterval = 1;
     let ret: InspectConfiguration = {
-      interval: 1,
+      interval: defaultInterval,
       extraInfo: config.extraInfo,
       inspectType: [],
     };
 
-    let module: NATIVE_RTC.ContentInspectModule = config.modules[0];
-    ret.interval = module.interval;
+    let module: NATIVE_RTC.ContentInspectModule = config.modules
+      ? config.modules[0]
+      : {
+          type: NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_MODERATION,
+          interval: defaultInterval,
+        };
+    ret.interval = module.interval ?? defaultInterval;
     switch (module.type) {
       case NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_INVALID:
         break;
       case NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_MODERATION:
-        ret.inspectType.push('moderation');
+        ret.inspectType!.push('moderation');
         break;
       case NATIVE_RTC.CONTENT_INSPECT_TYPE.CONTENT_INSPECT_SUPERVISION:
-        ret.inspectType.push('supervise');
+        ret.inspectType!.push('supervise');
         break;
     }
     //web这里的单位是毫秒， 而native传入的间隔是秒
-    ret.interval = module.interval * 1000;
+    ret.interval = module.interval
+      ? module.interval * 1000
+      : defaultInterval * 1000;
 
     return ret;
   }
@@ -384,76 +366,19 @@ export class AgoraTranslate {
     }
   }
 
-  public static NATIVE_RTCRtcImage2LiveStreamingTranscodingImage(
-    image: NATIVE_RTC.RtcImage
-  ): LiveStreamingTranscodingImage {
-    let ret: LiveStreamingTranscodingImage = {
-      url: image.url,
-      x: image.x,
-      y: image.y,
-      width: image.width,
-      height: image.height,
-      alpha: image.alpha,
-    };
-    return ret;
-  }
-
   public static NATIVE_RTCTranscodingUser2LiveStreamingTranscodingUser(
     user: NATIVE_RTC.TranscodingUser
   ): LiveStreamingTranscodingUser {
     let ret: LiveStreamingTranscodingUser = {
       alpha: user.alpha,
       height: user.height,
-      uid: user.uid as UID,
+      uid: user.uid as number,
       width: user.width,
       x: user.x,
       y: user.y,
       zOrder: user.zOrder,
       audioChannel: user.audioChannel,
     };
-    return ret;
-  }
-
-  public static NATIVE_RTCLiveTranscoding2LiveStreamingTranscodingConfig(
-    config: NATIVE_RTC.LiveTranscoding
-  ): LiveStreamingTranscodingConfig {
-    let ret: LiveStreamingTranscodingConfig = {
-      audioBitrate: config.audioBitrate,
-      audioChannels: config.audioChannels as 1 | 2 | 3 | 4 | 5,
-      audioSampleRate: config.audioSampleRate as 32000 | 44100 | 48000,
-      backgroundColor: config.backgroundColor,
-      height: config.height,
-      width: config.width,
-      lowLatency: config.lowLatency,
-      videoBitrate: config.videoBitrate,
-      videoCodecProfile: config.videoCodecProfile as 66 | 77 | 100,
-      videoFrameRate: config.videoFramerate,
-      videoGop: config.videoGop,
-      userConfigExtraInfo: config.transcodingExtraInfo,
-    };
-
-    if (config.watermarkCount >= 1) {
-      ret.watermark = AgoraTranslate.NATIVE_RTCRtcImage2LiveStreamingTranscodingImage(
-        config.watermark[0]
-      );
-    }
-    if (config.backgroundImageCount >= 1) {
-      ret.backgroundImage = AgoraTranslate.NATIVE_RTCRtcImage2LiveStreamingTranscodingImage(
-        config.backgroundImage[0]
-      );
-    }
-
-    ret.transcodingUsers = [];
-    if (config.userCount > 0) {
-      for (let i = 0; i < config.userCount; i++) {
-        ret.transcodingUsers.push(
-          AgoraTranslate.NATIVE_RTCTranscodingUser2LiveStreamingTranscodingUser(
-            config.transcodingUsers[i]
-          )
-        );
-      }
-    }
-
     return ret;
   }
 
@@ -537,6 +462,9 @@ export class AgoraTranslate {
       case ConnectionDisconnectedReason.FALLBACK:
         return NATIVE_RTC.CONNECTION_CHANGED_REASON_TYPE
           .CONNECTION_CHANGED_INTERRUPTED;
+      default:
+        return NATIVE_RTC.CONNECTION_CHANGED_REASON_TYPE
+          .CONNECTION_CHANGED_INTERRUPTED;
     }
   }
 
@@ -575,7 +503,7 @@ export class AgoraTranslate {
 
   public static volumeIndicatorResult2NATIVE_RTCAudioVolumeInfo(result: {
     level: number;
-    uid: UID;
+    uid: number;
   }): NATIVE_RTC.AudioVolumeInfo {
     //level范围是[0,100], volume范围是 0 - 255， 要做一下转换
     let audioVolumInfo: NATIVE_RTC.AudioVolumeInfo = {

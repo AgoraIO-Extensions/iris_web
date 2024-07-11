@@ -11,7 +11,7 @@ import { AgoraConsole } from '../util/AgoraConsole';
 export class IMediaEngineDispatch implements IMediaEngine {
   // @ts-ignore
   _impl: IMediaEngineImpl;
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._impl = new IMediaEngineImpl(engine);

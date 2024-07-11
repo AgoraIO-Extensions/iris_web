@@ -1,5 +1,10 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { ICameraVideoTrack, ILocalTrack, ITrack } from 'agora-rtc-sdk-ng';
+import {
+  ICameraVideoTrack,
+  ILocalTrack,
+  IRemoteAudioTrack,
+  ITrack,
+} from 'agora-rtc-sdk-ng';
 import { CallIrisApiResult } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -12,7 +17,10 @@ export class TrackHelper {
     this._engine = engine;
   }
 
-  public play(track: ITrack, element?: string): void {
+  public play(
+    track: ITrack | IRemoteAudioTrack,
+    element?: string | HTMLElement
+  ): void {
     try {
       track?.play(element);
     } catch (e) {

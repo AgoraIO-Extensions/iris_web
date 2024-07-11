@@ -8,7 +8,7 @@ import { AgoraConsole } from '../util/AgoraConsole';
 
 export class ILocalSpatialAudioEngineDispatch
   implements ILocalSpatialAudioEngine {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;

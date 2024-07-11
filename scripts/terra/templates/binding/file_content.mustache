@@ -7,7 +7,7 @@ import { AgoraConsole } from '../util/AgoraConsole';
 {{#user_data.isCallback}}
 export class {{name}} {{#base_clazzs}}extends {{.}}{{/base_clazzs}}{
 
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
       {{#user_data.hasBaseClazzs}}
@@ -60,7 +60,7 @@ export class {{name}}Dispatch {{#base_clazzs}}extends {{.}}Dispatch{{/base_clazz
     // @ts-ignore
     _impl: {{name}}Impl;
     {{/user_data.hasSupportApi}}
-    _engine: IrisRtcEngine = null;
+    _engine: IrisRtcEngine;
     
     constructor(engine: IrisRtcEngine) {
       {{#user_data.hasBaseClazzs}}

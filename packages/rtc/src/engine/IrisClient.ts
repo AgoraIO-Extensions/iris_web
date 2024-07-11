@@ -22,13 +22,13 @@ import { IrisRtcEngine } from './IrisRtcEngine';
 
 export class IrisClient {
   id: string;
-  agoraRTCClient: IAgoraRTCClient;
+  agoraRTCClient?: IAgoraRTCClient;
   _engine: IrisRtcEngine;
   irisClientState: IrisClientState;
   clientEventHandler: IrisClientEventHandler;
 
   audioTrackPackages: Array<AudioTrackPackage> = new Array<AudioTrackPackage>();
-  videoTrackPackage: VideoTrackPackage;
+  videoTrackPackage?: VideoTrackPackage;
 
   connection: NATIVE_RTC.RtcConnection;
 
@@ -49,12 +49,11 @@ export class IrisClient {
   setClientConfig(): ClientConfig {
     let irisClientState = this.irisClientState;
     let config: ClientConfig = {
-      codec:
-        irisClientState.videoEncoderConfiguration != null
-          ? AgoraTranslate.NATIVE_RTCVIDEO_CODEC_TYPE2SDK_CODEC(
-              irisClientState.videoEncoderConfiguration.codecType
-            )
-          : 'vp8',
+      codec: irisClientState.videoEncoderConfiguration?.codecType
+        ? AgoraTranslate.NATIVE_RTCVIDEO_CODEC_TYPE2SDK_CODEC(
+            irisClientState.videoEncoderConfiguration.codecType
+          )
+        : 'vp8',
       mode: irisClientState.channelProfile
         ? AgoraTranslate.NATIVE_RTC_CHANNEL_PROFILE_TYPE2SDK_MODE(
             irisClientState.channelProfile
@@ -94,7 +93,7 @@ export class IrisClient {
     );
 
     //设置远端默认是 大流还是小流
-    if (irisClientState.remoteDefaultVideoStreamType != null) {
+    if (irisClientState.remoteDefaultVideoStreamType !== 0) {
       this.agoraRTCClient
         .setRemoteDefaultVideoStreamType(
           AgoraTranslate.NATIVE_RTCVIDEO_STREAM_TYPE2RemoteStreamType(
@@ -131,21 +130,21 @@ export class IrisClient {
     }
 
     //如果当前轨道被特别指定了，那么就设置一下
-    if (irisClientState.enabledDualStreamModes.has(videoSourceType)) {
-      let steamMode = irisClientState.enabledDualStreamModes.get(
-        videoSourceType
+    if (irisClientState.enabledDualStreamModes.has(videoSourceType!)) {
+      let streamMode = irisClientState.enabledDualStreamModes.get(
+        videoSourceType!
       );
-      if (steamMode.enabled) {
+      if (streamMode?.enabled) {
         this.agoraRTCClient
           .enableDualStream()
           .then(() => {})
           .catch(() => {})
           .finally(() => {});
 
-        if (steamMode.streamConfig != null) {
+        if (streamMode.streamConfig != null) {
           this.agoraRTCClient.setLowStreamParameter(
             AgoraTranslate.NATIVE_RTCSimulcastStreamConfig2LowStreamParameter(
-              steamMode.streamConfig
+              streamMode.streamConfig
             )
           );
         }
@@ -169,7 +168,6 @@ export class IrisClient {
     //设置是否报告说话的人
     if (irisClientState.enabledAudioVolumeIndication) {
       this.agoraRTCClient.enableAudioVolumeIndicator();
-      irisClientState.enabledAudioVolumeIndication = null;
     }
 
     //是否开启了加密
@@ -177,12 +175,14 @@ export class IrisClient {
       let encryptionConfig: NATIVE_RTC.EncryptionConfig =
         irisClientState.encryptionConfig.config;
       let encryptionMode: EncryptionMode = AgoraTranslate.NATIVE_RTCENCRYPTION_MODE2EncryptionMode(
-        encryptionConfig.encryptionMode
+        encryptionConfig.encryptionMode!
       );
-      let salt: Uint8Array = new Uint8Array(encryptionConfig.encryptionKdfSalt);
+      let salt: Uint8Array = new Uint8Array(
+        encryptionConfig.encryptionKdfSalt!
+      );
       this.agoraRTCClient.setEncryptionConfig(
         encryptionMode,
-        encryptionConfig.encryptionKey,
+        encryptionConfig.encryptionKey!,
         salt
       );
       //加密只有一次生效
@@ -237,7 +237,8 @@ export class IrisClient {
   }
 
   clearLocalVideoTrack() {
-    this.videoTrackPackage = null;
+    this.videoTrackPackage?.dispose();
+    this.videoTrackPackage = undefined;
   }
 
   async release() {
@@ -256,8 +257,8 @@ export class IrisClient {
     }
 
     this.audioTrackPackages = [];
-    this.videoTrackPackage = null;
-    this.agoraRTCClient = null;
+    this.videoTrackPackage = undefined;
+    this.agoraRTCClient = undefined;
     for (
       let i = 0;
       i < this._engine.irisClientManager.remoteUserPackages.length;
@@ -276,7 +277,6 @@ export class IrisClient {
         i--;
       }
     }
-    this.connection = null;
     //不删除通过engine.initialize创建的client
     if (this._engine.irisClientManager.irisClientList[0]?.id !== this.id) {
       this._engine.irisClientManager.irisClientList = this._engine.irisClientManager.irisClientList.filter(
