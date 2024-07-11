@@ -549,16 +549,14 @@ export class IrisClientManager {
 
   async processBufferSourceAudioTrackClose(
     bufferSourceAudioTrackPackage: BufferSourceAudioTrackPackage,
-    agoraRTCClient: IAgoraRTCClient
+    agoraRTCClient?: IAgoraRTCClient
   ) {
     let track = bufferSourceAudioTrackPackage.track;
     if (
-      agoraRTCClient &&
-      agoraRTCClient.localTracks &&
-      agoraRTCClient.localTracks.indexOf(track) != -1
+      agoraRTCClient?.localTracks?.indexOf(track) != -1
     ) {
       try {
-        await agoraRTCClient.unpublish(track);
+        await agoraRTCClient?.unpublish(track);
         AgoraConsole.log('unpublish success');
       } catch (e) {
         this._engine.returnResult(false);
@@ -575,15 +573,14 @@ export class IrisClientManager {
 
   async processAudioTrackClose(
     audioTrackPackage: AudioTrackPackage,
-    agoraRTCClient: IAgoraRTCClient
+    agoraRTCClient?: IAgoraRTCClient
   ) {
     let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
     if (
-      agoraRTCClient.localTracks &&
-      agoraRTCClient.localTracks.indexOf(audioTrack) != -1
+      agoraRTCClient?.localTracks?.indexOf(audioTrack) != -1
     ) {
       try {
-        await agoraRTCClient.unpublish(audioTrack);
+        await agoraRTCClient?.unpublish(audioTrack);
         AgoraConsole.log('unpublish success');
       } catch (e) {
         this._engine.returnResult(false);
@@ -602,15 +599,14 @@ export class IrisClientManager {
 
   async processVideoTrackClose(
     videoTrackPackage: VideoTrackPackage,
-    agoraRTCClient: IAgoraRTCClient
+    agoraRTCClient?: IAgoraRTCClient
   ) {
     let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
     if (
-      agoraRTCClient.localTracks &&
-      agoraRTCClient.localTracks.indexOf(videoTrack) != -1
+      agoraRTCClient?.localTracks?.indexOf(videoTrack) != -1
     ) {
       try {
-        await agoraRTCClient.unpublish(videoTrack);
+        await agoraRTCClient?.unpublish(videoTrack);
         AgoraConsole.log('unpublish success');
       } catch (e) {
         this._engine.returnResult(false);

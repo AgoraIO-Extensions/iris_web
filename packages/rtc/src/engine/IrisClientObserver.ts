@@ -254,9 +254,6 @@ export class IrisClientObserver {
         irisClient = irisClientManager.irisClientList[0];
       }
       let agoraRTCClient = irisClient.agoraRTCClient;
-      if (!agoraRTCClient) {
-        return;
-      }
       if (this._engine.implHelper.isAudio(trackPackage.type!)) {
         await irisClientManager.processAudioTrackClose(
           trackPackage as AudioTrackPackage,
@@ -303,7 +300,6 @@ export class IrisClientObserver {
           trackPackage as VideoTrackPackage
         );
         irisClient.clearLocalVideoTrack();
-      } else {
       }
     } catch (reason) {
       AgoraConsole.error(reason);
