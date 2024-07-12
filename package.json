@@ -29,11 +29,14 @@
     }
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^17.6.7",
     "@release-it/conventional-changelog": "^7.0.1",
     "@types/eslint": "^8.44.2",
     "@types/node": "^18.17.9",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "commitlint": "^17.6.7",
+    "cross-env": "^7.0.3",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-auto-import": "^0.1.1",
@@ -43,6 +46,7 @@
     "husky": "^8.0.3",
     "prettier": "^2.0.5",
     "release-it": "^16.1.3",
+    "lint-staged": "^14.0.0",
     "tsup": "^7.1.0"
   },
   "husky": {
@@ -50,6 +54,25 @@
       "pre-commit": "npm run lint",
       "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS"
     }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "cross-env NODE_ENV=development eslint --cache"
+    ],
+    "*.json,.{eslintrc,prettierrc}": [
+      "prettier --ignore-path .eslintignore --parser json --write"
+    ],
+    "*.{css,scss}": [
+      "prettier --ignore-path .eslintignore --write"
+    ],
+    "*.{html,md,mdx,yml}": [
+      "prettier --ignore-path .eslintignore --write"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "release-it": {
     "git": {
