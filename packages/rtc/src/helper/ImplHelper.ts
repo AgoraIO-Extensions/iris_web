@@ -11,9 +11,9 @@ import {
   UID,
 } from 'agora-rtc-sdk-ng';
 
-import { IrisAudioSourceType } from '../base/BaseType';
 import { IrisClient } from '../engine/IrisClient';
 
+import { IrisAudioSourceType } from '../base/BaseType';
 import {
   AudioTrackPackage,
   BufferSourceAudioTrackPackage,
