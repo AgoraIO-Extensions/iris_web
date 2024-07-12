@@ -448,7 +448,7 @@ export class ImplHelper {
         userAccount: uid as string,
       });
     }
-    irisClient.setConnection(con);
+    irisClient.connection = con;
     this._engine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd(con, 0);
     await this._engine.irisClientManager.irisClientObserver.notifyLocal(
       NotifyType.PUBLISH_TRACK,

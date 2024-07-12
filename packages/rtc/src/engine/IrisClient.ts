@@ -22,6 +22,7 @@ import { IrisRtcEngine } from './IrisRtcEngine';
 
 export class IrisClient {
   id: string;
+  //agoraRTCClient only exist after joinChannel
   agoraRTCClient?: IAgoraRTCClient;
   _engine: IrisRtcEngine;
   irisClientState: IrisClientState;
@@ -37,13 +38,14 @@ export class IrisClient {
     this.irisClientState = new IrisClientState(this._engine.globalState);
     if (connection) {
       this.connection = connection;
+    } else {
+      this.connection = {
+        channelId: '',
+        localUid: 0,
+      };
     }
     this.id = `irisClient_${Math.floor(Math.random() * new Date().getTime())}`;
     this._engine.irisClientManager.irisClientList.push(this);
-  }
-
-  setConnection(connection: NATIVE_RTC.RtcConnection) {
-    this.connection = connection;
   }
 
   setClientConfig(): ClientConfig {
@@ -256,9 +258,6 @@ export class IrisClient {
       }
     }
 
-    this.audioTrackPackages = [];
-    this.videoTrackPackage = undefined;
-    this.agoraRTCClient = undefined;
     for (
       let i = 0;
       i < this._engine.irisClientManager.remoteUserPackages.length;
@@ -283,5 +282,12 @@ export class IrisClient {
         (item) => item.id != this.id
       );
     }
+    this.audioTrackPackages = [];
+    this.connection = {
+      channelId: '',
+      localUid: 0,
+    };
+    this.videoTrackPackage = undefined;
+    this.agoraRTCClient = undefined;
   }
 }

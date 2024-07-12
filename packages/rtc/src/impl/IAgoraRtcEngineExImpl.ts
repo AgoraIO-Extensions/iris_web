@@ -28,7 +28,8 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
     let processJoinChannel = async (): Promise<CallIrisApiResult> => {
-      let irisClient = new IrisClient(this._engine, connection);
+      let irisClient = new IrisClient(this._engine);
+      irisClient.connection = connection;
       irisClient.createClient(options);
       irisClient.irisClientState.token = token;
       let agoraRTCClient = irisClient.agoraRTCClient;

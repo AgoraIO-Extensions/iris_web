@@ -114,6 +114,8 @@ describe('IAgoraRtcEngineImpl', () => {
       leaveParam
     );
     expect(irisClient.agoraRTCClient).toBeUndefined();
+    expect(irisClient.videoTrackPackage).toBeUndefined();
+    expect(irisClient.audioTrackPackages.length).toBe(0);
   });
   test('updateChannelMediaOptionsEx_457bb35', async () => {
     let param = {
