@@ -55,6 +55,7 @@
   "RtcEngineEx_muteLocalAudioStreamEx_3cf17a4",
   "RtcEngineEx_muteRemoteVideoStreamEx_6d93082",
   "RtcEngineEx_muteRemoteAudioStreamEx_6d93082",
+  "RtcEngineEx_leaveChannelEx_b03ee9a",
   "RtcEngineEx_leaveChannelEx_c81e1a4",
   "RtcEngineEx_updateChannelMediaOptionsEx_457bb35",
   "RtcEngineEx_setupRemoteVideoEx_522a409",

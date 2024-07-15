@@ -6,11 +6,6 @@ import { IrisGlobalState } from './IrisGlobalState';
 export class IrisClientState {
   _globalState: IrisGlobalState;
 
-  //LeaveChannelOptions
-  stopAudioMixing?: boolean = true;
-  stopAllEffect?: boolean = true;
-  stopMicrophoneRecording?: boolean = true;
-
   //ChannelMediaOptions
   publishCameraTrack?: boolean = true;
 
@@ -164,9 +159,7 @@ export class IrisClientState {
     }
   }
 
-  mergeChannelMediaOptions(
-    options: NATIVE_RTC.ChannelMediaOptions | NATIVE_RTC.LeaveChannelOptions
-  ) {
+  mergeChannelMediaOptions(options: NATIVE_RTC.ChannelMediaOptions) {
     for (let key in options) {
       this[key] = options[key];
     }

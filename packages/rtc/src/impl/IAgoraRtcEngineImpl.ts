@@ -13,6 +13,7 @@ import {
 } from 'iris-web-core';
 
 import { IrisAudioSourceType } from '../base/BaseType';
+import { defaultLeaveChannelOptions } from '../base/DefaultValue';
 import { IrisClient } from '../engine/IrisClient';
 import {
   BufferSourceAudioTrackPackage,
@@ -135,19 +136,12 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processFunc);
   }
   leaveChannel(): CallApiReturnType {
-    let options: NATIVE_RTC.LeaveChannelOptions = {
-      stopAudioMixing: true,
-      stopAllEffect: true,
-      stopMicrophoneRecording: true,
-    };
-    return this.leaveChannel_2c0e3aa(options);
+    return this.leaveChannel_2c0e3aa(defaultLeaveChannelOptions);
   }
   leaveChannel_2c0e3aa(
     options: NATIVE_RTC.LeaveChannelOptions
   ): CallApiReturnType {
     let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
-      //离开频道后重置参数
-      // this._engine.globalState.reset();
       if (this._engine.irisClientManager.irisClientList.length === 0) {
         return this._engine.returnResult();
       }
@@ -161,9 +155,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       );
 
       for (let irisClient of this._engine.irisClientManager.irisClientList) {
-        irisClient.irisClientState.mergeChannelMediaOptions(options);
         let agoraRTCClient = irisClient.agoraRTCClient;
-        options = irisClient.irisClientState;
 
         if (agoraRTCClient) {
           //读取 options
@@ -173,14 +165,14 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               if (options.stopMicrophoneRecording) {
                 await this._engine.trackHelper.setMuted(track, true);
               }
-              if (options.stopAllEffect) {
-                this.stopAllEffects();
-                //todo effect
-              }
-              if (options.stopAudioMixing) {
-                //todo audio Mixing
-              }
             }
+          }
+          if (options.stopAllEffect) {
+            this.stopAllEffects();
+            //todo effect
+          }
+          if (options.stopAudioMixing) {
+            //todo audio Mixing
           }
 
           //为了防止离开频道后丢失了channelName和uid，所以需要先保存一下

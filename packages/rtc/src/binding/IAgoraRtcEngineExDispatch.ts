@@ -57,10 +57,19 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   leaveChannelEx_b03ee9a(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_leaveChannelEx_b03ee9a not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+    let options = obj.options;
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
+
+    return this._impl.leaveChannelEx_b03ee9a(connection, options);
   }
 
   // @ts-ignore

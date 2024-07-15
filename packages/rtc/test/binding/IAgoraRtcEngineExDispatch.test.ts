@@ -188,9 +188,55 @@ describe('IRtcEngineEx', () => {
     ).toBeCalledWith('test');
   });
 
+  test('RtcEngineEx_leaveChannelEx_b03ee9a parameter', async () => {
+    let nParam = {
+      connection: undefined,
+      options: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_leaveChannelEx_b03ee9a',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    //@ts-ignore
+    nParam.connection = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_leaveChannelEx_b03ee9a',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('options is undefined');
+    }
+    //@ts-ignore
+    nParam.options = 'test';
+  });
+
   test('RtcEngineEx_leaveChannelEx_b03ee9a impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl,
+        'leaveChannelEx_b03ee9a'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       connection: 'test',
@@ -208,13 +254,12 @@ describe('IRtcEngineEx', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
-        ?.leaveChannelEx_b03ee9a
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .leaveChannelEx_b03ee9a
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
+        .leaveChannelEx_b03ee9a
+    ).toBeCalledWith('test', 'test');
   });
 
   test('RtcEngineEx_updateChannelMediaOptionsEx_457bb35 parameter', async () => {

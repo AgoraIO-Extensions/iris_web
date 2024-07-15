@@ -9,6 +9,7 @@ import { IrisApiEngine, IrisCore } from 'iris-web-core';
 
 import { IrisWebRtc } from '../../src/IrisRtcApi';
 import { IrisAudioSourceType } from '../../src/base/BaseType';
+import { defaultLeaveChannelOptions } from '../../src/base/DefaultValue';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
@@ -88,6 +89,20 @@ describe('IAgoraRtcEngineImpl', () => {
     ).toBeCalledTimes(1);
   });
   test('leaveChannelEx_c81e1a4', async () => {
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    let connection = await joinChannelEx(apiEnginePtr);
+    jest.spyOn(rtcEngineExImpl, 'leaveChannelEx_b03ee9a');
+    let leaveParam = {
+      connection: connection,
+    };
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_leaveChannelEx_c81e1a4',
+      leaveParam
+    );
+    expect(rtcEngineExImpl.leaveChannelEx_b03ee9a).toBeCalled();
+  });
+  test('leaveChannelEx_b03ee9a', async () => {
     let param = {
       token: '1234',
       connection: {
@@ -107,13 +122,15 @@ describe('IAgoraRtcEngineImpl', () => {
     jest.spyOn(irisClient.agoraRTCClient!, 'leave');
     let leaveParam = {
       connection: param.connection,
+      options: defaultLeaveChannelOptions,
     };
     await callIris(
       apiEnginePtr,
-      'RtcEngineEx_leaveChannelEx_c81e1a4',
+      'RtcEngineEx_leaveChannelEx_b03ee9a',
       leaveParam
     );
     expect(irisClient.agoraRTCClient).toBeUndefined();
+    expect(irisRtcEngine.irisClientManager.remoteUserPackages.length).toBe(0);
     expect(irisClient.videoTrackPackage).toBeUndefined();
     expect(irisClient.audioTrackPackages.length).toBe(0);
   });
@@ -169,12 +186,16 @@ describe('IAgoraRtcEngineImpl', () => {
         clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
       },
     };
-    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_a3cd08c', param);
+    let connection = await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_joinChannelEx_a3cd08c',
+      param
+    );
     let param2 = {
       canvas: {
         uid: TEST_REMOTE_UID,
         view: 'test-view',
-        sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
+        sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
       },
       connection: param.connection,
     };

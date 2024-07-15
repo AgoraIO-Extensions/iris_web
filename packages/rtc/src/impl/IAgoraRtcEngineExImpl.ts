@@ -1,8 +1,10 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
+import { IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
 import { IrisAudioSourceType } from '../base/BaseType';
 
+import { defaultLeaveChannelOptions } from '../base/DefaultValue';
 import { IrisClient } from '../engine/IrisClient';
 import { RemoteUserPackage } from '../engine/IrisClientManager';
 
@@ -71,6 +73,17 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
+      this.leaveChannelEx_b03ee9a(connection, defaultLeaveChannelOptions);
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(processFunc);
+  }
+
+  leaveChannelEx_b03ee9a(
+    connection: NATIVE_RTC.RtcConnection,
+    options: NATIVE_RTC.LeaveChannelOptions
+  ): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
       if (this._engine.irisClientManager.irisClientList.length === 0) {
         return this._engine.returnResult();
       }
@@ -89,6 +102,21 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
       let agoraRTCClient = irisClient?.agoraRTCClient;
       if (agoraRTCClient) {
+        //读取 options
+        for (let trackPackage of irisClient.audioTrackPackages) {
+          if (trackPackage.track) {
+            let track = trackPackage.track as IMicrophoneAudioTrack;
+            if (options.stopMicrophoneRecording) {
+              await this._engine.trackHelper.setMuted(track, true);
+            }
+          }
+        }
+        if (options.stopAllEffect) {
+          this._engine.getImplInstance('RtcEngine').stopAllEffects();
+        }
+        if (options.stopAudioMixing) {
+          //todo audio Mixing
+        }
         try {
           await this._engine.clientHelper.leave(agoraRTCClient);
         } catch (e) {
@@ -105,11 +133,11 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         );
         irisClient.release();
       }
-
       return this._engine.returnResult();
     };
     return this._engine.execute(processFunc);
   }
+
   updateChannelMediaOptionsEx_457bb35(
     options: NATIVE_RTC.ChannelMediaOptions,
     connection: NATIVE_RTC.RtcConnection

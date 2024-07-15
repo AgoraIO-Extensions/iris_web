@@ -181,6 +181,10 @@ export class IrisRtcEngine implements ApiInterceptor {
     }
   }
 
+  public getImplInstance(className: string): any {
+    return this.implDispatchesMap.get(className)?._impl;
+  }
+
   public getVideoFrame(uid: number, channel_id: string): VideoParams {
     return this.irisClientManager.getVideoFrame(uid, channel_id);
   }
