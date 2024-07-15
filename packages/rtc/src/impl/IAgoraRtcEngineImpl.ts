@@ -119,7 +119,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
     let processJoinChannel = async (): Promise<CallIrisApiResult> => {
-      this._engine.implHelper.joinChannel(token, channelId, uid, options);
+      await this._engine.implHelper.joinChannel(token, channelId, uid, options);
       return this._engine.returnResult();
     };
 

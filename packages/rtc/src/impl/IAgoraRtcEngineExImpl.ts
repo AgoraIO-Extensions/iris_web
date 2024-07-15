@@ -72,11 +72,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   leaveChannelEx_c81e1a4(
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
-    let processFunc = async (): Promise<CallIrisApiResult> => {
-      this.leaveChannelEx_b03ee9a(connection, defaultLeaveChannelOptions);
-      return this._engine.returnResult();
-    };
-    return this._engine.execute(processFunc);
+    return this.leaveChannelEx_b03ee9a(connection, defaultLeaveChannelOptions);
   }
 
   leaveChannelEx_b03ee9a(
@@ -131,7 +127,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           connection,
           new NATIVE_RTC.RtcStats()
         );
-        irisClient.release();
+        await irisClient.release();
       }
       return this._engine.returnResult();
     };
