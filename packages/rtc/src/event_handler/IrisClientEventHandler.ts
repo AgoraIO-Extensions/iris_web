@@ -301,169 +301,96 @@ export class IrisClientEventHandler {
       | 'unmute-video'
       | 'disable-local-video'
   ): void {
-    let _uid = uid as number;
+    uid = this._engine.irisClientManager.getUserInfoByUid(uid)?.uid!;
     switch (msg) {
       case 'mute-audio':
         this._engine.rtcEngineEventHandler.onUserMuteAudio_0aac2fe(
           this._irisClient.connection,
-          _uid,
+          uid,
           true
         );
         this._engine.rtcEngineEventHandler.onUserStateChanged_65f95a7(
           this._irisClient.connection,
-          _uid,
+          uid,
           NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_AUDIO
+        );
+        this._engine.rtcEngineEventHandler.onRemoteAudioStateChanged_056772e(
+          this._irisClient.connection,
+          uid,
+          NATIVE_RTC.REMOTE_AUDIO_STATE.REMOTE_AUDIO_STATE_STOPPED,
+          NATIVE_RTC.REMOTE_AUDIO_STATE_REASON.REMOTE_AUDIO_REASON_REMOTE_MUTED,
+          0
         );
         break;
       case 'mute-video':
         this._engine.rtcEngineEventHandler.onUserMuteVideo_0aac2fe(
           this._irisClient.connection,
-          _uid,
+          uid,
           true
         );
         this._engine.rtcEngineEventHandler.onUserStateChanged_65f95a7(
           this._irisClient.connection,
-          _uid,
+          uid,
           NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_VIDEO
+        );
+        this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
+          this._irisClient.connection,
+          uid,
+          NATIVE_RTC.REMOTE_VIDEO_STATE.REMOTE_VIDEO_STATE_STOPPED,
+          NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
+            .REMOTE_VIDEO_STATE_REASON_REMOTE_MUTED,
+          0
         );
         break;
       case 'unmute-audio':
         this._engine.rtcEngineEventHandler.onUserMuteAudio_0aac2fe(
           this._irisClient.connection,
-          _uid,
+          uid,
           false
+        );
+        this._engine.rtcEngineEventHandler.onRemoteAudioStateChanged_056772e(
+          this._irisClient.connection,
+          uid,
+          NATIVE_RTC.REMOTE_AUDIO_STATE.REMOTE_AUDIO_STATE_STARTING,
+          NATIVE_RTC.REMOTE_AUDIO_STATE_REASON
+            .REMOTE_AUDIO_REASON_REMOTE_UNMUTED,
+          0
         );
         break;
       case 'unmute-video':
         this._engine.rtcEngineEventHandler.onUserMuteVideo_0aac2fe(
           this._irisClient.connection,
-          _uid,
+          uid,
           false
+        );
+        this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
+          this._irisClient.connection,
+          uid,
+          NATIVE_RTC.REMOTE_VIDEO_STATE.REMOTE_VIDEO_STATE_STARTING,
+          NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
+            .REMOTE_VIDEO_STATE_REASON_REMOTE_UNMUTED,
+          0
         );
         break;
       case 'enable-local-video':
         this._engine.rtcEngineEventHandler.onUserEnableLocalVideo_0aac2fe(
           this._irisClient.connection,
-          _uid,
+          uid,
           true
         );
         this._engine.rtcEngineEventHandler.onUserStateChanged_65f95a7(
           this._irisClient.connection,
-          _uid,
+          uid,
           NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_ENABLE_LOCAL_VIDEO
         );
         break;
       case 'disable-local-video':
         this._engine.rtcEngineEventHandler.onUserEnableLocalVideo_0aac2fe(
           this._irisClient.connection,
-          _uid,
+          uid,
           false
         );
         break;
-    }
-    if (uid === this.agoraRTCClient.uid) {
-      switch (msg) {
-        case 'mute-audio':
-          this._engine.rtcEngineEventHandler.onUserMuteAudio_0aac2fe(
-            this._irisClient.connection,
-            _uid,
-            true
-          );
-          this._engine.rtcEngineEventHandler.onUserStateChanged_65f95a7(
-            this._irisClient.connection,
-            _uid,
-            NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_AUDIO
-          );
-          break;
-        case 'mute-video':
-          this._engine.rtcEngineEventHandler.onUserMuteVideo_0aac2fe(
-            this._irisClient.connection,
-            _uid,
-            true
-          );
-          this._engine.rtcEngineEventHandler.onUserStateChanged_65f95a7(
-            this._irisClient.connection,
-            _uid,
-            NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_VIDEO
-          );
-          break;
-        case 'unmute-audio':
-          this._engine.rtcEngineEventHandler.onUserMuteAudio_0aac2fe(
-            this._irisClient.connection,
-            _uid,
-            false
-          );
-          break;
-        case 'unmute-video':
-          this._engine.rtcEngineEventHandler.onUserMuteVideo_0aac2fe(
-            this._irisClient.connection,
-            _uid,
-            false
-          );
-          break;
-        case 'enable-local-video':
-          this._engine.rtcEngineEventHandler.onUserEnableLocalVideo_0aac2fe(
-            this._irisClient.connection,
-            _uid,
-            true
-          );
-          this._engine.rtcEngineEventHandler.onUserStateChanged_65f95a7(
-            this._irisClient.connection,
-            _uid,
-            NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_ENABLE_LOCAL_VIDEO
-          );
-          break;
-        case 'disable-local-video':
-          this._engine.rtcEngineEventHandler.onUserEnableLocalVideo_0aac2fe(
-            this._irisClient.connection,
-            _uid,
-            false
-          );
-          break;
-      }
-    } else {
-      switch (msg) {
-        case 'mute-audio':
-          this._engine.rtcEngineEventHandler.onRemoteAudioStateChanged_056772e(
-            this._irisClient.connection,
-            _uid,
-            NATIVE_RTC.REMOTE_AUDIO_STATE.REMOTE_AUDIO_STATE_STOPPED,
-            NATIVE_RTC.REMOTE_AUDIO_STATE_REASON
-              .REMOTE_AUDIO_REASON_REMOTE_MUTED,
-            0
-          );
-          break;
-        case 'mute-video':
-          this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
-            this._irisClient.connection,
-            _uid,
-            NATIVE_RTC.REMOTE_VIDEO_STATE.REMOTE_VIDEO_STATE_STOPPED,
-            NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
-              .REMOTE_VIDEO_STATE_REASON_REMOTE_MUTED,
-            0
-          );
-          break;
-        case 'unmute-audio':
-          this._engine.rtcEngineEventHandler.onRemoteAudioStateChanged_056772e(
-            this._irisClient.connection,
-            _uid,
-            NATIVE_RTC.REMOTE_AUDIO_STATE.REMOTE_AUDIO_STATE_STARTING,
-            NATIVE_RTC.REMOTE_AUDIO_STATE_REASON
-              .REMOTE_AUDIO_REASON_REMOTE_UNMUTED,
-            0
-          );
-          break;
-        case 'unmute-video':
-          this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
-            this._irisClient.connection,
-            _uid,
-            NATIVE_RTC.REMOTE_VIDEO_STATE.REMOTE_VIDEO_STATE_STARTING,
-            NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
-              .REMOTE_VIDEO_STATE_REASON_REMOTE_UNMUTED,
-            0
-          );
-          break;
-      }
     }
   }
 
