@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { ClientRole, IAgoraRTCClient } from 'agora-rtc-sdk-ng';
+import { ClientRole, IAgoraRTCClient, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { CallIrisApiResult } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -73,6 +73,21 @@ export class ClientHelper {
   ): Promise<void> {
     try {
       await (client as any).sendStreamMessage(message);
+    } catch (e) {
+      AgoraConsole.error(e);
+      Promise.resolve(
+        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+      );
+      throw e;
+    }
+  }
+
+  public async unpublish(
+    client: IAgoraRTCClient,
+    tracks?: ILocalTrack | ILocalTrack[]
+  ): Promise<void> {
+    try {
+      await client.unpublish(tracks);
     } catch (e) {
       AgoraConsole.error(e);
       Promise.resolve(

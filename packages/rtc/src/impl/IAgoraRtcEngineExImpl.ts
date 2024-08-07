@@ -80,6 +80,9 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     options: NATIVE_RTC.LeaveChannelOptions
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
+      if (!options) {
+        options = defaultLeaveChannelOptions;
+      }
       if (this._engine.irisClientManager.irisClientList.length === 0) {
         return this._engine.returnResult();
       }

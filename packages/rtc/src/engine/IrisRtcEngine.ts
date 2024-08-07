@@ -138,9 +138,6 @@ export class IrisRtcEngine implements ApiInterceptor {
     let obj = this.implDispatchesMap.get(className);
     if (obj) {
       let callApiFun = obj[funName];
-      // if (apiParam.event === 'RtcEngine_joinChannelWithUserAccount_670ae7c3') {
-      //   debugger;
-      // }
       if (callApiFun) {
         if (
           func_name !== 'RtcEngine_initialize_0320339' &&

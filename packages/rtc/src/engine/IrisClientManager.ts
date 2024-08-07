@@ -20,8 +20,6 @@ import {
 } from '../base/BaseType';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 
-import { AgoraConsole } from '../util';
-
 import { IrisClient } from './IrisClient';
 import { IrisClientObserver } from './IrisClientObserver';
 import { IrisIntervalType, IrisRtcEngine } from './IrisRtcEngine';
@@ -548,19 +546,9 @@ export class IrisClientManager {
   }
 
   async processBufferSourceAudioTrackClose(
-    bufferSourceAudioTrackPackage: BufferSourceAudioTrackPackage,
-    agoraRTCClient?: IAgoraRTCClient
+    bufferSourceAudioTrackPackage: BufferSourceAudioTrackPackage
   ) {
     let track = bufferSourceAudioTrackPackage.track;
-    if (agoraRTCClient?.localTracks?.indexOf(track) != -1) {
-      try {
-        await agoraRTCClient?.unpublish(track);
-        AgoraConsole.log('unpublish success');
-      } catch (e) {
-        this._engine.returnResult(false);
-        throw e;
-      }
-    }
 
     //删除完毕后进行stop,close
     track.stopProcessAudioBuffer();
@@ -569,20 +557,8 @@ export class IrisClientManager {
     this.removeTrackEventHandlerByTrack(track);
   }
 
-  async processAudioTrackClose(
-    audioTrackPackage: AudioTrackPackage,
-    agoraRTCClient?: IAgoraRTCClient
-  ) {
+  async processAudioTrackClose(audioTrackPackage: AudioTrackPackage) {
     let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
-    if (agoraRTCClient?.localTracks?.indexOf(audioTrack) != -1) {
-      try {
-        await agoraRTCClient?.unpublish(audioTrack);
-        AgoraConsole.log('unpublish success');
-      } catch (e) {
-        this._engine.returnResult(false);
-        throw e;
-      }
-    }
     //删除完毕后进行stop
     if (audioTrack.isPlaying) {
       this._engine.trackHelper.stop(audioTrack);
@@ -593,20 +569,8 @@ export class IrisClientManager {
     this.removeTrackEventHandlerByTrack(audioTrack);
   }
 
-  async processVideoTrackClose(
-    videoTrackPackage: VideoTrackPackage,
-    agoraRTCClient?: IAgoraRTCClient
-  ) {
+  async processVideoTrackClose(videoTrackPackage: VideoTrackPackage) {
     let videoTrack = videoTrackPackage.track as ILocalVideoTrack;
-    if (agoraRTCClient?.localTracks?.indexOf(videoTrack) != -1) {
-      try {
-        await agoraRTCClient?.unpublish(videoTrack);
-        AgoraConsole.log('unpublish success');
-      } catch (e) {
-        this._engine.returnResult(false);
-        throw e;
-      }
-    }
 
     //如果isPreview是false则停止播放以及设置为不可用
     if (!videoTrackPackage.isPreview) {

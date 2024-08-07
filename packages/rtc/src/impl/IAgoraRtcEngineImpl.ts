@@ -318,7 +318,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       for (let irisClient of this._engine.irisClientManager.irisClientList) {
         irisClient.irisClientState.autoSubscribeVideo = false;
         await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-          NotifyType.UNPUBLISH_TRACK,
+          NotifyType.REMOVE_TRACK,
           [...this._engine.irisClientManager.localVideoTrackPackages],
           [irisClient]
         );
@@ -549,7 +549,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       for (let irisClient of this._engine.irisClientManager.irisClientList) {
         irisClient.irisClientState.autoSubscribeAudio = false;
         await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-          NotifyType.UNPUBLISH_TRACK,
+          NotifyType.REMOVE_TRACK,
           [...this._engine.irisClientManager.localAudioTrackPackages],
           [irisClient]
         );
@@ -921,7 +921,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         return this._engine.returnResult();
       }
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-        NotifyType.UNPUBLISH_TRACK,
+        NotifyType.REMOVE_TRACK,
         [bufferSourceAudioTrackPackage]
       );
 
@@ -1018,7 +1018,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
 
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-        NotifyType.UNPUBLISH_TRACK,
+        NotifyType.REMOVE_TRACK,
         [...videoPackages, ...audioPackages]
       );
 

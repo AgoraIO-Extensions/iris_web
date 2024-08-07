@@ -27,6 +27,7 @@ export enum NotifyType {
   'UPDATE_TRACK',
   'MUTE_TRACK',
   'UNMUTE_TRACK',
+  'REMOVE_TRACK',
 }
 export enum NotifyRemoteType {
   'SUBSCRIBE_VIDEO_TRACK',
@@ -200,8 +201,28 @@ export class IrisClientObserver {
     }
   }
 
+  async unpublishTrack(trackPackage: TrackPackage) {
+    if (!trackPackage.track) {
+      return;
+    }
+
+    let irisClient = trackPackage.irisClient;
+    if (!irisClient) {
+      return;
+    }
+    let agoraRTCClient = irisClient.agoraRTCClient;
+    let track = trackPackage.track as ILocalTrack;
+    if (agoraRTCClient?.localTracks?.indexOf(track) != -1) {
+      AgoraConsole.debug(`unpublishTrack ${track}`);
+      if (!track?.enabled) {
+        await this._engine.clientHelper.unpublish(agoraRTCClient!, track);
+      }
+    }
+  }
+
   async enableTrack(trackPackage: TrackPackage) {
     let track = trackPackage.track as ILocalTrack;
+    AgoraConsole.debug(`enableTrack ${track}`);
     if (!track?.enabled) {
       await this._engine.trackHelper.setEnabled(
         trackPackage.track as ILocalTrack,
@@ -212,6 +233,7 @@ export class IrisClientObserver {
 
   async unableTrack(trackPackage: TrackPackage) {
     let track = trackPackage.track as ILocalTrack;
+    AgoraConsole.debug(`unableTrack ${track}`);
     if (track?.enabled) {
       await this._engine.trackHelper.setEnabled(
         trackPackage.track as ILocalTrack,
@@ -222,6 +244,7 @@ export class IrisClientObserver {
 
   async muteTrack(trackPackage: TrackPackage) {
     let track = trackPackage.track as ILocalTrack;
+    AgoraConsole.debug(`muteTrack ${track}`);
     if (!track?.muted) {
       await this._engine.trackHelper.setMuted(
         trackPackage.track as ILocalTrack,
@@ -232,6 +255,7 @@ export class IrisClientObserver {
 
   async unmuteTrack(trackPackage: TrackPackage) {
     let track = trackPackage.track as ILocalTrack;
+    AgoraConsole.debug(`unmuteTrack ${track}`);
     if (track?.muted) {
       await this._engine.trackHelper.setMuted(
         trackPackage.track as ILocalTrack,
@@ -240,24 +264,22 @@ export class IrisClientObserver {
     }
   }
 
-  async stopTrack(trackPackage: TrackPackage) {
+  async removeTrack(trackPackage: TrackPackage) {
     let irisClientManager = this._engine.irisClientManager;
     try {
       if (!trackPackage.track) {
         return;
       }
 
-      AgoraConsole.debug(`stopTrack ${trackPackage.track}`);
-      //还没有分配给对应的irisClient时,track会放到engine.initialize创建的client
+      AgoraConsole.debug(`removeTrack ${trackPackage.track}`);
       let irisClient = trackPackage.irisClient;
       if (!irisClient) {
         irisClient = irisClientManager.irisClientList[0];
       }
-      let agoraRTCClient = irisClient.agoraRTCClient;
+      this.unpublishTrack(trackPackage);
       if (this._engine.implHelper.isAudio(trackPackage.type!)) {
         await irisClientManager.processAudioTrackClose(
-          trackPackage as AudioTrackPackage,
-          agoraRTCClient
+          trackPackage as AudioTrackPackage
         );
         if (
           trackPackage.type ===
@@ -276,20 +298,17 @@ export class IrisClientObserver {
         trackPackage.type
       ) {
         await irisClientManager.processBufferSourceAudioTrackClose(
-          trackPackage as BufferSourceAudioTrackPackage,
-          agoraRTCClient
+          trackPackage as BufferSourceAudioTrackPackage
         );
         irisClient.removeLocalAudioTrack(trackPackage);
         irisClientManager.removeLocalAudioTrackPackage(trackPackage);
       } else if (this._engine.implHelper.isVideoCamera(trackPackage.type!)) {
         await irisClientManager.processVideoTrackClose(
-          trackPackage as VideoTrackPackage,
-          agoraRTCClient
+          trackPackage as VideoTrackPackage
         );
       } else if (this._engine.implHelper.isScreenCapture(trackPackage.type!)) {
         await irisClientManager.processVideoTrackClose(
-          trackPackage as VideoTrackPackage,
-          agoraRTCClient
+          trackPackage as VideoTrackPackage
         );
         this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a(
           trackPackage.type as NATIVE_RTC.VIDEO_SOURCE_TYPE,
@@ -344,7 +363,7 @@ export class IrisClientObserver {
 
         case NotifyType.UNPUBLISH_TRACK:
           if (scopePackage) {
-            await this.stopTrack(scopePackage);
+            await this.unpublishTrack(scopePackage);
           }
           break;
         case NotifyType.UPDATE_TRACK:
@@ -352,11 +371,16 @@ export class IrisClientObserver {
             await this.updateTrack(scopePackage);
           }
           break;
+        case NotifyType.REMOVE_TRACK:
+          if (scopePackage) {
+            await this.removeTrack(scopePackage);
+          }
+          break;
       }
     }
   }
 
-  subscribeVideoTrack(userPackage: RemoteUserPackage) {
+  subscribeVideoTrack(userPackage: RemoteUserPackage, force: boolean = false) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -365,8 +389,9 @@ export class IrisClientObserver {
     }
     let autoSubscribeVideo: boolean =
       irisClient.irisClientState.autoSubscribeVideo;
+    let needSubscribe = autoSubscribeVideo || force;
     let enableVideo: boolean = this._engine.globalState.enabledVideo;
-    if (enableVideo && autoSubscribeVideo && irisClient.agoraRTCClient) {
+    if (enableVideo && needSubscribe && irisClient.agoraRTCClient) {
       let user = irisClient.agoraRTCClient.remoteUsers.find(
         (item) => item.uid === userPackage.uid
       );
@@ -393,7 +418,7 @@ export class IrisClientObserver {
       });
     }
   }
-  subscribeAudioTrack(userPackage: RemoteUserPackage) {
+  subscribeAudioTrack(userPackage: RemoteUserPackage, force: boolean = false) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -402,8 +427,9 @@ export class IrisClientObserver {
     }
     let autoSubscribeAudio: boolean =
       irisClient.irisClientState.autoSubscribeAudio;
+    let needSubscribe = autoSubscribeAudio || force;
     let enableAudio: boolean = this._engine.globalState.enabledAudio;
-    if (enableAudio && autoSubscribeAudio && irisClient.agoraRTCClient) {
+    if (enableAudio && needSubscribe && irisClient.agoraRTCClient) {
       let user = irisClient.agoraRTCClient.remoteUsers.find(
         (item) => item.uid === userPackage.uid
       );
@@ -426,7 +452,10 @@ export class IrisClientObserver {
     }
   }
 
-  unsubscribeVideoTrack(userPackage: RemoteUserPackage) {
+  unsubscribeVideoTrack(
+    userPackage: RemoteUserPackage,
+    force: boolean = false
+  ) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -447,7 +476,10 @@ export class IrisClientObserver {
     }
   }
 
-  unsubscribeAudioTrack(userPackage: RemoteUserPackage) {
+  unsubscribeAudioTrack(
+    userPackage: RemoteUserPackage,
+    force: boolean = false
+  ) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -468,27 +500,31 @@ export class IrisClientObserver {
     }
   }
 
-  notifyRemote(type: NotifyRemoteType, scopePackages: RemoteUserPackage[]) {
+  notifyRemote(
+    type: NotifyRemoteType,
+    scopePackages: RemoteUserPackage[],
+    force: boolean = false
+  ) {
     for (let scopePackage of scopePackages) {
       switch (type) {
         case NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK:
           if (scopePackage) {
-            this.subscribeVideoTrack(scopePackage);
+            this.subscribeVideoTrack(scopePackage, force);
           }
           break;
         case NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK:
           if (scopePackage) {
-            this.subscribeAudioTrack(scopePackage);
+            this.subscribeAudioTrack(scopePackage, force);
           }
           break;
         case NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK:
           if (scopePackage) {
-            this.unsubscribeAudioTrack(scopePackage);
+            this.unsubscribeAudioTrack(scopePackage, force);
           }
           break;
         case NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK:
           if (scopePackage) {
-            this.unsubscribeVideoTrack(scopePackage);
+            this.unsubscribeVideoTrack(scopePackage, force);
           }
           break;
       }
