@@ -1,5 +1,12 @@
 # IRIS_WEB
 
+## [0.8.0-pre](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.7.0...v0.8.0-pre) (2024-08-07)
+
+
+### Bug Fixes
+
+* muteRemoteStream api ([6bf5895](https://github.com/AgoraIO-Extensions/iris_web/commit/6bf5895268cfd63a62689e18598fb009fc46f04c))
+
 ## [0.7.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.5.0...v0.7.0) (2024-05-08)
 
 
