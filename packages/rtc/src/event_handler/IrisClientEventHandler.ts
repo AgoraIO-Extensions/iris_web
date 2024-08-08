@@ -303,7 +303,11 @@ export class IrisClientEventHandler {
       | 'unmute-video'
       | 'disable-local-video'
   ): void {
-    uid = this._engine.irisClientManager.getUserInfoByUid(uid)?.uid!;
+    //@ts-ignore websdk的私有属性
+    //如果是string uid 登录
+    if (this.agoraRTCClient.isStringUID) {
+      uid = this._engine.irisClientManager.getUserInfoByUid(uid)?.uid!;
+    }
     switch (msg) {
       case 'mute-audio':
         this._engine.rtcEngineEventHandler.onUserMuteAudio_0aac2fe(
