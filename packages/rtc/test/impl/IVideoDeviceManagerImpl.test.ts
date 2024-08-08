@@ -11,11 +11,10 @@ import { IrisApiEngine, IrisCore } from 'iris-web-core';
 
 import { IrisWebRtc } from '../../src/IrisRtcApi';
 
+import { IVideoDeviceManagerImpl } from '../../src/impl/IVideoDeviceManagerImpl';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import { callIris, callIrisWithoutCheck, setupLocalVideo } from '../utils';
-
-import { IVideoDeviceManagerImpl } from './IAgoraRtcEngineImpl';
 
 let apiEnginePtr: IrisApiEngine;
 let irisRtcEngine: IrisRtcEngine;
@@ -52,20 +51,9 @@ afterEach(() => {
 
 describe('IAgoraRtcEngineImpl', () => {
   test('enumerateVideoDevices', async () => {
-    let param = {
-      enabled: true,
-      useTexture: true,
-      sourceType: NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE.ENCODED_VIDEO_FRAME,
-      encodedVideoOption: {
-        ccMode: NATIVE_RTC.TCcMode.CC_DISABLED,
-        codecType: NATIVE_RTC.VIDEO_CODEC_TYPE.VIDEO_CODEC_AV1,
-        targetBitrate: 1,
-      },
-    };
     let result = await callIrisWithoutCheck(
       apiEnginePtr,
-      'VideoDeviceManager_enumerateVideoDevices',
-      param
+      'VideoDeviceManager_enumerateVideoDevices'
     );
     expect(result.code).toBe(NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK);
     expect(irisRtcEngine.globalState.playbackDevices.length).not.toBe(0);
@@ -114,8 +102,6 @@ describe('IAgoraRtcEngineImpl', () => {
   });
   test('release', async () => {
     await callIris(apiEnginePtr, 'VideoDeviceManager_release', { sync: false });
-    expect(irisRtcEngine.globalState.playbackDevices.length).toBe(0);
-    expect(irisRtcEngine.globalState.recordingDevices.length).toBe(0);
     expect(irisRtcEngine.globalState.videoDevices.length).toBe(0);
   });
 });

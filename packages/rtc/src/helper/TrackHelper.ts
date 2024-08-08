@@ -1,7 +1,9 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
 import {
   ICameraVideoTrack,
+  ILocalAudioTrack,
   ILocalTrack,
+  IMicrophoneAudioTrack,
   IRemoteAudioTrack,
   ITrack,
 } from 'agora-rtc-sdk-ng';
@@ -69,11 +71,25 @@ export class TrackHelper {
     }
   }
   public async setDevice(
-    track: ICameraVideoTrack,
+    track: ICameraVideoTrack | IMicrophoneAudioTrack,
     deviceId: string
   ): Promise<void> {
     try {
       await track?.setDevice(deviceId);
+    } catch (e) {
+      AgoraConsole.error(e);
+      Promise.resolve(
+        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+      );
+      throw e;
+    }
+  }
+  public async setPlaybackDevice(
+    track: ILocalAudioTrack | IRemoteAudioTrack,
+    deviceId: string
+  ): Promise<void> {
+    try {
+      await track?.setPlaybackDevice(deviceId);
     } catch (e) {
       AgoraConsole.error(e);
       Promise.resolve(

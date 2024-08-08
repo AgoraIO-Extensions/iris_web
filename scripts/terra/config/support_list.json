@@ -100,5 +100,12 @@
   "VideoDeviceManager_enumerateVideoDevices",
   "VideoDeviceManager_setDevice_4ad5f6e",
   "VideoDeviceManager_getDevice_73b9872",
-  "VideoDeviceManager_release"
+  "VideoDeviceManager_release",
+  "AudioDeviceManager_enumerateRecordingDevices",
+  "AudioDeviceManager_enumeratePlaybackDevices",
+  "AudioDeviceManager_setRecordingDevice_4ad5f6e",
+  "AudioDeviceManager_setPlaybackDevice_4ad5f6e",
+  "AudioDeviceManager_getRecordingDevice_73b9872",
+  "AudioDeviceManager_getPlaybackDevice_73b9872",
+  "AudioDeviceManager_release"
 ]

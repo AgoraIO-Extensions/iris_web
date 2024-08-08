@@ -69,8 +69,14 @@ export class IrisGlobalState {
   recordingDevices: DeviceInfo[] = new Array();
   videoDevices: DeviceInfo[] = new Array();
 
-  //setDevice() : videoDevice
+  //setDevice()
   videoDeviceId: string;
+
+  //setPlaybackDevice_4ad5f6e()
+  playbackDeviceId: string;
+
+  //setRecordingDevice_4ad5f6e()
+  recordingDeviceId: string;
 
   //enableAudioVolumeIndication
   enableAudioVolumeIndication: boolean = false;

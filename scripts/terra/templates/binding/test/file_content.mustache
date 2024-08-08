@@ -158,7 +158,7 @@ describe('{{name}}', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('{{user_data.prefix_name}}')._impl
         .{{name}}
-    ).toBeCalledWith({{#parameters}}'test',{{/parameters}});
+    ).toBeCalledWith({{#parameters}}{{^is_output}}'test',{{/is_output}}{{/parameters}});
   });
   {{/user_data.isSupport}}
   {{^user_data.isSupport}}

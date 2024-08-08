@@ -71,10 +71,8 @@ import { ApiParam, CallApiReturnType, IrisCore } from 'iris-web-core';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { callApiBufferExtension } from '../extensions/CallApiBufferExtensions';
 import { eventHandlerBufferExtension } from '../extensions/EventhandlerBufferExtensions';
-import {
-  IRtcEngineImpl,
-  IVideoDeviceManagerImpl,
-} from '../impl/IAgoraRtcEngineImpl';
+import { IRtcEngineImpl } from '../impl/IAgoraRtcEngineImpl';
+import { IVideoDeviceManagerImpl } from '../impl/IVideoDeviceManagerImpl';
 import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IRtcEngineEventHandler {
@@ -4437,7 +4435,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
     }
     let userInfo = obj.userInfo;
 
-    return this._impl.getUserInfoByUserAccount_c6a8f08(userAccount, userInfo);
+    return this._impl.getUserInfoByUserAccount_c6a8f08(userAccount);
   }
 
   // @ts-ignore
@@ -4450,7 +4448,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
     }
     let userInfo = obj.userInfo;
 
-    return this._impl.getUserInfoByUid_6b7aee8(uid, userInfo);
+    return this._impl.getUserInfoByUid_6b7aee8(uid);
   }
 
   // @ts-ignore

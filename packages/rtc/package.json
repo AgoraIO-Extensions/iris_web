@@ -17,7 +17,7 @@
   "author": "AgoraIO-Extensions",
   "license": "MIT",
   "dependencies": {
-    "@agoraio-extensions/agora-rtc-sdk-ng-fake": "^1.0.12",
+    "@agoraio-extensions/agora-rtc-sdk-ng-fake": "^1.0.13",
     "@iris/native-rtc": "workspace: *",
     "agora-rtc-sdk-ng": "4.21.0",
     "iris-web-core": "workspace: *"

@@ -11261,7 +11261,7 @@ describe('IRtcEngine', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
         .getUserInfoByUserAccount_c6a8f08
-    ).toBeCalledWith('test', 'test');
+    ).toBeCalledWith('test');
   });
 
   test('RtcEngine_getUserInfoByUid_6b7aee8 parameter', async () => {
@@ -11317,7 +11317,7 @@ describe('IRtcEngine', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
         .getUserInfoByUid_6b7aee8
-    ).toBeCalledWith('test', 'test');
+    ).toBeCalledWith('test');
   });
 
   test('RtcEngine_startOrUpdateChannelMediaRelay_e68f0a4 impl call', async () => {
