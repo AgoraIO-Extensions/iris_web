@@ -165,10 +165,10 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           remoteUser.update({
             element: canvas.view,
           });
-          this._engine.irisClientManager.irisClientObserver.notifyRemote(
-            NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
-            [remoteUser]
-          );
+          // this._engine.irisClientManager.irisClientObserver.notifyRemote(
+          //   NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
+          //   [remoteUser]
+          // );
         } else {
           let userPackage = new RemoteUserPackage(
             connection,

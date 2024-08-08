@@ -778,14 +778,15 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             if (reportVad) {
               this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
                 connection,
-                [
-                  {
-                    uid: agoraRTCClient.uid as number,
-                    volume: localStats?.sendVolumeLevel,
-                    vad: localStats?.sendVolumeLevel > 0 ? 1 : 0,
-                    // voicePitch: number,  web没有
-                  },
-                ],
+                [],
+                // [
+                //   {
+                //     uid: agoraRTCClient.uid as number,
+                //     volume: localStats?.sendVolumeLevel,
+                //     vad: localStats?.sendVolumeLevel > 0 ? 1 : 0,
+                //     // voicePitch: number,  web没有
+                //   },
+                // ],
                 1,
                 localStats?.sendVolumeLevel
               );
@@ -795,12 +796,14 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               uid: number;
               volume: number;
               vad: number;
+              voicePitch: number;
             }[] = [];
             for (let uid in remoteStats) {
               remoteSpeakers.push({
                 uid: (uid as unknown) as number,
                 volume: remoteStats[uid].receiveLevel,
                 vad: 1,
+                voicePitch: 1.0,
               });
             }
             let totalVolume: number = 0;
@@ -809,7 +812,8 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             });
             this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
               connection,
-              remoteSpeakers,
+              [],
+              // remoteSpeakers,
               remoteSpeakers.length,
               totalVolume
             );
