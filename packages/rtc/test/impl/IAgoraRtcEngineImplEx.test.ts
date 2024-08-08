@@ -335,7 +335,7 @@ describe('IAgoraRtcEngineImpl', () => {
       connection
     );
     let remoteUsers = irisClient.agoraRTCClient!.remoteUsers;
-    expect(remoteUsers[0].videoTrack?.isPlaying).toBe(true);
+    expect(remoteUsers[0].videoTrack?.isPlaying).toBe(false);
 
     await callIris(
       apiEnginePtr,
@@ -355,6 +355,7 @@ describe('IAgoraRtcEngineImpl', () => {
       }
     );
     expect(remoteUsers[0].videoTrack).not.toBeUndefined();
+    expect(remoteUsers[0].videoTrack?.isPlaying).toBe(true);
   });
   test('muteRemoteVideoStreamEx_6d93082', async () => {
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
@@ -364,7 +365,7 @@ describe('IAgoraRtcEngineImpl', () => {
       connection
     );
     let remoteUsers = irisClient.agoraRTCClient!.remoteUsers;
-    expect(remoteUsers[0].videoTrack?.isPlaying).toBe(true);
+    expect(remoteUsers[0].videoTrack?.isPlaying).toBe(false);
 
     await callIris(
       apiEnginePtr,
@@ -386,6 +387,7 @@ describe('IAgoraRtcEngineImpl', () => {
       }
     );
     expect(remoteUsers[0].videoTrack).not.toBeUndefined();
+    expect(remoteUsers[0].videoTrack?.isPlaying).toBe(true);
   });
 
   test('createDataStreamEx_9f641b6', async () => {
