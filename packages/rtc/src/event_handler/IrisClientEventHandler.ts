@@ -258,12 +258,14 @@ export class IrisClientEventHandler {
       if (mediaType == 'audio') {
         this._engine.irisClientManager.irisClientObserver.notifyRemote(
           NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
-          [remoteUser]
+          [remoteUser],
+          false
         );
       } else if (mediaType == 'video') {
         this._engine.irisClientManager.irisClientObserver.notifyRemote(
           NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
-          [remoteUser]
+          [remoteUser],
+          false
         );
       }
     }

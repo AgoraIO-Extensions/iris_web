@@ -380,7 +380,7 @@ export class IrisClientObserver {
     }
   }
 
-  subscribeVideoTrack(userPackage: RemoteUserPackage, force: boolean = false) {
+  subscribeVideoTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -418,7 +418,7 @@ export class IrisClientObserver {
       });
     }
   }
-  subscribeAudioTrack(userPackage: RemoteUserPackage, force: boolean = false) {
+  subscribeAudioTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -452,10 +452,7 @@ export class IrisClientObserver {
     }
   }
 
-  unsubscribeVideoTrack(
-    userPackage: RemoteUserPackage,
-    force: boolean = false
-  ) {
+  unsubscribeVideoTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -476,10 +473,7 @@ export class IrisClientObserver {
     }
   }
 
-  unsubscribeAudioTrack(
-    userPackage: RemoteUserPackage,
-    force: boolean = false
-  ) {
+  unsubscribeAudioTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -503,7 +497,7 @@ export class IrisClientObserver {
   notifyRemote(
     type: NotifyRemoteType,
     scopePackages: RemoteUserPackage[],
-    force: boolean = false
+    force: boolean = true
   ) {
     for (let scopePackage of scopePackages) {
       switch (type) {
