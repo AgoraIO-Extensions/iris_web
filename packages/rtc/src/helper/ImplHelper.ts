@@ -369,7 +369,7 @@ export class ImplHelper {
     let audioTrackPackages = irisClient.audioTrackPackages!;
     let videoTrackPackage = irisClient.videoTrackPackage!;
     let irisClientObserver = irisClientManager.irisClientObserver;
-    irisClientObserver.notifyLocal(NotifyType.UNPUBLISH_TRACK, [
+    await irisClientObserver.notifyLocal(NotifyType.UNPUBLISH_TRACK, [
       ...audioTrackPackages,
       videoTrackPackage,
     ]);

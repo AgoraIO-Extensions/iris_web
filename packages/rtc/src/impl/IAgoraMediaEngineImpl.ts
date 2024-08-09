@@ -107,7 +107,7 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
         if (!videoTrack.isPlaying && videoTrackPackage.element) {
           this._engine.trackHelper.play(videoTrack, videoTrackPackage.element);
         }
-        this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        await this._engine.irisClientManager.irisClientObserver.notifyLocal(
           NotifyType.PUBLISH_TRACK,
           [videoTrackPackage],
           this._engine.irisClientManager.irisClientList

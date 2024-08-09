@@ -179,10 +179,6 @@ export class IrisClientObserver {
         irisClient.agoraRTCClient?.channelName &&
         !irisClient.agoraRTCClient.localTracks?.includes(publishTrack)
       ) {
-        if (!publishTrack.enabled) {
-          await this._engine.trackHelper.setEnabled(publishTrack, true);
-        }
-
         try {
           AgoraConsole.debug(`publishTrack ${publishTrack}`);
           await irisClient.agoraRTCClient!.publish(publishTrack);
@@ -212,11 +208,9 @@ export class IrisClientObserver {
     }
     let agoraRTCClient = irisClient.agoraRTCClient;
     let track = trackPackage.track as ILocalTrack;
-    if (agoraRTCClient?.localTracks?.indexOf(track) != -1) {
+    if (agoraRTCClient?.localTracks?.includes(track)) {
       AgoraConsole.debug(`unpublishTrack ${track}`);
-      if (!track?.enabled) {
-        await this._engine.clientHelper.unpublish(agoraRTCClient!, track);
-      }
+      await this._engine.clientHelper.unpublish(agoraRTCClient!, track);
     }
   }
 
