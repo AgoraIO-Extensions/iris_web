@@ -547,6 +547,14 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   }
 
   // @ts-ignore
+  setSimulcastConfigEx_bd8d7d0(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_setSimulcastConfigEx_bd8d7d0 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   setHighPriorityUserListEx_8736b5c(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngineEx_setHighPriorityUserListEx_8736b5c not supported in this platform!'
@@ -582,6 +590,22 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   setParametersEx_8225ea3(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngineEx_setParametersEx_8225ea3 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  getCallIdEx_b13f7c4(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_getCallIdEx_b13f7c4 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  sendAudioMetadataEx_e2bf1c4(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_sendAudioMetadataEx_e2bf1c4 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

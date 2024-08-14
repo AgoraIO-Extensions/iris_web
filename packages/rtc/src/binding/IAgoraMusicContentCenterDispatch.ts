@@ -174,6 +174,14 @@ export class IMusicPlayerDispatch extends IMediaPlayerDispatch
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
+
+  // @ts-ignore
+  setPlayMode_748bee0(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MusicPlayer_setPlayMode_748bee0 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
 }
 
 export class IMusicContentCenterDispatch implements IMusicContentCenter {
@@ -226,6 +234,14 @@ export class IMusicContentCenterDispatch implements IMusicContentCenter {
   createMusicPlayer(): CallApiReturnType {
     AgoraConsole.warn(
       'MusicContentCenter_createMusicPlayer not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  destroyMusicPlayer_876d086(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MusicContentCenter_destroyMusicPlayer_876d086 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

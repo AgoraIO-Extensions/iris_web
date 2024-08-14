@@ -212,6 +212,34 @@ describe('IAudioDeviceManager', () => {
     );
   });
 
+  test('AudioDeviceManager_getPlaybackDeviceInfo_ed3a96d impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      deviceTypeName: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'AudioDeviceManager_getPlaybackDeviceInfo_ed3a96d',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl
+        ?.getPlaybackDeviceInfo_ed3a96d
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
   test('AudioDeviceManager_setPlaybackDeviceVolume_46f8ab7 impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
@@ -376,6 +404,34 @@ describe('IAudioDeviceManager', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl
         ?.getRecordingDeviceInfo_5540658
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
+  test('AudioDeviceManager_getRecordingDeviceInfo_ed3a96d impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      deviceTypeName: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'AudioDeviceManager_getRecordingDeviceInfo_ed3a96d',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl
+        ?.getRecordingDeviceInfo_ed3a96d
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(

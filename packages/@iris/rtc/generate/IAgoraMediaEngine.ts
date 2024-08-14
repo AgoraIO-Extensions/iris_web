@@ -13,6 +13,7 @@ import {
   EXTERNAL_VIDEO_SOURCE_TYPE,
   ExternalVideoFrame,
   IAudioFrameObserver,
+  IFaceInfoObserver,
   IVideoEncodedFrameObserver,
   IVideoFrameObserver,
 } from './AgoraMediaBase';
@@ -35,6 +36,10 @@ export interface IMediaEngine {
 
   registerVideoEncodedFrameObserver_d45d579(
     observer: IVideoEncodedFrameObserver
+  ): CallApiReturnType;
+
+  registerFaceInfoObserver_0303ed6(
+    observer: IFaceInfoObserver
   ): CallApiReturnType;
 
   pushAudioFrame_c71f4ab(frame: AudioFrame, trackId: number): CallApiReturnType;

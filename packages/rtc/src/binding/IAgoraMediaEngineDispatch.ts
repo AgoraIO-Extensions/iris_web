@@ -44,6 +44,14 @@ export class IMediaEngineDispatch implements IMediaEngine {
   }
 
   // @ts-ignore
+  registerFaceInfoObserver_0303ed6(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MediaEngine_registerFaceInfoObserver_0303ed6 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   pushAudioFrame_c71f4ab(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'MediaEngine_pushAudioFrame_c71f4ab not supported in this platform!'

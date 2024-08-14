@@ -124,6 +124,34 @@ describe('IMediaEngine', () => {
     );
   });
 
+  test('MediaEngine_registerFaceInfoObserver_0303ed6 impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      observer: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MediaEngine_registerFaceInfoObserver_0303ed6',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
+        ?.registerFaceInfoObserver_0303ed6
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
   test('MediaEngine_pushAudioFrame_c71f4ab impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')

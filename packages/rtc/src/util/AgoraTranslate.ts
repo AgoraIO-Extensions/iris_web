@@ -349,6 +349,8 @@ export class AgoraTranslate {
         return RemoteStreamType.HIGH_STREAM;
       case NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_LOW:
         return RemoteStreamType.LOW_STREAM;
+      default:
+        return RemoteStreamType.HIGH_STREAM;
     }
   }
 
@@ -363,6 +365,8 @@ export class AgoraTranslate {
         return RemoteStreamFallbackType.LOW_STREAM;
       case NATIVE_RTC.STREAM_FALLBACK_OPTIONS.STREAM_FALLBACK_OPTION_AUDIO_ONLY:
         return RemoteStreamFallbackType.AUDIO_ONLY;
+      default:
+        return RemoteStreamFallbackType.DISABLE;
     }
   }
 

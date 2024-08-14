@@ -391,6 +391,25 @@ export class IVideoFrameObserver {
   }
 }
 
+export class IFaceInfoObserver {
+  _engine: IrisRtcEngine;
+
+  constructor(engine: IrisRtcEngine) {
+    this._engine = engine;
+  }
+
+  notifyEvent(param: ApiParam): void {
+    this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
+  }
+
+  onFaceInfo_3a2037f(outFaceInfo: string): void {
+    AgoraConsole.warn(
+      'FaceInfoObserver_onFaceInfo_3a2037f not supported in this platform!'
+    );
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+}
+
 export class IMediaRecorderObserver {
   _engine: IrisRtcEngine;
 
