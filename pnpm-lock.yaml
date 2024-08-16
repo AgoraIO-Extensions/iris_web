@@ -98,8 +98,8 @@ importers:
         specifier: 'workspace: *'
         version: link:../../@iris/rtc
       agora-rtc-sdk-ng:
-        specifier: 4.21.0
-        version: 4.21.0
+        specifier: 4.22.0
+        version: 4.22.0
       iris-web-rtc:
         specifier: 'workspace: *'
         version: link:../../rtc
@@ -153,8 +153,8 @@ importers:
         specifier: 'workspace: *'
         version: link:../@iris/rtc
       agora-rtc-sdk-ng:
-        specifier: 4.21.0
-        version: 4.21.0
+        specifier: 4.22.0
+        version: 4.22.0
       iris-web-core:
         specifier: 'workspace: *'
         version: link:../core
@@ -216,30 +216,29 @@ packages:
     resolution: {integrity: sha512-/62yikz7NLScCGAAST5SHdnjaDJQBDq0M2muyRTpf2VQhw6StBg2ALiu73zSJQ4fMVLA+0uBhBHAle7Wg+2kSg==}
     dev: true
 
-  /@agora-js/media@4.21.0:
-    resolution: {integrity: sha512-X4aV84/gB4O7GOOkwP3+NGTHtT2IVkpa4DFBTlBNl7hrkjDwUeanzCQZyva92Zyw59N0NI6dKh9CjJKoIL5Now==}
+  /@agora-js/media@4.22.0:
+    resolution: {integrity: sha512-6IYuzm6lUQ0xmkg70z+zc4GHSu+VdnuQvq8x12GnYKcKAUf13s3h6EMy68DLG4AjLU0c/bN2uNDt74u9Zwc7vQ==}
     dependencies:
-      '@agora-js/report': 4.21.0
-      '@agora-js/shared': 4.21.0
+      '@agora-js/report': 4.22.0
+      '@agora-js/shared': 4.22.0
       agora-rte-extension: 1.2.4
       axios: 1.7.2
-      pako: 2.1.0
       webrtc-adapter: 8.2.0
     transitivePeerDependencies:
       - debug
     dev: false
 
-  /@agora-js/report@4.21.0:
-    resolution: {integrity: sha512-c8KIdomuPItwvri431z5CPT7L4m+jLJrwWWt/QS3JN+sp/t49NnoOIyKQf3y5xCbyNPCNNeGofrwkaIRu4YE8g==}
+  /@agora-js/report@4.22.0:
+    resolution: {integrity: sha512-6LfrvRw9O97R1FP00vdPfS4hCjA8WMEllN7JDxTBnfPDaS+XHgu+ewcTkpSnhFVQG2pM45lwuE0G9F0RKLF5Jw==}
     dependencies:
-      '@agora-js/shared': 4.21.0
+      '@agora-js/shared': 4.22.0
       axios: 1.7.2
     transitivePeerDependencies:
       - debug
     dev: false
 
-  /@agora-js/shared@4.21.0:
-    resolution: {integrity: sha512-oqaiuIhG9ai/NXUDEmj9b3uGxxU9I0OZZszNaJexjakJuVZPM7ypzrCLUi5SzkTh++QOf68yuvD488fjq5WQsA==}
+  /@agora-js/shared@4.22.0:
+    resolution: {integrity: sha512-taKwc0AqbwCHHJL/2VafRQ7thgOYC1c6tiRweL1X3QpfBjJdXYVjc9jn2zY9NAZO4l4+5f1S9t988d1536XPtQ==}
     dependencies:
       axios: 1.7.2
       ua-parser-js: 0.7.37
@@ -2215,15 +2214,16 @@ packages:
       - supports-color
     dev: true
 
-  /agora-rtc-sdk-ng@4.21.0:
-    resolution: {integrity: sha512-EAZMdhbqIXl/PtFqEQn0O5Pmj3Tt+4oTXtd76MK1CozgbcDsc0TmFZK3qM25eaKqhzTz1wiVCwzBCWs3pF5OpQ==}
+  /agora-rtc-sdk-ng@4.22.0:
+    resolution: {integrity: sha512-mP6BDNP6oV01IQV7yXZ4wIuwDpoHaK6ARiDVKDaD+fK3LXXWqUtCweZLwzTde+OYkauPEsivqNbkAp/q6Ggqtg==}
     dependencies:
-      '@agora-js/media': 4.21.0
-      '@agora-js/report': 4.21.0
-      '@agora-js/shared': 4.21.0
+      '@agora-js/media': 4.22.0
+      '@agora-js/report': 4.22.0
+      '@agora-js/shared': 4.22.0
       agora-rte-extension: 1.2.4
       axios: 1.7.2
       formdata-polyfill: 4.0.10
+      pako: 2.1.0
       ua-parser-js: 0.7.37
       webrtc-adapter: 8.2.0
     transitivePeerDependencies:

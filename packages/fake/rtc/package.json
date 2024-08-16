@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@iris/native-rtc": "workspace: *",
-    "agora-rtc-sdk-ng": "4.21.0",
+    "agora-rtc-sdk-ng": "4.22.0",
     "@agoraio-extensions/agora-rtc-sdk-ng-fake": "^1.0.13",
     "iris-web-rtc": "workspace: *"
   },
