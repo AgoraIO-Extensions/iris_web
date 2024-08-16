@@ -1,5 +1,11 @@
 import { IrisApiEngineImpl, IrisEventHandlerImpl } from './IrisApiEngineImpl';
 
+declare global {
+  interface Window {
+    __AGORA_IRIS_API_ENGINE_LIST__: IrisApiEngine[];
+  }
+}
+
 export class CallIrisApiResult {
   public constructor(
     public readonly code: number,
@@ -112,11 +118,21 @@ export interface IrisApiEngine {
 }
 
 function createIrisApiEngine(): IrisApiEngine {
-  return new IrisApiEngineImpl();
+  let engine = new IrisApiEngineImpl();
+  if (window.__AGORA_IRIS_API_ENGINE_LIST__ === undefined) {
+    window.__AGORA_IRIS_API_ENGINE_LIST__ = [];
+    window.__AGORA_IRIS_API_ENGINE_LIST__.push(engine);
+  }
+  return engine;
 }
 
 function disposeIrisApiEngine(engine_ptr: IrisApiEngine): number {
   engine_ptr.dispose();
+  if (window.__AGORA_IRIS_API_ENGINE_LIST__ !== undefined) {
+    window.__AGORA_IRIS_API_ENGINE_LIST__.filter(
+      (engine) => engine !== engine_ptr
+    );
+  }
   // IrisApiEngine.instance = null;
   return 0;
 }

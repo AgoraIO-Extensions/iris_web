@@ -9,7 +9,6 @@ import {
   ConnectionState,
   DeviceState,
   EncryptionMode,
-  InjectStreamConfig,
   InspectConfiguration,
   LiveStreamingTranscodingUser,
   LowStreamParameter,
@@ -234,22 +233,6 @@ export class AgoraTranslate {
       default:
         return 'none';
     }
-  }
-
-  public static NATIVE_RTCInjectStreamConfig2InjectStreamConfig(
-    config: NATIVE_RTC.InjectStreamConfig
-  ): InjectStreamConfig {
-    let ret: InjectStreamConfig = {
-      audioBitrate: config.audioBitrate,
-      audioChannels: config.audioChannels,
-      audioSampleRate: config.audioSampleRate,
-      height: config.width,
-      width: config.height,
-      videoBitrate: config.videoBitrate,
-      videoFramerate: config.videoFramerate,
-      videoGop: config.videoGop,
-    };
-    return ret;
   }
 
   public static NATIVE_RTCContentInspectConfig2InspectConfiguration(
