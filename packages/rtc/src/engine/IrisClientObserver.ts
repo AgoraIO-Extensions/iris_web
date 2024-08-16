@@ -397,7 +397,8 @@ export class IrisClientObserver {
         if (userPackage.element) {
           this._engine.trackHelper.play(
             user!.videoTrack as ITrack,
-            userPackage.element
+            userPackage.element,
+            userPackage.videoPlayerConfig
           );
         }
         let param: IrisTrackEventHandlerParam = {

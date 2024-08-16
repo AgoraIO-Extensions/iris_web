@@ -104,6 +104,7 @@ export class ImplHelper {
     if (!videoTrackPackage) {
       videoTrackPackage = new VideoTrackPackage(
         undefined,
+        undefined,
         videoType,
         videoTrack
       );
@@ -111,7 +112,7 @@ export class ImplHelper {
         videoTrackPackage
       );
     } else {
-      videoTrackPackage.update({ track: videoTrack });
+      videoTrackPackage.track = videoTrack;
     }
     let trackEventHandler: IrisTrackEventHandler = new IrisTrackEventHandler(
       {
@@ -172,6 +173,7 @@ export class ImplHelper {
           if (!videoTrackPackage) {
             videoTrackPackage = new VideoTrackPackage(
               undefined,
+              undefined,
               videoType,
               videoTrack
             );
@@ -179,7 +181,7 @@ export class ImplHelper {
               videoTrackPackage
             );
           } else {
-            videoTrackPackage.update({ track: videoTrack });
+            videoTrackPackage.track = videoTrack;
           }
 
           //设置屏幕共享特殊的事件

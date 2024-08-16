@@ -3372,34 +3372,65 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   setLocalRenderMode_cfb201b(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setLocalRenderMode_cfb201b not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let renderMode = obj.renderMode;
+    if (renderMode === undefined) {
+      AgoraConsole.error('renderMode is undefined');
+      throw 'renderMode is undefined';
+    }
+    let mirrorMode = obj.mirrorMode;
+    if (mirrorMode === undefined) {
+      AgoraConsole.error('mirrorMode is undefined');
+      throw 'mirrorMode is undefined';
+    }
+
+    return this._impl.setLocalRenderMode_cfb201b(renderMode, mirrorMode);
   }
 
   // @ts-ignore
   setRemoteRenderMode_6771ce0(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setRemoteRenderMode_6771ce0 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let renderMode = obj.renderMode;
+    if (renderMode === undefined) {
+      AgoraConsole.error('renderMode is undefined');
+      throw 'renderMode is undefined';
+    }
+    let mirrorMode = obj.mirrorMode;
+    if (mirrorMode === undefined) {
+      AgoraConsole.error('mirrorMode is undefined');
+      throw 'mirrorMode is undefined';
+    }
+
+    return this._impl.setRemoteRenderMode_6771ce0(uid, renderMode, mirrorMode);
   }
 
   // @ts-ignore
   setLocalRenderMode_bedb5ae(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setLocalRenderMode_bedb5ae not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let renderMode = obj.renderMode;
+    if (renderMode === undefined) {
+      AgoraConsole.error('renderMode is undefined');
+      throw 'renderMode is undefined';
+    }
+
+    return this._impl.setLocalRenderMode_bedb5ae(renderMode);
   }
 
   // @ts-ignore
   setLocalVideoMirrorMode_b8a6c69(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setLocalVideoMirrorMode_b8a6c69 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mirrorMode = obj.mirrorMode;
+    if (mirrorMode === undefined) {
+      AgoraConsole.error('mirrorMode is undefined');
+      throw 'mirrorMode is undefined';
+    }
+
+    return this._impl.setLocalVideoMirrorMode_b8a6c69(mirrorMode);
   }
 
   // @ts-ignore

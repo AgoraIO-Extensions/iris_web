@@ -7525,9 +7525,55 @@ describe('IRtcEngine', () => {
     );
   });
 
+  test('RtcEngine_setLocalRenderMode_cfb201b parameter', async () => {
+    let nParam = {
+      renderMode: undefined,
+      mirrorMode: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_setLocalRenderMode_cfb201b',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('renderMode is undefined');
+    }
+    //@ts-ignore
+    nParam.renderMode = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_setLocalRenderMode_cfb201b',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('mirrorMode is undefined');
+    }
+    //@ts-ignore
+    nParam.mirrorMode = 'test';
+  });
+
   test('RtcEngine_setLocalRenderMode_cfb201b impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
+        'setLocalRenderMode_cfb201b'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       renderMode: 'test',
@@ -7545,18 +7591,82 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
-        ?.setLocalRenderMode_cfb201b
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .setLocalRenderMode_cfb201b
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .setLocalRenderMode_cfb201b
+    ).toBeCalledWith('test', 'test');
+  });
+
+  test('RtcEngine_setRemoteRenderMode_6771ce0 parameter', async () => {
+    let nParam = {
+      uid: undefined,
+      renderMode: undefined,
+      mirrorMode: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_setRemoteRenderMode_6771ce0',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('uid is undefined');
+    }
+    //@ts-ignore
+    nParam.uid = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_setRemoteRenderMode_6771ce0',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('renderMode is undefined');
+    }
+    //@ts-ignore
+    nParam.renderMode = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_setRemoteRenderMode_6771ce0',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('mirrorMode is undefined');
+    }
+    //@ts-ignore
+    nParam.mirrorMode = 'test';
   });
 
   test('RtcEngine_setRemoteRenderMode_6771ce0 impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
+        'setRemoteRenderMode_6771ce0'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       uid: 'test',
@@ -7575,18 +7685,44 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
-        ?.setRemoteRenderMode_6771ce0
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .setRemoteRenderMode_6771ce0
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .setRemoteRenderMode_6771ce0
+    ).toBeCalledWith('test', 'test', 'test');
+  });
+
+  test('RtcEngine_setLocalRenderMode_bedb5ae parameter', async () => {
+    let nParam = {
+      renderMode: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_setLocalRenderMode_bedb5ae',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('renderMode is undefined');
+    }
+    //@ts-ignore
+    nParam.renderMode = 'test';
   });
 
   test('RtcEngine_setLocalRenderMode_bedb5ae impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
+        'setLocalRenderMode_bedb5ae'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       renderMode: 'test',
@@ -7603,18 +7739,44 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
-        ?.setLocalRenderMode_bedb5ae
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .setLocalRenderMode_bedb5ae
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .setLocalRenderMode_bedb5ae
+    ).toBeCalledWith('test');
+  });
+
+  test('RtcEngine_setLocalVideoMirrorMode_b8a6c69 parameter', async () => {
+    let nParam = {
+      mirrorMode: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_setLocalVideoMirrorMode_b8a6c69',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('mirrorMode is undefined');
+    }
+    //@ts-ignore
+    nParam.mirrorMode = 'test';
   });
 
   test('RtcEngine_setLocalVideoMirrorMode_b8a6c69 impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
+        'setLocalVideoMirrorMode_b8a6c69'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       mirrorMode: 'test',
@@ -7631,13 +7793,12 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
-        ?.setLocalVideoMirrorMode_b8a6c69
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .setLocalVideoMirrorMode_b8a6c69
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .setLocalVideoMirrorMode_b8a6c69
+    ).toBeCalledWith('test');
   });
 
   test('RtcEngine_enableDualStreamMode_5039d15 impl call', async () => {

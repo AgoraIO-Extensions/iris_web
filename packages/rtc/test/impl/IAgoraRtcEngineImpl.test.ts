@@ -16,7 +16,7 @@ import { IrisWebRtc } from '../../src/IrisRtcApi';
 
 import { IrisAudioSourceType } from '../../src/base/BaseType';
 import { BufferSourceAudioTrackPackage } from '../../src/engine/IrisClientManager';
-import { AgoraConsole } from '../../src/util';
+import { AgoraConsole, AgoraTranslate } from '../../src/util';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
@@ -1089,5 +1089,69 @@ describe('IAgoraRtcEngineImpl', () => {
       }
     );
     expect(JSON.parse(result.data).userInfo.uid).toBe(userInfoList[0].uid);
+  });
+  test('setLocalRenderMode_cfb201b', async () => {
+    let param = {
+      renderMode: NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT,
+      mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+    };
+    await setupLocalVideo(apiEnginePtr, null);
+    await callIris(apiEnginePtr, 'RtcEngine_setLocalRenderMode_cfb201b', param);
+    expect(
+      irisRtcEngine.irisClientManager.localVideoTrackPackages[0]
+        .videoPlayerConfig.fit
+    ).toBe(AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(param.renderMode));
+    expect(
+      irisRtcEngine.irisClientManager.localVideoTrackPackages[0]
+        .videoPlayerConfig.mirror
+    ).toBe(true);
+  });
+  test('setLocalRenderMode_bedb5ae', async () => {
+    let param = {
+      renderMode: NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT,
+    };
+    await setupLocalVideo(apiEnginePtr, null);
+    await callIris(apiEnginePtr, 'RtcEngine_setLocalRenderMode_bedb5ae', param);
+    expect(
+      irisRtcEngine.irisClientManager.localVideoTrackPackages[0]
+        .videoPlayerConfig.fit
+    ).toBe(AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(param.renderMode));
+  });
+  test('setLocalVideoMirrorMode_b8a6c69', async () => {
+    let param = {
+      mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+    };
+    await setupLocalVideo(apiEnginePtr, null);
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_setLocalVideoMirrorMode_b8a6c69',
+      param
+    );
+    expect(
+      irisRtcEngine.irisClientManager.localVideoTrackPackages[0]
+        .videoPlayerConfig.mirror
+    ).toBe(true);
+  });
+  test('setRemoteRenderMode_6771ce0', async () => {
+    let param = {
+      uid: TEST_REMOTE_UID,
+      renderMode: NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT,
+      mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+    };
+    await setupLocalVideo(apiEnginePtr, null);
+    await joinChannel(apiEnginePtr, null);
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_setRemoteRenderMode_6771ce0',
+      param
+    );
+    expect(
+      irisRtcEngine.irisClientManager.remoteUserPackages[0].videoPlayerConfig
+        .fit
+    ).toBe(AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(param.renderMode));
+    expect(
+      irisRtcEngine.irisClientManager.remoteUserPackages[0].videoPlayerConfig
+        .mirror
+    ).toBe(true);
   });
 });

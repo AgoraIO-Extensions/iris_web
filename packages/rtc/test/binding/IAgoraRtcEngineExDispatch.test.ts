@@ -1164,9 +1164,93 @@ describe('IRtcEngineEx', () => {
     );
   });
 
+  test('RtcEngineEx_setRemoteRenderModeEx_a72fe4e parameter', async () => {
+    let nParam = {
+      uid: undefined,
+      renderMode: undefined,
+      mirrorMode: undefined,
+      connection: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_setRemoteRenderModeEx_a72fe4e',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('uid is undefined');
+    }
+    //@ts-ignore
+    nParam.uid = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_setRemoteRenderModeEx_a72fe4e',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('renderMode is undefined');
+    }
+    //@ts-ignore
+    nParam.renderMode = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_setRemoteRenderModeEx_a72fe4e',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('mirrorMode is undefined');
+    }
+    //@ts-ignore
+    nParam.mirrorMode = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_setRemoteRenderModeEx_a72fe4e',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    //@ts-ignore
+    nParam.connection = 'test';
+  });
+
   test('RtcEngineEx_setRemoteRenderModeEx_a72fe4e impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl,
+        'setRemoteRenderModeEx_a72fe4e'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       uid: 'test',
@@ -1186,13 +1270,12 @@ describe('IRtcEngineEx', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
-        ?.setRemoteRenderModeEx_a72fe4e
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .setRemoteRenderModeEx_a72fe4e
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
+        .setRemoteRenderModeEx_a72fe4e
+    ).toBeCalledWith('test', 'test', 'test', 'test');
   });
 
   test('RtcEngineEx_enableLoopbackRecordingEx_4f41542 impl call', async () => {

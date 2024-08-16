@@ -5,6 +5,7 @@ import {
   ICameraVideoTrack,
   ILocalVideoTrack,
   IMicrophoneAudioTrack,
+  VideoPlayerConfig,
 } from 'agora-rtc-sdk-ng';
 import {
   AsyncTaskType,
@@ -363,6 +364,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       if (!videoTrackPackage) {
         videoTrackPackage = new VideoTrackPackage(
           undefined,
+          undefined,
           sourceType,
           undefined
         );
@@ -372,10 +374,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         if (this._engine.implHelper.isVideoCamera(sourceType)) {
           let cTrack: ICameraVideoTrack;
           cTrack = await this._engine.implHelper.createVideoCameraTrack();
-          videoTrackPackage.update({ track: cTrack });
+          videoTrackPackage.track = cTrack;
         }
       }
-      videoTrackPackage.setPreview(true);
+      videoTrackPackage.isPreview = true;
       try {
         let track = videoTrackPackage?.track as ILocalVideoTrack;
         if (track) {
@@ -384,7 +386,11 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             [videoTrackPackage]
           );
           if (videoTrackPackage.element) {
-            this._engine.trackHelper.play(track, videoTrackPackage.element);
+            this._engine.trackHelper.play(
+              track,
+              videoTrackPackage.element,
+              videoTrackPackage.videoPlayerConfig
+            );
           }
         }
       } catch (err) {
@@ -425,9 +431,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       videoTrackPackage = this._engine.irisClientManager.getLocalVideoTrackPackageBySourceType(
         sourceType
       )[0];
-      videoTrackPackage?.setPreview(false);
+      videoTrackPackage.isPreview = false;
       try {
-        let track = videoTrackPackage?.track as ILocalVideoTrack;
+        let track = videoTrackPackage.track as ILocalVideoTrack;
 
         if (track) {
           await this._engine.irisClientManager.irisClientObserver.notifyLocal(
@@ -435,10 +441,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             [videoTrackPackage]
           );
           if (videoTrackPackage.element && videoTrackPackage.track) {
-            this._engine.trackHelper.play(
-              videoTrackPackage.track,
-              videoTrackPackage.element
-            );
+            this._engine.trackHelper.stop(videoTrackPackage.track);
           }
         }
       } catch (err) {
@@ -485,15 +488,28 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         sourceType
       )[0];
       if (!trackPackage) {
-        trackPackage = new VideoTrackPackage(canvas.view, sourceType);
+        let config: VideoPlayerConfig = {
+          fit: AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(
+            canvas.renderMode
+              ? canvas.renderMode
+              : NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT
+          ),
+          mirror:
+            canvas.mirrorMode ===
+              NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
+            canvas.mirrorMode ===
+              NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+        };
+        trackPackage = new VideoTrackPackage(canvas.view, config, sourceType);
         this._engine.irisClientManager.addLocalVideoTrackPackage(trackPackage);
         if (this._engine.implHelper.isVideoCamera(sourceType)) {
           let cTrack: ICameraVideoTrack;
           cTrack = await this._engine.implHelper.createVideoCameraTrack();
-          trackPackage.update({ track: cTrack });
+          trackPackage.track = cTrack;
         }
       }
-      trackPackage.update({ type: sourceType, element: canvas.view });
+      trackPackage.type = sourceType;
+      trackPackage.element = canvas.view;
 
       let track = trackPackage.track as ILocalVideoTrack;
       if (track) {
@@ -503,7 +519,11 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         );
 
         if (trackPackage.element && trackPackage.isPreview) {
-          this._engine.trackHelper.play(track, trackPackage.element);
+          this._engine.trackHelper.play(
+            track,
+            trackPackage.element,
+            trackPackage.videoPlayerConfig
+          );
         }
       }
       return this._engine.returnResult();
@@ -892,7 +912,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             config.startPlayTime = Math.floor(startPos / 1000);
           }
           bufferSourceAudioTrackPackage.track.startProcessAudioBuffer(config);
-          bufferSourceAudioTrackPackage.track.play();
+          this._engine.trackHelper.play(bufferSourceAudioTrackPackage.track);
         } catch (reason) {
           AgoraConsole.error(reason);
         }
@@ -1137,5 +1157,123 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         userInfo: user ?? { uid: null, userAccount: null },
       })
     );
+  }
+
+  setLocalRenderMode_cfb201b(
+    renderMode: NATIVE_RTC.RENDER_MODE_TYPE,
+    mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE
+  ): CallApiReturnType {
+    let config: VideoPlayerConfig = {
+      fit: AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(
+        renderMode ? renderMode : NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT
+      ),
+      mirror:
+        mirrorMode ===
+          NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
+        mirrorMode ===
+          NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+    };
+    this._engine.irisClientManager.localVideoTrackPackages.map(
+      (videoTrackPackage) => {
+        let track = videoTrackPackage.track as ILocalVideoTrack;
+        videoTrackPackage.videoPlayerConfig = config;
+        if (track) {
+          this._engine.trackHelper.play(
+            track,
+            videoTrackPackage.element,
+            videoTrackPackage.videoPlayerConfig
+          );
+        }
+      }
+    );
+    return this._engine.returnResult();
+  }
+
+  setRemoteRenderMode_6771ce0(
+    uid: number,
+    renderMode: NATIVE_RTC.RENDER_MODE_TYPE,
+    mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE
+  ): CallApiReturnType {
+    let config: VideoPlayerConfig = {
+      fit: AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(
+        renderMode ? renderMode : NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT
+      ),
+      mirror:
+        mirrorMode ===
+          NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
+        mirrorMode ===
+          NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+    };
+    let remoteUserPackage = this._engine.irisClientManager.remoteUserPackages.find(
+      (user) => {
+        return user.uid === uid;
+      }
+    );
+    if (remoteUserPackage) {
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        remoteUserPackage.connection
+      );
+      if (irisClient) {
+        let user = irisClient.agoraRTCClient?.remoteUsers.find(
+          (item) => item.uid === remoteUserPackage!.uid
+        );
+        if (user && user.hasVideo) {
+          remoteUserPackage.videoPlayerConfig = config;
+          if (user.videoTrack) {
+            this._engine.trackHelper.play(
+              user.videoTrack,
+              remoteUserPackage.element,
+              remoteUserPackage.videoPlayerConfig
+            );
+          }
+        }
+      }
+    }
+    return this._engine.returnResult();
+  }
+
+  setLocalRenderMode_bedb5ae(
+    renderMode: NATIVE_RTC.RENDER_MODE_TYPE
+  ): CallApiReturnType {
+    let fit = AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(
+      renderMode ? renderMode : NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT
+    );
+    this._engine.irisClientManager.localVideoTrackPackages.map(
+      (videoTrackPackage) => {
+        let track = videoTrackPackage.track as ILocalVideoTrack;
+        videoTrackPackage.videoPlayerConfig.fit = fit;
+        if (track) {
+          this._engine.trackHelper.play(
+            track,
+            videoTrackPackage.element,
+            videoTrackPackage.videoPlayerConfig
+          );
+        }
+      }
+    );
+    return this._engine.returnResult();
+  }
+
+  setLocalVideoMirrorMode_b8a6c69(
+    mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE
+  ): CallApiReturnType {
+    let mirror =
+      mirrorMode === NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
+      mirrorMode ===
+        NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED;
+    this._engine.irisClientManager.localVideoTrackPackages.map(
+      (videoTrackPackage) => {
+        let track = videoTrackPackage.track as ILocalVideoTrack;
+        videoTrackPackage.videoPlayerConfig.mirror = mirror;
+        if (track) {
+          this._engine.trackHelper.play(
+            track,
+            videoTrackPackage.element,
+            videoTrackPackage.videoPlayerConfig
+          );
+        }
+      }
+    );
+    return this._engine.returnResult();
   }
 }

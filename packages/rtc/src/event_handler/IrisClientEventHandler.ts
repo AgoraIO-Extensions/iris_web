@@ -196,6 +196,7 @@ export class IrisClientEventHandler {
       userPackage = new RemoteUserPackage(
         connection,
         '',
+        undefined,
         remoteUid,
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
         IrisAudioSourceType.kAudioSourceTypeRemote
@@ -205,9 +206,7 @@ export class IrisClientEventHandler {
         this.agoraRTCClient
       );
     } else {
-      userPackage.update({
-        uid: remoteUid,
-      });
+      userPackage.uid = remoteUid;
     }
   }
 

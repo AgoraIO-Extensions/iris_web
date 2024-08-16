@@ -298,10 +298,34 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   setRemoteRenderModeEx_a72fe4e(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_setRemoteRenderModeEx_a72fe4e not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let renderMode = obj.renderMode;
+    if (renderMode === undefined) {
+      AgoraConsole.error('renderMode is undefined');
+      throw 'renderMode is undefined';
+    }
+    let mirrorMode = obj.mirrorMode;
+    if (mirrorMode === undefined) {
+      AgoraConsole.error('mirrorMode is undefined');
+      throw 'mirrorMode is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.setRemoteRenderModeEx_a72fe4e(
+      uid,
+      renderMode,
+      mirrorMode,
+      connection
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore

@@ -10,6 +10,7 @@ import {
   IRemoteAudioTrack,
   IRemoteVideoTrack,
   ITrack,
+  VideoPlayerConfig,
 } from 'agora-rtc-sdk-ng';
 
 import {
@@ -18,6 +19,7 @@ import {
   IrisVideoFrameBufferConfig,
   VideoParams,
 } from '../base/BaseType';
+import { defaultVideoPlayerConfig } from '../base/DefaultValue';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
 
 import { IrisClient } from './IrisClient';
@@ -29,6 +31,7 @@ export type WalkILocalVideoPackageTrackFun = (track: VideoTrackPackage) => void;
 export class RemoteUserPackage {
   connection: NATIVE_RTC.RtcConnection;
   element: string;
+  videoPlayerConfig: VideoPlayerConfig;
   uid: number;
   videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE;
   audioSourceType: IrisAudioSourceType;
@@ -36,29 +39,14 @@ export class RemoteUserPackage {
   constructor(
     connection: NATIVE_RTC.RtcConnection,
     element: string,
+    videoPlayerConfig: VideoPlayerConfig = defaultVideoPlayerConfig,
     uid: number,
     videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE,
     audioSourceType: IrisAudioSourceType
   ) {
     this.connection = connection;
     this.element = element;
-    this.uid = uid;
-    this.videoSourceType = videoSourceType;
-    this.audioSourceType = audioSourceType;
-  }
-
-  update({
-    element = this.element,
-    uid = this.uid,
-    videoSourceType = this.videoSourceType,
-    audioSourceType = this.audioSourceType,
-  }: {
-    element?: string;
-    uid?: number;
-    videoSourceType?: NATIVE_RTC.VIDEO_SOURCE_TYPE;
-    audioSourceType?: IrisAudioSourceType;
-  }) {
-    this.element = element;
+    this.videoPlayerConfig = videoPlayerConfig;
     this.uid = uid;
     this.videoSourceType = videoSourceType;
     this.audioSourceType = audioSourceType;
@@ -69,6 +57,7 @@ export class RemoteUserPackage {
 
 export class VideoTrackPackage {
   element?: string;
+  videoPlayerConfig: VideoPlayerConfig;
   type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
   track?: ILocalVideoTrack | IRemoteVideoTrack;
   isPreview: boolean = false;
@@ -76,32 +65,12 @@ export class VideoTrackPackage {
 
   constructor(
     element?: string,
+    videoPlayerConfig: VideoPlayerConfig = defaultVideoPlayerConfig,
     type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
     track?: ILocalVideoTrack | IRemoteVideoTrack
   ) {
     this.element = element;
-    this.type = type;
-    this.track = track;
-  }
-
-  setPreview(isPreview: boolean) {
-    this.isPreview = isPreview;
-  }
-
-  setIrisClient(irisClient: IrisClient) {
-    this.irisClient = irisClient;
-  }
-
-  update({
-    type = this.type,
-    track = this.track,
-    element = this.element,
-  }: {
-    type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
-    track?: ILocalVideoTrack | IRemoteVideoTrack;
-    element?: string;
-  }) {
-    this.element = element;
+    this.videoPlayerConfig = videoPlayerConfig;
     this.type = type;
     this.track = track;
   }
@@ -134,25 +103,6 @@ export class AudioTrackPackage {
     type: IrisAudioSourceType,
     track: ILocalAudioTrack | IRemoteAudioTrack
   ) {
-    this.type = type;
-    this.track = track;
-  }
-
-  setIrisClient(irisClient: IrisClient) {
-    this.irisClient = irisClient;
-  }
-
-  update({
-    type = this.type,
-    track = this.track,
-  }: {
-    type?: IrisAudioSourceType;
-    track?:
-      | ILocalAudioTrack
-      | IRemoteAudioTrack
-      | IMicrophoneAudioTrack
-      | ILocalTrack;
-  }) {
     this.type = type;
     this.track = track;
   }

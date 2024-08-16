@@ -538,4 +538,19 @@ export class AgoraTranslate {
         return NATIVE_RTC.CONTENT_INSPECT_RESULT.CONTENT_INSPECT_NEUTRAL;
     }
   }
+
+  public static NATIVE_RTC_RENDER_MODE_TYPE2Fit(
+    renderMode: NATIVE_RTC.RENDER_MODE_TYPE
+  ): 'cover' | 'contain' | 'fill' {
+    switch (renderMode) {
+      case NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_ADAPTIVE:
+        return 'cover';
+      case NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT:
+        return 'contain';
+      case NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_HIDDEN:
+        return 'cover';
+      default:
+        return 'fill';
+    }
+  }
 }

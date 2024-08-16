@@ -11,6 +11,8 @@ import { IrisWebRtc } from '../../src/IrisRtcApi';
 import { IrisAudioSourceType } from '../../src/base/BaseType';
 import { defaultLeaveChannelOptions } from '../../src/base/DefaultValue';
 
+import { AgoraTranslate } from '../../src/util';
+
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import {
@@ -429,5 +431,27 @@ describe('IAgoraRtcEngineImpl', () => {
       syncWithAudio: true,
       payload: 'test',
     });
+  });
+  test('setRemoteRenderModeEx_a72fe4e', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let param = {
+      uid: TEST_REMOTE_UID,
+      renderMode: NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT,
+      mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+      connection: connection,
+    };
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_setRemoteRenderModeEx_a72fe4e',
+      param
+    );
+    expect(
+      irisRtcEngine.irisClientManager.remoteUserPackages[0].videoPlayerConfig
+        .fit
+    ).toBe(AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(param.renderMode));
+    expect(
+      irisRtcEngine.irisClientManager.remoteUserPackages[0].videoPlayerConfig
+        .mirror
+    ).toBe(true);
   });
 });

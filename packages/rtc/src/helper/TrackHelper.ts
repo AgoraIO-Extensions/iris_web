@@ -6,6 +6,7 @@ import {
   IMicrophoneAudioTrack,
   IRemoteAudioTrack,
   ITrack,
+  VideoPlayerConfig,
 } from 'agora-rtc-sdk-ng';
 import { CallIrisApiResult } from 'iris-web-core';
 
@@ -20,11 +21,16 @@ export class TrackHelper {
   }
 
   public play(
-    track: ITrack | IRemoteAudioTrack,
-    element?: string | HTMLElement
+    track: ITrack,
+    element?: string | HTMLElement,
+    config?: VideoPlayerConfig
   ): void {
     try {
-      track?.play(element);
+      if (track.trackMediaType === 'video' && config) {
+        (track as ICameraVideoTrack)?.play(element!, config);
+      } else {
+        track?.play(element);
+      }
     } catch (e) {
       AgoraConsole.error(e);
       Promise.resolve(

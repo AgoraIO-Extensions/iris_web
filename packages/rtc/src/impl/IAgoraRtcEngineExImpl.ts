@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
+import { IMicrophoneAudioTrack, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
 import { IrisAudioSourceType } from '../base/BaseType';
@@ -12,9 +12,7 @@ import { NotifyRemoteType, NotifyType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { SendDataStreamMessage } from '../helper/ClientHelper';
-
-import { AgoraConsole } from '../util/AgoraConsole';
-import { isDefined } from '../util/AgoraTool';
+import { AgoraConsole, AgoraTranslate, isDefined } from '../util';
 
 //@ts-ignore
 export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
@@ -162,17 +160,24 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           canvas.uid
         );
         if (remoteUser) {
-          remoteUser.update({
-            element: canvas.view,
-          });
-          // this._engine.irisClientManager.irisClientObserver.notifyRemote(
-          //   NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
-          //   [remoteUser]
-          // );
+          remoteUser.element = canvas.view;
         } else {
+          let config: VideoPlayerConfig = {
+            fit: AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(
+              canvas.renderMode
+                ? canvas.renderMode
+                : NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT
+            ),
+            mirror:
+              canvas.mirrorMode ===
+                NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
+              canvas.mirrorMode ===
+                NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+          };
           let userPackage = new RemoteUserPackage(
             connection,
             canvas.view,
+            config,
             canvas.uid,
             NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
             IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
@@ -360,5 +365,49 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     };
 
     return this._engine.execute(process);
+  }
+
+  setRemoteRenderModeEx_a72fe4e(
+    uid: number,
+    renderMode: NATIVE_RTC.RENDER_MODE_TYPE,
+    mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE,
+    connection: NATIVE_RTC.RtcConnection
+  ): CallApiReturnType {
+    let config: VideoPlayerConfig = {
+      fit: AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(
+        renderMode ? renderMode : NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT
+      ),
+      mirror:
+        mirrorMode ===
+          NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
+        mirrorMode ===
+          NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+    };
+    let remoteUserPackage = this._engine.irisClientManager.remoteUserPackages.find(
+      (user) => {
+        return user.uid === uid;
+      }
+    );
+    if (remoteUserPackage) {
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
+      if (irisClient) {
+        let user = irisClient.agoraRTCClient?.remoteUsers.find(
+          (item) => item.uid === remoteUserPackage!.uid
+        );
+        if (user && user.hasVideo) {
+          remoteUserPackage.videoPlayerConfig = config;
+          if (user.videoTrack) {
+            this._engine.trackHelper.play(
+              user.videoTrack,
+              remoteUserPackage.element,
+              remoteUserPackage.videoPlayerConfig
+            );
+          }
+        }
+      }
+    }
+    return this._engine.returnResult();
   }
 }
