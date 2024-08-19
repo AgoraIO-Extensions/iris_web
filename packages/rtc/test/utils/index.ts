@@ -26,7 +26,8 @@ export const TEST_REMOTE_UID = 456;
 export async function callIris(
   apiEnginePtr: IrisApiEngine,
   apiName: string,
-  options: any = null
+  options: any = null,
+  buffers: any[] = ['test']
 ) {
   let result = await IrisCore.callIrisApi(
     apiEnginePtr,
@@ -35,7 +36,7 @@ export async function callIris(
       JSON.stringify(options),
       0,
       '',
-      ['test'],
+      buffers,
       [],
       1
     )
@@ -115,6 +116,8 @@ export async function joinChannel(apiEnginePtr: IrisApiEngine, options?: any) {
     } as IAgoraRTCRemoteUser,
   ];
   dispatchRTCEvent(agoraRTCClient, 'user-joined', user[0]);
+  dispatchRTCEvent(agoraRTCClient, 'user-published', user[0], 'video');
+  dispatchRTCEvent(agoraRTCClient, 'user-published', user[0], 'audio');
   agoraRTCClient.remoteUsers = user;
 }
 
@@ -163,6 +166,8 @@ export async function joinChannelWithUserAccount(
     } as IAgoraRTCRemoteUser,
   ];
   dispatchRTCEvent(agoraRTCClient, 'user-joined', user[0]);
+  dispatchRTCEvent(agoraRTCClient, 'user-published', user[0], 'video');
+  dispatchRTCEvent(agoraRTCClient, 'user-published', user[0], 'audio');
   agoraRTCClient.remoteUsers = user;
 }
 
@@ -200,8 +205,9 @@ export async function joinChannelEx(
       videoTrack: FakeLocalVideoTrack.create(),
     } as IAgoraRTCRemoteUser,
   ];
-  // triggerCallback(irisRtcEngine, 'onEventUserJoined', user);
   dispatchRTCEvent(agoraRTCClient, 'user-joined', user[0]);
+  dispatchRTCEvent(agoraRTCClient, 'user-published', user[0], 'video');
+  dispatchRTCEvent(agoraRTCClient, 'user-published', user[0], 'audio');
   agoraRTCClient.remoteUsers = user;
   irisClient.connection.localUid = agoraRTCClient.uid;
   return irisClient.connection;

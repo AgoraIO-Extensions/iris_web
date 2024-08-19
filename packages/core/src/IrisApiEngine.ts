@@ -72,7 +72,7 @@ export interface ApiInterceptor {
   dispose(): Promise<void>;
 }
 
-class EventParam {
+export class EventParam {
   constructor(
     event: string,
     data: string,

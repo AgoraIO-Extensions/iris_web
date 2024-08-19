@@ -418,10 +418,7 @@ export class IrisClientManager {
   getIrisClientByConnection(connection: NATIVE_RTC.RtcConnection): IrisClient {
     if (connection) {
       return this.irisClientList.filter((irisClient: IrisClient) => {
-        if (
-          irisClient.connection?.channelId == connection.channelId &&
-          irisClient.connection?.localUid == connection.localUid
-        ) {
+        if (irisClient.connection?.channelId == connection.channelId) {
           return irisClient;
         }
       })[0];
@@ -540,10 +537,8 @@ export class IrisClientManager {
     }
   }
 
-  removeUserInfoByUserAccount(userAccount: string) {
-    const index = this.userInfoList.findIndex(
-      (user) => user.userAccount === userAccount
-    );
+  removeUserInfoByUid(uid: number) {
+    const index = this.userInfoList.findIndex((user) => user.uid === uid);
     if (index !== -1) {
       this.userInfoList.splice(index, 1);
     }

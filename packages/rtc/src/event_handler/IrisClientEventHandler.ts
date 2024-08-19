@@ -7,6 +7,7 @@ import {
   IAgoraRTCRemoteUser,
   NetworkQuality,
   RemoteStreamType,
+  UID,
 } from 'agora-rtc-sdk-ng';
 
 import { IrisAudioSourceType } from '../base/BaseType';
@@ -16,7 +17,7 @@ import { RemoteUserPackage } from '../engine/IrisClientManager';
 import { NotifyRemoteType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-import { AgoraTranslate } from '../util/AgoraTranslate';
+import { AgoraTranslate, getUidFromRemoteUser } from '../util';
 
 export class IrisClientEventHandler {
   private _irisClient: IrisClient;
@@ -40,10 +41,6 @@ export class IrisClientEventHandler {
     this.agoraRTCClient.on(
       'user-unpublished',
       this.onEventUserUnpublished.bind(this)
-    );
-    this.agoraRTCClient.on(
-      'user-info-updated',
-      this.onEventUserInfoUpdated.bind(this)
     );
     this.agoraRTCClient.on('stream-message', this.onStreamMessage.bind(this));
     this.agoraRTCClient.on(
@@ -167,16 +164,15 @@ export class IrisClientEventHandler {
       channelId: this.agoraRTCClient.channelName,
       localUid: this.agoraRTCClient.uid as number,
     };
-    let remoteUid = user.uid as number;
+    let remoteUid: number = getUidFromRemoteUser(user);
     let elapsed = 0;
     this._engine.rtcEngineEventHandler.onUserJoined_c5499bd(
       connection,
       remoteUid,
       elapsed
     );
-    //@ts-ignore websdk的私有属性
-    //如果是string uid 登录
-    if (this.agoraRTCClient.isStringUID) {
+    //if joinchannel with string uid
+    if (typeof user.uid === 'string') {
       //@ts-ignore websdk的私有属性
       let _uintid = user._uintid;
       let userInfo: NATIVE_RTC.UserInfo = {
@@ -210,32 +206,33 @@ export class IrisClientEventHandler {
     }
   }
 
-  onEventUserLeft(user: IAgoraRTCRemoteUser, reason: string): void {
+  async onEventUserLeft(
+    user: IAgoraRTCRemoteUser,
+    reason: string
+  ): Promise<void> {
+    let remoteUid: number = getUidFromRemoteUser(user);
     let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      user.uid as number
+      remoteUid
     );
     let reason2 = AgoraTranslate.string2NATIVE_RTCUSER_OFFLINE_REASON_TYPE(
       reason
     );
     this._engine.rtcEngineEventHandler.onUserOffline_0a32aac(
       this._irisClient.connection,
-      user.uid as number,
+      remoteUid,
       reason2
     );
 
-    //@ts-ignore websdk的私有属性
-    //如果是string uid 登录
-    if (this.agoraRTCClient.isStringUID) {
-      this._engine.irisClientManager.removeUserInfoByUserAccount(
-        user.uid as string
-      );
+    //if joinchannel with string uid
+    if (typeof user.uid === 'string') {
+      this._engine.irisClientManager.removeUserInfoByUid(remoteUid);
     }
 
-    this._engine.irisClientManager.irisClientObserver.notifyRemote(
+    await this._engine.irisClientManager.irisClientObserver.notifyRemote(
       NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
       [remoteUser]
     );
-    this._engine.irisClientManager.irisClientObserver.notifyRemote(
+    await this._engine.irisClientManager.irisClientObserver.notifyRemote(
       NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
       [remoteUser]
     );
@@ -246,163 +243,118 @@ export class IrisClientEventHandler {
     );
   }
 
-  onEventUserPublished(
+  async onEventUserPublished(
     user: IAgoraRTCRemoteUser,
     mediaType: 'audio' | 'video'
-  ): void {
+  ): Promise<void> {
+    let remoteUid: number = getUidFromRemoteUser(user);
+    let isLocal = user.uid === this.agoraRTCClient.uid;
     let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      user.uid as number
+      remoteUid
     );
     if (remoteUser) {
       if (mediaType == 'audio') {
-        this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        await this._engine.irisClientManager.irisClientObserver.notifyRemote(
           NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
           [remoteUser],
           false
         );
+        this._engine.rtcEngineEventHandler.onUserMuteAudio_0aac2fe(
+          this._irisClient.connection,
+          remoteUid,
+          false
+        );
+        if (!isLocal) {
+          this._engine.rtcEngineEventHandler.onRemoteAudioStateChanged_056772e(
+            this._irisClient.connection,
+            remoteUid,
+            NATIVE_RTC.REMOTE_AUDIO_STATE.REMOTE_AUDIO_STATE_STARTING,
+            NATIVE_RTC.REMOTE_AUDIO_STATE_REASON
+              .REMOTE_AUDIO_REASON_REMOTE_UNMUTED,
+            0
+          );
+        }
       } else if (mediaType == 'video') {
-        this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        await this._engine.irisClientManager.irisClientObserver.notifyRemote(
           NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
           [remoteUser],
           false
         );
+        this._engine.rtcEngineEventHandler.onUserMuteVideo_0aac2fe(
+          this._irisClient.connection,
+          remoteUid,
+          false
+        );
+        if (!isLocal) {
+          this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
+            this._irisClient.connection,
+            remoteUid,
+            NATIVE_RTC.REMOTE_VIDEO_STATE.REMOTE_VIDEO_STATE_STARTING,
+            NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
+              .REMOTE_VIDEO_STATE_REASON_REMOTE_UNMUTED,
+            0
+          );
+        }
       }
     }
   }
 
-  onEventUserUnpublished(
+  async onEventUserUnpublished(
     user: IAgoraRTCRemoteUser,
     mediaType: 'audio' | 'video'
-  ): void {
+  ): Promise<void> {
+    let remoteUid: number = getUidFromRemoteUser(user);
     let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      user.uid as number
+      remoteUid
     );
     if (remoteUser) {
       if (mediaType == 'audio') {
-        this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        await this._engine.irisClientManager.irisClientObserver.notifyRemote(
           NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
           [remoteUser]
         );
-      } else if (mediaType == 'video') {
-        this._engine.irisClientManager.irisClientObserver.notifyRemote(
-          NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK,
-          [remoteUser]
-        );
-      }
-    }
-  }
-
-  onEventUserInfoUpdated(
-    uid: number,
-    msg:
-      | 'mute-audio'
-      | 'mute-video'
-      | 'enable-local-video'
-      | 'unmute-audio'
-      | 'unmute-video'
-      | 'disable-local-video'
-  ): void {
-    //@ts-ignore websdk的私有属性
-    //如果是string uid 登录
-    if (this.agoraRTCClient.isStringUID) {
-      uid = this._engine.irisClientManager.getUserInfoByUid(uid)?.uid!;
-    }
-    switch (msg) {
-      case 'mute-audio':
         this._engine.rtcEngineEventHandler.onUserMuteAudio_0aac2fe(
           this._irisClient.connection,
-          uid,
+          remoteUid,
           true
-        );
-        this._engine.rtcEngineEventHandler.onUserStateChanged_65f95a7(
-          this._irisClient.connection,
-          uid,
-          NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_AUDIO
         );
         this._engine.rtcEngineEventHandler.onRemoteAudioStateChanged_056772e(
           this._irisClient.connection,
-          uid,
+          remoteUid,
           NATIVE_RTC.REMOTE_AUDIO_STATE.REMOTE_AUDIO_STATE_STOPPED,
           NATIVE_RTC.REMOTE_AUDIO_STATE_REASON.REMOTE_AUDIO_REASON_REMOTE_MUTED,
           0
         );
-        break;
-      case 'mute-video':
+      } else if (mediaType == 'video') {
+        await this._engine.irisClientManager.irisClientObserver.notifyRemote(
+          NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK,
+          [remoteUser]
+        );
         this._engine.rtcEngineEventHandler.onUserMuteVideo_0aac2fe(
           this._irisClient.connection,
-          uid,
+          remoteUid,
           true
-        );
-        this._engine.rtcEngineEventHandler.onUserStateChanged_65f95a7(
-          this._irisClient.connection,
-          uid,
-          NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_MUTE_VIDEO
         );
         this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
           this._irisClient.connection,
-          uid,
+          remoteUid,
           NATIVE_RTC.REMOTE_VIDEO_STATE.REMOTE_VIDEO_STATE_STOPPED,
           NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
             .REMOTE_VIDEO_STATE_REASON_REMOTE_MUTED,
           0
         );
-        break;
-      case 'unmute-audio':
-        this._engine.rtcEngineEventHandler.onUserMuteAudio_0aac2fe(
-          this._irisClient.connection,
-          uid,
-          false
-        );
-        this._engine.rtcEngineEventHandler.onRemoteAudioStateChanged_056772e(
-          this._irisClient.connection,
-          uid,
-          NATIVE_RTC.REMOTE_AUDIO_STATE.REMOTE_AUDIO_STATE_STARTING,
-          NATIVE_RTC.REMOTE_AUDIO_STATE_REASON
-            .REMOTE_AUDIO_REASON_REMOTE_UNMUTED,
-          0
-        );
-        break;
-      case 'unmute-video':
-        this._engine.rtcEngineEventHandler.onUserMuteVideo_0aac2fe(
-          this._irisClient.connection,
-          uid,
-          false
-        );
-        this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
-          this._irisClient.connection,
-          uid,
-          NATIVE_RTC.REMOTE_VIDEO_STATE.REMOTE_VIDEO_STATE_STARTING,
-          NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
-            .REMOTE_VIDEO_STATE_REASON_REMOTE_UNMUTED,
-          0
-        );
-        break;
-      case 'enable-local-video':
-        this._engine.rtcEngineEventHandler.onUserEnableLocalVideo_0aac2fe(
-          this._irisClient.connection,
-          uid,
-          true
-        );
-        this._engine.rtcEngineEventHandler.onUserStateChanged_65f95a7(
-          this._irisClient.connection,
-          uid,
-          NATIVE_RTC.REMOTE_USER_STATE.USER_STATE_ENABLE_LOCAL_VIDEO
-        );
-        break;
-      case 'disable-local-video':
-        this._engine.rtcEngineEventHandler.onUserEnableLocalVideo_0aac2fe(
-          this._irisClient.connection,
-          uid,
-          false
-        );
-        break;
+      }
     }
   }
 
-  onStreamMessage(uid: number, payload: Uint8Array): void {
+  onStreamMessage(uid: UID, payload: Uint8Array): void {
+    //if joinchannel with string uid
+    if (typeof uid === 'string') {
+      uid = this._engine.irisClientManager.getUserInfoByUserAccount(uid)?.uid!;
+    }
     this._engine.rtcEngineEventHandler.onStreamMessage_99898cb(
       this._irisClient.connection,
-      uid as number,
+      uid,
       this._engine.globalState.streamMessageStreamId,
       payload,
       payload.length,
@@ -422,11 +374,15 @@ export class IrisClientEventHandler {
   }
 
   onEventStreamFallback(
-    uid: number,
+    uid: UID,
     isFallbackOrRecover: 'fallback' | 'recover'
   ): void {
+    //if joinchannel with string uid
+    if (typeof uid === 'string') {
+      uid = this._engine.irisClientManager.getUserInfoByUserAccount(uid)?.uid!;
+    }
     this._engine.rtcEngineEventHandler.onRemoteSubscribeFallbackToAudioOnly_dbdc15a(
-      uid as number,
+      uid,
       isFallbackOrRecover == 'fallback' ? true : false
     );
   }

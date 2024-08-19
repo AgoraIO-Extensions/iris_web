@@ -710,7 +710,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   muteAllRemoteVideoStreams_5039d15(mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK
           : NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
@@ -727,7 +727,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let remoteUserPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
         uid
       );
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK
           : NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
@@ -742,7 +742,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   muteAllRemoteAudioStreams_5039d15(mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK
           : NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
@@ -759,7 +759,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       let remoteUserPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
         uid
       );
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK
           : NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,

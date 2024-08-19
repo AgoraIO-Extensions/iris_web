@@ -2,11 +2,8 @@ import * as NATIVE_RTC from '@iris/native-rtc';
 import { IMicrophoneAudioTrack, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
-import { IrisAudioSourceType } from '../base/BaseType';
-
 import { defaultLeaveChannelOptions } from '../base/DefaultValue';
 import { IrisClient } from '../engine/IrisClient';
-import { RemoteUserPackage } from '../engine/IrisClientManager';
 
 import { NotifyRemoteType, NotifyType } from '../engine/IrisClientObserver';
 
@@ -155,40 +152,27 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
-      if (isDefined(canvas.uid)) {
-        let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
+      if (isDefined(canvas.uid) && isDefined(canvas.view)) {
+        let remoteUserPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
           canvas.uid
         );
-        if (remoteUser) {
-          remoteUser.element = canvas.view;
-        } else {
-          let config: VideoPlayerConfig = {
-            fit: AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(
-              canvas.renderMode
-                ? canvas.renderMode
-                : NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT
-            ),
-            mirror:
-              canvas.mirrorMode ===
-                NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
-              canvas.mirrorMode ===
-                NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
-          };
-          let userPackage = new RemoteUserPackage(
-            connection,
-            canvas.view,
-            config,
-            canvas.uid,
-            NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
-            IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+        if (remoteUserPackage) {
+          remoteUserPackage.element = canvas.view;
+        }
+        let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+          connection
+        );
+        if (irisClient) {
+          let remoteUser = irisClient.agoraRTCClient?.remoteUsers.find(
+            (user) => user.uid === canvas.uid
           );
-          let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
-            connection
-          );
-          this._engine.irisClientManager.addRemoteUserPackage(
-            userPackage,
-            irisClient?.agoraRTCClient!
-          );
+          if (remoteUser) {
+            this._engine.trackHelper.play(
+              remoteUser.videoTrack!,
+              remoteUserPackage.element,
+              remoteUserPackage.videoPlayerConfig
+            );
+          }
         }
         return this._engine.returnResult();
       } else {
@@ -213,7 +197,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let remoteUsers = remoteUserPackages.filter((userPackage) => {
         return userPackage.uid == uid;
       });
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK
           : NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
@@ -251,7 +235,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let remoteUserPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
         connection
       );
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK
           : NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
@@ -276,7 +260,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let remoteUsers = remoteUserPackages.filter((userPackage) => {
         return userPackage.uid == uid;
       });
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK
           : NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
@@ -314,7 +298,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let remoteUserPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
         connection
       );
-      this._engine.irisClientManager.irisClientObserver.notifyRemote(
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK
           : NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,

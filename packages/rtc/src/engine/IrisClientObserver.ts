@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { ILocalTrack, IMicrophoneAudioTrack, ITrack } from 'agora-rtc-sdk-ng';
+import { ILocalTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 
 import { IrisAudioSourceType } from '../base/BaseType';
 import {
@@ -374,7 +374,7 @@ export class IrisClientObserver {
     }
   }
 
-  subscribeVideoTrack(userPackage: RemoteUserPackage, force: boolean) {
+  async subscribeVideoTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -392,15 +392,8 @@ export class IrisClientObserver {
       if (!user || !user.hasVideo) {
         return;
       }
-      irisClient.agoraRTCClient.subscribe(user, 'video').then(() => {
+      await irisClient.agoraRTCClient.subscribe(user, 'video').then(() => {
         AgoraConsole.debug('onEventUserPublished subscribe video success');
-        if (userPackage.element) {
-          this._engine.trackHelper.play(
-            user!.videoTrack as ITrack,
-            userPackage.element,
-            userPackage.videoPlayerConfig
-          );
-        }
         let param: IrisTrackEventHandlerParam = {
           client: irisClient.agoraRTCClient,
           remoteUser: user!,
@@ -413,7 +406,7 @@ export class IrisClientObserver {
       });
     }
   }
-  subscribeAudioTrack(userPackage: RemoteUserPackage, force: boolean) {
+  async subscribeAudioTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -431,7 +424,7 @@ export class IrisClientObserver {
       if (!user || !user.hasAudio) {
         return;
       }
-      irisClient.agoraRTCClient.subscribe(user, 'audio').then(() => {
+      await irisClient.agoraRTCClient.subscribe(user, 'audio').then(() => {
         AgoraConsole.debug('onEventUserPublished subscribe audio success');
         this._engine.trackHelper.play(user!.audioTrack!);
         let param: IrisTrackEventHandlerParam = {
@@ -447,7 +440,7 @@ export class IrisClientObserver {
     }
   }
 
-  unsubscribeVideoTrack(userPackage: RemoteUserPackage, force: boolean) {
+  async unsubscribeVideoTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -458,7 +451,7 @@ export class IrisClientObserver {
       if (!user || !user.videoTrack) {
         return;
       }
-      irisClient.agoraRTCClient.unsubscribe(user, 'video').then(() => {
+      await irisClient.agoraRTCClient.unsubscribe(user, 'video').then(() => {
         AgoraConsole.debug('onEventUserPublished unsubscribe video success');
         this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
           user!,
@@ -468,7 +461,7 @@ export class IrisClientObserver {
     }
   }
 
-  unsubscribeAudioTrack(userPackage: RemoteUserPackage, force: boolean) {
+  async unsubscribeAudioTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -479,7 +472,7 @@ export class IrisClientObserver {
       if (!user || !user.audioTrack) {
         return;
       }
-      irisClient.agoraRTCClient.unsubscribe(user, 'audio').then(() => {
+      await irisClient.agoraRTCClient.unsubscribe(user, 'audio').then(() => {
         AgoraConsole.debug('onEventUserPublished unsubscribe audio success');
         this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
           user!,
@@ -489,7 +482,7 @@ export class IrisClientObserver {
     }
   }
 
-  notifyRemote(
+  async notifyRemote(
     type: NotifyRemoteType,
     scopePackages: RemoteUserPackage[],
     force: boolean = true
@@ -498,22 +491,22 @@ export class IrisClientObserver {
       switch (type) {
         case NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK:
           if (scopePackage) {
-            this.subscribeVideoTrack(scopePackage, force);
+            await this.subscribeVideoTrack(scopePackage, force);
           }
           break;
         case NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK:
           if (scopePackage) {
-            this.subscribeAudioTrack(scopePackage, force);
+            await this.subscribeAudioTrack(scopePackage, force);
           }
           break;
         case NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK:
           if (scopePackage) {
-            this.unsubscribeAudioTrack(scopePackage, force);
+            await this.unsubscribeAudioTrack(scopePackage, force);
           }
           break;
         case NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK:
           if (scopePackage) {
-            this.unsubscribeVideoTrack(scopePackage, force);
+            await this.unsubscribeVideoTrack(scopePackage, force);
           }
           break;
       }

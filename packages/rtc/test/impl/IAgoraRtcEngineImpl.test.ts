@@ -3,12 +3,7 @@ import {
   FakeAgoraRTCWrapper,
 } from '@agoraio-extensions/agora-rtc-sdk-ng-fake';
 import * as NATIVE_RTC from '@iris/native-rtc';
-import {
-  AREAS,
-  IAgoraRTC,
-  ILocalAudioTrack,
-  ILocalTrack,
-} from 'agora-rtc-sdk-ng';
+import { AREAS, IAgoraRTC, ILocalTrack } from 'agora-rtc-sdk-ng';
 
 import { IrisApiEngine, IrisCore } from 'iris-web-core';
 
