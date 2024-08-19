@@ -394,6 +394,14 @@ export class IrisClientObserver {
       }
       await irisClient.agoraRTCClient.subscribe(user, 'video').then(() => {
         AgoraConsole.debug('onEventUserPublished subscribe video success');
+        // setup video maybe called before subscribe, so we need to play video here too
+        if (userPackage.element) {
+          this._engine.trackHelper.play(
+            user!.videoTrack!,
+            userPackage.element,
+            userPackage.videoPlayerConfig
+          );
+        }
         let param: IrisTrackEventHandlerParam = {
           client: irisClient.agoraRTCClient,
           remoteUser: user!,

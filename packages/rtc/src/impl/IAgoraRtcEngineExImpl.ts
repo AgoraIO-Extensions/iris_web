@@ -166,7 +166,8 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
           let remoteUser = irisClient.agoraRTCClient?.remoteUsers.find(
             (user) => user.uid === canvas.uid
           );
-          if (remoteUser) {
+          // subscribe video maybe called before setupVideo, so we need to play video here too
+          if (remoteUser && remoteUser.videoTrack) {
             this._engine.trackHelper.play(
               remoteUser.videoTrack!,
               remoteUserPackage.element,
