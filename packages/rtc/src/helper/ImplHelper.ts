@@ -448,7 +448,11 @@ export class ImplHelper {
     irisClient.connection = con;
     this._engine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd(con, 0);
 
-    if (this._engine.globalState.enabledAudio) {
+    if (
+      irisClient.irisClientState.clientRoleType ===
+        NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER &&
+      this._engine.globalState.enabledAudio
+    ) {
       if (
         !this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(
           IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
