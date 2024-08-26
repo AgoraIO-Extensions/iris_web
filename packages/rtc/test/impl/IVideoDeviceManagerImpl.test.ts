@@ -66,6 +66,11 @@ describe('IAgoraRtcEngineImpl', () => {
       deviceIdUTF8: 1,
     };
     await setupLocalVideo(apiEnginePtr);
+    console.log(
+      irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
+        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA
+      )[0].track as ICameraVideoTrack
+    );
     jest.spyOn(
       irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA

@@ -22,9 +22,6 @@ import { IrisRtcEngine } from './IrisRtcEngine';
 export enum NotifyType {
   'PUBLISH_TRACK',
   'UNPUBLISH_TRACK',
-  'ENABLE_TRACK',
-  'UNABLE_TRACK',
-  'UPDATE_TRACK',
   'MUTE_TRACK',
   'UNMUTE_TRACK',
   'REMOVE_TRACK',
@@ -214,28 +211,6 @@ export class IrisClientObserver {
     }
   }
 
-  async enableTrack(trackPackage: TrackPackage) {
-    let track = trackPackage.track as ILocalTrack;
-    AgoraConsole.debug(`enableTrack ${track}`);
-    if (!track?.enabled) {
-      await this._engine.trackHelper.setEnabled(
-        trackPackage.track as ILocalTrack,
-        true
-      );
-    }
-  }
-
-  async unableTrack(trackPackage: TrackPackage) {
-    let track = trackPackage.track as ILocalTrack;
-    AgoraConsole.debug(`unableTrack ${track}`);
-    if (track?.enabled) {
-      await this._engine.trackHelper.setEnabled(
-        trackPackage.track as ILocalTrack,
-        false
-      );
-    }
-  }
-
   async muteTrack(trackPackage: TrackPackage) {
     let track = trackPackage.track as ILocalTrack;
     AgoraConsole.debug(`muteTrack ${track}`);
@@ -275,18 +250,14 @@ export class IrisClientObserver {
         await irisClientManager.processAudioTrackClose(
           trackPackage as AudioTrackPackage
         );
-        if (
-          trackPackage.type ===
-          IrisAudioSourceType.kAudioSourceTypeScreenCapture
-        ) {
-          this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f33d789(
-            NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
-              .LOCAL_AUDIO_STREAM_STATE_STOPPED,
-            0
-          );
-          irisClientManager.removeLocalAudioTrackPackage(trackPackage);
-          irisClient.removeLocalAudioTrack(trackPackage);
-        }
+        this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f33d789(
+          NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE.LOCAL_AUDIO_STREAM_STATE_STOPPED,
+          0
+        );
+        irisClientManager.removeLocalAudioTrackPackage(
+          trackPackage as AudioTrackPackage
+        );
+        irisClient.removeLocalAudioTrack(trackPackage as AudioTrackPackage);
       } else if (
         IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio ===
         trackPackage.type
@@ -320,8 +291,6 @@ export class IrisClientObserver {
     }
   }
 
-  async updateTrack(trackPackage: TrackPackage) {}
-
   async notifyLocal(
     type: NotifyType,
     scopePackages: TrackPackage[],
@@ -332,16 +301,6 @@ export class IrisClientObserver {
         case NotifyType.PUBLISH_TRACK:
           if (scopePackage) {
             await this.publishTrack(scopePackage, irisClientList ?? []);
-          }
-          break;
-        case NotifyType.ENABLE_TRACK:
-          if (scopePackage) {
-            await this.enableTrack(scopePackage);
-          }
-          break;
-        case NotifyType.UNABLE_TRACK:
-          if (scopePackage) {
-            await this.unableTrack(scopePackage);
           }
           break;
         case NotifyType.MUTE_TRACK:
@@ -358,11 +317,6 @@ export class IrisClientObserver {
         case NotifyType.UNPUBLISH_TRACK:
           if (scopePackage) {
             await this.unpublishTrack(scopePackage);
-          }
-          break;
-        case NotifyType.UPDATE_TRACK:
-          if (scopePackage) {
-            await this.updateTrack(scopePackage);
           }
           break;
         case NotifyType.REMOVE_TRACK:

@@ -154,9 +154,6 @@ export class IrisClientState {
     if (globalState.rtcEngineContext?.channelProfile) {
       this.channelProfile = globalState.rtcEngineContext.channelProfile;
     }
-    if (globalState.autoSubscribeVideo) {
-      this.autoSubscribeVideo = globalState.autoSubscribeVideo;
-    }
   }
 
   mergeChannelMediaOptions(options: NATIVE_RTC.ChannelMediaOptions) {

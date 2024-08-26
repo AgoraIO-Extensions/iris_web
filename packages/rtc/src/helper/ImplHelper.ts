@@ -203,12 +203,10 @@ export class ImplHelper {
     }
   }
 
-  public async createAudioTrack(audioType: IrisAudioSourceType) {
-    let audioTrackPackage: AudioTrackPackage;
+  public async createMicrophoneAudioTrack(): Promise<IMicrophoneAudioTrack> {
     let audioTrack: IMicrophoneAudioTrack;
     try {
       audioTrack = await this._engine.globalState.AgoraRTC.createMicrophoneAudioTrack();
-      //受全局enabledAudio控制
       await this._engine.trackHelper.setEnabled(audioTrack, false);
     } catch (e) {
       AgoraConsole.error('createMicrophoneAudioTrack failed');
@@ -216,16 +214,13 @@ export class ImplHelper {
     }
 
     await this.processAudioTrack(audioTrack);
-    audioTrackPackage = new AudioTrackPackage(audioType, audioTrack);
-    this._engine.irisClientManager.addLocalAudioTrackPackage(audioTrackPackage);
-    return audioTrackPackage;
+    return audioTrack;
   }
 
   public async createVideoCameraTrack(): Promise<ICameraVideoTrack> {
     let videoTrack: ICameraVideoTrack;
     try {
       videoTrack = await this._engine.globalState.AgoraRTC.createCameraVideoTrack();
-      //受全局enabledVideo控制
       await this._engine.trackHelper.setEnabled(videoTrack, false);
     } catch (e) {
       AgoraConsole.error('createCameraVideoTrack failed');
@@ -452,6 +447,27 @@ export class ImplHelper {
     }
     irisClient.connection = con;
     this._engine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd(con, 0);
+
+    if (this._engine.globalState.enabledAudio) {
+      if (
+        !this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+        )[0]
+      ) {
+        let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack();
+        this._engine.irisClientManager.addLocalAudioTrackPackage(
+          new AudioTrackPackage(
+            IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
+            audioTrack
+          )
+        );
+        await this._engine.trackHelper.setEnabled(
+          audioTrack as ILocalAudioTrack,
+          true
+        );
+      }
+    }
+
     await this._engine.irisClientManager.irisClientObserver.notifyLocal(
       NotifyType.PUBLISH_TRACK,
       [

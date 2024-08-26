@@ -1,10 +1,17 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { IMicrophoneAudioTrack, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
+import {
+  ILocalAudioTrack,
+  IMicrophoneAudioTrack,
+  VideoPlayerConfig,
+} from 'agora-rtc-sdk-ng';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
+
+import { IrisAudioSourceType } from '../base/BaseType';
 
 import { defaultLeaveChannelOptions } from '../base/DefaultValue';
 import { IrisClient } from '../engine/IrisClient';
 
+import { AudioTrackPackage } from '../engine/IrisClientManager';
 import { NotifyRemoteType, NotifyType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -50,6 +57,26 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         connection,
         0
       );
+
+      if (this._engine.globalState.enabledAudio) {
+        if (
+          !this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+            IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+          )[0]
+        ) {
+          let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack();
+          this._engine.irisClientManager.addLocalAudioTrackPackage(
+            new AudioTrackPackage(
+              IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
+              audioTrack
+            )
+          );
+          await this._engine.trackHelper.setEnabled(
+            audioTrack as ILocalAudioTrack,
+            true
+          );
+        }
+      }
 
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         NotifyType.PUBLISH_TRACK,
@@ -219,7 +246,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         connection
       );
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-        mute ? NotifyType.MUTE_TRACK : NotifyType.UNMUTE_TRACK,
+        mute ? NotifyType.UNPUBLISH_TRACK : NotifyType.PUBLISH_TRACK,
         localAudioTrackPackages
       );
 
@@ -282,7 +309,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         connection
       );
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-        mute ? NotifyType.MUTE_TRACK : NotifyType.UNMUTE_TRACK,
+        mute ? NotifyType.UNPUBLISH_TRACK : NotifyType.PUBLISH_TRACK,
         localVideoTrackPackages
       );
 

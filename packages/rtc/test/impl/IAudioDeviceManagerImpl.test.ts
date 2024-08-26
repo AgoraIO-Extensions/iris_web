@@ -82,6 +82,7 @@ describe('IAgoraRtcEngineImpl', () => {
     let param = {
       deviceId: 1,
     };
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
     await joinChannel(apiEnginePtr, null);
     jest.spyOn(
       irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
@@ -135,6 +136,7 @@ describe('IAgoraRtcEngineImpl', () => {
     let param = {
       deviceId: 1,
     };
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
     await joinChannel(apiEnginePtr, null);
     jest.spyOn(
       irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(

@@ -89,8 +89,6 @@ export class IrisGlobalState {
   channelProfile: NATIVE_RTC.CHANNEL_PROFILE_TYPE =
     NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING;
 
-  public autoSubscribeVideo: boolean = false;
-
   reset() {
     this.enabledAudio = true;
     this.pausedAudio = false;

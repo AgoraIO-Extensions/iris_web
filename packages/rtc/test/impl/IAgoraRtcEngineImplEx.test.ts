@@ -10,6 +10,7 @@ import { EventParam, IrisApiEngine, IrisCore } from 'iris-web-core';
 import { IrisWebRtc } from '../../src/IrisRtcApi';
 import { IrisAudioSourceType } from '../../src/base/BaseType';
 import { defaultLeaveChannelOptions } from '../../src/base/DefaultValue';
+import { NotifyType } from '../../src/engine/IrisClientObserver';
 
 import { AgoraTranslate } from '../../src/util';
 
@@ -228,27 +229,38 @@ describe('IAgoraRtcEngineImpl', () => {
   test('muteLocalAudioStreamEx_3cf17a4', async () => {
     let connection = await joinChannelEx(apiEnginePtr);
     await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
-    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
-      connection
-    );
     let localAudioTrackPackage = irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
       IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
     );
     expect(localAudioTrackPackage.length).toBe(1);
-    expect(localAudioTrackPackage[0].track.isPlaying).toBe(true);
-    expect((localAudioTrackPackage[0].track as ILocalTrack).muted).toBe(false);
 
+    jest.spyOn(
+      irisRtcEngine.irisClientManager.irisClientObserver,
+      'notifyLocal'
+    );
     await callIris(apiEnginePtr, 'RtcEngineEx_muteLocalAudioStreamEx_3cf17a4', {
       mute: true,
       connection,
     });
-    expect((localAudioTrackPackage[0].track as ILocalTrack).muted).toBe(true);
+    expect(
+      irisRtcEngine.irisClientManager.irisClientObserver.notifyLocal
+    ).toHaveBeenNthCalledWith(
+      1,
+      NotifyType.UNPUBLISH_TRACK,
+      irisRtcEngine.irisClientManager.localAudioTrackPackages
+    );
 
     await callIris(apiEnginePtr, 'RtcEngineEx_muteLocalAudioStreamEx_3cf17a4', {
       mute: false,
       connection,
     });
-    expect((localAudioTrackPackage[0].track as ILocalTrack).muted).toBe(false);
+    expect(
+      irisRtcEngine.irisClientManager.irisClientObserver.notifyLocal
+    ).toHaveBeenNthCalledWith(
+      2,
+      NotifyType.PUBLISH_TRACK,
+      irisRtcEngine.irisClientManager.localAudioTrackPackages
+    );
   });
   test('muteAllRemoteAudioStreamsEx_3cf17a4', async () => {
     let connection = await joinChannelEx(apiEnginePtr);
@@ -317,20 +329,34 @@ describe('IAgoraRtcEngineImpl', () => {
       NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
     );
     expect(localVideoTrackPackage.length).toBe(1);
-    expect(localVideoTrackPackage[0].track?.isPlaying).toBe(true);
-    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(false);
 
+    jest.spyOn(
+      irisRtcEngine.irisClientManager.irisClientObserver,
+      'notifyLocal'
+    );
     await callIris(apiEnginePtr, 'RtcEngineEx_muteLocalVideoStreamEx_3cf17a4', {
       mute: true,
       connection,
     });
-    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(true);
+    expect(
+      irisRtcEngine.irisClientManager.irisClientObserver.notifyLocal
+    ).toHaveBeenNthCalledWith(
+      1,
+      NotifyType.UNPUBLISH_TRACK,
+      irisRtcEngine.irisClientManager.localVideoTrackPackages
+    );
 
     await callIris(apiEnginePtr, 'RtcEngineEx_muteLocalVideoStreamEx_3cf17a4', {
       mute: false,
       connection,
     });
-    expect((localVideoTrackPackage[0].track as ILocalTrack).muted).toBe(false);
+    expect(
+      irisRtcEngine.irisClientManager.irisClientObserver.notifyLocal
+    ).toHaveBeenNthCalledWith(
+      2,
+      NotifyType.PUBLISH_TRACK,
+      irisRtcEngine.irisClientManager.localVideoTrackPackages
+    );
   });
   test('muteRemoteVideoStreamEx_6d93082', async () => {
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
