@@ -163,7 +163,10 @@ export class IrisClientObserver {
             }
             break;
           case NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM:
-            if (options.publishCustomVideoTrack) {
+            if (
+              options.publishCustomVideoTrack ||
+              globalState.pushVideoFrameEnabled
+            ) {
               publishTrack = trackPackage.track as ILocalTrack;
               irisClient.setLocalVideoTrack(trackPackage);
             }
