@@ -307,7 +307,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   ): CallApiReturnType {
     let process = async (): Promise<CallIrisApiResult> => {
       if (this._engine.globalState.enabledVideo == false) {
-        AgoraConsole.error('call enableVideo(true) before startPreview');
+        AgoraConsole.warn('call enableVideo(true) before startPreview');
         return this._engine.returnResult();
       }
 

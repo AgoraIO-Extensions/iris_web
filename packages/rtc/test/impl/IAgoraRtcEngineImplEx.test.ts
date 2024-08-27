@@ -160,10 +160,9 @@ describe('IAgoraRtcEngineImpl', () => {
     let param2 = {
       connection: param.connection,
       options: {
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE,
         publishCameraTrack: true,
         publishMicrophoneTrack: true,
-        publishScreenCaptureVideo: true,
-        publishScreenCaptureAudio: true,
         publishScreenTrack: true,
         publishCustomVideoTrack: true,
         token: '123',

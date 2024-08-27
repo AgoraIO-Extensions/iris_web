@@ -126,7 +126,7 @@ export class IrisClient {
     } else if (irisClientState.publishSecondaryCameraTrack == true) {
       videoSourceType =
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY;
-    } else if (irisClientState.publishScreenCaptureVideo == true) {
+    } else if (irisClientState.publishScreenTrack == true) {
       videoSourceType =
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
     }

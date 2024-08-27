@@ -292,10 +292,9 @@ describe('IAgoraRtcEngineImpl', () => {
     jest.spyOn(agoraRTCClient!, 'setClientRole');
     let param = {
       options: {
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE,
         publishCameraTrack: true,
         publishMicrophoneTrack: true,
-        publishScreenCaptureVideo: true,
-        publishScreenCaptureAudio: true,
         publishScreenTrack: true,
         publishCustomVideoTrack: true,
         token: '123',
@@ -448,17 +447,17 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.rtcEngineEventHandler,
       'onLocalVideoStateChanged_a44228a'
     );
-    jest.spyOn(AgoraConsole, 'error');
+    jest.spyOn(AgoraConsole, 'warn');
 
     await callIris(apiEnginePtr, 'RtcEngine_startPreview_4fd718e', param);
-    expect(AgoraConsole.error).toBeCalledWith(
+    expect(AgoraConsole.warn).toBeCalledWith(
       'call enableVideo(true) before startPreview'
     );
     jest.clearAllMocks();
     await callIris(apiEnginePtr, 'RtcEngine_startPreview_4fd718e', {
       sourceType: 100,
     });
-    expect(AgoraConsole.error).toBeCalledWith(
+    expect(AgoraConsole.warn).toBeCalledWith(
       'call enableVideo(true) before startPreview'
     );
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
