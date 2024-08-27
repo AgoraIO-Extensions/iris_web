@@ -393,25 +393,27 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       videoTrackPackage = this._engine.irisClientManager.getLocalVideoTrackPackageBySourceType(
         sourceType
       )[0];
-      videoTrackPackage.isPreview = false;
-      try {
-        let track = videoTrackPackage.track as ILocalVideoTrack;
+      if (videoTrackPackage) {
+        videoTrackPackage.isPreview = false;
+        try {
+          let track = videoTrackPackage.track as ILocalVideoTrack;
 
-        if (track) {
-          await this._engine.trackHelper.setEnabled(track, false);
-          if (videoTrackPackage.element && videoTrackPackage.track) {
-            this._engine.trackHelper.stop(videoTrackPackage.track);
+          if (track) {
+            await this._engine.trackHelper.setEnabled(track, false);
+            if (videoTrackPackage.element && videoTrackPackage.track) {
+              this._engine.trackHelper.stop(videoTrackPackage.track);
+            }
           }
+        } catch (err) {
+          AgoraConsole.error(err);
+          return this._engine.returnResult(false);
         }
-      } catch (err) {
-        AgoraConsole.error(err);
-        return this._engine.returnResult(false);
+        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a(
+          sourceType,
+          NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_STOPPED,
+          0
+        );
       }
-      this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a(
-        sourceType,
-        NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_STOPPED,
-        0
-      );
       return this._engine.returnResult();
     };
     return this._engine.execute(process);

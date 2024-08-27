@@ -354,8 +354,11 @@ export class ImplHelper {
     } else {
       irisClient = irisClientManager.getIrisClient();
     }
+    if (!irisClient) {
+      return;
+    }
     let irisClientState = irisClient.irisClientState;
-    let agoraRTCClient = irisClient?.agoraRTCClient;
+    let agoraRTCClient = irisClient.agoraRTCClient;
     let irisClientObserver = irisClientManager.irisClientObserver;
 
     //clientRole update
