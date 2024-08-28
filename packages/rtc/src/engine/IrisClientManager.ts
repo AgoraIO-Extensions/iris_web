@@ -61,6 +61,7 @@ export class VideoTrackPackage {
   type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
   track?: ILocalVideoTrack | IRemoteVideoTrack;
   isPreview: boolean = false;
+  isPublished: boolean = false;
   irisClient: IrisClient;
 
   constructor(
@@ -98,6 +99,7 @@ export class AudioTrackPackage {
     | IMicrophoneAudioTrack
     | ILocalTrack;
   irisClient: IrisClient;
+  isPublished: boolean = false;
 
   constructor(
     type: IrisAudioSourceType,
@@ -124,11 +126,6 @@ export class BufferSourceAudioTrackPackage extends AudioTrackPackage {
   type: IrisAudioSourceType;
   track: IBufferSourceAudioTrack;
   needPublish: boolean;
-  isPublished: boolean;
-
-  setIsPublished(isPublished: boolean) {
-    this.isPublished = isPublished;
-  }
 
   constructor(
     type: IrisAudioSourceType,
@@ -418,7 +415,10 @@ export class IrisClientManager {
   getIrisClientByConnection(connection: NATIVE_RTC.RtcConnection): IrisClient {
     if (connection) {
       return this.irisClientList.filter((irisClient: IrisClient) => {
-        if (irisClient.connection?.channelId == connection.channelId) {
+        if (
+          irisClient.connection?.channelId == connection.channelId &&
+          irisClient.connection?.localUid == connection.localUid
+        ) {
           return irisClient;
         }
       })[0];
@@ -511,7 +511,12 @@ export class IrisClientManager {
       this._engine.trackHelper.stop(audioTrack);
     }
     if (!audioTrack.muted) {
-      await this._engine.trackHelper.setEnabled(audioTrack, false);
+      if (
+        audioTrackPackage.type !==
+        IrisAudioSourceType.kAudioSourceTypeScreenCapture
+      ) {
+        await this._engine.trackHelper.setEnabled(audioTrack, false);
+      }
     }
     this.removeTrackEventHandlerByTrack(audioTrack);
   }

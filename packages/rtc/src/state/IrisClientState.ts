@@ -45,7 +45,7 @@ export class IrisClientState {
 
   autoSubscribeAudio: boolean = true;
 
-  autoSubscribeVideo: boolean = false;
+  autoSubscribeVideo: boolean = true;
 
   enableAudioRecordingOrPlayout: boolean = false;
 
