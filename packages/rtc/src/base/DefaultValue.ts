@@ -8,6 +8,6 @@ export const defaultLeaveChannelOptions: NATIVE_RTC.LeaveChannelOptions = {
 };
 
 export const defaultVideoPlayerConfig: VideoPlayerConfig = {
-  fit: 'cover',
+  fit: 'contain',
   mirror: false,
 };
