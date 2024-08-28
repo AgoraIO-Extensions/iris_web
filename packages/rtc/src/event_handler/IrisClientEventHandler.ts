@@ -10,7 +10,7 @@ import {
   UID,
 } from 'agora-rtc-sdk-ng';
 
-import { IrisAudioSourceType } from '../base/BaseType';
+import { IrisAudioSourceType, defaultRemoteVideoPlayerConfig } from '../base';
 
 import { IrisClient } from '../engine/IrisClient';
 import { RemoteUserPackage } from '../engine/IrisClientManager';
@@ -192,7 +192,7 @@ export class IrisClientEventHandler {
       userPackage = new RemoteUserPackage(
         connection,
         '',
-        undefined,
+        defaultRemoteVideoPlayerConfig,
         remoteUid,
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
         IrisAudioSourceType.kAudioSourceTypeRemote

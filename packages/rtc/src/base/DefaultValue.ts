@@ -11,3 +11,8 @@ export const defaultVideoPlayerConfig: VideoPlayerConfig = {
   fit: 'contain',
   mirror: false,
 };
+
+export const defaultRemoteVideoPlayerConfig: VideoPlayerConfig = {
+  fit: 'cover',
+  mirror: false,
+};
