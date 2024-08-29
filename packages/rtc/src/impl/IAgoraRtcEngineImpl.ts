@@ -865,7 +865,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       try {
         bufferSourceAudioTrackPackage = await this._engine.implHelper.createBufferSourceAudioTrack(
           soundId,
-          publish,
           bufferSourceAudioTrackInitConfig
         );
         AgoraConsole.log('createBufferSourceAudioTrack success');

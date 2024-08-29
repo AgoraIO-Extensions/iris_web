@@ -36,7 +36,6 @@ export class ImplHelper {
 
   public async createBufferSourceAudioTrack(
     soundId: number,
-    publish: boolean,
     bufferSourceAudioTrackInitConfig: BufferSourceAudioTrackInitConfig
   ): Promise<BufferSourceAudioTrackPackage> {
     let bufferSourceAudioTrack: IBufferSourceAudioTrack | undefined = undefined;
@@ -55,8 +54,7 @@ export class ImplHelper {
     let bufferSourceAudioTrackPackage = new BufferSourceAudioTrackPackage(
       IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio,
       bufferSourceAudioTrack!,
-      soundId,
-      publish
+      soundId
     );
     this._engine.irisClientManager.addLocalAudioTrackPackage(
       bufferSourceAudioTrackPackage
@@ -419,93 +417,75 @@ export class ImplHelper {
       if (options.publishCameraTrack === false) {
         needUnPublishVideoTrackPackages = [
           ...needUnPublishVideoTrackPackages,
-          ...localVideoTrackPackages
-            .filter(
-              (e) =>
-                e.type ===
-                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
-            )
-            .filter((e) => e.isPublished),
+          ...localVideoTrackPackages.filter(
+            (e) =>
+              e.type ===
+              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
+          ),
         ];
       }
       if (options.publishCameraTrack === true) {
         needPublishVideoTrackPackages = [
           ...needPublishVideoTrackPackages,
-          ...localVideoTrackPackages
-            .filter(
-              (e) =>
-                e.type ===
-                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
-            )
-            .filter((e) => !e.isPublished),
+          ...localVideoTrackPackages.filter(
+            (e) =>
+              e.type ===
+              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
+          ),
         ];
       }
 
       if (options.publishMicrophoneTrack === false) {
         needUnPublishAudioTrackPackages = [
           ...needUnPublishAudioTrackPackages,
-          ...localAudioTrackPackages
-            .filter(
-              (e) =>
-                e.type === IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
-            )
-            .filter((e) => e.isPublished),
+          ...localAudioTrackPackages.filter(
+            (e) =>
+              e.type === IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+          ),
         ];
       }
 
       if (options.publishMicrophoneTrack === true) {
         needPublishAudioTrackPackages = [
           ...needPublishAudioTrackPackages,
-          ...localAudioTrackPackages
-            .filter(
-              (e) =>
-                e.type === IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
-            )
-            .filter((e) => !e.isPublished),
+          ...localAudioTrackPackages.filter(
+            (e) =>
+              e.type === IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+          ),
         ];
       }
 
       if (options.publishScreenTrack === false) {
         needUnPublishAudioTrackPackages = [
           ...needUnPublishAudioTrackPackages,
-          ...localAudioTrackPackages
-            .filter(
-              (e) =>
-                e.type === IrisAudioSourceType.kAudioSourceTypeScreenCapture
-            )
-            .filter((e) => e.isPublished),
+          ...localAudioTrackPackages.filter(
+            (e) => e.type === IrisAudioSourceType.kAudioSourceTypeScreenCapture
+          ),
         ];
         needUnPublishVideoTrackPackages = [
           ...needUnPublishVideoTrackPackages,
-          ...localVideoTrackPackages
-            .filter(
-              (e) =>
-                e.type ===
-                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
-            )
-            .filter((e) => e.isPublished),
+          ...localVideoTrackPackages.filter(
+            (e) =>
+              e.type ===
+              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
+          ),
         ];
       }
 
       if (options.publishScreenTrack === true) {
         needPublishAudioTrackPackages = [
           ...needPublishAudioTrackPackages,
-          ...irisClientManager.localAudioTrackPackages
-            .filter(
-              (e) =>
-                e.type === IrisAudioSourceType.kAudioSourceTypeScreenCapture
-            )
-            .filter((e) => !e.isPublished),
+          ...irisClientManager.localAudioTrackPackages.filter(
+            (e) => e.type === IrisAudioSourceType.kAudioSourceTypeScreenCapture
+          ),
         ];
         needPublishVideoTrackPackages = [
           ...needPublishVideoTrackPackages,
-          ...irisClientManager.localVideoTrackPackages
-            .filter(
-              (e) =>
-                e.type ===
-                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
-            )
-            .filter((e) => !e.isPublished),
+          ...irisClientManager.localVideoTrackPackages.filter(
+            (e) =>
+              e.type ===
+              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
+          ),
         ];
       }
 
@@ -581,7 +561,8 @@ export class ImplHelper {
     if (
       irisClient.irisClientState.clientRoleType ===
         NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER &&
-      this._engine.globalState.enabledAudio
+      this._engine.globalState.enabledAudio &&
+      options.publishMicrophoneTrack
     ) {
       if (
         !this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(

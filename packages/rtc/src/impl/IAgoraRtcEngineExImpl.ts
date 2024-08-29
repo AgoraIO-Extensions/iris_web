@@ -61,7 +61,8 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       if (
         irisClient.irisClientState.clientRoleType ===
           NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER &&
-        this._engine.globalState.enabledAudio
+        this._engine.globalState.enabledAudio &&
+        options.publishMicrophoneTrack
       ) {
         if (
           !this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(

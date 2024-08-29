@@ -72,7 +72,7 @@ export class IrisClientObserver {
 
   async publishTrack(trackPackage: TrackPackage, irisClientList: IrisClient[]) {
     const globalState = this._engine.globalState;
-    if (!trackPackage.track || trackPackage.isPublished) return;
+    if (!trackPackage.track) return;
 
     let needPublish: boolean = false;
     let track = trackPackage.track as ILocalTrack;
@@ -95,13 +95,7 @@ export class IrisClientObserver {
             }
             break;
           case IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio:
-            const bufferTrackPackage = trackPackage as BufferSourceAudioTrackPackage;
-            if (
-              bufferTrackPackage.needPublish &&
-              !bufferTrackPackage.isPublished
-            ) {
-              needPublish = true;
-            }
+            needPublish = true;
             break;
         }
         if (needPublish) {
@@ -170,7 +164,6 @@ export class IrisClientObserver {
         try {
           AgoraConsole.debug(`publishTrack ${track}`);
           await irisClient.agoraRTCClient!.publish(track);
-          trackPackage.isPublished = true;
         } catch (reason) {
           AgoraConsole.error(reason);
         }
@@ -179,7 +172,7 @@ export class IrisClientObserver {
   }
 
   async unpublishTrack(trackPackage: TrackPackage) {
-    if (!trackPackage.track || !trackPackage.isPublished) {
+    if (!trackPackage.track) {
       return;
     }
 
@@ -192,7 +185,6 @@ export class IrisClientObserver {
     if (agoraRTCClient?.localTracks?.includes(track)) {
       AgoraConsole.debug(`unpublishTrack ${track}`);
       await this._engine.clientHelper.unpublish(agoraRTCClient!, track);
-      trackPackage.isPublished = false;
     }
   }
 

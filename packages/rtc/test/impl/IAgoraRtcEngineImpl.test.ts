@@ -694,11 +694,6 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(
       (irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
         IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
-      )[0] as BufferSourceAudioTrackPackage).needPublish
-    ).toBe(param.publish);
-    expect(
-      (irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
-        IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
       )[0] as BufferSourceAudioTrackPackage).soundId
     ).toBe(param.soundId);
     expect(

@@ -61,7 +61,6 @@ export class VideoTrackPackage {
   type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
   track?: ILocalVideoTrack | IRemoteVideoTrack;
   isPreview: boolean = false;
-  isPublished: boolean = false;
   irisClient: IrisClient;
 
   constructor(
@@ -99,7 +98,6 @@ export class AudioTrackPackage {
     | IMicrophoneAudioTrack
     | ILocalTrack;
   irisClient: IrisClient;
-  isPublished: boolean = false;
 
   constructor(
     type: IrisAudioSourceType,
@@ -125,24 +123,20 @@ export class BufferSourceAudioTrackPackage extends AudioTrackPackage {
   soundId: number;
   type: IrisAudioSourceType;
   track: IBufferSourceAudioTrack;
-  needPublish: boolean;
 
   constructor(
     type: IrisAudioSourceType,
     track: IBufferSourceAudioTrack,
-    soundId: number,
-    needPublish: boolean
+    soundId: number
   ) {
     super(type, track);
     this.type = type;
     this.track = track;
     this.soundId = soundId;
-    this.needPublish = needPublish;
   }
 
   dispose(): void {
     super.dispose();
-    this.needPublish = false;
   }
 }
 
