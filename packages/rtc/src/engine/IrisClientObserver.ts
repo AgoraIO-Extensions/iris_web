@@ -72,7 +72,7 @@ export class IrisClientObserver {
 
   async publishTrack(trackPackage: TrackPackage, irisClientList: IrisClient[]) {
     const globalState = this._engine.globalState;
-    if (!trackPackage.track && trackPackage.isPublished) return;
+    if (!trackPackage.track || trackPackage.isPublished) return;
 
     let needPublish: boolean = false;
     let track = trackPackage.track as ILocalTrack;
@@ -179,7 +179,7 @@ export class IrisClientObserver {
   }
 
   async unpublishTrack(trackPackage: TrackPackage) {
-    if (!trackPackage.track && !trackPackage.isPublished) {
+    if (!trackPackage.track || !trackPackage.isPublished) {
       return;
     }
 
