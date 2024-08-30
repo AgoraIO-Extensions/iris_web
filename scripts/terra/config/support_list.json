@@ -46,6 +46,11 @@
   "RtcEngine_stopEffect_46f8ab7",
   "RtcEngine_playEffect_531a783",
   "RtcEngine_stopAllEffects",
+  "RtcEngine_setLocalRenderMode_bedb5ae",
+  "RtcEngine_setLocalRenderMode_cfb201b",
+  "RtcEngine_setLocalVideoMirrorMode_b8a6c69",
+  "RtcEngine_setRemoteRenderMode_6771ce0",
+  "RtcEngineEx_setRemoteRenderModeEx_a72fe4e",
   "RtcEngineEx_joinChannelEx_a3cd08c",
   "RtcEngineEx_muteAllRemoteVideoStreamsEx_3cf17a4",
   "RtcEngineEx_muteAllRemoteAudioStreamsEx_3cf17a4",
@@ -55,6 +60,7 @@
   "RtcEngineEx_muteLocalAudioStreamEx_3cf17a4",
   "RtcEngineEx_muteRemoteVideoStreamEx_6d93082",
   "RtcEngineEx_muteRemoteAudioStreamEx_6d93082",
+  "RtcEngineEx_leaveChannelEx_b03ee9a",
   "RtcEngineEx_leaveChannelEx_c81e1a4",
   "RtcEngineEx_updateChannelMediaOptionsEx_457bb35",
   "RtcEngineEx_setupRemoteVideoEx_522a409",
@@ -99,5 +105,12 @@
   "VideoDeviceManager_enumerateVideoDevices",
   "VideoDeviceManager_setDevice_4ad5f6e",
   "VideoDeviceManager_getDevice_73b9872",
-  "VideoDeviceManager_release"
+  "VideoDeviceManager_release",
+  "AudioDeviceManager_enumerateRecordingDevices",
+  "AudioDeviceManager_enumeratePlaybackDevices",
+  "AudioDeviceManager_setRecordingDevice_4ad5f6e",
+  "AudioDeviceManager_setPlaybackDevice_4ad5f6e",
+  "AudioDeviceManager_getRecordingDevice_73b9872",
+  "AudioDeviceManager_getPlaybackDevice_73b9872",
+  "AudioDeviceManager_release"
 ]

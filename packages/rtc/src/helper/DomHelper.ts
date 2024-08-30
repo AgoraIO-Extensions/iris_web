@@ -10,7 +10,6 @@ export class IrisElement {
   public createIrisElement(): HTMLDivElement {
     const dom = document.createElement('div');
     dom.id = this.containerID;
-    // dom.style.display = this.containerDisplay;
     this.containerElement = dom;
     return dom;
   }
@@ -21,7 +20,6 @@ export class IrisElement {
 
   public remove() {
     this.containerElement?.remove();
-    this.containerElement = null;
   }
 
   release() {

@@ -4,7 +4,7 @@ export function eventHandlerBufferExtension(
   func_name: string,
   data: any
 ): any[] {
-  let bufferList = [];
+  let bufferList: any = [];
   switch (func_name) {
     case IRTCENGINEEVENTHANDLER_ONSTREAMMESSAGE_99898cb:
       if (data.data) {

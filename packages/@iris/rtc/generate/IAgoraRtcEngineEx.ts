@@ -8,6 +8,7 @@ import {
   EncryptionConfig,
   LiveTranscoding,
   SIMULCAST_STREAM_MODE,
+  SimulcastConfig,
   SimulcastStreamConfig,
   SpatialAudioParams,
   UserInfo,
@@ -280,6 +281,11 @@ export interface IRtcEngineEx {
     connection: RtcConnection
   ): CallApiReturnType;
 
+  setSimulcastConfigEx_bd8d7d0(
+    simulcastConfig: SimulcastConfig,
+    connection: RtcConnection
+  ): CallApiReturnType;
+
   setHighPriorityUserListEx_8736b5c(
     uidList: number[],
     uidNum: number,
@@ -306,5 +312,16 @@ export interface IRtcEngineEx {
   setParametersEx_8225ea3(
     connection: RtcConnection,
     parameters: string
+  ): CallApiReturnType;
+
+  getCallIdEx_b13f7c4(
+    callId: string,
+    connection: RtcConnection
+  ): CallApiReturnType;
+
+  sendAudioMetadataEx_e2bf1c4(
+    connection: RtcConnection,
+    metadata: string,
+    length: number
   ): CallApiReturnType;
 }

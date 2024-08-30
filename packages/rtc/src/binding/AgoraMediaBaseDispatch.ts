@@ -20,7 +20,7 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IVideoFrameMetaInfoDispatch implements IVideoFrameMetaInfo {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -35,7 +35,7 @@ export class IVideoFrameMetaInfoDispatch implements IVideoFrameMetaInfo {
 }
 
 export class IAudioPcmFrameSink {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -54,7 +54,7 @@ export class IAudioPcmFrameSink {
 }
 
 export class IAudioFrameObserverBase {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -143,7 +143,7 @@ export class IAudioFrameObserverBase {
 }
 
 export class IAudioFrameObserver extends IAudioFrameObserverBase {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     super(engine);
@@ -244,7 +244,7 @@ export class IAudioFrameObserver extends IAudioFrameObserverBase {
 }
 
 export class IAudioSpectrumObserver {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -273,7 +273,7 @@ export class IAudioSpectrumObserver {
 }
 
 export class IVideoEncodedFrameObserver {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -297,7 +297,7 @@ export class IVideoEncodedFrameObserver {
 }
 
 export class IVideoFrameObserver {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -391,8 +391,27 @@ export class IVideoFrameObserver {
   }
 }
 
+export class IFaceInfoObserver {
+  _engine: IrisRtcEngine;
+
+  constructor(engine: IrisRtcEngine) {
+    this._engine = engine;
+  }
+
+  notifyEvent(param: ApiParam): void {
+    this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
+  }
+
+  onFaceInfo_3a2037f(outFaceInfo: string): void {
+    AgoraConsole.warn(
+      'FaceInfoObserver_onFaceInfo_3a2037f not supported in this platform!'
+    );
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+}
+
 export class IMediaRecorderObserver {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;

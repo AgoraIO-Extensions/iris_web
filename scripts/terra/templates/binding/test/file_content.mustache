@@ -15,7 +15,7 @@ beforeAll(async () => {
   apiEnginePtr = IrisCore.createIrisApiEngine();
   IrisWebRtc.initIrisRtc(apiEnginePtr);
   irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
-  irisRtcEngine.implHelper.createAudioTrack = jest.fn();
+  irisRtcEngine.implHelper.createMicrophoneAudioTrack = jest.fn();
   let nParam = {
     context: 'test',
   };
@@ -123,6 +123,7 @@ describe('{{name}}', () => {
         } catch (e) {
           expect(e).toEqual('{{name}} is undefined');
         }
+        //@ts-ignore
         nParam.{{name}} = 'test';
       {{/is_output}}
     {{/parameters}}
@@ -157,7 +158,7 @@ describe('{{name}}', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('{{user_data.prefix_name}}')._impl
         .{{name}}
-    ).toBeCalledWith({{#parameters}}'test',{{/parameters}});
+    ).toBeCalledWith({{#parameters}}{{^is_output}}'test',{{/is_output}}{{/parameters}});
   });
   {{/user_data.isSupport}}
   {{^user_data.isSupport}}

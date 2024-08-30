@@ -136,7 +136,7 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(
       irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM
-      )[0].track.isPlaying
+      )[0].track!.isPlaying
     ).toBeFalsy();
     await setupLocalVideo(apiEnginePtr, {
       canvas: {
@@ -148,7 +148,7 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(
       irisRtcEngine.irisClientManager.getLocalVideoTrackPackageBySourceType(
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM
-      )[0].track.isPlaying
+      )[0].track!.isPlaying
     ).toBeTruthy();
   });
 });

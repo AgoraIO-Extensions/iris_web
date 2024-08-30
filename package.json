@@ -3,10 +3,12 @@
   "private": true,
   "description": "iris web",
   "scripts": {
+    "prepare": "husky install",
     "build": "pnpm -F iris-web-rtc run build && pnpm -F iris-web-rtc-fake run build",
     "test": "pnpm -F iris-web-rtc run test",
     "lint": "eslint --ext .ts,.tsx . && prettier --check .",
     "lint:fix": "eslint --fix --ext .ts,.tsx . && prettier --write .",
+    "typecheck": "pnpm -F iris-web-rtc run typecheck",
     "terra": "cd scripts/terra &&yarn terra",
     "start": "sh ./scripts/build_local_dev.sh",
     "release": "release-it"
@@ -27,20 +29,50 @@
     }
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^17.6.7",
     "@release-it/conventional-changelog": "^7.0.1",
     "@types/eslint": "^8.44.2",
     "@types/node": "^18.17.9",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "commitlint": "^17.6.7",
+    "cross-env": "^7.0.3",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-auto-import": "^0.1.1",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-unused-imports": "^3.0.0",
+    "husky": "^8.0.3",
     "prettier": "^2.0.5",
     "release-it": "^16.1.3",
+    "lint-staged": "^14.0.0",
     "tsup": "^7.1.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "cross-env NODE_ENV=development eslint --cache"
+    ],
+    "*.json,.{eslintrc,prettierrc}": [
+      "prettier --ignore-path .eslintignore --parser json --write"
+    ],
+    "*.{css,scss}": [
+      "prettier --ignore-path .eslintignore --write"
+    ],
+    "*.{html,md,mdx,yml}": [
+      "prettier --ignore-path .eslintignore --write"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "release-it": {
     "git": {

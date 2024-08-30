@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { ClientRole, IAgoraRTCClient } from 'agora-rtc-sdk-ng';
+import { ClientRole, IAgoraRTCClient, ILocalTrack } from 'agora-rtc-sdk-ng';
 import { CallIrisApiResult } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -41,7 +41,8 @@ export class ClientHelper {
   public async setClientRole(
     client: IAgoraRTCClient,
     role: NATIVE_RTC.CLIENT_ROLE_TYPE,
-    audienceLatencyLevel: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE
+    audienceLatencyLevel: NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE = NATIVE_RTC
+      .AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY
   ): Promise<void> {
     try {
       let webRole: ClientRole = AgoraTranslate.NATIVE_RTC_CLIENT_ROLE_TYPE2ClientRole(
@@ -54,7 +55,7 @@ export class ClientHelper {
           ? AgoraTranslate.NATIVE_RTC_AUDIENCE_LATENCY_LEVEL_TYPE2ClientRoleOptions(
               audienceLatencyLevel
             )
-          : null
+          : undefined
       );
     } catch (e) {
       AgoraConsole.error(e);
@@ -72,6 +73,21 @@ export class ClientHelper {
   ): Promise<void> {
     try {
       await (client as any).sendStreamMessage(message);
+    } catch (e) {
+      AgoraConsole.error(e);
+      Promise.resolve(
+        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
+      );
+      throw e;
+    }
+  }
+
+  public async unpublish(
+    client: IAgoraRTCClient,
+    tracks?: ILocalTrack | ILocalTrack[]
+  ): Promise<void> {
+    try {
+      await client.unpublish(tracks);
     } catch (e) {
       AgoraConsole.error(e);
       Promise.resolve(

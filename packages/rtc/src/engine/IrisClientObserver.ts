@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { ILocalTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
+import { ILocalTrack } from 'agora-rtc-sdk-ng';
 
 import { IrisAudioSourceType } from '../base/BaseType';
 import {
@@ -22,11 +22,9 @@ import { IrisRtcEngine } from './IrisRtcEngine';
 export enum NotifyType {
   'PUBLISH_TRACK',
   'UNPUBLISH_TRACK',
-  'ENABLE_TRACK',
-  'UNABLE_TRACK',
-  'UPDATE_TRACK',
   'MUTE_TRACK',
   'UNMUTE_TRACK',
+  'REMOVE_TRACK',
 }
 export enum NotifyRemoteType {
   'SUBSCRIBE_VIDEO_TRACK',
@@ -72,212 +70,127 @@ export class IrisClientObserver {
     );
   }
 
-  //根据每个irisClient的options,分配对应的轨道,如果irisClient的agoraRTCClient已经加入频道,则发布轨道
   async publishTrack(trackPackage: TrackPackage, irisClientList: IrisClient[]) {
-    let publishTrack: ILocalTrack;
-    let globalState = this._engine.globalState;
-    for (let irisClient of irisClientList) {
-      let options = irisClient.irisClientState;
+    const globalState = this._engine.globalState;
+    if (!trackPackage.track) return;
+
+    let needPublish: boolean = false;
+    let track = trackPackage.track as ILocalTrack;
+
+    for (const irisClient of irisClientList) {
+      const options = irisClient.irisClientState;
+
       if (globalState.enabledAudio && globalState.enabledLocalAudio) {
-        if (options.publishMicrophoneTrack) {
-          if (
-            trackPackage.track &&
-            (trackPackage.type ===
-              IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary ||
-              trackPackage.type ===
-                IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary)
-          ) {
-            this._engine.trackHelper.setMuted(
-              trackPackage.track as IMicrophoneAudioTrack,
-              false
-            );
-            publishTrack = trackPackage.track as ILocalTrack;
-            irisClient.addLocalAudioTrack(trackPackage);
-          }
+        switch (trackPackage.type) {
+          case IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary:
+          case IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary:
+            if (options.publishMicrophoneTrack) {
+              this._engine.trackHelper.setMuted(track, false);
+              needPublish = true;
+            }
+            break;
+          case IrisAudioSourceType.kAudioSourceTypeScreenCapture:
+            if (options.publishScreenCaptureAudio) {
+              needPublish = true;
+            }
+            break;
+          case IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio:
+            needPublish = true;
+            break;
         }
-        if (options.publishScreenCaptureAudio) {
-          if (
-            trackPackage.track &&
-            trackPackage.type ===
-              IrisAudioSourceType.kAudioSourceTypeScreenCapture
-          ) {
-            publishTrack = trackPackage.track as ILocalTrack;
-            irisClient.addLocalAudioTrack(trackPackage);
-          }
-        }
-
-        //engine.playEffect创建的track可以在加入频道前调用,也可以在加入频道后调用
-        //needPublish通过调用engine.playEffect时绑定
-        //当已加入频道时engine.playEffect调用会立刻publish
-        //当没有加入频道时,engine.playEffect调用不会publish,会等到加入频道后publish
-        //publish后, 会设置isPublished为true,避免重复publish
-        //当离开频道或者release时,轨道会关闭并unpublish
-        if (
-          trackPackage.track &&
-          trackPackage.type ===
-            IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
-        ) {
-          if (
-            (trackPackage as BufferSourceAudioTrackPackage).needPublish &&
-            !(trackPackage as BufferSourceAudioTrackPackage).isPublished
-          ) {
-            publishTrack = trackPackage.track as ILocalTrack;
-            irisClient.addLocalAudioTrack(trackPackage);
-          }
+        if (needPublish) {
+          irisClient.addLocalAudioTrack(trackPackage as AudioTrackPackage);
         }
       }
+
       if (globalState.enabledVideo && globalState.enabledLocalVideo) {
-        if (options.publishScreenCaptureVideo) {
-          if (options.publishScreenTrack) {
-            if (
-              trackPackage.track &&
-              trackPackage.type ===
-                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
-            ) {
-              publishTrack = trackPackage.track as ILocalTrack;
-              irisClient.setLocalVideoTrack(trackPackage);
+        switch (trackPackage.type) {
+          case NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY:
+            if (options.publishScreenTrack) {
+              needPublish = true;
             }
-          }
-          if (options.publishSecondaryScreenTrack) {
-            if (
-              trackPackage.track &&
-              trackPackage.type ===
-                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY
-            ) {
-              publishTrack = trackPackage.track as ILocalTrack;
-              irisClient.setLocalVideoTrack(trackPackage);
+            break;
+          case NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY:
+            if (options.publishSecondaryScreenTrack) {
+              needPublish = true;
             }
-          }
-          if (options.publishThirdScreenTrack) {
-            if (
-              trackPackage.track &&
-              trackPackage.type ===
-                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD
-            ) {
-              publishTrack = trackPackage.track as ILocalTrack;
-              irisClient.setLocalVideoTrack(trackPackage);
+            break;
+          case NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD:
+            if (options.publishThirdScreenTrack) {
+              needPublish = true;
             }
-          }
-          if (options.publishFourthScreenTrack) {
-            if (
-              trackPackage.track &&
-              trackPackage.type ===
-                NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH
-            ) {
-              publishTrack = trackPackage.track as ILocalTrack;
-              irisClient.setLocalVideoTrack(trackPackage);
+            break;
+          case NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH:
+            if (options.publishFourthScreenTrack) {
+              needPublish = true;
             }
-          }
+            break;
+          case NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY:
+            if (options.publishCameraTrack) {
+              needPublish = true;
+            }
+            break;
+          case NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY:
+            if (options.publishSecondaryCameraTrack) {
+              needPublish = true;
+            }
+            break;
+          case NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD:
+            if (options.publishThirdCameraTrack) {
+              needPublish = true;
+            }
+            break;
+          case NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH:
+            if (options.publishFourthCameraTrack) {
+              needPublish = true;
+            }
+            break;
+          case NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM:
+            if (options.publishCustomVideoTrack) {
+              needPublish = true;
+            }
+            break;
         }
-        if (options.publishCameraTrack) {
-          if (
-            trackPackage.track &&
-            trackPackage.type ===
-              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY
-          ) {
-            publishTrack = trackPackage.track as ILocalTrack;
-            irisClient.setLocalVideoTrack(trackPackage);
-          }
-        }
-        if (options.publishSecondaryCameraTrack) {
-          if (
-            trackPackage.track &&
-            trackPackage.type ===
-              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY
-          ) {
-            publishTrack = trackPackage.track as ILocalTrack;
-            irisClient.setLocalVideoTrack(trackPackage);
-          }
-        }
-        if (options.publishThirdCameraTrack) {
-          if (
-            trackPackage.track &&
-            trackPackage.type ===
-              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD
-          ) {
-            publishTrack = trackPackage.track as ILocalTrack;
-            irisClient.setLocalVideoTrack(trackPackage);
-          }
-        }
-        if (options.publishFourthCameraTrack) {
-          if (
-            trackPackage.track &&
-            trackPackage.type ===
-              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH
-          ) {
-            publishTrack = trackPackage.track as ILocalTrack;
-            irisClient.setLocalVideoTrack(trackPackage);
-          }
-        }
-        if (options.publishCustomVideoTrack) {
-          if (
-            trackPackage.track &&
-            trackPackage.type ===
-              NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM
-          ) {
-            publishTrack = trackPackage.track as ILocalTrack;
-            irisClient.setLocalVideoTrack(trackPackage);
-          }
+        if (needPublish) {
+          irisClient.setLocalVideoTrack(trackPackage as VideoTrackPackage);
         }
       }
 
-      //发布轨道必须保证该client的options满足条件,并且client已经加入频道,并且该轨道没有被发布过
       if (
+        needPublish &&
         irisClient.agoraRTCClient?.channelName &&
-        irisClient.agoraRTCClient.localTracks
+        !irisClient.agoraRTCClient.localTracks?.includes(track)
       ) {
-        for (let i = 0; i < irisClient.agoraRTCClient.localTracks.length; i++) {
-          let localTrack = irisClient.agoraRTCClient.localTracks[i];
-          if (localTrack === publishTrack) {
-            publishTrack = null;
-          }
-        }
-      } else {
-        publishTrack = null;
-      }
-      if (publishTrack) {
-        if (!publishTrack.enabled) {
-          await this._engine.trackHelper.setEnabled(publishTrack, true);
-        }
         try {
-          AgoraConsole.debug(`publishTrack ${publishTrack}`);
-          await irisClient.agoraRTCClient.publish(publishTrack);
+          AgoraConsole.debug(`publishTrack ${track}`);
+          await irisClient.agoraRTCClient!.publish(track);
         } catch (reason) {
           AgoraConsole.error(reason);
         }
-
-        if (
-          trackPackage.type ===
-          IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
-        ) {
-          (trackPackage as BufferSourceAudioTrackPackage).setIsPublished(true);
-        }
       }
     }
   }
 
-  async enableTrack(trackPackage: TrackPackage) {
-    let track = trackPackage.track as ILocalTrack;
-    if (!track?.enabled) {
-      await this._engine.trackHelper.setEnabled(
-        trackPackage.track as ILocalTrack,
-        true
-      );
+  async unpublishTrack(trackPackage: TrackPackage) {
+    if (!trackPackage.track) {
+      return;
     }
-  }
 
-  async unableTrack(trackPackage: TrackPackage) {
+    let irisClient = trackPackage.irisClient;
     let track = trackPackage.track as ILocalTrack;
-    if (track?.enabled) {
-      await this._engine.trackHelper.setEnabled(
-        trackPackage.track as ILocalTrack,
-        false
-      );
+    if (!irisClient) {
+      return;
+    }
+    let agoraRTCClient = irisClient.agoraRTCClient;
+    if (agoraRTCClient?.localTracks?.includes(track)) {
+      AgoraConsole.debug(`unpublishTrack ${track}`);
+      await this._engine.clientHelper.unpublish(agoraRTCClient!, track);
     }
   }
 
   async muteTrack(trackPackage: TrackPackage) {
     let track = trackPackage.track as ILocalTrack;
+    AgoraConsole.debug(`muteTrack ${track}`);
     if (!track?.muted) {
       await this._engine.trackHelper.setMuted(
         trackPackage.track as ILocalTrack,
@@ -288,6 +201,7 @@ export class IrisClientObserver {
 
   async unmuteTrack(trackPackage: TrackPackage) {
     let track = trackPackage.track as ILocalTrack;
+    AgoraConsole.debug(`unmuteTrack ${track}`);
     if (track?.muted) {
       await this._engine.trackHelper.setMuted(
         trackPackage.track as ILocalTrack,
@@ -296,55 +210,47 @@ export class IrisClientObserver {
     }
   }
 
-  async stopTrack(trackPackage: TrackPackage) {
+  async removeTrack(trackPackage: TrackPackage) {
     let irisClientManager = this._engine.irisClientManager;
     try {
       if (!trackPackage.track) {
         return;
       }
 
-      AgoraConsole.debug(`stopTrack ${trackPackage.track}`);
-      //还没有分配给对应的irisClient时,track会放到engine.initialize创建的client
+      AgoraConsole.debug(`removeTrack ${trackPackage.track}`);
       let irisClient = trackPackage.irisClient;
-      if (!trackPackage.irisClient) {
+      if (!irisClient) {
         irisClient = irisClientManager.irisClientList[0];
       }
-      if (this._engine.implHelper.isAudio(trackPackage.type)) {
+      this.unpublishTrack(trackPackage);
+      if (this._engine.implHelper.isAudio(trackPackage.type!)) {
         await irisClientManager.processAudioTrackClose(
-          trackPackage as AudioTrackPackage,
-          irisClient.agoraRTCClient
+          trackPackage as AudioTrackPackage
         );
-        if (
-          trackPackage.type ===
-          IrisAudioSourceType.kAudioSourceTypeScreenCapture
-        ) {
-          this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f33d789(
-            NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
-              .LOCAL_AUDIO_STREAM_STATE_STOPPED,
-            0
-          );
-          irisClientManager.removeLocalAudioTrackPackage(trackPackage);
-          irisClient.removeLocalAudioTrack(trackPackage);
-        }
+        this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f33d789(
+          NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE.LOCAL_AUDIO_STREAM_STATE_STOPPED,
+          0
+        );
+        irisClientManager.removeLocalAudioTrackPackage(
+          trackPackage as AudioTrackPackage
+        );
+        irisClient.removeLocalAudioTrack(trackPackage as AudioTrackPackage);
       } else if (
         IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio ===
         trackPackage.type
       ) {
         await irisClientManager.processBufferSourceAudioTrackClose(
-          trackPackage as BufferSourceAudioTrackPackage,
-          irisClient.agoraRTCClient
+          trackPackage as BufferSourceAudioTrackPackage
         );
         irisClient.removeLocalAudioTrack(trackPackage);
         irisClientManager.removeLocalAudioTrackPackage(trackPackage);
-      } else if (this._engine.implHelper.isVideoCamera(trackPackage.type)) {
+      } else if (this._engine.implHelper.isVideoCamera(trackPackage.type!)) {
         await irisClientManager.processVideoTrackClose(
-          trackPackage as VideoTrackPackage,
-          irisClient?.agoraRTCClient
+          trackPackage as VideoTrackPackage
         );
-      } else if (this._engine.implHelper.isScreenCapture(trackPackage.type)) {
+      } else if (this._engine.implHelper.isScreenCapture(trackPackage.type!)) {
         await irisClientManager.processVideoTrackClose(
-          trackPackage as VideoTrackPackage,
-          irisClient?.agoraRTCClient
+          trackPackage as VideoTrackPackage
         );
         this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a(
           trackPackage.type as NATIVE_RTC.VIDEO_SOURCE_TYPE,
@@ -355,15 +261,12 @@ export class IrisClientObserver {
           trackPackage as VideoTrackPackage
         );
         irisClient.clearLocalVideoTrack();
-      } else {
       }
     } catch (reason) {
       AgoraConsole.error(reason);
       throw reason;
     }
   }
-
-  async updateTrack(trackPackage: TrackPackage) {}
 
   async notifyLocal(
     type: NotifyType,
@@ -374,17 +277,7 @@ export class IrisClientObserver {
       switch (type) {
         case NotifyType.PUBLISH_TRACK:
           if (scopePackage) {
-            await this.publishTrack(scopePackage, irisClientList);
-          }
-          break;
-        case NotifyType.ENABLE_TRACK:
-          if (scopePackage) {
-            await this.enableTrack(scopePackage);
-          }
-          break;
-        case NotifyType.UNABLE_TRACK:
-          if (scopePackage) {
-            await this.unableTrack(scopePackage);
+            await this.publishTrack(scopePackage, irisClientList ?? []);
           }
           break;
         case NotifyType.MUTE_TRACK:
@@ -400,19 +293,19 @@ export class IrisClientObserver {
 
         case NotifyType.UNPUBLISH_TRACK:
           if (scopePackage) {
-            await this.stopTrack(scopePackage);
+            await this.unpublishTrack(scopePackage);
           }
           break;
-        case NotifyType.UPDATE_TRACK:
+        case NotifyType.REMOVE_TRACK:
           if (scopePackage) {
-            await this.updateTrack(scopePackage);
+            await this.removeTrack(scopePackage);
           }
           break;
       }
     }
   }
 
-  subscribeVideoTrack(userPackage: RemoteUserPackage) {
+  async subscribeVideoTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -421,32 +314,38 @@ export class IrisClientObserver {
     }
     let autoSubscribeVideo: boolean =
       irisClient.irisClientState.autoSubscribeVideo;
+    let needSubscribe = autoSubscribeVideo || force;
     let enableVideo: boolean = this._engine.globalState.enabledVideo;
-    if (enableVideo && autoSubscribeVideo && irisClient.agoraRTCClient) {
+    if (enableVideo && needSubscribe && irisClient.agoraRTCClient) {
       let user = irisClient.agoraRTCClient.remoteUsers.find(
         (item) => item.uid === userPackage.uid
       );
       if (!user || !user.hasVideo) {
         return;
       }
-      irisClient.agoraRTCClient.subscribe(user, 'video').then(() => {
+      await irisClient.agoraRTCClient.subscribe(user, 'video').then(() => {
         AgoraConsole.debug('onEventUserPublished subscribe video success');
+        // setup video maybe called before subscribe, so we need to play video here too
         if (userPackage.element) {
-          this._engine.trackHelper.play(user.videoTrack, userPackage.element);
+          this._engine.trackHelper.play(
+            user!.videoTrack!,
+            userPackage.element,
+            userPackage.videoPlayerConfig
+          );
         }
         let param: IrisTrackEventHandlerParam = {
-          channelName: irisClient.agoraRTCClient.channelName,
           client: irisClient.agoraRTCClient,
-          remoteUser: user,
-          track: user.videoTrack,
+          remoteUser: user!,
+          track: user!.videoTrack!,
           trackType: 'IRemoteVideoTrack',
+          videoSourceType: userPackage.videoSourceType,
         };
         let trackEventHandler = new IrisTrackEventHandler(param, this._engine);
         this._engine.irisClientManager.addTrackEventHandler(trackEventHandler);
       });
     }
   }
-  subscribeAudioTrack(userPackage: RemoteUserPackage) {
+  async subscribeAudioTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -455,23 +354,24 @@ export class IrisClientObserver {
     }
     let autoSubscribeAudio: boolean =
       irisClient.irisClientState.autoSubscribeAudio;
+    let needSubscribe = autoSubscribeAudio || force;
     let enableAudio: boolean = this._engine.globalState.enabledAudio;
-    if (enableAudio && autoSubscribeAudio && irisClient.agoraRTCClient) {
+    if (enableAudio && needSubscribe && irisClient.agoraRTCClient) {
       let user = irisClient.agoraRTCClient.remoteUsers.find(
         (item) => item.uid === userPackage.uid
       );
       if (!user || !user.hasAudio) {
         return;
       }
-      irisClient.agoraRTCClient.subscribe(user, 'audio').then(() => {
+      await irisClient.agoraRTCClient.subscribe(user, 'audio').then(() => {
         AgoraConsole.debug('onEventUserPublished subscribe audio success');
-        this._engine.trackHelper.play(user.audioTrack);
+        this._engine.trackHelper.play(user!.audioTrack!);
         let param: IrisTrackEventHandlerParam = {
-          channelName: irisClient.agoraRTCClient.channelName,
           client: irisClient.agoraRTCClient,
-          remoteUser: user,
-          track: user.audioTrack,
+          remoteUser: user!,
+          track: user!.audioTrack!,
           trackType: 'IRemoteTrack',
+          videoSourceType: userPackage.videoSourceType,
         };
         let trackEventHandler = new IrisTrackEventHandler(param, this._engine);
         this._engine.irisClientManager.addTrackEventHandler(trackEventHandler);
@@ -479,7 +379,7 @@ export class IrisClientObserver {
     }
   }
 
-  unsubscribeVideoTrack(userPackage: RemoteUserPackage) {
+  async unsubscribeVideoTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -490,17 +390,17 @@ export class IrisClientObserver {
       if (!user || !user.videoTrack) {
         return;
       }
-      irisClient.agoraRTCClient.unsubscribe(user, 'video').then(() => {
+      await irisClient.agoraRTCClient.unsubscribe(user, 'video').then(() => {
         AgoraConsole.debug('onEventUserPublished unsubscribe video success');
         this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
-          user,
+          user!,
           'video'
         );
       });
     }
   }
 
-  unsubscribeAudioTrack(userPackage: RemoteUserPackage) {
+  async unsubscribeAudioTrack(userPackage: RemoteUserPackage, force: boolean) {
     let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
       userPackage.connection
     );
@@ -511,37 +411,41 @@ export class IrisClientObserver {
       if (!user || !user.audioTrack) {
         return;
       }
-      irisClient.agoraRTCClient.unsubscribe(user, 'audio').then(() => {
+      await irisClient.agoraRTCClient.unsubscribe(user, 'audio').then(() => {
         AgoraConsole.debug('onEventUserPublished unsubscribe audio success');
         this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
-          user,
+          user!,
           'audio'
         );
       });
     }
   }
 
-  notifyRemote(type: NotifyRemoteType, scopePackages: RemoteUserPackage[]) {
+  async notifyRemote(
+    type: NotifyRemoteType,
+    scopePackages: RemoteUserPackage[],
+    force: boolean = true
+  ) {
     for (let scopePackage of scopePackages) {
       switch (type) {
         case NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK:
           if (scopePackage) {
-            this.subscribeVideoTrack(scopePackage);
+            await this.subscribeVideoTrack(scopePackage, force);
           }
           break;
         case NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK:
           if (scopePackage) {
-            this.subscribeAudioTrack(scopePackage);
+            await this.subscribeAudioTrack(scopePackage, force);
           }
           break;
         case NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK:
           if (scopePackage) {
-            this.unsubscribeAudioTrack(scopePackage);
+            await this.unsubscribeAudioTrack(scopePackage, force);
           }
           break;
         case NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK:
           if (scopePackage) {
-            this.unsubscribeVideoTrack(scopePackage);
+            await this.unsubscribeVideoTrack(scopePackage, force);
           }
           break;
       }

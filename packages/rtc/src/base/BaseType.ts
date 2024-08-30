@@ -1,5 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { ILocalVideoTrack, IRemoteVideoTrack, UID } from 'agora-rtc-sdk-ng';
+import { ILocalVideoTrack, IRemoteVideoTrack } from 'agora-rtc-sdk-ng';
 
 export enum IRIS_VIDEO_PROCESS_ERR {
   ERR_OK = 0,
@@ -20,7 +20,7 @@ export enum IrisAudioSourceType {
 
 export interface IrisVideoFrameBufferConfig {
   type: NATIVE_RTC.VIDEO_SOURCE_TYPE;
-  id: UID;
+  id: number;
   key: string;
 }
 

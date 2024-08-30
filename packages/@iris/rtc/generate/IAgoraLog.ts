@@ -7,6 +7,7 @@ export enum LOG_LEVEL {
   LOG_LEVEL_ERROR = 4,
   LOG_LEVEL_FATAL = 8,
   LOG_LEVEL_API_CALL = 16,
+  LOG_LEVEL_DEBUG = 32,
 }
 
 export enum LOG_FILTER_TYPE {

@@ -15,7 +15,7 @@ beforeAll(async () => {
   apiEnginePtr = IrisCore.createIrisApiEngine();
   IrisWebRtc.initIrisRtc(apiEnginePtr);
   irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
-  irisRtcEngine.implHelper.createAudioTrack = jest.fn();
+  irisRtcEngine.implHelper.createMicrophoneAudioTrack = jest.fn();
   let nParam = {
     context: 'test',
   };

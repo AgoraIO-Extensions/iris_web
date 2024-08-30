@@ -60,9 +60,6 @@ export function binding(parseResult: ParseResult) {
     });
 
     cxxfile.nodes = nodes.map((node: CXXTerraNode) => {
-      if (node.name === 'IRtcEngineEventHandler') {
-        // debugger;
-      }
 
       let hasSupportApi = false;
       node.asClazz().methods.map((method) => {

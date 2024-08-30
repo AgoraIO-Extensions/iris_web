@@ -4,6 +4,16 @@ import { CallApiReturnType } from 'iris-web-core';
 
 import { EncodedVideoFrameInfo } from './AgoraBase';
 
+export class ExtensionContext {
+  isValid?: boolean;
+
+  uid?: number;
+
+  providerName?: string;
+
+  extensionName?: string;
+}
+
 export enum VIDEO_SOURCE_TYPE {
   VIDEO_SOURCE_CAMERA_PRIMARY = 0,
   VIDEO_SOURCE_CAMERA = 0,
@@ -22,6 +32,7 @@ export enum VIDEO_SOURCE_TYPE {
   VIDEO_SOURCE_CAMERA_FOURTH = 12,
   VIDEO_SOURCE_SCREEN_THIRD = 13,
   VIDEO_SOURCE_SCREEN_FOURTH = 14,
+  VIDEO_SOURCE_SPEECH_DRIVEN = 15,
   VIDEO_SOURCE_UNKNOWN = 100,
 }
 
@@ -71,6 +82,7 @@ export enum MEDIA_SOURCE_TYPE {
   RTC_IMAGE_GIF_SOURCE = 10,
   REMOTE_VIDEO_SOURCE = 11,
   TRANSCODED_VIDEO_SOURCE = 12,
+  SPEECH_DRIVEN_VIDEO_SOURCE = 13,
   UNKNOWN_MEDIA_SOURCE = 100,
 }
 
@@ -127,6 +139,8 @@ export class AudioPcmFrame {
   bytes_per_sample?: BYTES_PER_SAMPLE;
 
   data_?: number[];
+
+  is_stereo_?: boolean;
 }
 
 export enum AUDIO_DUAL_MONO_MODE {
@@ -148,8 +162,10 @@ export enum VIDEO_PIXEL_FORMAT {
   VIDEO_CVPIXEL_NV12 = 12,
   VIDEO_CVPIXEL_I420 = 13,
   VIDEO_CVPIXEL_BGRA = 14,
+  VIDEO_CVPIXEL_P010 = 15,
   VIDEO_PIXEL_I422 = 16,
   VIDEO_TEXTURE_ID3D11TEXTURE2D = 17,
+  VIDEO_PIXEL_I010 = 18,
 }
 
 export enum RENDER_MODE_TYPE {
@@ -170,6 +186,109 @@ export enum META_INFO_KEY {
 
 export interface IVideoFrameMetaInfo {
   getMetaInfoStr_c81192f(key: META_INFO_KEY): CallApiReturnType;
+}
+
+export enum PrimaryID {
+  PRIMARYID_BT709 = 1,
+  PRIMARYID_UNSPECIFIED = 2,
+  PRIMARYID_BT470M = 4,
+  PRIMARYID_BT470BG = 5,
+  PRIMARYID_SMPTE170M = 6,
+  PRIMARYID_SMPTE240M = 7,
+  PRIMARYID_FILM = 8,
+  PRIMARYID_BT2020 = 9,
+  PRIMARYID_SMPTEST428 = 10,
+  PRIMARYID_SMPTEST431 = 11,
+  PRIMARYID_SMPTEST432 = 12,
+  PRIMARYID_JEDECP22 = 22,
+}
+
+export enum RangeID {
+  RANGEID_INVALID = 0,
+  RANGEID_LIMITED = 1,
+  RANGEID_FULL = 2,
+  RANGEID_DERIVED = 3,
+}
+
+export enum MatrixID {
+  MATRIXID_RGB = 0,
+  MATRIXID_BT709 = 1,
+  MATRIXID_UNSPECIFIED = 2,
+  MATRIXID_FCC = 4,
+  MATRIXID_BT470BG = 5,
+  MATRIXID_SMPTE170M = 6,
+  MATRIXID_SMPTE240M = 7,
+  MATRIXID_YCOCG = 8,
+  MATRIXID_BT2020_NCL = 9,
+  MATRIXID_BT2020_CL = 10,
+  MATRIXID_SMPTE2085 = 11,
+  MATRIXID_CDNCLS = 12,
+  MATRIXID_CDCLS = 13,
+  MATRIXID_BT2100_ICTCP = 14,
+}
+
+export enum TransferID {
+  TRANSFERID_BT709 = 1,
+  TRANSFERID_UNSPECIFIED = 2,
+  TRANSFERID_GAMMA22 = 4,
+  TRANSFERID_GAMMA28 = 5,
+  TRANSFERID_SMPTE170M = 6,
+  TRANSFERID_SMPTE240M = 7,
+  TRANSFERID_LINEAR = 8,
+  TRANSFERID_LOG = 9,
+  TRANSFERID_LOG_SQRT = 10,
+  TRANSFERID_IEC61966_2_4 = 11,
+  TRANSFERID_BT1361_ECG = 12,
+  TRANSFERID_IEC61966_2_1 = 13,
+  TRANSFERID_BT2020_10 = 14,
+  TRANSFERID_BT2020_12 = 15,
+  TRANSFERID_SMPTEST2084 = 16,
+  TRANSFERID_SMPTEST428 = 17,
+  TRANSFERID_ARIB_STD_B67 = 18,
+}
+
+export class ColorSpace {
+  primaries?: PrimaryID;
+
+  transfer?: TransferID;
+
+  matrix?: MatrixID;
+
+  range?: RangeID;
+}
+
+export class Hdr10MetadataInfo {
+  redPrimaryX?: number;
+
+  redPrimaryY?: number;
+
+  greenPrimaryX?: number;
+
+  greenPrimaryY?: number;
+
+  bluePrimaryX?: number;
+
+  bluePrimaryY?: number;
+
+  whitePointX?: number;
+
+  whitePointY?: number;
+
+  maxMasteringLuminance?: number;
+
+  minMasteringLuminance?: number;
+
+  maxContentLightLevel?: number;
+
+  maxFrameAverageLightLevel?: number;
+}
+
+export enum ALPHA_STITCH_MODE {
+  NO_ALPHA_STITCH = 0,
+  ALPHA_STITCH_UP = 1,
+  ALPHA_STITCH_BELOW = 2,
+  ALPHA_STITCH_LEFT = 3,
+  ALPHA_STITCH_RIGHT = 4,
 }
 
 export enum EGL_CONTEXT_TYPE {
@@ -210,15 +329,27 @@ export class ExternalVideoFrame {
 
   textureId?: number;
 
+  fenceObject?: number;
+
   matrix?: number[];
 
-  metadata_buffer?: Uint8Array;
+  metadataBuffer?: Uint8Array;
 
-  metadata_size?: number;
+  metadataSize?: number;
 
   alphaBuffer?: Uint8Array;
 
-  texture_slice_index?: number;
+  fillAlphaBuffer?: boolean;
+
+  alphaStitchMode?: ALPHA_STITCH_MODE;
+
+  d3d11Texture2d?: any;
+
+  textureSliceIndex?: number;
+
+  hdr10MetadataInfo?: Hdr10MetadataInfo;
+
+  colorSpace?: ColorSpace;
 }
 
 export class VideoFrame {
@@ -256,9 +387,15 @@ export class VideoFrame {
 
   alphaBuffer?: Uint8Array;
 
+  alphaStitchMode?: ALPHA_STITCH_MODE;
+
   pixelBuffer?: Uint8Array;
 
   metaInfo?: IVideoFrameMetaInfo;
+
+  hdr10MetadataInfo?: Hdr10MetadataInfo;
+
+  colorSpace?: ColorSpace;
 }
 
 export enum MEDIA_PLAYER_SOURCE_TYPE {
@@ -302,6 +439,8 @@ export class AudioFrame {
   presentationMs?: number;
 
   audioTrackNumber?: number;
+
+  rtpTimestamp?: number;
 }
 
 export enum AUDIO_FRAME_POSITION {
@@ -490,6 +629,10 @@ export class MediaRecorderConfiguration {
   maxDurationMs?: number;
 
   recorderInfoUpdateInterval?: number;
+}
+
+export interface IFaceInfoObserver {
+  onFaceInfo_3a2037f(outFaceInfo: string): void;
 }
 
 export class RecorderInfo {

@@ -11,7 +11,7 @@ import { AgoraConsole } from '../util/AgoraConsole';
 export class IMediaEngineDispatch implements IMediaEngine {
   // @ts-ignore
   _impl: IMediaEngineImpl;
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._impl = new IMediaEngineImpl(engine);
@@ -39,6 +39,14 @@ export class IMediaEngineDispatch implements IMediaEngine {
   ): CallApiReturnType {
     AgoraConsole.warn(
       'MediaEngine_registerVideoEncodedFrameObserver_d45d579 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  registerFaceInfoObserver_0303ed6(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MediaEngine_registerFaceInfoObserver_0303ed6 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

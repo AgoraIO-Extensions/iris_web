@@ -15,7 +15,7 @@ beforeAll(async () => {
   apiEnginePtr = IrisCore.createIrisApiEngine();
   IrisWebRtc.initIrisRtc(apiEnginePtr);
   irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
-  irisRtcEngine.implHelper.createAudioTrack = jest.fn();
+  irisRtcEngine.implHelper.createMicrophoneAudioTrack = jest.fn();
   let nParam = {
     context: 'test',
   };
@@ -647,6 +647,24 @@ describe('IVideoFrameObserver', () => {
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     eventHandler.getObservedFramePosition();
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+});
+describe('IFaceInfoObserver', () => {
+  test('FaceInfoObserver_onFaceInfo_3a2037f impl call', async () => {
+    let eventHandler = new bindingAPI.IFaceInfoObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.onFaceInfo_3a2037f(undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);

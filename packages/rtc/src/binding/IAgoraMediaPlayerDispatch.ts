@@ -11,7 +11,7 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IMediaPlayerDispatch implements IMediaPlayer {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
@@ -461,7 +461,7 @@ export class IMediaPlayerDispatch implements IMediaPlayer {
 
 export class IMediaPlayerCacheManagerDispatch
   implements IMediaPlayerCacheManager {
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;

@@ -21,3 +21,5 @@ js/
 docs/
 __temp
 
+# Optional eslint cache
+.eslintcache

@@ -14,7 +14,7 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   implements IRtcEngineEx {
   // @ts-ignore
   _impl: IRtcEngineExImpl;
-  _engine: IrisRtcEngine = null;
+  _engine: IrisRtcEngine;
 
   constructor(engine: IrisRtcEngine) {
     super(engine);
@@ -57,10 +57,19 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   leaveChannelEx_b03ee9a(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_leaveChannelEx_b03ee9a not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+    let options = obj.options;
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
+
+    return this._impl.leaveChannelEx_b03ee9a(connection, options);
   }
 
   // @ts-ignore
@@ -289,10 +298,34 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   setRemoteRenderModeEx_a72fe4e(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_setRemoteRenderModeEx_a72fe4e not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let renderMode = obj.renderMode;
+    if (renderMode === undefined) {
+      AgoraConsole.error('renderMode is undefined');
+      throw 'renderMode is undefined';
+    }
+    let mirrorMode = obj.mirrorMode;
+    if (mirrorMode === undefined) {
+      AgoraConsole.error('mirrorMode is undefined');
+      throw 'mirrorMode is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.setRemoteRenderModeEx_a72fe4e(
+      uid,
+      renderMode,
+      mirrorMode,
+      connection
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -538,6 +571,14 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   }
 
   // @ts-ignore
+  setSimulcastConfigEx_bd8d7d0(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_setSimulcastConfigEx_bd8d7d0 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   setHighPriorityUserListEx_8736b5c(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngineEx_setHighPriorityUserListEx_8736b5c not supported in this platform!'
@@ -573,6 +614,22 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   setParametersEx_8225ea3(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngineEx_setParametersEx_8225ea3 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  getCallIdEx_b13f7c4(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_getCallIdEx_b13f7c4 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  sendAudioMetadataEx_e2bf1c4(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_sendAudioMetadataEx_e2bf1c4 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

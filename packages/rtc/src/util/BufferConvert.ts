@@ -9,6 +9,10 @@ export const drawRGBABufferToCanvas = (
 ): void => {
   const ctx = canvas.getContext('2d');
 
+  if (!ctx) {
+    return;
+  }
+
   canvas.width = width;
   canvas.height = height;
 
