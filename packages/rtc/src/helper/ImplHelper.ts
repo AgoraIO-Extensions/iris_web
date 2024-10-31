@@ -233,9 +233,6 @@ export class ImplHelper {
   public async processScreenShareAudioTrack(audioTrack: ILocalAudioTrack) {
     let globalState = this._engine.globalState;
 
-    if (globalState.enabledAudio) {
-      this._engine.trackHelper.play(audioTrack);
-    }
     if (globalState.pausedAudio) {
       await this._engine.trackHelper.setEnabled(audioTrack, false);
     }

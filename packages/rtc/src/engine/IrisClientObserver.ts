@@ -277,7 +277,10 @@ export class IrisClientObserver {
       switch (type) {
         case NotifyType.PUBLISH_TRACK:
           if (scopePackage) {
-            await this.publishTrack(scopePackage, irisClientList ?? []);
+            await this.publishTrack(
+              scopePackage,
+              irisClientList ?? this._engine.irisClientManager.irisClientList
+            );
           }
           break;
         case NotifyType.MUTE_TRACK:

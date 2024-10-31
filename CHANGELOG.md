@@ -1,5 +1,12 @@
 # IRIS_WEB
 
+## [0.8.1](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.0...v0.8.1) (2024-10-31)
+
+
+### Bug Fixes
+
+* mutevideo is not working and screen share audio sent to remote by default ([68c3b20](https://github.com/AgoraIO-Extensions/iris_web/commit/68c3b20272dd8057d235d569f354778b0dd1faec))
+
 ## [0.8.0](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.7.0...v0.8.0) (2024-08-30)
 
 ## [0.8.0-pre](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.7.0...v0.8.0-pre) (2024-08-07)
