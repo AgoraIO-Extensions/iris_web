@@ -385,12 +385,12 @@ export class ImplHelper {
           options.clientRoleType!,
           options
         );
-        await this._engine.clientHelper.setClientRole(
-          agoraRTCClient!,
-          options.clientRoleType!,
-          irisClientState.audienceLatencyLevel
-        );
       }
+      await this._engine.clientHelper.setClientRole(
+        agoraRTCClient!,
+        options.clientRoleType!,
+        irisClientState.audienceLatencyLevel
+      );
       irisClientState.clientRoleType = options.clientRoleType;
     }
 
