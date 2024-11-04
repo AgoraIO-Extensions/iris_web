@@ -23,12 +23,14 @@ function initIrisRtc(
   );
   // set the first irisApiEngine apiInterceptors to irisClientManager
   // this is a convenient way to get irisClientManager in most cases
-  if (window.__AGORA_IRIS_API_ENGINE_LIST__.length === 1) {
-    window.__AGORA_IRIS_CLIENT_MANAGER__ =
-      window.__AGORA_IRIS_API_ENGINE_LIST__[0][
-        'apiInterceptors'
-      ][0]?.irisClientManager;
-  }
+  setTimeout(() => {
+    if (window.__AGORA_IRIS_API_ENGINE_LIST__.length === 1) {
+      window.__AGORA_IRIS_CLIENT_MANAGER__ =
+        window.__AGORA_IRIS_API_ENGINE_LIST__[0][
+          'apiInterceptors'
+        ][0]?.irisClientManager;
+    }
+  }, 1000);
 }
 
 export let IrisWebRtc = {

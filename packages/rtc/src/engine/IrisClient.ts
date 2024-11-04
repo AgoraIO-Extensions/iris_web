@@ -218,6 +218,12 @@ export class IrisClient {
   }
 
   addLocalAudioTrack(trackPackage: AudioTrackPackage) {
+    let find = this.audioTrackPackages.find(
+      (track) => track.track === trackPackage.track
+    );
+    if (find) {
+      return;
+    }
     this.audioTrackPackages.push(trackPackage);
     trackPackage.irisClient = this;
   }
