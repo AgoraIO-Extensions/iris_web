@@ -365,7 +365,6 @@ export class ImplHelper {
         connection
       );
     }
-
     //clientRole update
     if (isDefined(options.clientRoleType)) {
       if (

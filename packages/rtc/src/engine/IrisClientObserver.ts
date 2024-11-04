@@ -74,12 +74,11 @@ export class IrisClientObserver {
     const globalState = this._engine.globalState;
     if (!trackPackage.track) return;
 
-    let needPublish: boolean = false;
     let track = trackPackage.track as ILocalTrack;
 
     for (const irisClient of irisClientList) {
+      let needPublish: boolean = false;
       const options = irisClient.irisClientState;
-
       if (globalState.enabledAudio && globalState.enabledLocalAudio) {
         switch (trackPackage.type) {
           case IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary:
