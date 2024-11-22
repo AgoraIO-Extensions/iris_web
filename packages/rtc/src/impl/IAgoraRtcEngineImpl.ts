@@ -560,11 +560,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         } catch (e) {
           AgoraConsole.warn(`createAudioTrack error: ${e}`);
         }
-      } else {
-        await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-          NotifyType.REMOVE_TRACK,
-          this._engine.irisClientManager.localAudioTrackPackages
-        );
       }
 
       for (let trackPackage of this._engine.irisClientManager
