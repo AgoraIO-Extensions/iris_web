@@ -1,5 +1,14 @@
 # IRIS_WEB
 
+## [0.8.4](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.0...v0.8.4) (2024-11-25)
+
+
+### Bug Fixes
+
+* fix some issues in 0.8.4 ([#38](https://github.com/AgoraIO-Extensions/iris_web/issues/38)) ([a83d078](https://github.com/AgoraIO-Extensions/iris_web/commit/a83d078ec248644f448ce6ee0fc57d45b2744dcf))
+* publish track issue ([#37](https://github.com/AgoraIO-Extensions/iris_web/issues/37)) ([0661a66](https://github.com/AgoraIO-Extensions/iris_web/commit/0661a66f78650e2031994141edf1852d5cb30725))
+* updateChannelMediaOptions doesn't setClientRole ([#36](https://github.com/AgoraIO-Extensions/iris_web/issues/36)) ([9a2fc5b](https://github.com/AgoraIO-Extensions/iris_web/commit/9a2fc5b61c50a5fe8b8c56133017b98c44c8932a))
+
 ## [0.8.3](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.0...v0.8.3) (2024-11-04)
 
 
