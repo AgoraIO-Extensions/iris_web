@@ -204,6 +204,31 @@ export class IrisClientEventHandler {
     } else {
       userPackage.uid = remoteUid;
     }
+    this._engine.rtcEngineEventHandler.onRemoteAudioStateChanged_056772e(
+      this._irisClient.connection,
+      remoteUid,
+      user.hasAudio
+        ? NATIVE_RTC.REMOTE_AUDIO_STATE.REMOTE_AUDIO_STATE_STARTING
+        : NATIVE_RTC.REMOTE_AUDIO_STATE.REMOTE_AUDIO_STATE_STOPPED,
+      user.hasAudio
+        ? NATIVE_RTC.REMOTE_AUDIO_STATE_REASON
+            .REMOTE_AUDIO_REASON_REMOTE_UNMUTED
+        : NATIVE_RTC.REMOTE_AUDIO_STATE_REASON.REMOTE_AUDIO_REASON_REMOTE_MUTED,
+      0
+    );
+    this._engine.rtcEngineEventHandler.onRemoteVideoStateChanged_a14e9d1(
+      this._irisClient.connection,
+      remoteUid,
+      user.hasVideo
+        ? NATIVE_RTC.REMOTE_VIDEO_STATE.REMOTE_VIDEO_STATE_STARTING
+        : NATIVE_RTC.REMOTE_VIDEO_STATE.REMOTE_VIDEO_STATE_STOPPED,
+      user.hasVideo
+        ? NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
+            .REMOTE_VIDEO_STATE_REASON_REMOTE_UNMUTED
+        : NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
+            .REMOTE_VIDEO_STATE_REASON_REMOTE_MUTED,
+      0
+    );
   }
 
   async onEventUserLeft(

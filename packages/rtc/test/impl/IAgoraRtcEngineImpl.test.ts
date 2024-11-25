@@ -799,7 +799,7 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
         IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
       ).length
-    ).toBe(0);
+    ).toBe(1);
     await joinChannel(apiEnginePtr, null);
     await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
     expect(

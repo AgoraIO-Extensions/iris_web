@@ -177,6 +177,15 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(agoraRTCClient?.setClientRole).toBeCalledTimes(1);
   });
   test('setupRemoteVideoEx_522a409', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let param2 = {
+      canvas: {
+        uid: TEST_REMOTE_UID,
+        view: 'test-view',
+        sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
+      },
+      connection: connection,
+    };
     await callIris(
       apiEnginePtr,
       'RtcEngine_registerEventHandler_5fc0465',
@@ -215,15 +224,6 @@ describe('IAgoraRtcEngineImpl', () => {
         },
       ]
     );
-    let connection = await joinChannelEx(apiEnginePtr);
-    let param2 = {
-      canvas: {
-        uid: TEST_REMOTE_UID,
-        view: 'test-view',
-        sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
-      },
-      connection: connection,
-    };
   });
   test('muteLocalAudioStreamEx_3cf17a4', async () => {
     let connection = await joinChannelEx(apiEnginePtr);
