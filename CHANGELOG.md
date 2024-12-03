@@ -1,5 +1,12 @@
 # IRIS_WEB
 
+## [0.8.5](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.4...v0.8.5) (2024-12-03)
+
+
+### Features
+
+* bump native sdk to 4.5.0 ([#39](https://github.com/AgoraIO-Extensions/iris_web/issues/39)) ([0f84785](https://github.com/AgoraIO-Extensions/iris_web/commit/0f847857308c10b2c89fe7da9a19dbf5db09bf3d))
+
 ## [0.8.4](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.0...v0.8.4) (2024-11-25)
 
 
