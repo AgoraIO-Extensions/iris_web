@@ -73,6 +73,22 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   }
 
   // @ts-ignore
+  leaveChannelWithUserAccountEx_ccad422(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_leaveChannelWithUserAccountEx_ccad422 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  leaveChannelWithUserAccountEx_8bbe372(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_leaveChannelWithUserAccountEx_8bbe372 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   updateChannelMediaOptionsEx_457bb35(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let options = obj.options;
@@ -590,6 +606,14 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   takeSnapshotEx_de1c015(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngineEx_takeSnapshotEx_de1c015 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  takeSnapshotEx_b856417(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_takeSnapshotEx_b856417 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

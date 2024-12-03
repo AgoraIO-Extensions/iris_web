@@ -323,6 +323,34 @@ describe('IMediaEngine', () => {
     ).toBeCalledWith('test', 'test', 'test', 'test');
   });
 
+  test('MediaEngine_setExternalRemoteEglContext_f337cbf impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      eglContext: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MediaEngine_setExternalRemoteEglContext_f337cbf',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
+        ?.setExternalRemoteEglContext_f337cbf
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
   test('MediaEngine_setExternalAudioSource_e6538be impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')

@@ -67,6 +67,7 @@
   "RtcEngineEventHandler_onError_d26c0fd",
   "RtcEngineEventHandler_onAudioEffectFinished_46f8ab7",
   "RtcEngineEventHandler_onLocalAudioStateChanged_13b6c02",
+  "RtcEngineEventHandler_onLocalAudioStateChanged_f33d789",
   "RtcEngineEventHandler_onLocalVideoStateChanged_a44228a",
   "RtcEngineEventHandler_onVideoDeviceStateChanged_976d8c3",
   "RtcEngineEventHandler_onAudioDeviceStateChanged_976d8c3",

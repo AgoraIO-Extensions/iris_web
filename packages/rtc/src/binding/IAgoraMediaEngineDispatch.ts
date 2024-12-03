@@ -100,6 +100,14 @@ export class IMediaEngineDispatch implements IMediaEngine {
   }
 
   // @ts-ignore
+  setExternalRemoteEglContext_f337cbf(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MediaEngine_setExternalRemoteEglContext_f337cbf not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   setExternalAudioSource_e6538be(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'MediaEngine_setExternalAudioSource_e6538be not supported in this platform!'

@@ -230,6 +230,14 @@ export class IrisClientObserver {
           NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE.LOCAL_AUDIO_STREAM_STATE_STOPPED,
           0
         );
+        this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_13b6c02(
+          {
+            localUid: irisClient.agoraRTCClient?.uid as number,
+            channelId: irisClient.agoraRTCClient?.channelName,
+          },
+          NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE.LOCAL_AUDIO_STREAM_STATE_STOPPED,
+          0
+        );
         irisClientManager.removeLocalAudioTrackPackage(
           trackPackage as AudioTrackPackage
         );
