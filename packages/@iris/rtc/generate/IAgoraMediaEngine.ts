@@ -53,6 +53,8 @@ export interface IMediaEngine {
     encodedVideoOption: SenderOptions
   ): CallApiReturnType;
 
+  setExternalRemoteEglContext_f337cbf(eglContext: any): CallApiReturnType;
+
   setExternalAudioSource_e6538be(
     enabled: boolean,
     sampleRate: number,

@@ -40,7 +40,9 @@ import {
   FACE_SHAPE_AREA,
   FaceShapeAreaOptions,
   FaceShapeBeautyOptions,
+  FilterEffectOptions,
   FocalLengthInfo,
+  HDR_CAPABILITY,
   HEADPHONE_EQUALIZER_PRESET,
   IAudioEncodedFrameObserver,
   INTERFACE_ID_TYPE,
@@ -54,6 +56,7 @@ import {
   LastmileProbeResult,
   LiveTranscoding,
   LocalAccessPointConfiguration,
+  LocalAudioMixerConfiguration,
   LocalAudioStats,
   LocalTranscoderConfiguration,
   LowlightEnhanceOptions,
@@ -95,6 +98,7 @@ import {
   VIDEO_CODEC_TYPE,
   VIDEO_CONTENT_HINT,
   VIDEO_MIRROR_MODE_TYPE,
+  VIDEO_MODULE_TYPE,
   VIDEO_ORIENTATION,
   VIDEO_QOE_PREFERENCE_TYPE,
   VIDEO_STREAM_TYPE,
@@ -124,6 +128,7 @@ import {
   MEDIA_SOURCE_TYPE,
   RAW_AUDIO_FRAME_OP_MODE_TYPE,
   RENDER_MODE_TYPE,
+  SnapshotConfig,
   VIDEO_SOURCE_TYPE,
 } from './AgoraMediaBase';
 import { LOG_FILTER_TYPE, LOG_LEVEL, LogConfig } from './IAgoraLog';
@@ -162,6 +167,7 @@ export enum AUDIO_MIXING_REASON_TYPE {
   AUDIO_MIXING_REASON_ONE_LOOP_COMPLETED = 721,
   AUDIO_MIXING_REASON_ALL_LOOPS_COMPLETED = 723,
   AUDIO_MIXING_REASON_STOPPED_BY_USER = 724,
+  AUDIO_MIXING_REASON_RESUMED_BY_USER = 726,
   AUDIO_MIXING_REASON_OK = 0,
 }
 
@@ -464,7 +470,7 @@ export class ScreenCaptureConfiguration {
 
   screenRect?: Rectangle;
 
-  windowId?: any;
+  windowId?: number;
 
   params?: ScreenCaptureParameters;
 
@@ -497,7 +503,7 @@ export enum ScreenCaptureSourceType {
 export class ScreenCaptureSourceInfo {
   type?: ScreenCaptureSourceType;
 
-  sourceId?: any;
+  sourceId?: number;
 
   sourceName?: string;
 
@@ -517,7 +523,7 @@ export class ScreenCaptureSourceInfo {
 
   minimizeWindow?: boolean;
 
-  sourceDisplayId?: any;
+  sourceDisplayId?: number;
 }
 
 export class AdvancedAudioOptions {
@@ -1615,6 +1621,12 @@ export interface IRtcEngine {
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
+  setFilterEffectOptions_53b4be3(
+    enabled: boolean,
+    options: FilterEffectOptions,
+    type: MEDIA_SOURCE_TYPE
+  ): CallApiReturnType;
+
   setLowlightEnhanceOptions_4f9f013(
     enabled: boolean,
     options: LowlightEnhanceOptions,
@@ -1949,6 +1961,13 @@ export interface IRtcEngine {
     mirrorMode: VIDEO_MIRROR_MODE_TYPE
   ): CallApiReturnType;
 
+  setLocalRenderTargetFps_2ad83d8(
+    sourceType: VIDEO_SOURCE_TYPE,
+    targetFps: number
+  ): CallApiReturnType;
+
+  setRemoteRenderTargetFps_46f8ab7(targetFps: number): CallApiReturnType;
+
   setLocalRenderMode_bedb5ae(renderMode: RENDER_MODE_TYPE): CallApiReturnType;
 
   setLocalVideoMirrorMode_b8a6c69(
@@ -2218,7 +2237,7 @@ export interface IRtcEngine {
     restriction: AUDIO_SESSION_OPERATION_RESTRICTION
   ): CallApiReturnType;
 
-  startScreenCaptureByDisplayId_7cf6800(
+  startScreenCaptureByDisplayId_ce89867(
     displayId: number,
     regionRect: Rectangle,
     captureParams: ScreenCaptureParameters
@@ -2232,8 +2251,8 @@ export interface IRtcEngine {
 
   getAudioDeviceInfo_505aa0c(deviceInfo: DeviceInfo): CallApiReturnType;
 
-  startScreenCaptureByWindowId_5ab7e59(
-    windowId: any,
+  startScreenCaptureByWindowId_ce89867(
+    windowId: number,
     regionRect: Rectangle,
     captureParams: ScreenCaptureParameters
   ): CallApiReturnType;
@@ -2262,6 +2281,8 @@ export interface IRtcEngine {
     focalLengthInfos: FocalLengthInfo[],
     size: number
   ): CallApiReturnType;
+
+  setExternalMediaProjection_f337cbf(mediaProjection: any): CallApiReturnType;
 
   setScreenCaptureScenario_13de7b4(
     screenScenario: SCREEN_SCENARIO_TYPE
@@ -2301,6 +2322,16 @@ export interface IRtcEngine {
   stopRtmpStream_3a2037f(url: string): CallApiReturnType;
 
   stopLocalVideoTranscoder(): CallApiReturnType;
+
+  startLocalAudioMixer_a7ff78e(
+    config: LocalAudioMixerConfiguration
+  ): CallApiReturnType;
+
+  updateLocalAudioMixerConfiguration_a7ff78e(
+    config: LocalAudioMixerConfiguration
+  ): CallApiReturnType;
+
+  stopLocalAudioMixer(): CallApiReturnType;
 
   startCameraCapture_f3692cc(
     sourceType: VIDEO_SOURCE_TYPE,
@@ -2491,6 +2522,8 @@ export interface IRtcEngine {
 
   takeSnapshot_1922dd1(uid: number, filePath: string): CallApiReturnType;
 
+  takeSnapshot_5669ea6(uid: number, config: SnapshotConfig): CallApiReturnType;
+
   enableContentInspect_e15e514(
     enabled: boolean,
     config: ContentInspectConfig
@@ -2544,6 +2577,11 @@ export interface IRtcEngine {
     metadata: string,
     length: number
   ): CallApiReturnType;
+
+  queryHDRCapability_bebdacb(
+    videoModule: VIDEO_MODULE_TYPE,
+    capability: HDR_CAPABILITY
+  ): CallApiReturnType;
 }
 
 export enum QUALITY_REPORT_FORMAT_TYPE {
@@ -2555,6 +2593,7 @@ export enum MEDIA_DEVICE_STATE_TYPE {
   MEDIA_DEVICE_STATE_IDLE = 0,
   MEDIA_DEVICE_STATE_ACTIVE = 1,
   MEDIA_DEVICE_STATE_DISABLED = 2,
+  MEDIA_DEVICE_STATE_PLUGGED_IN = 3,
   MEDIA_DEVICE_STATE_NOT_PRESENT = 4,
   MEDIA_DEVICE_STATE_UNPLUGGED = 8,
 }

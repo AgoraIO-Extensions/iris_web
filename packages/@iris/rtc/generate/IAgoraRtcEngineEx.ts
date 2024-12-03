@@ -19,7 +19,11 @@ import {
   VideoSubscriptionOptions,
   WatermarkOptions,
 } from './AgoraBase';
-import { ContentInspectConfig, RENDER_MODE_TYPE } from './AgoraMediaBase';
+import {
+  ContentInspectConfig,
+  RENDER_MODE_TYPE,
+  SnapshotConfig,
+} from './AgoraMediaBase';
 import {
   ChannelMediaOptions,
   LeaveChannelOptions,
@@ -43,6 +47,17 @@ export interface IRtcEngineEx {
 
   leaveChannelEx_b03ee9a(
     connection: RtcConnection,
+    options: LeaveChannelOptions
+  ): CallApiReturnType;
+
+  leaveChannelWithUserAccountEx_ccad422(
+    channelId: string,
+    userAccount: string
+  ): CallApiReturnType;
+
+  leaveChannelWithUserAccountEx_8bbe372(
+    channelId: string,
+    userAccount: string,
     options: LeaveChannelOptions
   ): CallApiReturnType;
 
@@ -297,6 +312,12 @@ export interface IRtcEngineEx {
     connection: RtcConnection,
     uid: number,
     filePath: string
+  ): CallApiReturnType;
+
+  takeSnapshotEx_b856417(
+    connection: RtcConnection,
+    uid: number,
+    config: SnapshotConfig
   ): CallApiReturnType;
 
   enableContentInspectEx_c4e7f69(

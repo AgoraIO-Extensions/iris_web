@@ -36,6 +36,17 @@ export enum VIDEO_SOURCE_TYPE {
   VIDEO_SOURCE_UNKNOWN = 100,
 }
 
+export enum AUDIO_SOURCE_TYPE {
+  AUDIO_SOURCE_MICROPHONE = 0,
+  AUDIO_SOURCE_CUSTOM = 1,
+  AUDIO_SOURCE_MEDIA_PLAYER = 2,
+  AUDIO_SOURCE_LOOPBACK_RECORDING = 3,
+  AUDIO_SOURCE_MIXED_STREAM = 4,
+  AUDIO_SOURCE_REMOTE_USER = 5,
+  AUDIO_SOURCE_REMOTE_CHANNEL = 6,
+  AUDIO_SOURCE_UNKNOWN = 100,
+}
+
 export enum AudioRoute {
   ROUTE_DEFAULT = -1,
   ROUTE_HEADSET = 0,
@@ -411,6 +422,12 @@ export enum VIDEO_MODULE_POSITION {
   POSITION_POST_CAPTURER_ORIGIN = 1,
 }
 
+export class SnapshotConfig {
+  filePath?: string;
+
+  position?: VIDEO_MODULE_POSITION;
+}
+
 export interface IAudioPcmFrameSink {
   onFrame_95f515a(frame: AudioPcmFrame): void;
 }
@@ -629,6 +646,18 @@ export class MediaRecorderConfiguration {
   maxDurationMs?: number;
 
   recorderInfoUpdateInterval?: number;
+
+  width?: number;
+
+  height?: number;
+
+  fps?: number;
+
+  sample_rate?: number;
+
+  channel_num?: number;
+
+  videoSourceType?: VIDEO_SOURCE_TYPE;
 }
 
 export interface IFaceInfoObserver {

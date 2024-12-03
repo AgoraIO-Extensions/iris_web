@@ -578,6 +578,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         this._engine.irisClientManager.localAudioTrackPackages
       );
 
+      this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_13b6c02(
+        {
+          localUid: undefined,
+          channelId: undefined,
+        },
+        enabled
+          ? NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
+              .LOCAL_AUDIO_STREAM_STATE_RECORDING
+          : NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
+              .LOCAL_AUDIO_STREAM_STATE_STOPPED,
+        NATIVE_RTC.LOCAL_AUDIO_STREAM_REASON.LOCAL_AUDIO_STREAM_REASON_OK
+      );
+
       this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f33d789(
         enabled
           ? NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
