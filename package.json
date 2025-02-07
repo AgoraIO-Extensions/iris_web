@@ -26,7 +26,8 @@
     "patchedDependencies": {
       "eslint-plugin-auto-import@0.1.1": "patches/eslint-plugin-auto-import@0.1.1.patch",
       "eslint@8.4.1": "patches/eslint@8.4.1.patch"
-    }
+    },
+    "allowNonAppliedPatches": true
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.6.7",
