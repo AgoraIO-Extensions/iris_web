@@ -68,7 +68,7 @@ importers:
         specifier: ^14.0.0
         version: 14.0.1
       prettier:
-        specifier: ^2.0.5
+        specifier: 2.0.5
         version: 2.0.5
       release-it:
         specifier: ^16.1.3
