@@ -35,13 +35,13 @@ jobs:
           echo "RTC_FAKE_PACKAGE_PATH=$RTC_FAKE_PACKAGE_PATH" >> $GITHUB_ENV
 
       - name: Upload iris-web-rtc Artifact ⬆️
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.RTC_PACKAGE_PATH }}
           path: ./packages/rtc/dist/${{ env.RTC_PACKAGE_PATH }}
 
       - name: Upload iris-web-rtc-fake Artifact ⬆️
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.RTC_FAKE_PACKAGE_PATH }}
           path: ./packages/fake/rtc/dist/${{ env.RTC_FAKE_PACKAGE_PATH }}
