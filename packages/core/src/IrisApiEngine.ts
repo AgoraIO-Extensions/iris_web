@@ -119,7 +119,10 @@ export interface IrisApiEngine {
 
 function createIrisApiEngine(): IrisApiEngine {
   let engine = new IrisApiEngineImpl();
-  if (window.__AGORA_IRIS_API_ENGINE_LIST__ === undefined) {
+  if (
+    window.__AGORA_IRIS_API_ENGINE_LIST__ === undefined ||
+    window.__AGORA_IRIS_API_ENGINE_LIST__.length === 0
+  ) {
     window.__AGORA_IRIS_API_ENGINE_LIST__ = [];
     window.__AGORA_IRIS_API_ENGINE_LIST__.push(engine);
   }
@@ -129,7 +132,7 @@ function createIrisApiEngine(): IrisApiEngine {
 function disposeIrisApiEngine(engine_ptr: IrisApiEngine): number {
   engine_ptr.dispose();
   if (window.__AGORA_IRIS_API_ENGINE_LIST__ !== undefined) {
-    window.__AGORA_IRIS_API_ENGINE_LIST__.filter(
+    window.__AGORA_IRIS_API_ENGINE_LIST__ = window.__AGORA_IRIS_API_ENGINE_LIST__.filter(
       (engine) => engine !== engine_ptr
     );
   }
