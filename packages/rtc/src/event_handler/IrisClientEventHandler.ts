@@ -94,10 +94,6 @@ export class IrisClientEventHandler {
       this.onEventJoinFallbackToProxy.bind(this)
     );
     this.agoraRTCClient.on(
-      'published-user-list',
-      this.onEventPublishedUserList.bind(this)
-    );
-    this.agoraRTCClient.on(
       'content-inspect-error',
       this.onEventContentInspectError.bind(this)
     );
@@ -487,10 +483,6 @@ export class IrisClientEventHandler {
   }
 
   onEventJoinFallbackToProxy(proxyServer: string): void {
-    //todo 暂时没有找到对应的回调
-  }
-
-  onEventPublishedUserList(users: IAgoraRTCRemoteUser): void {
     //todo 暂时没有找到对应的回调
   }
 
