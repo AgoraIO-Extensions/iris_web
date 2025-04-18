@@ -23,7 +23,7 @@ import {
   VideoTrackPackage,
 } from '../engine/IrisClientManager';
 import { NotifyRemoteType, NotifyType } from '../engine/IrisClientObserver';
-import { IrisIntervalType, IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import { IRtcEngineExtensions } from '../extensions/IAgoraRtcEngineExtensions';
 import { SendDataStreamMessage } from '../helper/ClientHelper';
@@ -773,67 +773,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         ...(smooth && { smooth }),
         ...(reportVad && { reportVad }),
       };
-      //只有在初次的时候才注册onAudioVolumeIndication事件
       let agoraRTCClient = this._engine.irisClientManager.getIrisClient()
         ?.agoraRTCClient;
 
-      if (!this._engine.globalState.enableAudioVolumeIndication) {
-        let intervalFunction = setInterval(() => {
-          if (agoraRTCClient) {
-            const localStats = agoraRTCClient.getLocalAudioStats();
-            let connection: NATIVE_RTC.RtcConnection = {
-              channelId: agoraRTCClient.channelName,
-              localUid: agoraRTCClient.uid as number,
-            };
-            if (reportVad) {
-              this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
-                connection,
-                [
-                  {
-                    uid: agoraRTCClient.uid as number,
-                    volume: localStats?.sendVolumeLevel,
-                    vad: localStats?.sendVolumeLevel > 0 ? 1 : 0,
-                    // voicePitch: number,  web没有
-                  },
-                ],
-                1,
-                localStats?.sendVolumeLevel
-              );
-            }
-            const remoteStats = agoraRTCClient.getRemoteAudioStats();
-            let remoteSpeakers: {
-              uid: number;
-              volume: number;
-              vad: number;
-              voicePitch: number;
-            }[] = [];
-            for (let uid in remoteStats) {
-              remoteSpeakers.push({
-                uid: parseInt(uid),
-                volume: remoteStats[uid].receiveLevel,
-                vad: 1,
-                voicePitch: 1.0,
-              });
-            }
-            let totalVolume: number = 0;
-            remoteSpeakers.forEach((speaker) => {
-              totalVolume += speaker.volume;
-            });
-            this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
-              connection,
-              remoteSpeakers,
-              remoteSpeakers.length,
-              totalVolume
-            );
-          }
-        }, interval);
-        this._engine.addIrisInterval(
-          IrisIntervalType.enableAudioVolumeIndication,
-          intervalFunction,
-          0
+      this._engine.globalState.enableAudioVolumeIndication = interval > 0;
+
+      if (this._engine.globalState.enableAudioVolumeIndication) {
+        agoraRTCClient?.enableAudioVolumeIndicator();
+        this.setParameters_3a2037f(
+          JSON.stringify({ AUDIO_VOLUME_INDICATION_INTERVAL: interval })
         );
       }
-      this._engine.globalState.enableAudioVolumeIndication = true;
       return this._engine.returnResult();
     };
     return this._engine.execute(processFunc);

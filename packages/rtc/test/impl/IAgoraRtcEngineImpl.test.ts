@@ -311,6 +311,9 @@ describe('IAgoraRtcEngineImpl', () => {
 
   test('enableAudioVolumeIndication_39794a0', async () => {
     await joinChannel(apiEnginePtr, null);
+    let agoraRTCClient = irisRtcEngine.irisClientManager.getIrisClient()
+      .agoraRTCClient;
+    jest.spyOn(agoraRTCClient!, 'enableAudioVolumeIndicator');
     jest.spyOn(
       irisRtcEngine.rtcEngineEventHandler,
       'onAudioVolumeIndication_781482a'
@@ -327,21 +330,13 @@ describe('IAgoraRtcEngineImpl', () => {
       param
     );
     expect(
-      irisRtcEngine.globalState.enableAudioVolumeIndicationConfig.interval
-    ).toBe(param.interval);
-    expect(
       irisRtcEngine.globalState.enableAudioVolumeIndicationConfig.smooth
     ).toBe(param.smooth);
     expect(
       irisRtcEngine.globalState.enableAudioVolumeIndicationConfig.smooth
     ).toBe(param.smooth);
-    //irisIntervalList是因为一个是远端的onNetworkQuality 一个是enableAudioVolumeIndication的
-    expect(irisRtcEngine.irisIntervalList.length == 2).toBeTruthy();
     expect(irisRtcEngine.globalState.enableAudioVolumeIndication).toBeTruthy();
-    jest.advanceTimersByTime(param.interval);
-    expect(
-      irisRtcEngine.rtcEngineEventHandler.onAudioVolumeIndication_781482a
-    ).toBeCalledTimes(2);
+    expect(agoraRTCClient?.enableAudioVolumeIndicator).toBeCalledTimes(1);
   });
 
   test('leaveChannel', async () => {
