@@ -1,5 +1,12 @@
 # IRIS_WEB
 
+## [0.8.8](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.7...v0.8.8) (2025-04-18)
+
+
+### Bug Fixes
+
+* enableAudioVolumeIndication issue ([#43](https://github.com/AgoraIO-Extensions/iris_web/issues/43)) ([0523a20](https://github.com/AgoraIO-Extensions/iris_web/commit/0523a20f9c6c7a1ca803a31001f25e4fb9ed225a))
+
 ## [0.8.7](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.6...v0.8.7) (2025-04-08)
 
 ## [0.8.6](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.5...v0.8.6) (2024-12-03)
