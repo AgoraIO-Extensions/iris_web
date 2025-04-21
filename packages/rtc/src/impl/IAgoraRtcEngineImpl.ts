@@ -779,10 +779,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalState.enableAudioVolumeIndication = interval > 0;
 
       if (this._engine.globalState.enableAudioVolumeIndication) {
-        agoraRTCClient?.enableAudioVolumeIndicator();
         this.setParameters_3a2037f(
           JSON.stringify({ AUDIO_VOLUME_INDICATION_INTERVAL: interval })
         );
+        agoraRTCClient?.enableAudioVolumeIndicator();
       }
       return this._engine.returnResult();
     };
