@@ -1013,22 +1013,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processFunc);
   }
   setParameters_3a2037f(parameters: string): CallApiReturnType {
+    //example:
+    //[dart]await rtcEngine.setParameters('{"AUDIO_VOLUME_INDICATION_INTERVAL": 10000}');
+    //parameters please use json string
+
     let fun = async () => {
       try {
-        if (typeof parameters === 'string') {
+        let json = JSON.parse(parameters);
+        let keyList = Object.keys(json);
+        for (let i = 0; i < keyList.length; i++) {
           (this._engine.globalState.AgoraRTC as any).setParameter(
-            undefined,
-            parameters
+            keyList[i],
+            json[keyList[i]]
           );
-        } else {
-          let json = JSON.parse(parameters);
-          let keyList = Object.keys(json);
-          for (let i = 0; i < keyList.length; i++) {
-            (this._engine.globalState.AgoraRTC as any).setParameter(
-              keyList[i],
-              json[keyList[i]]
-            );
-          }
         }
       } catch (e) {
         AgoraConsole.log(e);
