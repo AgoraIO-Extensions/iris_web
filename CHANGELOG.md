@@ -1,5 +1,12 @@
 # IRIS_WEB
 
+## [0.8.9](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.8...v0.8.9) (2025-04-21)
+
+
+### Bug Fixes
+
+* setParameters issue ([#44](https://github.com/AgoraIO-Extensions/iris_web/issues/44)) ([ba62ad2](https://github.com/AgoraIO-Extensions/iris_web/commit/ba62ad2647001680c89369c8d97648378629213a))
+
 ## [0.8.8](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.7...v0.8.8) (2025-04-18)
 
 
