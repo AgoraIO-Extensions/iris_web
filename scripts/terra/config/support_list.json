@@ -103,6 +103,8 @@
   "RtcEngineEventHandler_onFirstRemoteVideoFrame_a68170a",
   "MediaEngine_setExternalVideoSource_fff99b6",
   "MediaEngine_pushVideoFrame_4e544e2",
+  "MediaEngine_registerAudioFrameObserver_d873a64",
+  "MediaEngine_unregisterAudioFrameObserver",
   "VideoDeviceManager_enumerateVideoDevices",
   "VideoDeviceManager_setDevice_4ad5f6e",
   "VideoDeviceManager_getDevice_73b9872",

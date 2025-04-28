@@ -11,7 +11,7 @@ import { AgoraConsole } from '../util/AgoraConsole';
 import { drawRGBABufferToCanvas } from '../util/BufferConvert';
 
 //@ts-ignore
-export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
+export class IMediaEngineImpl implements IMediaEngineExtensions {
   private _engine: IrisRtcEngine;
 
   public constructor(engine: IrisRtcEngine) {
@@ -117,5 +117,17 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
       return this._engine.returnResult();
     };
     return this._engine.execute(processFunc);
+  }
+
+  registerAudioFrameObserver_d873a64(
+    observer: NATIVE_RTC.IAudioFrameObserver
+  ): CallApiReturnType {
+    return this._engine.returnResult();
+  }
+
+  unregisterAudioFrameObserver(
+    observer: NATIVE_RTC.IAudioFrameObserver
+  ): CallApiReturnType {
+    return this._engine.returnResult();
   }
 }
