@@ -501,6 +501,20 @@ export interface IAudioFrameObserver extends IAudioFrameObserverBase {
     uid: number,
     audioFrame: AudioFrame
   ): void;
+
+  onRecordAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
+
+  onPlaybackAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
+
+  onMixedAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
+
+  onEarMonitoringAudioFrame_5405a47(audioFrame: AudioFrame): void;
+
+  onPlaybackAudioFrameBeforeMixing_9215cc7(
+    channelId: string,
+    userId: string,
+    audioFrame: AudioFrame
+  ): void;
 }
 
 export class AudioSpectrumData {

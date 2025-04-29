@@ -17,16 +17,16 @@ export const IVIDEOFRAMEMETAINFO_GETMETAINFOSTR_c81192f =
   'VideoFrameMetaInfo_getMetaInfoStr_c81192f';
 export const IAUDIOPCMFRAMESINK_ONFRAME_95f515a =
   'AudioPcmFrameSink_onFrame_95f515a';
-export const IAUDIOFRAMEOBSERVERBASE_ONRECORDAUDIOFRAME_4c8de15 =
-  'AudioFrameObserverBase_onRecordAudioFrame_4c8de15';
-export const IAUDIOFRAMEOBSERVERBASE_ONPLAYBACKAUDIOFRAME_4c8de15 =
-  'AudioFrameObserverBase_onPlaybackAudioFrame_4c8de15';
-export const IAUDIOFRAMEOBSERVERBASE_ONMIXEDAUDIOFRAME_4c8de15 =
-  'AudioFrameObserverBase_onMixedAudioFrame_4c8de15';
-export const IAUDIOFRAMEOBSERVERBASE_ONEARMONITORINGAUDIOFRAME_5405a47 =
-  'AudioFrameObserverBase_onEarMonitoringAudioFrame_5405a47';
-export const IAUDIOFRAMEOBSERVERBASE_ONPLAYBACKAUDIOFRAMEBEFOREMIXING_9215cc7 =
-  'AudioFrameObserverBase_onPlaybackAudioFrameBeforeMixing_9215cc7';
+export const IAUDIOFRAMEOBSERVER_ONRECORDAUDIOFRAME_4c8de15 =
+  'AudioFrameObserver_onRecordAudioFrame_4c8de15';
+export const IAUDIOFRAMEOBSERVER_ONPLAYBACKAUDIOFRAME_4c8de15 =
+  'AudioFrameObserver_onPlaybackAudioFrame_4c8de15';
+export const IAUDIOFRAMEOBSERVER_ONMIXEDAUDIOFRAME_4c8de15 =
+  'AudioFrameObserver_onMixedAudioFrame_4c8de15';
+export const IAUDIOFRAMEOBSERVER_ONEARMONITORINGAUDIOFRAME_5405a47 =
+  'AudioFrameObserver_onEarMonitoringAudioFrame_5405a47';
+export const IAUDIOFRAMEOBSERVER_ONPLAYBACKAUDIOFRAMEBEFOREMIXING_9215cc7 =
+  'AudioFrameObserver_onPlaybackAudioFrameBeforeMixing_9215cc7';
 export const IAUDIOFRAMEOBSERVER_ONPLAYBACKAUDIOFRAMEBEFOREMIXING_85ec0fc =
   'AudioFrameObserver_onPlaybackAudioFrameBeforeMixing_85ec0fc';
 export const IAUDIOSPECTRUMOBSERVER_ONLOCALAUDIOSPECTRUM_5822fed =

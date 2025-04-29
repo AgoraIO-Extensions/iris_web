@@ -205,18 +205,27 @@ export class ImplHelper {
     let audioTrack: IMicrophoneAudioTrack;
     try {
       audioTrack = await this._engine.globalState.AgoraRTC.createMicrophoneAudioTrack();
-      audioTrack.setAudioFrameCallback((buffer) => {
-        let channelId =
-          this._engine.irisClientManager.localAudioTrackPackages.find(
-            (e) => e.track === audioTrack
-          )?.irisClient.connection.channelId ?? '';
-        this._engine.mediaEngineEventHandler.onPlaybackAudioFrame_4c8de15(
-          channelId,
-          {
-            buffer: buffer as any,
-          }
-        );
-      }, this._engine.globalState.audioFrameParameters.samplesPerCall);
+      if (this._engine.globalState.isAudioFrameParametersSet) {
+        audioTrack.setAudioFrameCallback((buffer) => {
+          let channelId =
+            this._engine.irisClientManager.localAudioTrackPackages.find(
+              (e) => e.track === audioTrack
+            )?.irisClient?.connection?.channelId ?? '';
+
+          // Convert AudioBuffer to Uint8Array
+          const channelData = buffer.getChannelData(
+            this._engine.globalState.audioFrameParameters.channel
+          ); // Get data from first channel
+          const byteArray = new Uint8Array(channelData.buffer);
+
+          this._engine.mediaEngineEventHandler.onPlaybackAudioFrame_4c8de15(
+            channelId,
+            {
+              buffer: byteArray,
+            }
+          );
+        }, this._engine.globalState.audioFrameParameters.samplesPerCall);
+      }
       await this._engine.trackHelper.setEnabled(audioTrack, false);
     } catch (e) {
       AgoraConsole.error('createMicrophoneAudioTrack failed');

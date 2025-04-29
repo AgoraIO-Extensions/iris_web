@@ -106,7 +106,7 @@
   "MediaEngine_pushVideoFrame_4e544e2",
   "MediaEngine_registerAudioFrameObserver_d873a64",
   "MediaEngine_unregisterAudioFrameObserver",
-  "AudioFrameObserverBase_onPlaybackAudioFrame_4c8de15",
+  "AudioFrameObserver_onPlaybackAudioFrame_4c8de15",
   "VideoDeviceManager_enumerateVideoDevices",
   "VideoDeviceManager_setDevice_4ad5f6e",
   "VideoDeviceManager_getDevice_73b9872",

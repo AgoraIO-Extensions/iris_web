@@ -10,7 +10,8 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { drawRGBABufferToCanvas } from '../util/BufferConvert';
 
-export const MEDIA_ENGINE_KEY = 'MediaEngine';
+import { RTCENGINE_KEY } from './IAgoraRtcEngineImpl';
+
 //@ts-ignore
 export class IMediaEngineImpl implements IMediaEngineExtensions {
   private _engine: IrisRtcEngine;
@@ -123,7 +124,7 @@ export class IMediaEngineImpl implements IMediaEngineExtensions {
   registerAudioFrameObserver_d873a64(observer: any): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.irisEventHandlerManager.addEventHandler(
-        MEDIA_ENGINE_KEY,
+        RTCENGINE_KEY,
         observer
       );
       return this._engine.returnResult();
@@ -135,7 +136,7 @@ export class IMediaEngineImpl implements IMediaEngineExtensions {
   unregisterAudioFrameObserver(observer: any): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.irisEventHandlerManager.removeEventHandler(
-        MEDIA_ENGINE_KEY,
+        RTCENGINE_KEY,
         observer
       );
 
