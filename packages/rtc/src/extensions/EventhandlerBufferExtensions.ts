@@ -15,7 +15,7 @@ export function eventHandlerBufferExtension(
       }
       break;
     case IAUDIOFRAMEOBSERVER_ONPLAYBACKAUDIOFRAME_4c8de15:
-      if (data.audioFrame.buffer) {
+      if (data?.audioFrame?.buffer) {
         bufferList.push(data.audioFrame.buffer);
       }
       break;
