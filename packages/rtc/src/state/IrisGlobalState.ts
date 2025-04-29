@@ -89,6 +89,20 @@ export class IrisGlobalState {
   channelProfile: NATIVE_RTC.CHANNEL_PROFILE_TYPE =
     NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING;
 
+  isAudioFrameParametersSet: boolean = false;
+  audioFrameParameters: {
+    sampleRate: number;
+    channel: number;
+    mode: NATIVE_RTC.RAW_AUDIO_FRAME_OP_MODE_TYPE;
+    samplesPerCall: number;
+  } = {
+    sampleRate: 32000,
+    channel: 1,
+    mode:
+      NATIVE_RTC.RAW_AUDIO_FRAME_OP_MODE_TYPE.RAW_AUDIO_FRAME_OP_MODE_READ_ONLY,
+    samplesPerCall: 1024,
+  };
+
   reset() {
     this.enabledAudio = true;
     this.pausedAudio = false;

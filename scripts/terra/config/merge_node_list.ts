@@ -8,7 +8,7 @@ module.exports = [
   {
     source: "agora::media::IAudioFrameObserverBase",
     target: "agora::media::IAudioFrameObserver",
-    deleteSource: false,
+    deleteSource: true,
     isFilterOverloadFunctions: false,
   },
 ];

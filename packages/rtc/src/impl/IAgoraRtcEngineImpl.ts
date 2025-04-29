@@ -1222,4 +1222,29 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     );
     return this._engine.returnResult();
   }
+
+  setPlaybackAudioFrameParameters_bd46d1d(
+    sampleRate: number,
+    channel: number,
+    mode: NATIVE_RTC.RAW_AUDIO_FRAME_OP_MODE_TYPE,
+    samplesPerCall: number
+  ): CallApiReturnType {
+    //websdk do not have sampleRate, channel, mode
+    let fun = async () => {
+      try {
+        this._engine.globalState.isAudioFrameParametersSet = samplesPerCall > 0;
+        this._engine.globalState.audioFrameParameters = {
+          sampleRate,
+          channel,
+          mode,
+          samplesPerCall,
+        };
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
 }

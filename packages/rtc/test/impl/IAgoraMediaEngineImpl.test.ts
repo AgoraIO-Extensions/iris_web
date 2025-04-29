@@ -151,4 +151,60 @@ describe('IAgoraRtcEngineImpl', () => {
       )[0].track!.isPlaying
     ).toBeTruthy();
   });
+  test('registerAudioFrameObserver_d873a64', async () => {
+    jest.spyOn(irisRtcEngine.irisEventHandlerManager, 'addEventHandler');
+    await callIris(
+      apiEnginePtr,
+      'MediaEngine_registerAudioFrameObserver_d873a64',
+      {
+        observer: 'test',
+      }
+    );
+
+    expect(
+      irisRtcEngine.irisEventHandlerManager.addEventHandler
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.irisEventHandlerManager.addEventHandler
+    ).toBeCalledWith('MediaEngine', 'test');
+    expect(
+      irisRtcEngine.irisEventHandlerManager['eventHandlersMap'].get(
+        'MediaEngine'
+      ).length == 1
+    ).toBe(true);
+    expect(
+      irisRtcEngine.irisEventHandlerManager['eventHandlersMap'].get(
+        'MediaEngine'
+      )[0] === 'test'
+    ).toBe(true);
+  });
+  test('unregisterAudioFrameObserver', async () => {
+    await callIris(
+      apiEnginePtr,
+      'MediaEngine_registerAudioFrameObserver_d873a64',
+      {
+        observer: 'test',
+      }
+    );
+    expect(
+      irisRtcEngine.irisEventHandlerManager['eventHandlersMap'].get(
+        'MediaEngine'
+      ).length == 1
+    ).toBe(true);
+    jest.spyOn(irisRtcEngine.irisEventHandlerManager, 'removeEventHandler');
+    await callIris(apiEnginePtr, 'MediaEngine_unregisterAudioFrameObserver', {
+      observer: 'test',
+    });
+    expect(
+      irisRtcEngine.irisEventHandlerManager['eventHandlersMap'].get(
+        'MediaEngine'
+      ).length == 0
+    ).toBe(true);
+    expect(
+      irisRtcEngine.irisEventHandlerManager.removeEventHandler
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.irisEventHandlerManager.removeEventHandler
+    ).toBeCalledWith('MediaEngine', 'test');
+  });
 });

@@ -14,7 +14,7 @@ import {
   VIDEO_SOURCE_TYPE,
   VideoFrame,
 } from '@iris/native-rtc';
-import { ApiParam, CallApiReturnType } from 'iris-web-core';
+import { ApiParam, CallApiReturnType, IrisCore } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -61,12 +61,12 @@ export class IAudioFrameObserverBase {
   }
 
   notifyEvent(param: ApiParam): void {
-    this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
+    this._engine.irisEventHandlerManager.notifyEvent('MediaEngine', param);
   }
 
   onRecordAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void {
     AgoraConsole.warn(
-      'AudioFrameObserver_onRecordAudioFrame_4c8de15 not supported in this platform!'
+      'AudioFrameObserverBase_onRecordAudioFrame_4c8de15 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -75,22 +75,33 @@ export class IAudioFrameObserverBase {
     channelId: string,
     audioFrame: AudioFrame
   ): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_onPlaybackAudioFrame_4c8de15 not supported in this platform!'
+    let _obj = {
+      channelId,
+      audioFrame,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'AudioFrameObserverBase_onPlaybackAudioFrame_4c8de15',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onMixedAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void {
     AgoraConsole.warn(
-      'AudioFrameObserver_onMixedAudioFrame_4c8de15 not supported in this platform!'
+      'AudioFrameObserverBase_onMixedAudioFrame_4c8de15 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onEarMonitoringAudioFrame_5405a47(audioFrame: AudioFrame): void {
     AgoraConsole.warn(
-      'AudioFrameObserver_onEarMonitoringAudioFrame_5405a47 not supported in this platform!'
+      'AudioFrameObserverBase_onEarMonitoringAudioFrame_5405a47 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -101,42 +112,7 @@ export class IAudioFrameObserverBase {
     audioFrame: AudioFrame
   ): void {
     AgoraConsole.warn(
-      'AudioFrameObserver_onPlaybackAudioFrameBeforeMixing_9215cc7 not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  getObservedAudioFramePosition(): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_getObservedAudioFramePosition not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  getPlaybackAudioParams(): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_getPlaybackAudioParams not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  getRecordAudioParams(): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_getRecordAudioParams not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  getMixedAudioParams(): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_getMixedAudioParams not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  getEarMonitoringAudioParams(): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_getEarMonitoringAudioParams not supported in this platform!'
+      'AudioFrameObserverBase_onPlaybackAudioFrameBeforeMixing_9215cc7 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -151,7 +127,7 @@ export class IAudioFrameObserver extends IAudioFrameObserverBase {
   }
 
   notifyEvent(param: ApiParam): void {
-    this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
+    this._engine.irisEventHandlerManager.notifyEvent('MediaEngine', param);
   }
 
   onPlaybackAudioFrameBeforeMixing_85ec0fc(
@@ -161,83 +137,6 @@ export class IAudioFrameObserver extends IAudioFrameObserverBase {
   ): void {
     AgoraConsole.warn(
       'AudioFrameObserver_onPlaybackAudioFrameBeforeMixing_85ec0fc not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  onRecordAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_onRecordAudioFrame_4c8de15 not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  onPlaybackAudioFrame_4c8de15(
-    channelId: string,
-    audioFrame: AudioFrame
-  ): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_onPlaybackAudioFrame_4c8de15 not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  onMixedAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_onMixedAudioFrame_4c8de15 not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  onEarMonitoringAudioFrame_5405a47(audioFrame: AudioFrame): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_onEarMonitoringAudioFrame_5405a47 not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  onPlaybackAudioFrameBeforeMixing_9215cc7(
-    channelId: string,
-    userId: string,
-    audioFrame: AudioFrame
-  ): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_onPlaybackAudioFrameBeforeMixing_9215cc7 not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  getObservedAudioFramePosition(): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_getObservedAudioFramePosition not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  getPlaybackAudioParams(): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_getPlaybackAudioParams not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  getRecordAudioParams(): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_getRecordAudioParams not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  getMixedAudioParams(): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_getMixedAudioParams not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  getEarMonitoringAudioParams(): void {
-    AgoraConsole.warn(
-      'AudioFrameObserver_getEarMonitoringAudioParams not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

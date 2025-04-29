@@ -19,10 +19,12 @@ export class IMediaEngineDispatch implements IMediaEngine {
   }
   // @ts-ignore
   registerAudioFrameObserver_d873a64(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'MediaEngine_registerAudioFrameObserver_d873a64 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
+    if (eventHandler === undefined) {
+      AgoraConsole.error('eventHandler is undefined');
+      throw 'eventHandler is undefined';
+    }
+    return this._impl.registerAudioFrameObserver_d873a64(eventHandler);
   }
 
   // @ts-ignore

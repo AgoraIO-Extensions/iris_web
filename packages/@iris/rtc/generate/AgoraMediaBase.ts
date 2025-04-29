@@ -493,16 +493,6 @@ export interface IAudioFrameObserverBase {
     userId: string,
     audioFrame: AudioFrame
   ): void;
-
-  getObservedAudioFramePosition(): number;
-
-  getPlaybackAudioParams(): AudioParams;
-
-  getRecordAudioParams(): AudioParams;
-
-  getMixedAudioParams(): AudioParams;
-
-  getEarMonitoringAudioParams(): AudioParams;
 }
 
 export interface IAudioFrameObserver extends IAudioFrameObserverBase {
@@ -511,30 +501,6 @@ export interface IAudioFrameObserver extends IAudioFrameObserverBase {
     uid: number,
     audioFrame: AudioFrame
   ): void;
-
-  onRecordAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
-
-  onPlaybackAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
-
-  onMixedAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
-
-  onEarMonitoringAudioFrame_5405a47(audioFrame: AudioFrame): void;
-
-  onPlaybackAudioFrameBeforeMixing_9215cc7(
-    channelId: string,
-    userId: string,
-    audioFrame: AudioFrame
-  ): void;
-
-  getObservedAudioFramePosition(): number;
-
-  getPlaybackAudioParams(): AudioParams;
-
-  getRecordAudioParams(): AudioParams;
-
-  getMixedAudioParams(): AudioParams;
-
-  getEarMonitoringAudioParams(): AudioParams;
 }
 
 export class AudioSpectrumData {

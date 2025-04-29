@@ -3532,10 +3532,34 @@ export class IRtcEngineDispatch implements IRtcEngine {
   setPlaybackAudioFrameParameters_bd46d1d(
     apiParam: ApiParam
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setPlaybackAudioFrameParameters_bd46d1d not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let sampleRate = obj.sampleRate;
+    if (sampleRate === undefined) {
+      AgoraConsole.error('sampleRate is undefined');
+      throw 'sampleRate is undefined';
+    }
+    let channel = obj.channel;
+    if (channel === undefined) {
+      AgoraConsole.error('channel is undefined');
+      throw 'channel is undefined';
+    }
+    let mode = obj.mode;
+    if (mode === undefined) {
+      AgoraConsole.error('mode is undefined');
+      throw 'mode is undefined';
+    }
+    let samplesPerCall = obj.samplesPerCall;
+    if (samplesPerCall === undefined) {
+      AgoraConsole.error('samplesPerCall is undefined');
+      throw 'samplesPerCall is undefined';
+    }
+
+    return this._impl.setPlaybackAudioFrameParameters_bd46d1d(
+      sampleRate,
+      channel,
+      mode,
+      samplesPerCall
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
