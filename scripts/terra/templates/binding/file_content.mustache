@@ -103,7 +103,12 @@ export class {{name}}Dispatch {{#base_clazzs}}extends {{.}}Dispatch{{/base_clazz
     {{/parameters}}
 
     {{/user_data.isRegisterMethod}}
+    {{#user_data.isRegisterMethod}}
+    return this._impl.{{name}}(eventHandler);
+    {{/user_data.isRegisterMethod}}
+    {{^user_data.isRegisterMethod}}
     return this._impl.{{name}}({{#parameters}}{{^is_output}}{{name}},{{/is_output}}{{/parameters}});
+    {{/user_data.isRegisterMethod}}
     {{/user_data.isSupport}}
     {{^user_data.isSupport}}
     AgoraConsole.warn('{{{user_data.IrisApiIdParser.value}}} not supported in this platform!');

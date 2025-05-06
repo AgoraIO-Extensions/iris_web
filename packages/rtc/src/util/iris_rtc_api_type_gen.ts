@@ -27,16 +27,6 @@ export const IAUDIOFRAMEOBSERVER_ONEARMONITORINGAUDIOFRAME_5405a47 =
   'AudioFrameObserver_onEarMonitoringAudioFrame_5405a47';
 export const IAUDIOFRAMEOBSERVER_ONPLAYBACKAUDIOFRAMEBEFOREMIXING_9215cc7 =
   'AudioFrameObserver_onPlaybackAudioFrameBeforeMixing_9215cc7';
-export const IAUDIOFRAMEOBSERVER_GETOBSERVEDAUDIOFRAMEPOSITION =
-  'AudioFrameObserver_getObservedAudioFramePosition';
-export const IAUDIOFRAMEOBSERVER_GETPLAYBACKAUDIOPARAMS =
-  'AudioFrameObserver_getPlaybackAudioParams';
-export const IAUDIOFRAMEOBSERVER_GETRECORDAUDIOPARAMS =
-  'AudioFrameObserver_getRecordAudioParams';
-export const IAUDIOFRAMEOBSERVER_GETMIXEDAUDIOPARAMS =
-  'AudioFrameObserver_getMixedAudioParams';
-export const IAUDIOFRAMEOBSERVER_GETEARMONITORINGAUDIOPARAMS =
-  'AudioFrameObserver_getEarMonitoringAudioParams';
 export const IAUDIOFRAMEOBSERVER_ONPLAYBACKAUDIOFRAMEBEFOREMIXING_85ec0fc =
   'AudioFrameObserver_onPlaybackAudioFrameBeforeMixing_85ec0fc';
 export const IAUDIOSPECTRUMOBSERVER_ONLOCALAUDIOSPECTRUM_5822fed =

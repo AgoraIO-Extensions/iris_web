@@ -13,10 +13,12 @@ import {
 
 import { InitIrisRtcOptions } from '../IrisRtcApi';
 import { IrisVideoFrameBufferConfig, VideoParams } from '../base/BaseType';
-import { IVideoFrameMetaInfoDispatch } from '../binding/AgoraMediaBaseDispatch';
+import {
+  IAudioFrameObserver,
+  IVideoFrameMetaInfoDispatch,
+} from '../binding/AgoraMediaBaseDispatch';
 import { IH265TranscoderDispatch } from '../binding/IAgoraH265TranscoderDispatch';
 
-import { IMediaEngineDispatch } from '../binding/IAgoraMediaEngineDispatch';
 import {
   IMediaPlayerCacheManagerDispatch,
   IMediaPlayerDispatch,
@@ -37,6 +39,7 @@ import { ILocalSpatialAudioEngineDispatch } from '../binding/IAgoraSpatialAudioD
 import { IAudioDeviceManagerDispatch } from '../binding/IAudioDeviceManagerDispatch';
 
 import { IrisAgoraEventHandler } from '../event_handler/IrisAgoraEventHandler';
+import { MediaEngineDispatchExtensions } from '../extensions/IAgoraMediaEngineExtensions';
 import { RtcEngineDispatchExtensions } from '../extensions/IAgoraRtcEngineExtensions';
 import { ClientHelper } from '../helper/ClientHelper';
 import { IrisElement } from '../helper/DomHelper';
@@ -61,6 +64,7 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   public irisClientManager: IrisClientManager = new IrisClientManager(this);
   public rtcEngineEventHandler: NATIVE_RTC.IRtcEngineEventHandler;
+  public mediaEngineEventHandler: NATIVE_RTC.IAudioFrameObserver;
 
   public globalState: IrisGlobalState;
   public agoraEventHandler: IrisAgoraEventHandler;
@@ -83,7 +87,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     const mapData = [
       ['MediaPlayer', new IMediaPlayerDispatch(this)],
       ['MediaPlayerCacheManager', new IMediaPlayerCacheManagerDispatch(this)],
-      ['MediaEngine', new IMediaEngineDispatch(this)],
+      ['MediaEngine', new MediaEngineDispatchExtensions(this)],
       ['MediaRecorder', new IMediaRecorderDispatch(this)],
       ['MusicChartCollection', new MusicChartCollectionDispatch(this)],
       ['MusicCollection', new MusicCollectionDispatch(this)],
@@ -103,6 +107,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     );
 
     this.rtcEngineEventHandler = new IRtcEngineEventHandler(this);
+    this.mediaEngineEventHandler = new IAudioFrameObserver(this);
     this.globalState = new IrisGlobalState();
     this.irisElement = new IrisElement();
     this.agoraEventHandler = new IrisAgoraEventHandler(this);

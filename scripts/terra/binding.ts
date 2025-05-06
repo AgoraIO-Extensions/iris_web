@@ -71,7 +71,7 @@ export function binding(parseResult: ParseResult) {
         const clazzMethodUserData: ClazzMethodUserData = {
           hasParameters: method.parameters.length > 0,
           isSupport: supportList.includes(methodIrisApiIdValue),
-          isRegisterMethod: new RegExp('registerEventHandler').test(
+          isRegisterMethod: new RegExp('registerEventHandler|registerAudioFrameObserver').test(
             method.name
           ),
           bindingExtension: bindingExtensionList.includes(methodIrisApiIdValue),

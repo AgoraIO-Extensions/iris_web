@@ -8082,9 +8082,93 @@ describe('IRtcEngine', () => {
     );
   });
 
+  test('RtcEngine_setPlaybackAudioFrameParameters_bd46d1d parameter', async () => {
+    let nParam = {
+      sampleRate: undefined,
+      channel: undefined,
+      mode: undefined,
+      samplesPerCall: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_setPlaybackAudioFrameParameters_bd46d1d',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('sampleRate is undefined');
+    }
+    //@ts-ignore
+    nParam.sampleRate = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_setPlaybackAudioFrameParameters_bd46d1d',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('channel is undefined');
+    }
+    //@ts-ignore
+    nParam.channel = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_setPlaybackAudioFrameParameters_bd46d1d',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('mode is undefined');
+    }
+    //@ts-ignore
+    nParam.mode = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_setPlaybackAudioFrameParameters_bd46d1d',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('samplesPerCall is undefined');
+    }
+    //@ts-ignore
+    nParam.samplesPerCall = 'test';
+  });
+
   test('RtcEngine_setPlaybackAudioFrameParameters_bd46d1d impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
+        'setPlaybackAudioFrameParameters_bd46d1d'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       sampleRate: 'test',
@@ -8104,13 +8188,12 @@ describe('IRtcEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
-        ?.setPlaybackAudioFrameParameters_bd46d1d
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .setPlaybackAudioFrameParameters_bd46d1d
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl
+        .setPlaybackAudioFrameParameters_bd46d1d
+    ).toBeCalledWith('test', 'test', 'test', 'test');
   });
 
   test('RtcEngine_setMixedAudioFrameParameters_ee7e270 impl call', async () => {
