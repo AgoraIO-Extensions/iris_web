@@ -1233,12 +1233,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let fun = async () => {
       try {
         this._engine.globalState.isAudioFrameParametersSet = samplesPerCall > 0;
-        this._engine.globalState.audioFrameParameters = {
-          sampleRate,
-          channel,
-          mode,
-          samplesPerCall,
-        };
+        if (!this._engine.globalState.isAudioFrameParametersSet) {
+          this._engine.irisClientManager.localAudioTrackPackages.map(
+            (audioTrackPackage) => {
+              (audioTrackPackage.track as ILocalAudioTrack).setAudioFrameCallback(
+                null,
+                samplesPerCall
+              );
+            }
+          );
+        } else {
+          this._engine.globalState.audioFrameParameters = {
+            sampleRate,
+            channel,
+            mode,
+            samplesPerCall,
+          };
+        }
       } catch (e) {
         AgoraConsole.log(e);
         return this._engine.returnResult(false);
