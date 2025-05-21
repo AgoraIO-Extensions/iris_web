@@ -1234,14 +1234,14 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       try {
         this._engine.globalState.isAudioFrameParametersSet = samplesPerCall > 0;
         if (!this._engine.globalState.isAudioFrameParametersSet) {
-          this._engine.irisClientManager.localAudioTrackPackages.map(
-            (audioTrackPackage) => {
-              (audioTrackPackage.track as ILocalAudioTrack).setAudioFrameCallback(
+          this._engine.irisClientManager.irisClientList.map((irisClient) => {
+            irisClient.agoraRTCClient?.remoteUsers.map((remoteUser) => {
+              remoteUser.audioTrack?.setAudioFrameCallback(
                 null,
                 samplesPerCall
               );
-            }
-          );
+            });
+          });
         } else {
           this._engine.globalState.audioFrameParameters = {
             sampleRate,
