@@ -1,6 +1,6 @@
 {
   "name": "iris-web-rtc-fake",
-  "version": "0.8.9",
+  "version": "0.9.1",
   "description": "wait",
   "main": "./index.ts",
   "scripts": {

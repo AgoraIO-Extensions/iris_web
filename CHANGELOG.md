@@ -1,5 +1,12 @@
 # IRIS_WEB
 
+## [0.9.1](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.9...v0.9.1) (2025-05-21)
+
+
+### Features
+
+* enableLogUpload ([1505f4a](https://github.com/AgoraIO-Extensions/iris_web/commit/1505f4ae911f56ae0530e70f541d51ed32da7f09))
+
 ## [0.8.9](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.8...v0.8.9) (2025-04-21)
 
 

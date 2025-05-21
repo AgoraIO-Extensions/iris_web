@@ -1022,10 +1022,20 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         let json = JSON.parse(parameters);
         let keyList = Object.keys(json);
         for (let i = 0; i < keyList.length; i++) {
-          (this._engine.globalState.AgoraRTC as any).setParameter(
-            keyList[i],
-            json[keyList[i]]
-          );
+          switch (keyList[i]) {
+            case 'enableLogUpload':
+              if (json[keyList[i]] === true) {
+                this._engine.globalState.AgoraRTC.enableLogUpload();
+              } else {
+                this._engine.globalState.AgoraRTC.disableLogUpload();
+              }
+              break;
+            default:
+              (this._engine.globalState.AgoraRTC as any).setParameter(
+                keyList[i],
+                json[keyList[i]]
+              );
+          }
         }
       } catch (e) {
         AgoraConsole.log(e);
@@ -1211,5 +1221,41 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       }
     );
     return this._engine.returnResult();
+  }
+
+  setPlaybackAudioFrameParameters_bd46d1d(
+    sampleRate: number,
+    channel: number,
+    mode: NATIVE_RTC.RAW_AUDIO_FRAME_OP_MODE_TYPE,
+    samplesPerCall: number
+  ): CallApiReturnType {
+    //websdk do not have sampleRate, channel, mode
+    let fun = async () => {
+      try {
+        this._engine.globalState.isAudioFrameParametersSet = samplesPerCall > 0;
+        if (!this._engine.globalState.isAudioFrameParametersSet) {
+          this._engine.irisClientManager.irisClientList.map((irisClient) => {
+            irisClient.agoraRTCClient?.remoteUsers.map((remoteUser) => {
+              remoteUser.audioTrack?.setAudioFrameCallback(
+                null,
+                samplesPerCall
+              );
+            });
+          });
+        } else {
+          this._engine.globalState.audioFrameParameters = {
+            sampleRate,
+            channel,
+            mode,
+            samplesPerCall,
+          };
+        }
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
   }
 }

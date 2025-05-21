@@ -295,6 +295,29 @@ export class IrisClientEventHandler {
             0
           );
         }
+        if (user.audioTrack) {
+          if (this._engine.globalState.isAudioFrameParametersSet) {
+            user.audioTrack.setAudioFrameCallback((buffer) => {
+              let channelId =
+                this._engine.irisClientManager.localAudioTrackPackages.find(
+                  (e) => e.track === user.audioTrack
+                )?.irisClient?.connection?.channelId ?? '';
+
+              // Convert AudioBuffer to Uint8Array
+              const channelData = buffer.getChannelData(
+                this._engine.globalState.audioFrameParameters.channel
+              ); // Get data from first channel
+              const byteArray = new Uint8Array(channelData.buffer);
+
+              this._engine.mediaEngineEventHandler.onPlaybackAudioFrame_4c8de15(
+                channelId,
+                {
+                  buffer: byteArray,
+                }
+              );
+            }, this._engine.globalState.audioFrameParameters.samplesPerCall);
+          }
+        }
       } else if (mediaType == 'video') {
         await this._engine.irisClientManager.irisClientObserver.notifyRemote(
           NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
@@ -346,6 +369,14 @@ export class IrisClientEventHandler {
           NATIVE_RTC.REMOTE_AUDIO_STATE_REASON.REMOTE_AUDIO_REASON_REMOTE_MUTED,
           0
         );
+        if (user.audioTrack) {
+          if (this._engine.globalState.isAudioFrameParametersSet) {
+            user.audioTrack.setAudioFrameCallback(
+              null,
+              this._engine.globalState.audioFrameParameters.samplesPerCall
+            );
+          }
+        }
       } else if (mediaType == 'video') {
         await this._engine.irisClientManager.irisClientObserver.notifyRemote(
           NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK,

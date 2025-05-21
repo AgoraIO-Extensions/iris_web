@@ -10,8 +10,10 @@ import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { drawRGBABufferToCanvas } from '../util/BufferConvert';
 
+import { RTCENGINE_KEY } from './IAgoraRtcEngineImpl';
+
 //@ts-ignore
-export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
+export class IMediaEngineImpl implements IMediaEngineExtensions {
   private _engine: IrisRtcEngine;
 
   public constructor(engine: IrisRtcEngine) {
@@ -116,6 +118,31 @@ export class IMediaEngineImpl implements NATIVE_RTC.IMediaEngine {
 
       return this._engine.returnResult();
     };
+    return this._engine.execute(processFunc);
+  }
+
+  registerAudioFrameObserver_d873a64(observer: any): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      this._engine.irisEventHandlerManager.addEventHandler(
+        RTCENGINE_KEY,
+        observer
+      );
+      return this._engine.returnResult();
+    };
+
+    return this._engine.execute(processFunc);
+  }
+
+  unregisterAudioFrameObserver(observer: any): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      this._engine.irisEventHandlerManager.removeEventHandler(
+        RTCENGINE_KEY,
+        observer
+      );
+
+      return this._engine.returnResult();
+    };
+
     return this._engine.execute(processFunc);
   }
 }

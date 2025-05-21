@@ -2,3 +2,5 @@
 
 export const IRTCENGINE_RELEASE = 'RtcEngine_release';
 export const IRTCENGINE_SETAPPTYPE = 'RtcEngine_setAppType';
+export const IMEDIAENGINE_UNREGISTERAUDIOFRAMEOBSERVER =
+  'MediaEngine_unregisterAudioFrameObserver';
