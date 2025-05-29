@@ -46,25 +46,17 @@ export class IMediaEngineDispatch implements IMediaEngine {
   }
 
   // @ts-ignore
-  registerFaceInfoObserver_0303ed6(apiParam: ApiParam): CallApiReturnType {
+  pushAudioFrame_8dfac8c(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'MediaEngine_registerFaceInfoObserver_0303ed6 not supported in this platform!'
+      'MediaEngine_pushAudioFrame_8dfac8c not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  pushAudioFrame_c71f4ab(apiParam: ApiParam): CallApiReturnType {
+  pullAudioFrame_28bed4b(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'MediaEngine_pushAudioFrame_c71f4ab not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  // @ts-ignore
-  pullAudioFrame_2c74a9c(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'MediaEngine_pullAudioFrame_2c74a9c not supported in this platform!'
+      'MediaEngine_pullAudioFrame_28bed4b not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -99,14 +91,6 @@ export class IMediaEngineDispatch implements IMediaEngine {
       sourceType,
       encodedVideoOption
     );
-  }
-
-  // @ts-ignore
-  setExternalRemoteEglContext_f337cbf(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'MediaEngine_setExternalRemoteEglContext_f337cbf not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -170,9 +154,9 @@ export class IMediaEngineDispatch implements IMediaEngine {
   }
 
   // @ts-ignore
-  pushEncodedVideoImage_e71452b(apiParam: ApiParam): CallApiReturnType {
+  pushEncodedVideoImage_f854c56(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'MediaEngine_pushEncodedVideoImage_e71452b not supported in this platform!'
+      'MediaEngine_pushEncodedVideoImage_f854c56 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

@@ -13,8 +13,6 @@ export const IAUDIOENCODEDFRAMEOBSERVER_ONPLAYBACKAUDIOENCODEDFRAME_d930ddc =
   'AudioEncodedFrameObserver_onPlaybackAudioEncodedFrame_d930ddc';
 export const IAUDIOENCODEDFRAMEOBSERVER_ONMIXEDAUDIOENCODEDFRAME_d930ddc =
   'AudioEncodedFrameObserver_onMixedAudioEncodedFrame_d930ddc';
-export const IVIDEOFRAMEMETAINFO_GETMETAINFOSTR_c81192f =
-  'VideoFrameMetaInfo_getMetaInfoStr_c81192f';
 export const IAUDIOPCMFRAMESINK_ONFRAME_95f515a =
   'AudioPcmFrameSink_onFrame_95f515a';
 export const IAUDIOFRAMEOBSERVER_ONRECORDAUDIOFRAME_4c8de15 =
@@ -55,10 +53,8 @@ export const IVIDEOFRAMEOBSERVER_GETMIRRORAPPLIED =
   'VideoFrameObserver_getMirrorApplied';
 export const IVIDEOFRAMEOBSERVER_GETOBSERVEDFRAMEPOSITION =
   'VideoFrameObserver_getObservedFramePosition';
-export const IFACEINFOOBSERVER_ONFACEINFO_3a2037f =
-  'FaceInfoObserver_onFaceInfo_3a2037f';
-export const IMEDIARECORDEROBSERVER_ONRECORDERSTATECHANGED_c38849f =
-  'MediaRecorderObserver_onRecorderStateChanged_c38849f';
+export const IMEDIARECORDEROBSERVER_ONRECORDERSTATECHANGED_e1716bb =
+  'MediaRecorderObserver_onRecorderStateChanged_e1716bb';
 export const IMEDIARECORDEROBSERVER_ONRECORDERINFOUPDATED_64fa74a =
   'MediaRecorderObserver_onRecorderInfoUpdated_64fa74a';
 export const IH265TRANSCODEROBSERVER_ONENABLETRANSCODE_6ba6646 =
@@ -83,16 +79,12 @@ export const IMEDIAENGINE_REGISTERVIDEOFRAMEOBSERVER_2cc0ef1 =
   'MediaEngine_registerVideoFrameObserver_2cc0ef1';
 export const IMEDIAENGINE_REGISTERVIDEOENCODEDFRAMEOBSERVER_d45d579 =
   'MediaEngine_registerVideoEncodedFrameObserver_d45d579';
-export const IMEDIAENGINE_REGISTERFACEINFOOBSERVER_0303ed6 =
-  'MediaEngine_registerFaceInfoObserver_0303ed6';
-export const IMEDIAENGINE_PUSHAUDIOFRAME_c71f4ab =
-  'MediaEngine_pushAudioFrame_c71f4ab';
-export const IMEDIAENGINE_PULLAUDIOFRAME_2c74a9c =
-  'MediaEngine_pullAudioFrame_2c74a9c';
+export const IMEDIAENGINE_PUSHAUDIOFRAME_8dfac8c =
+  'MediaEngine_pushAudioFrame_8dfac8c';
+export const IMEDIAENGINE_PULLAUDIOFRAME_28bed4b =
+  'MediaEngine_pullAudioFrame_28bed4b';
 export const IMEDIAENGINE_SETEXTERNALVIDEOSOURCE_fff99b6 =
   'MediaEngine_setExternalVideoSource_fff99b6';
-export const IMEDIAENGINE_SETEXTERNALREMOTEEGLCONTEXT_f337cbf =
-  'MediaEngine_setExternalRemoteEglContext_f337cbf';
 export const IMEDIAENGINE_SETEXTERNALAUDIOSOURCE_e6538be =
   'MediaEngine_setExternalAudioSource_e6538be';
 export const IMEDIAENGINE_CREATECUSTOMAUDIOTRACK_5a0bf1a =
@@ -105,8 +97,8 @@ export const IMEDIAENGINE_ENABLECUSTOMAUDIOLOCALPLAYBACK_5f38e8a =
   'MediaEngine_enableCustomAudioLocalPlayback_5f38e8a';
 export const IMEDIAENGINE_PUSHVIDEOFRAME_4e544e2 =
   'MediaEngine_pushVideoFrame_4e544e2';
-export const IMEDIAENGINE_PUSHENCODEDVIDEOIMAGE_e71452b =
-  'MediaEngine_pushEncodedVideoImage_e71452b';
+export const IMEDIAENGINE_PUSHENCODEDVIDEOIMAGE_f854c56 =
+  'MediaEngine_pushEncodedVideoImage_f854c56';
 export const IMEDIAENGINE_ADDVIDEOFRAMERENDERER_2cc0ef1 =
   'MediaEngine_addVideoFrameRenderer_2cc0ef1';
 export const IMEDIAENGINE_REMOVEVIDEOFRAMERENDERER_2cc0ef1 =
@@ -137,8 +129,6 @@ export const IMEDIAPLAYER_SETPLAYBACKSPEED_46f8ab7 =
   'MediaPlayer_setPlaybackSpeed_46f8ab7';
 export const IMEDIAPLAYER_SELECTAUDIOTRACK_46f8ab7 =
   'MediaPlayer_selectAudioTrack_46f8ab7';
-export const IMEDIAPLAYER_SELECTMULTIAUDIOTRACK_4e92b3c =
-  'MediaPlayer_selectMultiAudioTrack_4e92b3c';
 export const IMEDIAPLAYER_SETPLAYEROPTION_4d05d29 =
   'MediaPlayer_setPlayerOption_4d05d29';
 export const IMEDIAPLAYER_SETPLAYEROPTION_ccad422 =
@@ -231,10 +221,10 @@ export const IMEDIAPLAYERCACHEMANAGER_GETMAXCACHEFILESIZE =
   'MediaPlayerCacheManager_getMaxCacheFileSize';
 export const IMEDIAPLAYERCACHEMANAGER_GETCACHEFILECOUNT =
   'MediaPlayerCacheManager_getCacheFileCount';
-export const IMEDIAPLAYERSOURCEOBSERVER_ONPLAYERSOURCESTATECHANGED_7fb38f1 =
-  'MediaPlayerSourceObserver_onPlayerSourceStateChanged_7fb38f1';
-export const IMEDIAPLAYERSOURCEOBSERVER_ONPOSITIONCHANGED_303b92e =
-  'MediaPlayerSourceObserver_onPositionChanged_303b92e';
+export const IMEDIAPLAYERSOURCEOBSERVER_ONPLAYERSOURCESTATECHANGED_9572693 =
+  'MediaPlayerSourceObserver_onPlayerSourceStateChanged_9572693';
+export const IMEDIAPLAYERSOURCEOBSERVER_ONPOSITIONCHANGED_f631116 =
+  'MediaPlayerSourceObserver_onPositionChanged_f631116';
 export const IMEDIAPLAYERSOURCEOBSERVER_ONPLAYEREVENT_50f16fa =
   'MediaPlayerSourceObserver_onPlayerEvent_50f16fa';
 export const IMEDIAPLAYERSOURCEOBSERVER_ONMETADATA_469a01b =
@@ -251,10 +241,6 @@ export const IMEDIAPLAYERSOURCEOBSERVER_ONPLAYERSRCINFOCHANGED_54f3e5a =
   'MediaPlayerSourceObserver_onPlayerSrcInfoChanged_54f3e5a';
 export const IMEDIAPLAYERSOURCEOBSERVER_ONPLAYERINFOUPDATED_0e902a8 =
   'MediaPlayerSourceObserver_onPlayerInfoUpdated_0e902a8';
-export const IMEDIAPLAYERSOURCEOBSERVER_ONPLAYERCACHESTATS_0145940 =
-  'MediaPlayerSourceObserver_onPlayerCacheStats_0145940';
-export const IMEDIAPLAYERSOURCEOBSERVER_ONPLAYERPLAYBACKSTATS_ffa466f =
-  'MediaPlayerSourceObserver_onPlayerPlaybackStats_ffa466f';
 export const IMEDIAPLAYERSOURCEOBSERVER_ONAUDIOVOLUMEINDICATION_46f8ab7 =
   'MediaPlayerSourceObserver_onAudioVolumeIndication_46f8ab7';
 export const IMEDIARECORDER_SETMEDIARECORDEROBSERVER_e1f7340 =
@@ -271,19 +257,17 @@ export const MUSICCOLLECTION_GETPAGE = 'MusicCollection_getPage';
 export const MUSICCOLLECTION_GETPAGESIZE = 'MusicCollection_getPageSize';
 export const MUSICCOLLECTION_GETMUSIC_8fcdcef =
   'MusicCollection_getMusic_8fcdcef';
-export const IMUSICCONTENTCENTEREVENTHANDLER_ONMUSICCHARTSRESULT_fb18135 =
-  'MusicContentCenterEventHandler_onMusicChartsResult_fb18135';
-export const IMUSICCONTENTCENTEREVENTHANDLER_ONMUSICCOLLECTIONRESULT_c30c2e6 =
-  'MusicContentCenterEventHandler_onMusicCollectionResult_c30c2e6';
-export const IMUSICCONTENTCENTEREVENTHANDLER_ONLYRICRESULT_9ad9c90 =
-  'MusicContentCenterEventHandler_onLyricResult_9ad9c90';
-export const IMUSICCONTENTCENTEREVENTHANDLER_ONSONGSIMPLEINFORESULT_9ad9c90 =
-  'MusicContentCenterEventHandler_onSongSimpleInfoResult_9ad9c90';
-export const IMUSICCONTENTCENTEREVENTHANDLER_ONPRELOADEVENT_20170bc =
-  'MusicContentCenterEventHandler_onPreLoadEvent_20170bc';
+export const IMUSICCONTENTCENTEREVENTHANDLER_ONMUSICCHARTSRESULT_3597d7e =
+  'MusicContentCenterEventHandler_onMusicChartsResult_3597d7e';
+export const IMUSICCONTENTCENTEREVENTHANDLER_ONMUSICCOLLECTIONRESULT_1517101 =
+  'MusicContentCenterEventHandler_onMusicCollectionResult_1517101';
+export const IMUSICCONTENTCENTEREVENTHANDLER_ONLYRICRESULT_981e37c =
+  'MusicContentCenterEventHandler_onLyricResult_981e37c';
+export const IMUSICCONTENTCENTEREVENTHANDLER_ONSONGSIMPLEINFORESULT_981e37c =
+  'MusicContentCenterEventHandler_onSongSimpleInfoResult_981e37c';
+export const IMUSICCONTENTCENTEREVENTHANDLER_ONPRELOADEVENT_562c799 =
+  'MusicContentCenterEventHandler_onPreLoadEvent_562c799';
 export const IMUSICPLAYER_OPEN_303b92e = 'MusicPlayer_open_303b92e';
-export const IMUSICPLAYER_SETPLAYMODE_748bee0 =
-  'MusicPlayer_setPlayMode_748bee0';
 export const IMUSICCONTENTCENTER_INITIALIZE_df70304 =
   'MusicContentCenter_initialize_df70304';
 export const IMUSICCONTENTCENTER_RENEWTOKEN_3a2037f =
@@ -295,8 +279,6 @@ export const IMUSICCONTENTCENTER_UNREGISTEREVENTHANDLER =
   'MusicContentCenter_unregisterEventHandler';
 export const IMUSICCONTENTCENTER_CREATEMUSICPLAYER =
   'MusicContentCenter_createMusicPlayer';
-export const IMUSICCONTENTCENTER_DESTROYMUSICPLAYER_876d086 =
-  'MusicContentCenter_destroyMusicPlayer_876d086';
 export const IMUSICCONTENTCENTER_GETMUSICCHARTS_66d4ecd =
   'MusicContentCenter_getMusicCharts_66d4ecd';
 export const IMUSICCONTENTCENTER_GETMUSICCOLLECTIONBYMUSICCHARTID_8cd0b4d =
@@ -365,8 +347,8 @@ export const IRTCENGINEEVENTHANDLER_ONFIRSTREMOTEVIDEODECODED_58b686c =
   'RtcEngineEventHandler_onFirstRemoteVideoDecoded_58b686c';
 export const IRTCENGINEEVENTHANDLER_ONVIDEOSIZECHANGED_5f7d8e3 =
   'RtcEngineEventHandler_onVideoSizeChanged_5f7d8e3';
-export const IRTCENGINEEVENTHANDLER_ONLOCALVIDEOSTATECHANGED_a44228a =
-  'RtcEngineEventHandler_onLocalVideoStateChanged_a44228a';
+export const IRTCENGINEEVENTHANDLER_ONLOCALVIDEOSTATECHANGED_9e9b3c6 =
+  'RtcEngineEventHandler_onLocalVideoStateChanged_9e9b3c6';
 export const IRTCENGINEEVENTHANDLER_ONREMOTEVIDEOSTATECHANGED_815ab69 =
   'RtcEngineEventHandler_onRemoteVideoStateChanged_815ab69';
 export const IRTCENGINEEVENTHANDLER_ONFIRSTREMOTEVIDEOFRAME_58b686c =
@@ -381,14 +363,14 @@ export const IRTCENGINEEVENTHANDLER_ONUSERMUTEVIDEO_dbdc15a =
   'RtcEngineEventHandler_onUserMuteVideo_dbdc15a';
 export const IRTCENGINEEVENTHANDLER_ONUSERENABLEVIDEO_dbdc15a =
   'RtcEngineEventHandler_onUserEnableVideo_dbdc15a';
-export const IRTCENGINEEVENTHANDLER_ONUSERSTATECHANGED_c63723e =
-  'RtcEngineEventHandler_onUserStateChanged_c63723e';
+export const IRTCENGINEEVENTHANDLER_ONUSERSTATECHANGED_6bd0e74 =
+  'RtcEngineEventHandler_onUserStateChanged_6bd0e74';
 export const IRTCENGINEEVENTHANDLER_ONUSERENABLELOCALVIDEO_dbdc15a =
   'RtcEngineEventHandler_onUserEnableLocalVideo_dbdc15a';
-export const IRTCENGINEEVENTHANDLER_ONREMOTEAUDIOSTATS_4aba4cc =
-  'RtcEngineEventHandler_onRemoteAudioStats_4aba4cc';
 export const IRTCENGINEEVENTHANDLER_ONLOCALAUDIOSTATS_8fcb8ec =
   'RtcEngineEventHandler_onLocalAudioStats_8fcb8ec';
+export const IRTCENGINEEVENTHANDLER_ONREMOTEAUDIOSTATS_4aba4cc =
+  'RtcEngineEventHandler_onRemoteAudioStats_4aba4cc';
 export const IRTCENGINEEVENTHANDLER_ONLOCALVIDEOSTATS_baa96c8 =
   'RtcEngineEventHandler_onLocalVideoStats_baa96c8';
 export const IRTCENGINEEVENTHANDLER_ONREMOTEVIDEOSTATS_e271890 =
@@ -405,8 +387,8 @@ export const IRTCENGINEEVENTHANDLER_ONVIDEOSTOPPED =
   'RtcEngineEventHandler_onVideoStopped';
 export const IRTCENGINEEVENTHANDLER_ONAUDIOMIXINGSTATECHANGED_fd2c0a6 =
   'RtcEngineEventHandler_onAudioMixingStateChanged_fd2c0a6';
-export const IRTCENGINEEVENTHANDLER_ONRHYTHMPLAYERSTATECHANGED_09360d2 =
-  'RtcEngineEventHandler_onRhythmPlayerStateChanged_09360d2';
+export const IRTCENGINEEVENTHANDLER_ONRHYTHMPLAYERSTATECHANGED_28c4cdd =
+  'RtcEngineEventHandler_onRhythmPlayerStateChanged_28c4cdd';
 export const IRTCENGINEEVENTHANDLER_ONCONNECTIONLOST =
   'RtcEngineEventHandler_onConnectionLost';
 export const IRTCENGINEEVENTHANDLER_ONCONNECTIONINTERRUPTED =
@@ -425,12 +407,12 @@ export const IRTCENGINEEVENTHANDLER_ONLICENSEVALIDATIONFAILURE_4518fcc =
   'RtcEngineEventHandler_onLicenseValidationFailure_4518fcc';
 export const IRTCENGINEEVENTHANDLER_ONFIRSTLOCALAUDIOFRAMEPUBLISHED_46f8ab7 =
   'RtcEngineEventHandler_onFirstLocalAudioFramePublished_46f8ab7';
-export const IRTCENGINEEVENTHANDLER_ONFIRSTREMOTEAUDIODECODED_88641bf =
-  'RtcEngineEventHandler_onFirstRemoteAudioDecoded_88641bf';
 export const IRTCENGINEEVENTHANDLER_ONFIRSTREMOTEAUDIOFRAME_88641bf =
   'RtcEngineEventHandler_onFirstRemoteAudioFrame_88641bf';
-export const IRTCENGINEEVENTHANDLER_ONLOCALAUDIOSTATECHANGED_f33d789 =
-  'RtcEngineEventHandler_onLocalAudioStateChanged_f33d789';
+export const IRTCENGINEEVENTHANDLER_ONFIRSTREMOTEAUDIODECODED_88641bf =
+  'RtcEngineEventHandler_onFirstRemoteAudioDecoded_88641bf';
+export const IRTCENGINEEVENTHANDLER_ONLOCALAUDIOSTATECHANGED_f428c19 =
+  'RtcEngineEventHandler_onLocalAudioStateChanged_f428c19';
 export const IRTCENGINEEVENTHANDLER_ONREMOTEAUDIOSTATECHANGED_f1532dd =
   'RtcEngineEventHandler_onRemoteAudioStateChanged_f1532dd';
 export const IRTCENGINEEVENTHANDLER_ONACTIVESPEAKER_c8d091a =
@@ -445,8 +427,8 @@ export const IRTCENGINEEVENTHANDLER_ONCLIENTROLECHANGEFAILED_386f862 =
   'RtcEngineEventHandler_onClientRoleChangeFailed_386f862';
 export const IRTCENGINEEVENTHANDLER_ONAUDIODEVICEVOLUMECHANGED_55ab726 =
   'RtcEngineEventHandler_onAudioDeviceVolumeChanged_55ab726';
-export const IRTCENGINEEVENTHANDLER_ONRTMPSTREAMINGSTATECHANGED_1f07503 =
-  'RtcEngineEventHandler_onRtmpStreamingStateChanged_1f07503';
+export const IRTCENGINEEVENTHANDLER_ONRTMPSTREAMINGSTATECHANGED_08571ff =
+  'RtcEngineEventHandler_onRtmpStreamingStateChanged_08571ff';
 export const IRTCENGINEEVENTHANDLER_ONRTMPSTREAMINGEVENT_2e48ef5 =
   'RtcEngineEventHandler_onRtmpStreamingEvent_2e48ef5';
 export const IRTCENGINEEVENTHANDLER_ONTRANSCODINGUPDATED =
@@ -455,6 +437,8 @@ export const IRTCENGINEEVENTHANDLER_ONAUDIOROUTINGCHANGED_46f8ab7 =
   'RtcEngineEventHandler_onAudioRoutingChanged_46f8ab7';
 export const IRTCENGINEEVENTHANDLER_ONCHANNELMEDIARELAYSTATECHANGED_4e92b3c =
   'RtcEngineEventHandler_onChannelMediaRelayStateChanged_4e92b3c';
+export const IRTCENGINEEVENTHANDLER_ONCHANNELMEDIARELAYEVENT_46f8ab7 =
+  'RtcEngineEventHandler_onChannelMediaRelayEvent_46f8ab7';
 export const IRTCENGINEEVENTHANDLER_ONLOCALPUBLISHFALLBACKTOAUDIOONLY_5039d15 =
   'RtcEngineEventHandler_onLocalPublishFallbackToAudioOnly_5039d15';
 export const IRTCENGINEEVENTHANDLER_ONREMOTESUBSCRIBEFALLBACKTOAUDIOONLY_dbdc15a =
@@ -467,8 +451,8 @@ export const IRTCENGINEEVENTHANDLER_ONCONNECTIONSTATECHANGED_ec7c9c0 =
   'RtcEngineEventHandler_onConnectionStateChanged_ec7c9c0';
 export const IRTCENGINEEVENTHANDLER_ONWLACCMESSAGE_333465b =
   'RtcEngineEventHandler_onWlAccMessage_333465b';
-export const IRTCENGINEEVENTHANDLER_ONWLACCSTATS_94ee38e =
-  'RtcEngineEventHandler_onWlAccStats_94ee38e';
+export const IRTCENGINEEVENTHANDLER_ONWLACCSTATS_8f5541b =
+  'RtcEngineEventHandler_onWlAccStats_8f5541b';
 export const IRTCENGINEEVENTHANDLER_ONNETWORKTYPECHANGED_e85a70d =
   'RtcEngineEventHandler_onNetworkTypeChanged_e85a70d';
 export const IRTCENGINEEVENTHANDLER_ONENCRYPTIONERROR_a0d1b74 =
@@ -479,12 +463,6 @@ export const IRTCENGINEEVENTHANDLER_ONLOCALUSERREGISTERED_1922dd1 =
   'RtcEngineEventHandler_onLocalUserRegistered_1922dd1';
 export const IRTCENGINEEVENTHANDLER_ONUSERINFOUPDATED_2120245 =
   'RtcEngineEventHandler_onUserInfoUpdated_2120245';
-export const IRTCENGINEEVENTHANDLER_ONUSERACCOUNTUPDATED_1922dd1 =
-  'RtcEngineEventHandler_onUserAccountUpdated_1922dd1';
-export const IRTCENGINEEVENTHANDLER_ONVIDEORENDERINGTRACINGRESULT_76e2449 =
-  'RtcEngineEventHandler_onVideoRenderingTracingResult_76e2449';
-export const IRTCENGINEEVENTHANDLER_ONLOCALVIDEOTRANSCODERERROR_83e3a9c =
-  'RtcEngineEventHandler_onLocalVideoTranscoderError_83e3a9c';
 export const IRTCENGINEEVENTHANDLER_ONUPLOADLOGRESULT_eef29d2 =
   'RtcEngineEventHandler_onUploadLogResult_eef29d2';
 export const IRTCENGINEEVENTHANDLER_ONAUDIOSUBSCRIBESTATECHANGED_e0ec28e =
@@ -495,20 +473,20 @@ export const IRTCENGINEEVENTHANDLER_ONAUDIOPUBLISHSTATECHANGED_2c13a28 =
   'RtcEngineEventHandler_onAudioPublishStateChanged_2c13a28';
 export const IRTCENGINEEVENTHANDLER_ONVIDEOPUBLISHSTATECHANGED_5b45b6e =
   'RtcEngineEventHandler_onVideoPublishStateChanged_5b45b6e';
-export const IRTCENGINEEVENTHANDLER_ONTRANSCODEDSTREAMLAYOUTINFO_3bfb91b =
-  'RtcEngineEventHandler_onTranscodedStreamLayoutInfo_3bfb91b';
-export const IRTCENGINEEVENTHANDLER_ONAUDIOMETADATARECEIVED_77edd82 =
-  'RtcEngineEventHandler_onAudioMetadataReceived_77edd82';
-export const IRTCENGINEEVENTHANDLER_ONEXTENSIONEVENTWITHCONTEXT_a5fb27a =
-  'RtcEngineEventHandler_onExtensionEventWithContext_a5fb27a';
-export const IRTCENGINEEVENTHANDLER_ONEXTENSIONSTARTEDWITHCONTEXT_67c38e3 =
-  'RtcEngineEventHandler_onExtensionStartedWithContext_67c38e3';
-export const IRTCENGINEEVENTHANDLER_ONEXTENSIONSTOPPEDWITHCONTEXT_67c38e3 =
-  'RtcEngineEventHandler_onExtensionStoppedWithContext_67c38e3';
-export const IRTCENGINEEVENTHANDLER_ONEXTENSIONERRORWITHCONTEXT_a452f11 =
-  'RtcEngineEventHandler_onExtensionErrorWithContext_a452f11';
-export const IRTCENGINEEVENTHANDLER_ONSETRTMFLAGRESULT_46f8ab7 =
-  'RtcEngineEventHandler_onSetRtmFlagResult_46f8ab7';
+export const IRTCENGINEEVENTHANDLER_ONEXTENSIONEVENT_062d13c =
+  'RtcEngineEventHandler_onExtensionEvent_062d13c';
+export const IRTCENGINEEVENTHANDLER_ONEXTENSIONSTARTED_ccad422 =
+  'RtcEngineEventHandler_onExtensionStarted_ccad422';
+export const IRTCENGINEEVENTHANDLER_ONEXTENSIONSTOPPED_ccad422 =
+  'RtcEngineEventHandler_onExtensionStopped_ccad422';
+export const IRTCENGINEEVENTHANDLER_ONEXTENSIONERROR_bd3489b =
+  'RtcEngineEventHandler_onExtensionError_bd3489b';
+export const IRTCENGINEEVENTHANDLER_ONUSERACCOUNTUPDATED_1922dd1 =
+  'RtcEngineEventHandler_onUserAccountUpdated_1922dd1';
+export const IRTCENGINEEVENTHANDLER_ONLOCALVIDEOTRANSCODERERROR_83e3a9c =
+  'RtcEngineEventHandler_onLocalVideoTranscoderError_83e3a9c';
+export const IRTCENGINEEVENTHANDLER_ONVIDEORENDERINGTRACINGRESULT_76e2449 =
+  'RtcEngineEventHandler_onVideoRenderingTracingResult_76e2449';
 export const IRTCENGINEEVENTHANDLER_ONJOINCHANNELSUCCESS_263e4cd =
   'RtcEngineEventHandler_onJoinChannelSuccess_263e4cd';
 export const IRTCENGINEEVENTHANDLER_ONREJOINCHANNELSUCCESS_263e4cd =
@@ -531,6 +509,8 @@ export const IRTCENGINEEVENTHANDLER_ONFIRSTREMOTEVIDEODECODED_a68170a =
   'RtcEngineEventHandler_onFirstRemoteVideoDecoded_a68170a';
 export const IRTCENGINEEVENTHANDLER_ONVIDEOSIZECHANGED_99bf45c =
   'RtcEngineEventHandler_onVideoSizeChanged_99bf45c';
+export const IRTCENGINEEVENTHANDLER_ONLOCALVIDEOSTATECHANGED_cc0928e =
+  'RtcEngineEventHandler_onLocalVideoStateChanged_cc0928e';
 export const IRTCENGINEEVENTHANDLER_ONREMOTEVIDEOSTATECHANGED_a14e9d1 =
   'RtcEngineEventHandler_onRemoteVideoStateChanged_a14e9d1';
 export const IRTCENGINEEVENTHANDLER_ONFIRSTREMOTEVIDEOFRAME_a68170a =
@@ -579,8 +559,8 @@ export const IRTCENGINEEVENTHANDLER_ONFIRSTREMOTEAUDIOFRAME_c5499bd =
   'RtcEngineEventHandler_onFirstRemoteAudioFrame_c5499bd';
 export const IRTCENGINEEVENTHANDLER_ONFIRSTREMOTEAUDIODECODED_c5499bd =
   'RtcEngineEventHandler_onFirstRemoteAudioDecoded_c5499bd';
-export const IRTCENGINEEVENTHANDLER_ONLOCALAUDIOSTATECHANGED_13b6c02 =
-  'RtcEngineEventHandler_onLocalAudioStateChanged_13b6c02';
+export const IRTCENGINEEVENTHANDLER_ONLOCALAUDIOSTATECHANGED_6d655b4 =
+  'RtcEngineEventHandler_onLocalAudioStateChanged_6d655b4';
 export const IRTCENGINEEVENTHANDLER_ONREMOTEAUDIOSTATECHANGED_056772e =
   'RtcEngineEventHandler_onRemoteAudioStateChanged_056772e';
 export const IRTCENGINEEVENTHANDLER_ONACTIVESPEAKER_dd67adc =
@@ -611,12 +591,6 @@ export const IRTCENGINEEVENTHANDLER_ONSNAPSHOTTAKEN_5a6a693 =
   'RtcEngineEventHandler_onSnapshotTaken_5a6a693';
 export const IRTCENGINEEVENTHANDLER_ONVIDEORENDERINGTRACINGRESULT_813c0f4 =
   'RtcEngineEventHandler_onVideoRenderingTracingResult_813c0f4';
-export const IRTCENGINEEVENTHANDLER_ONSETRTMFLAGRESULT_263e4cd =
-  'RtcEngineEventHandler_onSetRtmFlagResult_263e4cd';
-export const IRTCENGINEEVENTHANDLER_ONTRANSCODEDSTREAMLAYOUTINFO_48f6419 =
-  'RtcEngineEventHandler_onTranscodedStreamLayoutInfo_48f6419';
-export const IRTCENGINEEVENTHANDLER_ONAUDIOMETADATARECEIVED_0d4eb96 =
-  'RtcEngineEventHandler_onAudioMetadataReceived_0d4eb96';
 export const IVIDEODEVICEMANAGER_ENUMERATEVIDEODEVICES =
   'VideoDeviceManager_enumerateVideoDevices';
 export const IVIDEODEVICEMANAGER_SETDEVICE_4ad5f6e =
@@ -638,10 +612,11 @@ export const IMETADATAOBSERVER_ONREADYTOSENDMETADATA_cbf4b59 =
   'MetadataObserver_onReadyToSendMetadata_cbf4b59';
 export const IMETADATAOBSERVER_ONMETADATARECEIVED_cb7661d =
   'MetadataObserver_onMetadataReceived_cb7661d';
-export const IDIRECTCDNSTREAMINGEVENTHANDLER_ONDIRECTCDNSTREAMINGSTATECHANGED_40f1fa3 =
-  'DirectCdnStreamingEventHandler_onDirectCdnStreamingStateChanged_40f1fa3';
+export const IDIRECTCDNSTREAMINGEVENTHANDLER_ONDIRECTCDNSTREAMINGSTATECHANGED_2a6b2f2 =
+  'DirectCdnStreamingEventHandler_onDirectCdnStreamingStateChanged_2a6b2f2';
 export const IDIRECTCDNSTREAMINGEVENTHANDLER_ONDIRECTCDNSTREAMINGSTATS_d50595f =
   'DirectCdnStreamingEventHandler_onDirectCdnStreamingStats_d50595f';
+export const IRTCENGINE_RELEASE_5039d15 = 'RtcEngine_release_5039d15';
 export const IRTCENGINE_INITIALIZE_0320339 = 'RtcEngine_initialize_0320339';
 export const IRTCENGINE_QUERYINTERFACE_257d192 =
   'RtcEngine_queryInterface_257d192';
@@ -650,11 +625,10 @@ export const IRTCENGINE_GETERRORDESCRIPTION_46f8ab7 =
   'RtcEngine_getErrorDescription_46f8ab7';
 export const IRTCENGINE_QUERYCODECCAPABILITY_ddf4f31 =
   'RtcEngine_queryCodecCapability_ddf4f31';
-export const IRTCENGINE_QUERYDEVICESCORE = 'RtcEngine_queryDeviceScore';
 export const IRTCENGINE_PRELOADCHANNEL_a0779eb =
   'RtcEngine_preloadChannel_a0779eb';
-export const IRTCENGINE_PRELOADCHANNELWITHUSERACCOUNT_0e4f59e =
-  'RtcEngine_preloadChannelWithUserAccount_0e4f59e';
+export const IRTCENGINE_PRELOADCHANNEL_0e4f59e =
+  'RtcEngine_preloadChannel_0e4f59e';
 export const IRTCENGINE_UPDATEPRELOADCHANNELTOKEN_3a2037f =
   'RtcEngine_updatePreloadChannelToken_3a2037f';
 export const IRTCENGINE_JOINCHANNEL_f097389 = 'RtcEngine_joinChannel_f097389';
@@ -670,6 +644,9 @@ export const IRTCENGINE_SETCLIENTROLE_3426fa6 =
   'RtcEngine_setClientRole_3426fa6';
 export const IRTCENGINE_SETCLIENTROLE_b46cc48 =
   'RtcEngine_setClientRole_b46cc48';
+export const IRTCENGINE_STARTECHOTEST = 'RtcEngine_startEchoTest';
+export const IRTCENGINE_STARTECHOTEST_46f8ab7 =
+  'RtcEngine_startEchoTest_46f8ab7';
 export const IRTCENGINE_STARTECHOTEST_16140d7 =
   'RtcEngine_startEchoTest_16140d7';
 export const IRTCENGINE_STOPECHOTEST = 'RtcEngine_stopEchoTest';
@@ -689,16 +666,6 @@ export const IRTCENGINE_SETVIDEOENCODERCONFIGURATION_89677d8 =
   'RtcEngine_setVideoEncoderConfiguration_89677d8';
 export const IRTCENGINE_SETBEAUTYEFFECTOPTIONS_e7635d1 =
   'RtcEngine_setBeautyEffectOptions_e7635d1';
-export const IRTCENGINE_SETFACESHAPEBEAUTYOPTIONS_a862ce7 =
-  'RtcEngine_setFaceShapeBeautyOptions_a862ce7';
-export const IRTCENGINE_SETFACESHAPEAREAOPTIONS_2e242a3 =
-  'RtcEngine_setFaceShapeAreaOptions_2e242a3';
-export const IRTCENGINE_GETFACESHAPEBEAUTYOPTIONS_8382895 =
-  'RtcEngine_getFaceShapeBeautyOptions_8382895';
-export const IRTCENGINE_GETFACESHAPEAREAOPTIONS_0783e2c =
-  'RtcEngine_getFaceShapeAreaOptions_0783e2c';
-export const IRTCENGINE_SETFILTEREFFECTOPTIONS_53b4be3 =
-  'RtcEngine_setFilterEffectOptions_53b4be3';
 export const IRTCENGINE_SETLOWLIGHTENHANCEOPTIONS_4f9f013 =
   'RtcEngine_setLowlightEnhanceOptions_4f9f013';
 export const IRTCENGINE_SETVIDEODENOISEROPTIONS_4e9fccc =
@@ -713,8 +680,6 @@ export const IRTCENGINE_SETUPLOCALVIDEO_acc9c38 =
   'RtcEngine_setupLocalVideo_acc9c38';
 export const IRTCENGINE_SETVIDEOSCENARIO_c02cd1c =
   'RtcEngine_setVideoScenario_c02cd1c';
-export const IRTCENGINE_SETVIDEOQOEPREFERENCE_c4a3d9f =
-  'RtcEngine_setVideoQoEPreference_c4a3d9f';
 export const IRTCENGINE_ENABLEAUDIO = 'RtcEngine_enableAudio';
 export const IRTCENGINE_DISABLEAUDIO = 'RtcEngine_disableAudio';
 export const IRTCENGINE_SETAUDIOPROFILE_d944543 =
@@ -729,6 +694,8 @@ export const IRTCENGINE_MUTELOCALAUDIOSTREAM_5039d15 =
   'RtcEngine_muteLocalAudioStream_5039d15';
 export const IRTCENGINE_MUTEALLREMOTEAUDIOSTREAMS_5039d15 =
   'RtcEngine_muteAllRemoteAudioStreams_5039d15';
+export const IRTCENGINE_SETDEFAULTMUTEALLREMOTEAUDIOSTREAMS_5039d15 =
+  'RtcEngine_setDefaultMuteAllRemoteAudioStreams_5039d15';
 export const IRTCENGINE_MUTEREMOTEAUDIOSTREAM_dbdc15a =
   'RtcEngine_muteRemoteAudioStream_dbdc15a';
 export const IRTCENGINE_MUTELOCALVIDEOSTREAM_5039d15 =
@@ -737,14 +704,16 @@ export const IRTCENGINE_ENABLELOCALVIDEO_5039d15 =
   'RtcEngine_enableLocalVideo_5039d15';
 export const IRTCENGINE_MUTEALLREMOTEVIDEOSTREAMS_5039d15 =
   'RtcEngine_muteAllRemoteVideoStreams_5039d15';
-export const IRTCENGINE_SETREMOTEDEFAULTVIDEOSTREAMTYPE_5a94eb0 =
-  'RtcEngine_setRemoteDefaultVideoStreamType_5a94eb0';
+export const IRTCENGINE_SETDEFAULTMUTEALLREMOTEVIDEOSTREAMS_5039d15 =
+  'RtcEngine_setDefaultMuteAllRemoteVideoStreams_5039d15';
 export const IRTCENGINE_MUTEREMOTEVIDEOSTREAM_dbdc15a =
   'RtcEngine_muteRemoteVideoStream_dbdc15a';
 export const IRTCENGINE_SETREMOTEVIDEOSTREAMTYPE_9e6406e =
   'RtcEngine_setRemoteVideoStreamType_9e6406e';
 export const IRTCENGINE_SETREMOTEVIDEOSUBSCRIPTIONOPTIONS_0b6b258 =
   'RtcEngine_setRemoteVideoSubscriptionOptions_0b6b258';
+export const IRTCENGINE_SETREMOTEDEFAULTVIDEOSTREAMTYPE_5a94eb0 =
+  'RtcEngine_setRemoteDefaultVideoStreamType_5a94eb0';
 export const IRTCENGINE_SETSUBSCRIBEAUDIOBLOCKLIST_2d31fd5 =
   'RtcEngine_setSubscribeAudioBlocklist_2d31fd5';
 export const IRTCENGINE_SETSUBSCRIBEAUDIOALLOWLIST_2d31fd5 =
@@ -801,8 +770,6 @@ export const IRTCENGINE_SETAUDIOMIXINGDUALMONOMODE_38a5515 =
   'RtcEngine_setAudioMixingDualMonoMode_38a5515';
 export const IRTCENGINE_SETAUDIOMIXINGPITCH_46f8ab7 =
   'RtcEngine_setAudioMixingPitch_46f8ab7';
-export const IRTCENGINE_SETAUDIOMIXINGPLAYBACKSPEED_46f8ab7 =
-  'RtcEngine_setAudioMixingPlaybackSpeed_46f8ab7';
 export const IRTCENGINE_GETEFFECTSVOLUME = 'RtcEngine_getEffectsVolume';
 export const IRTCENGINE_SETEFFECTSVOLUME_46f8ab7 =
   'RtcEngine_setEffectsVolume_46f8ab7';
@@ -861,8 +828,6 @@ export const IRTCENGINE_SETHEADPHONEEQPRESET_b679644 =
   'RtcEngine_setHeadphoneEQPreset_b679644';
 export const IRTCENGINE_SETHEADPHONEEQPARAMETERS_4e92b3c =
   'RtcEngine_setHeadphoneEQParameters_4e92b3c';
-export const IRTCENGINE_ENABLEVOICEAITUNER_28f5d5b =
-  'RtcEngine_enableVoiceAITuner_28f5d5b';
 export const IRTCENGINE_SETLOGFILE_3a2037f = 'RtcEngine_setLogFile_3a2037f';
 export const IRTCENGINE_SETLOGFILTER_2626ac7 = 'RtcEngine_setLogFilter_2626ac7';
 export const IRTCENGINE_SETLOGLEVEL_f125d83 = 'RtcEngine_setLogLevel_f125d83';
@@ -870,15 +835,10 @@ export const IRTCENGINE_SETLOGFILESIZE_2626ac7 =
   'RtcEngine_setLogFileSize_2626ac7';
 export const IRTCENGINE_UPLOADLOGFILE_66d4ecd =
   'RtcEngine_uploadLogFile_66d4ecd';
-export const IRTCENGINE_WRITELOG_62889f6 = 'RtcEngine_writeLog_62889f6';
 export const IRTCENGINE_SETLOCALRENDERMODE_cfb201b =
   'RtcEngine_setLocalRenderMode_cfb201b';
 export const IRTCENGINE_SETREMOTERENDERMODE_6771ce0 =
   'RtcEngine_setRemoteRenderMode_6771ce0';
-export const IRTCENGINE_SETLOCALRENDERTARGETFPS_2ad83d8 =
-  'RtcEngine_setLocalRenderTargetFps_2ad83d8';
-export const IRTCENGINE_SETREMOTERENDERTARGETFPS_46f8ab7 =
-  'RtcEngine_setRemoteRenderTargetFps_46f8ab7';
 export const IRTCENGINE_SETLOCALRENDERMODE_bedb5ae =
   'RtcEngine_setLocalRenderMode_bedb5ae';
 export const IRTCENGINE_SETLOCALVIDEOMIRRORMODE_b8a6c69 =
@@ -889,8 +849,6 @@ export const IRTCENGINE_ENABLEDUALSTREAMMODE_9822d8a =
   'RtcEngine_enableDualStreamMode_9822d8a';
 export const IRTCENGINE_SETDUALSTREAMMODE_3a7f662 =
   'RtcEngine_setDualStreamMode_3a7f662';
-export const IRTCENGINE_SETSIMULCASTCONFIG_3dcdfd7 =
-  'RtcEngine_setSimulcastConfig_3dcdfd7';
 export const IRTCENGINE_SETDUALSTREAMMODE_b3a4f6c =
   'RtcEngine_setDualStreamMode_b3a4f6c';
 export const IRTCENGINE_ENABLECUSTOMAUDIOLOCALPLAYBACK_9566341 =
@@ -919,20 +877,14 @@ export const IRTCENGINE_MUTERECORDINGSIGNAL_5039d15 =
   'RtcEngine_muteRecordingSignal_5039d15';
 export const IRTCENGINE_ADJUSTPLAYBACKSIGNALVOLUME_46f8ab7 =
   'RtcEngine_adjustPlaybackSignalVolume_46f8ab7';
-export const IRTCENGINE_ADJUSTUSERPLAYBACKSIGNALVOLUME_88641bf =
-  'RtcEngine_adjustUserPlaybackSignalVolume_88641bf';
+export const IRTCENGINE_ADJUSTUSERPLAYBACKSIGNALVOLUME_3cba5ae =
+  'RtcEngine_adjustUserPlaybackSignalVolume_3cba5ae';
 export const IRTCENGINE_SETLOCALPUBLISHFALLBACKOPTION_c29b788 =
   'RtcEngine_setLocalPublishFallbackOption_c29b788';
 export const IRTCENGINE_SETREMOTESUBSCRIBEFALLBACKOPTION_c29b788 =
   'RtcEngine_setRemoteSubscribeFallbackOption_c29b788';
 export const IRTCENGINE_SETHIGHPRIORITYUSERLIST_ab88726 =
   'RtcEngine_setHighPriorityUserList_ab88726';
-export const IRTCENGINE_ENABLEEXTENSION_d8b3874 =
-  'RtcEngine_enableExtension_d8b3874';
-export const IRTCENGINE_SETEXTENSIONPROPERTY_f746b51 =
-  'RtcEngine_setExtensionProperty_f746b51';
-export const IRTCENGINE_GETEXTENSIONPROPERTY_18768d4 =
-  'RtcEngine_getExtensionProperty_18768d4';
 export const IRTCENGINE_ENABLELOOPBACKRECORDING_0b8eb79 =
   'RtcEngine_enableLoopbackRecording_0b8eb79';
 export const IRTCENGINE_ADJUSTLOOPBACKSIGNALVOLUME_46f8ab7 =
@@ -951,10 +903,16 @@ export const IRTCENGINE_REGISTEREXTENSION_fd62af4 =
   'RtcEngine_registerExtension_fd62af4';
 export const IRTCENGINE_ENABLEEXTENSION_0b60a2c =
   'RtcEngine_enableExtension_0b60a2c';
+export const IRTCENGINE_ENABLEEXTENSION_d8b3874 =
+  'RtcEngine_enableExtension_d8b3874';
 export const IRTCENGINE_SETEXTENSIONPROPERTY_520ac55 =
   'RtcEngine_setExtensionProperty_520ac55';
 export const IRTCENGINE_GETEXTENSIONPROPERTY_38c9723 =
   'RtcEngine_getExtensionProperty_38c9723';
+export const IRTCENGINE_SETEXTENSIONPROPERTY_f746b51 =
+  'RtcEngine_setExtensionProperty_f746b51';
+export const IRTCENGINE_GETEXTENSIONPROPERTY_18768d4 =
+  'RtcEngine_getExtensionProperty_18768d4';
 export const IRTCENGINE_SETCAMERACAPTURERCONFIGURATION_afa93b3 =
   'RtcEngine_setCameraCapturerConfiguration_afa93b3';
 export const IRTCENGINE_CREATECUSTOMVIDEOTRACK =
@@ -1000,8 +958,6 @@ export const IRTCENGINE_ISCAMERAAUTOEXPOSUREFACEMODESUPPORTED =
   'RtcEngine_isCameraAutoExposureFaceModeSupported';
 export const IRTCENGINE_SETCAMERAAUTOEXPOSUREFACEMODEENABLED_5039d15 =
   'RtcEngine_setCameraAutoExposureFaceModeEnabled_5039d15';
-export const IRTCENGINE_SETCAMERASTABILIZATIONMODE_701b981 =
-  'RtcEngine_setCameraStabilizationMode_701b981';
 export const IRTCENGINE_SETDEFAULTAUDIOROUTETOSPEAKERPHONE_5039d15 =
   'RtcEngine_setDefaultAudioRouteToSpeakerphone_5039d15';
 export const IRTCENGINE_SETENABLESPEAKERPHONE_5039d15 =
@@ -1010,22 +966,18 @@ export const IRTCENGINE_ISSPEAKERPHONEENABLED =
   'RtcEngine_isSpeakerphoneEnabled';
 export const IRTCENGINE_SETROUTEINCOMMUNICATIONMODE_46f8ab7 =
   'RtcEngine_setRouteInCommunicationMode_46f8ab7';
-export const IRTCENGINE_ISCAMERACENTERSTAGESUPPORTED =
-  'RtcEngine_isCameraCenterStageSupported';
-export const IRTCENGINE_ENABLECAMERACENTERSTAGE_5039d15 =
-  'RtcEngine_enableCameraCenterStage_5039d15';
 export const IRTCENGINE_GETSCREENCAPTURESOURCES_f3e02cb =
   'RtcEngine_getScreenCaptureSources_f3e02cb';
 export const IRTCENGINE_SETAUDIOSESSIONOPERATIONRESTRICTION_c492897 =
   'RtcEngine_setAudioSessionOperationRestriction_c492897';
-export const IRTCENGINE_STARTSCREENCAPTUREBYDISPLAYID_ce89867 =
-  'RtcEngine_startScreenCaptureByDisplayId_ce89867';
+export const IRTCENGINE_STARTSCREENCAPTUREBYDISPLAYID_7cf6800 =
+  'RtcEngine_startScreenCaptureByDisplayId_7cf6800';
 export const IRTCENGINE_STARTSCREENCAPTUREBYSCREENRECT_e286286 =
   'RtcEngine_startScreenCaptureByScreenRect_e286286';
 export const IRTCENGINE_GETAUDIODEVICEINFO_505aa0c =
   'RtcEngine_getAudioDeviceInfo_505aa0c';
-export const IRTCENGINE_STARTSCREENCAPTUREBYWINDOWID_ce89867 =
-  'RtcEngine_startScreenCaptureByWindowId_ce89867';
+export const IRTCENGINE_STARTSCREENCAPTUREBYWINDOWID_5ab7e59 =
+  'RtcEngine_startScreenCaptureByWindowId_5ab7e59';
 export const IRTCENGINE_SETSCREENCAPTURECONTENTHINT_8ad2c79 =
   'RtcEngine_setScreenCaptureContentHint_8ad2c79';
 export const IRTCENGINE_UPDATESCREENCAPTUREREGION_6b327a8 =
@@ -1038,10 +990,6 @@ export const IRTCENGINE_UPDATESCREENCAPTURE_270da41 =
   'RtcEngine_updateScreenCapture_270da41';
 export const IRTCENGINE_QUERYSCREENCAPTURECAPABILITY =
   'RtcEngine_queryScreenCaptureCapability';
-export const IRTCENGINE_QUERYCAMERAFOCALLENGTHCAPABILITY_2dee6af =
-  'RtcEngine_queryCameraFocalLengthCapability_2dee6af';
-export const IRTCENGINE_SETEXTERNALMEDIAPROJECTION_f337cbf =
-  'RtcEngine_setExternalMediaProjection_f337cbf';
 export const IRTCENGINE_SETSCREENCAPTURESCENARIO_13de7b4 =
   'RtcEngine_setScreenCaptureScenario_13de7b4';
 export const IRTCENGINE_STOPSCREENCAPTURE = 'RtcEngine_stopScreenCapture';
@@ -1054,19 +1002,14 @@ export const IRTCENGINE_STARTRTMPSTREAMWITHTRANSCODING_f76aa1a =
   'RtcEngine_startRtmpStreamWithTranscoding_f76aa1a';
 export const IRTCENGINE_UPDATERTMPTRANSCODING_91368d4 =
   'RtcEngine_updateRtmpTranscoding_91368d4';
+export const IRTCENGINE_STOPRTMPSTREAM_3a2037f =
+  'RtcEngine_stopRtmpStream_3a2037f';
 export const IRTCENGINE_STARTLOCALVIDEOTRANSCODER_90f9e33 =
   'RtcEngine_startLocalVideoTranscoder_90f9e33';
 export const IRTCENGINE_UPDATELOCALTRANSCODERCONFIGURATION_90f9e33 =
   'RtcEngine_updateLocalTranscoderConfiguration_90f9e33';
-export const IRTCENGINE_STOPRTMPSTREAM_3a2037f =
-  'RtcEngine_stopRtmpStream_3a2037f';
 export const IRTCENGINE_STOPLOCALVIDEOTRANSCODER =
   'RtcEngine_stopLocalVideoTranscoder';
-export const IRTCENGINE_STARTLOCALAUDIOMIXER_a7ff78e =
-  'RtcEngine_startLocalAudioMixer_a7ff78e';
-export const IRTCENGINE_UPDATELOCALAUDIOMIXERCONFIGURATION_a7ff78e =
-  'RtcEngine_updateLocalAudioMixerConfiguration_a7ff78e';
-export const IRTCENGINE_STOPLOCALAUDIOMIXER = 'RtcEngine_stopLocalAudioMixer';
 export const IRTCENGINE_STARTCAMERACAPTURE_f3692cc =
   'RtcEngine_startCameraCapture_f3692cc';
 export const IRTCENGINE_STOPCAMERACAPTURE_4fd718e =
@@ -1088,12 +1031,16 @@ export const IRTCENGINE_SETREMOTEUSERPRIORITY_f34115b =
   'RtcEngine_setRemoteUserPriority_f34115b';
 export const IRTCENGINE_REGISTERPACKETOBSERVER_f8b44dd =
   'RtcEngine_registerPacketObserver_f8b44dd';
+export const IRTCENGINE_SETENCRYPTIONMODE_3a2037f =
+  'RtcEngine_setEncryptionMode_3a2037f';
+export const IRTCENGINE_SETENCRYPTIONSECRET_3a2037f =
+  'RtcEngine_setEncryptionSecret_3a2037f';
 export const IRTCENGINE_ENABLEENCRYPTION_421c27b =
   'RtcEngine_enableEncryption_421c27b';
 export const IRTCENGINE_CREATEDATASTREAM_b897a63 =
   'RtcEngine_createDataStream_b897a63';
-export const IRTCENGINE_CREATEDATASTREAM_5862815 =
-  'RtcEngine_createDataStream_5862815';
+export const IRTCENGINE_CREATEDATASTREAM_81d7315 =
+  'RtcEngine_createDataStream_81d7315';
 export const IRTCENGINE_SENDSTREAMMESSAGE_8715a45 =
   'RtcEngine_sendStreamMessage_8715a45';
 export const IRTCENGINE_ADDVIDEOWATERMARK_eaef16d =
@@ -1130,6 +1077,10 @@ export const IRTCENGINE_GETUSERINFOBYUID_6b7aee8 =
   'RtcEngine_getUserInfoByUid_6b7aee8';
 export const IRTCENGINE_STARTORUPDATECHANNELMEDIARELAY_e68f0a4 =
   'RtcEngine_startOrUpdateChannelMediaRelay_e68f0a4';
+export const IRTCENGINE_STARTCHANNELMEDIARELAY_e68f0a4 =
+  'RtcEngine_startChannelMediaRelay_e68f0a4';
+export const IRTCENGINE_UPDATECHANNELMEDIARELAY_e68f0a4 =
+  'RtcEngine_updateChannelMediaRelay_e68f0a4';
 export const IRTCENGINE_STOPCHANNELMEDIARELAY =
   'RtcEngine_stopChannelMediaRelay';
 export const IRTCENGINE_PAUSEALLCHANNELMEDIARELAY =
@@ -1152,7 +1103,6 @@ export const IRTCENGINE_STOPRHYTHMPLAYER = 'RtcEngine_stopRhythmPlayer';
 export const IRTCENGINE_CONFIGRHYTHMPLAYER_b36c805 =
   'RtcEngine_configRhythmPlayer_b36c805';
 export const IRTCENGINE_TAKESNAPSHOT_1922dd1 = 'RtcEngine_takeSnapshot_1922dd1';
-export const IRTCENGINE_TAKESNAPSHOT_5669ea6 = 'RtcEngine_takeSnapshot_5669ea6';
 export const IRTCENGINE_ENABLECONTENTINSPECT_e15e514 =
   'RtcEngine_enableContentInspect_e15e514';
 export const IRTCENGINE_ADJUSTCUSTOMAUDIOPUBLISHVOLUME_f8da2ca =
@@ -1183,20 +1133,12 @@ export const IRTCENGINE_ENABLEINSTANTMEDIARENDERING =
 export const IRTCENGINE_GETNTPWALLTIMEINMS = 'RtcEngine_getNtpWallTimeInMs';
 export const IRTCENGINE_ISFEATUREAVAILABLEONDEVICE_a694b62 =
   'RtcEngine_isFeatureAvailableOnDevice_a694b62';
-export const IRTCENGINE_SENDAUDIOMETADATA_878f309 =
-  'RtcEngine_sendAudioMetadata_878f309';
-export const IRTCENGINE_QUERYHDRCAPABILITY_bebdacb =
-  'RtcEngine_queryHDRCapability_bebdacb';
 export const IRTCENGINEEX_JOINCHANNELEX_a3cd08c =
   'RtcEngineEx_joinChannelEx_a3cd08c';
 export const IRTCENGINEEX_LEAVECHANNELEX_c81e1a4 =
   'RtcEngineEx_leaveChannelEx_c81e1a4';
 export const IRTCENGINEEX_LEAVECHANNELEX_b03ee9a =
   'RtcEngineEx_leaveChannelEx_b03ee9a';
-export const IRTCENGINEEX_LEAVECHANNELWITHUSERACCOUNTEX_ccad422 =
-  'RtcEngineEx_leaveChannelWithUserAccountEx_ccad422';
-export const IRTCENGINEEX_LEAVECHANNELWITHUSERACCOUNTEX_8bbe372 =
-  'RtcEngineEx_leaveChannelWithUserAccountEx_8bbe372';
 export const IRTCENGINEEX_UPDATECHANNELMEDIAOPTIONSEX_457bb35 =
   'RtcEngineEx_updateChannelMediaOptionsEx_457bb35';
 export const IRTCENGINEEX_SETVIDEOENCODERCONFIGURATIONEX_4670c1e =
@@ -1239,16 +1181,16 @@ export const IRTCENGINEEX_ADJUSTRECORDINGSIGNALVOLUMEEX_e84d10e =
   'RtcEngineEx_adjustRecordingSignalVolumeEx_e84d10e';
 export const IRTCENGINEEX_MUTERECORDINGSIGNALEX_3cf17a4 =
   'RtcEngineEx_muteRecordingSignalEx_3cf17a4';
-export const IRTCENGINEEX_ADJUSTUSERPLAYBACKSIGNALVOLUMEEX_adbd29c =
-  'RtcEngineEx_adjustUserPlaybackSignalVolumeEx_adbd29c';
+export const IRTCENGINEEX_ADJUSTUSERPLAYBACKSIGNALVOLUMEEX_9634cfd =
+  'RtcEngineEx_adjustUserPlaybackSignalVolumeEx_9634cfd';
 export const IRTCENGINEEX_GETCONNECTIONSTATEEX_c81e1a4 =
   'RtcEngineEx_getConnectionStateEx_c81e1a4';
 export const IRTCENGINEEX_ENABLEENCRYPTIONEX_10cd872 =
   'RtcEngineEx_enableEncryptionEx_10cd872';
 export const IRTCENGINEEX_CREATEDATASTREAMEX_1767167 =
   'RtcEngineEx_createDataStreamEx_1767167';
-export const IRTCENGINEEX_CREATEDATASTREAMEX_9f641b6 =
-  'RtcEngineEx_createDataStreamEx_9f641b6';
+export const IRTCENGINEEX_CREATEDATASTREAMEX_894331f =
+  'RtcEngineEx_createDataStreamEx_894331f';
 export const IRTCENGINEEX_SENDSTREAMMESSAGEEX_0c34857 =
   'RtcEngineEx_sendStreamMessageEx_0c34857';
 export const IRTCENGINEEX_ADDVIDEOWATERMARKEX_ad7daa3 =
@@ -1269,6 +1211,10 @@ export const IRTCENGINEEX_STOPRTMPSTREAMEX_e405325 =
   'RtcEngineEx_stopRtmpStreamEx_e405325';
 export const IRTCENGINEEX_STARTORUPDATECHANNELMEDIARELAYEX_4ad39a8 =
   'RtcEngineEx_startOrUpdateChannelMediaRelayEx_4ad39a8';
+export const IRTCENGINEEX_STARTCHANNELMEDIARELAYEX_4ad39a8 =
+  'RtcEngineEx_startChannelMediaRelayEx_4ad39a8';
+export const IRTCENGINEEX_UPDATECHANNELMEDIARELAYEX_4ad39a8 =
+  'RtcEngineEx_updateChannelMediaRelayEx_4ad39a8';
 export const IRTCENGINEEX_STOPCHANNELMEDIARELAYEX_c81e1a4 =
   'RtcEngineEx_stopChannelMediaRelayEx_c81e1a4';
 export const IRTCENGINEEX_PAUSEALLCHANNELMEDIARELAYEX_c81e1a4 =
@@ -1283,26 +1229,39 @@ export const IRTCENGINEEX_ENABLEDUALSTREAMMODEEX_4b18f41 =
   'RtcEngineEx_enableDualStreamModeEx_4b18f41';
 export const IRTCENGINEEX_SETDUALSTREAMMODEEX_622d0f3 =
   'RtcEngineEx_setDualStreamModeEx_622d0f3';
-export const IRTCENGINEEX_SETSIMULCASTCONFIGEX_bd8d7d0 =
-  'RtcEngineEx_setSimulcastConfigEx_bd8d7d0';
 export const IRTCENGINEEX_SETHIGHPRIORITYUSERLISTEX_8736b5c =
   'RtcEngineEx_setHighPriorityUserListEx_8736b5c';
 export const IRTCENGINEEX_TAKESNAPSHOTEX_de1c015 =
   'RtcEngineEx_takeSnapshotEx_de1c015';
-export const IRTCENGINEEX_TAKESNAPSHOTEX_b856417 =
-  'RtcEngineEx_takeSnapshotEx_b856417';
 export const IRTCENGINEEX_ENABLECONTENTINSPECTEX_c4e7f69 =
   'RtcEngineEx_enableContentInspectEx_c4e7f69';
 export const IRTCENGINEEX_STARTMEDIARENDERINGTRACINGEX_c81e1a4 =
   'RtcEngineEx_startMediaRenderingTracingEx_c81e1a4';
-export const IRTCENGINEEX_SETPARAMETERSEX_8225ea3 =
-  'RtcEngineEx_setParametersEx_8225ea3';
-export const IRTCENGINEEX_GETCALLIDEX_b13f7c4 =
-  'RtcEngineEx_getCallIdEx_b13f7c4';
-export const IRTCENGINEEX_SENDAUDIOMETADATAEX_e2bf1c4 =
-  'RtcEngineEx_sendAudioMetadataEx_e2bf1c4';
-export const ILOCALSPATIALAUDIOENGINE_RELEASE =
-  'LocalSpatialAudioEngine_release';
+export const IBASESPATIALAUDIOENGINE_RELEASE = 'BaseSpatialAudioEngine_release';
+export const IBASESPATIALAUDIOENGINE_SETMAXAUDIORECVCOUNT_46f8ab7 =
+  'BaseSpatialAudioEngine_setMaxAudioRecvCount_46f8ab7';
+export const IBASESPATIALAUDIOENGINE_SETAUDIORECVRANGE_685e803 =
+  'BaseSpatialAudioEngine_setAudioRecvRange_685e803';
+export const IBASESPATIALAUDIOENGINE_SETDISTANCEUNIT_685e803 =
+  'BaseSpatialAudioEngine_setDistanceUnit_685e803';
+export const IBASESPATIALAUDIOENGINE_UPDATESELFPOSITION_2487f19 =
+  'BaseSpatialAudioEngine_updateSelfPosition_2487f19';
+export const IBASESPATIALAUDIOENGINE_UPDATESELFPOSITIONEX_564d6f9 =
+  'BaseSpatialAudioEngine_updateSelfPositionEx_564d6f9';
+export const IBASESPATIALAUDIOENGINE_UPDATEPLAYERPOSITIONINFO_b37c59d =
+  'BaseSpatialAudioEngine_updatePlayerPositionInfo_b37c59d';
+export const IBASESPATIALAUDIOENGINE_SETPARAMETERS_3a2037f =
+  'BaseSpatialAudioEngine_setParameters_3a2037f';
+export const IBASESPATIALAUDIOENGINE_MUTELOCALAUDIOSTREAM_5039d15 =
+  'BaseSpatialAudioEngine_muteLocalAudioStream_5039d15';
+export const IBASESPATIALAUDIOENGINE_MUTEALLREMOTEAUDIOSTREAMS_5039d15 =
+  'BaseSpatialAudioEngine_muteAllRemoteAudioStreams_5039d15';
+export const IBASESPATIALAUDIOENGINE_SETZONES_414a27e =
+  'BaseSpatialAudioEngine_setZones_414a27e';
+export const IBASESPATIALAUDIOENGINE_SETPLAYERATTENUATION_a15bc51 =
+  'BaseSpatialAudioEngine_setPlayerAttenuation_a15bc51';
+export const IBASESPATIALAUDIOENGINE_MUTEREMOTEAUDIOSTREAM_dbdc15a =
+  'BaseSpatialAudioEngine_muteRemoteAudioStream_dbdc15a';
 export const ILOCALSPATIALAUDIOENGINE_INITIALIZE_cf94fbf =
   'LocalSpatialAudioEngine_initialize_cf94fbf';
 export const ILOCALSPATIALAUDIOENGINE_UPDATEREMOTEPOSITION_adc0909 =
@@ -1313,36 +1272,12 @@ export const ILOCALSPATIALAUDIOENGINE_REMOVEREMOTEPOSITION_c8d091a =
   'LocalSpatialAudioEngine_removeRemotePosition_c8d091a';
 export const ILOCALSPATIALAUDIOENGINE_REMOVEREMOTEPOSITIONEX_58a9850 =
   'LocalSpatialAudioEngine_removeRemotePositionEx_58a9850';
-export const ILOCALSPATIALAUDIOENGINE_CLEARREMOTEPOSITIONSEX_c81e1a4 =
-  'LocalSpatialAudioEngine_clearRemotePositionsEx_c81e1a4';
-export const ILOCALSPATIALAUDIOENGINE_UPDATESELFPOSITIONEX_502183a =
-  'LocalSpatialAudioEngine_updateSelfPositionEx_502183a';
-export const ILOCALSPATIALAUDIOENGINE_SETMAXAUDIORECVCOUNT_46f8ab7 =
-  'LocalSpatialAudioEngine_setMaxAudioRecvCount_46f8ab7';
-export const ILOCALSPATIALAUDIOENGINE_SETAUDIORECVRANGE_685e803 =
-  'LocalSpatialAudioEngine_setAudioRecvRange_685e803';
-export const ILOCALSPATIALAUDIOENGINE_SETDISTANCEUNIT_685e803 =
-  'LocalSpatialAudioEngine_setDistanceUnit_685e803';
-export const ILOCALSPATIALAUDIOENGINE_UPDATESELFPOSITION_9c9930f =
-  'LocalSpatialAudioEngine_updateSelfPosition_9c9930f';
-export const ILOCALSPATIALAUDIOENGINE_UPDATEPLAYERPOSITIONINFO_b37c59d =
-  'LocalSpatialAudioEngine_updatePlayerPositionInfo_b37c59d';
-export const ILOCALSPATIALAUDIOENGINE_SETPARAMETERS_3a2037f =
-  'LocalSpatialAudioEngine_setParameters_3a2037f';
-export const ILOCALSPATIALAUDIOENGINE_MUTELOCALAUDIOSTREAM_5039d15 =
-  'LocalSpatialAudioEngine_muteLocalAudioStream_5039d15';
-export const ILOCALSPATIALAUDIOENGINE_MUTEALLREMOTEAUDIOSTREAMS_5039d15 =
-  'LocalSpatialAudioEngine_muteAllRemoteAudioStreams_5039d15';
-export const ILOCALSPATIALAUDIOENGINE_MUTEREMOTEAUDIOSTREAM_dbdc15a =
-  'LocalSpatialAudioEngine_muteRemoteAudioStream_dbdc15a';
-export const ILOCALSPATIALAUDIOENGINE_SETREMOTEAUDIOATTENUATION_74c3e98 =
-  'LocalSpatialAudioEngine_setRemoteAudioAttenuation_74c3e98';
-export const ILOCALSPATIALAUDIOENGINE_SETZONES_414a27e =
-  'LocalSpatialAudioEngine_setZones_414a27e';
-export const ILOCALSPATIALAUDIOENGINE_SETPLAYERATTENUATION_a15bc51 =
-  'LocalSpatialAudioEngine_setPlayerAttenuation_a15bc51';
 export const ILOCALSPATIALAUDIOENGINE_CLEARREMOTEPOSITIONS =
   'LocalSpatialAudioEngine_clearRemotePositions';
+export const ILOCALSPATIALAUDIOENGINE_CLEARREMOTEPOSITIONSEX_c81e1a4 =
+  'LocalSpatialAudioEngine_clearRemotePositionsEx_c81e1a4';
+export const ILOCALSPATIALAUDIOENGINE_SETREMOTEAUDIOATTENUATION_74c3e98 =
+  'LocalSpatialAudioEngine_setRemoteAudioAttenuation_74c3e98';
 export const IAUDIODEVICEMANAGER_ENUMERATEPLAYBACKDEVICES =
   'AudioDeviceManager_enumeratePlaybackDevices';
 export const IAUDIODEVICEMANAGER_ENUMERATERECORDINGDEVICES =
@@ -1353,8 +1288,6 @@ export const IAUDIODEVICEMANAGER_GETPLAYBACKDEVICE_73b9872 =
   'AudioDeviceManager_getPlaybackDevice_73b9872';
 export const IAUDIODEVICEMANAGER_GETPLAYBACKDEVICEINFO_5540658 =
   'AudioDeviceManager_getPlaybackDeviceInfo_5540658';
-export const IAUDIODEVICEMANAGER_GETPLAYBACKDEVICEINFO_ed3a96d =
-  'AudioDeviceManager_getPlaybackDeviceInfo_ed3a96d';
 export const IAUDIODEVICEMANAGER_SETPLAYBACKDEVICEVOLUME_46f8ab7 =
   'AudioDeviceManager_setPlaybackDeviceVolume_46f8ab7';
 export const IAUDIODEVICEMANAGER_GETPLAYBACKDEVICEVOLUME_915cb25 =
@@ -1365,8 +1298,6 @@ export const IAUDIODEVICEMANAGER_GETRECORDINGDEVICE_73b9872 =
   'AudioDeviceManager_getRecordingDevice_73b9872';
 export const IAUDIODEVICEMANAGER_GETRECORDINGDEVICEINFO_5540658 =
   'AudioDeviceManager_getRecordingDeviceInfo_5540658';
-export const IAUDIODEVICEMANAGER_GETRECORDINGDEVICEINFO_ed3a96d =
-  'AudioDeviceManager_getRecordingDeviceInfo_ed3a96d';
 export const IAUDIODEVICEMANAGER_SETRECORDINGDEVICEVOLUME_46f8ab7 =
   'AudioDeviceManager_setRecordingDeviceVolume_46f8ab7';
 export const IAUDIODEVICEMANAGER_GETRECORDINGDEVICEVOLUME_915cb25 =

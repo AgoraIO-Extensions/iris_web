@@ -8,7 +8,6 @@ import {
   EncryptionConfig,
   LiveTranscoding,
   SIMULCAST_STREAM_MODE,
-  SimulcastConfig,
   SimulcastStreamConfig,
   SpatialAudioParams,
   UserInfo,
@@ -19,11 +18,7 @@ import {
   VideoSubscriptionOptions,
   WatermarkOptions,
 } from './AgoraBase';
-import {
-  ContentInspectConfig,
-  RENDER_MODE_TYPE,
-  SnapshotConfig,
-} from './AgoraMediaBase';
+import { ContentInspectConfig, RENDER_MODE_TYPE } from './AgoraMediaBase';
 import {
   ChannelMediaOptions,
   LeaveChannelOptions,
@@ -47,17 +42,6 @@ export interface IRtcEngineEx {
 
   leaveChannelEx_b03ee9a(
     connection: RtcConnection,
-    options: LeaveChannelOptions
-  ): CallApiReturnType;
-
-  leaveChannelWithUserAccountEx_ccad422(
-    channelId: string,
-    userAccount: string
-  ): CallApiReturnType;
-
-  leaveChannelWithUserAccountEx_8bbe372(
-    channelId: string,
-    userAccount: string,
     options: LeaveChannelOptions
   ): CallApiReturnType;
 
@@ -180,7 +164,7 @@ export interface IRtcEngineEx {
     connection: RtcConnection
   ): CallApiReturnType;
 
-  adjustUserPlaybackSignalVolumeEx_adbd29c(
+  adjustUserPlaybackSignalVolumeEx_9634cfd(
     uid: number,
     volume: number,
     connection: RtcConnection
@@ -200,7 +184,7 @@ export interface IRtcEngineEx {
     connection: RtcConnection
   ): CallApiReturnType;
 
-  createDataStreamEx_9f641b6(
+  createDataStreamEx_894331f(
     config: DataStreamConfig,
     connection: RtcConnection
   ): CallApiReturnType;
@@ -262,6 +246,16 @@ export interface IRtcEngineEx {
     connection: RtcConnection
   ): CallApiReturnType;
 
+  startChannelMediaRelayEx_4ad39a8(
+    configuration: ChannelMediaRelayConfiguration,
+    connection: RtcConnection
+  ): CallApiReturnType;
+
+  updateChannelMediaRelayEx_4ad39a8(
+    configuration: ChannelMediaRelayConfiguration,
+    connection: RtcConnection
+  ): CallApiReturnType;
+
   stopChannelMediaRelayEx_c81e1a4(connection: RtcConnection): CallApiReturnType;
 
   pauseAllChannelMediaRelayEx_c81e1a4(
@@ -296,11 +290,6 @@ export interface IRtcEngineEx {
     connection: RtcConnection
   ): CallApiReturnType;
 
-  setSimulcastConfigEx_bd8d7d0(
-    simulcastConfig: SimulcastConfig,
-    connection: RtcConnection
-  ): CallApiReturnType;
-
   setHighPriorityUserListEx_8736b5c(
     uidList: number[],
     uidNum: number,
@@ -314,12 +303,6 @@ export interface IRtcEngineEx {
     filePath: string
   ): CallApiReturnType;
 
-  takeSnapshotEx_b856417(
-    connection: RtcConnection,
-    uid: number,
-    config: SnapshotConfig
-  ): CallApiReturnType;
-
   enableContentInspectEx_c4e7f69(
     enabled: boolean,
     config: ContentInspectConfig,
@@ -328,21 +311,5 @@ export interface IRtcEngineEx {
 
   startMediaRenderingTracingEx_c81e1a4(
     connection: RtcConnection
-  ): CallApiReturnType;
-
-  setParametersEx_8225ea3(
-    connection: RtcConnection,
-    parameters: string
-  ): CallApiReturnType;
-
-  getCallIdEx_b13f7c4(
-    callId: string,
-    connection: RtcConnection
-  ): CallApiReturnType;
-
-  sendAudioMetadataEx_e2bf1c4(
-    connection: RtcConnection,
-    metadata: string,
-    length: number
   ): CallApiReturnType;
 }

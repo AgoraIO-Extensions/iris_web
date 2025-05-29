@@ -7,8 +7,8 @@ import {
   MusicChartCollection,
   MusicChartInfo,
   MusicCollection,
-  MusicContentCenterStateReason,
-  PreloadState,
+  MusicContentCenterStatusCode,
+  PreloadStatusCode,
 } from '@iris/native-rtc';
 import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
@@ -98,62 +98,62 @@ export class IMusicContentCenterEventHandler {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
-  onMusicChartsResult_fb18135(
+  onMusicChartsResult_3597d7e(
     requestId: string,
     result: MusicChartInfo[],
-    reason: MusicContentCenterStateReason
+    errorCode: MusicContentCenterStatusCode
   ): void {
     AgoraConsole.warn(
-      'MusicContentCenterEventHandler_onMusicChartsResult_fb18135 not supported in this platform!'
+      'MusicContentCenterEventHandler_onMusicChartsResult_3597d7e not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onMusicCollectionResult_c30c2e6(
+  onMusicCollectionResult_1517101(
     requestId: string,
     result: MusicCollection,
-    reason: MusicContentCenterStateReason
+    errorCode: MusicContentCenterStatusCode
   ): void {
     AgoraConsole.warn(
-      'MusicContentCenterEventHandler_onMusicCollectionResult_c30c2e6 not supported in this platform!'
+      'MusicContentCenterEventHandler_onMusicCollectionResult_1517101 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onLyricResult_9ad9c90(
+  onLyricResult_981e37c(
     requestId: string,
     songCode: number,
     lyricUrl: string,
-    reason: MusicContentCenterStateReason
+    errorCode: MusicContentCenterStatusCode
   ): void {
     AgoraConsole.warn(
-      'MusicContentCenterEventHandler_onLyricResult_9ad9c90 not supported in this platform!'
+      'MusicContentCenterEventHandler_onLyricResult_981e37c not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onSongSimpleInfoResult_9ad9c90(
+  onSongSimpleInfoResult_981e37c(
     requestId: string,
     songCode: number,
     simpleInfo: string,
-    reason: MusicContentCenterStateReason
+    errorCode: MusicContentCenterStatusCode
   ): void {
     AgoraConsole.warn(
-      'MusicContentCenterEventHandler_onSongSimpleInfoResult_9ad9c90 not supported in this platform!'
+      'MusicContentCenterEventHandler_onSongSimpleInfoResult_981e37c not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onPreLoadEvent_20170bc(
+  onPreLoadEvent_562c799(
     requestId: string,
     songCode: number,
     percent: number,
     lyricUrl: string,
-    state: PreloadState,
-    reason: MusicContentCenterStateReason
+    status: PreloadStatusCode,
+    errorCode: MusicContentCenterStatusCode
   ): void {
     AgoraConsole.warn(
-      'MusicContentCenterEventHandler_onPreLoadEvent_20170bc not supported in this platform!'
+      'MusicContentCenterEventHandler_onPreLoadEvent_562c799 not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -171,14 +171,6 @@ export class IMusicPlayerDispatch extends IMediaPlayerDispatch
   open_303b92e(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'MusicPlayer_open_303b92e not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  // @ts-ignore
-  setPlayMode_748bee0(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'MusicPlayer_setPlayMode_748bee0 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -234,14 +226,6 @@ export class IMusicContentCenterDispatch implements IMusicContentCenter {
   createMusicPlayer(): CallApiReturnType {
     AgoraConsole.warn(
       'MusicContentCenter_createMusicPlayer not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  // @ts-ignore
-  destroyMusicPlayer_876d086(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'MusicContentCenter_destroyMusicPlayer_876d086 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

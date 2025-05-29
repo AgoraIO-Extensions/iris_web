@@ -55,14 +55,6 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   }
 
   // @ts-ignore
-  getPlaybackDeviceInfo_ed3a96d(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'AudioDeviceManager_getPlaybackDeviceInfo_ed3a96d not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  // @ts-ignore
   setPlaybackDeviceVolume_46f8ab7(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'AudioDeviceManager_setPlaybackDeviceVolume_46f8ab7 not supported in this platform!'
@@ -102,14 +94,6 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   getRecordingDeviceInfo_5540658(): CallApiReturnType {
     AgoraConsole.warn(
       'AudioDeviceManager_getRecordingDeviceInfo_5540658 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  // @ts-ignore
-  getRecordingDeviceInfo_ed3a96d(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'AudioDeviceManager_getRecordingDeviceInfo_ed3a96d not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

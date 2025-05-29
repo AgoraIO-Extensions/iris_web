@@ -6,34 +6,18 @@ import {
   AudioSpectrumData,
   ERROR_CODE_TYPE,
   EncodedVideoFrameInfo,
-  IVideoFrameMetaInfo,
+  RecorderErrorCode,
   RecorderInfo,
-  RecorderReasonCode,
   RecorderState,
   UserAudioSpectrumInfo,
   VIDEO_SOURCE_TYPE,
   VideoFrame,
 } from '@iris/native-rtc';
-import { ApiParam, CallApiReturnType, IrisCore } from 'iris-web-core';
+import { ApiParam, IrisCore } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { eventHandlerBufferExtension } from '../extensions/EventhandlerBufferExtensions';
 import { AgoraConsole } from '../util/AgoraConsole';
-
-export class IVideoFrameMetaInfoDispatch implements IVideoFrameMetaInfo {
-  _engine: IrisRtcEngine;
-
-  constructor(engine: IrisRtcEngine) {
-    this._engine = engine;
-  }
-  // @ts-ignore
-  getMetaInfoStr_c81192f(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'VideoFrameMetaInfo_getMetaInfoStr_c81192f not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-}
 
 export class IAudioPcmFrameSink {
   _engine: IrisRtcEngine;
@@ -352,25 +336,6 @@ export class IVideoFrameObserver {
   }
 }
 
-export class IFaceInfoObserver {
-  _engine: IrisRtcEngine;
-
-  constructor(engine: IrisRtcEngine) {
-    this._engine = engine;
-  }
-
-  notifyEvent(param: ApiParam): void {
-    this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
-  }
-
-  onFaceInfo_3a2037f(outFaceInfo: string): void {
-    AgoraConsole.warn(
-      'FaceInfoObserver_onFaceInfo_3a2037f not supported in this platform!'
-    );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-}
-
 export class IMediaRecorderObserver {
   _engine: IrisRtcEngine;
 
@@ -382,14 +347,14 @@ export class IMediaRecorderObserver {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
-  onRecorderStateChanged_c38849f(
+  onRecorderStateChanged_e1716bb(
     channelId: string,
     uid: number,
     state: RecorderState,
-    reason: RecorderReasonCode
+    error: RecorderErrorCode
   ): void {
     AgoraConsole.warn(
-      'MediaRecorderObserver_onRecorderStateChanged_c38849f not supported in this platform!'
+      'MediaRecorderObserver_onRecorderStateChanged_e1716bb not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

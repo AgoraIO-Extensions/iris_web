@@ -13,7 +13,6 @@ import {
   EXTERNAL_VIDEO_SOURCE_TYPE,
   ExternalVideoFrame,
   IAudioFrameObserver,
-  IFaceInfoObserver,
   IVideoEncodedFrameObserver,
   IVideoFrameObserver,
 } from './AgoraMediaBase';
@@ -38,13 +37,9 @@ export interface IMediaEngine {
     observer: IVideoEncodedFrameObserver
   ): CallApiReturnType;
 
-  registerFaceInfoObserver_0303ed6(
-    observer: IFaceInfoObserver
-  ): CallApiReturnType;
+  pushAudioFrame_8dfac8c(frame: AudioFrame, trackId: number): CallApiReturnType;
 
-  pushAudioFrame_c71f4ab(frame: AudioFrame, trackId: number): CallApiReturnType;
-
-  pullAudioFrame_2c74a9c(frame: AudioFrame): CallApiReturnType;
+  pullAudioFrame_28bed4b(frame: AudioFrame): CallApiReturnType;
 
   setExternalVideoSource_fff99b6(
     enabled: boolean,
@@ -52,8 +47,6 @@ export interface IMediaEngine {
     sourceType: EXTERNAL_VIDEO_SOURCE_TYPE,
     encodedVideoOption: SenderOptions
   ): CallApiReturnType;
-
-  setExternalRemoteEglContext_f337cbf(eglContext: any): CallApiReturnType;
 
   setExternalAudioSource_e6538be(
     enabled: boolean,
@@ -86,7 +79,7 @@ export interface IMediaEngine {
     videoTrackId: number
   ): CallApiReturnType;
 
-  pushEncodedVideoImage_e71452b(
+  pushEncodedVideoImage_f854c56(
     imageBuffer: Uint8Array,
     length: number,
     videoEncodedFrameInfo: EncodedVideoFrameInfo,

@@ -2,28 +2,22 @@
 
 import { CallApiReturnType } from 'iris-web-core';
 
-export enum MusicPlayMode {
-  kMusicPlayModeOriginal = 0,
-  kMusicPlayModeAccompany = 1,
-  kMusicPlayModeLeadSing = 2,
+export enum PreloadStatusCode {
+  kPreloadStatusCompleted = 0,
+  kPreloadStatusFailed = 1,
+  kPreloadStatusPreloading = 2,
+  kPreloadStatusRemoved = 3,
 }
 
-export enum PreloadState {
-  kPreloadStateCompleted = 0,
-  kPreloadStateFailed = 1,
-  kPreloadStatePreloading = 2,
-  kPreloadStateRemoved = 3,
-}
-
-export enum MusicContentCenterStateReason {
-  kMusicContentCenterReasonOk = 0,
-  kMusicContentCenterReasonError = 1,
-  kMusicContentCenterReasonGateway = 2,
-  kMusicContentCenterReasonPermissionAndResource = 3,
-  kMusicContentCenterReasonInternalDataParse = 4,
-  kMusicContentCenterReasonMusicLoading = 5,
-  kMusicContentCenterReasonMusicDecryption = 6,
-  kMusicContentCenterReasonHttpInternalError = 7,
+export enum MusicContentCenterStatusCode {
+  kMusicContentCenterStatusOk = 0,
+  kMusicContentCenterStatusErr = 1,
+  kMusicContentCenterStatusErrGateway = 2,
+  kMusicContentCenterStatusErrPermissionAndResource = 3,
+  kMusicContentCenterStatusErrInternalDataParse = 4,
+  kMusicContentCenterStatusErrMusicLoading = 5,
+  kMusicContentCenterStatusErrMusicDecryption = 6,
+  kMusicContentCenterStatusErrHttpInternalError = 7,
 }
 
 export class MusicChartInfo {
@@ -104,39 +98,39 @@ export interface MusicCollection {
 }
 
 export interface IMusicContentCenterEventHandler {
-  onMusicChartsResult_fb18135(
+  onMusicChartsResult_3597d7e(
     requestId: string,
     result: MusicChartInfo[],
-    reason: MusicContentCenterStateReason
+    errorCode: MusicContentCenterStatusCode
   ): void;
 
-  onMusicCollectionResult_c30c2e6(
+  onMusicCollectionResult_1517101(
     requestId: string,
     result: MusicCollection,
-    reason: MusicContentCenterStateReason
+    errorCode: MusicContentCenterStatusCode
   ): void;
 
-  onLyricResult_9ad9c90(
+  onLyricResult_981e37c(
     requestId: string,
     songCode: number,
     lyricUrl: string,
-    reason: MusicContentCenterStateReason
+    errorCode: MusicContentCenterStatusCode
   ): void;
 
-  onSongSimpleInfoResult_9ad9c90(
+  onSongSimpleInfoResult_981e37c(
     requestId: string,
     songCode: number,
     simpleInfo: string,
-    reason: MusicContentCenterStateReason
+    errorCode: MusicContentCenterStatusCode
   ): void;
 
-  onPreLoadEvent_20170bc(
+  onPreLoadEvent_562c799(
     requestId: string,
     songCode: number,
     percent: number,
     lyricUrl: string,
-    state: PreloadState,
-    reason: MusicContentCenterStateReason
+    status: PreloadStatusCode,
+    errorCode: MusicContentCenterStatusCode
   ): void;
 }
 
@@ -154,8 +148,6 @@ export class MusicContentCenterConfiguration {
 
 export interface IMusicPlayer {
   open_303b92e(songCode: number, startPos: number): CallApiReturnType;
-
-  setPlayMode_748bee0(mode: MusicPlayMode): CallApiReturnType;
 }
 
 export interface IMusicContentCenter {
@@ -174,8 +166,6 @@ export interface IMusicContentCenter {
   unregisterEventHandler(): CallApiReturnType;
 
   createMusicPlayer(): CallApiReturnType;
-
-  destroyMusicPlayer_876d086(music_player: IMusicPlayer): CallApiReturnType;
 
   getMusicCharts_66d4ecd(requestId: string): CallApiReturnType;
 
@@ -211,7 +201,7 @@ export interface IMusicContentCenter {
   getLyric_5ab5efd(
     requestId: string,
     songCode: number,
-    lyricType: number
+    LyricType: number
   ): CallApiReturnType;
 
   getSongSimpleInfo_d3baeab(

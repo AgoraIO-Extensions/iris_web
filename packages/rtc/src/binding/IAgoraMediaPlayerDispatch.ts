@@ -137,14 +137,6 @@ export class IMediaPlayerDispatch implements IMediaPlayer {
   }
 
   // @ts-ignore
-  selectMultiAudioTrack_4e92b3c(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'MediaPlayer_selectMultiAudioTrack_4e92b3c not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  // @ts-ignore
   setPlayerOption_4d05d29(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'MediaPlayer_setPlayerOption_4d05d29 not supported in this platform!'

@@ -440,7 +440,7 @@ describe('IAgoraRtcEngineImpl', () => {
     await setupLocalVideo(apiEnginePtr, null);
     jest.spyOn(
       irisRtcEngine.rtcEngineEventHandler,
-      'onLocalVideoStateChanged_a44228a'
+      'onLocalVideoStateChanged_9e9b3c6'
     );
     jest.spyOn(AgoraConsole, 'warn');
 
@@ -465,7 +465,7 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.irisClientManager.localVideoTrackPackages[0].isPreview
     ).toBeTruthy();
     expect(
-      irisRtcEngine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a
+      irisRtcEngine.rtcEngineEventHandler.onLocalVideoStateChanged_9e9b3c6
     ).toBeCalled();
   });
   test('stopPreview', async () => {
@@ -485,7 +485,7 @@ describe('IAgoraRtcEngineImpl', () => {
     await setupLocalVideo(apiEnginePtr, null);
     jest.spyOn(
       irisRtcEngine.rtcEngineEventHandler,
-      'onLocalVideoStateChanged_a44228a'
+      'onLocalVideoStateChanged_9e9b3c6'
     );
 
     let result2 = await callIrisWithoutCheck(
@@ -505,7 +505,7 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.irisClientManager.localVideoTrackPackages[0].isPreview
     ).toBeFalsy();
     expect(
-      irisRtcEngine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a
+      irisRtcEngine.rtcEngineEventHandler.onLocalVideoStateChanged_9e9b3c6
     ).toBeCalled();
   });
   test('setVideoEncoderConfiguration_89677d8', async () => {

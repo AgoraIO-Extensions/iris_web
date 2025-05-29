@@ -359,7 +359,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         AgoraConsole.error(err);
         return this._engine.returnResult(false);
       }
-      this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a(
+      this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_9e9b3c6(
         sourceType,
         NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_ENCODING,
         0
@@ -408,7 +408,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           AgoraConsole.error(err);
           return this._engine.returnResult(false);
         }
-        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a(
+        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_9e9b3c6(
           sourceType,
           NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_STOPPED,
           0
@@ -578,7 +578,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         this._engine.irisClientManager.localAudioTrackPackages
       );
 
-      this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_13b6c02(
+      this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_6d655b4(
         {
           localUid: undefined,
           channelId: undefined,
@@ -588,16 +588,16 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               .LOCAL_AUDIO_STREAM_STATE_RECORDING
           : NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
               .LOCAL_AUDIO_STREAM_STATE_STOPPED,
-        NATIVE_RTC.LOCAL_AUDIO_STREAM_REASON.LOCAL_AUDIO_STREAM_REASON_OK
+        NATIVE_RTC.LOCAL_AUDIO_STREAM_ERROR.LOCAL_AUDIO_STREAM_ERROR_OK
       );
 
-      this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f33d789(
+      this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f428c19(
         enabled
           ? NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
               .LOCAL_AUDIO_STREAM_STATE_RECORDING
           : NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
               .LOCAL_AUDIO_STREAM_STATE_STOPPED,
-        NATIVE_RTC.LOCAL_AUDIO_STREAM_REASON.LOCAL_AUDIO_STREAM_REASON_OK
+        NATIVE_RTC.LOCAL_AUDIO_STREAM_ERROR.LOCAL_AUDIO_STREAM_ERROR_OK
       );
 
       return this._engine.returnResult();

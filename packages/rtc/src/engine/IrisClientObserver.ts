@@ -226,11 +226,11 @@ export class IrisClientObserver {
         await irisClientManager.processAudioTrackClose(
           trackPackage as AudioTrackPackage
         );
-        this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f33d789(
+        this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f428c19(
           NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE.LOCAL_AUDIO_STREAM_STATE_STOPPED,
           0
         );
-        this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_13b6c02(
+        this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_6d655b4(
           {
             localUid: irisClient.agoraRTCClient?.uid as number,
             channelId: irisClient.agoraRTCClient?.channelName,
@@ -259,7 +259,7 @@ export class IrisClientObserver {
         await irisClientManager.processVideoTrackClose(
           trackPackage as VideoTrackPackage
         );
-        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_a44228a(
+        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_9e9b3c6(
           trackPackage.type as NATIVE_RTC.VIDEO_SOURCE_TYPE,
           NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_STOPPED,
           0
