@@ -40,13 +40,13 @@ afterEach(() => {
 });
 
 describe('IMediaPlayer', () => {
-  test('MediaPlayer impl call', async () => {
+  test('MediaPlayer_getMediaPlayerId impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer',
+      'MediaPlayer_getMediaPlayerId',
       JSON.stringify(nParam),
       0,
       '',
@@ -121,13 +121,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer impl call', async () => {
+  test('MediaPlayer_play impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer',
+      'MediaPlayer_play',
       JSON.stringify(nParam),
       0,
       '',
@@ -146,13 +146,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer impl call', async () => {
+  test('MediaPlayer_pause impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer',
+      'MediaPlayer_pause',
       JSON.stringify(nParam),
       0,
       '',
@@ -171,13 +171,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer impl call', async () => {
+  test('MediaPlayer_stop impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer',
+      'MediaPlayer_stop',
       JSON.stringify(nParam),
       0,
       '',
@@ -196,13 +196,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer impl call', async () => {
+  test('MediaPlayer_resume impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer',
+      'MediaPlayer_resume',
       JSON.stringify(nParam),
       0,
       '',
@@ -604,13 +604,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer impl call', async () => {
+  test('MediaPlayer_getState impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer',
+      'MediaPlayer_getState',
       JSON.stringify(nParam),
       0,
       '',
@@ -1130,13 +1130,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer impl call', async () => {
+  test('MediaPlayer_getPlayerSdkVersion impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer',
+      'MediaPlayer_getPlayerSdkVersion',
       JSON.stringify(nParam),
       0,
       '',
@@ -1156,13 +1156,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer impl call', async () => {
+  test('MediaPlayer_getPlaySrc impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer',
+      'MediaPlayer_getPlaySrc',
       JSON.stringify(nParam),
       0,
       '',
@@ -1210,13 +1210,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer impl call', async () => {
+  test('MediaPlayer_getAgoraCDNLineCount impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer',
+      'MediaPlayer_getAgoraCDNLineCount',
       JSON.stringify(nParam),
       0,
       '',
@@ -1264,13 +1264,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer impl call', async () => {
+  test('MediaPlayer_getCurrentAgoraCDNIndex impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer',
+      'MediaPlayer_getCurrentAgoraCDNIndex',
       JSON.stringify(nParam),
       0,
       '',
@@ -1544,13 +1544,13 @@ describe('IMediaPlayer', () => {
   });
 });
 describe('IMediaPlayerCacheManager', () => {
-  test('MediaPlayerCacheManager impl call', async () => {
+  test('MediaPlayerCacheManager_removeAllCaches impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager',
+      'MediaPlayerCacheManager_removeAllCaches',
       JSON.stringify(nParam),
       0,
       '',
@@ -1570,13 +1570,13 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager impl call', async () => {
+  test('MediaPlayerCacheManager_removeOldCache impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager',
+      'MediaPlayerCacheManager_removeOldCache',
       JSON.stringify(nParam),
       0,
       '',
@@ -1765,13 +1765,13 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager impl call', async () => {
+  test('MediaPlayerCacheManager_getMaxCacheFileCount impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager',
+      'MediaPlayerCacheManager_getMaxCacheFileCount',
       JSON.stringify(nParam),
       0,
       '',
@@ -1791,13 +1791,13 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager impl call', async () => {
+  test('MediaPlayerCacheManager_getMaxCacheFileSize impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager',
+      'MediaPlayerCacheManager_getMaxCacheFileSize',
       JSON.stringify(nParam),
       0,
       '',
@@ -1817,13 +1817,13 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager impl call', async () => {
+  test('MediaPlayerCacheManager_getCacheFileCount impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager',
+      'MediaPlayerCacheManager_getCacheFileCount',
       JSON.stringify(nParam),
       0,
       '',

@@ -14,8 +14,16 @@ export const IAUDIOENCODEDFRAMEOBSERVER_ONPLAYBACKAUDIOENCODEDFRAME =
 export const IAUDIOENCODEDFRAMEOBSERVER_ONMIXEDAUDIOENCODEDFRAME =
   'AudioEncodedFrameObserver_onMixedAudioEncodedFrame';
 export const IAUDIOPCMFRAMESINK_ONFRAME = 'AudioPcmFrameSink_onFrame';
-export const IAUDIOFRAMEOBSERVER = 'AudioFrameObserver';
-export const IAUDIOFRAMEOBSERVER2 = 'AudioFrameObserver2';
+export const IAUDIOFRAMEOBSERVER_ONRECORDAUDIOFRAME =
+  'AudioFrameObserver_onRecordAudioFrame';
+export const IAUDIOFRAMEOBSERVER_ONPLAYBACKAUDIOFRAME =
+  'AudioFrameObserver_onPlaybackAudioFrame';
+export const IAUDIOFRAMEOBSERVER_ONMIXEDAUDIOFRAME =
+  'AudioFrameObserver_onMixedAudioFrame';
+export const IAUDIOFRAMEOBSERVER_ONEARMONITORINGAUDIOFRAME =
+  'AudioFrameObserver_onEarMonitoringAudioFrame';
+export const IAUDIOFRAMEOBSERVER_ONPLAYBACKAUDIOFRAMEBEFOREMIXING2 =
+  'AudioFrameObserver_onPlaybackAudioFrameBeforeMixing2';
 export const IAUDIOFRAMEOBSERVER_ONPLAYBACKAUDIOFRAMEBEFOREMIXING =
   'AudioFrameObserver_onPlaybackAudioFrameBeforeMixing';
 export const IAUDIOSPECTRUMOBSERVER_ONLOCALAUDIOSPECTRUM =
@@ -34,7 +42,16 @@ export const IVIDEOFRAMEOBSERVER_ONRENDERVIDEOFRAME =
   'VideoFrameObserver_onRenderVideoFrame';
 export const IVIDEOFRAMEOBSERVER_ONTRANSCODEDVIDEOFRAME =
   'VideoFrameObserver_onTranscodedVideoFrame';
-export const IVIDEOFRAMEOBSERVER = 'VideoFrameObserver';
+export const IVIDEOFRAMEOBSERVER_GETVIDEOFRAMEPROCESSMODE =
+  'VideoFrameObserver_getVideoFrameProcessMode';
+export const IVIDEOFRAMEOBSERVER_GETVIDEOFORMATPREFERENCE =
+  'VideoFrameObserver_getVideoFormatPreference';
+export const IVIDEOFRAMEOBSERVER_GETROTATIONAPPLIED =
+  'VideoFrameObserver_getRotationApplied';
+export const IVIDEOFRAMEOBSERVER_GETMIRRORAPPLIED =
+  'VideoFrameObserver_getMirrorApplied';
+export const IVIDEOFRAMEOBSERVER_GETOBSERVEDFRAMEPOSITION =
+  'VideoFrameObserver_getObservedFramePosition';
 export const IMEDIARECORDEROBSERVER_ONRECORDERSTATECHANGED =
   'MediaRecorderObserver_onRecorderStateChanged';
 export const IMEDIARECORDEROBSERVER_ONRECORDERINFOUPDATED =
@@ -80,11 +97,15 @@ export const IMEDIAENGINE_ADDVIDEOFRAMERENDERER =
   'MediaEngine_addVideoFrameRenderer';
 export const IMEDIAENGINE_REMOVEVIDEOFRAMERENDERER =
   'MediaEngine_removeVideoFrameRenderer';
-export const IMEDIAENGINE = 'MediaEngine';
-export const IMEDIAPLAYER = 'MediaPlayer';
+export const IMEDIAENGINE_RELEASE = 'MediaEngine_release';
+export const IMEDIAPLAYER_GETMEDIAPLAYERID = 'MediaPlayer_getMediaPlayerId';
 export const IMEDIAPLAYER_OPEN = 'MediaPlayer_open';
 export const IMEDIAPLAYER_OPENWITHMEDIASOURCE =
   'MediaPlayer_openWithMediaSource';
+export const IMEDIAPLAYER_PLAY = 'MediaPlayer_play';
+export const IMEDIAPLAYER_PAUSE = 'MediaPlayer_pause';
+export const IMEDIAPLAYER_STOP = 'MediaPlayer_stop';
+export const IMEDIAPLAYER_RESUME = 'MediaPlayer_resume';
 export const IMEDIAPLAYER_SEEK = 'MediaPlayer_seek';
 export const IMEDIAPLAYER_SETAUDIOPITCH = 'MediaPlayer_setAudioPitch';
 export const IMEDIAPLAYER_GETDURATION = 'MediaPlayer_getDuration';
@@ -101,6 +122,7 @@ export const IMEDIAPLAYER_SELECTINTERNALSUBTITLE =
   'MediaPlayer_selectInternalSubtitle';
 export const IMEDIAPLAYER_SETEXTERNALSUBTITLE =
   'MediaPlayer_setExternalSubtitle';
+export const IMEDIAPLAYER_GETSTATE = 'MediaPlayer_getState';
 export const IMEDIAPLAYER_MUTE = 'MediaPlayer_mute';
 export const IMEDIAPLAYER_GETMUTE = 'MediaPlayer_getMute';
 export const IMEDIAPLAYER_ADJUSTPLAYOUTVOLUME =
@@ -132,10 +154,17 @@ export const IMEDIAPLAYER_UNREGISTERMEDIAPLAYERAUDIOSPECTRUMOBSERVER =
   'MediaPlayer_unregisterMediaPlayerAudioSpectrumObserver';
 export const IMEDIAPLAYER_SETAUDIODUALMONOMODE =
   'MediaPlayer_setAudioDualMonoMode';
+export const IMEDIAPLAYER_GETPLAYERSDKVERSION =
+  'MediaPlayer_getPlayerSdkVersion';
+export const IMEDIAPLAYER_GETPLAYSRC = 'MediaPlayer_getPlaySrc';
 export const IMEDIAPLAYER_OPENWITHAGORACDNSRC =
   'MediaPlayer_openWithAgoraCDNSrc';
+export const IMEDIAPLAYER_GETAGORACDNLINECOUNT =
+  'MediaPlayer_getAgoraCDNLineCount';
 export const IMEDIAPLAYER_SWITCHAGORACDNLINEBYINDEX =
   'MediaPlayer_switchAgoraCDNLineByIndex';
+export const IMEDIAPLAYER_GETCURRENTAGORACDNINDEX =
+  'MediaPlayer_getCurrentAgoraCDNIndex';
 export const IMEDIAPLAYER_ENABLEAUTOSWITCHAGORACDN =
   'MediaPlayer_enableAutoSwitchAgoraCDN';
 export const IMEDIAPLAYER_RENEWAGORACDNSRCTOKEN =
@@ -149,7 +178,10 @@ export const IMEDIAPLAYER_SETSPATIALAUDIOPARAMS =
   'MediaPlayer_setSpatialAudioParams';
 export const IMEDIAPLAYER_SETSOUNDPOSITIONPARAMS =
   'MediaPlayer_setSoundPositionParams';
-export const IMEDIAPLAYERCACHEMANAGER = 'MediaPlayerCacheManager';
+export const IMEDIAPLAYERCACHEMANAGER_REMOVEALLCACHES =
+  'MediaPlayerCacheManager_removeAllCaches';
+export const IMEDIAPLAYERCACHEMANAGER_REMOVEOLDCACHE =
+  'MediaPlayerCacheManager_removeOldCache';
 export const IMEDIAPLAYERCACHEMANAGER_REMOVECACHEBYURI =
   'MediaPlayerCacheManager_removeCacheByUri';
 export const IMEDIAPLAYERCACHEMANAGER_SETCACHEDIR =
@@ -162,6 +194,12 @@ export const IMEDIAPLAYERCACHEMANAGER_ENABLEAUTOREMOVECACHE =
   'MediaPlayerCacheManager_enableAutoRemoveCache';
 export const IMEDIAPLAYERCACHEMANAGER_GETCACHEDIR =
   'MediaPlayerCacheManager_getCacheDir';
+export const IMEDIAPLAYERCACHEMANAGER_GETMAXCACHEFILECOUNT =
+  'MediaPlayerCacheManager_getMaxCacheFileCount';
+export const IMEDIAPLAYERCACHEMANAGER_GETMAXCACHEFILESIZE =
+  'MediaPlayerCacheManager_getMaxCacheFileSize';
+export const IMEDIAPLAYERCACHEMANAGER_GETCACHEFILECOUNT =
+  'MediaPlayerCacheManager_getCacheFileCount';
 export const IMEDIAPLAYERSOURCEOBSERVER_ONPLAYERSOURCESTATECHANGED =
   'MediaPlayerSourceObserver_onPlayerSourceStateChanged';
 export const IMEDIAPLAYERSOURCEOBSERVER_ONPOSITIONCHANGED =
@@ -174,7 +212,10 @@ export const IMEDIAPLAYERSOURCEOBSERVER_ONPLAYBUFFERUPDATED =
   'MediaPlayerSourceObserver_onPlayBufferUpdated';
 export const IMEDIAPLAYERSOURCEOBSERVER_ONPRELOADEVENT =
   'MediaPlayerSourceObserver_onPreloadEvent';
-export const IMEDIAPLAYERSOURCEOBSERVER = 'MediaPlayerSourceObserver';
+export const IMEDIAPLAYERSOURCEOBSERVER_ONCOMPLETED =
+  'MediaPlayerSourceObserver_onCompleted';
+export const IMEDIAPLAYERSOURCEOBSERVER_ONAGORACDNTOKENWILLEXPIRE =
+  'MediaPlayerSourceObserver_onAgoraCDNTokenWillExpire';
 export const IMEDIAPLAYERSOURCEOBSERVER_ONPLAYERSRCINFOCHANGED =
   'MediaPlayerSourceObserver_onPlayerSrcInfoChanged';
 export const IMEDIAPLAYERSOURCEOBSERVER_ONPLAYERINFOUPDATED =
@@ -184,10 +225,13 @@ export const IMEDIAPLAYERSOURCEOBSERVER_ONAUDIOVOLUMEINDICATION =
 export const IMEDIARECORDER_SETMEDIARECORDEROBSERVER =
   'MediaRecorder_setMediaRecorderObserver';
 export const IMEDIARECORDER_STARTRECORDING = 'MediaRecorder_startRecording';
-export const IMEDIARECORDER = 'MediaRecorder';
-export const MUSICCHARTCOLLECTION = 'MusicChartCollection';
+export const IMEDIARECORDER_STOPRECORDING = 'MediaRecorder_stopRecording';
+export const MUSICCHARTCOLLECTION_GETCOUNT = 'MusicChartCollection_getCount';
 export const MUSICCHARTCOLLECTION_GET = 'MusicChartCollection_get';
-export const MUSICCOLLECTION = 'MusicCollection';
+export const MUSICCOLLECTION_GETCOUNT = 'MusicCollection_getCount';
+export const MUSICCOLLECTION_GETTOTAL = 'MusicCollection_getTotal';
+export const MUSICCOLLECTION_GETPAGE = 'MusicCollection_getPage';
+export const MUSICCOLLECTION_GETPAGESIZE = 'MusicCollection_getPageSize';
 export const MUSICCOLLECTION_GETMUSIC = 'MusicCollection_getMusic';
 export const IMUSICCONTENTCENTEREVENTHANDLER_ONMUSICCHARTSRESULT =
   'MusicContentCenterEventHandler_onMusicChartsResult';
@@ -202,9 +246,13 @@ export const IMUSICCONTENTCENTEREVENTHANDLER_ONPRELOADEVENT =
 export const IMUSICPLAYER_OPEN = 'MusicPlayer_open';
 export const IMUSICCONTENTCENTER_INITIALIZE = 'MusicContentCenter_initialize';
 export const IMUSICCONTENTCENTER_RENEWTOKEN = 'MusicContentCenter_renewToken';
-export const IMUSICCONTENTCENTER = 'MusicContentCenter';
+export const IMUSICCONTENTCENTER_RELEASE = 'MusicContentCenter_release';
 export const IMUSICCONTENTCENTER_REGISTEREVENTHANDLER =
   'MusicContentCenter_registerEventHandler';
+export const IMUSICCONTENTCENTER_UNREGISTEREVENTHANDLER =
+  'MusicContentCenter_unregisterEventHandler';
+export const IMUSICCONTENTCENTER_CREATEMUSICPLAYER =
+  'MusicContentCenter_createMusicPlayer';
 export const IMUSICCONTENTCENTER_GETMUSICCHARTS =
   'MusicContentCenter_getMusicCharts';
 export const IMUSICCONTENTCENTER_GETMUSICCOLLECTIONBYMUSICCHARTID =
@@ -241,13 +289,16 @@ export const IRTCENGINEEVENTHANDLER_ONAUDIODEVICESTATECHANGED =
   'RtcEngineEventHandler_onAudioDeviceStateChanged';
 export const IRTCENGINEEVENTHANDLER_ONAUDIOMIXINGPOSITIONCHANGED =
   'RtcEngineEventHandler_onAudioMixingPositionChanged';
-export const IRTCENGINEEVENTHANDLER = 'RtcEngineEventHandler';
+export const IRTCENGINEEVENTHANDLER_ONAUDIOMIXINGFINISHED =
+  'RtcEngineEventHandler_onAudioMixingFinished';
 export const IRTCENGINEEVENTHANDLER_ONAUDIOEFFECTFINISHED =
   'RtcEngineEventHandler_onAudioEffectFinished';
 export const IRTCENGINEEVENTHANDLER_ONVIDEODEVICESTATECHANGED =
   'RtcEngineEventHandler_onVideoDeviceStateChanged';
 export const IRTCENGINEEVENTHANDLER_ONNETWORKQUALITY =
   'RtcEngineEventHandler_onNetworkQuality';
+export const IRTCENGINEEVENTHANDLER_ONINTRAREQUESTRECEIVED =
+  'RtcEngineEventHandler_onIntraRequestReceived';
 export const IRTCENGINEEVENTHANDLER_ONUPLINKNETWORKINFOUPDATED =
   'RtcEngineEventHandler_onUplinkNetworkInfoUpdated';
 export const IRTCENGINEEVENTHANDLER_ONDOWNLINKNETWORKINFOUPDATED =
@@ -290,20 +341,32 @@ export const IRTCENGINEEVENTHANDLER_ONLOCALVIDEOSTATS =
   'RtcEngineEventHandler_onLocalVideoStats';
 export const IRTCENGINEEVENTHANDLER_ONREMOTEVIDEOSTATS =
   'RtcEngineEventHandler_onRemoteVideoStats';
+export const IRTCENGINEEVENTHANDLER_ONCAMERAREADY =
+  'RtcEngineEventHandler_onCameraReady';
 export const IRTCENGINEEVENTHANDLER_ONCAMERAFOCUSAREACHANGED =
   'RtcEngineEventHandler_onCameraFocusAreaChanged';
 export const IRTCENGINEEVENTHANDLER_ONCAMERAEXPOSUREAREACHANGED =
   'RtcEngineEventHandler_onCameraExposureAreaChanged';
 export const IRTCENGINEEVENTHANDLER_ONFACEPOSITIONCHANGED =
   'RtcEngineEventHandler_onFacePositionChanged';
+export const IRTCENGINEEVENTHANDLER_ONVIDEOSTOPPED =
+  'RtcEngineEventHandler_onVideoStopped';
 export const IRTCENGINEEVENTHANDLER_ONAUDIOMIXINGSTATECHANGED =
   'RtcEngineEventHandler_onAudioMixingStateChanged';
 export const IRTCENGINEEVENTHANDLER_ONRHYTHMPLAYERSTATECHANGED =
   'RtcEngineEventHandler_onRhythmPlayerStateChanged';
+export const IRTCENGINEEVENTHANDLER_ONCONNECTIONLOST =
+  'RtcEngineEventHandler_onConnectionLost';
+export const IRTCENGINEEVENTHANDLER_ONCONNECTIONINTERRUPTED =
+  'RtcEngineEventHandler_onConnectionInterrupted';
+export const IRTCENGINEEVENTHANDLER_ONCONNECTIONBANNED =
+  'RtcEngineEventHandler_onConnectionBanned';
 export const IRTCENGINEEVENTHANDLER_ONSTREAMMESSAGE =
   'RtcEngineEventHandler_onStreamMessage';
 export const IRTCENGINEEVENTHANDLER_ONSTREAMMESSAGEERROR =
   'RtcEngineEventHandler_onStreamMessageError';
+export const IRTCENGINEEVENTHANDLER_ONREQUESTTOKEN =
+  'RtcEngineEventHandler_onRequestToken';
 export const IRTCENGINEEVENTHANDLER_ONTOKENPRIVILEGEWILLEXPIRE =
   'RtcEngineEventHandler_onTokenPrivilegeWillExpire';
 export const IRTCENGINEEVENTHANDLER_ONLICENSEVALIDATIONFAILURE =
@@ -334,6 +397,8 @@ export const IRTCENGINEEVENTHANDLER_ONRTMPSTREAMINGSTATECHANGED =
   'RtcEngineEventHandler_onRtmpStreamingStateChanged';
 export const IRTCENGINEEVENTHANDLER_ONRTMPSTREAMINGEVENT =
   'RtcEngineEventHandler_onRtmpStreamingEvent';
+export const IRTCENGINEEVENTHANDLER_ONTRANSCODINGUPDATED =
+  'RtcEngineEventHandler_onTranscodingUpdated';
 export const IRTCENGINEEVENTHANDLER_ONAUDIOROUTINGCHANGED =
   'RtcEngineEventHandler_onAudioRoutingChanged';
 export const IRTCENGINEEVENTHANDLER_ONCHANNELMEDIARELAYSTATECHANGED =
@@ -492,7 +557,8 @@ export const IRTCENGINEEVENTHANDLER_ONSNAPSHOTTAKENEx =
   'RtcEngineEventHandler_onSnapshotTakenEx';
 export const IRTCENGINEEVENTHANDLER_ONVIDEORENDERINGTRACINGRESULTEx =
   'RtcEngineEventHandler_onVideoRenderingTracingResultEx';
-export const IVIDEODEVICEMANAGER = 'VideoDeviceManager';
+export const IVIDEODEVICEMANAGER_ENUMERATEVIDEODEVICES =
+  'VideoDeviceManager_enumerateVideoDevices';
 export const IVIDEODEVICEMANAGER_SETDEVICE = 'VideoDeviceManager_setDevice';
 export const IVIDEODEVICEMANAGER_GETDEVICE = 'VideoDeviceManager_getDevice';
 export const IVIDEODEVICEMANAGER_NUMBEROFCAPABILITIES =
@@ -501,7 +567,11 @@ export const IVIDEODEVICEMANAGER_GETCAPABILITY =
   'VideoDeviceManager_getCapability';
 export const IVIDEODEVICEMANAGER_STARTDEVICETEST =
   'VideoDeviceManager_startDeviceTest';
-export const IMETADATAOBSERVER = 'MetadataObserver';
+export const IVIDEODEVICEMANAGER_STOPDEVICETEST =
+  'VideoDeviceManager_stopDeviceTest';
+export const IVIDEODEVICEMANAGER_RELEASE = 'VideoDeviceManager_release';
+export const IMETADATAOBSERVER_GETMAXMETADATASIZE =
+  'MetadataObserver_getMaxMetadataSize';
 export const IMETADATAOBSERVER_ONREADYTOSENDMETADATA =
   'MetadataObserver_onReadyToSendMetadata';
 export const IMETADATAOBSERVER_ONMETADATARECEIVED =
@@ -524,19 +594,27 @@ export const IRTCENGINE_JOINCHANNEL = 'RtcEngine_joinChannel';
 export const IRTCENGINE_JOINCHANNEL2 = 'RtcEngine_joinChannel2';
 export const IRTCENGINE_UPDATECHANNELMEDIAOPTIONS =
   'RtcEngine_updateChannelMediaOptions';
-export const IRTCENGINE = 'RtcEngine';
+export const IRTCENGINE_LEAVECHANNEL = 'RtcEngine_leaveChannel';
 export const IRTCENGINE_LEAVECHANNEL2 = 'RtcEngine_leaveChannel2';
 export const IRTCENGINE_RENEWTOKEN = 'RtcEngine_renewToken';
 export const IRTCENGINE_SETCHANNELPROFILE = 'RtcEngine_setChannelProfile';
 export const IRTCENGINE_SETCLIENTROLE = 'RtcEngine_setClientRole';
 export const IRTCENGINE_SETCLIENTROLE2 = 'RtcEngine_setClientRole2';
+export const IRTCENGINE_STARTECHOTEST = 'RtcEngine_startEchoTest';
 export const IRTCENGINE_STARTECHOTEST2 = 'RtcEngine_startEchoTest2';
 export const IRTCENGINE_STARTECHOTEST3 = 'RtcEngine_startEchoTest3';
+export const IRTCENGINE_STOPECHOTEST = 'RtcEngine_stopEchoTest';
 export const IRTCENGINE_ENABLEMULTICAMERA = 'RtcEngine_enableMultiCamera';
+export const IRTCENGINE_ENABLEVIDEO = 'RtcEngine_enableVideo';
+export const IRTCENGINE_DISABLEVIDEO = 'RtcEngine_disableVideo';
+export const IRTCENGINE_STARTPREVIEW = 'RtcEngine_startPreview';
 export const IRTCENGINE_STARTPREVIEW2 = 'RtcEngine_startPreview2';
+export const IRTCENGINE_STOPPREVIEW = 'RtcEngine_stopPreview';
 export const IRTCENGINE_STOPPREVIEW2 = 'RtcEngine_stopPreview2';
 export const IRTCENGINE_STARTLASTMILEPROBETEST =
   'RtcEngine_startLastmileProbeTest';
+export const IRTCENGINE_STOPLASTMILEPROBETEST =
+  'RtcEngine_stopLastmileProbeTest';
 export const IRTCENGINE_SETVIDEOENCODERCONFIGURATION =
   'RtcEngine_setVideoEncoderConfiguration';
 export const IRTCENGINE_SETBEAUTYEFFECTOPTIONS =
@@ -552,6 +630,8 @@ export const IRTCENGINE_ENABLEVIRTUALBACKGROUND =
 export const IRTCENGINE_SETUPREMOTEVIDEO = 'RtcEngine_setupRemoteVideo';
 export const IRTCENGINE_SETUPLOCALVIDEO = 'RtcEngine_setupLocalVideo';
 export const IRTCENGINE_SETVIDEOSCENARIO = 'RtcEngine_setVideoScenario';
+export const IRTCENGINE_ENABLEAUDIO = 'RtcEngine_enableAudio';
+export const IRTCENGINE_DISABLEAUDIO = 'RtcEngine_disableAudio';
 export const IRTCENGINE_SETAUDIOPROFILE = 'RtcEngine_setAudioProfile';
 export const IRTCENGINE_SETAUDIOPROFILE2 = 'RtcEngine_setAudioProfile2';
 export const IRTCENGINE_SETAUDIOSCENARIO = 'RtcEngine_setAudioScenario';
@@ -592,23 +672,38 @@ export const IRTCENGINE_STARTAUDIORECORDING2 = 'RtcEngine_startAudioRecording2';
 export const IRTCENGINE_STARTAUDIORECORDING3 = 'RtcEngine_startAudioRecording3';
 export const IRTCENGINE_REGISTERAUDIOENCODEDFRAMEOBSERVER =
   'RtcEngine_registerAudioEncodedFrameObserver';
+export const IRTCENGINE_STOPAUDIORECORDING = 'RtcEngine_stopAudioRecording';
+export const IRTCENGINE_CREATEMEDIAPLAYER = 'RtcEngine_createMediaPlayer';
 export const IRTCENGINE_DESTROYMEDIAPLAYER = 'RtcEngine_destroyMediaPlayer';
 export const IRTCENGINE_CREATEMEDIARECORDER = 'RtcEngine_createMediaRecorder';
 export const IRTCENGINE_DESTROYMEDIARECORDER = 'RtcEngine_destroyMediaRecorder';
 export const IRTCENGINE_STARTAUDIOMIXING = 'RtcEngine_startAudioMixing';
 export const IRTCENGINE_STARTAUDIOMIXING2 = 'RtcEngine_startAudioMixing2';
+export const IRTCENGINE_STOPAUDIOMIXING = 'RtcEngine_stopAudioMixing';
+export const IRTCENGINE_PAUSEAUDIOMIXING = 'RtcEngine_pauseAudioMixing';
+export const IRTCENGINE_RESUMEAUDIOMIXING = 'RtcEngine_resumeAudioMixing';
 export const IRTCENGINE_SELECTAUDIOTRACK = 'RtcEngine_selectAudioTrack';
+export const IRTCENGINE_GETAUDIOTRACKCOUNT = 'RtcEngine_getAudioTrackCount';
 export const IRTCENGINE_ADJUSTAUDIOMIXINGVOLUME =
   'RtcEngine_adjustAudioMixingVolume';
 export const IRTCENGINE_ADJUSTAUDIOMIXINGPUBLISHVOLUME =
   'RtcEngine_adjustAudioMixingPublishVolume';
+export const IRTCENGINE_GETAUDIOMIXINGPUBLISHVOLUME =
+  'RtcEngine_getAudioMixingPublishVolume';
 export const IRTCENGINE_ADJUSTAUDIOMIXINGPLAYOUTVOLUME =
   'RtcEngine_adjustAudioMixingPlayoutVolume';
+export const IRTCENGINE_GETAUDIOMIXINGPLAYOUTVOLUME =
+  'RtcEngine_getAudioMixingPlayoutVolume';
+export const IRTCENGINE_GETAUDIOMIXINGDURATION =
+  'RtcEngine_getAudioMixingDuration';
+export const IRTCENGINE_GETAUDIOMIXINGCURRENTPOSITION =
+  'RtcEngine_getAudioMixingCurrentPosition';
 export const IRTCENGINE_SETAUDIOMIXINGPOSITION =
   'RtcEngine_setAudioMixingPosition';
 export const IRTCENGINE_SETAUDIOMIXINGDUALMONOMODE =
   'RtcEngine_setAudioMixingDualMonoMode';
 export const IRTCENGINE_SETAUDIOMIXINGPITCH = 'RtcEngine_setAudioMixingPitch';
+export const IRTCENGINE_GETEFFECTSVOLUME = 'RtcEngine_getEffectsVolume';
 export const IRTCENGINE_SETEFFECTSVOLUME = 'RtcEngine_setEffectsVolume';
 export const IRTCENGINE_PRELOADEFFECT = 'RtcEngine_preloadEffect';
 export const IRTCENGINE_PLAYEFFECT = 'RtcEngine_playEffect';
@@ -616,9 +711,13 @@ export const IRTCENGINE_PLAYALLEFFECTS = 'RtcEngine_playAllEffects';
 export const IRTCENGINE_GETVOLUMEOFEFFECT = 'RtcEngine_getVolumeOfEffect';
 export const IRTCENGINE_SETVOLUMEOFEFFECT = 'RtcEngine_setVolumeOfEffect';
 export const IRTCENGINE_PAUSEEFFECT = 'RtcEngine_pauseEffect';
+export const IRTCENGINE_PAUSEALLEFFECTS = 'RtcEngine_pauseAllEffects';
 export const IRTCENGINE_RESUMEEFFECT = 'RtcEngine_resumeEffect';
+export const IRTCENGINE_RESUMEALLEFFECTS = 'RtcEngine_resumeAllEffects';
 export const IRTCENGINE_STOPEFFECT = 'RtcEngine_stopEffect';
+export const IRTCENGINE_STOPALLEFFECTS = 'RtcEngine_stopAllEffects';
 export const IRTCENGINE_UNLOADEFFECT = 'RtcEngine_unloadEffect';
+export const IRTCENGINE_UNLOADALLEFFECTS = 'RtcEngine_unloadAllEffects';
 export const IRTCENGINE_GETEFFECTDURATION = 'RtcEngine_getEffectDuration';
 export const IRTCENGINE_SETEFFECTPOSITION = 'RtcEngine_setEffectPosition';
 export const IRTCENGINE_GETEFFECTCURRENTPOSITION =
@@ -678,6 +777,8 @@ export const IRTCENGINE_SETPLAYBACKAUDIOFRAMEBEFOREMIXINGPARAMETERS =
   'RtcEngine_setPlaybackAudioFrameBeforeMixingParameters';
 export const IRTCENGINE_ENABLEAUDIOSPECTRUMMONITOR =
   'RtcEngine_enableAudioSpectrumMonitor';
+export const IRTCENGINE_DISABLEAUDIOSPECTRUMMONITOR =
+  'RtcEngine_disableAudioSpectrumMonitor';
 export const IRTCENGINE_REGISTERAUDIOSPECTRUMOBSERVER =
   'RtcEngine_registerAudioSpectrumObserver';
 export const IRTCENGINE_UNREGISTERAUDIOSPECTRUMOBSERVER =
@@ -699,6 +800,8 @@ export const IRTCENGINE_ENABLELOOPBACKRECORDING =
   'RtcEngine_enableLoopbackRecording';
 export const IRTCENGINE_ADJUSTLOOPBACKSIGNALVOLUME =
   'RtcEngine_adjustLoopbackSignalVolume';
+export const IRTCENGINE_GETLOOPBACKRECORDINGVOLUME =
+  'RtcEngine_getLoopbackRecordingVolume';
 export const IRTCENGINE_ENABLEINEARMONITORING =
   'RtcEngine_enableInEarMonitoring';
 export const IRTCENGINE_SETINEARMONITORINGVOLUME =
@@ -718,29 +821,52 @@ export const IRTCENGINE_GETEXTENSIONPROPERTY2 =
   'RtcEngine_getExtensionProperty2';
 export const IRTCENGINE_SETCAMERACAPTURERCONFIGURATION =
   'RtcEngine_setCameraCapturerConfiguration';
+export const IRTCENGINE_CREATECUSTOMVIDEOTRACK =
+  'RtcEngine_createCustomVideoTrack';
 export const IRTCENGINE_CREATECUSTOMENCODEDVIDEOTRACK =
   'RtcEngine_createCustomEncodedVideoTrack';
 export const IRTCENGINE_DESTROYCUSTOMVIDEOTRACK =
   'RtcEngine_destroyCustomVideoTrack';
 export const IRTCENGINE_DESTROYCUSTOMENCODEDVIDEOTRACK =
   'RtcEngine_destroyCustomEncodedVideoTrack';
+export const IRTCENGINE_SWITCHCAMERA = 'RtcEngine_switchCamera';
+export const IRTCENGINE_ISCAMERAZOOMSUPPORTED =
+  'RtcEngine_isCameraZoomSupported';
+export const IRTCENGINE_ISCAMERAFACEDETECTSUPPORTED =
+  'RtcEngine_isCameraFaceDetectSupported';
+export const IRTCENGINE_ISCAMERATORCHSUPPORTED =
+  'RtcEngine_isCameraTorchSupported';
+export const IRTCENGINE_ISCAMERAFOCUSSUPPORTED =
+  'RtcEngine_isCameraFocusSupported';
+export const IRTCENGINE_ISCAMERAAUTOFOCUSFACEMODESUPPORTED =
+  'RtcEngine_isCameraAutoFocusFaceModeSupported';
 export const IRTCENGINE_SETCAMERAZOOMFACTOR = 'RtcEngine_setCameraZoomFactor';
 export const IRTCENGINE_ENABLEFACEDETECTION = 'RtcEngine_enableFaceDetection';
+export const IRTCENGINE_GETCAMERAMAXZOOMFACTOR =
+  'RtcEngine_getCameraMaxZoomFactor';
 export const IRTCENGINE_SETCAMERAFOCUSPOSITIONINPREVIEW =
   'RtcEngine_setCameraFocusPositionInPreview';
 export const IRTCENGINE_SETCAMERATORCHON = 'RtcEngine_setCameraTorchOn';
 export const IRTCENGINE_SETCAMERAAUTOFOCUSFACEMODEENABLED =
   'RtcEngine_setCameraAutoFocusFaceModeEnabled';
+export const IRTCENGINE_ISCAMERAEXPOSUREPOSITIONSUPPORTED =
+  'RtcEngine_isCameraExposurePositionSupported';
 export const IRTCENGINE_SETCAMERAEXPOSUREPOSITION =
   'RtcEngine_setCameraExposurePosition';
+export const IRTCENGINE_ISCAMERAEXPOSURESUPPORTED =
+  'RtcEngine_isCameraExposureSupported';
 export const IRTCENGINE_SETCAMERAEXPOSUREFACTOR =
   'RtcEngine_setCameraExposureFactor';
+export const IRTCENGINE_ISCAMERAAUTOEXPOSUREFACEMODESUPPORTED =
+  'RtcEngine_isCameraAutoExposureFaceModeSupported';
 export const IRTCENGINE_SETCAMERAAUTOEXPOSUREFACEMODEENABLED =
   'RtcEngine_setCameraAutoExposureFaceModeEnabled';
 export const IRTCENGINE_SETDEFAULTAUDIOROUTETOSPEAKERPHONE =
   'RtcEngine_setDefaultAudioRouteToSpeakerphone';
 export const IRTCENGINE_SETENABLESPEAKERPHONE =
   'RtcEngine_setEnableSpeakerphone';
+export const IRTCENGINE_ISSPEAKERPHONEENABLED =
+  'RtcEngine_isSpeakerphoneEnabled';
 export const IRTCENGINE_SETROUTEINCOMMUNICATIONMODE =
   'RtcEngine_setRouteInCommunicationMode';
 export const IRTCENGINE_GETSCREENCAPTURESOURCES =
@@ -762,8 +888,11 @@ export const IRTCENGINE_UPDATESCREENCAPTUREPARAMETERS =
   'RtcEngine_updateScreenCaptureParameters';
 export const IRTCENGINE_STARTSCREENCAPTURE = 'RtcEngine_startScreenCapture';
 export const IRTCENGINE_UPDATESCREENCAPTURE = 'RtcEngine_updateScreenCapture';
+export const IRTCENGINE_QUERYSCREENCAPTURECAPABILITY =
+  'RtcEngine_queryScreenCaptureCapability';
 export const IRTCENGINE_SETSCREENCAPTURESCENARIO =
   'RtcEngine_setScreenCaptureScenario';
+export const IRTCENGINE_STOPSCREENCAPTURE = 'RtcEngine_stopScreenCapture';
 export const IRTCENGINE_GETCALLID = 'RtcEngine_getCallId';
 export const IRTCENGINE_RATE = 'RtcEngine_rate';
 export const IRTCENGINE_COMPLAIN = 'RtcEngine_complain';
@@ -778,6 +907,8 @@ export const IRTCENGINE_STARTLOCALVIDEOTRANSCODER =
   'RtcEngine_startLocalVideoTranscoder';
 export const IRTCENGINE_UPDATELOCALTRANSCODERCONFIGURATION =
   'RtcEngine_updateLocalTranscoderConfiguration';
+export const IRTCENGINE_STOPLOCALVIDEOTRANSCODER =
+  'RtcEngine_stopLocalVideoTranscoder';
 export const IRTCENGINE_STARTCAMERACAPTURE = 'RtcEngine_startCameraCapture';
 export const IRTCENGINE_STOPCAMERACAPTURE = 'RtcEngine_stopCameraCapture';
 export const IRTCENGINE_SETCAMERADEVICEORIENTATION =
@@ -786,6 +917,7 @@ export const IRTCENGINE_SETSCREENCAPTUREORIENTATION =
   'RtcEngine_setScreenCaptureOrientation';
 export const IRTCENGINE_STARTSCREENCAPTURE2 = 'RtcEngine_startScreenCapture2';
 export const IRTCENGINE_STOPSCREENCAPTURE2 = 'RtcEngine_stopScreenCapture2';
+export const IRTCENGINE_GETCONNECTIONSTATE = 'RtcEngine_getConnectionState';
 export const IRTCENGINE_REGISTEREVENTHANDLER = 'RtcEngine_registerEventHandler';
 export const IRTCENGINE_UNREGISTEREVENTHANDLER =
   'RtcEngine_unregisterEventHandler';
@@ -801,6 +933,9 @@ export const IRTCENGINE_CREATEDATASTREAM2 = 'RtcEngine_createDataStream2';
 export const IRTCENGINE_SENDSTREAMMESSAGE = 'RtcEngine_sendStreamMessage';
 export const IRTCENGINE_ADDVIDEOWATERMARK = 'RtcEngine_addVideoWatermark';
 export const IRTCENGINE_ADDVIDEOWATERMARK2 = 'RtcEngine_addVideoWatermark2';
+export const IRTCENGINE_CLEARVIDEOWATERMARKS = 'RtcEngine_clearVideoWatermarks';
+export const IRTCENGINE_PAUSEAUDIO = 'RtcEngine_pauseAudio';
+export const IRTCENGINE_RESUMEAUDIO = 'RtcEngine_resumeAudio';
 export const IRTCENGINE_ENABLEWEBSDKINTEROPERABILITY =
   'RtcEngine_enableWebSdkInteroperability';
 export const IRTCENGINE_SENDCUSTOMREPORTMESSAGE =
@@ -829,15 +964,24 @@ export const IRTCENGINE_STARTCHANNELMEDIARELAY =
   'RtcEngine_startChannelMediaRelay';
 export const IRTCENGINE_UPDATECHANNELMEDIARELAY =
   'RtcEngine_updateChannelMediaRelay';
+export const IRTCENGINE_STOPCHANNELMEDIARELAY =
+  'RtcEngine_stopChannelMediaRelay';
+export const IRTCENGINE_PAUSEALLCHANNELMEDIARELAY =
+  'RtcEngine_pauseAllChannelMediaRelay';
+export const IRTCENGINE_RESUMEALLCHANNELMEDIARELAY =
+  'RtcEngine_resumeAllChannelMediaRelay';
 export const IRTCENGINE_SETDIRECTCDNSTREAMINGAUDIOCONFIGURATION =
   'RtcEngine_setDirectCdnStreamingAudioConfiguration';
 export const IRTCENGINE_SETDIRECTCDNSTREAMINGVIDEOCONFIGURATION =
   'RtcEngine_setDirectCdnStreamingVideoConfiguration';
 export const IRTCENGINE_STARTDIRECTCDNSTREAMING =
   'RtcEngine_startDirectCdnStreaming';
+export const IRTCENGINE_STOPDIRECTCDNSTREAMING =
+  'RtcEngine_stopDirectCdnStreaming';
 export const IRTCENGINE_UPDATEDIRECTCDNSTREAMINGMEDIAOPTIONS =
   'RtcEngine_updateDirectCdnStreamingMediaOptions';
 export const IRTCENGINE_STARTRHYTHMPLAYER = 'RtcEngine_startRhythmPlayer';
+export const IRTCENGINE_STOPRHYTHMPLAYER = 'RtcEngine_stopRhythmPlayer';
 export const IRTCENGINE_CONFIGRHYTHMPLAYER = 'RtcEngine_configRhythmPlayer';
 export const IRTCENGINE_TAKESNAPSHOT = 'RtcEngine_takeSnapshot';
 export const IRTCENGINE_ENABLECONTENTINSPECT = 'RtcEngine_enableContentInspect';
@@ -852,9 +996,17 @@ export const IRTCENGINE_SETADVANCEDAUDIOOPTIONS =
 export const IRTCENGINE_SETAVSYNCSOURCE = 'RtcEngine_setAVSyncSource';
 export const IRTCENGINE_ENABLEVIDEOIMAGESOURCE =
   'RtcEngine_enableVideoImageSource';
+export const IRTCENGINE_GETCURRENTMONOTONICTIMEINMS =
+  'RtcEngine_getCurrentMonotonicTimeInMs';
 export const IRTCENGINE_ENABLEWIRELESSACCELERATE =
   'RtcEngine_enableWirelessAccelerate';
+export const IRTCENGINE_GETNETWORKTYPE = 'RtcEngine_getNetworkType';
 export const IRTCENGINE_SETPARAMETERS = 'RtcEngine_setParameters';
+export const IRTCENGINE_STARTMEDIARENDERINGTRACING =
+  'RtcEngine_startMediaRenderingTracing';
+export const IRTCENGINE_ENABLEINSTANTMEDIARENDERING =
+  'RtcEngine_enableInstantMediaRendering';
+export const IRTCENGINE_GETNTPWALLTIMEINMS = 'RtcEngine_getNtpWallTimeInMs';
 export const IRTCENGINE_ISFEATUREAVAILABLEONDEVICE =
   'RtcEngine_isFeatureAvailableOnDevice';
 export const IRTCENGINEEX_JOINCHANNELEX = 'RtcEngineEx_joinChannelEx';
@@ -952,7 +1104,7 @@ export const IRTCENGINEEX_ENABLECONTENTINSPECTEX =
   'RtcEngineEx_enableContentInspectEx';
 export const IRTCENGINEEX_STARTMEDIARENDERINGTRACINGEX =
   'RtcEngineEx_startMediaRenderingTracingEx';
-export const IBASESPATIALAUDIOENGINE = 'BaseSpatialAudioEngine';
+export const IBASESPATIALAUDIOENGINE_RELEASE = 'BaseSpatialAudioEngine_release';
 export const IBASESPATIALAUDIOENGINE_SETMAXAUDIORECVCOUNT =
   'BaseSpatialAudioEngine_setMaxAudioRecvCount';
 export const IBASESPATIALAUDIOENGINE_SETAUDIORECVRANGE =
@@ -987,12 +1139,16 @@ export const ILOCALSPATIALAUDIOENGINE_REMOVEREMOTEPOSITION =
   'LocalSpatialAudioEngine_removeRemotePosition';
 export const ILOCALSPATIALAUDIOENGINE_REMOVEREMOTEPOSITIONEX =
   'LocalSpatialAudioEngine_removeRemotePositionEx';
-export const ILOCALSPATIALAUDIOENGINE = 'LocalSpatialAudioEngine';
+export const ILOCALSPATIALAUDIOENGINE_CLEARREMOTEPOSITIONS =
+  'LocalSpatialAudioEngine_clearRemotePositions';
 export const ILOCALSPATIALAUDIOENGINE_CLEARREMOTEPOSITIONSEX =
   'LocalSpatialAudioEngine_clearRemotePositionsEx';
 export const ILOCALSPATIALAUDIOENGINE_SETREMOTEAUDIOATTENUATION =
   'LocalSpatialAudioEngine_setRemoteAudioAttenuation';
-export const IAUDIODEVICEMANAGER = 'AudioDeviceManager';
+export const IAUDIODEVICEMANAGER_ENUMERATEPLAYBACKDEVICES =
+  'AudioDeviceManager_enumeratePlaybackDevices';
+export const IAUDIODEVICEMANAGER_ENUMERATERECORDINGDEVICES =
+  'AudioDeviceManager_enumerateRecordingDevices';
 export const IAUDIODEVICEMANAGER_SETPLAYBACKDEVICE =
   'AudioDeviceManager_setPlaybackDevice';
 export const IAUDIODEVICEMANAGER_GETPLAYBACKDEVICE =
@@ -1027,13 +1183,20 @@ export const IAUDIODEVICEMANAGER_GETRECORDINGDEVICEMUTE =
   'AudioDeviceManager_getRecordingDeviceMute';
 export const IAUDIODEVICEMANAGER_STARTPLAYBACKDEVICETEST =
   'AudioDeviceManager_startPlaybackDeviceTest';
+export const IAUDIODEVICEMANAGER_STOPPLAYBACKDEVICETEST =
+  'AudioDeviceManager_stopPlaybackDeviceTest';
 export const IAUDIODEVICEMANAGER_STARTRECORDINGDEVICETEST =
   'AudioDeviceManager_startRecordingDeviceTest';
+export const IAUDIODEVICEMANAGER_STOPRECORDINGDEVICETEST =
+  'AudioDeviceManager_stopRecordingDeviceTest';
 export const IAUDIODEVICEMANAGER_STARTAUDIODEVICELOOPBACKTEST =
   'AudioDeviceManager_startAudioDeviceLoopbackTest';
+export const IAUDIODEVICEMANAGER_STOPAUDIODEVICELOOPBACKTEST =
+  'AudioDeviceManager_stopAudioDeviceLoopbackTest';
 export const IAUDIODEVICEMANAGER_FOLLOWSYSTEMPLAYBACKDEVICE =
   'AudioDeviceManager_followSystemPlaybackDevice';
 export const IAUDIODEVICEMANAGER_FOLLOWSYSTEMRECORDINGDEVICE =
   'AudioDeviceManager_followSystemRecordingDevice';
 export const IAUDIODEVICEMANAGER_FOLLOWSYSTEMLOOPBACKDEVICE =
   'AudioDeviceManager_followSystemLoopbackDevice';
+export const IAUDIODEVICEMANAGER_RELEASE = 'AudioDeviceManager_release';

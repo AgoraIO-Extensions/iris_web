@@ -40,13 +40,13 @@ afterEach(() => {
 });
 
 describe('MusicChartCollection', () => {
-  test('MusicChartCollection impl call', async () => {
+  test('MusicChartCollection_getCount impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MusicChartCollection',
+      'MusicChartCollection_getCount',
       JSON.stringify(nParam),
       0,
       '',
@@ -94,13 +94,13 @@ describe('MusicChartCollection', () => {
   });
 });
 describe('MusicCollection', () => {
-  test('MusicCollection impl call', async () => {
+  test('MusicCollection_getCount impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MusicCollection',
+      'MusicCollection_getCount',
       JSON.stringify(nParam),
       0,
       '',
@@ -119,13 +119,13 @@ describe('MusicCollection', () => {
     );
   });
 
-  test('MusicCollection impl call', async () => {
+  test('MusicCollection_getTotal impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MusicCollection',
+      'MusicCollection_getTotal',
       JSON.stringify(nParam),
       0,
       '',
@@ -144,13 +144,13 @@ describe('MusicCollection', () => {
     );
   });
 
-  test('MusicCollection impl call', async () => {
+  test('MusicCollection_getPage impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MusicCollection',
+      'MusicCollection_getPage',
       JSON.stringify(nParam),
       0,
       '',
@@ -169,13 +169,13 @@ describe('MusicCollection', () => {
     );
   });
 
-  test('MusicCollection impl call', async () => {
+  test('MusicCollection_getPageSize impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MusicCollection',
+      'MusicCollection_getPageSize',
       JSON.stringify(nParam),
       0,
       '',
@@ -411,13 +411,13 @@ describe('IMusicContentCenter', () => {
     );
   });
 
-  test('MusicContentCenter impl call', async () => {
+  test('MusicContentCenter_release impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MusicContentCenter',
+      'MusicContentCenter_release',
       JSON.stringify(nParam),
       0,
       '',
@@ -464,13 +464,13 @@ describe('IMusicContentCenter', () => {
     );
   });
 
-  test('MusicContentCenter impl call', async () => {
+  test('MusicContentCenter_unregisterEventHandler impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MusicContentCenter',
+      'MusicContentCenter_unregisterEventHandler',
       JSON.stringify(nParam),
       0,
       '',
@@ -490,13 +490,13 @@ describe('IMusicContentCenter', () => {
     );
   });
 
-  test('MusicContentCenter impl call', async () => {
+  test('MusicContentCenter_createMusicPlayer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MusicContentCenter',
+      'MusicContentCenter_createMusicPlayer',
       JSON.stringify(nParam),
       0,
       '',

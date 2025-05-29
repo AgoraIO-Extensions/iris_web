@@ -40,13 +40,16 @@ afterEach(() => {
 });
 
 describe('IAudioDeviceManager', () => {
-  test('AudioDeviceManager impl call', async () => {
+  test('AudioDeviceManager_enumeratePlaybackDevices impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl,
+        'enumeratePlaybackDevices'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'AudioDeviceManager',
+      'AudioDeviceManager_enumeratePlaybackDevices',
       JSON.stringify(nParam),
       0,
       '',
@@ -57,22 +60,24 @@ describe('IAudioDeviceManager', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl
-        ?.enumeratePlaybackDevices
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .enumeratePlaybackDevices
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl
+        .enumeratePlaybackDevices
+    ).toBeCalledWith();
   });
 
-  test('AudioDeviceManager impl call', async () => {
+  test('AudioDeviceManager_enumerateRecordingDevices impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl,
+        'enumerateRecordingDevices'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'AudioDeviceManager',
+      'AudioDeviceManager_enumerateRecordingDevices',
       JSON.stringify(nParam),
       0,
       '',
@@ -83,13 +88,12 @@ describe('IAudioDeviceManager', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl
-        ?.enumerateRecordingDevices
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .enumerateRecordingDevices
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl
+        .enumerateRecordingDevices
+    ).toBeCalledWith();
   });
 
   test('AudioDeviceManager_setPlaybackDevice parameter', async () => {
@@ -632,13 +636,13 @@ describe('IAudioDeviceManager', () => {
     );
   });
 
-  test('AudioDeviceManager impl call', async () => {
+  test('AudioDeviceManager_stopPlaybackDeviceTest impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'AudioDeviceManager',
+      'AudioDeviceManager_stopPlaybackDeviceTest',
       JSON.stringify(nParam),
       0,
       '',
@@ -686,13 +690,13 @@ describe('IAudioDeviceManager', () => {
     );
   });
 
-  test('AudioDeviceManager impl call', async () => {
+  test('AudioDeviceManager_stopRecordingDeviceTest impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'AudioDeviceManager',
+      'AudioDeviceManager_stopRecordingDeviceTest',
       JSON.stringify(nParam),
       0,
       '',
@@ -740,13 +744,13 @@ describe('IAudioDeviceManager', () => {
     );
   });
 
-  test('AudioDeviceManager impl call', async () => {
+  test('AudioDeviceManager_stopAudioDeviceLoopbackTest impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'AudioDeviceManager',
+      'AudioDeviceManager_stopAudioDeviceLoopbackTest',
       JSON.stringify(nParam),
       0,
       '',
@@ -850,13 +854,16 @@ describe('IAudioDeviceManager', () => {
     );
   });
 
-  test('AudioDeviceManager impl call', async () => {
+  test('AudioDeviceManager_release impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl,
+        'release'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'AudioDeviceManager',
+      'AudioDeviceManager_release',
       JSON.stringify(nParam),
       0,
       '',
@@ -866,12 +873,10 @@ describe('IAudioDeviceManager', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl?.release
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+      irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl.release
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('AudioDeviceManager')._impl.release
+    ).toBeCalledWith();
   });
 });

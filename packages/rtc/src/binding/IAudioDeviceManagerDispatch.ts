@@ -18,14 +18,12 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   }
   // @ts-ignore
   enumeratePlaybackDevices(): CallApiReturnType {
-    AgoraConsole.warn('AudioDeviceManager not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    return this._impl.enumeratePlaybackDevices();
   }
 
   // @ts-ignore
   enumerateRecordingDevices(): CallApiReturnType {
-    AgoraConsole.warn('AudioDeviceManager not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    return this._impl.enumerateRecordingDevices();
   }
 
   // @ts-ignore
@@ -174,7 +172,9 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
 
   // @ts-ignore
   stopPlaybackDeviceTest(): CallApiReturnType {
-    AgoraConsole.warn('AudioDeviceManager not supported in this platform!');
+    AgoraConsole.warn(
+      'AudioDeviceManager_stopPlaybackDeviceTest not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -188,7 +188,9 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
 
   // @ts-ignore
   stopRecordingDeviceTest(): CallApiReturnType {
-    AgoraConsole.warn('AudioDeviceManager not supported in this platform!');
+    AgoraConsole.warn(
+      'AudioDeviceManager_stopRecordingDeviceTest not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -202,7 +204,9 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
 
   // @ts-ignore
   stopAudioDeviceLoopbackTest(): CallApiReturnType {
-    AgoraConsole.warn('AudioDeviceManager not supported in this platform!');
+    AgoraConsole.warn(
+      'AudioDeviceManager_stopAudioDeviceLoopbackTest not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -232,7 +236,6 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
 
   // @ts-ignore
   release(): CallApiReturnType {
-    AgoraConsole.warn('AudioDeviceManager not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    return this._impl.release();
   }
 }

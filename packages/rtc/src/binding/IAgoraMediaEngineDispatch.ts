@@ -175,7 +175,7 @@ export class IMediaEngineDispatch implements IMediaEngine {
 
   // @ts-ignore
   release(): CallApiReturnType {
-    AgoraConsole.warn('MediaEngine not supported in this platform!');
+    AgoraConsole.warn('MediaEngine_release not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }

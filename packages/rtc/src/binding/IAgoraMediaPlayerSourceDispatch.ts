@@ -76,14 +76,14 @@ export class IMediaPlayerSourceObserver {
 
   onCompleted(): void {
     AgoraConsole.warn(
-      'MediaPlayerSourceObserver not supported in this platform!'
+      'MediaPlayerSourceObserver_onCompleted not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onAgoraCDNTokenWillExpire(): void {
     AgoraConsole.warn(
-      'MediaPlayerSourceObserver not supported in this platform!'
+      'MediaPlayerSourceObserver_onAgoraCDNTokenWillExpire not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

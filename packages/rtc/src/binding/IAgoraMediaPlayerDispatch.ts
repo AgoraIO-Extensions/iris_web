@@ -18,7 +18,9 @@ export class IMediaPlayerDispatch implements IMediaPlayer {
   }
   // @ts-ignore
   getMediaPlayerId(): CallApiReturnType {
-    AgoraConsole.warn('MediaPlayer not supported in this platform!');
+    AgoraConsole.warn(
+      'MediaPlayer_getMediaPlayerId not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -38,25 +40,25 @@ export class IMediaPlayerDispatch implements IMediaPlayer {
 
   // @ts-ignore
   play(): CallApiReturnType {
-    AgoraConsole.warn('MediaPlayer not supported in this platform!');
+    AgoraConsole.warn('MediaPlayer_play not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   pause(): CallApiReturnType {
-    AgoraConsole.warn('MediaPlayer not supported in this platform!');
+    AgoraConsole.warn('MediaPlayer_pause not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   stop(): CallApiReturnType {
-    AgoraConsole.warn('MediaPlayer not supported in this platform!');
+    AgoraConsole.warn('MediaPlayer_stop not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   resume(): CallApiReturnType {
-    AgoraConsole.warn('MediaPlayer not supported in this platform!');
+    AgoraConsole.warn('MediaPlayer_resume not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -172,7 +174,7 @@ export class IMediaPlayerDispatch implements IMediaPlayer {
 
   // @ts-ignore
   getState(): CallApiReturnType {
-    AgoraConsole.warn('MediaPlayer not supported in this platform!');
+    AgoraConsole.warn('MediaPlayer_getState not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -320,13 +322,15 @@ export class IMediaPlayerDispatch implements IMediaPlayer {
 
   // @ts-ignore
   getPlayerSdkVersion(): CallApiReturnType {
-    AgoraConsole.warn('MediaPlayer not supported in this platform!');
+    AgoraConsole.warn(
+      'MediaPlayer_getPlayerSdkVersion not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   getPlaySrc(): CallApiReturnType {
-    AgoraConsole.warn('MediaPlayer not supported in this platform!');
+    AgoraConsole.warn('MediaPlayer_getPlaySrc not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -340,7 +344,9 @@ export class IMediaPlayerDispatch implements IMediaPlayer {
 
   // @ts-ignore
   getAgoraCDNLineCount(): CallApiReturnType {
-    AgoraConsole.warn('MediaPlayer not supported in this platform!');
+    AgoraConsole.warn(
+      'MediaPlayer_getAgoraCDNLineCount not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -354,7 +360,9 @@ export class IMediaPlayerDispatch implements IMediaPlayer {
 
   // @ts-ignore
   getCurrentAgoraCDNIndex(): CallApiReturnType {
-    AgoraConsole.warn('MediaPlayer not supported in this platform!');
+    AgoraConsole.warn(
+      'MediaPlayer_getCurrentAgoraCDNIndex not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -435,7 +443,7 @@ export class IMediaPlayerCacheManagerDispatch
   // @ts-ignore
   removeAllCaches(): CallApiReturnType {
     AgoraConsole.warn(
-      'MediaPlayerCacheManager not supported in this platform!'
+      'MediaPlayerCacheManager_removeAllCaches not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -443,7 +451,7 @@ export class IMediaPlayerCacheManagerDispatch
   // @ts-ignore
   removeOldCache(): CallApiReturnType {
     AgoraConsole.warn(
-      'MediaPlayerCacheManager not supported in this platform!'
+      'MediaPlayerCacheManager_removeOldCache not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -499,7 +507,7 @@ export class IMediaPlayerCacheManagerDispatch
   // @ts-ignore
   getMaxCacheFileCount(): CallApiReturnType {
     AgoraConsole.warn(
-      'MediaPlayerCacheManager not supported in this platform!'
+      'MediaPlayerCacheManager_getMaxCacheFileCount not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -507,7 +515,7 @@ export class IMediaPlayerCacheManagerDispatch
   // @ts-ignore
   getMaxCacheFileSize(): CallApiReturnType {
     AgoraConsole.warn(
-      'MediaPlayerCacheManager not supported in this platform!'
+      'MediaPlayerCacheManager_getMaxCacheFileSize not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -515,7 +523,7 @@ export class IMediaPlayerCacheManagerDispatch
   // @ts-ignore
   getCacheFileCount(): CallApiReturnType {
     AgoraConsole.warn(
-      'MediaPlayerCacheManager not supported in this platform!'
+      'MediaPlayerCacheManager_getCacheFileCount not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

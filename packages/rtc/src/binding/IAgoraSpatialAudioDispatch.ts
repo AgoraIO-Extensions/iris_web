@@ -19,7 +19,9 @@ export class IBaseSpatialAudioEngineDispatch
   }
   // @ts-ignore
   release(): CallApiReturnType {
-    AgoraConsole.warn('BaseSpatialAudioEngine not supported in this platform!');
+    AgoraConsole.warn(
+      'BaseSpatialAudioEngine_release not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -172,7 +174,7 @@ export class ILocalSpatialAudioEngineDispatch
   // @ts-ignore
   clearRemotePositions(): CallApiReturnType {
     AgoraConsole.warn(
-      'LocalSpatialAudioEngine not supported in this platform!'
+      'LocalSpatialAudioEngine_clearRemotePositions not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

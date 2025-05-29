@@ -25,7 +25,9 @@ export class MusicChartCollectionDispatch implements MusicChartCollection {
   }
   // @ts-ignore
   getCount(): CallApiReturnType {
-    AgoraConsole.warn('MusicChartCollection not supported in this platform!');
+    AgoraConsole.warn(
+      'MusicChartCollection_getCount not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -46,25 +48,33 @@ export class MusicCollectionDispatch implements MusicCollection {
   }
   // @ts-ignore
   getCount(): CallApiReturnType {
-    AgoraConsole.warn('MusicCollection not supported in this platform!');
+    AgoraConsole.warn(
+      'MusicCollection_getCount not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   getTotal(): CallApiReturnType {
-    AgoraConsole.warn('MusicCollection not supported in this platform!');
+    AgoraConsole.warn(
+      'MusicCollection_getTotal not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   getPage(): CallApiReturnType {
-    AgoraConsole.warn('MusicCollection not supported in this platform!');
+    AgoraConsole.warn(
+      'MusicCollection_getPage not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   getPageSize(): CallApiReturnType {
-    AgoraConsole.warn('MusicCollection not supported in this platform!');
+    AgoraConsole.warn(
+      'MusicCollection_getPageSize not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -188,7 +198,9 @@ export class IMusicContentCenterDispatch implements IMusicContentCenter {
 
   // @ts-ignore
   release(): CallApiReturnType {
-    AgoraConsole.warn('MusicContentCenter not supported in this platform!');
+    AgoraConsole.warn(
+      'MusicContentCenter_release not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
@@ -202,13 +214,17 @@ export class IMusicContentCenterDispatch implements IMusicContentCenter {
 
   // @ts-ignore
   unregisterEventHandler(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('MusicContentCenter not supported in this platform!');
+    AgoraConsole.warn(
+      'MusicContentCenter_unregisterEventHandler not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   createMusicPlayer(): CallApiReturnType {
-    AgoraConsole.warn('MusicContentCenter not supported in this platform!');
+    AgoraConsole.warn(
+      'MusicContentCenter_createMusicPlayer not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 

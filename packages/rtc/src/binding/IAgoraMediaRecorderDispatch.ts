@@ -30,7 +30,9 @@ export class IMediaRecorderDispatch implements IMediaRecorder {
 
   // @ts-ignore
   stopRecording(): CallApiReturnType {
-    AgoraConsole.warn('MediaRecorder not supported in this platform!');
+    AgoraConsole.warn(
+      'MediaRecorder_stopRecording not supported in this platform!'
+    );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }

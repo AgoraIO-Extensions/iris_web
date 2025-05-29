@@ -95,13 +95,13 @@ describe('IMediaRecorder', () => {
     );
   });
 
-  test('MediaRecorder impl call', async () => {
+  test('MediaRecorder_stopRecording impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaRecorder',
+      'MediaRecorder_stopRecording',
       JSON.stringify(nParam),
       0,
       '',

@@ -604,13 +604,13 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine impl call', async () => {
+  test('MediaEngine_release impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine',
+      'MediaEngine_release',
       JSON.stringify(nParam),
       0,
       '',

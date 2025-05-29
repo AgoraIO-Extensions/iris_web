@@ -13,23 +13,24 @@ export function isMatch(str: string, type: string): boolean {
   return result;
 }
 
-function cutStringByIndex(str: string, index: number): string {
-  if (index > 0) {
+function cutStringByIndex(str: string, index: number, cutNumber: number): string {
+  const underscoreCount = str.split('_').length - 1;
+  if (index > 0 && underscoreCount >= cutNumber) {
     return str.substring(0, index);
-  }else{
+  } else {
     return str;
   }
 }
 
 export function revertIrisApiId(
   memberFunc: MemberFunction
-) :MemberFunction {
+): MemberFunction {
   let value = getIrisApiIdValue(memberFunc, true);
-  memberFunc.name = cutStringByIndex(value, value.lastIndexOf('_'));
+  memberFunc.name = cutStringByIndex(value, value.lastIndexOf('_'), 1);
   const originalKey = memberFunc.user_data.IrisApiIdParser.key;
   const originalValue = memberFunc.user_data.IrisApiIdParser.value;
-  const cutKey = cutStringByIndex(originalKey, originalKey.lastIndexOf('_'));
-  const cutValue = cutStringByIndex(originalValue, originalValue.lastIndexOf('_'));
+  const cutKey = cutStringByIndex(originalKey, originalKey.lastIndexOf('_'), 2);
+  const cutValue = cutStringByIndex(originalValue, originalValue.lastIndexOf('_'), 2);
   memberFunc.user_data.IrisApiIdParser.key = cutKey;
   memberFunc.user_data.IrisApiIdParser.value = cutValue;
   return memberFunc;

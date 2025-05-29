@@ -136,7 +136,7 @@ describe('IMediaPlayerSourceObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('MediaPlayerSourceObserver impl call', async () => {
+  test('MediaPlayerSourceObserver_onCompleted impl call', async () => {
     let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
@@ -152,7 +152,7 @@ describe('IMediaPlayerSourceObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('MediaPlayerSourceObserver impl call', async () => {
+  test('MediaPlayerSourceObserver_onAgoraCDNTokenWillExpire impl call', async () => {
     let eventHandler = new bindingAPI.IMediaPlayerSourceObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
