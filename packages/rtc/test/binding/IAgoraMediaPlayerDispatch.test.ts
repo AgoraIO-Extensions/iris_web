@@ -20,7 +20,7 @@ beforeAll(async () => {
     context: 'test',
   };
   let apiParam = new IrisCore.EventParam(
-    'RtcEngine_initialize_0320339',
+    'RtcEngine_initialize',
     JSON.stringify(nParam),
     0,
     '',
@@ -40,13 +40,13 @@ afterEach(() => {
 });
 
 describe('IMediaPlayer', () => {
-  test('MediaPlayer_getMediaPlayerId impl call', async () => {
+  test('MediaPlayer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getMediaPlayerId',
+      'MediaPlayer',
       JSON.stringify(nParam),
       0,
       '',
@@ -65,7 +65,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_open_e43f201 impl call', async () => {
+  test('MediaPlayer_open impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -74,7 +74,7 @@ describe('IMediaPlayer', () => {
       startPos: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_open_e43f201',
+      'MediaPlayer_open',
       JSON.stringify(nParam),
       0,
       '',
@@ -84,7 +84,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.open_e43f201
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.open
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -93,7 +93,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_openWithMediaSource_3c11499 impl call', async () => {
+  test('MediaPlayer_openWithMediaSource impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -101,7 +101,7 @@ describe('IMediaPlayer', () => {
       source: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_openWithMediaSource_3c11499',
+      'MediaPlayer_openWithMediaSource',
       JSON.stringify(nParam),
       0,
       '',
@@ -112,7 +112,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.openWithMediaSource_3c11499
+        ?.openWithMediaSource
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -121,13 +121,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_play impl call', async () => {
+  test('MediaPlayer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_play',
+      'MediaPlayer',
       JSON.stringify(nParam),
       0,
       '',
@@ -146,13 +146,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_pause impl call', async () => {
+  test('MediaPlayer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_pause',
+      'MediaPlayer',
       JSON.stringify(nParam),
       0,
       '',
@@ -171,13 +171,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_stop impl call', async () => {
+  test('MediaPlayer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_stop',
+      'MediaPlayer',
       JSON.stringify(nParam),
       0,
       '',
@@ -196,13 +196,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_resume impl call', async () => {
+  test('MediaPlayer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_resume',
+      'MediaPlayer',
       JSON.stringify(nParam),
       0,
       '',
@@ -221,7 +221,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_seek_f631116 impl call', async () => {
+  test('MediaPlayer_seek impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -229,7 +229,7 @@ describe('IMediaPlayer', () => {
       newPos: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_seek_f631116',
+      'MediaPlayer_seek',
       JSON.stringify(nParam),
       0,
       '',
@@ -239,7 +239,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.seek_f631116
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.seek
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -248,7 +248,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_setAudioPitch_46f8ab7 impl call', async () => {
+  test('MediaPlayer_setAudioPitch impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -256,7 +256,7 @@ describe('IMediaPlayer', () => {
       pitch: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setAudioPitch_46f8ab7',
+      'MediaPlayer_setAudioPitch',
       JSON.stringify(nParam),
       0,
       '',
@@ -266,8 +266,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.setAudioPitch_46f8ab7
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.setAudioPitch
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -276,7 +275,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getDuration_b12f121 impl call', async () => {
+  test('MediaPlayer_getDuration impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -284,7 +283,7 @@ describe('IMediaPlayer', () => {
       duration: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getDuration_b12f121',
+      'MediaPlayer_getDuration',
       JSON.stringify(nParam),
       0,
       '',
@@ -294,8 +293,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.getDuration_b12f121
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.getDuration
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -304,7 +302,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getPlayPosition_b12f121 impl call', async () => {
+  test('MediaPlayer_getPlayPosition impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -312,7 +310,7 @@ describe('IMediaPlayer', () => {
       pos: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getPlayPosition_b12f121',
+      'MediaPlayer_getPlayPosition',
       JSON.stringify(nParam),
       0,
       '',
@@ -322,8 +320,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.getPlayPosition_b12f121
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.getPlayPosition
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -332,7 +329,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getStreamCount_b12f121 impl call', async () => {
+  test('MediaPlayer_getStreamCount impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -340,7 +337,7 @@ describe('IMediaPlayer', () => {
       count: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getStreamCount_b12f121',
+      'MediaPlayer_getStreamCount',
       JSON.stringify(nParam),
       0,
       '',
@@ -350,8 +347,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.getStreamCount_b12f121
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.getStreamCount
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -360,7 +356,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getStreamInfo_0fa63fa impl call', async () => {
+  test('MediaPlayer_getStreamInfo impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -369,7 +365,7 @@ describe('IMediaPlayer', () => {
       info: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getStreamInfo_0fa63fa',
+      'MediaPlayer_getStreamInfo',
       JSON.stringify(nParam),
       0,
       '',
@@ -379,8 +375,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.getStreamInfo_0fa63fa
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.getStreamInfo
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -389,7 +384,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_setLoopCount_46f8ab7 impl call', async () => {
+  test('MediaPlayer_setLoopCount impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -397,7 +392,7 @@ describe('IMediaPlayer', () => {
       loopCount: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setLoopCount_46f8ab7',
+      'MediaPlayer_setLoopCount',
       JSON.stringify(nParam),
       0,
       '',
@@ -407,8 +402,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.setLoopCount_46f8ab7
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.setLoopCount
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -417,7 +411,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_setPlaybackSpeed_46f8ab7 impl call', async () => {
+  test('MediaPlayer_setPlaybackSpeed impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -425,7 +419,7 @@ describe('IMediaPlayer', () => {
       speed: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setPlaybackSpeed_46f8ab7',
+      'MediaPlayer_setPlaybackSpeed',
       JSON.stringify(nParam),
       0,
       '',
@@ -435,8 +429,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.setPlaybackSpeed_46f8ab7
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.setPlaybackSpeed
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -445,7 +438,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_selectAudioTrack_46f8ab7 impl call', async () => {
+  test('MediaPlayer_selectAudioTrack impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -453,7 +446,7 @@ describe('IMediaPlayer', () => {
       index: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_selectAudioTrack_46f8ab7',
+      'MediaPlayer_selectAudioTrack',
       JSON.stringify(nParam),
       0,
       '',
@@ -463,8 +456,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.selectAudioTrack_46f8ab7
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.selectAudioTrack
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -473,7 +465,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_setPlayerOption_4d05d29 impl call', async () => {
+  test('MediaPlayer_setPlayerOption impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -482,7 +474,7 @@ describe('IMediaPlayer', () => {
       value: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setPlayerOption_4d05d29',
+      'MediaPlayer_setPlayerOption',
       JSON.stringify(nParam),
       0,
       '',
@@ -492,8 +484,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.setPlayerOption_4d05d29
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.setPlayerOption
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -502,7 +493,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_setPlayerOption_ccad422 impl call', async () => {
+  test('MediaPlayer_setPlayerOption impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -511,7 +502,7 @@ describe('IMediaPlayer', () => {
       value: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setPlayerOption_ccad422',
+      'MediaPlayer_setPlayerOption',
       JSON.stringify(nParam),
       0,
       '',
@@ -521,8 +512,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.setPlayerOption_ccad422
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.setPlayerOption2
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -531,7 +521,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_takeScreenshot_3a2037f impl call', async () => {
+  test('MediaPlayer_takeScreenshot impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -539,7 +529,7 @@ describe('IMediaPlayer', () => {
       filename: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_takeScreenshot_3a2037f',
+      'MediaPlayer_takeScreenshot',
       JSON.stringify(nParam),
       0,
       '',
@@ -549,8 +539,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.takeScreenshot_3a2037f
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.takeScreenshot
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -559,7 +548,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_selectInternalSubtitle_46f8ab7 impl call', async () => {
+  test('MediaPlayer_selectInternalSubtitle impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -567,7 +556,7 @@ describe('IMediaPlayer', () => {
       index: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_selectInternalSubtitle_46f8ab7',
+      'MediaPlayer_selectInternalSubtitle',
       JSON.stringify(nParam),
       0,
       '',
@@ -578,7 +567,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.selectInternalSubtitle_46f8ab7
+        ?.selectInternalSubtitle
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -587,7 +576,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_setExternalSubtitle_3a2037f impl call', async () => {
+  test('MediaPlayer_setExternalSubtitle impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -595,7 +584,7 @@ describe('IMediaPlayer', () => {
       url: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setExternalSubtitle_3a2037f',
+      'MediaPlayer_setExternalSubtitle',
       JSON.stringify(nParam),
       0,
       '',
@@ -606,7 +595,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.setExternalSubtitle_3a2037f
+        ?.setExternalSubtitle
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -615,13 +604,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getState impl call', async () => {
+  test('MediaPlayer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getState',
+      'MediaPlayer',
       JSON.stringify(nParam),
       0,
       '',
@@ -640,7 +629,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_mute_5039d15 impl call', async () => {
+  test('MediaPlayer_mute impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -648,7 +637,7 @@ describe('IMediaPlayer', () => {
       muted: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_mute_5039d15',
+      'MediaPlayer_mute',
       JSON.stringify(nParam),
       0,
       '',
@@ -658,7 +647,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.mute_5039d15
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.mute
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -667,7 +656,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getMute_c93e9d4 impl call', async () => {
+  test('MediaPlayer_getMute impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -675,7 +664,7 @@ describe('IMediaPlayer', () => {
       muted: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getMute_c93e9d4',
+      'MediaPlayer_getMute',
       JSON.stringify(nParam),
       0,
       '',
@@ -685,7 +674,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.getMute_c93e9d4
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.getMute
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -694,7 +683,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_adjustPlayoutVolume_46f8ab7 impl call', async () => {
+  test('MediaPlayer_adjustPlayoutVolume impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -702,7 +691,7 @@ describe('IMediaPlayer', () => {
       volume: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_adjustPlayoutVolume_46f8ab7',
+      'MediaPlayer_adjustPlayoutVolume',
       JSON.stringify(nParam),
       0,
       '',
@@ -713,7 +702,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.adjustPlayoutVolume_46f8ab7
+        ?.adjustPlayoutVolume
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -722,7 +711,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getPlayoutVolume_9cfaa7e impl call', async () => {
+  test('MediaPlayer_getPlayoutVolume impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -730,7 +719,34 @@ describe('IMediaPlayer', () => {
       volume: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getPlayoutVolume_9cfaa7e',
+      'MediaPlayer_getPlayoutVolume',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.getPlayoutVolume
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
+  test('MediaPlayer_adjustPublishSignalVolume impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      volume: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MediaPlayer_adjustPublishSignalVolume',
       JSON.stringify(nParam),
       0,
       '',
@@ -741,7 +757,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.getPlayoutVolume_9cfaa7e
+        ?.adjustPublishSignalVolume
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -750,7 +766,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_adjustPublishSignalVolume_46f8ab7 impl call', async () => {
+  test('MediaPlayer_getPublishSignalVolume impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -758,7 +774,7 @@ describe('IMediaPlayer', () => {
       volume: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_adjustPublishSignalVolume_46f8ab7',
+      'MediaPlayer_getPublishSignalVolume',
       JSON.stringify(nParam),
       0,
       '',
@@ -769,7 +785,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.adjustPublishSignalVolume_46f8ab7
+        ?.getPublishSignalVolume
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -778,35 +794,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getPublishSignalVolume_9cfaa7e impl call', async () => {
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
-    let nParam = {
-      volume: 'test',
-    };
-    let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getPublishSignalVolume_9cfaa7e',
-      JSON.stringify(nParam),
-      0,
-      '',
-      ['test'],
-      [],
-      1
-    );
-    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
-    expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.getPublishSignalVolume_9cfaa7e
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
-  });
-
-  test('MediaPlayer_setView_cb1a81f impl call', async () => {
+  test('MediaPlayer_setView impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -814,7 +802,7 @@ describe('IMediaPlayer', () => {
       view: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setView_cb1a81f',
+      'MediaPlayer_setView',
       JSON.stringify(nParam),
       0,
       '',
@@ -824,7 +812,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.setView_cb1a81f
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.setView
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -833,7 +821,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_setRenderMode_bedb5ae impl call', async () => {
+  test('MediaPlayer_setRenderMode impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -841,7 +829,7 @@ describe('IMediaPlayer', () => {
       renderMode: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setRenderMode_bedb5ae',
+      'MediaPlayer_setRenderMode',
       JSON.stringify(nParam),
       0,
       '',
@@ -851,8 +839,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.setRenderMode_bedb5ae
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.setRenderMode
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -861,7 +848,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_registerPlayerSourceObserver_15621d7 impl call', async () => {
+  test('MediaPlayer_registerPlayerSourceObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -869,7 +856,7 @@ describe('IMediaPlayer', () => {
       observer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_registerPlayerSourceObserver_15621d7',
+      'MediaPlayer_registerPlayerSourceObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -880,7 +867,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.registerPlayerSourceObserver_15621d7
+        ?.registerPlayerSourceObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -889,7 +876,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_unregisterPlayerSourceObserver_15621d7 impl call', async () => {
+  test('MediaPlayer_unregisterPlayerSourceObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -897,7 +884,7 @@ describe('IMediaPlayer', () => {
       observer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_unregisterPlayerSourceObserver_15621d7',
+      'MediaPlayer_unregisterPlayerSourceObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -908,7 +895,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.unregisterPlayerSourceObserver_15621d7
+        ?.unregisterPlayerSourceObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -917,7 +904,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_registerAudioFrameObserver_89ab9b5 impl call', async () => {
+  test('MediaPlayer_registerAudioFrameObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -925,7 +912,7 @@ describe('IMediaPlayer', () => {
       observer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_registerAudioFrameObserver_89ab9b5',
+      'MediaPlayer_registerAudioFrameObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -936,7 +923,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.registerAudioFrameObserver_89ab9b5
+        ?.registerAudioFrameObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -945,7 +932,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_registerAudioFrameObserver_a5b510b impl call', async () => {
+  test('MediaPlayer_registerAudioFrameObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -954,7 +941,7 @@ describe('IMediaPlayer', () => {
       mode: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_registerAudioFrameObserver_a5b510b',
+      'MediaPlayer_registerAudioFrameObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -965,7 +952,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.registerAudioFrameObserver_a5b510b
+        ?.registerAudioFrameObserver2
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -974,7 +961,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_unregisterAudioFrameObserver_89ab9b5 impl call', async () => {
+  test('MediaPlayer_unregisterAudioFrameObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -982,7 +969,7 @@ describe('IMediaPlayer', () => {
       observer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_unregisterAudioFrameObserver_89ab9b5',
+      'MediaPlayer_unregisterAudioFrameObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -993,7 +980,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.unregisterAudioFrameObserver_89ab9b5
+        ?.unregisterAudioFrameObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1002,7 +989,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_registerVideoFrameObserver_833bd8d impl call', async () => {
+  test('MediaPlayer_registerVideoFrameObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1010,7 +997,7 @@ describe('IMediaPlayer', () => {
       observer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_registerVideoFrameObserver_833bd8d',
+      'MediaPlayer_registerVideoFrameObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -1021,7 +1008,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.registerVideoFrameObserver_833bd8d
+        ?.registerVideoFrameObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1030,7 +1017,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_unregisterVideoFrameObserver_5165d4c impl call', async () => {
+  test('MediaPlayer_unregisterVideoFrameObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1038,7 +1025,7 @@ describe('IMediaPlayer', () => {
       observer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_unregisterVideoFrameObserver_5165d4c',
+      'MediaPlayer_unregisterVideoFrameObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -1049,7 +1036,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.unregisterVideoFrameObserver_5165d4c
+        ?.unregisterVideoFrameObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1058,7 +1045,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_registerMediaPlayerAudioSpectrumObserver_226bb48 impl call', async () => {
+  test('MediaPlayer_registerMediaPlayerAudioSpectrumObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1067,7 +1054,7 @@ describe('IMediaPlayer', () => {
       intervalInMS: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_registerMediaPlayerAudioSpectrumObserver_226bb48',
+      'MediaPlayer_registerMediaPlayerAudioSpectrumObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -1078,7 +1065,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.registerMediaPlayerAudioSpectrumObserver_226bb48
+        ?.registerMediaPlayerAudioSpectrumObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1087,7 +1074,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_unregisterMediaPlayerAudioSpectrumObserver_09064ce impl call', async () => {
+  test('MediaPlayer_unregisterMediaPlayerAudioSpectrumObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1095,7 +1082,7 @@ describe('IMediaPlayer', () => {
       observer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_unregisterMediaPlayerAudioSpectrumObserver_09064ce',
+      'MediaPlayer_unregisterMediaPlayerAudioSpectrumObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -1106,7 +1093,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.unregisterMediaPlayerAudioSpectrumObserver_09064ce
+        ?.unregisterMediaPlayerAudioSpectrumObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1115,7 +1102,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_setAudioDualMonoMode_30c9672 impl call', async () => {
+  test('MediaPlayer_setAudioDualMonoMode impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1123,7 +1110,7 @@ describe('IMediaPlayer', () => {
       mode: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setAudioDualMonoMode_30c9672',
+      'MediaPlayer_setAudioDualMonoMode',
       JSON.stringify(nParam),
       0,
       '',
@@ -1134,7 +1121,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.setAudioDualMonoMode_30c9672
+        ?.setAudioDualMonoMode
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1143,13 +1130,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getPlayerSdkVersion impl call', async () => {
+  test('MediaPlayer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getPlayerSdkVersion',
+      'MediaPlayer',
       JSON.stringify(nParam),
       0,
       '',
@@ -1169,13 +1156,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getPlaySrc impl call', async () => {
+  test('MediaPlayer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getPlaySrc',
+      'MediaPlayer',
       JSON.stringify(nParam),
       0,
       '',
@@ -1194,7 +1181,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_openWithAgoraCDNSrc_e43f201 impl call', async () => {
+  test('MediaPlayer_openWithAgoraCDNSrc impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1203,7 +1190,7 @@ describe('IMediaPlayer', () => {
       startPos: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_openWithAgoraCDNSrc_e43f201',
+      'MediaPlayer_openWithAgoraCDNSrc',
       JSON.stringify(nParam),
       0,
       '',
@@ -1214,7 +1201,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.openWithAgoraCDNSrc_e43f201
+        ?.openWithAgoraCDNSrc
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1223,13 +1210,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getAgoraCDNLineCount impl call', async () => {
+  test('MediaPlayer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getAgoraCDNLineCount',
+      'MediaPlayer',
       JSON.stringify(nParam),
       0,
       '',
@@ -1249,7 +1236,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_switchAgoraCDNLineByIndex_46f8ab7 impl call', async () => {
+  test('MediaPlayer_switchAgoraCDNLineByIndex impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1257,7 +1244,7 @@ describe('IMediaPlayer', () => {
       index: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_switchAgoraCDNLineByIndex_46f8ab7',
+      'MediaPlayer_switchAgoraCDNLineByIndex',
       JSON.stringify(nParam),
       0,
       '',
@@ -1268,7 +1255,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.switchAgoraCDNLineByIndex_46f8ab7
+        ?.switchAgoraCDNLineByIndex
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1277,13 +1264,13 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_getCurrentAgoraCDNIndex impl call', async () => {
+  test('MediaPlayer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_getCurrentAgoraCDNIndex',
+      'MediaPlayer',
       JSON.stringify(nParam),
       0,
       '',
@@ -1303,7 +1290,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_enableAutoSwitchAgoraCDN_5039d15 impl call', async () => {
+  test('MediaPlayer_enableAutoSwitchAgoraCDN impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1311,7 +1298,7 @@ describe('IMediaPlayer', () => {
       enable: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_enableAutoSwitchAgoraCDN_5039d15',
+      'MediaPlayer_enableAutoSwitchAgoraCDN',
       JSON.stringify(nParam),
       0,
       '',
@@ -1322,7 +1309,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.enableAutoSwitchAgoraCDN_5039d15
+        ?.enableAutoSwitchAgoraCDN
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1331,7 +1318,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_renewAgoraCDNSrcToken_e43f201 impl call', async () => {
+  test('MediaPlayer_renewAgoraCDNSrcToken impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1340,7 +1327,7 @@ describe('IMediaPlayer', () => {
       ts: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_renewAgoraCDNSrcToken_e43f201',
+      'MediaPlayer_renewAgoraCDNSrcToken',
       JSON.stringify(nParam),
       0,
       '',
@@ -1351,7 +1338,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.renewAgoraCDNSrcToken_e43f201
+        ?.renewAgoraCDNSrcToken
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1360,7 +1347,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_switchAgoraCDNSrc_7a174df impl call', async () => {
+  test('MediaPlayer_switchAgoraCDNSrc impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1369,7 +1356,7 @@ describe('IMediaPlayer', () => {
       syncPts: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_switchAgoraCDNSrc_7a174df',
+      'MediaPlayer_switchAgoraCDNSrc',
       JSON.stringify(nParam),
       0,
       '',
@@ -1380,7 +1367,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.switchAgoraCDNSrc_7a174df
+        ?.switchAgoraCDNSrc
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1389,7 +1376,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_switchSrc_7a174df impl call', async () => {
+  test('MediaPlayer_switchSrc impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1398,7 +1385,7 @@ describe('IMediaPlayer', () => {
       syncPts: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_switchSrc_7a174df',
+      'MediaPlayer_switchSrc',
       JSON.stringify(nParam),
       0,
       '',
@@ -1408,8 +1395,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.switchSrc_7a174df
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.switchSrc
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1418,7 +1404,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_preloadSrc_e43f201 impl call', async () => {
+  test('MediaPlayer_preloadSrc impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1427,7 +1413,7 @@ describe('IMediaPlayer', () => {
       startPos: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_preloadSrc_e43f201',
+      'MediaPlayer_preloadSrc',
       JSON.stringify(nParam),
       0,
       '',
@@ -1437,8 +1423,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.preloadSrc_e43f201
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.preloadSrc
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1447,7 +1432,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_playPreloadedSrc_3a2037f impl call', async () => {
+  test('MediaPlayer_playPreloadedSrc impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1455,7 +1440,7 @@ describe('IMediaPlayer', () => {
       src: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_playPreloadedSrc_3a2037f',
+      'MediaPlayer_playPreloadedSrc',
       JSON.stringify(nParam),
       0,
       '',
@@ -1465,8 +1450,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.playPreloadedSrc_3a2037f
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.playPreloadedSrc
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1475,7 +1459,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_unloadSrc_3a2037f impl call', async () => {
+  test('MediaPlayer_unloadSrc impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1483,7 +1467,7 @@ describe('IMediaPlayer', () => {
       src: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_unloadSrc_3a2037f',
+      'MediaPlayer_unloadSrc',
       JSON.stringify(nParam),
       0,
       '',
@@ -1493,8 +1477,7 @@ describe('IMediaPlayer', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.unloadSrc_3a2037f
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl?.unloadSrc
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1503,7 +1486,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_setSpatialAudioParams_5035667 impl call', async () => {
+  test('MediaPlayer_setSpatialAudioParams impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1511,7 +1494,7 @@ describe('IMediaPlayer', () => {
       params: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setSpatialAudioParams_5035667',
+      'MediaPlayer_setSpatialAudioParams',
       JSON.stringify(nParam),
       0,
       '',
@@ -1522,7 +1505,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.setSpatialAudioParams_5035667
+        ?.setSpatialAudioParams
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1531,7 +1514,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_setSoundPositionParams_f282d50 impl call', async () => {
+  test('MediaPlayer_setSoundPositionParams impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1540,7 +1523,7 @@ describe('IMediaPlayer', () => {
       gain: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setSoundPositionParams_f282d50',
+      'MediaPlayer_setSoundPositionParams',
       JSON.stringify(nParam),
       0,
       '',
@@ -1551,7 +1534,7 @@ describe('IMediaPlayer', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
-        ?.setSoundPositionParams_f282d50
+        ?.setSoundPositionParams
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1561,13 +1544,13 @@ describe('IMediaPlayer', () => {
   });
 });
 describe('IMediaPlayerCacheManager', () => {
-  test('MediaPlayerCacheManager_removeAllCaches impl call', async () => {
+  test('MediaPlayerCacheManager impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager_removeAllCaches',
+      'MediaPlayerCacheManager',
       JSON.stringify(nParam),
       0,
       '',
@@ -1587,13 +1570,13 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager_removeOldCache impl call', async () => {
+  test('MediaPlayerCacheManager impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager_removeOldCache',
+      'MediaPlayerCacheManager',
       JSON.stringify(nParam),
       0,
       '',
@@ -1613,7 +1596,7 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager_removeCacheByUri_3a2037f impl call', async () => {
+  test('MediaPlayerCacheManager_removeCacheByUri impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1621,7 +1604,7 @@ describe('IMediaPlayerCacheManager', () => {
       uri: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager_removeCacheByUri_3a2037f',
+      'MediaPlayerCacheManager_removeCacheByUri',
       JSON.stringify(nParam),
       0,
       '',
@@ -1632,7 +1615,7 @@ describe('IMediaPlayerCacheManager', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayerCacheManager')._impl
-        ?.removeCacheByUri_3a2037f
+        ?.removeCacheByUri
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1641,7 +1624,7 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager_setCacheDir_3a2037f impl call', async () => {
+  test('MediaPlayerCacheManager_setCacheDir impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1649,7 +1632,7 @@ describe('IMediaPlayerCacheManager', () => {
       path: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager_setCacheDir_3a2037f',
+      'MediaPlayerCacheManager_setCacheDir',
       JSON.stringify(nParam),
       0,
       '',
@@ -1660,7 +1643,7 @@ describe('IMediaPlayerCacheManager', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayerCacheManager')._impl
-        ?.setCacheDir_3a2037f
+        ?.setCacheDir
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1669,7 +1652,7 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager_setMaxCacheFileCount_46f8ab7 impl call', async () => {
+  test('MediaPlayerCacheManager_setMaxCacheFileCount impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1677,7 +1660,7 @@ describe('IMediaPlayerCacheManager', () => {
       count: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager_setMaxCacheFileCount_46f8ab7',
+      'MediaPlayerCacheManager_setMaxCacheFileCount',
       JSON.stringify(nParam),
       0,
       '',
@@ -1688,7 +1671,7 @@ describe('IMediaPlayerCacheManager', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayerCacheManager')._impl
-        ?.setMaxCacheFileCount_46f8ab7
+        ?.setMaxCacheFileCount
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1697,7 +1680,7 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager_setMaxCacheFileSize_f631116 impl call', async () => {
+  test('MediaPlayerCacheManager_setMaxCacheFileSize impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1705,7 +1688,7 @@ describe('IMediaPlayerCacheManager', () => {
       cacheSize: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager_setMaxCacheFileSize_f631116',
+      'MediaPlayerCacheManager_setMaxCacheFileSize',
       JSON.stringify(nParam),
       0,
       '',
@@ -1716,7 +1699,7 @@ describe('IMediaPlayerCacheManager', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayerCacheManager')._impl
-        ?.setMaxCacheFileSize_f631116
+        ?.setMaxCacheFileSize
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1725,7 +1708,7 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager_enableAutoRemoveCache_5039d15 impl call', async () => {
+  test('MediaPlayerCacheManager_enableAutoRemoveCache impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1733,7 +1716,7 @@ describe('IMediaPlayerCacheManager', () => {
       enable: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager_enableAutoRemoveCache_5039d15',
+      'MediaPlayerCacheManager_enableAutoRemoveCache',
       JSON.stringify(nParam),
       0,
       '',
@@ -1744,7 +1727,7 @@ describe('IMediaPlayerCacheManager', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayerCacheManager')._impl
-        ?.enableAutoRemoveCache_5039d15
+        ?.enableAutoRemoveCache
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1753,7 +1736,7 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager_getCacheDir_c9551e8 impl call', async () => {
+  test('MediaPlayerCacheManager_getCacheDir impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -1762,7 +1745,7 @@ describe('IMediaPlayerCacheManager', () => {
       length: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager_getCacheDir_c9551e8',
+      'MediaPlayerCacheManager_getCacheDir',
       JSON.stringify(nParam),
       0,
       '',
@@ -1773,7 +1756,7 @@ describe('IMediaPlayerCacheManager', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaPlayerCacheManager')._impl
-        ?.getCacheDir_c9551e8
+        ?.getCacheDir
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -1782,13 +1765,13 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager_getMaxCacheFileCount impl call', async () => {
+  test('MediaPlayerCacheManager impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager_getMaxCacheFileCount',
+      'MediaPlayerCacheManager',
       JSON.stringify(nParam),
       0,
       '',
@@ -1808,13 +1791,13 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager_getMaxCacheFileSize impl call', async () => {
+  test('MediaPlayerCacheManager impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager_getMaxCacheFileSize',
+      'MediaPlayerCacheManager',
       JSON.stringify(nParam),
       0,
       '',
@@ -1834,13 +1817,13 @@ describe('IMediaPlayerCacheManager', () => {
     );
   });
 
-  test('MediaPlayerCacheManager_getCacheFileCount impl call', async () => {
+  test('MediaPlayerCacheManager impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayerCacheManager_getCacheFileCount',
+      'MediaPlayerCacheManager',
       JSON.stringify(nParam),
       0,
       '',

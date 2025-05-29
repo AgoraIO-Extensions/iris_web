@@ -7,8 +7,9 @@ import { ParseResult, TerraContext } from '@agoraio-extensions/terra-core';
 import { IrisApiIdParserUserData, renderWithConfiguration } from '@agoraio-extensions/terra_shared_configs';
 
 import {
-  getIrisApiIdForWrapperFunc,
+  appendNumberToDuplicateMemberFunction,
   isMatch,
+  revertIrisApiId,
 } from './utils';
 
 const bindingEventExtensionList = require('./config/binding_event_extension_list.ts');
@@ -39,7 +40,7 @@ type ClazzMethodUserData = IrisApiIdParserUserData & {
   bindingExtension: [];
 }
 
-export function binding(parseResult: ParseResult) {
+export function binding(parseResult: ParseResult, isTest: boolean = false) {
   let cxxfiles = parseResult.nodes as CXXFile[];
   let view = cxxfiles.map((cxxfile: CXXFile) => {
     const cxxUserData: CXXFileUserData = {
@@ -62,20 +63,43 @@ export function binding(parseResult: ParseResult) {
     cxxfile.nodes = nodes.map((node: CXXTerraNode) => {
 
       let hasSupportApi = false;
+
+      if(!isTest){
+        //for old iris
+        node.asClazz().methods.map((method) => {
+          method = revertIrisApiId(method);
+          if(method.user_data?.MergeNodeParser?.sourceClazzName === 'IRtcEngineEventHandlerEx' && !method.name.endsWith('Ex')){
+            method.name = method.name + 'Ex';
+            method.user_data.IrisApiIdParser.value = method.user_data.IrisApiIdParser.value + 'Ex';
+            method.user_data.IrisApiIdParser.key = method.user_data.IrisApiIdParser.key + 'Ex';
+          }
+        });
+        //重载函数重命名, 自动末尾+数字
+        //['joinChannel', 'joinChannel'] => ['joinChannel', 'joinChannel2']
+        node.asClazz().methods = appendNumberToDuplicateMemberFunction(
+          node.asClazz().methods
+        );
+      }
+
       node.asClazz().methods.map((method) => {
-        method.name = getIrisApiIdForWrapperFunc(method);
+
         let methodIrisApiIdValue = (method.user_data as ClazzMethodUserData).IrisApiIdParser.value;
         if(!hasSupportApi && supportList.includes(methodIrisApiIdValue)){
           hasSupportApi = true;
         }
+
+        if(method.name === 'onPlaybackAudioFrame'){
+          // debugger
+        }
+        
         const clazzMethodUserData: ClazzMethodUserData = {
           hasParameters: method.parameters.length > 0,
-          isSupport: supportList.includes(methodIrisApiIdValue),
+          isSupport: supportList[methodIrisApiIdValue] !== undefined,
           isRegisterMethod: new RegExp('registerEventHandler|registerAudioFrameObserver').test(
             method.name
           ),
-          bindingExtension: bindingExtensionList.includes(methodIrisApiIdValue),
-          bindingEventExtension: bindingEventExtensionList.includes(methodIrisApiIdValue),
+          bindingExtension: bindingExtensionList[methodIrisApiIdValue] !== undefined,
+          bindingEventExtension: bindingEventExtensionList[methodIrisApiIdValue] !== undefined,
           ...method.user_data,
         };
         method.user_data = clazzMethodUserData;

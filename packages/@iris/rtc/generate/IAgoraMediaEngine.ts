@@ -25,30 +25,26 @@ export enum AUDIO_MIXING_DUAL_MONO_MODE {
 }
 
 export interface IMediaEngine {
-  registerAudioFrameObserver_d873a64(
-    observer: IAudioFrameObserver
-  ): CallApiReturnType;
+  registerAudioFrameObserver(observer: IAudioFrameObserver): CallApiReturnType;
 
-  registerVideoFrameObserver_2cc0ef1(
-    observer: IVideoFrameObserver
-  ): CallApiReturnType;
+  registerVideoFrameObserver(observer: IVideoFrameObserver): CallApiReturnType;
 
-  registerVideoEncodedFrameObserver_d45d579(
+  registerVideoEncodedFrameObserver(
     observer: IVideoEncodedFrameObserver
   ): CallApiReturnType;
 
-  pushAudioFrame_8dfac8c(frame: AudioFrame, trackId: number): CallApiReturnType;
+  pushAudioFrame(frame: AudioFrame, trackId: number): CallApiReturnType;
 
-  pullAudioFrame_28bed4b(frame: AudioFrame): CallApiReturnType;
+  pullAudioFrame(frame: AudioFrame): CallApiReturnType;
 
-  setExternalVideoSource_fff99b6(
+  setExternalVideoSource(
     enabled: boolean,
     useTexture: boolean,
     sourceType: EXTERNAL_VIDEO_SOURCE_TYPE,
     encodedVideoOption: SenderOptions
   ): CallApiReturnType;
 
-  setExternalAudioSource_e6538be(
+  setExternalAudioSource(
     enabled: boolean,
     sampleRate: number,
     channels: number,
@@ -56,43 +52,39 @@ export interface IMediaEngine {
     publish: boolean
   ): CallApiReturnType;
 
-  createCustomAudioTrack_5a0bf1a(
+  createCustomAudioTrack(
     trackType: AUDIO_TRACK_TYPE,
     config: AudioTrackConfig
   ): CallApiReturnType;
 
-  destroyCustomAudioTrack_6178b5d(trackId: number): CallApiReturnType;
+  destroyCustomAudioTrack(trackId: number): CallApiReturnType;
 
-  setExternalAudioSink_d275ce0(
+  setExternalAudioSink(
     enabled: boolean,
     sampleRate: number,
     channels: number
   ): CallApiReturnType;
 
-  enableCustomAudioLocalPlayback_5f38e8a(
+  enableCustomAudioLocalPlayback(
     trackId: number,
     enabled: boolean
   ): CallApiReturnType;
 
-  pushVideoFrame_4e544e2(
+  pushVideoFrame(
     frame: ExternalVideoFrame,
     videoTrackId: number
   ): CallApiReturnType;
 
-  pushEncodedVideoImage_f854c56(
+  pushEncodedVideoImage(
     imageBuffer: Uint8Array,
     length: number,
     videoEncodedFrameInfo: EncodedVideoFrameInfo,
     videoTrackId: number
   ): CallApiReturnType;
 
-  addVideoFrameRenderer_2cc0ef1(
-    renderer: IVideoFrameObserver
-  ): CallApiReturnType;
+  addVideoFrameRenderer(renderer: IVideoFrameObserver): CallApiReturnType;
 
-  removeVideoFrameRenderer_2cc0ef1(
-    renderer: IVideoFrameObserver
-  ): CallApiReturnType;
+  removeVideoFrameRenderer(renderer: IVideoFrameObserver): CallApiReturnType;
 
   release(): CallApiReturnType;
 }

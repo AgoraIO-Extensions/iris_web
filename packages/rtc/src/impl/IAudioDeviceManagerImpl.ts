@@ -57,7 +57,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return this._engine.execute(process);
   }
 
-  setPlaybackDevice_4ad5f6e(deviceId: string): CallApiReturnType {
+  setPlaybackDevice(deviceId: string): CallApiReturnType {
     let process = async () => {
       this._engine.globalState.playbackDeviceId = deviceId;
 
@@ -85,7 +85,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return this._engine.execute(process);
   }
 
-  getPlaybackDevice_73b9872(): CallApiReturnType {
+  getPlaybackDevice(): CallApiReturnType {
     let process = async () => {
       let list: MediaDeviceInfo[] = [];
       let deviceId = '';
@@ -113,7 +113,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return this._engine.execute(process);
   }
 
-  setRecordingDevice_4ad5f6e(deviceId: string): CallApiReturnType {
+  setRecordingDevice(deviceId: string): CallApiReturnType {
     let process = async () => {
       this._engine.globalState.recordingDeviceId = deviceId;
 
@@ -139,7 +139,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     return this._engine.execute(process);
   }
 
-  getRecordingDevice_73b9872(): CallApiReturnType {
+  getRecordingDevice(): CallApiReturnType {
     let process = async () => {
       let list: MediaDeviceInfo[] = [];
       let deviceId = '';

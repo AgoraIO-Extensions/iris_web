@@ -122,7 +122,7 @@ export class IrisTrackEventHandler {
       let soundId = (this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(
         IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
       )[0] as BufferSourceAudioTrackPackage).soundId;
-      this._engine.rtcEngineEventHandler.onAudioEffectFinished_46f8ab7(soundId);
+      this._engine.rtcEngineEventHandler.onAudioEffectFinished(soundId);
     }
   }
 
@@ -131,7 +131,7 @@ export class IrisTrackEventHandler {
   }
 
   onEventVideoElementVisibleStatus(data?: CheckVideoVisibleResult): void {
-    this._engine.rtcEngineEventHandler.onFirstLocalVideoFrame_ebdfd19(
+    this._engine.rtcEngineEventHandler.onFirstLocalVideoFrame(
       this._videoSourceType as NATIVE_RTC.VIDEO_SOURCE_TYPE,
       0,
       0,
@@ -150,12 +150,12 @@ export class IrisTrackEventHandler {
       };
       let remoteUid = (this._remoteUser?.uid as number) || -1;
       let elapsed = 0;
-      this._engine.rtcEngineEventHandler.onFirstRemoteAudioDecoded_c5499bd(
+      this._engine.rtcEngineEventHandler.onFirstRemoteAudioDecodedEx(
         connection,
         remoteUid,
         elapsed
       );
-      this._engine.rtcEngineEventHandler.onFirstRemoteAudioFrame_c5499bd(
+      this._engine.rtcEngineEventHandler.onFirstRemoteAudioFrameEx(
         connection,
         remoteUid,
         elapsed
@@ -174,14 +174,14 @@ export class IrisTrackEventHandler {
         width = imageData?.width || -1;
         height = imageData?.height || -1;
       }
-      this._engine.rtcEngineEventHandler.onFirstRemoteVideoDecoded_a68170a(
+      this._engine.rtcEngineEventHandler.onFirstRemoteVideoDecodedEx(
         connection,
         remoteUid,
         width,
         height,
         elapsed
       );
-      this._engine.rtcEngineEventHandler.onFirstRemoteVideoFrame_a68170a(
+      this._engine.rtcEngineEventHandler.onFirstRemoteVideoFrameEx(
         connection,
         remoteUid,
         width,

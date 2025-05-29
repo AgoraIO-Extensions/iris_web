@@ -8,7 +8,7 @@ import { IRtcEngineImpl } from '../impl/IAgoraRtcEngineImpl';
 
 export interface IRtcEngineExtensions extends NATIVE_RTC.IRtcEngine {
   setAppType(appType: number): CallApiReturnType;
-  release(): CallApiReturnType;
+  release(sync: boolean): CallApiReturnType;
 }
 
 export class RtcEngineDispatchExtensions extends IRtcEngineDispatch {
@@ -26,6 +26,11 @@ export class RtcEngineDispatchExtensions extends IRtcEngineDispatch {
   }
 
   release(apiParam: ApiParam): CallApiReturnType {
-    return this._impl.release();
+    let obj = JSON.parse(apiParam.data) as any;
+    let sync = obj.sync;
+    if (sync === undefined) {
+      sync = false;
+    }
+    return this._impl.release(sync);
   }
 }

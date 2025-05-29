@@ -261,7 +261,7 @@ export enum VIDEO_MODULE_POSITION {
 }
 
 export interface IAudioPcmFrameSink {
-  onFrame_95f515a(frame: AudioPcmFrame): void;
+  onFrame(frame: AudioPcmFrame): void;
 }
 
 export enum AUDIO_FRAME_TYPE {
@@ -308,15 +308,15 @@ export class AudioParams {
 }
 
 export interface IAudioFrameObserverBase {
-  onRecordAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
+  onRecordAudioFrame(channelId: string, audioFrame: AudioFrame): void;
 
-  onPlaybackAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
+  onPlaybackAudioFrame(channelId: string, audioFrame: AudioFrame): void;
 
-  onMixedAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
+  onMixedAudioFrame(channelId: string, audioFrame: AudioFrame): void;
 
-  onEarMonitoringAudioFrame_5405a47(audioFrame: AudioFrame): void;
+  onEarMonitoringAudioFrame(audioFrame: AudioFrame): void;
 
-  onPlaybackAudioFrameBeforeMixing_9215cc7(
+  onPlaybackAudioFrameBeforeMixing2(
     channelId: string,
     userId: string,
     audioFrame: AudioFrame
@@ -324,21 +324,21 @@ export interface IAudioFrameObserverBase {
 }
 
 export interface IAudioFrameObserver extends IAudioFrameObserverBase {
-  onPlaybackAudioFrameBeforeMixing_85ec0fc(
+  onPlaybackAudioFrameBeforeMixing(
     channelId: string,
     uid: number,
     audioFrame: AudioFrame
   ): void;
 
-  onRecordAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
+  onRecordAudioFrame(channelId: string, audioFrame: AudioFrame): void;
 
-  onPlaybackAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
+  onPlaybackAudioFrame(channelId: string, audioFrame: AudioFrame): void;
 
-  onMixedAudioFrame_4c8de15(channelId: string, audioFrame: AudioFrame): void;
+  onMixedAudioFrame(channelId: string, audioFrame: AudioFrame): void;
 
-  onEarMonitoringAudioFrame_5405a47(audioFrame: AudioFrame): void;
+  onEarMonitoringAudioFrame(audioFrame: AudioFrame): void;
 
-  onPlaybackAudioFrameBeforeMixing_9215cc7(
+  onPlaybackAudioFrameBeforeMixing2(
     channelId: string,
     userId: string,
     audioFrame: AudioFrame
@@ -358,16 +358,16 @@ export class UserAudioSpectrumInfo {
 }
 
 export interface IAudioSpectrumObserver {
-  onLocalAudioSpectrum_5822fed(data: AudioSpectrumData): void;
+  onLocalAudioSpectrum(data: AudioSpectrumData): void;
 
-  onRemoteAudioSpectrum_8ea2cde(
+  onRemoteAudioSpectrum(
     spectrums: UserAudioSpectrumInfo[],
     spectrumNumber: number
   ): void;
 }
 
 export interface IVideoEncodedFrameObserver {
-  onEncodedVideoFrameReceived_6922697(
+  onEncodedVideoFrameReceived(
     uid: number,
     imageBuffer: Uint8Array,
     length: number,
@@ -381,28 +381,25 @@ export enum VIDEO_FRAME_PROCESS_MODE {
 }
 
 export interface IVideoFrameObserver {
-  onCaptureVideoFrame_1673590(
+  onCaptureVideoFrame(
     sourceType: VIDEO_SOURCE_TYPE,
     videoFrame: VideoFrame
   ): void;
 
-  onPreEncodeVideoFrame_1673590(
+  onPreEncodeVideoFrame(
     sourceType: VIDEO_SOURCE_TYPE,
     videoFrame: VideoFrame
   ): void;
 
-  onMediaPlayerVideoFrame_e648e2c(
-    videoFrame: VideoFrame,
-    mediaPlayerId: number
-  ): void;
+  onMediaPlayerVideoFrame(videoFrame: VideoFrame, mediaPlayerId: number): void;
 
-  onRenderVideoFrame_43dcf82(
+  onRenderVideoFrame(
     channelId: string,
     remoteUid: number,
     videoFrame: VideoFrame
   ): void;
 
-  onTranscodedVideoFrame_27754d8(videoFrame: VideoFrame): void;
+  onTranscodedVideoFrame(videoFrame: VideoFrame): void;
 
   getVideoFrameProcessMode(): VIDEO_FRAME_PROCESS_MODE;
 
@@ -465,14 +462,14 @@ export class RecorderInfo {
 }
 
 export interface IMediaRecorderObserver {
-  onRecorderStateChanged_e1716bb(
+  onRecorderStateChanged(
     channelId: string,
     uid: number,
     state: RecorderState,
     error: RecorderErrorCode
   ): void;
 
-  onRecorderInfoUpdated_64fa74a(
+  onRecorderInfoUpdated(
     channelId: string,
     uid: number,
     info: RecorderInfo

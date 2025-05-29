@@ -31,7 +31,7 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
     };
     return this._engine.execute(process);
   }
-  setDevice_4ad5f6e(deviceIdUTF8: string): CallApiReturnType {
+  setDevice(deviceIdUTF8: string): CallApiReturnType {
     let process = async () => {
       this._engine.globalState.videoDeviceId = deviceIdUTF8;
 
@@ -60,7 +60,7 @@ export class IVideoDeviceManagerImpl implements NATIVE_RTC.IVideoDeviceManager {
     };
     return this._engine.execute(process);
   }
-  getDevice_73b9872(): CallApiReturnType {
+  getDevice(): CallApiReturnType {
     let process = async () => {
       let list: MediaDeviceInfo[] = [];
       let deviceId = '';

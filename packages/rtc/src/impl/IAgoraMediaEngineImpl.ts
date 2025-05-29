@@ -20,7 +20,7 @@ export class IMediaEngineImpl implements IMediaEngineExtensions {
     this._engine = engine;
   }
 
-  setExternalVideoSource_fff99b6(
+  setExternalVideoSource(
     enabled: boolean,
     useTexture: boolean,
     sourceType: NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE,
@@ -37,7 +37,7 @@ export class IMediaEngineImpl implements IMediaEngineExtensions {
     return this._engine.execute(processFunc);
   }
 
-  pushVideoFrame_4e544e2(
+  pushVideoFrame(
     frame: NATIVE_RTC.ExternalVideoFrame,
     videoTrackId: number
   ): CallApiReturnType {
@@ -49,7 +49,7 @@ export class IMediaEngineImpl implements IMediaEngineExtensions {
       }
       if (!this._engine.globalState.pushVideoFrameEnabled) {
         AgoraConsole.error(
-          'pushVideoFrameEnabled is disabled , call setExternalVideoSource_fff99b6 first'
+          'pushVideoFrameEnabled is disabled , call setExternalVideoSource first'
         );
         return this._engine.returnResult();
       }
@@ -121,7 +121,7 @@ export class IMediaEngineImpl implements IMediaEngineExtensions {
     return this._engine.execute(processFunc);
   }
 
-  registerAudioFrameObserver_d873a64(observer: any): CallApiReturnType {
+  registerAudioFrameObserver(observer: any): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.irisEventHandlerManager.addEventHandler(
         RTCENGINE_KEY,

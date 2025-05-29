@@ -598,19 +598,11 @@ export class LeaveChannelOptions {
 }
 
 export interface IRtcEngineEventHandler {
-  onJoinChannelSuccess_ee6b011(
-    channel: string,
-    uid: number,
-    elapsed: number
-  ): void;
+  onJoinChannelSuccess(channel: string, uid: number, elapsed: number): void;
 
-  onRejoinChannelSuccess_ee6b011(
-    channel: string,
-    uid: number,
-    elapsed: number
-  ): void;
+  onRejoinChannelSuccess(channel: string, uid: number, elapsed: number): void;
 
-  onProxyConnected_9f89fd0(
+  onProxyConnected(
     channel: string,
     uid: number,
     proxyType: PROXY_TYPE,
@@ -618,79 +610,75 @@ export interface IRtcEngineEventHandler {
     elapsed: number
   ): void;
 
-  onError_d26c0fd(err: ERROR_CODE_TYPE, msg: string): void;
+  onError(err: ERROR_CODE_TYPE, msg: string): void;
 
-  onAudioQuality_40aeca1(
+  onAudioQuality(
     uid: number,
     quality: number,
     delay: number,
     lost: number
   ): void;
 
-  onLastmileProbeResult_42b5843(result: LastmileProbeResult): void;
+  onLastmileProbeResult(result: LastmileProbeResult): void;
 
-  onAudioVolumeIndication_e9637c8(
+  onAudioVolumeIndication(
     speakers: AudioVolumeInfo,
     speakerNumber: number,
     totalVolume: number
   ): void;
 
-  onLeaveChannel_40ef426(stats: RtcStats): void;
+  onLeaveChannel(stats: RtcStats): void;
 
-  onRtcStats_40ef426(stats: RtcStats): void;
+  onRtcStats(stats: RtcStats): void;
 
-  onAudioDeviceStateChanged_976d8c3(
+  onAudioDeviceStateChanged(
     deviceId: string,
     deviceType: MEDIA_DEVICE_TYPE,
     deviceState: MEDIA_DEVICE_STATE_TYPE
   ): void;
 
-  onAudioMixingPositionChanged_f631116(position: number): void;
+  onAudioMixingPositionChanged(position: number): void;
 
   onAudioMixingFinished(): void;
 
-  onAudioEffectFinished_46f8ab7(soundId: number): void;
+  onAudioEffectFinished(soundId: number): void;
 
-  onVideoDeviceStateChanged_976d8c3(
+  onVideoDeviceStateChanged(
     deviceId: string,
     deviceType: MEDIA_DEVICE_TYPE,
     deviceState: MEDIA_DEVICE_STATE_TYPE
   ): void;
 
-  onNetworkQuality_68a324c(
-    uid: number,
-    txQuality: number,
-    rxQuality: number
-  ): void;
+  onNetworkQuality(uid: number, txQuality: number, rxQuality: number): void;
 
   onIntraRequestReceived(): void;
 
-  onUplinkNetworkInfoUpdated_cbb1856(info: UplinkNetworkInfo): void;
+  onUplinkNetworkInfoUpdated(info: UplinkNetworkInfo): void;
 
-  onDownlinkNetworkInfoUpdated_e9d5bd9(info: DownlinkNetworkInfo): void;
+  onDownlinkNetworkInfoUpdated(info: DownlinkNetworkInfo): void;
 
-  onLastmileQuality_46f8ab7(quality: QUALITY_TYPE): void;
+  onLastmileQuality(quality: QUALITY_TYPE): void;
 
-  onFirstLocalVideoFrame_ebdfd19(
+  onFirstLocalVideoFrame(
     source: VIDEO_SOURCE_TYPE,
     width: number,
     height: number,
     elapsed: number
   ): void;
 
-  onFirstLocalVideoFramePublished_2ad83d8(
+  onFirstLocalVideoFramePublished(
     source: VIDEO_SOURCE_TYPE,
     elapsed: number
   ): void;
 
-  onFirstRemoteVideoDecoded_58b686c(
+  onFirstRemoteVideoDecoded(
     uid: number,
     width: number,
     height: number,
     elapsed: number
   ): void;
 
-  onVideoSizeChanged_5f7d8e3(
+  onVideoSizeChanged(
     sourceType: VIDEO_SOURCE_TYPE,
     uid: number,
     width: number,
@@ -698,68 +686,65 @@ export interface IRtcEngineEventHandler {
     rotation: number
   ): void;
 
-  onLocalVideoStateChanged_9e9b3c6(
+  onLocalVideoStateChanged(
     source: VIDEO_SOURCE_TYPE,
     state: LOCAL_VIDEO_STREAM_STATE,
     error: LOCAL_VIDEO_STREAM_ERROR
   ): void;
 
-  onRemoteVideoStateChanged_815ab69(
+  onRemoteVideoStateChanged(
     uid: number,
     state: REMOTE_VIDEO_STATE,
     reason: REMOTE_VIDEO_STATE_REASON,
     elapsed: number
   ): void;
 
-  onFirstRemoteVideoFrame_58b686c(
+  onFirstRemoteVideoFrame(
     userId: number,
     width: number,
     height: number,
     elapsed: number
   ): void;
 
-  onUserJoined_88641bf(uid: number, elapsed: number): void;
+  onUserJoined(uid: number, elapsed: number): void;
 
-  onUserOffline_eb1e059(uid: number, reason: USER_OFFLINE_REASON_TYPE): void;
+  onUserOffline(uid: number, reason: USER_OFFLINE_REASON_TYPE): void;
 
-  onUserMuteAudio_dbdc15a(uid: number, muted: boolean): void;
+  onUserMuteAudio(uid: number, muted: boolean): void;
 
-  onUserMuteVideo_dbdc15a(userId: number, muted: boolean): void;
+  onUserMuteVideo(userId: number, muted: boolean): void;
 
-  onUserEnableVideo_dbdc15a(uid: number, enabled: boolean): void;
+  onUserEnableVideo(uid: number, enabled: boolean): void;
 
-  onUserStateChanged_6bd0e74(uid: number, state: number): void;
+  onUserStateChanged(uid: number, state: number): void;
 
-  onUserEnableLocalVideo_dbdc15a(uid: number, enabled: boolean): void;
+  onUserEnableLocalVideo(uid: number, enabled: boolean): void;
 
-  onLocalAudioStats_8fcb8ec(stats: LocalAudioStats): void;
+  onLocalAudioStats(stats: LocalAudioStats): void;
 
-  onRemoteAudioStats_4aba4cc(stats: RemoteAudioStats): void;
+  onRemoteAudioStats(stats: RemoteAudioStats): void;
 
-  onLocalVideoStats_baa96c8(
-    source: VIDEO_SOURCE_TYPE,
-    stats: LocalVideoStats
-  ): void;
+  onLocalVideoStats(source: VIDEO_SOURCE_TYPE, stats: LocalVideoStats): void;
 
-  onRemoteVideoStats_e271890(stats: RemoteVideoStats): void;
+  onRemoteVideoStats(stats: RemoteVideoStats): void;
 
   onCameraReady(): void;
 
-  onCameraFocusAreaChanged_41c5354(
+  onCameraFocusAreaChanged(
     x: number,
     y: number,
     width: number,
     height: number
   ): void;
 
-  onCameraExposureAreaChanged_41c5354(
+  onCameraExposureAreaChanged(
     x: number,
     y: number,
     width: number,
     height: number
   ): void;
 
-  onFacePositionChanged_197b4a7(
+  onFacePositionChanged(
     imageWidth: number,
     imageHeight: number,
     vecRectangle: Rectangle[],
@@ -769,12 +754,12 @@ export interface IRtcEngineEventHandler {
 
   onVideoStopped(): void;
 
-  onAudioMixingStateChanged_fd2c0a6(
+  onAudioMixingStateChanged(
     state: AUDIO_MIXING_STATE_TYPE,
     reason: AUDIO_MIXING_REASON_TYPE
   ): void;
 
-  onRhythmPlayerStateChanged_28c4cdd(
+  onRhythmPlayerStateChanged(
     state: RHYTHM_PLAYER_STATE_TYPE,
     errorCode: RHYTHM_PLAYER_ERROR_TYPE
   ): void;
@@ -785,7 +770,7 @@ export interface IRtcEngineEventHandler {
 
   onConnectionBanned(): void;
 
-  onStreamMessage_6f90bce(
+  onStreamMessage(
     userId: number,
     streamId: number,
     data: string,
@@ -793,7 +778,7 @@ export interface IRtcEngineEventHandler {
     sentTs: number
   ): void;
 
-  onStreamMessageError_21e5c1a(
+  onStreamMessageError(
     userId: number,
     streamId: number,
     code: number,
@@ -803,33 +788,33 @@ export interface IRtcEngineEventHandler {
 
   onRequestToken(): void;
 
-  onTokenPrivilegeWillExpire_3a2037f(token: string): void;
+  onTokenPrivilegeWillExpire(token: string): void;
 
-  onLicenseValidationFailure_4518fcc(error: LICENSE_ERROR_TYPE): void;
+  onLicenseValidationFailure(error: LICENSE_ERROR_TYPE): void;
 
-  onFirstLocalAudioFramePublished_46f8ab7(elapsed: number): void;
+  onFirstLocalAudioFramePublished(elapsed: number): void;
 
-  onFirstRemoteAudioFrame_88641bf(uid: number, elapsed: number): void;
+  onFirstRemoteAudioFrame(uid: number, elapsed: number): void;
 
-  onFirstRemoteAudioDecoded_88641bf(uid: number, elapsed: number): void;
+  onFirstRemoteAudioDecoded(uid: number, elapsed: number): void;
 
-  onLocalAudioStateChanged_f428c19(
+  onLocalAudioStateChanged(
     state: LOCAL_AUDIO_STREAM_STATE,
     error: LOCAL_AUDIO_STREAM_ERROR
   ): void;
 
-  onRemoteAudioStateChanged_f1532dd(
+  onRemoteAudioStateChanged(
     uid: number,
     state: REMOTE_AUDIO_STATE,
     reason: REMOTE_AUDIO_STATE_REASON,
     elapsed: number
   ): void;
 
-  onActiveSpeaker_c8d091a(userId: number): void;
+  onActiveSpeaker(userId: number): void;
 
-  onContentInspectResult_ba185c8(result: CONTENT_INSPECT_RESULT): void;
+  onContentInspectResult(result: CONTENT_INSPECT_RESULT): void;
 
-  onSnapshotTaken_c495bf6(
+  onSnapshotTaken(
     uid: number,
     filePath: string,
     width: number,
@@ -837,99 +822,93 @@ export interface IRtcEngineEventHandler {
     errCode: number
   ): void;
 
-  onClientRoleChanged_938fb25(
+  onClientRoleChanged(
     oldRole: CLIENT_ROLE_TYPE,
     newRole: CLIENT_ROLE_TYPE,
     newRoleOptions: ClientRoleOptions
   ): void;
 
-  onClientRoleChangeFailed_386f862(
+  onClientRoleChangeFailed(
     reason: CLIENT_ROLE_CHANGE_FAILED_REASON,
     currentRole: CLIENT_ROLE_TYPE
   ): void;
 
-  onAudioDeviceVolumeChanged_55ab726(
+  onAudioDeviceVolumeChanged(
     deviceType: MEDIA_DEVICE_TYPE,
     volume: number,
     muted: boolean
   ): void;
 
-  onRtmpStreamingStateChanged_08571ff(
+  onRtmpStreamingStateChanged(
     url: string,
     state: RTMP_STREAM_PUBLISH_STATE,
     errCode: RTMP_STREAM_PUBLISH_ERROR_TYPE
   ): void;
 
-  onRtmpStreamingEvent_2e48ef5(
-    url: string,
-    eventCode: RTMP_STREAMING_EVENT
-  ): void;
+  onRtmpStreamingEvent(url: string, eventCode: RTMP_STREAMING_EVENT): void;
 
   onTranscodingUpdated(): void;
 
-  onAudioRoutingChanged_46f8ab7(routing: number): void;
+  onAudioRoutingChanged(routing: number): void;
 
-  onChannelMediaRelayStateChanged_4e92b3c(
+  onChannelMediaRelayStateChanged(
     state: CHANNEL_MEDIA_RELAY_STATE,
     code: CHANNEL_MEDIA_RELAY_ERROR
   ): void;
 
-  onChannelMediaRelayEvent_46f8ab7(code: CHANNEL_MEDIA_RELAY_EVENT): void;
+  onChannelMediaRelayEvent(code: CHANNEL_MEDIA_RELAY_EVENT): void;
 
-  onLocalPublishFallbackToAudioOnly_5039d15(isFallbackOrRecover: boolean): void;
+  onLocalPublishFallbackToAudioOnly(isFallbackOrRecover: boolean): void;
 
-  onRemoteSubscribeFallbackToAudioOnly_dbdc15a(
+  onRemoteSubscribeFallbackToAudioOnly(
     uid: number,
     isFallbackOrRecover: boolean
   ): void;
 
-  onRemoteAudioTransportStats_bd01ada(
+  onRemoteAudioTransportStats(
     uid: number,
     delay: number,
     lost: number,
     rxKBitRate: number
   ): void;
 
-  onRemoteVideoTransportStats_bd01ada(
+  onRemoteVideoTransportStats(
     uid: number,
     delay: number,
     lost: number,
     rxKBitRate: number
   ): void;
 
-  onConnectionStateChanged_ec7c9c0(
+  onConnectionStateChanged(
     state: CONNECTION_STATE_TYPE,
     reason: CONNECTION_CHANGED_REASON_TYPE
   ): void;
 
-  onWlAccMessage_333465b(
+  onWlAccMessage(
     reason: WLACC_MESSAGE_REASON,
     action: WLACC_SUGGEST_ACTION,
     wlAccMsg: string
   ): void;
 
-  onWlAccStats_8f5541b(
-    currentStats: WlAccStats,
-    averageStats: WlAccStats
-  ): void;
+  onWlAccStats(currentStats: WlAccStats, averageStats: WlAccStats): void;
 
-  onNetworkTypeChanged_e85a70d(type: NETWORK_TYPE): void;
+  onNetworkTypeChanged(type: NETWORK_TYPE): void;
 
-  onEncryptionError_a0d1b74(errorType: ENCRYPTION_ERROR_TYPE): void;
+  onEncryptionError(errorType: ENCRYPTION_ERROR_TYPE): void;
 
-  onPermissionError_f37c62b(permissionType: PERMISSION_TYPE): void;
+  onPermissionError(permissionType: PERMISSION_TYPE): void;
 
-  onLocalUserRegistered_1922dd1(uid: number, userAccount: string): void;
+  onLocalUserRegistered(uid: number, userAccount: string): void;
 
-  onUserInfoUpdated_2120245(uid: number, info: UserInfo): void;
+  onUserInfoUpdated(uid: number, info: UserInfo): void;
 
-  onUploadLogResult_eef29d2(
+  onUploadLogResult(
     requestId: string,
     success: boolean,
     reason: UPLOAD_ERROR_REASON
   ): void;
 
-  onAudioSubscribeStateChanged_e0ec28e(
+  onAudioSubscribeStateChanged(
     channel: string,
     uid: number,
     oldState: STREAM_SUBSCRIBE_STATE,
@@ -937,7 +916,7 @@ export interface IRtcEngineEventHandler {
     elapseSinceLastState: number
   ): void;
 
-  onVideoSubscribeStateChanged_e0ec28e(
+  onVideoSubscribeStateChanged(
     channel: string,
     uid: number,
     oldState: STREAM_SUBSCRIBE_STATE,
@@ -945,14 +924,14 @@ export interface IRtcEngineEventHandler {
     elapseSinceLastState: number
   ): void;
 
-  onAudioPublishStateChanged_2c13a28(
+  onAudioPublishStateChanged(
     channel: string,
     oldState: STREAM_PUBLISH_STATE,
     newState: STREAM_PUBLISH_STATE,
     elapseSinceLastState: number
   ): void;
 
-  onVideoPublishStateChanged_5b45b6e(
+  onVideoPublishStateChanged(
     source: VIDEO_SOURCE_TYPE,
     channel: string,
     oldState: STREAM_PUBLISH_STATE,
@@ -960,48 +939,42 @@ export interface IRtcEngineEventHandler {
     elapseSinceLastState: number
   ): void;
 
-  onExtensionEvent_062d13c(
+  onExtensionEvent(
     provider: string,
     extension: string,
     key: string,
     value: string
   ): void;
 
-  onExtensionStarted_ccad422(provider: string, extension: string): void;
+  onExtensionStarted(provider: string, extension: string): void;
 
-  onExtensionStopped_ccad422(provider: string, extension: string): void;
+  onExtensionStopped(provider: string, extension: string): void;
 
-  onExtensionError_bd3489b(
+  onExtensionError(
     provider: string,
     extension: string,
     error: number,
     message: string
   ): void;
 
-  onUserAccountUpdated_1922dd1(uid: number, userAccount: string): void;
+  onUserAccountUpdated(uid: number, userAccount: string): void;
 
-  onLocalVideoTranscoderError_83e3a9c(
+  onLocalVideoTranscoderError(
     stream: TranscodingVideoStream,
     error: VIDEO_TRANSCODER_ERROR
   ): void;
 
-  onVideoRenderingTracingResult_76e2449(
+  onVideoRenderingTracingResult(
     uid: number,
     currentEvent: MEDIA_TRACE_EVENT,
     tracingInfo: VideoRenderingTracingInfo
   ): void;
 
-  onJoinChannelSuccess_263e4cd(
-    connection: RtcConnection,
-    elapsed: number
-  ): void;
+  onJoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void;
 
-  onRejoinChannelSuccess_263e4cd(
-    connection: RtcConnection,
-    elapsed: number
-  ): void;
+  onRejoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void;
 
-  onAudioQuality_5c7294b(
+  onAudioQualityEx(
     connection: RtcConnection,
     remoteUid: number,
     quality: QUALITY_TYPE,
@@ -1009,32 +982,32 @@ export interface IRtcEngineEventHandler {
     lost: number
   ): void;
 
-  onAudioVolumeIndication_781482a(
+  onAudioVolumeIndicationEx(
     connection: RtcConnection,
     speakers: AudioVolumeInfo[],
     speakerNumber: number,
     totalVolume: number
   ): void;
 
-  onLeaveChannel_c8e730d(connection: RtcConnection, stats: RtcStats): void;
+  onLeaveChannelEx(connection: RtcConnection, stats: RtcStats): void;
 
-  onRtcStats_c8e730d(connection: RtcConnection, stats: RtcStats): void;
+  onRtcStatsEx(connection: RtcConnection, stats: RtcStats): void;
 
-  onNetworkQuality_34d8b3c(
+  onNetworkQualityEx(
     connection: RtcConnection,
     remoteUid: number,
     txQuality: QUALITY_TYPE,
     rxQuality: QUALITY_TYPE
   ): void;
 
-  onIntraRequestReceived_c81e1a4(connection: RtcConnection): void;
+  onIntraRequestReceivedEx(connection: RtcConnection): void;
 
-  onFirstLocalVideoFramePublished_263e4cd(
+  onFirstLocalVideoFramePublishedEx(
     connection: RtcConnection,
     elapsed: number
   ): void;
 
-  onFirstRemoteVideoDecoded_a68170a(
+  onFirstRemoteVideoDecodedEx(
     connection: RtcConnection,
     remoteUid: number,
     width: number,
@@ -1042,7 +1015,7 @@ export interface IRtcEngineEventHandler {
     elapsed: number
   ): void;
 
-  onVideoSizeChanged_99bf45c(
+  onVideoSizeChangedEx(
     connection: RtcConnection,
     sourceType: VIDEO_SOURCE_TYPE,
     uid: number,
@@ -1051,13 +1024,13 @@ export interface IRtcEngineEventHandler {
     rotation: number
   ): void;
 
-  onLocalVideoStateChanged_cc0928e(
+  onLocalVideoStateChangedEx(
     connection: RtcConnection,
     state: LOCAL_VIDEO_STREAM_STATE,
     errorCode: LOCAL_VIDEO_STREAM_ERROR
   ): void;
 
-  onRemoteVideoStateChanged_a14e9d1(
+  onRemoteVideoStateChangedEx(
     connection: RtcConnection,
     remoteUid: number,
     state: REMOTE_VIDEO_STATE,
@@ -1065,7 +1038,7 @@ export interface IRtcEngineEventHandler {
     elapsed: number
   ): void;
 
-  onFirstRemoteVideoFrame_a68170a(
+  onFirstRemoteVideoFrameEx(
     connection: RtcConnection,
     remoteUid: number,
     width: number,
@@ -1073,75 +1046,69 @@ export interface IRtcEngineEventHandler {
     elapsed: number
   ): void;
 
-  onUserJoined_c5499bd(
+  onUserJoinedEx(
     connection: RtcConnection,
     remoteUid: number,
     elapsed: number
   ): void;
 
-  onUserOffline_0a32aac(
+  onUserOfflineEx(
     connection: RtcConnection,
     remoteUid: number,
     reason: USER_OFFLINE_REASON_TYPE
   ): void;
 
-  onUserMuteAudio_0aac2fe(
+  onUserMuteAudioEx(
     connection: RtcConnection,
     remoteUid: number,
     muted: boolean
   ): void;
 
-  onUserMuteVideo_0aac2fe(
+  onUserMuteVideoEx(
     connection: RtcConnection,
     remoteUid: number,
     muted: boolean
   ): void;
 
-  onUserEnableVideo_0aac2fe(
+  onUserEnableVideoEx(
     connection: RtcConnection,
     remoteUid: number,
     enabled: boolean
   ): void;
 
-  onUserEnableLocalVideo_0aac2fe(
+  onUserEnableLocalVideoEx(
     connection: RtcConnection,
     remoteUid: number,
     enabled: boolean
   ): void;
 
-  onUserStateChanged_65f95a7(
+  onUserStateChangedEx(
     connection: RtcConnection,
     remoteUid: number,
     state: number
   ): void;
 
-  onLocalAudioStats_5657f05(
-    connection: RtcConnection,
-    stats: LocalAudioStats
-  ): void;
+  onLocalAudioStatsEx(connection: RtcConnection, stats: LocalAudioStats): void;
 
-  onRemoteAudioStats_ffbde06(
+  onRemoteAudioStatsEx(
     connection: RtcConnection,
     stats: RemoteAudioStats
   ): void;
 
-  onLocalVideoStats_3ac0eb4(
-    connection: RtcConnection,
-    stats: LocalVideoStats
-  ): void;
+  onLocalVideoStatsEx(connection: RtcConnection, stats: LocalVideoStats): void;
 
-  onRemoteVideoStats_2f43a70(
+  onRemoteVideoStatsEx(
     connection: RtcConnection,
     stats: RemoteVideoStats
   ): void;
 
-  onConnectionLost_c81e1a4(connection: RtcConnection): void;
+  onConnectionLostEx(connection: RtcConnection): void;
 
-  onConnectionInterrupted_c81e1a4(connection: RtcConnection): void;
+  onConnectionInterruptedEx(connection: RtcConnection): void;
 
-  onConnectionBanned_c81e1a4(connection: RtcConnection): void;
+  onConnectionBannedEx(connection: RtcConnection): void;
 
-  onStreamMessage_99898cb(
+  onStreamMessageEx(
     connection: RtcConnection,
     remoteUid: number,
     streamId: number,
@@ -1150,7 +1117,7 @@ export interface IRtcEngineEventHandler {
     sentTs: number
   ): void;
 
-  onStreamMessageError_fe302fc(
+  onStreamMessageErrorEx(
     connection: RtcConnection,
     remoteUid: number,
     streamId: number,
@@ -1159,42 +1126,39 @@ export interface IRtcEngineEventHandler {
     cached: number
   ): void;
 
-  onRequestToken_c81e1a4(connection: RtcConnection): void;
+  onRequestTokenEx(connection: RtcConnection): void;
 
-  onLicenseValidationFailure_5dfd95e(
+  onLicenseValidationFailureEx(
     connection: RtcConnection,
     reason: LICENSE_ERROR_TYPE
   ): void;
 
-  onTokenPrivilegeWillExpire_8225ea3(
-    connection: RtcConnection,
-    token: string
-  ): void;
+  onTokenPrivilegeWillExpireEx(connection: RtcConnection, token: string): void;
 
-  onFirstLocalAudioFramePublished_263e4cd(
+  onFirstLocalAudioFramePublishedEx(
     connection: RtcConnection,
     elapsed: number
   ): void;
 
-  onFirstRemoteAudioFrame_c5499bd(
+  onFirstRemoteAudioFrameEx(
     connection: RtcConnection,
     userId: number,
     elapsed: number
   ): void;
 
-  onFirstRemoteAudioDecoded_c5499bd(
+  onFirstRemoteAudioDecodedEx(
     connection: RtcConnection,
     uid: number,
     elapsed: number
   ): void;
 
-  onLocalAudioStateChanged_6d655b4(
+  onLocalAudioStateChangedEx(
     connection: RtcConnection,
     state: LOCAL_AUDIO_STREAM_STATE,
     error: LOCAL_AUDIO_STREAM_ERROR
   ): void;
 
-  onRemoteAudioStateChanged_056772e(
+  onRemoteAudioStateChangedEx(
     connection: RtcConnection,
     remoteUid: number,
     state: REMOTE_AUDIO_STATE,
@@ -1202,22 +1166,22 @@ export interface IRtcEngineEventHandler {
     elapsed: number
   ): void;
 
-  onActiveSpeaker_dd67adc(connection: RtcConnection, uid: number): void;
+  onActiveSpeakerEx(connection: RtcConnection, uid: number): void;
 
-  onClientRoleChanged_2acaf10(
+  onClientRoleChangedEx(
     connection: RtcConnection,
     oldRole: CLIENT_ROLE_TYPE,
     newRole: CLIENT_ROLE_TYPE,
     newRoleOptions: ClientRoleOptions
   ): void;
 
-  onClientRoleChangeFailed_5a3af5b(
+  onClientRoleChangeFailedEx(
     connection: RtcConnection,
     reason: CLIENT_ROLE_CHANGE_FAILED_REASON,
     currentRole: CLIENT_ROLE_TYPE
   ): void;
 
-  onRemoteAudioTransportStats_527a345(
+  onRemoteAudioTransportStatsEx(
     connection: RtcConnection,
     remoteUid: number,
     delay: number,
@@ -1225,7 +1189,7 @@ export interface IRtcEngineEventHandler {
     rxKBitRate: number
   ): void;
 
-  onRemoteVideoTransportStats_527a345(
+  onRemoteVideoTransportStatsEx(
     connection: RtcConnection,
     remoteUid: number,
     delay: number,
@@ -1233,49 +1197,46 @@ export interface IRtcEngineEventHandler {
     rxKBitRate: number
   ): void;
 
-  onConnectionStateChanged_4075a9c(
+  onConnectionStateChangedEx(
     connection: RtcConnection,
     state: CONNECTION_STATE_TYPE,
     reason: CONNECTION_CHANGED_REASON_TYPE
   ): void;
 
-  onWlAccMessage_2b9068e(
+  onWlAccMessageEx(
     connection: RtcConnection,
     reason: WLACC_MESSAGE_REASON,
     action: WLACC_SUGGEST_ACTION,
     wlAccMsg: string
   ): void;
 
-  onWlAccStats_b162607(
+  onWlAccStatsEx(
     connection: RtcConnection,
     currentStats: WlAccStats,
     averageStats: WlAccStats
   ): void;
 
-  onNetworkTypeChanged_388fd6f(
-    connection: RtcConnection,
-    type: NETWORK_TYPE
-  ): void;
+  onNetworkTypeChangedEx(connection: RtcConnection, type: NETWORK_TYPE): void;
 
-  onEncryptionError_e7a65fe(
+  onEncryptionErrorEx(
     connection: RtcConnection,
     errorType: ENCRYPTION_ERROR_TYPE
   ): void;
 
-  onUploadLogResult_3115804(
+  onUploadLogResultEx(
     connection: RtcConnection,
     requestId: string,
     success: boolean,
     reason: UPLOAD_ERROR_REASON
   ): void;
 
-  onUserAccountUpdated_de1c015(
+  onUserAccountUpdatedEx(
     connection: RtcConnection,
     remoteUid: number,
     userAccount: string
   ): void;
 
-  onSnapshotTaken_5a6a693(
+  onSnapshotTakenEx(
     connection: RtcConnection,
     uid: number,
     filePath: string,
@@ -1284,7 +1245,7 @@ export interface IRtcEngineEventHandler {
     errCode: number
   ): void;
 
-  onVideoRenderingTracingResult_813c0f4(
+  onVideoRenderingTracingResultEx(
     connection: RtcConnection,
     uid: number,
     currentEvent: MEDIA_TRACE_EVENT,
@@ -1295,19 +1256,19 @@ export interface IRtcEngineEventHandler {
 export interface IVideoDeviceManager {
   enumerateVideoDevices(): CallApiReturnType;
 
-  setDevice_4ad5f6e(deviceIdUTF8: string): CallApiReturnType;
+  setDevice(deviceIdUTF8: string): CallApiReturnType;
 
-  getDevice_73b9872(): CallApiReturnType;
+  getDevice(): CallApiReturnType;
 
-  numberOfCapabilities_3a2037f(deviceIdUTF8: string): CallApiReturnType;
+  numberOfCapabilities(deviceIdUTF8: string): CallApiReturnType;
 
-  getCapability_ddeefdd(
+  getCapability(
     deviceIdUTF8: string,
     deviceCapabilityNumber: number,
     capability: VideoFormat
   ): CallApiReturnType;
 
-  startDeviceTest_a55f55f(hwnd: any): CallApiReturnType;
+  startDeviceTest(hwnd: any): CallApiReturnType;
 
   stopDeviceTest(): CallApiReturnType;
 
@@ -1360,12 +1321,12 @@ export class Metadata {
 export interface IMetadataObserver {
   getMaxMetadataSize(): number;
 
-  onReadyToSendMetadata_cbf4b59(
+  onReadyToSendMetadata(
     metadata: Metadata,
     source_type: VIDEO_SOURCE_TYPE
   ): boolean;
 
-  onMetadataReceived_cb7661d(metadata: Metadata): void;
+  onMetadataReceived(metadata: Metadata): void;
 }
 
 export enum DIRECT_CDN_STREAMING_ERROR {
@@ -1398,13 +1359,13 @@ export class DirectCdnStreamingStats {
 }
 
 export interface IDirectCdnStreamingEventHandler {
-  onDirectCdnStreamingStateChanged_2a6b2f2(
+  onDirectCdnStreamingStateChanged(
     state: DIRECT_CDN_STREAMING_STATE,
     error: DIRECT_CDN_STREAMING_ERROR,
     message: string
   ): void;
 
-  onDirectCdnStreamingStats_d50595f(stats: DirectCdnStreamingStats): void;
+  onDirectCdnStreamingStats(stats: DirectCdnStreamingStats): void;
 }
 
 export class DirectCdnStreamingMediaOptions {
@@ -1434,77 +1395,75 @@ export class ExtensionInfo {
 }
 
 export interface IRtcEngine {
-  release_5039d15(sync: boolean): CallApiReturnType;
+  release(sync: boolean): CallApiReturnType;
 
-  initialize_0320339(context: RtcEngineContext): CallApiReturnType;
+  initialize(context: RtcEngineContext): CallApiReturnType;
 
-  queryInterface_257d192(iid: INTERFACE_ID_TYPE, inter: any): CallApiReturnType;
+  queryInterface(iid: INTERFACE_ID_TYPE, inter: any): CallApiReturnType;
 
-  getVersion_915cb25(): CallApiReturnType;
+  getVersion(): CallApiReturnType;
 
-  getErrorDescription_46f8ab7(code: number): CallApiReturnType;
+  getErrorDescription(code: number): CallApiReturnType;
 
-  queryCodecCapability_ddf4f31(
+  queryCodecCapability(
     codecInfo: CodecCapInfo[],
     size: number
   ): CallApiReturnType;
 
-  preloadChannel_a0779eb(
+  preloadChannel(
     token: string,
     channelId: string,
     uid: number
   ): CallApiReturnType;
 
-  preloadChannel_0e4f59e(
+  preloadChannel2(
     token: string,
     channelId: string,
     userAccount: string
   ): CallApiReturnType;
 
-  updatePreloadChannelToken_3a2037f(token: string): CallApiReturnType;
+  updatePreloadChannelToken(token: string): CallApiReturnType;
 
-  joinChannel_f097389(
+  joinChannel(
     token: string,
     channelId: string,
     info: string,
     uid: number
   ): CallApiReturnType;
 
-  joinChannel_cdbb747(
+  joinChannel2(
     token: string,
     channelId: string,
     uid: number,
     options: ChannelMediaOptions
   ): CallApiReturnType;
 
-  updateChannelMediaOptions_7bfc1d7(
-    options: ChannelMediaOptions
-  ): CallApiReturnType;
+  updateChannelMediaOptions(options: ChannelMediaOptions): CallApiReturnType;
 
   leaveChannel(): CallApiReturnType;
 
-  leaveChannel_2c0e3aa(options: LeaveChannelOptions): CallApiReturnType;
+  leaveChannel2(options: LeaveChannelOptions): CallApiReturnType;
 
-  renewToken_3a2037f(token: string): CallApiReturnType;
+  renewToken(token: string): CallApiReturnType;
 
-  setChannelProfile_a78fa4f(profile: CHANNEL_PROFILE_TYPE): CallApiReturnType;
+  setChannelProfile(profile: CHANNEL_PROFILE_TYPE): CallApiReturnType;
 
-  setClientRole_3426fa6(role: CLIENT_ROLE_TYPE): CallApiReturnType;
+  setClientRole(role: CLIENT_ROLE_TYPE): CallApiReturnType;
 
-  setClientRole_b46cc48(
+  setClientRole2(
     role: CLIENT_ROLE_TYPE,
     options: ClientRoleOptions
   ): CallApiReturnType;
 
   startEchoTest(): CallApiReturnType;
 
-  startEchoTest_46f8ab7(intervalInSeconds: number): CallApiReturnType;
+  startEchoTest2(intervalInSeconds: number): CallApiReturnType;
 
-  startEchoTest_16140d7(config: EchoTestConfiguration): CallApiReturnType;
+  startEchoTest3(config: EchoTestConfiguration): CallApiReturnType;
 
   stopEchoTest(): CallApiReturnType;
 
-  enableMultiCamera_bffe023(
+  enableMultiCamera(
     enabled: boolean,
     config: CameraCapturerConfiguration
   ): CallApiReturnType;
@@ -1515,58 +1474,56 @@ export interface IRtcEngine {
 
   startPreview(): CallApiReturnType;
 
-  startPreview_4fd718e(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
+  startPreview2(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
 
   stopPreview(): CallApiReturnType;
 
-  stopPreview_4fd718e(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
+  stopPreview2(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
 
-  startLastmileProbeTest_c4de423(
-    config: LastmileProbeConfig
-  ): CallApiReturnType;
+  startLastmileProbeTest(config: LastmileProbeConfig): CallApiReturnType;
 
   stopLastmileProbeTest(): CallApiReturnType;
 
-  setVideoEncoderConfiguration_89677d8(
+  setVideoEncoderConfiguration(
     config: VideoEncoderConfiguration
   ): CallApiReturnType;
 
-  setBeautyEffectOptions_e7635d1(
+  setBeautyEffectOptions(
     enabled: boolean,
     options: BeautyOptions,
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  setLowlightEnhanceOptions_4f9f013(
+  setLowlightEnhanceOptions(
     enabled: boolean,
     options: LowlightEnhanceOptions,
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  setVideoDenoiserOptions_4e9fccc(
+  setVideoDenoiserOptions(
     enabled: boolean,
     options: VideoDenoiserOptions,
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  setColorEnhanceOptions_ecae2b3(
+  setColorEnhanceOptions(
     enabled: boolean,
     options: ColorEnhanceOptions,
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  enableVirtualBackground_6dd8ee4(
+  enableVirtualBackground(
     enabled: boolean,
     backgroundSource: VirtualBackgroundSource,
     segproperty: SegmentationProperty,
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  setupRemoteVideo_acc9c38(canvas: VideoCanvas): CallApiReturnType;
+  setupRemoteVideo(canvas: VideoCanvas): CallApiReturnType;
 
-  setupLocalVideo_acc9c38(canvas: VideoCanvas): CallApiReturnType;
+  setupLocalVideo(canvas: VideoCanvas): CallApiReturnType;
 
-  setVideoScenario_c02cd1c(
+  setVideoScenario(
     scenarioType: VIDEO_APPLICATION_SCENARIO_TYPE
   ): CallApiReturnType;
 
@@ -1574,91 +1531,89 @@ export interface IRtcEngine {
 
   disableAudio(): CallApiReturnType;
 
-  setAudioProfile_d944543(
+  setAudioProfile(
     profile: AUDIO_PROFILE_TYPE,
     scenario: AUDIO_SCENARIO_TYPE
   ): CallApiReturnType;
 
-  setAudioProfile_ac39c15(profile: AUDIO_PROFILE_TYPE): CallApiReturnType;
+  setAudioProfile2(profile: AUDIO_PROFILE_TYPE): CallApiReturnType;
 
-  setAudioScenario_c36f5c1(scenario: AUDIO_SCENARIO_TYPE): CallApiReturnType;
+  setAudioScenario(scenario: AUDIO_SCENARIO_TYPE): CallApiReturnType;
 
-  enableLocalAudio_5039d15(enabled: boolean): CallApiReturnType;
+  enableLocalAudio(enabled: boolean): CallApiReturnType;
 
-  muteLocalAudioStream_5039d15(mute: boolean): CallApiReturnType;
+  muteLocalAudioStream(mute: boolean): CallApiReturnType;
 
-  muteAllRemoteAudioStreams_5039d15(mute: boolean): CallApiReturnType;
+  muteAllRemoteAudioStreams(mute: boolean): CallApiReturnType;
 
-  setDefaultMuteAllRemoteAudioStreams_5039d15(mute: boolean): CallApiReturnType;
+  setDefaultMuteAllRemoteAudioStreams(mute: boolean): CallApiReturnType;
 
-  muteRemoteAudioStream_dbdc15a(uid: number, mute: boolean): CallApiReturnType;
+  muteRemoteAudioStream(uid: number, mute: boolean): CallApiReturnType;
 
-  muteLocalVideoStream_5039d15(mute: boolean): CallApiReturnType;
+  muteLocalVideoStream(mute: boolean): CallApiReturnType;
 
-  enableLocalVideo_5039d15(enabled: boolean): CallApiReturnType;
+  enableLocalVideo(enabled: boolean): CallApiReturnType;
 
-  muteAllRemoteVideoStreams_5039d15(mute: boolean): CallApiReturnType;
+  muteAllRemoteVideoStreams(mute: boolean): CallApiReturnType;
 
-  setDefaultMuteAllRemoteVideoStreams_5039d15(mute: boolean): CallApiReturnType;
+  setDefaultMuteAllRemoteVideoStreams(mute: boolean): CallApiReturnType;
 
-  muteRemoteVideoStream_dbdc15a(uid: number, mute: boolean): CallApiReturnType;
+  muteRemoteVideoStream(uid: number, mute: boolean): CallApiReturnType;
 
-  setRemoteVideoStreamType_9e6406e(
+  setRemoteVideoStreamType(
     uid: number,
     streamType: VIDEO_STREAM_TYPE
   ): CallApiReturnType;
 
-  setRemoteVideoSubscriptionOptions_0b6b258(
+  setRemoteVideoSubscriptionOptions(
     uid: number,
     options: VideoSubscriptionOptions
   ): CallApiReturnType;
 
-  setRemoteDefaultVideoStreamType_5a94eb0(
+  setRemoteDefaultVideoStreamType(
     streamType: VIDEO_STREAM_TYPE
   ): CallApiReturnType;
 
-  setSubscribeAudioBlocklist_2d31fd5(
+  setSubscribeAudioBlocklist(
     uidList: number[],
     uidNumber: number
   ): CallApiReturnType;
 
-  setSubscribeAudioAllowlist_2d31fd5(
+  setSubscribeAudioAllowlist(
     uidList: number[],
     uidNumber: number
   ): CallApiReturnType;
 
-  setSubscribeVideoBlocklist_2d31fd5(
+  setSubscribeVideoBlocklist(
     uidList: number[],
     uidNumber: number
   ): CallApiReturnType;
 
-  setSubscribeVideoAllowlist_2d31fd5(
+  setSubscribeVideoAllowlist(
     uidList: number[],
     uidNumber: number
   ): CallApiReturnType;
 
-  enableAudioVolumeIndication_39794a0(
+  enableAudioVolumeIndication(
     interval: number,
     smooth: number,
     reportVad: boolean
   ): CallApiReturnType;
 
-  startAudioRecording_6161339(
+  startAudioRecording(
     filePath: string,
     quality: AUDIO_RECORDING_QUALITY_TYPE
   ): CallApiReturnType;
 
-  startAudioRecording_410d265(
+  startAudioRecording2(
     filePath: string,
     sampleRate: number,
     quality: AUDIO_RECORDING_QUALITY_TYPE
   ): CallApiReturnType;
 
-  startAudioRecording_e32bb3b(
-    config: AudioRecordingConfiguration
-  ): CallApiReturnType;
+  startAudioRecording3(config: AudioRecordingConfiguration): CallApiReturnType;
 
-  registerAudioEncodedFrameObserver_ed4a177(
+  registerAudioEncodedFrameObserver(
     config: AudioEncodedFrameObserverConfig,
     observer: IAudioEncodedFrameObserver
   ): CallApiReturnType;
@@ -1667,21 +1622,19 @@ export interface IRtcEngine {
 
   createMediaPlayer(): CallApiReturnType;
 
-  destroyMediaPlayer_328a49b(media_player: IMediaPlayer): CallApiReturnType;
+  destroyMediaPlayer(media_player: IMediaPlayer): CallApiReturnType;
 
-  createMediaRecorder_f779617(info: RecorderStreamInfo): CallApiReturnType;
+  createMediaRecorder(info: RecorderStreamInfo): CallApiReturnType;
 
-  destroyMediaRecorder_95cdef5(
-    mediaRecorder: IMediaRecorder
-  ): CallApiReturnType;
+  destroyMediaRecorder(mediaRecorder: IMediaRecorder): CallApiReturnType;
 
-  startAudioMixing_f3db86c(
+  startAudioMixing(
     filePath: string,
     loopback: boolean,
     cycle: number
   ): CallApiReturnType;
 
-  startAudioMixing_1ee1b1e(
+  startAudioMixing2(
     filePath: string,
     loopback: boolean,
     cycle: number,
@@ -1694,17 +1647,17 @@ export interface IRtcEngine {
 
   resumeAudioMixing(): CallApiReturnType;
 
-  selectAudioTrack_46f8ab7(index: number): CallApiReturnType;
+  selectAudioTrack(index: number): CallApiReturnType;
 
   getAudioTrackCount(): CallApiReturnType;
 
-  adjustAudioMixingVolume_46f8ab7(volume: number): CallApiReturnType;
+  adjustAudioMixingVolume(volume: number): CallApiReturnType;
 
-  adjustAudioMixingPublishVolume_46f8ab7(volume: number): CallApiReturnType;
+  adjustAudioMixingPublishVolume(volume: number): CallApiReturnType;
 
   getAudioMixingPublishVolume(): CallApiReturnType;
 
-  adjustAudioMixingPlayoutVolume_46f8ab7(volume: number): CallApiReturnType;
+  adjustAudioMixingPlayoutVolume(volume: number): CallApiReturnType;
 
   getAudioMixingPlayoutVolume(): CallApiReturnType;
 
@@ -1712,25 +1665,25 @@ export interface IRtcEngine {
 
   getAudioMixingCurrentPosition(): CallApiReturnType;
 
-  setAudioMixingPosition_46f8ab7(pos: number): CallApiReturnType;
+  setAudioMixingPosition(pos: number): CallApiReturnType;
 
-  setAudioMixingDualMonoMode_38a5515(
+  setAudioMixingDualMonoMode(
     mode: AUDIO_MIXING_DUAL_MONO_MODE
   ): CallApiReturnType;
 
-  setAudioMixingPitch_46f8ab7(pitch: number): CallApiReturnType;
+  setAudioMixingPitch(pitch: number): CallApiReturnType;
 
   getEffectsVolume(): CallApiReturnType;
 
-  setEffectsVolume_46f8ab7(volume: number): CallApiReturnType;
+  setEffectsVolume(volume: number): CallApiReturnType;
 
-  preloadEffect_282ba8c(
+  preloadEffect(
     soundId: number,
     filePath: string,
     startPos: number
   ): CallApiReturnType;
 
-  playEffect_531a783(
+  playEffect(
     soundId: number,
     filePath: string,
     loopCount: number,
@@ -1741,7 +1694,7 @@ export interface IRtcEngine {
     startPos: number
   ): CallApiReturnType;
 
-  playAllEffects_20d7df2(
+  playAllEffects(
     loopCount: number,
     pitch: number,
     pan: number,
@@ -1749,261 +1702,255 @@ export interface IRtcEngine {
     publish: boolean
   ): CallApiReturnType;
 
-  getVolumeOfEffect_46f8ab7(soundId: number): CallApiReturnType;
+  getVolumeOfEffect(soundId: number): CallApiReturnType;
 
-  setVolumeOfEffect_4e92b3c(soundId: number, volume: number): CallApiReturnType;
+  setVolumeOfEffect(soundId: number, volume: number): CallApiReturnType;
 
-  pauseEffect_46f8ab7(soundId: number): CallApiReturnType;
+  pauseEffect(soundId: number): CallApiReturnType;
 
   pauseAllEffects(): CallApiReturnType;
 
-  resumeEffect_46f8ab7(soundId: number): CallApiReturnType;
+  resumeEffect(soundId: number): CallApiReturnType;
 
   resumeAllEffects(): CallApiReturnType;
 
-  stopEffect_46f8ab7(soundId: number): CallApiReturnType;
+  stopEffect(soundId: number): CallApiReturnType;
 
   stopAllEffects(): CallApiReturnType;
 
-  unloadEffect_46f8ab7(soundId: number): CallApiReturnType;
+  unloadEffect(soundId: number): CallApiReturnType;
 
   unloadAllEffects(): CallApiReturnType;
 
-  getEffectDuration_3a2037f(filePath: string): CallApiReturnType;
+  getEffectDuration(filePath: string): CallApiReturnType;
 
-  setEffectPosition_4e92b3c(soundId: number, pos: number): CallApiReturnType;
+  setEffectPosition(soundId: number, pos: number): CallApiReturnType;
 
-  getEffectCurrentPosition_46f8ab7(soundId: number): CallApiReturnType;
+  getEffectCurrentPosition(soundId: number): CallApiReturnType;
 
-  enableSoundPositionIndication_5039d15(enabled: boolean): CallApiReturnType;
+  enableSoundPositionIndication(enabled: boolean): CallApiReturnType;
 
-  setRemoteVoicePosition_250b42d(
+  setRemoteVoicePosition(
     uid: number,
     pan: number,
     gain: number
   ): CallApiReturnType;
 
-  enableSpatialAudio_5039d15(enabled: boolean): CallApiReturnType;
+  enableSpatialAudio(enabled: boolean): CallApiReturnType;
 
-  setRemoteUserSpatialAudioParams_65a7855(
+  setRemoteUserSpatialAudioParams(
     uid: number,
     params: SpatialAudioParams
   ): CallApiReturnType;
 
-  setVoiceBeautifierPreset_4dd6319(
-    preset: VOICE_BEAUTIFIER_PRESET
-  ): CallApiReturnType;
+  setVoiceBeautifierPreset(preset: VOICE_BEAUTIFIER_PRESET): CallApiReturnType;
 
-  setAudioEffectPreset_92ea92c(preset: AUDIO_EFFECT_PRESET): CallApiReturnType;
+  setAudioEffectPreset(preset: AUDIO_EFFECT_PRESET): CallApiReturnType;
 
-  setVoiceConversionPreset_d14ee73(
-    preset: VOICE_CONVERSION_PRESET
-  ): CallApiReturnType;
+  setVoiceConversionPreset(preset: VOICE_CONVERSION_PRESET): CallApiReturnType;
 
-  setAudioEffectParameters_73bc670(
+  setAudioEffectParameters(
     preset: AUDIO_EFFECT_PRESET,
     param1: number,
     param2: number
   ): CallApiReturnType;
 
-  setVoiceBeautifierParameters_f3cf745(
+  setVoiceBeautifierParameters(
     preset: VOICE_BEAUTIFIER_PRESET,
     param1: number,
     param2: number
   ): CallApiReturnType;
 
-  setVoiceConversionParameters_2f5022e(
+  setVoiceConversionParameters(
     preset: VOICE_CONVERSION_PRESET,
     param1: number,
     param2: number
   ): CallApiReturnType;
 
-  setLocalVoicePitch_bdb36bb(pitch: number): CallApiReturnType;
+  setLocalVoicePitch(pitch: number): CallApiReturnType;
 
-  setLocalVoiceFormant_bdb36bb(formantRatio: number): CallApiReturnType;
+  setLocalVoiceFormant(formantRatio: number): CallApiReturnType;
 
-  setLocalVoiceEqualization_d14012c(
+  setLocalVoiceEqualization(
     bandFrequency: AUDIO_EQUALIZATION_BAND_FREQUENCY,
     bandGain: number
   ): CallApiReturnType;
 
-  setLocalVoiceReverb_29c2013(
+  setLocalVoiceReverb(
     reverbKey: AUDIO_REVERB_TYPE,
     value: number
   ): CallApiReturnType;
 
-  setHeadphoneEQPreset_b679644(
-    preset: HEADPHONE_EQUALIZER_PRESET
-  ): CallApiReturnType;
+  setHeadphoneEQPreset(preset: HEADPHONE_EQUALIZER_PRESET): CallApiReturnType;
 
-  setHeadphoneEQParameters_4e92b3c(
+  setHeadphoneEQParameters(
     lowGain: number,
     highGain: number
   ): CallApiReturnType;
 
-  setLogFile_3a2037f(filePath: string): CallApiReturnType;
+  setLogFile(filePath: string): CallApiReturnType;
 
-  setLogFilter_2626ac7(filter: LOG_FILTER_TYPE): CallApiReturnType;
+  setLogFilter(filter: LOG_FILTER_TYPE): CallApiReturnType;
 
-  setLogLevel_f125d83(level: LOG_LEVEL): CallApiReturnType;
+  setLogLevel(level: LOG_LEVEL): CallApiReturnType;
 
-  setLogFileSize_2626ac7(fileSizeInKBytes: number): CallApiReturnType;
+  setLogFileSize(fileSizeInKBytes: number): CallApiReturnType;
 
-  uploadLogFile_66d4ecd(requestId: string): CallApiReturnType;
+  uploadLogFile(requestId: string): CallApiReturnType;
 
-  setLocalRenderMode_cfb201b(
+  setLocalRenderMode(
     renderMode: RENDER_MODE_TYPE,
     mirrorMode: VIDEO_MIRROR_MODE_TYPE
   ): CallApiReturnType;
 
-  setRemoteRenderMode_6771ce0(
+  setRemoteRenderMode(
     uid: number,
     renderMode: RENDER_MODE_TYPE,
     mirrorMode: VIDEO_MIRROR_MODE_TYPE
   ): CallApiReturnType;
 
-  setLocalRenderMode_bedb5ae(renderMode: RENDER_MODE_TYPE): CallApiReturnType;
+  setLocalRenderMode2(renderMode: RENDER_MODE_TYPE): CallApiReturnType;
 
-  setLocalVideoMirrorMode_b8a6c69(
+  setLocalVideoMirrorMode(
     mirrorMode: VIDEO_MIRROR_MODE_TYPE
   ): CallApiReturnType;
 
-  enableDualStreamMode_5039d15(enabled: boolean): CallApiReturnType;
+  enableDualStreamMode(enabled: boolean): CallApiReturnType;
 
-  enableDualStreamMode_9822d8a(
+  enableDualStreamMode2(
     enabled: boolean,
     streamConfig: SimulcastStreamConfig
   ): CallApiReturnType;
 
-  setDualStreamMode_3a7f662(mode: SIMULCAST_STREAM_MODE): CallApiReturnType;
+  setDualStreamMode(mode: SIMULCAST_STREAM_MODE): CallApiReturnType;
 
-  setDualStreamMode_b3a4f6c(
+  setDualStreamMode2(
     mode: SIMULCAST_STREAM_MODE,
     streamConfig: SimulcastStreamConfig
   ): CallApiReturnType;
 
-  enableCustomAudioLocalPlayback_9566341(
+  enableCustomAudioLocalPlayback(
     trackId: number,
     enabled: boolean
   ): CallApiReturnType;
 
-  setRecordingAudioFrameParameters_bd46d1d(
+  setRecordingAudioFrameParameters(
     sampleRate: number,
     channel: number,
     mode: RAW_AUDIO_FRAME_OP_MODE_TYPE,
     samplesPerCall: number
   ): CallApiReturnType;
 
-  setPlaybackAudioFrameParameters_bd46d1d(
+  setPlaybackAudioFrameParameters(
     sampleRate: number,
     channel: number,
     mode: RAW_AUDIO_FRAME_OP_MODE_TYPE,
     samplesPerCall: number
   ): CallApiReturnType;
 
-  setMixedAudioFrameParameters_ee7e270(
+  setMixedAudioFrameParameters(
     sampleRate: number,
     channel: number,
     samplesPerCall: number
   ): CallApiReturnType;
 
-  setEarMonitoringAudioFrameParameters_bd46d1d(
+  setEarMonitoringAudioFrameParameters(
     sampleRate: number,
     channel: number,
     mode: RAW_AUDIO_FRAME_OP_MODE_TYPE,
     samplesPerCall: number
   ): CallApiReturnType;
 
-  setPlaybackAudioFrameBeforeMixingParameters_4e92b3c(
+  setPlaybackAudioFrameBeforeMixingParameters(
     sampleRate: number,
     channel: number
   ): CallApiReturnType;
 
-  enableAudioSpectrumMonitor_46f8ab7(intervalInMS: number): CallApiReturnType;
+  enableAudioSpectrumMonitor(intervalInMS: number): CallApiReturnType;
 
   disableAudioSpectrumMonitor(): CallApiReturnType;
 
-  registerAudioSpectrumObserver_0406ea7(
+  registerAudioSpectrumObserver(
     observer: IAudioSpectrumObserver
   ): CallApiReturnType;
 
-  unregisterAudioSpectrumObserver_0406ea7(
+  unregisterAudioSpectrumObserver(
     observer: IAudioSpectrumObserver
   ): CallApiReturnType;
 
-  adjustRecordingSignalVolume_46f8ab7(volume: number): CallApiReturnType;
+  adjustRecordingSignalVolume(volume: number): CallApiReturnType;
 
-  muteRecordingSignal_5039d15(mute: boolean): CallApiReturnType;
+  muteRecordingSignal(mute: boolean): CallApiReturnType;
 
-  adjustPlaybackSignalVolume_46f8ab7(volume: number): CallApiReturnType;
+  adjustPlaybackSignalVolume(volume: number): CallApiReturnType;
 
-  adjustUserPlaybackSignalVolume_3cba5ae(
+  adjustUserPlaybackSignalVolume(
     uid: number,
     volume: number
   ): CallApiReturnType;
 
-  setLocalPublishFallbackOption_c29b788(
+  setLocalPublishFallbackOption(
     option: STREAM_FALLBACK_OPTIONS
   ): CallApiReturnType;
 
-  setRemoteSubscribeFallbackOption_c29b788(
+  setRemoteSubscribeFallbackOption(
     option: STREAM_FALLBACK_OPTIONS
   ): CallApiReturnType;
 
-  setHighPriorityUserList_ab88726(
+  setHighPriorityUserList(
     uidList: number[],
     uidNum: number,
     option: STREAM_FALLBACK_OPTIONS
   ): CallApiReturnType;
 
-  enableLoopbackRecording_0b8eb79(
+  enableLoopbackRecording(
     enabled: boolean,
     deviceName: string
   ): CallApiReturnType;
 
-  adjustLoopbackSignalVolume_46f8ab7(volume: number): CallApiReturnType;
+  adjustLoopbackSignalVolume(volume: number): CallApiReturnType;
 
   getLoopbackRecordingVolume(): CallApiReturnType;
 
-  enableInEarMonitoring_077cf5f(
+  enableInEarMonitoring(
     enabled: boolean,
     includeAudioFilters: EAR_MONITORING_FILTER_TYPE
   ): CallApiReturnType;
 
-  setInEarMonitoringVolume_46f8ab7(volume: number): CallApiReturnType;
+  setInEarMonitoringVolume(volume: number): CallApiReturnType;
 
-  loadExtensionProvider_7a174df(
+  loadExtensionProvider(
     path: string,
     unload_after_use: boolean
   ): CallApiReturnType;
 
-  setExtensionProviderProperty_0e4f59e(
+  setExtensionProviderProperty(
     provider: string,
     key: string,
     value: string
   ): CallApiReturnType;
 
-  registerExtension_fd62af4(
+  registerExtension(
     provider: string,
     extension: string,
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  enableExtension_0b60a2c(
+  enableExtension(
     provider: string,
     extension: string,
     enable: boolean,
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  enableExtension_d8b3874(
+  enableExtension2(
     provider: string,
     extension: string,
     extensionInfo: ExtensionInfo,
     enable: boolean
   ): CallApiReturnType;
 
-  setExtensionProperty_520ac55(
+  setExtensionProperty(
     provider: string,
     extension: string,
     key: string,
@@ -2011,7 +1958,7 @@ export interface IRtcEngine {
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  getExtensionProperty_38c9723(
+  getExtensionProperty(
     provider: string,
     extension: string,
     key: string,
@@ -2020,7 +1967,7 @@ export interface IRtcEngine {
     type: MEDIA_SOURCE_TYPE
   ): CallApiReturnType;
 
-  setExtensionProperty_f746b51(
+  setExtensionProperty2(
     provider: string,
     extension: string,
     extensionInfo: ExtensionInfo,
@@ -2028,7 +1975,7 @@ export interface IRtcEngine {
     value: string
   ): CallApiReturnType;
 
-  getExtensionProperty_18768d4(
+  getExtensionProperty2(
     provider: string,
     extension: string,
     extensionInfo: ExtensionInfo,
@@ -2037,21 +1984,19 @@ export interface IRtcEngine {
     buf_len: number
   ): CallApiReturnType;
 
-  setCameraCapturerConfiguration_afa93b3(
+  setCameraCapturerConfiguration(
     config: CameraCapturerConfiguration
   ): CallApiReturnType;
 
   createCustomVideoTrack(): CallApiReturnType;
 
-  createCustomEncodedVideoTrack_0e9dc99(
+  createCustomEncodedVideoTrack(
     sender_option: SenderOptions
   ): CallApiReturnType;
 
-  destroyCustomVideoTrack_3019423(video_track_id: number): CallApiReturnType;
+  destroyCustomVideoTrack(video_track_id: number): CallApiReturnType;
 
-  destroyCustomEncodedVideoTrack_3019423(
-    video_track_id: number
-  ): CallApiReturnType;
+  destroyCustomEncodedVideoTrack(video_track_id: number): CallApiReturnType;
 
   switchCamera(): CallApiReturnType;
 
@@ -2065,205 +2010,190 @@ export interface IRtcEngine {
 
   isCameraAutoFocusFaceModeSupported(): CallApiReturnType;
 
-  setCameraZoomFactor_685e803(factor: number): CallApiReturnType;
+  setCameraZoomFactor(factor: number): CallApiReturnType;
 
-  enableFaceDetection_5039d15(enabled: boolean): CallApiReturnType;
+  enableFaceDetection(enabled: boolean): CallApiReturnType;
 
   getCameraMaxZoomFactor(): CallApiReturnType;
 
-  setCameraFocusPositionInPreview_f282d50(
+  setCameraFocusPositionInPreview(
     positionX: number,
     positionY: number
   ): CallApiReturnType;
 
-  setCameraTorchOn_5039d15(isOn: boolean): CallApiReturnType;
+  setCameraTorchOn(isOn: boolean): CallApiReturnType;
 
-  setCameraAutoFocusFaceModeEnabled_5039d15(
-    enabled: boolean
-  ): CallApiReturnType;
+  setCameraAutoFocusFaceModeEnabled(enabled: boolean): CallApiReturnType;
 
   isCameraExposurePositionSupported(): CallApiReturnType;
 
-  setCameraExposurePosition_f282d50(
+  setCameraExposurePosition(
     positionXinView: number,
     positionYinView: number
   ): CallApiReturnType;
 
   isCameraExposureSupported(): CallApiReturnType;
 
-  setCameraExposureFactor_685e803(factor: number): CallApiReturnType;
+  setCameraExposureFactor(factor: number): CallApiReturnType;
 
   isCameraAutoExposureFaceModeSupported(): CallApiReturnType;
 
-  setCameraAutoExposureFaceModeEnabled_5039d15(
-    enabled: boolean
-  ): CallApiReturnType;
+  setCameraAutoExposureFaceModeEnabled(enabled: boolean): CallApiReturnType;
 
-  setDefaultAudioRouteToSpeakerphone_5039d15(
+  setDefaultAudioRouteToSpeakerphone(
     defaultToSpeaker: boolean
   ): CallApiReturnType;
 
-  setEnableSpeakerphone_5039d15(speakerOn: boolean): CallApiReturnType;
+  setEnableSpeakerphone(speakerOn: boolean): CallApiReturnType;
 
   isSpeakerphoneEnabled(): CallApiReturnType;
 
-  setRouteInCommunicationMode_46f8ab7(route: number): CallApiReturnType;
+  setRouteInCommunicationMode(route: number): CallApiReturnType;
 
-  getScreenCaptureSources_f3e02cb(
+  getScreenCaptureSources(
     thumbSize: SIZE,
     iconSize: SIZE,
     includeScreen: boolean
   ): CallApiReturnType;
 
-  setAudioSessionOperationRestriction_c492897(
+  setAudioSessionOperationRestriction(
     restriction: AUDIO_SESSION_OPERATION_RESTRICTION
   ): CallApiReturnType;
 
-  startScreenCaptureByDisplayId_7cf6800(
+  startScreenCaptureByDisplayId(
     displayId: number,
     regionRect: Rectangle,
     captureParams: ScreenCaptureParameters
   ): CallApiReturnType;
 
-  startScreenCaptureByScreenRect_e286286(
+  startScreenCaptureByScreenRect(
     screenRect: Rectangle,
     regionRect: Rectangle,
     captureParams: ScreenCaptureParameters
   ): CallApiReturnType;
 
-  getAudioDeviceInfo_505aa0c(deviceInfo: DeviceInfo): CallApiReturnType;
+  getAudioDeviceInfo(deviceInfo: DeviceInfo): CallApiReturnType;
 
-  startScreenCaptureByWindowId_5ab7e59(
+  startScreenCaptureByWindowId(
     windowId: any,
     regionRect: Rectangle,
     captureParams: ScreenCaptureParameters
   ): CallApiReturnType;
 
-  setScreenCaptureContentHint_8ad2c79(
+  setScreenCaptureContentHint(
     contentHint: VIDEO_CONTENT_HINT
   ): CallApiReturnType;
 
-  updateScreenCaptureRegion_6b327a8(regionRect: Rectangle): CallApiReturnType;
+  updateScreenCaptureRegion(regionRect: Rectangle): CallApiReturnType;
 
-  updateScreenCaptureParameters_a2eef93(
+  updateScreenCaptureParameters(
     captureParams: ScreenCaptureParameters
   ): CallApiReturnType;
 
-  startScreenCapture_270da41(
+  startScreenCapture(
     captureParams: ScreenCaptureParameters2
   ): CallApiReturnType;
 
-  updateScreenCapture_270da41(
+  updateScreenCapture(
     captureParams: ScreenCaptureParameters2
   ): CallApiReturnType;
 
   queryScreenCaptureCapability(): CallApiReturnType;
 
-  setScreenCaptureScenario_13de7b4(
+  setScreenCaptureScenario(
     screenScenario: SCREEN_SCENARIO_TYPE
   ): CallApiReturnType;
 
   stopScreenCapture(): CallApiReturnType;
 
-  getCallId_66d4ecd(callId: string): CallApiReturnType;
+  getCallId(callId: string): CallApiReturnType;
 
-  rate_f1a0070(
-    callId: string,
-    rating: number,
-    description: string
-  ): CallApiReturnType;
+  rate(callId: string, rating: number, description: string): CallApiReturnType;
 
-  complain_ccad422(callId: string, description: string): CallApiReturnType;
+  complain(callId: string, description: string): CallApiReturnType;
 
-  startRtmpStreamWithoutTranscoding_3a2037f(url: string): CallApiReturnType;
+  startRtmpStreamWithoutTranscoding(url: string): CallApiReturnType;
 
-  startRtmpStreamWithTranscoding_f76aa1a(
+  startRtmpStreamWithTranscoding(
     url: string,
     transcoding: LiveTranscoding
   ): CallApiReturnType;
 
-  updateRtmpTranscoding_91368d4(
-    transcoding: LiveTranscoding
-  ): CallApiReturnType;
+  updateRtmpTranscoding(transcoding: LiveTranscoding): CallApiReturnType;
 
-  stopRtmpStream_3a2037f(url: string): CallApiReturnType;
+  stopRtmpStream(url: string): CallApiReturnType;
 
-  startLocalVideoTranscoder_90f9e33(
+  startLocalVideoTranscoder(
     config: LocalTranscoderConfiguration
   ): CallApiReturnType;
 
-  updateLocalTranscoderConfiguration_90f9e33(
+  updateLocalTranscoderConfiguration(
     config: LocalTranscoderConfiguration
   ): CallApiReturnType;
 
   stopLocalVideoTranscoder(): CallApiReturnType;
 
-  startCameraCapture_f3692cc(
+  startCameraCapture(
     sourceType: VIDEO_SOURCE_TYPE,
     config: CameraCapturerConfiguration
   ): CallApiReturnType;
 
-  stopCameraCapture_4fd718e(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
+  stopCameraCapture(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
 
-  setCameraDeviceOrientation_025aae8(
+  setCameraDeviceOrientation(
     type: VIDEO_SOURCE_TYPE,
     orientation: VIDEO_ORIENTATION
   ): CallApiReturnType;
 
-  setScreenCaptureOrientation_025aae8(
+  setScreenCaptureOrientation(
     type: VIDEO_SOURCE_TYPE,
     orientation: VIDEO_ORIENTATION
   ): CallApiReturnType;
 
-  startScreenCapture_9ebb320(
+  startScreenCapture2(
     sourceType: VIDEO_SOURCE_TYPE,
     config: ScreenCaptureConfiguration
   ): CallApiReturnType;
 
-  stopScreenCapture_4fd718e(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
+  stopScreenCapture2(sourceType: VIDEO_SOURCE_TYPE): CallApiReturnType;
 
   getConnectionState(): CallApiReturnType;
 
-  registerEventHandler_5fc0465(
+  registerEventHandler(eventHandler: IRtcEngineEventHandler): CallApiReturnType;
+
+  unregisterEventHandler(
     eventHandler: IRtcEngineEventHandler
   ): CallApiReturnType;
 
-  unregisterEventHandler_5fc0465(
-    eventHandler: IRtcEngineEventHandler
-  ): CallApiReturnType;
-
-  setRemoteUserPriority_f34115b(
+  setRemoteUserPriority(
     uid: number,
     userPriority: PRIORITY_TYPE
   ): CallApiReturnType;
 
-  registerPacketObserver_f8b44dd(observer: IPacketObserver): CallApiReturnType;
+  registerPacketObserver(observer: IPacketObserver): CallApiReturnType;
 
-  setEncryptionMode_3a2037f(encryptionMode: string): CallApiReturnType;
+  setEncryptionMode(encryptionMode: string): CallApiReturnType;
 
-  setEncryptionSecret_3a2037f(secret: string): CallApiReturnType;
+  setEncryptionSecret(secret: string): CallApiReturnType;
 
-  enableEncryption_421c27b(
+  enableEncryption(
     enabled: boolean,
     config: EncryptionConfig
   ): CallApiReturnType;
 
-  createDataStream_b897a63(
-    reliable: boolean,
-    ordered: boolean
-  ): CallApiReturnType;
+  createDataStream(reliable: boolean, ordered: boolean): CallApiReturnType;
 
-  createDataStream_81d7315(config: DataStreamConfig): CallApiReturnType;
+  createDataStream2(config: DataStreamConfig): CallApiReturnType;
 
-  sendStreamMessage_8715a45(
+  sendStreamMessage(
     streamId: number,
     data: Uint8Array,
     length: number
   ): CallApiReturnType;
 
-  addVideoWatermark_eaef16d(watermark: RtcImage): CallApiReturnType;
+  addVideoWatermark(watermark: RtcImage): CallApiReturnType;
 
-  addVideoWatermark_7480410(
+  addVideoWatermark2(
     watermarkUrl: string,
     options: WatermarkOptions
   ): CallApiReturnType;
@@ -2274,9 +2204,9 @@ export interface IRtcEngine {
 
   resumeAudio(): CallApiReturnType;
 
-  enableWebSdkInteroperability_5039d15(enabled: boolean): CallApiReturnType;
+  enableWebSdkInteroperability(enabled: boolean): CallApiReturnType;
 
-  sendCustomReportMessage_56d6589(
+  sendCustomReportMessage(
     id: string,
     category: string,
     event: string,
@@ -2284,17 +2214,17 @@ export interface IRtcEngine {
     value: number
   ): CallApiReturnType;
 
-  registerMediaMetadataObserver_8701fec(
+  registerMediaMetadataObserver(
     observer: IMetadataObserver,
     type: METADATA_TYPE
   ): CallApiReturnType;
 
-  unregisterMediaMetadataObserver_8701fec(
+  unregisterMediaMetadataObserver(
     observer: IMetadataObserver,
     type: METADATA_TYPE
   ): CallApiReturnType;
 
-  startAudioFrameDump_aad7331(
+  startAudioFrameDump(
     channel_id: string,
     user_id: number,
     location: string,
@@ -2304,58 +2234,55 @@ export interface IRtcEngine {
     auto_upload: boolean
   ): CallApiReturnType;
 
-  stopAudioFrameDump_a4c9af4(
+  stopAudioFrameDump(
     channel_id: string,
     user_id: number,
     location: string
   ): CallApiReturnType;
 
-  setAINSMode_4df3049(
-    enabled: boolean,
-    mode: AUDIO_AINS_MODE
-  ): CallApiReturnType;
+  setAINSMode(enabled: boolean, mode: AUDIO_AINS_MODE): CallApiReturnType;
 
-  registerLocalUserAccount_ccad422(
+  registerLocalUserAccount(
     appId: string,
     userAccount: string
   ): CallApiReturnType;
 
-  joinChannelWithUserAccount_0e4f59e(
+  joinChannelWithUserAccount(
     token: string,
     channelId: string,
     userAccount: string
   ): CallApiReturnType;
 
-  joinChannelWithUserAccount_4685af9(
+  joinChannelWithUserAccount2(
     token: string,
     channelId: string,
     userAccount: string,
     options: ChannelMediaOptions
   ): CallApiReturnType;
 
-  joinChannelWithUserAccountEx_268b977(
+  joinChannelWithUserAccountEx(
     token: string,
     channelId: string,
     userAccount: string,
     options: ChannelMediaOptions
   ): CallApiReturnType;
 
-  getUserInfoByUserAccount_c6a8f08(
+  getUserInfoByUserAccount(
     userAccount: string,
     userInfo: UserInfo
   ): CallApiReturnType;
 
-  getUserInfoByUid_6b7aee8(uid: number, userInfo: UserInfo): CallApiReturnType;
+  getUserInfoByUid(uid: number, userInfo: UserInfo): CallApiReturnType;
 
-  startOrUpdateChannelMediaRelay_e68f0a4(
+  startOrUpdateChannelMediaRelay(
     configuration: ChannelMediaRelayConfiguration
   ): CallApiReturnType;
 
-  startChannelMediaRelay_e68f0a4(
+  startChannelMediaRelay(
     configuration: ChannelMediaRelayConfiguration
   ): CallApiReturnType;
 
-  updateChannelMediaRelay_e68f0a4(
+  updateChannelMediaRelay(
     configuration: ChannelMediaRelayConfiguration
   ): CallApiReturnType;
 
@@ -2365,15 +2292,15 @@ export interface IRtcEngine {
 
   resumeAllChannelMediaRelay(): CallApiReturnType;
 
-  setDirectCdnStreamingAudioConfiguration_ac39c15(
+  setDirectCdnStreamingAudioConfiguration(
     profile: AUDIO_PROFILE_TYPE
   ): CallApiReturnType;
 
-  setDirectCdnStreamingVideoConfiguration_89677d8(
+  setDirectCdnStreamingVideoConfiguration(
     config: VideoEncoderConfiguration
   ): CallApiReturnType;
 
-  startDirectCdnStreaming_ed8d77b(
+  startDirectCdnStreaming(
     eventHandler: IDirectCdnStreamingEventHandler,
     publishUrl: string,
     options: DirectCdnStreamingMediaOptions
@@ -2381,11 +2308,11 @@ export interface IRtcEngine {
 
   stopDirectCdnStreaming(): CallApiReturnType;
 
-  updateDirectCdnStreamingMediaOptions_d2556c8(
+  updateDirectCdnStreamingMediaOptions(
     options: DirectCdnStreamingMediaOptions
   ): CallApiReturnType;
 
-  startRhythmPlayer_e1f6565(
+  startRhythmPlayer(
     sound1: string,
     sound2: string,
     config: AgoraRhythmPlayerConfig
@@ -2393,52 +2320,48 @@ export interface IRtcEngine {
 
   stopRhythmPlayer(): CallApiReturnType;
 
-  configRhythmPlayer_b36c805(
-    config: AgoraRhythmPlayerConfig
-  ): CallApiReturnType;
+  configRhythmPlayer(config: AgoraRhythmPlayerConfig): CallApiReturnType;
 
-  takeSnapshot_1922dd1(uid: number, filePath: string): CallApiReturnType;
+  takeSnapshot(uid: number, filePath: string): CallApiReturnType;
 
-  enableContentInspect_e15e514(
+  enableContentInspect(
     enabled: boolean,
     config: ContentInspectConfig
   ): CallApiReturnType;
 
-  adjustCustomAudioPublishVolume_f8da2ca(
+  adjustCustomAudioPublishVolume(
     trackId: number,
     volume: number
   ): CallApiReturnType;
 
-  adjustCustomAudioPlayoutVolume_f8da2ca(
+  adjustCustomAudioPlayoutVolume(
     trackId: number,
     volume: number
   ): CallApiReturnType;
 
-  setCloudProxy_39d115e(proxyType: CLOUD_PROXY_TYPE): CallApiReturnType;
+  setCloudProxy(proxyType: CLOUD_PROXY_TYPE): CallApiReturnType;
 
-  setLocalAccessPoint_798c8c7(
-    config: LocalAccessPointConfiguration
-  ): CallApiReturnType;
+  setLocalAccessPoint(config: LocalAccessPointConfiguration): CallApiReturnType;
 
-  setAdvancedAudioOptions_38d986b(
+  setAdvancedAudioOptions(
     options: AdvancedAudioOptions,
     sourceType: number
   ): CallApiReturnType;
 
-  setAVSyncSource_bf26e54(channelId: string, uid: number): CallApiReturnType;
+  setAVSyncSource(channelId: string, uid: number): CallApiReturnType;
 
-  enableVideoImageSource_5f39ea0(
+  enableVideoImageSource(
     enable: boolean,
     options: ImageTrackOptions
   ): CallApiReturnType;
 
   getCurrentMonotonicTimeInMs(): CallApiReturnType;
 
-  enableWirelessAccelerate_5039d15(enabled: boolean): CallApiReturnType;
+  enableWirelessAccelerate(enabled: boolean): CallApiReturnType;
 
   getNetworkType(): CallApiReturnType;
 
-  setParameters_3a2037f(parameters: string): CallApiReturnType;
+  setParameters(parameters: string): CallApiReturnType;
 
   startMediaRenderingTracing(): CallApiReturnType;
 
@@ -2446,7 +2369,7 @@ export interface IRtcEngine {
 
   getNtpWallTimeInMs(): CallApiReturnType;
 
-  isFeatureAvailableOnDevice_a694b62(type: FeatureType): CallApiReturnType;
+  isFeatureAvailableOnDevice(type: FeatureType): CallApiReturnType;
 }
 
 export enum QUALITY_REPORT_FORMAT_TYPE {

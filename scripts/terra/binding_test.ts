@@ -10,7 +10,7 @@ export default function (
   args: any,
   parseResult: ParseResult
 ) {
-  let view = binding(parseResult);
+  let view = binding(parseResult, true);
   return renderWithConfiguration({
     fileNameTemplatePath: path.join(
       __dirname,

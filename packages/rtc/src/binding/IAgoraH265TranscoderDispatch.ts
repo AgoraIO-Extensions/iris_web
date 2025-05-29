@@ -21,27 +21,27 @@ export class IH265TranscoderObserver {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
-  onEnableTranscode_6ba6646(result: H265_TRANSCODE_RESULT): void {
+  onEnableTranscode(result: H265_TRANSCODE_RESULT): void {
     AgoraConsole.warn(
-      'H265TranscoderObserver_onEnableTranscode_6ba6646 not supported in this platform!'
+      'H265TranscoderObserver_onEnableTranscode not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onQueryChannel_31ba3df(
+  onQueryChannel(
     result: H265_TRANSCODE_RESULT,
     originChannel: string,
     transcodeChannel: string
   ): void {
     AgoraConsole.warn(
-      'H265TranscoderObserver_onQueryChannel_31ba3df not supported in this platform!'
+      'H265TranscoderObserver_onQueryChannel not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onTriggerTranscode_6ba6646(result: H265_TRANSCODE_RESULT): void {
+  onTriggerTranscode(result: H265_TRANSCODE_RESULT): void {
     AgoraConsole.warn(
-      'H265TranscoderObserver_onTriggerTranscode_6ba6646 not supported in this platform!'
+      'H265TranscoderObserver_onTriggerTranscode not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -54,41 +54,41 @@ export class IH265TranscoderDispatch implements IH265Transcoder {
     this._engine = engine;
   }
   // @ts-ignore
-  enableTranscode_a0779eb(apiParam: ApiParam): CallApiReturnType {
+  enableTranscode(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'H265Transcoder_enableTranscode_a0779eb not supported in this platform!'
+      'H265Transcoder_enableTranscode not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  queryChannel_a0779eb(apiParam: ApiParam): CallApiReturnType {
+  queryChannel(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'H265Transcoder_queryChannel_a0779eb not supported in this platform!'
+      'H265Transcoder_queryChannel not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  triggerTranscode_a0779eb(apiParam: ApiParam): CallApiReturnType {
+  triggerTranscode(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'H265Transcoder_triggerTranscode_a0779eb not supported in this platform!'
+      'H265Transcoder_triggerTranscode not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  registerTranscoderObserver_e1ee996(apiParam: ApiParam): CallApiReturnType {
+  registerTranscoderObserver(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'H265Transcoder_registerTranscoderObserver_e1ee996 not supported in this platform!'
+      'H265Transcoder_registerTranscoderObserver not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  unregisterTranscoderObserver_e1ee996(apiParam: ApiParam): CallApiReturnType {
+  unregisterTranscoderObserver(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'H265Transcoder_unregisterTranscoderObserver_e1ee996 not supported in this platform!'
+      'H265Transcoder_unregisterTranscoderObserver not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

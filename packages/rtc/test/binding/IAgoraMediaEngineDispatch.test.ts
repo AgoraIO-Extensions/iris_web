@@ -20,7 +20,7 @@ beforeAll(async () => {
     context: 'test',
   };
   let apiParam = new IrisCore.EventParam(
-    'RtcEngine_initialize_0320339',
+    'RtcEngine_initialize',
     JSON.stringify(nParam),
     0,
     '',
@@ -40,61 +40,7 @@ afterEach(() => {
 });
 
 describe('IMediaEngine', () => {
-  test('MediaEngine_registerAudioFrameObserver_d873a64 parameter', async () => {
-    let nParam = {
-      observer: undefined,
-    };
-    try {
-      await IrisCore.callIrisApi(
-        apiEnginePtr,
-        new IrisCore.EventParam(
-          'MediaEngine_registerAudioFrameObserver_d873a64',
-          JSON.stringify(nParam),
-          0,
-          '',
-          ['test'],
-          [],
-          1
-        )
-      );
-    } catch (e) {
-      expect(e).toEqual('observer is undefined');
-    }
-    //@ts-ignore
-    nParam.observer = 'test';
-  });
-
-  test('MediaEngine_registerAudioFrameObserver_d873a64 impl call', async () => {
-    jest
-      .spyOn(
-        irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl,
-        'registerAudioFrameObserver_d873a64'
-      )
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
-    let nParam = {
-      observer: 'test',
-    };
-    let apiParam = new IrisCore.EventParam(
-      'MediaEngine_registerAudioFrameObserver_d873a64',
-      JSON.stringify(nParam),
-      0,
-      '',
-      ['test'],
-      [],
-      1
-    );
-    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
-    expect(
-      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        .registerAudioFrameObserver_d873a64
-    ).toBeCalledTimes(1);
-    expect(
-      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        .registerAudioFrameObserver_d873a64
-    ).toBeCalledWith('test');
-  });
-
-  test('MediaEngine_registerVideoFrameObserver_2cc0ef1 impl call', async () => {
+  test('MediaEngine_registerAudioFrameObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -102,7 +48,7 @@ describe('IMediaEngine', () => {
       observer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_registerVideoFrameObserver_2cc0ef1',
+      'MediaEngine_registerAudioFrameObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -113,7 +59,7 @@ describe('IMediaEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.registerVideoFrameObserver_2cc0ef1
+        ?.registerAudioFrameObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -122,7 +68,7 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_registerVideoEncodedFrameObserver_d45d579 impl call', async () => {
+  test('MediaEngine_registerVideoFrameObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -130,7 +76,7 @@ describe('IMediaEngine', () => {
       observer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_registerVideoEncodedFrameObserver_d45d579',
+      'MediaEngine_registerVideoFrameObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -141,7 +87,7 @@ describe('IMediaEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.registerVideoEncodedFrameObserver_d45d579
+        ?.registerVideoFrameObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -150,7 +96,35 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_pushAudioFrame_8dfac8c impl call', async () => {
+  test('MediaEngine_registerVideoEncodedFrameObserver impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      observer: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MediaEngine_registerVideoEncodedFrameObserver',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
+        ?.registerVideoEncodedFrameObserver
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
+  test('MediaEngine_pushAudioFrame impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -159,7 +133,7 @@ describe('IMediaEngine', () => {
       trackId: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_pushAudioFrame_8dfac8c',
+      'MediaEngine_pushAudioFrame',
       JSON.stringify(nParam),
       0,
       '',
@@ -169,8 +143,7 @@ describe('IMediaEngine', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.pushAudioFrame_8dfac8c
+      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl?.pushAudioFrame
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -179,7 +152,7 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_pullAudioFrame_28bed4b impl call', async () => {
+  test('MediaEngine_pullAudioFrame impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -187,7 +160,7 @@ describe('IMediaEngine', () => {
       frame: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_pullAudioFrame_28bed4b',
+      'MediaEngine_pullAudioFrame',
       JSON.stringify(nParam),
       0,
       '',
@@ -197,8 +170,7 @@ describe('IMediaEngine', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.pullAudioFrame_28bed4b
+      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl?.pullAudioFrame
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -207,93 +179,9 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_setExternalVideoSource_fff99b6 parameter', async () => {
-    let nParam = {
-      enabled: undefined,
-      useTexture: undefined,
-      sourceType: undefined,
-      encodedVideoOption: undefined,
-    };
-    try {
-      await IrisCore.callIrisApi(
-        apiEnginePtr,
-        new IrisCore.EventParam(
-          'MediaEngine_setExternalVideoSource_fff99b6',
-          JSON.stringify(nParam),
-          0,
-          '',
-          ['test'],
-          [],
-          1
-        )
-      );
-    } catch (e) {
-      expect(e).toEqual('enabled is undefined');
-    }
-    //@ts-ignore
-    nParam.enabled = 'test';
-    try {
-      await IrisCore.callIrisApi(
-        apiEnginePtr,
-        new IrisCore.EventParam(
-          'MediaEngine_setExternalVideoSource_fff99b6',
-          JSON.stringify(nParam),
-          0,
-          '',
-          ['test'],
-          [],
-          1
-        )
-      );
-    } catch (e) {
-      expect(e).toEqual('useTexture is undefined');
-    }
-    //@ts-ignore
-    nParam.useTexture = 'test';
-    try {
-      await IrisCore.callIrisApi(
-        apiEnginePtr,
-        new IrisCore.EventParam(
-          'MediaEngine_setExternalVideoSource_fff99b6',
-          JSON.stringify(nParam),
-          0,
-          '',
-          ['test'],
-          [],
-          1
-        )
-      );
-    } catch (e) {
-      expect(e).toEqual('sourceType is undefined');
-    }
-    //@ts-ignore
-    nParam.sourceType = 'test';
-    try {
-      await IrisCore.callIrisApi(
-        apiEnginePtr,
-        new IrisCore.EventParam(
-          'MediaEngine_setExternalVideoSource_fff99b6',
-          JSON.stringify(nParam),
-          0,
-          '',
-          ['test'],
-          [],
-          1
-        )
-      );
-    } catch (e) {
-      expect(e).toEqual('encodedVideoOption is undefined');
-    }
-    //@ts-ignore
-    nParam.encodedVideoOption = 'test';
-  });
-
-  test('MediaEngine_setExternalVideoSource_fff99b6 impl call', async () => {
+  test('MediaEngine_setExternalVideoSource impl call', async () => {
     jest
-      .spyOn(
-        irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl,
-        'setExternalVideoSource_fff99b6'
-      )
+      .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       enabled: 'test',
@@ -302,7 +190,7 @@ describe('IMediaEngine', () => {
       encodedVideoOption: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_setExternalVideoSource_fff99b6',
+      'MediaEngine_setExternalVideoSource',
       JSON.stringify(nParam),
       0,
       '',
@@ -313,15 +201,16 @@ describe('IMediaEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        .setExternalVideoSource_fff99b6
-    ).toBeCalledTimes(1);
-    expect(
-      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        .setExternalVideoSource_fff99b6
-    ).toBeCalledWith('test', 'test', 'test', 'test');
+        ?.setExternalVideoSource
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   });
 
-  test('MediaEngine_setExternalAudioSource_e6538be impl call', async () => {
+  test('MediaEngine_setExternalAudioSource impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -333,7 +222,7 @@ describe('IMediaEngine', () => {
       publish: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_setExternalAudioSource_e6538be',
+      'MediaEngine_setExternalAudioSource',
       JSON.stringify(nParam),
       0,
       '',
@@ -344,7 +233,7 @@ describe('IMediaEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.setExternalAudioSource_e6538be
+        ?.setExternalAudioSource
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -353,7 +242,7 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_createCustomAudioTrack_5a0bf1a impl call', async () => {
+  test('MediaEngine_createCustomAudioTrack impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -362,7 +251,7 @@ describe('IMediaEngine', () => {
       config: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_createCustomAudioTrack_5a0bf1a',
+      'MediaEngine_createCustomAudioTrack',
       JSON.stringify(nParam),
       0,
       '',
@@ -373,7 +262,7 @@ describe('IMediaEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.createCustomAudioTrack_5a0bf1a
+        ?.createCustomAudioTrack
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -382,7 +271,7 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_destroyCustomAudioTrack_6178b5d impl call', async () => {
+  test('MediaEngine_destroyCustomAudioTrack impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -390,7 +279,7 @@ describe('IMediaEngine', () => {
       trackId: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_destroyCustomAudioTrack_6178b5d',
+      'MediaEngine_destroyCustomAudioTrack',
       JSON.stringify(nParam),
       0,
       '',
@@ -401,7 +290,7 @@ describe('IMediaEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.destroyCustomAudioTrack_6178b5d
+        ?.destroyCustomAudioTrack
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -410,7 +299,7 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_setExternalAudioSink_d275ce0 impl call', async () => {
+  test('MediaEngine_setExternalAudioSink impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -420,7 +309,7 @@ describe('IMediaEngine', () => {
       channels: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_setExternalAudioSink_d275ce0',
+      'MediaEngine_setExternalAudioSink',
       JSON.stringify(nParam),
       0,
       '',
@@ -431,7 +320,7 @@ describe('IMediaEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.setExternalAudioSink_d275ce0
+        ?.setExternalAudioSink
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -440,7 +329,7 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_enableCustomAudioLocalPlayback_5f38e8a impl call', async () => {
+  test('MediaEngine_enableCustomAudioLocalPlayback impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -449,7 +338,7 @@ describe('IMediaEngine', () => {
       enabled: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_enableCustomAudioLocalPlayback_5f38e8a',
+      'MediaEngine_enableCustomAudioLocalPlayback',
       JSON.stringify(nParam),
       0,
       '',
@@ -460,7 +349,7 @@ describe('IMediaEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.enableCustomAudioLocalPlayback_5f38e8a
+        ?.enableCustomAudioLocalPlayback
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -469,40 +358,16 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_pushVideoFrame_4e544e2 parameter', async () => {
-    let nParam = {
-      frame: 'test',
-      videoTrackId: 'test',
-    };
-    jest.spyOn(bufferExtensions, 'callApiBufferExtension');
-    await IrisCore.callIrisApi(
-      apiEnginePtr,
-      new IrisCore.EventParam(
-        'MediaEngine_pushVideoFrame_4e544e2',
-        JSON.stringify(nParam),
-        0,
-        '',
-        ['test'],
-        [],
-        1
-      )
-    );
-    expect(bufferExtensions.callApiBufferExtension).toBeCalledTimes(1);
-  });
-
-  test('MediaEngine_pushVideoFrame_4e544e2 impl call', async () => {
+  test('MediaEngine_pushVideoFrame impl call', async () => {
     jest
-      .spyOn(
-        irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl,
-        'pushVideoFrame_4e544e2'
-      )
+      .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       frame: 'test',
       videoTrackId: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_pushVideoFrame_4e544e2',
+      'MediaEngine_pushVideoFrame',
       JSON.stringify(nParam),
       0,
       '',
@@ -512,16 +377,16 @@ describe('IMediaEngine', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        .pushVideoFrame_4e544e2
-    ).toBeCalledTimes(1);
-    expect(
-      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        .pushVideoFrame_4e544e2
-    ).toBeCalledWith('test', 'test');
+      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl?.pushVideoFrame
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
   });
 
-  test('MediaEngine_pushEncodedVideoImage_f854c56 impl call', async () => {
+  test('MediaEngine_pushEncodedVideoImage impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -532,7 +397,7 @@ describe('IMediaEngine', () => {
       videoTrackId: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_pushEncodedVideoImage_f854c56',
+      'MediaEngine_pushEncodedVideoImage',
       JSON.stringify(nParam),
       0,
       '',
@@ -543,7 +408,7 @@ describe('IMediaEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.pushEncodedVideoImage_f854c56
+        ?.pushEncodedVideoImage
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -552,7 +417,7 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_addVideoFrameRenderer_2cc0ef1 impl call', async () => {
+  test('MediaEngine_addVideoFrameRenderer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -560,7 +425,7 @@ describe('IMediaEngine', () => {
       renderer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_addVideoFrameRenderer_2cc0ef1',
+      'MediaEngine_addVideoFrameRenderer',
       JSON.stringify(nParam),
       0,
       '',
@@ -571,7 +436,7 @@ describe('IMediaEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.addVideoFrameRenderer_2cc0ef1
+        ?.addVideoFrameRenderer
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -580,7 +445,7 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_removeVideoFrameRenderer_2cc0ef1 impl call', async () => {
+  test('MediaEngine_removeVideoFrameRenderer impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -588,7 +453,7 @@ describe('IMediaEngine', () => {
       renderer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_removeVideoFrameRenderer_2cc0ef1',
+      'MediaEngine_removeVideoFrameRenderer',
       JSON.stringify(nParam),
       0,
       '',
@@ -599,7 +464,7 @@ describe('IMediaEngine', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
-        ?.removeVideoFrameRenderer_2cc0ef1
+        ?.removeVideoFrameRenderer
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -608,13 +473,13 @@ describe('IMediaEngine', () => {
     );
   });
 
-  test('MediaEngine_release impl call', async () => {
+  test('MediaEngine impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaEngine_release',
+      'MediaEngine',
       JSON.stringify(nParam),
       0,
       '',

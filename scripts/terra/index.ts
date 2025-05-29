@@ -12,7 +12,7 @@ import {
   renderWithConfiguration,
 } from '@agoraio-extensions/terra_shared_configs';
 
-import { getIrisApiIdForWrapperFunc, isMatch } from './utils';
+import { appendNumberToDuplicateMemberFunction, isMatch, revertIrisApiId } from './utils';
 
 type CXXFileUserData = {
   fileName: string;
@@ -49,8 +49,24 @@ export default function (
       let isCallback = isMatch(node.name, 'isCallback');
 
       if (node.__TYPE === CXXTYPE.Clazz) {
+
+        //for old iris
         node.asClazz().methods.map((method) => {
-          method.name = getIrisApiIdForWrapperFunc(method);
+          method = revertIrisApiId(method);
+          if(method.user_data?.MergeNodeParser?.sourceClazzName === 'IRtcEngineEventHandlerEx' && !method.name.endsWith('Ex')){
+            method.name = method.name + 'Ex';
+            method.user_data.IrisApiIdParser.value = method.user_data.IrisApiIdParser.value + 'Ex';
+            method.user_data.IrisApiIdParser.key = method.user_data.IrisApiIdParser.key + 'Ex';
+          }
+        });
+        //重载函数重命名, 自动末尾+数字
+        //['joinChannel', 'joinChannel'] => ['joinChannel', 'joinChannel2']
+        node.asClazz().methods = appendNumberToDuplicateMemberFunction(
+          node.asClazz().methods
+        );
+
+        node.asClazz().methods.map((method) => {
+
           const clazzMethodUserData: ClazzMethodUserData = {
             output: '',
             input: '',

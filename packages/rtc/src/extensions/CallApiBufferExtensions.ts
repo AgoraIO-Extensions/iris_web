@@ -1,9 +1,9 @@
 import { ApiParam } from 'iris-web-core';
 
 import {
-  IMEDIAENGINE_PUSHVIDEOFRAME_4e544e2,
-  IRTCENGINEEX_SENDSTREAMMESSAGEEX_0c34857,
-  IRTCENGINE_SENDSTREAMMESSAGE_8715a45,
+  IMEDIAENGINE_PUSHVIDEOFRAME,
+  IRTCENGINEEX_SENDSTREAMMESSAGEEX,
+  IRTCENGINE_SENDSTREAMMESSAGE,
 } from '../util/iris_rtc_api_type_gen';
 
 export function callApiBufferExtension(
@@ -12,17 +12,17 @@ export function callApiBufferExtension(
   buffer: Array<any>
 ): ApiParam {
   switch (func_name) {
-    case IMEDIAENGINE_PUSHVIDEOFRAME_4e544e2:
+    case IMEDIAENGINE_PUSHVIDEOFRAME:
       if (typeof data?.frame === 'object') {
         data.frame.buffer = buffer;
       }
       break;
-    case IRTCENGINE_SENDSTREAMMESSAGE_8715a45:
+    case IRTCENGINE_SENDSTREAMMESSAGE:
       if (buffer) {
         data.data = buffer[0];
       }
       break;
-    case IRTCENGINEEX_SENDSTREAMMESSAGEEX_0c34857:
+    case IRTCENGINEEX_SENDSTREAMMESSAGEEX:
       if (buffer) {
         data.data = buffer[0];
       }

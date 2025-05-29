@@ -13,8 +13,42 @@ export function isMatch(str: string, type: string): boolean {
   return result;
 }
 
-export function getIrisApiIdForWrapperFunc(
+function cutStringByIndex(str: string, index: number): string {
+  if (index > 0) {
+    return str.substring(0, index);
+  }else{
+    return str;
+  }
+}
+
+export function revertIrisApiId(
   memberFunc: MemberFunction
-) {
-  return getIrisApiIdValue(memberFunc, true);
+) :MemberFunction {
+  let value = getIrisApiIdValue(memberFunc, true);
+  memberFunc.name = cutStringByIndex(value, value.lastIndexOf('_'));
+  const originalKey = memberFunc.user_data.IrisApiIdParser.key;
+  const originalValue = memberFunc.user_data.IrisApiIdParser.value;
+  const cutKey = cutStringByIndex(originalKey, originalKey.lastIndexOf('_'));
+  const cutValue = cutStringByIndex(originalValue, originalValue.lastIndexOf('_'));
+  memberFunc.user_data.IrisApiIdParser.key = cutKey;
+  memberFunc.user_data.IrisApiIdParser.value = cutValue;
+  return memberFunc;
+}
+
+export function appendNumberToDuplicateMemberFunction(
+  arr: MemberFunction[]
+): MemberFunction[] {
+  const count = {};
+  arr.forEach((item: MemberFunction) => {
+    if (count[item.name] === undefined) {
+      count[item.name] = 1;
+    } else {
+      count[item.name]++;
+    }
+
+    if (count[item.name] > 1) {
+      item.name += count[item.name];
+    }
+  });
+  return arr;
 }

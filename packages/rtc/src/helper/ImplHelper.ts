@@ -374,11 +374,11 @@ export class ImplHelper {
       ) {
         (this._engine.getImplInstance(
           'RtcEngine'
-        ) as IRtcEngineImpl).muteLocalAudioStream_5039d15(true);
+        ) as IRtcEngineImpl).muteLocalAudioStream(true);
         (this._engine.getImplInstance(
           'RtcEngine'
-        ) as IRtcEngineImpl).muteLocalVideoStream_5039d15(true);
-        this._engine.rtcEngineEventHandler.onClientRoleChanged_2acaf10(
+        ) as IRtcEngineImpl).muteLocalVideoStream(true);
+        this._engine.rtcEngineEventHandler.onClientRoleChangedEx(
           irisClient.connection!,
           irisClientState.clientRoleType!,
           options.clientRoleType!,
@@ -532,7 +532,7 @@ export class ImplHelper {
       );
     } catch (reason) {
       AgoraConsole.error(reason);
-      this._engine.rtcEngineEventHandler.onError_d26c0fd(
+      this._engine.rtcEngineEventHandler.onError(
         NATIVE_RTC.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED,
         ''
       );
@@ -554,7 +554,7 @@ export class ImplHelper {
       });
     }
     irisClient.connection = con;
-    this._engine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd(con, 0);
+    this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(con, 0);
 
     if (
       irisClient.irisClientState.clientRoleType ===

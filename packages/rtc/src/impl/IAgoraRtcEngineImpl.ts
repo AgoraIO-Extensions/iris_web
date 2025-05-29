@@ -40,7 +40,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     this._engine = engine;
   }
 
-  release(): CallApiReturnType {
+  release(sync: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       await this._engine.irisClientManager.release();
       return this._engine.returnResult();
@@ -58,7 +58,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processFunc);
   }
 
-  initialize_0320339(context: NATIVE_RTC.RtcEngineContext): CallApiReturnType {
+  initialize(context: NATIVE_RTC.RtcEngineContext): CallApiReturnType {
     let processFunc = async () => {
       // Return OK if already initialized.
       if (this._engine.irisClientManager.irisClientList.length > 0) {
@@ -93,21 +93,21 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  joinChannel_f097389(
+  joinChannel(
     token: string,
     channelId: string,
     info: string,
     uid: number
   ): CallApiReturnType {
     let irisClient = this._engine.irisClientManager.getIrisClient();
-    return this.joinChannel_cdbb747(
+    return this.joinChannel2(
       token,
       channelId,
       uid,
       irisClient!.irisClientState
     );
   }
-  joinChannel_cdbb747(
+  joinChannel2(
     token: string,
     channelId: string,
     uid: number,
@@ -120,7 +120,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processJoinChannel);
   }
-  updateChannelMediaOptions_7bfc1d7(
+  updateChannelMediaOptions(
     options: NATIVE_RTC.ChannelMediaOptions
   ): CallApiReturnType {
     let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
@@ -131,11 +131,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processFunc);
   }
   leaveChannel(): CallApiReturnType {
-    return this.leaveChannel_2c0e3aa(defaultLeaveChannelOptions);
+    return this.leaveChannel2(defaultLeaveChannelOptions);
   }
-  leaveChannel_2c0e3aa(
-    options: NATIVE_RTC.LeaveChannelOptions
-  ): CallApiReturnType {
+  leaveChannel2(options: NATIVE_RTC.LeaveChannelOptions): CallApiReturnType {
     let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
       if (this._engine.irisClientManager.irisClientList.length === 0) {
         return this._engine.returnResult();
@@ -177,7 +175,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           };
 
           agoraRTCClient.remoteUsers.map((remoteUser) => {
-            this._engine.rtcEngineEventHandler.onUserOffline_0a32aac(
+            this._engine.rtcEngineEventHandler.onUserOfflineEx(
               irisClient.connection ?? con,
               remoteUser.uid as number,
               NATIVE_RTC.USER_OFFLINE_REASON_TYPE.USER_OFFLINE_DROPPED
@@ -190,12 +188,12 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             AgoraConsole.log(`leaveChannel success`);
           } catch (e) {
             AgoraConsole.error(`leaveChannel failed:${e}`);
-            this._engine.rtcEngineEventHandler.onError_d26c0fd(
+            this._engine.rtcEngineEventHandler.onError(
               NATIVE_RTC.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED,
               ''
             );
           }
-          this._engine.rtcEngineEventHandler.onLeaveChannel_c8e730d(
+          this._engine.rtcEngineEventHandler.onLeaveChannelEx(
             irisClient.connection ?? con,
             new NATIVE_RTC.RtcStats()
           );
@@ -207,7 +205,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  setChannelProfile_a78fa4f(
+  setChannelProfile(
     profile: NATIVE_RTC.CHANNEL_PROFILE_TYPE
   ): CallApiReturnType {
     let processFunc = async () => {
@@ -226,16 +224,16 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
 
   //可以在加入频道前后调用
-  setClientRole_3426fa6(role: NATIVE_RTC.CLIENT_ROLE_TYPE): CallApiReturnType {
+  setClientRole(role: NATIVE_RTC.CLIENT_ROLE_TYPE): CallApiReturnType {
     let options: NATIVE_RTC.ClientRoleOptions = {
       audienceLatencyLevel:
         NATIVE_RTC.AUDIENCE_LATENCY_LEVEL_TYPE
           .AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY,
     };
-    return this.setClientRole_b46cc48(role, options);
+    return this.setClientRole2(role, options);
   }
 
-  setClientRole_b46cc48(
+  setClientRole2(
     role: NATIVE_RTC.CLIENT_ROLE_TYPE,
     options: NATIVE_RTC.ClientRoleOptions
   ): CallApiReturnType {
@@ -253,12 +251,12 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         ));
 
       if (role === NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE) {
-        this.muteLocalAudioStream_5039d15(true);
-        this.muteLocalVideoStream_5039d15(true);
+        this.muteLocalAudioStream(true);
+        this.muteLocalVideoStream(true);
       }
       //如果已经加入频道
       if (client?.channelName) {
-        this._engine.rtcEngineEventHandler.onClientRoleChanged_2acaf10(
+        this._engine.rtcEngineEventHandler.onClientRoleChangedEx(
           irisClient.connection!,
           oldRole!,
           role,
@@ -275,10 +273,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   enableVideo(): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
       this._engine.globalState.enabledVideo = true;
-      this.enableLocalVideo_5039d15(true);
-      this.muteLocalVideoStream_5039d15(false);
-      this.muteAllRemoteVideoStreams_5039d15(false);
-      this.muteAllRemoteVideoStreams_5039d15(false);
+      this.enableLocalVideo(true);
+      this.muteLocalVideoStream(false);
+      this.muteAllRemoteVideoStreams(false);
+      this.muteAllRemoteVideoStreams(false);
 
       return this._engine.returnResult();
     };
@@ -288,23 +286,19 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   disableVideo(): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
       this._engine.globalState.enabledVideo = false;
-      this.enableLocalVideo_5039d15(false);
-      this.muteLocalVideoStream_5039d15(true);
-      this.muteAllRemoteVideoStreams_5039d15(true);
-      this.muteAllRemoteVideoStreams_5039d15(true);
+      this.enableLocalVideo(false);
+      this.muteLocalVideoStream(true);
+      this.muteAllRemoteVideoStreams(true);
+      this.muteAllRemoteVideoStreams(true);
 
       return this._engine.returnResult();
     };
     return this._engine.execute(processVideoTrack);
   }
   startPreview(): CallApiReturnType {
-    return this.startPreview_4fd718e(
-      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA
-    );
+    return this.startPreview2(NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA);
   }
-  startPreview_4fd718e(
-    sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE
-  ): CallApiReturnType {
+  startPreview2(sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE): CallApiReturnType {
     let process = async (): Promise<CallIrisApiResult> => {
       if (this._engine.globalState.enabledVideo == false) {
         AgoraConsole.warn('call enableVideo(true) before startPreview');
@@ -359,7 +353,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         AgoraConsole.error(err);
         return this._engine.returnResult(false);
       }
-      this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_9e9b3c6(
+      this._engine.rtcEngineEventHandler.onLocalVideoStateChanged(
         sourceType,
         NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_ENCODING,
         0
@@ -370,13 +364,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(process);
   }
   stopPreview(): CallApiReturnType {
-    return this.stopPreview_4fd718e(
-      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA
-    );
+    return this.stopPreview2(NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA);
   }
-  stopPreview_4fd718e(
-    sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE
-  ): CallApiReturnType {
+  stopPreview2(sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE): CallApiReturnType {
     let process = async (): Promise<CallIrisApiResult> => {
       if (sourceType >= 5) {
         AgoraConsole.error('Invalid source type');
@@ -408,7 +398,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           AgoraConsole.error(err);
           return this._engine.returnResult(false);
         }
-        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged_9e9b3c6(
+        this._engine.rtcEngineEventHandler.onLocalVideoStateChanged(
           sourceType,
           NATIVE_RTC.LOCAL_VIDEO_STREAM_STATE.LOCAL_VIDEO_STREAM_STATE_STOPPED,
           0
@@ -418,7 +408,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     };
     return this._engine.execute(process);
   }
-  setVideoEncoderConfiguration_89677d8(
+  setVideoEncoderConfiguration(
     config: NATIVE_RTC.VideoEncoderConfiguration
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
@@ -440,7 +430,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     };
     return this._engine.execute(processFunc);
   }
-  setupLocalVideo_acc9c38(canvas: NATIVE_RTC.VideoCanvas): CallApiReturnType {
+  setupLocalVideo(canvas: NATIVE_RTC.VideoCanvas): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
       let sourceType =
         canvas.sourceType ||
@@ -492,9 +482,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   enableAudio(): CallApiReturnType {
     let processAudioTracks = async (): Promise<CallIrisApiResult> => {
       this._engine.globalState.enabledAudio = true;
-      this.enableLocalAudio_5039d15(true);
-      this.muteLocalAudioStream_5039d15(false);
-      this.muteAllRemoteAudioStreams_5039d15(false);
+      this.enableLocalAudio(true);
+      this.muteLocalAudioStream(false);
+      this.muteAllRemoteAudioStreams(false);
 
       return this._engine.returnResult();
     };
@@ -504,16 +494,16 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   disableAudio(): CallApiReturnType {
     let processAudioTracks = async (): Promise<CallIrisApiResult> => {
       this._engine.globalState.enabledAudio = false;
-      this.enableLocalAudio_5039d15(false);
-      this.muteLocalAudioStream_5039d15(true);
-      this.muteAllRemoteAudioStreams_5039d15(true);
+      this.enableLocalAudio(false);
+      this.muteLocalAudioStream(true);
+      this.muteAllRemoteAudioStreams(true);
 
       return this._engine.returnResult();
     };
 
     return this._engine.execute(processAudioTracks);
   }
-  setAudioProfile_d944543(
+  setAudioProfile(
     profile: NATIVE_RTC.AUDIO_PROFILE_TYPE,
     scenario: NATIVE_RTC.AUDIO_SCENARIO_TYPE
   ): CallApiReturnType {
@@ -527,9 +517,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processFunc);
   }
 
-  setAudioProfile_ac39c15(
-    profile: NATIVE_RTC.AUDIO_PROFILE_TYPE
-  ): CallApiReturnType {
+  setAudioProfile2(profile: NATIVE_RTC.AUDIO_PROFILE_TYPE): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.globalState.audioProfile = profile;
 
@@ -538,7 +526,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  enableLocalAudio_5039d15(enabled: boolean): CallApiReturnType {
+  enableLocalAudio(enabled: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.globalState.enabledLocalAudio = enabled;
 
@@ -578,7 +566,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         this._engine.irisClientManager.localAudioTrackPackages
       );
 
-      this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_6d655b4(
+      this._engine.rtcEngineEventHandler.onLocalAudioStateChangedEx(
         {
           localUid: undefined,
           channelId: undefined,
@@ -591,7 +579,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         NATIVE_RTC.LOCAL_AUDIO_STREAM_ERROR.LOCAL_AUDIO_STREAM_ERROR_OK
       );
 
-      this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f428c19(
+      this._engine.rtcEngineEventHandler.onLocalAudioStateChanged(
         enabled
           ? NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
               .LOCAL_AUDIO_STREAM_STATE_RECORDING
@@ -606,7 +594,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processFunc);
   }
 
-  enableLocalVideo_5039d15(enabled: boolean): CallApiReturnType {
+  enableLocalVideo(enabled: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.globalState.enabledLocalVideo = enabled;
 
@@ -631,7 +619,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  muteLocalAudioStream_5039d15(mute: boolean): CallApiReturnType {
+  muteLocalAudioStream(mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         mute ? NotifyType.UNPUBLISH_TRACK : NotifyType.PUBLISH_TRACK,
@@ -644,7 +632,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processFunc);
   }
 
-  muteLocalVideoStream_5039d15(mute: boolean): CallApiReturnType {
+  muteLocalVideoStream(mute: boolean): CallApiReturnType {
     let process = async () => {
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         mute ? NotifyType.UNPUBLISH_TRACK : NotifyType.PUBLISH_TRACK,
@@ -656,26 +644,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(process);
   }
 
-  createDataStream_5862815(
-    config: NATIVE_RTC.DataStreamConfig
-  ): CallApiReturnType {
-    let process = async () => {
-      for (let irisClient of this._engine.irisClientManager.irisClientList) {
-        irisClient.irisClientState.dataStreamConfig = config;
-      }
-      return this._engine.returnResult(
-        true,
-        0,
-        JSON.stringify({
-          result: 0,
-          streamId: 0,
-        })
-      );
-    };
-    return this._engine.execute(process);
-  }
-
-  sendStreamMessage_8715a45(
+  sendStreamMessage(
     streamId: number,
     data: Uint8Array,
     length: number
@@ -698,7 +667,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(process);
   }
 
-  muteAllRemoteVideoStreams_5039d15(mute: boolean): CallApiReturnType {
+  muteAllRemoteVideoStreams(mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
@@ -712,7 +681,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  muteRemoteVideoStream_dbdc15a(uid: number, mute: boolean): CallApiReturnType {
+  muteRemoteVideoStream(uid: number, mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       let remoteUserPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
         uid
@@ -730,7 +699,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processFunc);
   }
 
-  muteAllRemoteAudioStreams_5039d15(mute: boolean): CallApiReturnType {
+  muteAllRemoteAudioStreams(mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
@@ -744,7 +713,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  muteRemoteAudioStream_dbdc15a(uid: number, mute: boolean): CallApiReturnType {
+  muteRemoteAudioStream(uid: number, mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       let remoteUserPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
         uid
@@ -761,7 +730,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  enableAudioVolumeIndication_39794a0(
+  enableAudioVolumeIndication(
     interval: number,
     smooth: number,
     reportVad: boolean
@@ -779,7 +748,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalState.enableAudioVolumeIndication = interval > 0;
 
       if (this._engine.globalState.enableAudioVolumeIndication) {
-        this.setParameters_3a2037f(
+        this.setParameters(
           JSON.stringify({ AUDIO_VOLUME_INDICATION_INTERVAL: interval })
         );
         agoraRTCClient?.enableAudioVolumeIndicator();
@@ -788,7 +757,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     };
     return this._engine.execute(processFunc);
   }
-  playEffect_531a783(
+  playEffect(
     soundId: number,
     filePath: string,
     loopCount: number,
@@ -868,14 +837,14 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     };
     return this._engine.execute(processFunc);
   }
-  stopEffect_46f8ab7(soundId: number): CallApiReturnType {
+  stopEffect(soundId: number): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       let bufferSourceAudioTrackPackage: BufferSourceAudioTrackPackage = this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(
         IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio
       )[0] as BufferSourceAudioTrackPackage;
       if (!bufferSourceAudioTrackPackage?.track) {
         AgoraConsole.error(`soundId:${soundId} not found`);
-        this._engine.rtcEngineEventHandler.onError_d26c0fd(
+        this._engine.rtcEngineEventHandler.onError(
           NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED,
           `soundId:${soundId} not found`
         );
@@ -901,7 +870,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           bufferSourceAudioTrackPackage.track &&
           bufferSourceAudioTrackPackage.soundId
         ) {
-          this.stopEffect_46f8ab7(bufferSourceAudioTrackPackage.soundId);
+          this.stopEffect(bufferSourceAudioTrackPackage.soundId);
         }
       });
       return this._engine.returnResult();
@@ -909,7 +878,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  setLogLevel_f125d83(level: NATIVE_RTC.LOG_LEVEL): CallApiReturnType {
+  setLogLevel(level: NATIVE_RTC.LOG_LEVEL): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       AgoraConsole.logLevel = level;
       let numberLevel: number = AgoraTranslate.NATIVE_RTCLOG_LEVEL2Number(
@@ -921,7 +890,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  startScreenCapture_270da41(
+  startScreenCapture(
     captureParams: NATIVE_RTC.ScreenCaptureParameters2
   ): CallApiReturnType {
     let process = async () => {
@@ -951,13 +920,14 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     };
     return this._engine.execute(process);
   }
+
   stopScreenCapture(): CallApiReturnType {
-    return this.stopScreenCapture_4fd718e(
+    return this.stopScreenCapture2(
       NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
     );
   }
 
-  stopScreenCapture_4fd718e(
+  stopScreenCapture2(
     sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE
   ): CallApiReturnType {
     //需要处理
@@ -989,7 +959,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processFunc);
   }
 
-  registerEventHandler_5fc0465(eventHandler: any): CallApiReturnType {
+  registerEventHandler(eventHandler: any): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.irisEventHandlerManager.addEventHandler(
         RTCENGINE_KEY,
@@ -1000,7 +970,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  unregisterEventHandler_5fc0465(eventHandler: any): CallApiReturnType {
+  unregisterEventHandler(eventHandler: any): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.irisEventHandlerManager.removeEventHandler(
         RTCENGINE_KEY,
@@ -1012,7 +982,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     return this._engine.execute(processFunc);
   }
-  setParameters_3a2037f(parameters: string): CallApiReturnType {
+  setParameters(parameters: string): CallApiReturnType {
     //example:
     //[dart]await rtcEngine.setParameters('{"AUDIO_VOLUME_INDICATION_INTERVAL": 10000}');
     //parameters please use json string
@@ -1046,13 +1016,13 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(fun);
   }
 
-  joinChannelWithUserAccount_0e4f59e(
+  joinChannelWithUserAccount(
     token: string,
     channelId: string,
     userAccount: string
   ): CallApiReturnType {
     let irisClient = this._engine.irisClientManager.getIrisClient();
-    return this.joinChannelWithUserAccount_4685af9(
+    return this.joinChannelWithUserAccount2(
       token,
       channelId,
       userAccount,
@@ -1060,7 +1030,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     );
   }
 
-  joinChannelWithUserAccount_4685af9(
+  joinChannelWithUserAccount2(
     token: string,
     channelId: string,
     userAccount: string,
@@ -1079,7 +1049,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processJoinChannel);
   }
 
-  getUserInfoByUserAccount_c6a8f08(userAccount: string): CallApiReturnType {
+  getUserInfoByUserAccount(userAccount: string): CallApiReturnType {
     let user = this._engine.irisClientManager.getUserInfoByUserAccount(
       userAccount
     );
@@ -1093,7 +1063,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     );
   }
 
-  getUserInfoByUid_6b7aee8(uid: number): CallApiReturnType {
+  getUserInfoByUid(uid: number): CallApiReturnType {
     let user = this._engine.irisClientManager.getUserInfoByUid(uid);
     return this._engine.returnResult(
       true,
@@ -1105,7 +1075,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     );
   }
 
-  setLocalRenderMode_cfb201b(
+  setLocalRenderMode(
     renderMode: NATIVE_RTC.RENDER_MODE_TYPE,
     mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE
   ): CallApiReturnType {
@@ -1135,7 +1105,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.returnResult();
   }
 
-  setRemoteRenderMode_6771ce0(
+  setRemoteRenderMode(
     uid: number,
     renderMode: NATIVE_RTC.RENDER_MODE_TYPE,
     mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE
@@ -1178,7 +1148,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.returnResult();
   }
 
-  setLocalRenderMode_bedb5ae(
+  setLocalRenderMode2(
     renderMode: NATIVE_RTC.RENDER_MODE_TYPE
   ): CallApiReturnType {
     let fit = AgoraTranslate.NATIVE_RTC_RENDER_MODE_TYPE2Fit(
@@ -1200,7 +1170,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.returnResult();
   }
 
-  setLocalVideoMirrorMode_b8a6c69(
+  setLocalVideoMirrorMode(
     mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE
   ): CallApiReturnType {
     let mirror =
@@ -1223,7 +1193,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.returnResult();
   }
 
-  setPlaybackAudioFrameParameters_bd46d1d(
+  setPlaybackAudioFrameParameters(
     sampleRate: number,
     channel: number,
     mode: NATIVE_RTC.RAW_AUDIO_FRAME_OP_MODE_TYPE,

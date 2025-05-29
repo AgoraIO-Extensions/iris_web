@@ -20,7 +20,7 @@ beforeAll(async () => {
     context: 'test',
   };
   let apiParam = new IrisCore.EventParam(
-    'RtcEngine_initialize_0320339',
+    'RtcEngine_initialize',
     JSON.stringify(nParam),
     0,
     '',
@@ -40,13 +40,13 @@ afterEach(() => {
 });
 
 describe('IAudioPcmFrameSink', () => {
-  test('AudioPcmFrameSink_onFrame_95f515a impl call', async () => {
+  test('AudioPcmFrameSink_onFrame impl call', async () => {
     let eventHandler = new bindingAPI.IAudioPcmFrameSink(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onFrame_95f515a(undefined);
+    eventHandler.onFrame(undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -58,13 +58,13 @@ describe('IAudioPcmFrameSink', () => {
   });
 });
 describe('IAudioFrameObserverBase', () => {
-  test('AudioFrameObserver_onRecordAudioFrame_4c8de15 impl call', async () => {
+  test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onRecordAudioFrame_4c8de15(undefined, undefined);
+    eventHandler.onRecordAudioFrame(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -74,21 +74,13 @@ describe('IAudioFrameObserverBase', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('AudioFrameObserver_onPlaybackAudioFrame_4c8de15 impl call', async () => {
-    let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
-    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
-    eventHandler.onPlaybackAudioFrame_4c8de15(undefined, undefined);
-    expect(
-      eventHandler._engine.irisEventHandlerManager.notifyEvent
-    ).toBeCalledTimes(1);
-  });
-  test('AudioFrameObserver_onMixedAudioFrame_4c8de15 impl call', async () => {
+  test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onMixedAudioFrame_4c8de15(undefined, undefined);
+    eventHandler.onPlaybackAudioFrame(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -98,13 +90,13 @@ describe('IAudioFrameObserverBase', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('AudioFrameObserver_onEarMonitoringAudioFrame_5405a47 impl call', async () => {
+  test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onEarMonitoringAudioFrame_5405a47(undefined);
+    eventHandler.onMixedAudioFrame(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -114,13 +106,29 @@ describe('IAudioFrameObserverBase', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('AudioFrameObserver_onPlaybackAudioFrameBeforeMixing_9215cc7 impl call', async () => {
+  test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onPlaybackAudioFrameBeforeMixing_9215cc7(
+    eventHandler.onEarMonitoringAudioFrame(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+  test('AudioFrameObserver impl call', async () => {
+    let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.onPlaybackAudioFrameBeforeMixing2(
       undefined,
       undefined,
       undefined
@@ -136,13 +144,13 @@ describe('IAudioFrameObserverBase', () => {
   });
 });
 describe('IAudioFrameObserver', () => {
-  test('AudioFrameObserver_onPlaybackAudioFrameBeforeMixing_85ec0fc impl call', async () => {
+  test('AudioFrameObserver_onPlaybackAudioFrameBeforeMixing impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onPlaybackAudioFrameBeforeMixing_85ec0fc(
+    eventHandler.onPlaybackAudioFrameBeforeMixing(
       undefined,
       undefined,
       undefined
@@ -156,13 +164,13 @@ describe('IAudioFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('AudioFrameObserver_onRecordAudioFrame_4c8de15 impl call', async () => {
+  test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onRecordAudioFrame_4c8de15(undefined, undefined);
+    eventHandler.onRecordAudioFrame(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -172,21 +180,13 @@ describe('IAudioFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('AudioFrameObserver_onPlaybackAudioFrame_4c8de15 impl call', async () => {
-    let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
-    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
-    eventHandler.onPlaybackAudioFrame_4c8de15(undefined, undefined);
-    expect(
-      eventHandler._engine.irisEventHandlerManager.notifyEvent
-    ).toBeCalledTimes(1);
-  });
-  test('AudioFrameObserver_onMixedAudioFrame_4c8de15 impl call', async () => {
+  test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onMixedAudioFrame_4c8de15(undefined, undefined);
+    eventHandler.onPlaybackAudioFrame(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -196,13 +196,13 @@ describe('IAudioFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('AudioFrameObserver_onEarMonitoringAudioFrame_5405a47 impl call', async () => {
+  test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onEarMonitoringAudioFrame_5405a47(undefined);
+    eventHandler.onMixedAudioFrame(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -212,13 +212,29 @@ describe('IAudioFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('AudioFrameObserver_onPlaybackAudioFrameBeforeMixing_9215cc7 impl call', async () => {
+  test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onPlaybackAudioFrameBeforeMixing_9215cc7(
+    eventHandler.onEarMonitoringAudioFrame(undefined);
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+  test('AudioFrameObserver impl call', async () => {
+    let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.onPlaybackAudioFrameBeforeMixing2(
       undefined,
       undefined,
       undefined
@@ -234,13 +250,13 @@ describe('IAudioFrameObserver', () => {
   });
 });
 describe('IAudioSpectrumObserver', () => {
-  test('AudioSpectrumObserver_onLocalAudioSpectrum_5822fed impl call', async () => {
+  test('AudioSpectrumObserver_onLocalAudioSpectrum impl call', async () => {
     let eventHandler = new bindingAPI.IAudioSpectrumObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onLocalAudioSpectrum_5822fed(undefined);
+    eventHandler.onLocalAudioSpectrum(undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -250,13 +266,13 @@ describe('IAudioSpectrumObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('AudioSpectrumObserver_onRemoteAudioSpectrum_8ea2cde impl call', async () => {
+  test('AudioSpectrumObserver_onRemoteAudioSpectrum impl call', async () => {
     let eventHandler = new bindingAPI.IAudioSpectrumObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onRemoteAudioSpectrum_8ea2cde(undefined, undefined);
+    eventHandler.onRemoteAudioSpectrum(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -268,13 +284,13 @@ describe('IAudioSpectrumObserver', () => {
   });
 });
 describe('IVideoEncodedFrameObserver', () => {
-  test('VideoEncodedFrameObserver_onEncodedVideoFrameReceived_6922697 impl call', async () => {
+  test('VideoEncodedFrameObserver_onEncodedVideoFrameReceived impl call', async () => {
     let eventHandler = new bindingAPI.IVideoEncodedFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onEncodedVideoFrameReceived_6922697(
+    eventHandler.onEncodedVideoFrameReceived(
       undefined,
       undefined,
       undefined,
@@ -291,13 +307,13 @@ describe('IVideoEncodedFrameObserver', () => {
   });
 });
 describe('IVideoFrameObserver', () => {
-  test('VideoFrameObserver_onCaptureVideoFrame_1673590 impl call', async () => {
+  test('VideoFrameObserver_onCaptureVideoFrame impl call', async () => {
     let eventHandler = new bindingAPI.IVideoFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onCaptureVideoFrame_1673590(undefined, undefined);
+    eventHandler.onCaptureVideoFrame(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -307,13 +323,13 @@ describe('IVideoFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('VideoFrameObserver_onPreEncodeVideoFrame_1673590 impl call', async () => {
+  test('VideoFrameObserver_onPreEncodeVideoFrame impl call', async () => {
     let eventHandler = new bindingAPI.IVideoFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onPreEncodeVideoFrame_1673590(undefined, undefined);
+    eventHandler.onPreEncodeVideoFrame(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -323,13 +339,13 @@ describe('IVideoFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('VideoFrameObserver_onMediaPlayerVideoFrame_e648e2c impl call', async () => {
+  test('VideoFrameObserver_onMediaPlayerVideoFrame impl call', async () => {
     let eventHandler = new bindingAPI.IVideoFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onMediaPlayerVideoFrame_e648e2c(undefined, undefined);
+    eventHandler.onMediaPlayerVideoFrame(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -339,13 +355,13 @@ describe('IVideoFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('VideoFrameObserver_onRenderVideoFrame_43dcf82 impl call', async () => {
+  test('VideoFrameObserver_onRenderVideoFrame impl call', async () => {
     let eventHandler = new bindingAPI.IVideoFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onRenderVideoFrame_43dcf82(undefined, undefined, undefined);
+    eventHandler.onRenderVideoFrame(undefined, undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -355,13 +371,13 @@ describe('IVideoFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('VideoFrameObserver_onTranscodedVideoFrame_27754d8 impl call', async () => {
+  test('VideoFrameObserver_onTranscodedVideoFrame impl call', async () => {
     let eventHandler = new bindingAPI.IVideoFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onTranscodedVideoFrame_27754d8(undefined);
+    eventHandler.onTranscodedVideoFrame(undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -371,7 +387,7 @@ describe('IVideoFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('VideoFrameObserver_getVideoFrameProcessMode impl call', async () => {
+  test('VideoFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IVideoFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
@@ -387,7 +403,7 @@ describe('IVideoFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('VideoFrameObserver_getVideoFormatPreference impl call', async () => {
+  test('VideoFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IVideoFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
@@ -403,7 +419,7 @@ describe('IVideoFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('VideoFrameObserver_getRotationApplied impl call', async () => {
+  test('VideoFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IVideoFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
@@ -419,7 +435,7 @@ describe('IVideoFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('VideoFrameObserver_getMirrorApplied impl call', async () => {
+  test('VideoFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IVideoFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
@@ -435,7 +451,7 @@ describe('IVideoFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('VideoFrameObserver_getObservedFramePosition impl call', async () => {
+  test('VideoFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IVideoFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
@@ -453,13 +469,13 @@ describe('IVideoFrameObserver', () => {
   });
 });
 describe('IMediaRecorderObserver', () => {
-  test('MediaRecorderObserver_onRecorderStateChanged_e1716bb impl call', async () => {
+  test('MediaRecorderObserver_onRecorderStateChanged impl call', async () => {
     let eventHandler = new bindingAPI.IMediaRecorderObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onRecorderStateChanged_e1716bb(
+    eventHandler.onRecorderStateChanged(
       undefined,
       undefined,
       undefined,
@@ -474,13 +490,13 @@ describe('IMediaRecorderObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('MediaRecorderObserver_onRecorderInfoUpdated_64fa74a impl call', async () => {
+  test('MediaRecorderObserver_onRecorderInfoUpdated impl call', async () => {
     let eventHandler = new bindingAPI.IMediaRecorderObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onRecorderInfoUpdated_64fa74a(undefined, undefined, undefined);
+    eventHandler.onRecorderInfoUpdated(undefined, undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);

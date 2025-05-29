@@ -796,13 +796,13 @@ export class Packet {
 }
 
 export interface IPacketObserver {
-  onSendAudioPacket_4ad95e3(packet: Packet): boolean;
+  onSendAudioPacket(packet: Packet): boolean;
 
-  onSendVideoPacket_4ad95e3(packet: Packet): boolean;
+  onSendVideoPacket(packet: Packet): boolean;
 
-  onReceiveAudioPacket_4ad95e3(packet: Packet): boolean;
+  onReceiveAudioPacket(packet: Packet): boolean;
 
-  onReceiveVideoPacket_4ad95e3(packet: Packet): boolean;
+  onReceiveVideoPacket(packet: Packet): boolean;
 }
 
 export enum AUDIO_SAMPLE_RATE_TYPE {
@@ -1373,19 +1373,19 @@ export class AudioEncodedFrameObserverConfig {
 }
 
 export interface IAudioEncodedFrameObserver {
-  onRecordAudioEncodedFrame_d930ddc(
+  onRecordAudioEncodedFrame(
     frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void;
 
-  onPlaybackAudioEncodedFrame_d930ddc(
+  onPlaybackAudioEncodedFrame(
     frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void;
 
-  onMixedAudioEncodedFrame_d930ddc(
+  onMixedAudioEncodedFrame(
     frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo

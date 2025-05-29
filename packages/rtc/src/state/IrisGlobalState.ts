@@ -72,10 +72,10 @@ export class IrisGlobalState {
   //setDevice()
   videoDeviceId: string;
 
-  //setPlaybackDevice_4ad5f6e()
+  //setPlaybackDevice()
   playbackDeviceId: string;
 
-  //setRecordingDevice_4ad5f6e()
+  //setRecordingDevice()
   recordingDeviceId: string;
 
   //enableAudioVolumeIndication

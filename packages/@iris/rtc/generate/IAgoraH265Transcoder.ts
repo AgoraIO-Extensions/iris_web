@@ -18,41 +18,37 @@ export enum H265_TRANSCODE_RESULT {
 }
 
 export interface IH265TranscoderObserver {
-  onEnableTranscode_6ba6646(result: H265_TRANSCODE_RESULT): void;
+  onEnableTranscode(result: H265_TRANSCODE_RESULT): void;
 
-  onQueryChannel_31ba3df(
+  onQueryChannel(
     result: H265_TRANSCODE_RESULT,
     originChannel: string,
     transcodeChannel: string
   ): void;
 
-  onTriggerTranscode_6ba6646(result: H265_TRANSCODE_RESULT): void;
+  onTriggerTranscode(result: H265_TRANSCODE_RESULT): void;
 }
 
 export interface IH265Transcoder {
-  enableTranscode_a0779eb(
+  enableTranscode(
     token: string,
     channel: string,
     uid: number
   ): CallApiReturnType;
 
-  queryChannel_a0779eb(
+  queryChannel(token: string, channel: string, uid: number): CallApiReturnType;
+
+  triggerTranscode(
     token: string,
     channel: string,
     uid: number
   ): CallApiReturnType;
 
-  triggerTranscode_a0779eb(
-    token: string,
-    channel: string,
-    uid: number
-  ): CallApiReturnType;
-
-  registerTranscoderObserver_e1ee996(
+  registerTranscoderObserver(
     observer: IH265TranscoderObserver
   ): CallApiReturnType;
 
-  unregisterTranscoderObserver_e1ee996(
+  unregisterTranscoderObserver(
     observer: IH265TranscoderObserver
   ): CallApiReturnType;
 }

@@ -26,7 +26,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     this._engine = engine;
   }
 
-  joinChannelEx_a3cd08c(
+  joinChannelEx(
     token: string,
     connection: NATIVE_RTC.RtcConnection,
     options: NATIVE_RTC.ChannelMediaOptions
@@ -46,17 +46,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         );
       } catch (reason) {
         AgoraConsole.error(reason);
-        this._engine.rtcEngineEventHandler.onError_d26c0fd(
+        this._engine.rtcEngineEventHandler.onError(
           NATIVE_RTC.ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED,
           ''
         );
         irisClient.release();
         return this._engine.returnResult(false);
       }
-      this._engine.rtcEngineEventHandler.onJoinChannelSuccess_263e4cd(
-        connection,
-        0
-      );
+      this._engine.rtcEngineEventHandler.onJoinChannelSuccessEx(connection, 0);
 
       if (
         irisClient.irisClientState.clientRoleType ===
@@ -96,13 +93,11 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     };
     return this._engine.execute(processJoinChannel);
   }
-  leaveChannelEx_c81e1a4(
-    connection: NATIVE_RTC.RtcConnection
-  ): CallApiReturnType {
-    return this.leaveChannelEx_b03ee9a(connection, defaultLeaveChannelOptions);
+  leaveChannelEx(connection: NATIVE_RTC.RtcConnection): CallApiReturnType {
+    return this.leaveChannelEx2(connection, defaultLeaveChannelOptions);
   }
 
-  leaveChannelEx_b03ee9a(
+  leaveChannelEx2(
     connection: NATIVE_RTC.RtcConnection,
     options: NATIVE_RTC.LeaveChannelOptions
   ): CallApiReturnType {
@@ -148,12 +143,12 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         } catch (e) {
           AgoraConsole.error(e);
           this._engine.returnResult(false);
-          this._engine.rtcEngineEventHandler.onError_d26c0fd(
+          this._engine.rtcEngineEventHandler.onError(
             NATIVE_RTC.ERROR_CODE_TYPE.ERR_LEAVE_CHANNEL_REJECTED,
             ''
           );
         }
-        this._engine.rtcEngineEventHandler.onLeaveChannel_c8e730d(
+        this._engine.rtcEngineEventHandler.onLeaveChannelEx(
           connection,
           new NATIVE_RTC.RtcStats()
         );
@@ -164,7 +159,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     return this._engine.execute(processFunc);
   }
 
-  updateChannelMediaOptionsEx_457bb35(
+  updateChannelMediaOptionsEx(
     options: NATIVE_RTC.ChannelMediaOptions,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
@@ -179,7 +174,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processInSequence);
   }
-  setupRemoteVideoEx_522a409(
+  setupRemoteVideoEx(
     canvas: NATIVE_RTC.VideoCanvas,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
@@ -218,7 +213,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processVideoTrack);
   }
-  muteRemoteAudioStreamEx_6d93082(
+  muteRemoteAudioStreamEx(
     uid: number,
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
@@ -242,7 +237,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processFunc);
   }
-  muteLocalAudioStreamEx_3cf17a4(
+  muteLocalAudioStreamEx(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
@@ -260,7 +255,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processFunc);
   }
-  muteAllRemoteAudioStreamsEx_3cf17a4(
+  muteAllRemoteAudioStreamsEx(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
@@ -281,7 +276,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     return this._engine.execute(processFunc);
   }
 
-  muteRemoteVideoStreamEx_6d93082(
+  muteRemoteVideoStreamEx(
     uid: number,
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
@@ -305,7 +300,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processFunc);
   }
-  muteLocalVideoStreamEx_3cf17a4(
+  muteLocalVideoStreamEx(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
@@ -323,7 +318,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processFunc);
   }
-  muteAllRemoteVideoStreamsEx_3cf17a4(
+  muteAllRemoteVideoStreamsEx(
     mute: boolean,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
@@ -357,7 +352,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processFunc);
   }
-  sendStreamMessageEx_0c34857(
+  sendStreamMessageEx(
     streamId: number,
     data: Uint8Array,
     length: number,
@@ -384,7 +379,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     return this._engine.execute(process);
   }
 
-  setRemoteRenderModeEx_a72fe4e(
+  setRemoteRenderModeEx(
     uid: number,
     renderMode: NATIVE_RTC.RENDER_MODE_TYPE,
     mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE,

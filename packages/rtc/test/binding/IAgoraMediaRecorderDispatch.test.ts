@@ -20,7 +20,7 @@ beforeAll(async () => {
     context: 'test',
   };
   let apiParam = new IrisCore.EventParam(
-    'RtcEngine_initialize_0320339',
+    'RtcEngine_initialize',
     JSON.stringify(nParam),
     0,
     '',
@@ -40,7 +40,7 @@ afterEach(() => {
 });
 
 describe('IMediaRecorder', () => {
-  test('MediaRecorder_setMediaRecorderObserver_e1f7340 impl call', async () => {
+  test('MediaRecorder_setMediaRecorderObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -48,7 +48,7 @@ describe('IMediaRecorder', () => {
       callback: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaRecorder_setMediaRecorderObserver_e1f7340',
+      'MediaRecorder_setMediaRecorderObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -59,7 +59,7 @@ describe('IMediaRecorder', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('MediaRecorder')._impl
-        ?.setMediaRecorderObserver_e1f7340
+        ?.setMediaRecorderObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -68,7 +68,7 @@ describe('IMediaRecorder', () => {
     );
   });
 
-  test('MediaRecorder_startRecording_94480b3 impl call', async () => {
+  test('MediaRecorder_startRecording impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -76,7 +76,7 @@ describe('IMediaRecorder', () => {
       config: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaRecorder_startRecording_94480b3',
+      'MediaRecorder_startRecording',
       JSON.stringify(nParam),
       0,
       '',
@@ -86,8 +86,7 @@ describe('IMediaRecorder', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('MediaRecorder')._impl
-        ?.startRecording_94480b3
+      irisRtcEngine.implDispatchesMap.get('MediaRecorder')._impl?.startRecording
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -96,13 +95,13 @@ describe('IMediaRecorder', () => {
     );
   });
 
-  test('MediaRecorder_stopRecording impl call', async () => {
+  test('MediaRecorder impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {};
     let apiParam = new IrisCore.EventParam(
-      'MediaRecorder_stopRecording',
+      'MediaRecorder',
       JSON.stringify(nParam),
       0,
       '',

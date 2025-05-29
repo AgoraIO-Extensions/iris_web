@@ -20,7 +20,7 @@ beforeAll(async () => {
     context: 'test',
   };
   let apiParam = new IrisCore.EventParam(
-    'RtcEngine_initialize_0320339',
+    'RtcEngine_initialize',
     JSON.stringify(nParam),
     0,
     '',
@@ -40,13 +40,13 @@ afterEach(() => {
 });
 
 describe('IH265TranscoderObserver', () => {
-  test('H265TranscoderObserver_onEnableTranscode_6ba6646 impl call', async () => {
+  test('H265TranscoderObserver_onEnableTranscode impl call', async () => {
     let eventHandler = new bindingAPI.IH265TranscoderObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onEnableTranscode_6ba6646(undefined);
+    eventHandler.onEnableTranscode(undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -56,13 +56,13 @@ describe('IH265TranscoderObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('H265TranscoderObserver_onQueryChannel_31ba3df impl call', async () => {
+  test('H265TranscoderObserver_onQueryChannel impl call', async () => {
     let eventHandler = new bindingAPI.IH265TranscoderObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onQueryChannel_31ba3df(undefined, undefined, undefined);
+    eventHandler.onQueryChannel(undefined, undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -72,13 +72,13 @@ describe('IH265TranscoderObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('H265TranscoderObserver_onTriggerTranscode_6ba6646 impl call', async () => {
+  test('H265TranscoderObserver_onTriggerTranscode impl call', async () => {
     let eventHandler = new bindingAPI.IH265TranscoderObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
-    eventHandler.onTriggerTranscode_6ba6646(undefined);
+    eventHandler.onTriggerTranscode(undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);
@@ -90,7 +90,7 @@ describe('IH265TranscoderObserver', () => {
   });
 });
 describe('IH265Transcoder', () => {
-  test('H265Transcoder_enableTranscode_a0779eb impl call', async () => {
+  test('H265Transcoder_enableTranscode impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -100,7 +100,7 @@ describe('IH265Transcoder', () => {
       uid: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'H265Transcoder_enableTranscode_a0779eb',
+      'H265Transcoder_enableTranscode',
       JSON.stringify(nParam),
       0,
       '',
@@ -111,7 +111,7 @@ describe('IH265Transcoder', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('H265Transcoder')._impl
-        ?.enableTranscode_a0779eb
+        ?.enableTranscode
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -120,7 +120,7 @@ describe('IH265Transcoder', () => {
     );
   });
 
-  test('H265Transcoder_queryChannel_a0779eb impl call', async () => {
+  test('H265Transcoder_queryChannel impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -130,7 +130,36 @@ describe('IH265Transcoder', () => {
       uid: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'H265Transcoder_queryChannel_a0779eb',
+      'H265Transcoder_queryChannel',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('H265Transcoder')._impl?.queryChannel
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
+  test('H265Transcoder_triggerTranscode impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      token: 'test',
+      channel: 'test',
+      uid: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'H265Transcoder_triggerTranscode',
       JSON.stringify(nParam),
       0,
       '',
@@ -141,7 +170,7 @@ describe('IH265Transcoder', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('H265Transcoder')._impl
-        ?.queryChannel_a0779eb
+        ?.triggerTranscode
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -150,37 +179,7 @@ describe('IH265Transcoder', () => {
     );
   });
 
-  test('H265Transcoder_triggerTranscode_a0779eb impl call', async () => {
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
-    let nParam = {
-      token: 'test',
-      channel: 'test',
-      uid: 'test',
-    };
-    let apiParam = new IrisCore.EventParam(
-      'H265Transcoder_triggerTranscode_a0779eb',
-      JSON.stringify(nParam),
-      0,
-      '',
-      ['test'],
-      [],
-      1
-    );
-    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
-    expect(
-      irisRtcEngine.implDispatchesMap.get('H265Transcoder')._impl
-        ?.triggerTranscode_a0779eb
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
-  });
-
-  test('H265Transcoder_registerTranscoderObserver_e1ee996 impl call', async () => {
+  test('H265Transcoder_registerTranscoderObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -188,7 +187,7 @@ describe('IH265Transcoder', () => {
       observer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'H265Transcoder_registerTranscoderObserver_e1ee996',
+      'H265Transcoder_registerTranscoderObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -199,7 +198,7 @@ describe('IH265Transcoder', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('H265Transcoder')._impl
-        ?.registerTranscoderObserver_e1ee996
+        ?.registerTranscoderObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -208,7 +207,7 @@ describe('IH265Transcoder', () => {
     );
   });
 
-  test('H265Transcoder_unregisterTranscoderObserver_e1ee996 impl call', async () => {
+  test('H265Transcoder_unregisterTranscoderObserver impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -216,7 +215,7 @@ describe('IH265Transcoder', () => {
       observer: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'H265Transcoder_unregisterTranscoderObserver_e1ee996',
+      'H265Transcoder_unregisterTranscoderObserver',
       JSON.stringify(nParam),
       0,
       '',
@@ -227,7 +226,7 @@ describe('IH265Transcoder', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('H265Transcoder')._impl
-        ?.unregisterTranscoderObserver_e1ee996
+        ?.unregisterTranscoderObserver
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(

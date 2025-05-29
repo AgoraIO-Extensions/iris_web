@@ -127,8 +127,7 @@ export class IrisRtcEngine implements ApiInterceptor {
     let func_name = apiParam.event;
     let array = func_name.split('_');
     let className = array[0];
-    let funName = array.slice(1).join('_');
-
+    let funName = array[1];
     AgoraConsole.log(
       `[callIrisApiAsync][start] ${(() => {
         let printData = JSON.parse(JSON.stringify(apiParam));
@@ -141,7 +140,7 @@ export class IrisRtcEngine implements ApiInterceptor {
       let callApiFun = obj[funName];
       if (callApiFun) {
         if (
-          func_name !== 'RtcEngine_initialize_0320339' &&
+          func_name !== 'RtcEngine_initialize' &&
           this.irisClientManager.irisClientList.length == 0
         ) {
           AgoraConsole.error('you have not initialize yet');

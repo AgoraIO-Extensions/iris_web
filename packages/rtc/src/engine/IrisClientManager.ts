@@ -301,7 +301,7 @@ export class IrisClientManager {
           channelId: agoraRTCClient.channelName,
           localUid: agoraRTCClient.uid as number,
         };
-        this._engine.rtcEngineEventHandler.onNetworkQuality_34d8b3c(
+        this._engine.rtcEngineEventHandler.onNetworkQualityEx(
           connection,
           remoteUserPackage.uid as number,
           stats[remoteUserPackage.uid]?.downlinkNetworkQuality,

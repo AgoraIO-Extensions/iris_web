@@ -97,11 +97,7 @@ export async function joinChannel(apiEnginePtr: IrisApiEngine, options?: any) {
       clientRoleType: CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
     };
   }
-  let result = await callIris(
-    apiEnginePtr,
-    'RtcEngine_joinChannel_f097389',
-    options
-  );
+  let result = await callIris(apiEnginePtr, 'RtcEngine_joinChannel', options);
   expect(result.code).toBe(0);
   let irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
   let agoraRTCClient =
@@ -148,7 +144,7 @@ export async function joinChannelWithUserAccount(
   }
   let result = await callIris(
     apiEnginePtr,
-    'RtcEngine_joinChannelWithUserAccount_0e4f59e',
+    'RtcEngine_joinChannelWithUserAccount',
     options
   );
   expect(result.code).toBe(0);
@@ -185,11 +181,7 @@ export async function joinChannelEx(
       clientRoleType: CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
     },
   };
-  let result = await callIris(
-    apiEnginePtr,
-    'RtcEngineEx_joinChannelEx_a3cd08c',
-    param
-  );
+  let result = await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', param);
   expect(result.code).toBe(0);
   let irisRtcEngine = apiEnginePtr['apiInterceptors'][0];
   let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
@@ -228,7 +220,7 @@ export async function setupLocalVideo(
   }
   let result = await callIris(
     apiEnginePtr,
-    'RtcEngine_setupLocalVideo_acc9c38',
+    'RtcEngine_setupLocalVideo',
     options
   );
   expect(result.code).toBe(0);
@@ -256,7 +248,7 @@ export async function setupRemoteVideoEx(
   }
   let result = await callIris(
     apiEnginePtr,
-    'RtcEngineEx_setupRemoteVideoEx_522a409',
+    'RtcEngineEx_setupRemoteVideoEx',
     options
   );
   expect(result.code).toBe(0);

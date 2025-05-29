@@ -19,104 +19,102 @@ export class IBaseSpatialAudioEngineDispatch
   }
   // @ts-ignore
   release(): CallApiReturnType {
+    AgoraConsole.warn('BaseSpatialAudioEngine not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  setMaxAudioRecvCount(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_release not supported in this platform!'
+      'BaseSpatialAudioEngine_setMaxAudioRecvCount not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  setMaxAudioRecvCount_46f8ab7(apiParam: ApiParam): CallApiReturnType {
+  setAudioRecvRange(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_setMaxAudioRecvCount_46f8ab7 not supported in this platform!'
+      'BaseSpatialAudioEngine_setAudioRecvRange not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  setAudioRecvRange_685e803(apiParam: ApiParam): CallApiReturnType {
+  setDistanceUnit(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_setAudioRecvRange_685e803 not supported in this platform!'
+      'BaseSpatialAudioEngine_setDistanceUnit not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  setDistanceUnit_685e803(apiParam: ApiParam): CallApiReturnType {
+  updateSelfPosition(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_setDistanceUnit_685e803 not supported in this platform!'
+      'BaseSpatialAudioEngine_updateSelfPosition not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  updateSelfPosition_2487f19(apiParam: ApiParam): CallApiReturnType {
+  updateSelfPositionEx(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_updateSelfPosition_2487f19 not supported in this platform!'
+      'BaseSpatialAudioEngine_updateSelfPositionEx not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  updateSelfPositionEx_564d6f9(apiParam: ApiParam): CallApiReturnType {
+  updatePlayerPositionInfo(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_updateSelfPositionEx_564d6f9 not supported in this platform!'
+      'BaseSpatialAudioEngine_updatePlayerPositionInfo not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  updatePlayerPositionInfo_b37c59d(apiParam: ApiParam): CallApiReturnType {
+  setParameters(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_updatePlayerPositionInfo_b37c59d not supported in this platform!'
+      'BaseSpatialAudioEngine_setParameters not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  setParameters_3a2037f(apiParam: ApiParam): CallApiReturnType {
+  muteLocalAudioStream(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_setParameters_3a2037f not supported in this platform!'
+      'BaseSpatialAudioEngine_muteLocalAudioStream not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  muteLocalAudioStream_5039d15(apiParam: ApiParam): CallApiReturnType {
+  muteAllRemoteAudioStreams(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_muteLocalAudioStream_5039d15 not supported in this platform!'
+      'BaseSpatialAudioEngine_muteAllRemoteAudioStreams not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  muteAllRemoteAudioStreams_5039d15(apiParam: ApiParam): CallApiReturnType {
+  setZones(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_muteAllRemoteAudioStreams_5039d15 not supported in this platform!'
+      'BaseSpatialAudioEngine_setZones not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  setZones_414a27e(apiParam: ApiParam): CallApiReturnType {
+  setPlayerAttenuation(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_setZones_414a27e not supported in this platform!'
+      'BaseSpatialAudioEngine_setPlayerAttenuation not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  setPlayerAttenuation_a15bc51(apiParam: ApiParam): CallApiReturnType {
+  muteRemoteAudioStream(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'BaseSpatialAudioEngine_setPlayerAttenuation_a15bc51 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
-  }
-
-  // @ts-ignore
-  muteRemoteAudioStream_dbdc15a(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'BaseSpatialAudioEngine_muteRemoteAudioStream_dbdc15a not supported in this platform!'
+      'BaseSpatialAudioEngine_muteRemoteAudioStream not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -132,41 +130,41 @@ export class ILocalSpatialAudioEngineDispatch
     this._engine = engine;
   }
   // @ts-ignore
-  initialize_cf94fbf(): CallApiReturnType {
+  initialize(): CallApiReturnType {
     AgoraConsole.warn(
-      'LocalSpatialAudioEngine_initialize_cf94fbf not supported in this platform!'
+      'LocalSpatialAudioEngine_initialize not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  updateRemotePosition_adc0909(apiParam: ApiParam): CallApiReturnType {
+  updateRemotePosition(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'LocalSpatialAudioEngine_updateRemotePosition_adc0909 not supported in this platform!'
+      'LocalSpatialAudioEngine_updateRemotePosition not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  updateRemotePositionEx_f0252d9(apiParam: ApiParam): CallApiReturnType {
+  updateRemotePositionEx(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'LocalSpatialAudioEngine_updateRemotePositionEx_f0252d9 not supported in this platform!'
+      'LocalSpatialAudioEngine_updateRemotePositionEx not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  removeRemotePosition_c8d091a(apiParam: ApiParam): CallApiReturnType {
+  removeRemotePosition(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'LocalSpatialAudioEngine_removeRemotePosition_c8d091a not supported in this platform!'
+      'LocalSpatialAudioEngine_removeRemotePosition not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  removeRemotePositionEx_58a9850(apiParam: ApiParam): CallApiReturnType {
+  removeRemotePositionEx(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'LocalSpatialAudioEngine_removeRemotePositionEx_58a9850 not supported in this platform!'
+      'LocalSpatialAudioEngine_removeRemotePositionEx not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -174,23 +172,23 @@ export class ILocalSpatialAudioEngineDispatch
   // @ts-ignore
   clearRemotePositions(): CallApiReturnType {
     AgoraConsole.warn(
-      'LocalSpatialAudioEngine_clearRemotePositions not supported in this platform!'
+      'LocalSpatialAudioEngine not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  clearRemotePositionsEx_c81e1a4(apiParam: ApiParam): CallApiReturnType {
+  clearRemotePositionsEx(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'LocalSpatialAudioEngine_clearRemotePositionsEx_c81e1a4 not supported in this platform!'
+      'LocalSpatialAudioEngine_clearRemotePositionsEx not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
-  setRemoteAudioAttenuation_74c3e98(apiParam: ApiParam): CallApiReturnType {
+  setRemoteAudioAttenuation(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'LocalSpatialAudioEngine_setRemoteAudioAttenuation_74c3e98 not supported in this platform!'
+      'LocalSpatialAudioEngine_setRemoteAudioAttenuation not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

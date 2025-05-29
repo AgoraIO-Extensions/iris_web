@@ -40,7 +40,7 @@ export class MusicCacheInfo {
 export interface MusicChartCollection {
   getCount(): CallApiReturnType;
 
-  get_46f8ab7(index: number): CallApiReturnType;
+  get(index: number): CallApiReturnType;
 }
 
 export class MvProperty {
@@ -94,37 +94,37 @@ export interface MusicCollection {
 
   getPageSize(): CallApiReturnType;
 
-  getMusic_8fcdcef(index: number): CallApiReturnType;
+  getMusic(index: number): CallApiReturnType;
 }
 
 export interface IMusicContentCenterEventHandler {
-  onMusicChartsResult_3597d7e(
+  onMusicChartsResult(
     requestId: string,
     result: MusicChartInfo[],
     errorCode: MusicContentCenterStatusCode
   ): void;
 
-  onMusicCollectionResult_1517101(
+  onMusicCollectionResult(
     requestId: string,
     result: MusicCollection,
     errorCode: MusicContentCenterStatusCode
   ): void;
 
-  onLyricResult_981e37c(
+  onLyricResult(
     requestId: string,
     songCode: number,
     lyricUrl: string,
     errorCode: MusicContentCenterStatusCode
   ): void;
 
-  onSongSimpleInfoResult_981e37c(
+  onSongSimpleInfoResult(
     requestId: string,
     songCode: number,
     simpleInfo: string,
     errorCode: MusicContentCenterStatusCode
   ): void;
 
-  onPreLoadEvent_562c799(
+  onPreLoadEvent(
     requestId: string,
     songCode: number,
     percent: number,
@@ -147,19 +147,17 @@ export class MusicContentCenterConfiguration {
 }
 
 export interface IMusicPlayer {
-  open_303b92e(songCode: number, startPos: number): CallApiReturnType;
+  open(songCode: number, startPos: number): CallApiReturnType;
 }
 
 export interface IMusicContentCenter {
-  initialize_df70304(
-    configuration: MusicContentCenterConfiguration
-  ): CallApiReturnType;
+  initialize(configuration: MusicContentCenterConfiguration): CallApiReturnType;
 
-  renewToken_3a2037f(token: string): CallApiReturnType;
+  renewToken(token: string): CallApiReturnType;
 
   release(): CallApiReturnType;
 
-  registerEventHandler_ae49451(
+  registerEventHandler(
     eventHandler: IMusicContentCenterEventHandler
   ): CallApiReturnType;
 
@@ -167,9 +165,9 @@ export interface IMusicContentCenter {
 
   createMusicPlayer(): CallApiReturnType;
 
-  getMusicCharts_66d4ecd(requestId: string): CallApiReturnType;
+  getMusicCharts(requestId: string): CallApiReturnType;
 
-  getMusicCollectionByMusicChartId_8cd0b4d(
+  getMusicCollectionByMusicChartId(
     requestId: string,
     musicChartId: number,
     page: number,
@@ -177,7 +175,7 @@ export interface IMusicContentCenter {
     jsonOption: string
   ): CallApiReturnType;
 
-  searchMusic_3f8cf09(
+  searchMusic(
     requestId: string,
     keyWord: string,
     page: number,
@@ -185,31 +183,28 @@ export interface IMusicContentCenter {
     jsonOption: string
   ): CallApiReturnType;
 
-  preload_bd5a5a3(songCode: number, jsonOption: string): CallApiReturnType;
+  preload(songCode: number, jsonOption: string): CallApiReturnType;
 
-  preload_d3baeab(requestId: string, songCode: number): CallApiReturnType;
+  preload2(requestId: string, songCode: number): CallApiReturnType;
 
-  removeCache_f631116(songCode: number): CallApiReturnType;
+  removeCache(songCode: number): CallApiReturnType;
 
-  getCaches_c4f9978(
+  getCaches(
     cacheInfo: MusicCacheInfo[],
     cacheInfoSize: number
   ): CallApiReturnType;
 
-  isPreloaded_f631116(songCode: number): CallApiReturnType;
+  isPreloaded(songCode: number): CallApiReturnType;
 
-  getLyric_5ab5efd(
+  getLyric(
     requestId: string,
     songCode: number,
     LyricType: number
   ): CallApiReturnType;
 
-  getSongSimpleInfo_d3baeab(
-    requestId: string,
-    songCode: number
-  ): CallApiReturnType;
+  getSongSimpleInfo(requestId: string, songCode: number): CallApiReturnType;
 
-  getInternalSongCode_3a3d1e7(
+  getInternalSongCode(
     songCode: number,
     jsonOption: string,
     internalSongCode: number

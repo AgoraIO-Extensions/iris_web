@@ -10,32 +10,32 @@ import {
 } from './AgoraMediaPlayerTypes';
 
 export interface IMediaPlayerSourceObserver {
-  onPlayerSourceStateChanged_9572693(
+  onPlayerSourceStateChanged(
     state: MEDIA_PLAYER_STATE,
     ec: MEDIA_PLAYER_ERROR
   ): void;
 
-  onPositionChanged_f631116(position_ms: number): void;
+  onPositionChanged(position_ms: number): void;
 
-  onPlayerEvent_50f16fa(
+  onPlayerEvent(
     eventCode: MEDIA_PLAYER_EVENT,
     elapsedTime: number,
     message: string
   ): void;
 
-  onMetaData_469a01b(data: Uint8Array, length: number): void;
+  onMetaData(data: Uint8Array, length: number): void;
 
-  onPlayBufferUpdated_f631116(playCachedBuffer: number): void;
+  onPlayBufferUpdated(playCachedBuffer: number): void;
 
-  onPreloadEvent_a1e3596(src: string, event: PLAYER_PRELOAD_EVENT): void;
+  onPreloadEvent(src: string, event: PLAYER_PRELOAD_EVENT): void;
 
   onCompleted(): void;
 
   onAgoraCDNTokenWillExpire(): void;
 
-  onPlayerSrcInfoChanged_54f3e5a(from: SrcInfo, to: SrcInfo): void;
+  onPlayerSrcInfoChanged(from: SrcInfo, to: SrcInfo): void;
 
-  onPlayerInfoUpdated_0e902a8(info: PlayerUpdatedInfo): void;
+  onPlayerInfoUpdated(info: PlayerUpdatedInfo): void;
 
-  onAudioVolumeIndication_46f8ab7(volume: number): void;
+  onAudioVolumeIndication(volume: number): void;
 }

@@ -33,20 +33,20 @@ export class SpatialAudioZone {
 export interface IBaseSpatialAudioEngine {
   release(): CallApiReturnType;
 
-  setMaxAudioRecvCount_46f8ab7(maxCount: number): CallApiReturnType;
+  setMaxAudioRecvCount(maxCount: number): CallApiReturnType;
 
-  setAudioRecvRange_685e803(range: number): CallApiReturnType;
+  setAudioRecvRange(range: number): CallApiReturnType;
 
-  setDistanceUnit_685e803(unit: number): CallApiReturnType;
+  setDistanceUnit(unit: number): CallApiReturnType;
 
-  updateSelfPosition_2487f19(
+  updateSelfPosition(
     position: number[],
     axisForward: number[],
     axisRight: number[],
     axisUp: number[]
   ): CallApiReturnType;
 
-  updateSelfPositionEx_564d6f9(
+  updateSelfPositionEx(
     position: number[],
     axisForward: number[],
     axisRight: number[],
@@ -54,57 +54,54 @@ export interface IBaseSpatialAudioEngine {
     connection: RtcConnection
   ): CallApiReturnType;
 
-  updatePlayerPositionInfo_b37c59d(
+  updatePlayerPositionInfo(
     playerId: number,
     positionInfo: RemoteVoicePositionInfo
   ): CallApiReturnType;
 
-  setParameters_3a2037f(params: string): CallApiReturnType;
+  setParameters(params: string): CallApiReturnType;
 
-  muteLocalAudioStream_5039d15(mute: boolean): CallApiReturnType;
+  muteLocalAudioStream(mute: boolean): CallApiReturnType;
 
-  muteAllRemoteAudioStreams_5039d15(mute: boolean): CallApiReturnType;
+  muteAllRemoteAudioStreams(mute: boolean): CallApiReturnType;
 
-  setZones_414a27e(
-    zones: SpatialAudioZone,
-    zoneCount: number
-  ): CallApiReturnType;
+  setZones(zones: SpatialAudioZone, zoneCount: number): CallApiReturnType;
 
-  setPlayerAttenuation_a15bc51(
+  setPlayerAttenuation(
     playerId: number,
     attenuation: number,
     forceSet: boolean
   ): CallApiReturnType;
 
-  muteRemoteAudioStream_dbdc15a(uid: number, mute: boolean): CallApiReturnType;
+  muteRemoteAudioStream(uid: number, mute: boolean): CallApiReturnType;
 }
 
 export interface ILocalSpatialAudioEngine {
-  initialize_cf94fbf(): CallApiReturnType;
+  initialize(): CallApiReturnType;
 
-  updateRemotePosition_adc0909(
+  updateRemotePosition(
     uid: number,
     posInfo: RemoteVoicePositionInfo
   ): CallApiReturnType;
 
-  updateRemotePositionEx_f0252d9(
+  updateRemotePositionEx(
     uid: number,
     posInfo: RemoteVoicePositionInfo,
     connection: RtcConnection
   ): CallApiReturnType;
 
-  removeRemotePosition_c8d091a(uid: number): CallApiReturnType;
+  removeRemotePosition(uid: number): CallApiReturnType;
 
-  removeRemotePositionEx_58a9850(
+  removeRemotePositionEx(
     uid: number,
     connection: RtcConnection
   ): CallApiReturnType;
 
   clearRemotePositions(): CallApiReturnType;
 
-  clearRemotePositionsEx_c81e1a4(connection: RtcConnection): CallApiReturnType;
+  clearRemotePositionsEx(connection: RtcConnection): CallApiReturnType;
 
-  setRemoteAudioAttenuation_74c3e98(
+  setRemoteAudioAttenuation(
     uid: number,
     attenuation: number,
     forceSet: boolean

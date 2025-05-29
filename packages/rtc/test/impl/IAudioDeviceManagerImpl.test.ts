@@ -46,7 +46,7 @@ beforeEach(async () => {
       },
     },
   };
-  await callIris(apiEnginePtr, 'RtcEngine_initialize_0320339', nParam);
+  await callIris(apiEnginePtr, 'RtcEngine_initialize', nParam);
 });
 
 afterEach(() => {
@@ -78,7 +78,7 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(irisRtcEngine.globalState.videoDevices.length).not.toBe(0);
     expect(JSON.parse(result.data).result.length).toBe(1);
   });
-  test('setPlaybackDevice_4ad5f6e', async () => {
+  test('setPlaybackDevice', async () => {
     let param = {
       deviceId: 1,
     };
@@ -90,11 +90,7 @@ describe('IAgoraRtcEngineImpl', () => {
       )[0].track as ILocalAudioTrack,
       'setPlaybackDevice'
     );
-    await callIris(
-      apiEnginePtr,
-      'AudioDeviceManager_setPlaybackDevice_4ad5f6e',
-      param
-    );
+    await callIris(apiEnginePtr, 'AudioDeviceManager_setPlaybackDevice', param);
     expect(irisRtcEngine.globalState.playbackDeviceId).toBe(param.deviceId);
     expect(
       (irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
@@ -102,14 +98,14 @@ describe('IAgoraRtcEngineImpl', () => {
       )[0].track as ILocalAudioTrack).setPlaybackDevice
     ).toBeCalledWith(param.deviceId);
   });
-  test('getPlaybackDevice_73b9872', async () => {
+  test('getPlaybackDevice', async () => {
     jest.spyOn(irisRtcEngine.globalState.AgoraRTC, 'getPlaybackDevices');
     let param = {
       deviceId: 1,
     };
     let result = await callIrisWithoutCheck(
       apiEnginePtr,
-      'AudioDeviceManager_getPlaybackDevice_73b9872',
+      'AudioDeviceManager_getPlaybackDevice',
       param
     );
     expect(result.code).toBe(NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK);
@@ -118,21 +114,13 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.globalState.AgoraRTC.getPlaybackDevices
     ).toBeCalledTimes(1);
     jest.clearAllMocks();
-    await callIris(
-      apiEnginePtr,
-      'AudioDeviceManager_setPlaybackDevice_4ad5f6e',
-      param
-    );
-    await callIris(
-      apiEnginePtr,
-      'AudioDeviceManager_getPlaybackDevice_73b9872',
-      param
-    );
+    await callIris(apiEnginePtr, 'AudioDeviceManager_setPlaybackDevice', param);
+    await callIris(apiEnginePtr, 'AudioDeviceManager_getPlaybackDevice', param);
     expect(
       irisRtcEngine.globalState.AgoraRTC.getPlaybackDevices
     ).toBeCalledTimes(0);
   });
-  test('setRecordingDevice_4ad5f6e', async () => {
+  test('setRecordingDevice', async () => {
     let param = {
       deviceId: 1,
     };
@@ -146,7 +134,7 @@ describe('IAgoraRtcEngineImpl', () => {
     );
     await callIris(
       apiEnginePtr,
-      'AudioDeviceManager_setRecordingDevice_4ad5f6e',
+      'AudioDeviceManager_setRecordingDevice',
       param
     );
     expect(irisRtcEngine.globalState.recordingDeviceId).toBe(param.deviceId);
@@ -156,14 +144,14 @@ describe('IAgoraRtcEngineImpl', () => {
       )[0].track as IMicrophoneAudioTrack).setDevice
     ).toBeCalledWith(param.deviceId);
   });
-  test('getRecordingDevice_73b9872', async () => {
+  test('getRecordingDevice', async () => {
     jest.spyOn(irisRtcEngine.globalState.AgoraRTC, 'getMicrophones');
     let param = {
       deviceId: 1,
     };
     let result = await callIrisWithoutCheck(
       apiEnginePtr,
-      'AudioDeviceManager_getRecordingDevice_73b9872',
+      'AudioDeviceManager_getRecordingDevice',
       param
     );
     expect(result.code).toBe(NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK);
@@ -176,12 +164,12 @@ describe('IAgoraRtcEngineImpl', () => {
     jest.clearAllMocks();
     await callIris(
       apiEnginePtr,
-      'AudioDeviceManager_setRecordingDevice_4ad5f6e',
+      'AudioDeviceManager_setRecordingDevice',
       param
     );
     await callIris(
       apiEnginePtr,
-      'AudioDeviceManager_getRecordingDevice_73b9872',
+      'AudioDeviceManager_getRecordingDevice',
       param
     );
     expect(irisRtcEngine.globalState.AgoraRTC.getMicrophones).toBeCalledTimes(

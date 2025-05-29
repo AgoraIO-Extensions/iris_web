@@ -21,30 +21,30 @@ export class IPacketObserver {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
-  onSendAudioPacket_4ad95e3(packet: Packet): void {
+  onSendAudioPacket(packet: Packet): void {
     AgoraConsole.warn(
-      'PacketObserver_onSendAudioPacket_4ad95e3 not supported in this platform!'
+      'PacketObserver_onSendAudioPacket not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onSendVideoPacket_4ad95e3(packet: Packet): void {
+  onSendVideoPacket(packet: Packet): void {
     AgoraConsole.warn(
-      'PacketObserver_onSendVideoPacket_4ad95e3 not supported in this platform!'
+      'PacketObserver_onSendVideoPacket not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onReceiveAudioPacket_4ad95e3(packet: Packet): void {
+  onReceiveAudioPacket(packet: Packet): void {
     AgoraConsole.warn(
-      'PacketObserver_onReceiveAudioPacket_4ad95e3 not supported in this platform!'
+      'PacketObserver_onReceiveAudioPacket not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onReceiveVideoPacket_4ad95e3(packet: Packet): void {
+  onReceiveVideoPacket(packet: Packet): void {
     AgoraConsole.warn(
-      'PacketObserver_onReceiveVideoPacket_4ad95e3 not supported in this platform!'
+      'PacketObserver_onReceiveVideoPacket not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -61,35 +61,35 @@ export class IAudioEncodedFrameObserver {
     this._engine.irisEventHandlerManager.notifyEvent('RtcEngine', param);
   }
 
-  onRecordAudioEncodedFrame_d930ddc(
+  onRecordAudioEncodedFrame(
     frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void {
     AgoraConsole.warn(
-      'AudioEncodedFrameObserver_onRecordAudioEncodedFrame_d930ddc not supported in this platform!'
+      'AudioEncodedFrameObserver_onRecordAudioEncodedFrame not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onPlaybackAudioEncodedFrame_d930ddc(
+  onPlaybackAudioEncodedFrame(
     frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void {
     AgoraConsole.warn(
-      'AudioEncodedFrameObserver_onPlaybackAudioEncodedFrame_d930ddc not supported in this platform!'
+      'AudioEncodedFrameObserver_onPlaybackAudioEncodedFrame not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
-  onMixedAudioEncodedFrame_d930ddc(
+  onMixedAudioEncodedFrame(
     frameBuffer: Uint8Array,
     length: number,
     audioEncodedFrameInfo: EncodedAudioFrameInfo
   ): void {
     AgoraConsole.warn(
-      'AudioEncodedFrameObserver_onMixedAudioEncodedFrame_d930ddc not supported in this platform!'
+      'AudioEncodedFrameObserver_onMixedAudioEncodedFrame not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
