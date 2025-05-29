@@ -493,7 +493,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_setPlayerOption impl call', async () => {
+  test('MediaPlayer_setPlayerOption2 impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -502,7 +502,7 @@ describe('IMediaPlayer', () => {
       value: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_setPlayerOption',
+      'MediaPlayer_setPlayerOption2',
       JSON.stringify(nParam),
       0,
       '',
@@ -932,7 +932,7 @@ describe('IMediaPlayer', () => {
     );
   });
 
-  test('MediaPlayer_registerAudioFrameObserver impl call', async () => {
+  test('MediaPlayer_registerAudioFrameObserver2 impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -941,7 +941,7 @@ describe('IMediaPlayer', () => {
       mode: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MediaPlayer_registerAudioFrameObserver',
+      'MediaPlayer_registerAudioFrameObserver2',
       JSON.stringify(nParam),
       0,
       '',

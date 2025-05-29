@@ -30,18 +30,22 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
 
   // @ts-ignore
   setPlaybackDevice(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'AudioDeviceManager_setPlaybackDevice not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let deviceId = obj.deviceId;
+    if (deviceId === undefined) {
+      AgoraConsole.error('deviceId is undefined');
+      throw 'deviceId is undefined';
+    }
+
+    return this._impl.setPlaybackDevice(deviceId);
   }
 
   // @ts-ignore
   getPlaybackDevice(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'AudioDeviceManager_getPlaybackDevice not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let deviceId = obj.deviceId;
+
+    return this._impl.getPlaybackDevice();
   }
 
   // @ts-ignore
@@ -70,18 +74,22 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
 
   // @ts-ignore
   setRecordingDevice(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'AudioDeviceManager_setRecordingDevice not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let deviceId = obj.deviceId;
+    if (deviceId === undefined) {
+      AgoraConsole.error('deviceId is undefined');
+      throw 'deviceId is undefined';
+    }
+
+    return this._impl.setRecordingDevice(deviceId);
   }
 
   // @ts-ignore
   getRecordingDevice(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'AudioDeviceManager_getRecordingDevice not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let deviceId = obj.deviceId;
+
+    return this._impl.getRecordingDevice();
   }
 
   // @ts-ignore

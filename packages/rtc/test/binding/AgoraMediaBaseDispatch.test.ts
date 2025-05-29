@@ -77,18 +77,10 @@ describe('IAudioFrameObserverBase', () => {
   test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
     eventHandler.onPlaybackAudioFrame(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
-    ).toBeCalledTimes(0);
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    ).toBeCalledTimes(1);
   });
   test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
@@ -122,7 +114,7 @@ describe('IAudioFrameObserverBase', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('AudioFrameObserver impl call', async () => {
+  test('AudioFrameObserver2 impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest
@@ -183,18 +175,10 @@ describe('IAudioFrameObserver', () => {
   test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
-    jest
-      .spyOn(irisRtcEngine, 'returnResult')
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
     eventHandler.onPlaybackAudioFrame(undefined, undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
-    ).toBeCalledTimes(0);
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+    ).toBeCalledTimes(1);
   });
   test('AudioFrameObserver impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
@@ -228,7 +212,7 @@ describe('IAudioFrameObserver', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
-  test('AudioFrameObserver impl call', async () => {
+  test('AudioFrameObserver2 impl call', async () => {
     let eventHandler = new bindingAPI.IAudioFrameObserver(irisRtcEngine);
     jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
     jest

@@ -4,6 +4,7 @@ import { ERROR_CODE_TYPE, IRtcEngineEx } from '@iris/native-rtc';
 import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { callApiBufferExtension } from '../extensions/CallApiBufferExtensions';
 import { IRtcEngineExImpl } from '../impl/IAgoraRtcEngineExImpl';
 import { AgoraConsole } from '../util/AgoraConsole';
 
@@ -22,34 +23,70 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   }
   // @ts-ignore
   joinChannelEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_joinChannelEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let token = obj.token;
+    if (token === undefined) {
+      AgoraConsole.error('token is undefined');
+      throw 'token is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+    let options = obj.options;
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
+
+    return this._impl.joinChannelEx(token, connection, options);
   }
 
   // @ts-ignore
   leaveChannelEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_leaveChannelEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.leaveChannelEx(connection);
   }
 
   // @ts-ignore
   leaveChannelEx2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_leaveChannelEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+    let options = obj.options;
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
+
+    return this._impl.leaveChannelEx2(connection, options);
   }
 
   // @ts-ignore
   updateChannelMediaOptionsEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_updateChannelMediaOptionsEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let options = obj.options;
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.updateChannelMediaOptionsEx(options, connection);
   }
 
   // @ts-ignore
@@ -62,26 +99,63 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   setupRemoteVideoEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_setupRemoteVideoEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let canvas = obj.canvas;
+    if (canvas === undefined) {
+      AgoraConsole.error('canvas is undefined');
+      throw 'canvas is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.setupRemoteVideoEx(canvas, connection);
   }
 
   // @ts-ignore
   muteRemoteAudioStreamEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_muteRemoteAudioStreamEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.muteRemoteAudioStreamEx(uid, mute, connection);
   }
 
   // @ts-ignore
   muteRemoteVideoStreamEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_muteRemoteVideoStreamEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.muteRemoteVideoStreamEx(uid, mute, connection);
   }
 
   // @ts-ignore
@@ -94,34 +168,70 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   muteLocalAudioStreamEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_muteLocalAudioStreamEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.muteLocalAudioStreamEx(mute, connection);
   }
 
   // @ts-ignore
   muteLocalVideoStreamEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_muteLocalVideoStreamEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.muteLocalVideoStreamEx(mute, connection);
   }
 
   // @ts-ignore
   muteAllRemoteAudioStreamsEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_muteAllRemoteAudioStreamsEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.muteAllRemoteAudioStreamsEx(mute, connection);
   }
 
   // @ts-ignore
   muteAllRemoteVideoStreamsEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_muteAllRemoteVideoStreamsEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.muteAllRemoteVideoStreamsEx(mute, connection);
   }
 
   // @ts-ignore
@@ -182,10 +292,34 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   setRemoteRenderModeEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_setRemoteRenderModeEx not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let renderMode = obj.renderMode;
+    if (renderMode === undefined) {
+      AgoraConsole.error('renderMode is undefined');
+      throw 'renderMode is undefined';
+    }
+    let mirrorMode = obj.mirrorMode;
+    if (mirrorMode === undefined) {
+      AgoraConsole.error('mirrorMode is undefined');
+      throw 'mirrorMode is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.setRemoteRenderModeEx(
+      uid,
+      renderMode,
+      mirrorMode,
+      connection
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -247,17 +381,37 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   // @ts-ignore
   createDataStreamEx2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngineEx_createDataStreamEx not supported in this platform!'
+      'RtcEngineEx_createDataStreamEx2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   sendStreamMessageEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_sendStreamMessageEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    obj = callApiBufferExtension(apiParam.event, obj, apiParam.buffer);
+    let streamId = obj.streamId;
+    if (streamId === undefined) {
+      AgoraConsole.error('streamId is undefined');
+      throw 'streamId is undefined';
+    }
+    let data = obj.data;
+    if (data === undefined) {
+      AgoraConsole.error('data is undefined');
+      throw 'data is undefined';
+    }
+    let length = obj.length;
+    if (length === undefined) {
+      AgoraConsole.error('length is undefined');
+      throw 'length is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.sendStreamMessageEx(streamId, data, length, connection);
   }
 
   // @ts-ignore

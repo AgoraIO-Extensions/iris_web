@@ -636,7 +636,7 @@ describe('IMusicContentCenter', () => {
     );
   });
 
-  test('MusicContentCenter_preload impl call', async () => {
+  test('MusicContentCenter_preload2 impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
@@ -645,7 +645,7 @@ describe('IMusicContentCenter', () => {
       songCode: 'test',
     };
     let apiParam = new IrisCore.EventParam(
-      'MusicContentCenter_preload',
+      'MusicContentCenter_preload2',
       JSON.stringify(nParam),
       0,
       '',

@@ -4,6 +4,7 @@ import { ERROR_CODE_TYPE, IMediaEngine } from '@iris/native-rtc';
 import { ApiParam, CallApiReturnType } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { callApiBufferExtension } from '../extensions/CallApiBufferExtensions';
 import { IMediaEngineImpl } from '../impl/IAgoraMediaEngineImpl';
 import { AgoraConsole } from '../util/AgoraConsole';
 
@@ -18,10 +19,12 @@ export class IMediaEngineDispatch implements IMediaEngine {
   }
   // @ts-ignore
   registerAudioFrameObserver(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'MediaEngine_registerAudioFrameObserver not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
+    if (eventHandler === undefined) {
+      AgoraConsole.error('eventHandler is undefined');
+      throw 'eventHandler is undefined';
+    }
+    return this._impl.registerAudioFrameObserver(eventHandler);
   }
 
   // @ts-ignore
@@ -58,10 +61,34 @@ export class IMediaEngineDispatch implements IMediaEngine {
 
   // @ts-ignore
   setExternalVideoSource(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'MediaEngine_setExternalVideoSource not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let enabled = obj.enabled;
+    if (enabled === undefined) {
+      AgoraConsole.error('enabled is undefined');
+      throw 'enabled is undefined';
+    }
+    let useTexture = obj.useTexture;
+    if (useTexture === undefined) {
+      AgoraConsole.error('useTexture is undefined');
+      throw 'useTexture is undefined';
+    }
+    let sourceType = obj.sourceType;
+    if (sourceType === undefined) {
+      AgoraConsole.error('sourceType is undefined');
+      throw 'sourceType is undefined';
+    }
+    let encodedVideoOption = obj.encodedVideoOption;
+    if (encodedVideoOption === undefined) {
+      AgoraConsole.error('encodedVideoOption is undefined');
+      throw 'encodedVideoOption is undefined';
+    }
+
+    return this._impl.setExternalVideoSource(
+      enabled,
+      useTexture,
+      sourceType,
+      encodedVideoOption
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -106,10 +133,20 @@ export class IMediaEngineDispatch implements IMediaEngine {
 
   // @ts-ignore
   pushVideoFrame(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'MediaEngine_pushVideoFrame not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    obj = callApiBufferExtension(apiParam.event, obj, apiParam.buffer);
+    let frame = obj.frame;
+    if (frame === undefined) {
+      AgoraConsole.error('frame is undefined');
+      throw 'frame is undefined';
+    }
+    let videoTrackId = obj.videoTrackId;
+    if (videoTrackId === undefined) {
+      AgoraConsole.error('videoTrackId is undefined');
+      throw 'videoTrackId is undefined';
+    }
+
+    return this._impl.pushVideoFrame(frame, videoTrackId);
   }
 
   // @ts-ignore

@@ -141,7 +141,7 @@ export class IMediaPlayerDispatch implements IMediaPlayer {
   // @ts-ignore
   setPlayerOption2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'MediaPlayer_setPlayerOption not supported in this platform!'
+      'MediaPlayer_setPlayerOption2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -261,7 +261,7 @@ export class IMediaPlayerDispatch implements IMediaPlayer {
   // @ts-ignore
   registerAudioFrameObserver2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'MediaPlayer_registerAudioFrameObserver not supported in this platform!'
+      'MediaPlayer_registerAudioFrameObserver2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

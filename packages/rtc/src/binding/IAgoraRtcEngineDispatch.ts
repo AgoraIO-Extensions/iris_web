@@ -65,9 +65,11 @@ import {
   WLACC_SUGGEST_ACTION,
   WlAccStats,
 } from '@iris/native-rtc';
-import { ApiParam, CallApiReturnType } from 'iris-web-core';
+import { ApiParam, CallApiReturnType, IrisCore } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { callApiBufferExtension } from '../extensions/CallApiBufferExtensions';
+import { eventHandlerBufferExtension } from '../extensions/EventhandlerBufferExtensions';
 import { IRtcEngineImpl } from '../impl/IAgoraRtcEngineImpl';
 import { IVideoDeviceManagerImpl } from '../impl/IVideoDeviceManagerImpl';
 import { AgoraConsole } from '../util/AgoraConsole';
@@ -111,10 +113,21 @@ export class IRtcEngineEventHandler {
   }
 
   onError(err: ERROR_CODE_TYPE, msg: string): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onError not supported in this platform!'
+    let _obj = {
+      err,
+      msg,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onError',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onAudioQuality(
@@ -166,10 +179,22 @@ export class IRtcEngineEventHandler {
     deviceType: MEDIA_DEVICE_TYPE,
     deviceState: MEDIA_DEVICE_STATE_TYPE
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onAudioDeviceStateChanged not supported in this platform!'
+    let _obj = {
+      deviceId,
+      deviceType,
+      deviceState,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onAudioDeviceStateChanged',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onAudioMixingPositionChanged(position: number): void {
@@ -185,10 +210,20 @@ export class IRtcEngineEventHandler {
   }
 
   onAudioEffectFinished(soundId: number): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onAudioEffectFinished not supported in this platform!'
+    let _obj = {
+      soundId,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onAudioEffectFinished',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onVideoDeviceStateChanged(
@@ -196,10 +231,22 @@ export class IRtcEngineEventHandler {
     deviceType: MEDIA_DEVICE_TYPE,
     deviceState: MEDIA_DEVICE_STATE_TYPE
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onVideoDeviceStateChanged not supported in this platform!'
+    let _obj = {
+      deviceId,
+      deviceType,
+      deviceState,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onVideoDeviceStateChanged',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onNetworkQuality(uid: number, txQuality: number, rxQuality: number): void {
@@ -241,10 +288,23 @@ export class IRtcEngineEventHandler {
     height: number,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onFirstLocalVideoFrame not supported in this platform!'
+    let _obj = {
+      source,
+      width,
+      height,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onFirstLocalVideoFrame',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onFirstLocalVideoFramePublished(
@@ -287,10 +347,22 @@ export class IRtcEngineEventHandler {
     state: LOCAL_VIDEO_STREAM_STATE,
     error: LOCAL_VIDEO_STREAM_ERROR
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onLocalVideoStateChanged not supported in this platform!'
+    let _obj = {
+      source,
+      state,
+      error,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onLocalVideoStateChanged',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onRemoteVideoStateChanged(
@@ -353,17 +425,39 @@ export class IRtcEngineEventHandler {
   }
 
   onUserStateChanged(uid: number, state: number): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onUserStateChanged not supported in this platform!'
+    let _obj = {
+      uid,
+      state,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onUserStateChanged',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onUserEnableLocalVideo(uid: number, enabled: boolean): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onUserEnableLocalVideo not supported in this platform!'
+    let _obj = {
+      uid,
+      enabled,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onUserEnableLocalVideo',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onLocalAudioStats(stats: LocalAudioStats): void {
@@ -483,10 +577,28 @@ export class IRtcEngineEventHandler {
     length: number,
     sentTs: number
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onStreamMessage not supported in this platform!'
+    let _obj = {
+      userId,
+      streamId,
+      data,
+      length,
+      sentTs,
+    };
+    let bufferList = eventHandlerBufferExtension(
+      'RtcEngineEventHandler_onStreamMessage',
+      _obj
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onStreamMessage',
+      _json,
+      0,
+      '',
+      bufferList as any,
+      [],
+      bufferList.length
+    );
+    this.notifyEvent(eventParam);
   }
 
   onStreamMessageError(
@@ -546,10 +658,21 @@ export class IRtcEngineEventHandler {
     state: LOCAL_AUDIO_STREAM_STATE,
     error: LOCAL_AUDIO_STREAM_ERROR
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onLocalAudioStateChanged not supported in this platform!'
+    let _obj = {
+      state,
+      error,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onLocalAudioStateChanged',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onRemoteAudioStateChanged(
@@ -572,10 +695,20 @@ export class IRtcEngineEventHandler {
   }
 
   onContentInspectResult(result: CONTENT_INSPECT_RESULT): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onContentInspectResult not supported in this platform!'
+    let _obj = {
+      result,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onContentInspectResult',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onSnapshotTaken(
@@ -681,10 +814,21 @@ export class IRtcEngineEventHandler {
     uid: number,
     isFallbackOrRecover: boolean
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onRemoteSubscribeFallbackToAudioOnly not supported in this platform!'
+    let _obj = {
+      uid,
+      isFallbackOrRecover,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onRemoteSubscribeFallbackToAudioOnly',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onRemoteAudioTransportStats(
@@ -768,10 +912,21 @@ export class IRtcEngineEventHandler {
   }
 
   onUserInfoUpdated(uid: number, info: UserInfo): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onUserInfoUpdated not supported in this platform!'
+    let _obj = {
+      uid,
+      info,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onUserInfoUpdated',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onUploadLogResult(
@@ -903,10 +1058,21 @@ export class IRtcEngineEventHandler {
   }
 
   onJoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onJoinChannelSuccessEx not supported in this platform!'
+    let _obj = {
+      connection,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onJoinChannelSuccessEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onRejoinChannelSuccessEx(connection: RtcConnection, elapsed: number): void {
@@ -935,17 +1101,41 @@ export class IRtcEngineEventHandler {
     speakerNumber: number,
     totalVolume: number
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onAudioVolumeIndicationEx not supported in this platform!'
+    let _obj = {
+      connection,
+      speakers,
+      speakerNumber,
+      totalVolume,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onAudioVolumeIndicationEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onLeaveChannelEx(connection: RtcConnection, stats: RtcStats): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onLeaveChannelEx not supported in this platform!'
+    let _obj = {
+      connection,
+      stats,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onLeaveChannelEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onRtcStatsEx(connection: RtcConnection, stats: RtcStats): void {
@@ -961,10 +1151,23 @@ export class IRtcEngineEventHandler {
     txQuality: QUALITY_TYPE,
     rxQuality: QUALITY_TYPE
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onNetworkQualityEx not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      txQuality,
+      rxQuality,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onNetworkQualityEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onIntraRequestReceivedEx(connection: RtcConnection): void {
@@ -991,10 +1194,24 @@ export class IRtcEngineEventHandler {
     height: number,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onFirstRemoteVideoDecodedEx not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      width,
+      height,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onFirstRemoteVideoDecodedEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onVideoSizeChangedEx(
@@ -1029,10 +1246,24 @@ export class IRtcEngineEventHandler {
     reason: REMOTE_VIDEO_STATE_REASON,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onRemoteVideoStateChangedEx not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      state,
+      reason,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onRemoteVideoStateChangedEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onFirstRemoteVideoFrameEx(
@@ -1042,10 +1273,24 @@ export class IRtcEngineEventHandler {
     height: number,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onFirstRemoteVideoFrameEx not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      width,
+      height,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onFirstRemoteVideoFrameEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onUserJoinedEx(
@@ -1053,10 +1298,22 @@ export class IRtcEngineEventHandler {
     remoteUid: number,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onUserJoinedEx not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onUserJoinedEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onUserOfflineEx(
@@ -1064,10 +1321,22 @@ export class IRtcEngineEventHandler {
     remoteUid: number,
     reason: USER_OFFLINE_REASON_TYPE
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onUserOfflineEx not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      reason,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onUserOfflineEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onUserMuteAudioEx(
@@ -1075,10 +1344,22 @@ export class IRtcEngineEventHandler {
     remoteUid: number,
     muted: boolean
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onUserMuteAudioEx not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      muted,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onUserMuteAudioEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onUserMuteVideoEx(
@@ -1086,10 +1367,22 @@ export class IRtcEngineEventHandler {
     remoteUid: number,
     muted: boolean
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onUserMuteVideoEx not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      muted,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onUserMuteVideoEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onUserEnableVideoEx(
@@ -1160,24 +1453,54 @@ export class IRtcEngineEventHandler {
   }
 
   onConnectionLostEx(connection: RtcConnection): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onConnectionLostEx not supported in this platform!'
+    let _obj = {
+      connection,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onConnectionLostEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onConnectionInterruptedEx(connection: RtcConnection): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onConnectionInterruptedEx not supported in this platform!'
+    let _obj = {
+      connection,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onConnectionInterruptedEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onConnectionBannedEx(connection: RtcConnection): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onConnectionBannedEx not supported in this platform!'
+    let _obj = {
+      connection,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onConnectionBannedEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onStreamMessageEx(
@@ -1209,10 +1532,20 @@ export class IRtcEngineEventHandler {
   }
 
   onRequestTokenEx(connection: RtcConnection): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onRequestTokenEx not supported in this platform!'
+    let _obj = {
+      connection,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onRequestTokenEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onLicenseValidationFailureEx(
@@ -1226,10 +1559,21 @@ export class IRtcEngineEventHandler {
   }
 
   onTokenPrivilegeWillExpireEx(connection: RtcConnection, token: string): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onTokenPrivilegeWillExpireEx not supported in this platform!'
+    let _obj = {
+      connection,
+      token,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onTokenPrivilegeWillExpireEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onFirstLocalAudioFramePublishedEx(
@@ -1247,10 +1591,22 @@ export class IRtcEngineEventHandler {
     userId: number,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onFirstRemoteAudioFrameEx not supported in this platform!'
+    let _obj = {
+      connection,
+      userId,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onFirstRemoteAudioFrameEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onFirstRemoteAudioDecodedEx(
@@ -1258,10 +1614,22 @@ export class IRtcEngineEventHandler {
     uid: number,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onFirstRemoteAudioDecodedEx not supported in this platform!'
+    let _obj = {
+      connection,
+      uid,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onFirstRemoteAudioDecodedEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onLocalAudioStateChangedEx(
@@ -1269,10 +1637,22 @@ export class IRtcEngineEventHandler {
     state: LOCAL_AUDIO_STREAM_STATE,
     error: LOCAL_AUDIO_STREAM_ERROR
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onLocalAudioStateChangedEx not supported in this platform!'
+    let _obj = {
+      connection,
+      state,
+      error,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onLocalAudioStateChangedEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onRemoteAudioStateChangedEx(
@@ -1282,10 +1662,24 @@ export class IRtcEngineEventHandler {
     reason: REMOTE_AUDIO_STATE_REASON,
     elapsed: number
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onRemoteAudioStateChangedEx not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      state,
+      reason,
+      elapsed,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onRemoteAudioStateChangedEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onActiveSpeakerEx(connection: RtcConnection, uid: number): void {
@@ -1301,10 +1695,23 @@ export class IRtcEngineEventHandler {
     newRole: CLIENT_ROLE_TYPE,
     newRoleOptions: ClientRoleOptions
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onClientRoleChangedEx not supported in this platform!'
+    let _obj = {
+      connection,
+      oldRole,
+      newRole,
+      newRoleOptions,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onClientRoleChangedEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onClientRoleChangeFailedEx(
@@ -1349,10 +1756,22 @@ export class IRtcEngineEventHandler {
     state: CONNECTION_STATE_TYPE,
     reason: CONNECTION_CHANGED_REASON_TYPE
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onConnectionStateChangedEx not supported in this platform!'
+    let _obj = {
+      connection,
+      state,
+      reason,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onConnectionStateChangedEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onWlAccMessageEx(
@@ -1389,10 +1808,21 @@ export class IRtcEngineEventHandler {
     connection: RtcConnection,
     errorType: ENCRYPTION_ERROR_TYPE
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onEncryptionErrorEx not supported in this platform!'
+    let _obj = {
+      connection,
+      errorType,
+    };
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onEncryptionErrorEx',
+      _json,
+      0,
+      '',
+      [],
+      [],
+      0
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    this.notifyEvent(eventParam);
   }
 
   onUploadLogResultEx(
@@ -1462,18 +1892,19 @@ export class IVideoDeviceManagerDispatch implements IVideoDeviceManager {
 
   // @ts-ignore
   setDevice(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'VideoDeviceManager_setDevice not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let deviceIdUTF8 = obj.deviceIdUTF8;
+    if (deviceIdUTF8 === undefined) {
+      AgoraConsole.error('deviceIdUTF8 is undefined');
+      throw 'deviceIdUTF8 is undefined';
+    }
+
+    return this._impl.setDevice(deviceIdUTF8);
   }
 
   // @ts-ignore
   getDevice(): CallApiReturnType {
-    AgoraConsole.warn(
-      'VideoDeviceManager_getDevice not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    return this._impl.getDevice();
   }
 
   // @ts-ignore
@@ -1588,14 +2019,26 @@ export class IRtcEngineDispatch implements IRtcEngine {
   }
   // @ts-ignore
   release(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('RtcEngine_release not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let sync = obj.sync;
+    if (sync === undefined) {
+      AgoraConsole.error('sync is undefined');
+      throw 'sync is undefined';
+    }
+
+    return this._impl.release(sync);
   }
 
   // @ts-ignore
   initialize(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('RtcEngine_initialize not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let context = obj.context;
+    if (context === undefined) {
+      AgoraConsole.error('context is undefined');
+      throw 'context is undefined';
+    }
+
+    return this._impl.initialize(context);
   }
 
   // @ts-ignore
@@ -1639,7 +2082,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   preloadChannel2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_preloadChannel not supported in this platform!'
+      'RtcEngine_preloadChannel2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -1654,22 +2097,68 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   joinChannel(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('RtcEngine_joinChannel not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let token = obj.token;
+    if (token === undefined) {
+      AgoraConsole.error('token is undefined');
+      throw 'token is undefined';
+    }
+    let channelId = obj.channelId;
+    if (channelId === undefined) {
+      AgoraConsole.error('channelId is undefined');
+      throw 'channelId is undefined';
+    }
+    let info = obj.info;
+    if (info === undefined) {
+      AgoraConsole.error('info is undefined');
+      throw 'info is undefined';
+    }
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+
+    return this._impl.joinChannel(token, channelId, info, uid);
   }
 
   // @ts-ignore
   joinChannel2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('RtcEngine_joinChannel not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let token = obj.token;
+    if (token === undefined) {
+      AgoraConsole.error('token is undefined');
+      throw 'token is undefined';
+    }
+    let channelId = obj.channelId;
+    if (channelId === undefined) {
+      AgoraConsole.error('channelId is undefined');
+      throw 'channelId is undefined';
+    }
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let options = obj.options;
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
+
+    return this._impl.joinChannel2(token, channelId, uid, options);
   }
 
   // @ts-ignore
   updateChannelMediaOptions(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_updateChannelMediaOptions not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let options = obj.options;
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
+
+    return this._impl.updateChannelMediaOptions(options);
   }
 
   // @ts-ignore
@@ -1680,8 +2169,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   leaveChannel2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('RtcEngine_leaveChannel not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let options = obj.options;
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
+
+    return this._impl.leaveChannel2(options);
   }
 
   // @ts-ignore
@@ -1692,26 +2187,43 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   setChannelProfile(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setChannelProfile not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let profile = obj.profile;
+    if (profile === undefined) {
+      AgoraConsole.error('profile is undefined');
+      throw 'profile is undefined';
+    }
+
+    return this._impl.setChannelProfile(profile);
   }
 
   // @ts-ignore
   setClientRole(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setClientRole not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let role = obj.role;
+    if (role === undefined) {
+      AgoraConsole.error('role is undefined');
+      throw 'role is undefined';
+    }
+
+    return this._impl.setClientRole(role);
   }
 
   // @ts-ignore
   setClientRole2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setClientRole not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let role = obj.role;
+    if (role === undefined) {
+      AgoraConsole.error('role is undefined');
+      throw 'role is undefined';
+    }
+    let options = obj.options;
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
+
+    return this._impl.setClientRole2(role, options);
   }
 
   // @ts-ignore
@@ -1723,7 +2235,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   startEchoTest2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_startEchoTest not supported in this platform!'
+      'RtcEngine_startEchoTest2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -1731,7 +2243,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   startEchoTest3(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_startEchoTest not supported in this platform!'
+      'RtcEngine_startEchoTest3 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -1770,8 +2282,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   startPreview2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('RtcEngine_startPreview not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let sourceType = obj.sourceType;
+    if (sourceType === undefined) {
+      AgoraConsole.error('sourceType is undefined');
+      throw 'sourceType is undefined';
+    }
+
+    return this._impl.startPreview2(sourceType);
   }
 
   // @ts-ignore
@@ -1782,8 +2300,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   stopPreview2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('RtcEngine_stopPreview not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let sourceType = obj.sourceType;
+    if (sourceType === undefined) {
+      AgoraConsole.error('sourceType is undefined');
+      throw 'sourceType is undefined';
+    }
+
+    return this._impl.stopPreview2(sourceType);
   }
 
   // @ts-ignore
@@ -1802,10 +2326,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   setVideoEncoderConfiguration(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setVideoEncoderConfiguration not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let config = obj.config;
+    if (config === undefined) {
+      AgoraConsole.error('config is undefined');
+      throw 'config is undefined';
+    }
+
+    return this._impl.setVideoEncoderConfiguration(config);
   }
 
   // @ts-ignore
@@ -1858,10 +2386,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   setupLocalVideo(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setupLocalVideo not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let canvas = obj.canvas;
+    if (canvas === undefined) {
+      AgoraConsole.error('canvas is undefined');
+      throw 'canvas is undefined';
+    }
+
+    return this._impl.setupLocalVideo(canvas);
   }
 
   // @ts-ignore
@@ -1886,18 +2418,31 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   setAudioProfile(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setAudioProfile not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let profile = obj.profile;
+    if (profile === undefined) {
+      AgoraConsole.error('profile is undefined');
+      throw 'profile is undefined';
+    }
+    let scenario = obj.scenario;
+    if (scenario === undefined) {
+      AgoraConsole.error('scenario is undefined');
+      throw 'scenario is undefined';
+    }
+
+    return this._impl.setAudioProfile(profile, scenario);
   }
 
   // @ts-ignore
   setAudioProfile2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setAudioProfile not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let profile = obj.profile;
+    if (profile === undefined) {
+      AgoraConsole.error('profile is undefined');
+      throw 'profile is undefined';
+    }
+
+    return this._impl.setAudioProfile2(profile);
   }
 
   // @ts-ignore
@@ -1910,26 +2455,38 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   enableLocalAudio(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_enableLocalAudio not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let enabled = obj.enabled;
+    if (enabled === undefined) {
+      AgoraConsole.error('enabled is undefined');
+      throw 'enabled is undefined';
+    }
+
+    return this._impl.enableLocalAudio(enabled);
   }
 
   // @ts-ignore
   muteLocalAudioStream(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_muteLocalAudioStream not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+
+    return this._impl.muteLocalAudioStream(mute);
   }
 
   // @ts-ignore
   muteAllRemoteAudioStreams(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_muteAllRemoteAudioStreams not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+
+    return this._impl.muteAllRemoteAudioStreams(mute);
   }
 
   // @ts-ignore
@@ -1942,34 +2499,55 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   muteRemoteAudioStream(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_muteRemoteAudioStream not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+
+    return this._impl.muteRemoteAudioStream(uid, mute);
   }
 
   // @ts-ignore
   muteLocalVideoStream(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_muteLocalVideoStream not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+
+    return this._impl.muteLocalVideoStream(mute);
   }
 
   // @ts-ignore
   enableLocalVideo(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_enableLocalVideo not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let enabled = obj.enabled;
+    if (enabled === undefined) {
+      AgoraConsole.error('enabled is undefined');
+      throw 'enabled is undefined';
+    }
+
+    return this._impl.enableLocalVideo(enabled);
   }
 
   // @ts-ignore
   muteAllRemoteVideoStreams(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_muteAllRemoteVideoStreams not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+
+    return this._impl.muteAllRemoteVideoStreams(mute);
   }
 
   // @ts-ignore
@@ -1982,10 +2560,19 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   muteRemoteVideoStream(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_muteRemoteVideoStream not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let mute = obj.mute;
+    if (mute === undefined) {
+      AgoraConsole.error('mute is undefined');
+      throw 'mute is undefined';
+    }
+
+    return this._impl.muteRemoteVideoStream(uid, mute);
   }
 
   // @ts-ignore
@@ -2046,10 +2633,24 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   enableAudioVolumeIndication(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_enableAudioVolumeIndication not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let interval = obj.interval;
+    if (interval === undefined) {
+      AgoraConsole.error('interval is undefined');
+      throw 'interval is undefined';
+    }
+    let smooth = obj.smooth;
+    if (smooth === undefined) {
+      AgoraConsole.error('smooth is undefined');
+      throw 'smooth is undefined';
+    }
+    let reportVad = obj.reportVad;
+    if (reportVad === undefined) {
+      AgoraConsole.error('reportVad is undefined');
+      throw 'reportVad is undefined';
+    }
+
+    return this._impl.enableAudioVolumeIndication(interval, smooth, reportVad);
   }
 
   // @ts-ignore
@@ -2063,7 +2664,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   startAudioRecording2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_startAudioRecording not supported in this platform!'
+      'RtcEngine_startAudioRecording2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -2071,7 +2672,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   startAudioRecording3(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_startAudioRecording not supported in this platform!'
+      'RtcEngine_startAudioRecording3 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -2131,7 +2732,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   startAudioMixing2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_startAudioMixing not supported in this platform!'
+      'RtcEngine_startAudioMixing2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -2264,8 +2865,58 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   playEffect(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('RtcEngine_playEffect not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let soundId = obj.soundId;
+    if (soundId === undefined) {
+      AgoraConsole.error('soundId is undefined');
+      throw 'soundId is undefined';
+    }
+    let filePath = obj.filePath;
+    if (filePath === undefined) {
+      AgoraConsole.error('filePath is undefined');
+      throw 'filePath is undefined';
+    }
+    let loopCount = obj.loopCount;
+    if (loopCount === undefined) {
+      AgoraConsole.error('loopCount is undefined');
+      throw 'loopCount is undefined';
+    }
+    let pitch = obj.pitch;
+    if (pitch === undefined) {
+      AgoraConsole.error('pitch is undefined');
+      throw 'pitch is undefined';
+    }
+    let pan = obj.pan;
+    if (pan === undefined) {
+      AgoraConsole.error('pan is undefined');
+      throw 'pan is undefined';
+    }
+    let gain = obj.gain;
+    if (gain === undefined) {
+      AgoraConsole.error('gain is undefined');
+      throw 'gain is undefined';
+    }
+    let publish = obj.publish;
+    if (publish === undefined) {
+      AgoraConsole.error('publish is undefined');
+      throw 'publish is undefined';
+    }
+    let startPos = obj.startPos;
+    if (startPos === undefined) {
+      AgoraConsole.error('startPos is undefined');
+      throw 'startPos is undefined';
+    }
+
+    return this._impl.playEffect(
+      soundId,
+      filePath,
+      loopCount,
+      pitch,
+      pan,
+      gain,
+      publish,
+      startPos
+    );
   }
 
   // @ts-ignore
@@ -2318,8 +2969,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   stopEffect(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('RtcEngine_stopEffect not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let soundId = obj.soundId;
+    if (soundId === undefined) {
+      AgoraConsole.error('soundId is undefined');
+      throw 'soundId is undefined';
+    }
+
+    return this._impl.stopEffect(soundId);
   }
 
   // @ts-ignore
@@ -2506,8 +3163,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   setLogLevel(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('RtcEngine_setLogLevel not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let level = obj.level;
+    if (level === undefined) {
+      AgoraConsole.error('level is undefined');
+      throw 'level is undefined';
+    }
+
+    return this._impl.setLogLevel(level);
   }
 
   // @ts-ignore
@@ -2528,34 +3191,65 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   setLocalRenderMode(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setLocalRenderMode not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let renderMode = obj.renderMode;
+    if (renderMode === undefined) {
+      AgoraConsole.error('renderMode is undefined');
+      throw 'renderMode is undefined';
+    }
+    let mirrorMode = obj.mirrorMode;
+    if (mirrorMode === undefined) {
+      AgoraConsole.error('mirrorMode is undefined');
+      throw 'mirrorMode is undefined';
+    }
+
+    return this._impl.setLocalRenderMode(renderMode, mirrorMode);
   }
 
   // @ts-ignore
   setRemoteRenderMode(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setRemoteRenderMode not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let renderMode = obj.renderMode;
+    if (renderMode === undefined) {
+      AgoraConsole.error('renderMode is undefined');
+      throw 'renderMode is undefined';
+    }
+    let mirrorMode = obj.mirrorMode;
+    if (mirrorMode === undefined) {
+      AgoraConsole.error('mirrorMode is undefined');
+      throw 'mirrorMode is undefined';
+    }
+
+    return this._impl.setRemoteRenderMode(uid, renderMode, mirrorMode);
   }
 
   // @ts-ignore
   setLocalRenderMode2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setLocalRenderMode not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let renderMode = obj.renderMode;
+    if (renderMode === undefined) {
+      AgoraConsole.error('renderMode is undefined');
+      throw 'renderMode is undefined';
+    }
+
+    return this._impl.setLocalRenderMode2(renderMode);
   }
 
   // @ts-ignore
   setLocalVideoMirrorMode(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setLocalVideoMirrorMode not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let mirrorMode = obj.mirrorMode;
+    if (mirrorMode === undefined) {
+      AgoraConsole.error('mirrorMode is undefined');
+      throw 'mirrorMode is undefined';
+    }
+
+    return this._impl.setLocalVideoMirrorMode(mirrorMode);
   }
 
   // @ts-ignore
@@ -2569,7 +3263,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   enableDualStreamMode2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_enableDualStreamMode not supported in this platform!'
+      'RtcEngine_enableDualStreamMode2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -2585,7 +3279,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   setDualStreamMode2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_setDualStreamMode not supported in this platform!'
+      'RtcEngine_setDualStreamMode2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -2608,10 +3302,34 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   setPlaybackAudioFrameParameters(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setPlaybackAudioFrameParameters not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let sampleRate = obj.sampleRate;
+    if (sampleRate === undefined) {
+      AgoraConsole.error('sampleRate is undefined');
+      throw 'sampleRate is undefined';
+    }
+    let channel = obj.channel;
+    if (channel === undefined) {
+      AgoraConsole.error('channel is undefined');
+      throw 'channel is undefined';
+    }
+    let mode = obj.mode;
+    if (mode === undefined) {
+      AgoraConsole.error('mode is undefined');
+      throw 'mode is undefined';
+    }
+    let samplesPerCall = obj.samplesPerCall;
+    if (samplesPerCall === undefined) {
+      AgoraConsole.error('samplesPerCall is undefined');
+      throw 'samplesPerCall is undefined';
+    }
+
+    return this._impl.setPlaybackAudioFrameParameters(
+      sampleRate,
+      channel,
+      mode,
+      samplesPerCall
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -2799,7 +3517,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   enableExtension2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_enableExtension not supported in this platform!'
+      'RtcEngine_enableExtension2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -2823,7 +3541,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   setExtensionProperty2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_setExtensionProperty not supported in this platform!'
+      'RtcEngine_setExtensionProperty2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -2831,7 +3549,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   getExtensionProperty2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_getExtensionProperty not supported in this platform!'
+      'RtcEngine_getExtensionProperty2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -3102,10 +3820,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   startScreenCapture(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_startScreenCapture not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let captureParams = obj.captureParams;
+    if (captureParams === undefined) {
+      AgoraConsole.error('captureParams is undefined');
+      throw 'captureParams is undefined';
+    }
+
+    return this._impl.startScreenCapture(captureParams);
   }
 
   // @ts-ignore
@@ -3243,17 +3965,21 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   startScreenCapture2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_startScreenCapture not supported in this platform!'
+      'RtcEngine_startScreenCapture2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   stopScreenCapture2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_stopScreenCapture not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let sourceType = obj.sourceType;
+    if (sourceType === undefined) {
+      AgoraConsole.error('sourceType is undefined');
+      throw 'sourceType is undefined';
+    }
+
+    return this._impl.stopScreenCapture2(sourceType);
   }
 
   // @ts-ignore
@@ -3264,18 +3990,22 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   registerEventHandler(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_registerEventHandler not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
+    if (eventHandler === undefined) {
+      AgoraConsole.error('eventHandler is undefined');
+      throw 'eventHandler is undefined';
+    }
+    return this._impl.registerEventHandler(eventHandler);
   }
 
   // @ts-ignore
   unregisterEventHandler(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_unregisterEventHandler not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let eventHandler = apiParam.buffer[0]; //obj.eventHandler;
+    if (eventHandler === undefined) {
+      AgoraConsole.error('eventHandler is undefined');
+      throw 'eventHandler is undefined';
+    }
+    return this._impl.unregisterEventHandler(eventHandler);
   }
 
   // @ts-ignore
@@ -3329,17 +4059,32 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   createDataStream2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_createDataStream not supported in this platform!'
+      'RtcEngine_createDataStream2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
   sendStreamMessage(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_sendStreamMessage not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    obj = callApiBufferExtension(apiParam.event, obj, apiParam.buffer);
+    let streamId = obj.streamId;
+    if (streamId === undefined) {
+      AgoraConsole.error('streamId is undefined');
+      throw 'streamId is undefined';
+    }
+    let data = obj.data;
+    if (data === undefined) {
+      AgoraConsole.error('data is undefined');
+      throw 'data is undefined';
+    }
+    let length = obj.length;
+    if (length === undefined) {
+      AgoraConsole.error('length is undefined');
+      throw 'length is undefined';
+    }
+
+    return this._impl.sendStreamMessage(streamId, data, length);
   }
 
   // @ts-ignore
@@ -3353,7 +4098,7 @@ export class IRtcEngineDispatch implements IRtcEngine {
   // @ts-ignore
   addVideoWatermark2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'RtcEngine_addVideoWatermark not supported in this platform!'
+      'RtcEngine_addVideoWatermark2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -3440,18 +4185,56 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   joinChannelWithUserAccount(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_joinChannelWithUserAccount not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let token = obj.token;
+    if (token === undefined) {
+      AgoraConsole.error('token is undefined');
+      throw 'token is undefined';
+    }
+    let channelId = obj.channelId;
+    if (channelId === undefined) {
+      AgoraConsole.error('channelId is undefined');
+      throw 'channelId is undefined';
+    }
+    let userAccount = obj.userAccount;
+    if (userAccount === undefined) {
+      AgoraConsole.error('userAccount is undefined');
+      throw 'userAccount is undefined';
+    }
+
+    return this._impl.joinChannelWithUserAccount(token, channelId, userAccount);
   }
 
   // @ts-ignore
   joinChannelWithUserAccount2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_joinChannelWithUserAccount not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let token = obj.token;
+    if (token === undefined) {
+      AgoraConsole.error('token is undefined');
+      throw 'token is undefined';
+    }
+    let channelId = obj.channelId;
+    if (channelId === undefined) {
+      AgoraConsole.error('channelId is undefined');
+      throw 'channelId is undefined';
+    }
+    let userAccount = obj.userAccount;
+    if (userAccount === undefined) {
+      AgoraConsole.error('userAccount is undefined');
+      throw 'userAccount is undefined';
+    }
+    let options = obj.options;
+    if (options === undefined) {
+      AgoraConsole.error('options is undefined');
+      throw 'options is undefined';
+    }
+
+    return this._impl.joinChannelWithUserAccount2(
+      token,
+      channelId,
+      userAccount,
+      options
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -3464,18 +4247,28 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   getUserInfoByUserAccount(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_getUserInfoByUserAccount not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let userAccount = obj.userAccount;
+    if (userAccount === undefined) {
+      AgoraConsole.error('userAccount is undefined');
+      throw 'userAccount is undefined';
+    }
+    let userInfo = obj.userInfo;
+
+    return this._impl.getUserInfoByUserAccount(userAccount);
   }
 
   // @ts-ignore
   getUserInfoByUid(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_getUserInfoByUid not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let userInfo = obj.userInfo;
+
+    return this._impl.getUserInfoByUid(uid);
   }
 
   // @ts-ignore
@@ -3676,10 +4469,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   setParameters(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setParameters not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let parameters = obj.parameters;
+    if (parameters === undefined) {
+      AgoraConsole.error('parameters is undefined');
+      throw 'parameters is undefined';
+    }
+
+    return this._impl.setParameters(parameters);
   }
 
   // @ts-ignore

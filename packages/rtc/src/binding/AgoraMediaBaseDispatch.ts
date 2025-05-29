@@ -13,9 +13,10 @@ import {
   VIDEO_SOURCE_TYPE,
   VideoFrame,
 } from '@iris/native-rtc';
-import { ApiParam } from 'iris-web-core';
+import { ApiParam, IrisCore } from 'iris-web-core';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { eventHandlerBufferExtension } from '../extensions/EventhandlerBufferExtensions';
 import { AgoraConsole } from '../util/AgoraConsole';
 
 export class IAudioPcmFrameSink {
@@ -54,8 +55,22 @@ export class IAudioFrameObserverBase {
   }
 
   onPlaybackAudioFrame(channelId: string, audioFrame: AudioFrame): void {
-    AgoraConsole.warn('AudioFrameObserver not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      channelId,
+      audioFrame,
+    };
+    let bufferList = eventHandlerBufferExtension('AudioFrameObserver', _obj);
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'AudioFrameObserver',
+      _json,
+      0,
+      '',
+      bufferList as any,
+      [],
+      bufferList.length
+    );
+    this.notifyEvent(eventParam);
   }
 
   onMixedAudioFrame(channelId: string, audioFrame: AudioFrame): void {
@@ -73,7 +88,7 @@ export class IAudioFrameObserverBase {
     userId: string,
     audioFrame: AudioFrame
   ): void {
-    AgoraConsole.warn('AudioFrameObserver not supported in this platform!');
+    AgoraConsole.warn('AudioFrameObserver2 not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }
@@ -107,8 +122,22 @@ export class IAudioFrameObserver extends IAudioFrameObserverBase {
   }
 
   onPlaybackAudioFrame(channelId: string, audioFrame: AudioFrame): void {
-    AgoraConsole.warn('AudioFrameObserver not supported in this platform!');
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _obj = {
+      channelId,
+      audioFrame,
+    };
+    let bufferList = eventHandlerBufferExtension('AudioFrameObserver', _obj);
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'AudioFrameObserver',
+      _json,
+      0,
+      '',
+      bufferList as any,
+      [],
+      bufferList.length
+    );
+    this.notifyEvent(eventParam);
   }
 
   onMixedAudioFrame(channelId: string, audioFrame: AudioFrame): void {
@@ -126,7 +155,7 @@ export class IAudioFrameObserver extends IAudioFrameObserverBase {
     userId: string,
     audioFrame: AudioFrame
   ): void {
-    AgoraConsole.warn('AudioFrameObserver not supported in this platform!');
+    AgoraConsole.warn('AudioFrameObserver2 not supported in this platform!');
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 }

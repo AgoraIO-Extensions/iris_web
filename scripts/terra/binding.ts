@@ -94,12 +94,12 @@ export function binding(parseResult: ParseResult, isTest: boolean = false) {
         
         const clazzMethodUserData: ClazzMethodUserData = {
           hasParameters: method.parameters.length > 0,
-          isSupport: supportList[methodIrisApiIdValue] !== undefined,
+          isSupport: supportList.includes(methodIrisApiIdValue),
           isRegisterMethod: new RegExp('registerEventHandler|registerAudioFrameObserver').test(
             method.name
           ),
-          bindingExtension: bindingExtensionList[methodIrisApiIdValue] !== undefined,
-          bindingEventExtension: bindingEventExtensionList[methodIrisApiIdValue] !== undefined,
+          bindingExtension: bindingExtensionList.includes(methodIrisApiIdValue),
+          bindingEventExtension: bindingEventExtensionList.includes(methodIrisApiIdValue),
           ...method.user_data,
         };
         method.user_data = clazzMethodUserData;

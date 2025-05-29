@@ -247,7 +247,7 @@ export class IMusicContentCenterDispatch implements IMusicContentCenter {
   // @ts-ignore
   preload2(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
-      'MusicContentCenter_preload not supported in this platform!'
+      'MusicContentCenter_preload2 not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

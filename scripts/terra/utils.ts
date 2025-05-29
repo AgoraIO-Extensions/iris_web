@@ -47,6 +47,8 @@ export function appendNumberToDuplicateMemberFunction(
     }
 
     if (count[item.name] > 1) {
+      item.user_data.IrisApiIdParser.key = item.user_data.IrisApiIdParser.key + count[item.name];
+      item.user_data.IrisApiIdParser.value = item.user_data.IrisApiIdParser.value + count[item.name];
       item.name += count[item.name];
     }
   });
