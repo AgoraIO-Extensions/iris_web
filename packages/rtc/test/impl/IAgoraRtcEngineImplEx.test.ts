@@ -3,7 +3,7 @@ import {
   FakeAgoraRTCWrapper,
 } from '@agoraio-extensions/agora-rtc-sdk-ng-fake';
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { AREAS, IAgoraRTC, ILocalTrack } from 'agora-rtc-sdk-ng';
+import { ILocalAudioTrack } from 'agora-rtc-sdk-ng';
 
 import { EventParam, IrisApiEngine, IrisCore } from 'iris-web-core';
 
@@ -369,5 +369,78 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.irisClientManager.remoteUserPackages[0].videoPlayerConfig
         .mirror
     ).toBe(true);
+  });
+
+  test('enableAudioVolumeIndicationEx', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    jest.spyOn(irisClient.agoraRTCClient!, 'enableAudioVolumeIndicator');
+    jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onAudioVolumeIndicationEx'
+    );
+
+    let param = {
+      interval: 111,
+      smooth: 222,
+      reportVad: true,
+      connection: connection,
+    };
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_enableAudioVolumeIndicationEx',
+      param
+    );
+    expect(
+      irisClient.irisClientState.enableAudioVolumeIndicationConfig.smooth
+    ).toBe(param.smooth);
+    expect(
+      irisClient.irisClientState.enableAudioVolumeIndicationConfig.smooth
+    ).toBe(param.smooth);
+    expect(irisClient.irisClientState.enableAudioVolumeIndication).toBeTruthy();
+    expect(
+      irisClient.agoraRTCClient?.enableAudioVolumeIndicator
+    ).toBeCalledTimes(1);
+  });
+  test('adjustRecordingSignalVolumeEx', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+    let param = {
+      volume: 300,
+      connection: connection,
+    };
+    let localAudioTrack = irisRtcEngine.irisClientManager
+      .localAudioTrackPackages[0].track as ILocalAudioTrack;
+    jest.spyOn(localAudioTrack!, 'setVolume');
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_adjustRecordingSignalVolumeEx',
+      param
+    );
+    expect(localAudioTrack!.setVolume).toBeCalledWith(
+      AgoraTranslate.NATIVE_RTC_Volume2WebVolume(param.volume)
+    );
+  });
+  test('adjustUserPlaybackSignalVolumeEx', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let param = {
+      volume: 300,
+      uid: TEST_REMOTE_UID,
+      connection: connection,
+    };
+    let remoteAudioTrack = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    ).agoraRTCClient?.remoteUsers[0].audioTrack;
+    jest.spyOn(remoteAudioTrack!, 'setVolume');
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_adjustUserPlaybackSignalVolumeEx',
+      param
+    );
+    expect(remoteAudioTrack!.setVolume).toBeCalledWith(
+      AgoraTranslate.NATIVE_RTC_Volume2WebVolume(param.volume)
+    );
   });
 });

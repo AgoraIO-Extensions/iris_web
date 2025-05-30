@@ -128,11 +128,12 @@ export class IrisClientState {
     config: new NATIVE_RTC.EncryptionConfig(),
   };
 
-  //C++ enabledAudioVolumeIndication()
-  enabledAudioVolumeIndication: {
-    interval: number;
-    smooth: number;
-    reportVad: boolean;
+  //enableAudioVolumeIndication
+  enableAudioVolumeIndication: boolean = false;
+  enableAudioVolumeIndicationConfig = {
+    interval: 50,
+    smooth: 3,
+    reportVad: false,
   };
 
   //setPlaybackDevice: audiDevice

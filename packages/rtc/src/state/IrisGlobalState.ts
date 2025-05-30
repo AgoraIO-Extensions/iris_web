@@ -78,14 +78,6 @@ export class IrisGlobalState {
   //setRecordingDevice()
   recordingDeviceId: string;
 
-  //enableAudioVolumeIndication
-  enableAudioVolumeIndication: boolean = false;
-  enableAudioVolumeIndicationConfig = {
-    interval: 50,
-    smooth: 3,
-    reportVad: false,
-  };
-
   channelProfile: NATIVE_RTC.CHANNEL_PROFILE_TYPE =
     NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING;
 

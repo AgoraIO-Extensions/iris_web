@@ -437,35 +437,37 @@ export class IrisClientEventHandler {
   }
 
   onEventVolumeIndicator(result: { level: number; uid: number }[]): void {
-    let speakers: NATIVE_RTC.AudioVolumeInfo[] = [];
-    for (let i = 0; i < result.length; i++) {
-      speakers.push(
-        AgoraTranslate.volumeIndicatorResult2NATIVE_RTCAudioVolumeInfo(
-          result[i]
-        )
+    this._engine.irisClientManager.irisClientList.map((irisClient) => {
+      let speakers: NATIVE_RTC.AudioVolumeInfo[] = [];
+      for (let i = 0; i < result.length; i++) {
+        speakers.push(
+          AgoraTranslate.volumeIndicatorResult2NATIVE_RTCAudioVolumeInfo(
+            result[i]
+          )
+        );
+      }
+      let speakerNumber = result.length;
+      /* todo
+       * - In the local user's callback, `totalVolume` is the sum of the voice volume and audio-mixing volume
+       * of the local user.
+       * - In the remote users' callback, `totalVolume` is the sum of the voice volume and audio-mixing volume
+       * of all the remote speakers.
+       */
+      let totalVolume = 0;
+      if (
+        !irisClient.irisClientState.enableAudioVolumeIndicationConfig.reportVad
+      ) {
+        speakers = speakers.filter(
+          (speaker) => speaker.uid !== this.agoraRTCClient.uid
+        );
+      }
+      this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(
+        this._irisClient.connection,
+        speakers,
+        speakerNumber,
+        totalVolume
       );
-    }
-    let speakerNumber = result.length;
-    /* todo
-     * - In the local user's callback, `totalVolume` is the sum of the voice volume and audio-mixing volume
-     * of the local user.
-     * - In the remote users' callback, `totalVolume` is the sum of the voice volume and audio-mixing volume
-     * of all the remote speakers.
-     */
-    let totalVolume = 0;
-
-    if (!this._engine.globalState.enableAudioVolumeIndicationConfig.reportVad) {
-      speakers = speakers.filter(
-        (speaker) => speaker.uid !== this.agoraRTCClient.uid
-      );
-    }
-
-    this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(
-      this._irisClient.connection,
-      speakers,
-      speakerNumber,
-      totalVolume
-    );
+    });
   }
 
   onEventCryptError(): void {

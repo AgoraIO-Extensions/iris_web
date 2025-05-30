@@ -167,11 +167,6 @@ export class IrisClient {
       }
     }
 
-    //设置是否报告说话的人
-    if (irisClientState.enabledAudioVolumeIndication) {
-      this.agoraRTCClient.enableAudioVolumeIndicator();
-    }
-
     //是否开启了加密
     if (irisClientState.encryptionConfig?.enabled) {
       let encryptionConfig: NATIVE_RTC.EncryptionConfig =

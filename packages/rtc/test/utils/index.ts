@@ -179,6 +179,7 @@ export async function joinChannelEx(
     options: {
       channelProfile: CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
       clientRoleType: CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+      publishMicrophoneTrack: true,
     },
   };
   let result = await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', param);

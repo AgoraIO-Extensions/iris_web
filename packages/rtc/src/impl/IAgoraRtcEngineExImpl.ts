@@ -430,16 +430,16 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalState.enableAudioVolumeIndicationConfig = {
-        ...this._engine.globalState.enableAudioVolumeIndicationConfig,
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
+
+      irisClient.irisClientState.enableAudioVolumeIndicationConfig = {
+        ...irisClient.irisClientState.enableAudioVolumeIndicationConfig,
         ...(interval && { interval }),
         ...(smooth && { smooth }),
         ...(reportVad && { reportVad }),
       };
-
-      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
-        connection
-      );
 
       let agoraRTCClient = irisClient?.agoraRTCClient;
 
@@ -447,9 +447,9 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         return this._engine.irisRtcErrorHandler.notInChannel();
       }
 
-      this._engine.globalState.enableAudioVolumeIndication = interval > 0;
+      irisClient.irisClientState.enableAudioVolumeIndication = interval > 0;
 
-      if (this._engine.globalState.enableAudioVolumeIndication) {
+      if (irisClient.irisClientState.enableAudioVolumeIndication) {
         this._engine
           .getImplInstance('RtcEngine')
           .setParameters(

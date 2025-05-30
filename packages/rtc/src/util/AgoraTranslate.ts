@@ -541,6 +541,6 @@ export class AgoraTranslate {
     if (typeof volume !== 'number' || isNaN(volume) || !isFinite(volume)) {
       throw new Error('volume is not a number');
     }
-    return Math.round(volume / 100);
+    return Math.round(volume / 4);
   }
 }
