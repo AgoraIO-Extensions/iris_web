@@ -87,7 +87,9 @@ describe('IAgoraRtcEngineImpl', () => {
   });
   test('release', async () => {
     jest.spyOn(irisRtcEngine.irisClientManager, 'release');
-    await callIris(apiEnginePtr, 'RtcEngine_release', null);
+    await callIris(apiEnginePtr, 'RtcEngine_release', {
+      sync: true,
+    });
     expect(irisRtcEngine.irisClientManager.release).toBeCalledTimes(1);
     expect(irisRtcEngine.irisClientManager.localAudioTrackPackages.length).toBe(
       0
@@ -222,23 +224,23 @@ describe('IAgoraRtcEngineImpl', () => {
     ).toBeCalledTimes(1);
   });
 
-  test('setAudioProfile2', async () => {
+  test('setAudioProfile', async () => {
     let param = {
       profile: NATIVE_RTC.AUDIO_PROFILE_TYPE.AUDIO_PROFILE_DEFAULT,
       scenario: NATIVE_RTC.AUDIO_SCENARIO_TYPE.AUDIO_SCENARIO_CHATROOM,
     };
-    await callIris(apiEnginePtr, 'RtcEngine_setAudioProfile2', param);
+    await callIris(apiEnginePtr, 'RtcEngine_setAudioProfile', param);
     expect(irisRtcEngine.globalState.audioProfile).toBe(param.profile);
     expect(irisRtcEngine.globalState.rtcEngineContext.audioScenario).toBe(
       param.scenario
     );
   });
 
-  test('setAudioProfile', async () => {
+  test('setAudioProfile2', async () => {
     let param = {
       profile: NATIVE_RTC.AUDIO_PROFILE_TYPE.AUDIO_PROFILE_DEFAULT,
     };
-    await callIris(apiEnginePtr, 'RtcEngine_setAudioProfile', param);
+    await callIris(apiEnginePtr, 'RtcEngine_setAudioProfile2', param);
     expect(irisRtcEngine.globalState.audioProfile).toBe(param.profile);
   });
 
@@ -893,42 +895,6 @@ describe('IAgoraRtcEngineImpl', () => {
       parameters: params,
     });
   });
-  test('sendStreamMessage_8715a45', async () => {
-    await callIris(apiEnginePtr, 'RtcEngine_createDataStream', {
-      config: {
-        syncWithAudio: true,
-        ordered: true,
-      },
-    });
-    let result = await callIrisWithoutCheck(
-      apiEnginePtr,
-      'RtcEngine_sendStreamMessage_8715a45',
-      {
-        streamId: '1',
-        data: 'hello world',
-        length: 11,
-      }
-    );
-    expect(result.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_IN_CHANNEL);
-    const mockFunction = jest.spyOn(
-      irisRtcEngine.clientHelper,
-      'sendStreamMessage'
-    );
-    await joinChannel(apiEnginePtr, null);
-    let result2 = await callIrisWithoutCheck(
-      apiEnginePtr,
-      'RtcEngine_sendStreamMessage_8715a45',
-      {
-        streamId: '1',
-        length: 11,
-      }
-    );
-    expect(result2.code).toBe(NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK);
-    expect(mockFunction.mock.calls[0][1]).toMatchObject({
-      syncWithAudio: true,
-      payload: 'test',
-    });
-  });
   test('joinChannelWithUserAccount', async () => {
     jest.spyOn(rtcEngineImpl, 'joinChannelWithUserAccount2');
 
@@ -999,13 +965,13 @@ describe('IAgoraRtcEngineImpl', () => {
     });
     expect(JSON.parse(result.data).userInfo.uid).toBe(userInfoList[0].uid);
   });
-  test('setLocalRenderMode2', async () => {
+  test('setLocalRenderMode', async () => {
     let param = {
       renderMode: NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT,
       mirrorMode: NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
     };
     await setupLocalVideo(apiEnginePtr, null);
-    await callIris(apiEnginePtr, 'RtcEngine_setLocalRenderMode2', param);
+    await callIris(apiEnginePtr, 'RtcEngine_setLocalRenderMode', param);
     expect(
       irisRtcEngine.irisClientManager.localVideoTrackPackages[0]
         .videoPlayerConfig.fit
@@ -1015,12 +981,12 @@ describe('IAgoraRtcEngineImpl', () => {
         .videoPlayerConfig.mirror
     ).toBe(true);
   });
-  test('setLocalRenderMode', async () => {
+  test('setLocalRenderMode2', async () => {
     let param = {
       renderMode: NATIVE_RTC.RENDER_MODE_TYPE.RENDER_MODE_FIT,
     };
     await setupLocalVideo(apiEnginePtr, null);
-    await callIris(apiEnginePtr, 'RtcEngine_setLocalRenderMode', param);
+    await callIris(apiEnginePtr, 'RtcEngine_setLocalRenderMode2', param);
     expect(
       irisRtcEngine.irisClientManager.localVideoTrackPackages[0]
         .videoPlayerConfig.fit
