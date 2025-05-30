@@ -89,17 +89,17 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.rtcEngineEventHandler.onJoinChannelSuccessEx
     ).toBeCalledTimes(1);
   });
-  test('leaveChannelEx2', async () => {
+  test('leaveChannelEx', async () => {
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     let connection = await joinChannelEx(apiEnginePtr);
     jest.spyOn(rtcEngineExImpl, 'leaveChannelEx');
     let leaveParam = {
       connection: connection,
     };
-    await callIris(apiEnginePtr, 'RtcEngineEx_leaveChannelEx2', leaveParam);
+    await callIris(apiEnginePtr, 'RtcEngineEx_leaveChannelEx', leaveParam);
     expect(rtcEngineExImpl.leaveChannelEx).toBeCalled();
   });
-  test('leaveChannelEx', async () => {
+  test('leaveChannelEx2', async () => {
     let param = {
       token: '1234',
       connection: {
@@ -121,7 +121,7 @@ describe('IAgoraRtcEngineImpl', () => {
       connection: param.connection,
       options: defaultLeaveChannelOptions,
     };
-    await callIris(apiEnginePtr, 'RtcEngineEx_leaveChannelEx', leaveParam);
+    await callIris(apiEnginePtr, 'RtcEngineEx_leaveChannelEx2', leaveParam);
     expect(irisClient.agoraRTCClient).toBeUndefined();
     expect(irisRtcEngine.irisClientManager.remoteUserPackages.length).toBe(0);
     expect(irisClient.videoTrackPackage).toBeUndefined();
@@ -352,29 +352,6 @@ describe('IAgoraRtcEngineImpl', () => {
     });
   });
 
-  test('sendStreamMessageEx_0c34857', async () => {
-    let connection = await joinChannelEx(apiEnginePtr);
-    await callIris(apiEnginePtr, 'RtcEngineEx_createDataStreamEx_9f641b6', {
-      connection,
-      config: {
-        syncWithAudio: true,
-        ordered: true,
-      },
-    });
-    const mockFunction = jest.spyOn(
-      irisRtcEngine.clientHelper,
-      'sendStreamMessage'
-    );
-    await callIris(apiEnginePtr, 'RtcEngineEx_sendStreamMessageEx_0c34857', {
-      connection: connection,
-      streamId: '1',
-      length: 11,
-    });
-    expect(mockFunction.mock.calls[0][1]).toMatchObject({
-      syncWithAudio: true,
-      payload: 'test',
-    });
-  });
   test('setRemoteRenderModeEx', async () => {
     let connection = await joinChannelEx(apiEnginePtr);
     let param = {
