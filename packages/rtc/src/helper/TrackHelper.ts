@@ -13,6 +13,7 @@ import { CallIrisApiResult } from 'iris-web-core';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import { AgoraConsole } from '../util/AgoraConsole';
+import { AgoraTranslate } from '../util/AgoraTranslate';
 
 export class TrackHelper {
   _engine: IrisRtcEngine;
@@ -102,6 +103,17 @@ export class TrackHelper {
         new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
       );
       throw e;
+    }
+  }
+
+  public setVolume(
+    track: ILocalAudioTrack | IRemoteAudioTrack,
+    volume: number
+  ): void {
+    try {
+      track?.setVolume(AgoraTranslate.NATIVE_RTC_Volume2WebVolume(volume));
+    } catch (e) {
+      AgoraConsole.error(e);
     }
   }
 }

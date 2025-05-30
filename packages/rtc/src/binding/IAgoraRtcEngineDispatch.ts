@@ -3424,10 +3424,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   adjustRecordingSignalVolume(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_adjustRecordingSignalVolume not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let volume = obj.volume;
+    if (volume === undefined) {
+      AgoraConsole.error('volume is undefined');
+      throw 'volume is undefined';
+    }
+
+    return this._impl.adjustRecordingSignalVolume(volume);
   }
 
   // @ts-ignore
@@ -3440,18 +3444,31 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   adjustPlaybackSignalVolume(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_adjustPlaybackSignalVolume not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let volume = obj.volume;
+    if (volume === undefined) {
+      AgoraConsole.error('volume is undefined');
+      throw 'volume is undefined';
+    }
+
+    return this._impl.adjustPlaybackSignalVolume(volume);
   }
 
   // @ts-ignore
   adjustUserPlaybackSignalVolume(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_adjustUserPlaybackSignalVolume not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let volume = obj.volume;
+    if (volume === undefined) {
+      AgoraConsole.error('volume is undefined');
+      throw 'volume is undefined';
+    }
+
+    return this._impl.adjustUserPlaybackSignalVolume(uid, volume);
   }
 
   // @ts-ignore

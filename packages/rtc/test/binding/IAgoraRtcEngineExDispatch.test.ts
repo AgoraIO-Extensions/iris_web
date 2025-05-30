@@ -1302,9 +1302,55 @@ describe('IRtcEngineEx', () => {
     );
   });
 
+  test('RtcEngineEx_adjustRecordingSignalVolumeEx parameter', async () => {
+    let nParam = {
+      volume: undefined,
+      connection: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_adjustRecordingSignalVolumeEx',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('volume is undefined');
+    }
+    //@ts-ignore
+    nParam.volume = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_adjustRecordingSignalVolumeEx',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    //@ts-ignore
+    nParam.connection = 'test';
+  });
+
   test('RtcEngineEx_adjustRecordingSignalVolumeEx impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl,
+        'adjustRecordingSignalVolumeEx'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       volume: 'test',
@@ -1322,13 +1368,12 @@ describe('IRtcEngineEx', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
-        ?.adjustRecordingSignalVolumeEx
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .adjustRecordingSignalVolumeEx
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
+        .adjustRecordingSignalVolumeEx
+    ).toBeCalledWith('test', 'test');
   });
 
   test('RtcEngineEx_muteRecordingSignalEx impl call', async () => {
@@ -1360,9 +1405,74 @@ describe('IRtcEngineEx', () => {
     );
   });
 
+  test('RtcEngineEx_adjustUserPlaybackSignalVolumeEx parameter', async () => {
+    let nParam = {
+      uid: undefined,
+      volume: undefined,
+      connection: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_adjustUserPlaybackSignalVolumeEx',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('uid is undefined');
+    }
+    //@ts-ignore
+    nParam.uid = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_adjustUserPlaybackSignalVolumeEx',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('volume is undefined');
+    }
+    //@ts-ignore
+    nParam.volume = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_adjustUserPlaybackSignalVolumeEx',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    //@ts-ignore
+    nParam.connection = 'test';
+  });
+
   test('RtcEngineEx_adjustUserPlaybackSignalVolumeEx impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl,
+        'adjustUserPlaybackSignalVolumeEx'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       uid: 'test',
@@ -1381,13 +1491,12 @@ describe('IRtcEngineEx', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
-        ?.adjustUserPlaybackSignalVolumeEx
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .adjustUserPlaybackSignalVolumeEx
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
+        .adjustUserPlaybackSignalVolumeEx
+    ).toBeCalledWith('test', 'test', 'test');
   });
 
   test('RtcEngineEx_getConnectionStateEx impl call', async () => {
@@ -1654,9 +1763,93 @@ describe('IRtcEngineEx', () => {
     );
   });
 
+  test('RtcEngineEx_enableAudioVolumeIndicationEx parameter', async () => {
+    let nParam = {
+      interval: undefined,
+      smooth: undefined,
+      reportVad: undefined,
+      connection: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_enableAudioVolumeIndicationEx',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('interval is undefined');
+    }
+    //@ts-ignore
+    nParam.interval = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_enableAudioVolumeIndicationEx',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('smooth is undefined');
+    }
+    //@ts-ignore
+    nParam.smooth = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_enableAudioVolumeIndicationEx',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('reportVad is undefined');
+    }
+    //@ts-ignore
+    nParam.reportVad = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_enableAudioVolumeIndicationEx',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    //@ts-ignore
+    nParam.connection = 'test';
+  });
+
   test('RtcEngineEx_enableAudioVolumeIndicationEx impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl,
+        'enableAudioVolumeIndicationEx'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       interval: 'test',
@@ -1676,13 +1869,12 @@ describe('IRtcEngineEx', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
-        ?.enableAudioVolumeIndicationEx
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .enableAudioVolumeIndicationEx
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
+        .enableAudioVolumeIndicationEx
+    ).toBeCalledWith('test', 'test', 'test', 'test');
   });
 
   test('RtcEngineEx_startRtmpStreamWithoutTranscodingEx impl call', async () => {

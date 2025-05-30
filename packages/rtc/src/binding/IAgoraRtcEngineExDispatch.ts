@@ -332,10 +332,19 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   adjustRecordingSignalVolumeEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_adjustRecordingSignalVolumeEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let volume = obj.volume;
+    if (volume === undefined) {
+      AgoraConsole.error('volume is undefined');
+      throw 'volume is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.adjustRecordingSignalVolumeEx(volume, connection);
   }
 
   // @ts-ignore
@@ -348,10 +357,24 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   adjustUserPlaybackSignalVolumeEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_adjustUserPlaybackSignalVolumeEx not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let volume = obj.volume;
+    if (volume === undefined) {
+      AgoraConsole.error('volume is undefined');
+      throw 'volume is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.adjustUserPlaybackSignalVolumeEx(uid, volume, connection);
   }
 
   // @ts-ignore
@@ -440,10 +463,34 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   enableAudioVolumeIndicationEx(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_enableAudioVolumeIndicationEx not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let interval = obj.interval;
+    if (interval === undefined) {
+      AgoraConsole.error('interval is undefined');
+      throw 'interval is undefined';
+    }
+    let smooth = obj.smooth;
+    if (smooth === undefined) {
+      AgoraConsole.error('smooth is undefined');
+      throw 'smooth is undefined';
+    }
+    let reportVad = obj.reportVad;
+    if (reportVad === undefined) {
+      AgoraConsole.error('reportVad is undefined');
+      throw 'reportVad is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.enableAudioVolumeIndicationEx(
+      interval,
+      smooth,
+      reportVad,
+      connection
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore

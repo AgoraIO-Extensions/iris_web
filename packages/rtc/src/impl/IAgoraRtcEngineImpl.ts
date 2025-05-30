@@ -735,27 +735,14 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     smooth: number,
     reportVad: boolean
   ): CallApiReturnType {
-    let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalState.enableAudioVolumeIndicationConfig = {
-        ...this._engine.globalState.enableAudioVolumeIndicationConfig,
-        ...(interval && { interval }),
-        ...(smooth && { smooth }),
-        ...(reportVad && { reportVad }),
-      };
-      let agoraRTCClient = this._engine.irisClientManager.getIrisClient()
-        ?.agoraRTCClient;
-
-      this._engine.globalState.enableAudioVolumeIndication = interval > 0;
-
-      if (this._engine.globalState.enableAudioVolumeIndication) {
-        this.setParameters(
-          JSON.stringify({ AUDIO_VOLUME_INDICATION_INTERVAL: interval })
-        );
-        agoraRTCClient?.enableAudioVolumeIndicator();
-      }
-      return this._engine.returnResult();
-    };
-    return this._engine.execute(processFunc);
+    return this._engine
+      .getImplInstance('RtcEngineEx')
+      .enableAudioVolumeIndicationEx(
+        interval,
+        smooth,
+        reportVad,
+        this._engine.irisClientManager.getIrisClient()?.connection
+      );
   }
   playEffect(
     soundId: number,
@@ -1220,6 +1207,82 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             samplesPerCall,
           };
         }
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  adjustPlaybackSignalVolume(volume: number): CallApiReturnType {
+    let fun = async () => {
+      try {
+        this._engine.irisClientManager.irisClientList.map((irisClient) => {
+          irisClient.agoraRTCClient?.remoteUsers.map((remoteUser) => {
+            if (remoteUser.hasAudio && remoteUser.audioTrack) {
+              this._engine.trackHelper.setVolume(remoteUser.audioTrack, volume);
+            }
+          });
+        });
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  adjustRecordingSignalVolume(volume: number): CallApiReturnType {
+    let fun = async () => {
+      try {
+        this._engine.irisClientManager.localAudioTrackPackages.map(
+          (audioTrackPackage) => {
+            if (
+              audioTrackPackage.track &&
+              this._engine.implHelper.isAudio(audioTrackPackage.type)
+            ) {
+              this._engine.trackHelper.setVolume(
+                audioTrackPackage.track as ILocalAudioTrack,
+                volume
+              );
+            }
+          }
+        );
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  adjustUserPlaybackSignalVolume(
+    uid: number,
+    volume: number
+  ): CallApiReturnType {
+    let fun = async () => {
+      try {
+        this._engine.irisClientManager.remoteUserPackages.map(
+          (remoteUserPackage) => {
+            if (remoteUserPackage.uid === uid) {
+              let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+                remoteUserPackage.connection
+              );
+              if (irisClient) {
+                let user = irisClient.agoraRTCClient?.remoteUsers.find(
+                  (item) => item.uid === remoteUserPackage.uid
+                );
+                if (user?.hasAudio && user.audioTrack) {
+                  this._engine.trackHelper.setVolume(user.audioTrack, volume);
+                }
+              }
+            }
+          }
+        );
       } catch (e) {
         AgoraConsole.log(e);
         return this._engine.returnResult(false);

@@ -536,4 +536,11 @@ export class AgoraTranslate {
         return 'fill';
     }
   }
+
+  public static NATIVE_RTC_Volume2WebVolume(volume: number): number {
+    if (typeof volume !== 'number' || isNaN(volume) || !isFinite(volume)) {
+      throw new Error('volume is not a number');
+    }
+    return Math.round(volume / 100);
+  }
 }
