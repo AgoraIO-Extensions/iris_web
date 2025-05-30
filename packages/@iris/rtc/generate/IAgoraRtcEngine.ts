@@ -1395,8 +1395,6 @@ export class ExtensionInfo {
 }
 
 export interface IRtcEngine {
-  release(sync: boolean): CallApiReturnType;
-
   initialize(context: RtcEngineContext): CallApiReturnType;
 
   queryInterface(iid: INTERFACE_ID_TYPE, inter: any): CallApiReturnType;

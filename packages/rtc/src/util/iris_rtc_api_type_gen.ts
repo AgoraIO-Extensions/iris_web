@@ -580,7 +580,6 @@ export const IDIRECTCDNSTREAMINGEVENTHANDLER_ONDIRECTCDNSTREAMINGSTATECHANGED =
   'DirectCdnStreamingEventHandler_onDirectCdnStreamingStateChanged';
 export const IDIRECTCDNSTREAMINGEVENTHANDLER_ONDIRECTCDNSTREAMINGSTATS =
   'DirectCdnStreamingEventHandler_onDirectCdnStreamingStats';
-export const IRTCENGINE_RELEASE = 'RtcEngine_release';
 export const IRTCENGINE_INITIALIZE = 'RtcEngine_initialize';
 export const IRTCENGINE_QUERYINTERFACE = 'RtcEngine_queryInterface';
 export const IRTCENGINE_GETVERSION = 'RtcEngine_getVersion';

@@ -2605,55 +2605,6 @@ describe('IDirectCdnStreamingEventHandler', () => {
   });
 });
 describe('IRtcEngine', () => {
-  test('RtcEngine_release parameter', async () => {
-    let nParam = {
-      sync: undefined,
-    };
-    try {
-      await IrisCore.callIrisApi(
-        apiEnginePtr,
-        new IrisCore.EventParam(
-          'RtcEngine_release',
-          JSON.stringify(nParam),
-          0,
-          '',
-          ['test'],
-          [],
-          1
-        )
-      );
-    } catch (e) {
-      expect(e).toEqual('sync is undefined');
-    }
-    //@ts-ignore
-    nParam.sync = 'test';
-  });
-
-  test('RtcEngine_release impl call', async () => {
-    jest
-      .spyOn(irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl, 'release')
-      .mockResolvedValue(new CallIrisApiResult(0, ''));
-    let nParam = {
-      sync: 'test',
-    };
-    let apiParam = new IrisCore.EventParam(
-      'RtcEngine_release',
-      JSON.stringify(nParam),
-      0,
-      '',
-      ['test'],
-      [],
-      1
-    );
-    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
-    expect(
-      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl.release
-    ).toBeCalledTimes(1);
-    expect(
-      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl.release
-    ).toBeCalledWith('test');
-  });
-
   test('RtcEngine_initialize parameter', async () => {
     let nParam = {
       context: undefined,

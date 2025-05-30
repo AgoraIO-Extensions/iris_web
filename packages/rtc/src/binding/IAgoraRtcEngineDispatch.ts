@@ -2038,18 +2038,6 @@ export class IRtcEngineDispatch implements IRtcEngine {
     this._engine = engine;
   }
   // @ts-ignore
-  release(apiParam: ApiParam): CallApiReturnType {
-    let obj = JSON.parse(apiParam.data) as any;
-    let sync = obj.sync;
-    if (sync === undefined) {
-      AgoraConsole.error('sync is undefined');
-      throw 'sync is undefined';
-    }
-
-    return this._impl.release(sync);
-  }
-
-  // @ts-ignore
   initialize(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let context = obj.context;

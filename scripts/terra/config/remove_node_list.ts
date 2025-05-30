@@ -70,6 +70,7 @@ module.exports = [
   'agora::rtc::IRtcEngineEx.createDataStreamEx.streamId',
   'agora::rtc::IRtcEngine.getVersion.build',
   'agora::rtc::IRtcEngine.takeSnapshot.callback',
+  'agora::rtc::IRtcEngine.release',
   'agora::rtc::ICloudSpatialAudioEngine.getTeammates.uids',
   'agora::rtc::ICloudSpatialAudioEngine.getTeammates.userCount',
   'agora::rtc::ILocalSpatialAudioEngine.initialize.config',
