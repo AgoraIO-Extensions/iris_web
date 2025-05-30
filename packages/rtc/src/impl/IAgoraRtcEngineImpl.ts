@@ -976,22 +976,26 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
     let fun = async () => {
       try {
-        let json = JSON.parse(parameters);
-        let keyList = Object.keys(json);
-        for (let i = 0; i < keyList.length; i++) {
-          switch (keyList[i]) {
-            case 'enableLogUpload':
-              if (json[keyList[i]] === true) {
-                this._engine.globalState.AgoraRTC.enableLogUpload();
-              } else {
-                this._engine.globalState.AgoraRTC.disableLogUpload();
-              }
-              break;
-            default:
-              (this._engine.globalState.AgoraRTC as any).setParameter(
-                keyList[i],
-                json[keyList[i]]
-              );
+        if (typeof parameters === 'string') {
+          (this._engine.globalState.AgoraRTC as any).setParameter(parameters);
+        } else {
+          let json = JSON.parse(parameters);
+          let keyList = Object.keys(json);
+          for (let i = 0; i < keyList.length; i++) {
+            switch (keyList[i]) {
+              case 'enableLogUpload':
+                if (json[keyList[i]] === true) {
+                  this._engine.globalState.AgoraRTC.enableLogUpload();
+                } else {
+                  this._engine.globalState.AgoraRTC.disableLogUpload();
+                }
+                break;
+              default:
+                (this._engine.globalState.AgoraRTC as any).setParameter(
+                  keyList[i],
+                  json[keyList[i]]
+                );
+            }
           }
         }
       } catch (e) {
