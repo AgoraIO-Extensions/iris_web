@@ -1103,47 +1103,6 @@ export const IRTCENGINEEX_ENABLECONTENTINSPECTEX =
   'RtcEngineEx_enableContentInspectEx';
 export const IRTCENGINEEX_STARTMEDIARENDERINGTRACINGEX =
   'RtcEngineEx_startMediaRenderingTracingEx';
-export const IBASESPATIALAUDIOENGINE_RELEASE = 'BaseSpatialAudioEngine_release';
-export const IBASESPATIALAUDIOENGINE_SETMAXAUDIORECVCOUNT =
-  'BaseSpatialAudioEngine_setMaxAudioRecvCount';
-export const IBASESPATIALAUDIOENGINE_SETAUDIORECVRANGE =
-  'BaseSpatialAudioEngine_setAudioRecvRange';
-export const IBASESPATIALAUDIOENGINE_SETDISTANCEUNIT =
-  'BaseSpatialAudioEngine_setDistanceUnit';
-export const IBASESPATIALAUDIOENGINE_UPDATESELFPOSITION =
-  'BaseSpatialAudioEngine_updateSelfPosition';
-export const IBASESPATIALAUDIOENGINE_UPDATESELFPOSITIONEX =
-  'BaseSpatialAudioEngine_updateSelfPositionEx';
-export const IBASESPATIALAUDIOENGINE_UPDATEPLAYERPOSITIONINFO =
-  'BaseSpatialAudioEngine_updatePlayerPositionInfo';
-export const IBASESPATIALAUDIOENGINE_SETPARAMETERS =
-  'BaseSpatialAudioEngine_setParameters';
-export const IBASESPATIALAUDIOENGINE_MUTELOCALAUDIOSTREAM =
-  'BaseSpatialAudioEngine_muteLocalAudioStream';
-export const IBASESPATIALAUDIOENGINE_MUTEALLREMOTEAUDIOSTREAMS =
-  'BaseSpatialAudioEngine_muteAllRemoteAudioStreams';
-export const IBASESPATIALAUDIOENGINE_SETZONES =
-  'BaseSpatialAudioEngine_setZones';
-export const IBASESPATIALAUDIOENGINE_SETPLAYERATTENUATION =
-  'BaseSpatialAudioEngine_setPlayerAttenuation';
-export const IBASESPATIALAUDIOENGINE_MUTEREMOTEAUDIOSTREAM =
-  'BaseSpatialAudioEngine_muteRemoteAudioStream';
-export const ILOCALSPATIALAUDIOENGINE_INITIALIZE =
-  'LocalSpatialAudioEngine_initialize';
-export const ILOCALSPATIALAUDIOENGINE_UPDATEREMOTEPOSITION =
-  'LocalSpatialAudioEngine_updateRemotePosition';
-export const ILOCALSPATIALAUDIOENGINE_UPDATEREMOTEPOSITIONEX =
-  'LocalSpatialAudioEngine_updateRemotePositionEx';
-export const ILOCALSPATIALAUDIOENGINE_REMOVEREMOTEPOSITION =
-  'LocalSpatialAudioEngine_removeRemotePosition';
-export const ILOCALSPATIALAUDIOENGINE_REMOVEREMOTEPOSITIONEX =
-  'LocalSpatialAudioEngine_removeRemotePositionEx';
-export const ILOCALSPATIALAUDIOENGINE_CLEARREMOTEPOSITIONS =
-  'LocalSpatialAudioEngine_clearRemotePositions';
-export const ILOCALSPATIALAUDIOENGINE_CLEARREMOTEPOSITIONSEX =
-  'LocalSpatialAudioEngine_clearRemotePositionsEx';
-export const ILOCALSPATIALAUDIOENGINE_SETREMOTEAUDIOATTENUATION =
-  'LocalSpatialAudioEngine_setRemoteAudioAttenuation';
 export const IAUDIODEVICEMANAGER_ENUMERATEPLAYBACKDEVICES =
   'AudioDeviceManager_enumeratePlaybackDevices';
 export const IAUDIODEVICEMANAGER_ENUMERATERECORDINGDEVICES =

@@ -32,7 +32,6 @@ import {
   IVideoDeviceManagerDispatch,
 } from '../binding/IAgoraRtcEngineDispatch';
 import { IRtcEngineExDispatch } from '../binding/IAgoraRtcEngineExDispatch';
-import { ILocalSpatialAudioEngineDispatch } from '../binding/IAgoraSpatialAudioDispatch';
 import { IAudioDeviceManagerDispatch } from '../binding/IAudioDeviceManagerDispatch';
 
 import { IrisAgoraEventHandler } from '../event_handler/IrisAgoraEventHandler';
@@ -95,7 +94,6 @@ export class IrisRtcEngine implements ApiInterceptor {
       ['VideoDeviceManager', new IVideoDeviceManagerDispatch(this)],
       ['RtcEngine', new RtcEngineDispatchExtensions(this)],
       ['RtcEngineEx', new IRtcEngineExDispatch(this)],
-      ['LocalSpatialAudioEngine', new ILocalSpatialAudioEngineDispatch(this)],
     ];
 
     mapData.forEach(([key, value]: [string, any]) =>

@@ -2,6 +2,8 @@ module.exports = [
   "IAgoraParameter.h",
   'AgoraOptional.h',
   'AgoraRefPtr.h',
+  'agora::rtc::IBaseSpatialAudioEngine',
+  'agora::rtc::ILocalSpatialAudioEngine',
   'agora::util::AutoPtr',
   'agora::util::CopyableAutoPtr',
   'agora::util::IString',
