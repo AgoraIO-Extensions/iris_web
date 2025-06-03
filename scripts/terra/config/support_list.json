@@ -17,7 +17,6 @@
   "RtcEngine_joinChannel2",
   "RtcEngine_updateChannelMediaOptions",
   "RtcEngine_enableAudioVolumeIndication",
-  "RtcEngineEx_enableAudioVolumeIndicationEx",
   "RtcEngine_setParameters",
   "RtcEngine_leaveChannel",
   "RtcEngine_leaveChannel2",
@@ -117,11 +116,12 @@
   "AudioDeviceManager_getRecordingDevice",
   "AudioDeviceManager_getPlaybackDevice",
   "AudioDeviceManager_release",
-  "RtcEngine_adjustPlaybackSignalVolume",
   "RtcEngine_createDataStream2",
   "RtcEngineEx_createDataStreamEx2",
+  "RtcEngine_adjustPlaybackSignalVolume",
   "RtcEngine_adjustRecordingSignalVolume",
   "RtcEngineEx_adjustRecordingSignalVolumeEx",
   "RtcEngine_adjustUserPlaybackSignalVolume",
-  "RtcEngineEx_adjustUserPlaybackSignalVolumeEx"
+  "RtcEngineEx_adjustUserPlaybackSignalVolumeEx",
+  "RtcEngineEx_enableAudioVolumeIndicationEx"
 ]
