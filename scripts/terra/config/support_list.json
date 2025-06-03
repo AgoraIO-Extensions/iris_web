@@ -118,6 +118,8 @@
   "AudioDeviceManager_getPlaybackDevice",
   "AudioDeviceManager_release",
   "RtcEngine_adjustPlaybackSignalVolume",
+  "RtcEngine_createDataStream2",
+  "RtcEngineEx_createDataStreamEx2",
   "RtcEngine_adjustRecordingSignalVolume",
   "RtcEngineEx_adjustRecordingSignalVolumeEx",
   "RtcEngine_adjustUserPlaybackSignalVolume",

@@ -10544,9 +10544,36 @@ describe('IRtcEngine', () => {
     );
   });
 
+  test('RtcEngine_createDataStream2 parameter', async () => {
+    let nParam = {
+      config: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngine_createDataStream2',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('config is undefined');
+    }
+    //@ts-ignore
+    nParam.config = 'test';
+  });
+
   test('RtcEngine_createDataStream2 impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl,
+        'createDataStream2'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       config: 'test',
@@ -10562,13 +10589,11 @@ describe('IRtcEngine', () => {
     );
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
-      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl?.createDataStream2
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl.createDataStream2
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngine')._impl.createDataStream2
+    ).toBeCalledWith('test');
   });
 
   test('RtcEngine_sendStreamMessage parameter', async () => {

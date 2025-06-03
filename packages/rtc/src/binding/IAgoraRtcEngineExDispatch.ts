@@ -403,10 +403,19 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   createDataStreamEx2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_createDataStreamEx2 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let config = obj.config;
+    if (config === undefined) {
+      AgoraConsole.error('config is undefined');
+      throw 'config is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.createDataStreamEx2(config, connection);
   }
 
   // @ts-ignore

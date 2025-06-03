@@ -352,6 +352,46 @@ describe('IAgoraRtcEngineImpl', () => {
     });
   });
 
+  test('createDataStreamEx2', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    await callIris(apiEnginePtr, 'RtcEngineEx_createDataStreamEx2', {
+      connection,
+      config: {
+        syncWithAudio: true,
+        ordered: true,
+      },
+    });
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    let irisClientState = irisClient.irisClientState;
+    expect(irisClientState.dataStreamConfig.syncWithAudio).toBe(true);
+    expect(irisClientState.dataStreamConfig.ordered).toBe(true);
+  });
+
+  test('sendStreamMessageEx', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    await callIris(apiEnginePtr, 'RtcEngineEx_createDataStreamEx2', {
+      connection,
+      config: {
+        syncWithAudio: true,
+        ordered: true,
+      },
+    });
+    const mockFunction = jest.spyOn(
+      irisRtcEngine.clientHelper,
+      'sendStreamMessage'
+    );
+    await callIris(apiEnginePtr, 'RtcEngineEx_sendStreamMessageEx', {
+      connection: connection,
+      streamId: '1',
+      length: 11,
+    });
+    expect(mockFunction.mock.calls[0][1]).toMatchObject({
+      syncWithAudio: true,
+      payload: 'test',
+    });
+  });
   test('setRemoteRenderModeEx', async () => {
     let connection = await joinChannelEx(apiEnginePtr);
     let param = {

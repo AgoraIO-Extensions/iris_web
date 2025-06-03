@@ -1587,9 +1587,55 @@ describe('IRtcEngineEx', () => {
     );
   });
 
+  test('RtcEngineEx_createDataStreamEx2 parameter', async () => {
+    let nParam = {
+      config: undefined,
+      connection: undefined,
+    };
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_createDataStreamEx2',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('config is undefined');
+    }
+    //@ts-ignore
+    nParam.config = 'test';
+    try {
+      await IrisCore.callIrisApi(
+        apiEnginePtr,
+        new IrisCore.EventParam(
+          'RtcEngineEx_createDataStreamEx2',
+          JSON.stringify(nParam),
+          0,
+          '',
+          ['test'],
+          [],
+          1
+        )
+      );
+    } catch (e) {
+      expect(e).toEqual('connection is undefined');
+    }
+    //@ts-ignore
+    nParam.connection = 'test';
+  });
+
   test('RtcEngineEx_createDataStreamEx2 impl call', async () => {
     jest
-      .spyOn(irisRtcEngine, 'returnResult')
+      .spyOn(
+        irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl,
+        'createDataStreamEx2'
+      )
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     let nParam = {
       config: 'test',
@@ -1607,13 +1653,12 @@ describe('IRtcEngineEx', () => {
     await IrisCore.callIrisApi(apiEnginePtr, apiParam);
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
-        ?.createDataStreamEx2
-    ).toBeUndefined();
-    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
-    expect(irisRtcEngine.returnResult).toBeCalledWith(
-      false,
-      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
-    );
+        .createDataStreamEx2
+    ).toBeCalledTimes(1);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
+        .createDataStreamEx2
+    ).toBeCalledWith('test', 'test');
   });
 
   test('RtcEngineEx_sendStreamMessageEx parameter', async () => {

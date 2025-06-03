@@ -644,6 +644,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(process);
   }
 
+  createDataStream2(config: NATIVE_RTC.DataStreamConfig): CallApiReturnType {
+    let process = async () => {
+      for (let irisClient of this._engine.irisClientManager.irisClientList) {
+        irisClient.irisClientState.dataStreamConfig = config;
+      }
+      return this._engine.returnResult(
+        true,
+        0,
+        JSON.stringify({
+          result: 0,
+          streamId: 0,
+        })
+      );
+    };
+    return this._engine.execute(process);
+  }
+
   sendStreamMessage(
     streamId: number,
     data: Uint8Array,

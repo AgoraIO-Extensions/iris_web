@@ -901,6 +901,54 @@ describe('IAgoraRtcEngineImpl', () => {
       parameters: params,
     });
   });
+  test('createDataStream2', async () => {
+    await callIris(apiEnginePtr, 'RtcEngine_createDataStream2', {
+      config: {
+        syncWithAudio: true,
+        ordered: true,
+      },
+    });
+    let irisClientState =
+      irisRtcEngine.irisClientManager.irisClientList[0]?.irisClientState;
+    expect(irisClientState.dataStreamConfig.syncWithAudio).toBe(true);
+    expect(irisClientState.dataStreamConfig.ordered).toBe(true);
+  });
+  test('sendStreamMessage', async () => {
+    await callIris(apiEnginePtr, 'RtcEngine_createDataStream2', {
+      config: {
+        syncWithAudio: true,
+        ordered: true,
+      },
+    });
+    let result = await callIrisWithoutCheck(
+      apiEnginePtr,
+      'RtcEngine_sendStreamMessage',
+      {
+        streamId: '1',
+        data: 'hello world',
+        length: 11,
+      }
+    );
+    expect(result.code).toBe(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_IN_CHANNEL);
+    const mockFunction = jest.spyOn(
+      irisRtcEngine.clientHelper,
+      'sendStreamMessage'
+    );
+    await joinChannel(apiEnginePtr, null);
+    let result2 = await callIrisWithoutCheck(
+      apiEnginePtr,
+      'RtcEngine_sendStreamMessage',
+      {
+        streamId: '1',
+        length: 11,
+      }
+    );
+    expect(result2.code).toBe(NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK);
+    expect(mockFunction.mock.calls[0][1]).toMatchObject({
+      syncWithAudio: true,
+      payload: 'test',
+    });
+  });
   test('joinChannelWithUserAccount', async () => {
     jest.spyOn(rtcEngineImpl, 'joinChannelWithUserAccount2');
 

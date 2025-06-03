@@ -4138,10 +4138,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   createDataStream2(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_createDataStream2 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let config = obj.config;
+    if (config === undefined) {
+      AgoraConsole.error('config is undefined');
+      throw 'config is undefined';
+    }
+
+    return this._impl.createDataStream2(config);
   }
 
   // @ts-ignore

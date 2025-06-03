@@ -338,7 +338,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
     return this._engine.execute(processFunc);
   }
-  createDataStreamEx_9f641b6(
+  createDataStreamEx2(
     config: NATIVE_RTC.DataStreamConfig,
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {

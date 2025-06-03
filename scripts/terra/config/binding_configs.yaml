@@ -24,6 +24,9 @@ parsers:
     package: '@agoraio-extensions/terra_shared_configs'
   - name: UpdateSimpleTypeParser
     package: '@agoraio-extensions/terra_shared_configs'
+    args:
+      ignoreDefaultConfig: false
+      configFilePath: ./rename_member_function_param_type_list.ts
   - name: ReturnTypeParser
     package: '@agoraio-extensions/terra_shared_configs'
   - name: FixEnumConstantParser

@@ -88,7 +88,7 @@ export function binding(parseResult: ParseResult, isTest: boolean = false) {
           hasSupportApi = true;
         }
 
-        if(method.name === 'onPlaybackAudioFrame'){
+        if(method.name === 'createDataStream2'){
           // debugger
         }
         
