@@ -6,7 +6,7 @@ import {
 import * as NATIVE_RTC from '@iris/native-rtc';
 import 'jest-canvas-mock';
 
-import { ILocalAudioTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
+import { IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import { IrisApiEngine, IrisCore } from 'iris-web-core';
 
 import { IrisWebRtc } from '../../src/IrisRtcApi';
@@ -84,19 +84,13 @@ describe('IAgoraRtcEngineImpl', () => {
     };
     await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
     await joinChannel(apiEnginePtr, null);
-    jest.spyOn(
-      irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
-        IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
-      )[0].track as ILocalAudioTrack,
-      'setPlaybackDevice'
-    );
+    let remoteAudioTrack = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      irisRtcEngine.irisClientManager.remoteUserPackages[0].connection
+    ).agoraRTCClient?.remoteUsers[0].audioTrack!;
+    jest.spyOn(remoteAudioTrack, 'setPlaybackDevice');
     await callIris(apiEnginePtr, 'AudioDeviceManager_setPlaybackDevice', param);
     expect(irisRtcEngine.globalState.playbackDeviceId).toBe(param.deviceId);
-    expect(
-      (irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
-        IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
-      )[0].track as ILocalAudioTrack).setPlaybackDevice
-    ).toBeCalledWith(param.deviceId);
+    expect(remoteAudioTrack.setPlaybackDevice).toBeCalledWith(param.deviceId);
   });
   test('getPlaybackDevice', async () => {
     jest.spyOn(irisRtcEngine.globalState.AgoraRTC, 'getPlaybackDevices');

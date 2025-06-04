@@ -14,4 +14,4 @@ export * from './generate/IAgoraRtcEngine';
 export * from './generate/IAgoraRtcEngineEx';
 export * from './generate/IAgoraSpatialAudio';
 export * from './generate/IAudioDeviceManager';
-export const NATIVE_RTC_VERSION = '4.2.3';
+export const NATIVE_RTC_VERSION = '4.2.6.163';

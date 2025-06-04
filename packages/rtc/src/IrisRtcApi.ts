@@ -30,7 +30,7 @@ function initIrisRtc(
           'apiInterceptors'
         ][0]?.irisClientManager;
     }
-  }, 1000);
+  }, 3000);
 }
 
 export let IrisWebRtc = {

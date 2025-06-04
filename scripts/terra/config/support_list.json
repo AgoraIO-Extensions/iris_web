@@ -85,7 +85,7 @@
   "RtcEngineEventHandler_onUserMuteAudioEx",
   "RtcEngineEventHandler_onUserStateChanged",
   "RtcEngineEventHandler_onRemoteAudioStateChangedEx",
-  "RtcEngineEventHandler_onStreamMessage",
+  "RtcEngineEventHandler_onStreamMessageEx",
   "RtcEngineEventHandler_onRemoteVideoStateChangedEx",
   "RtcEngineEventHandler_onClientRoleChangedEx",
   "RtcEngineEventHandler_onNetworkQualityEx",
@@ -123,5 +123,8 @@
   "RtcEngineEx_adjustRecordingSignalVolumeEx",
   "RtcEngine_adjustUserPlaybackSignalVolume",
   "RtcEngineEx_adjustUserPlaybackSignalVolumeEx",
-  "RtcEngineEx_enableAudioVolumeIndicationEx"
+  "RtcEngineEx_enableAudioVolumeIndicationEx",
+  "RtcEngine_enableInEarMonitoring",
+  "RtcEngine_startAudioDeviceLoopbackTest",
+  "RtcEngine_stopAudioDeviceLoopbackTest"
 ]

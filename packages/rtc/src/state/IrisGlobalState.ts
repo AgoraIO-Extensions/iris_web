@@ -95,6 +95,10 @@ export class IrisGlobalState {
     samplesPerCall: 1024,
   };
 
+  enableAEC: boolean = false;
+  enableANS: boolean = false;
+  enableAGC: boolean = false;
+
   reset() {
     this.enabledAudio = true;
     this.pausedAudio = false;

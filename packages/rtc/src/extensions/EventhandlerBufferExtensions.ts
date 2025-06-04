@@ -1,6 +1,6 @@
 import {
   // IAUDIOFRAMEOBSERVER_onPlaybackAudioFrame,
-  IRTCENGINEEVENTHANDLER_ONSTREAMMESSAGE,
+  IRTCENGINEEVENTHANDLER_ONSTREAMMESSAGEEx,
 } from '../util/iris_rtc_api_type_gen';
 
 export function eventHandlerBufferExtension(
@@ -9,7 +9,7 @@ export function eventHandlerBufferExtension(
 ): any[] {
   let bufferList: any = [];
   switch (func_name) {
-    case IRTCENGINEEVENTHANDLER_ONSTREAMMESSAGE:
+    case IRTCENGINEEVENTHANDLER_ONSTREAMMESSAGEEx:
       if (data.data) {
         bufferList.push(data.data);
       }

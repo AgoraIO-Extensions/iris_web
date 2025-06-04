@@ -1007,6 +1007,18 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
                   this._engine.globalState.AgoraRTC.disableLogUpload();
                 }
                 break;
+              case 'che.audio.agc.enable':
+                this._engine.globalState.enableAGC = json[keyList[i]];
+                this._engine.implHelper.reGenMicrophoneAudioTrack();
+                break;
+              case 'che.audio.aec.enable':
+                this._engine.globalState.enableAEC = json[keyList[i]];
+                this._engine.implHelper.reGenMicrophoneAudioTrack();
+                break;
+              case 'che.audio.ans.enable':
+                this._engine.globalState.enableANS = json[keyList[i]];
+                this._engine.implHelper.reGenMicrophoneAudioTrack();
+                break;
               default:
                 (this._engine.globalState.AgoraRTC as any).setParameter(
                   keyList[i],
@@ -1272,6 +1284,66 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             }
           }
         );
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  enableInEarMonitoring(
+    enabled: boolean,
+    includeAudioFilters: NATIVE_RTC.EAR_MONITORING_FILTER_TYPE
+  ): CallApiReturnType {
+    let fun = async () => {
+      try {
+        this.adjustRecordingSignalVolume(enabled ? 100 : 0);
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  startAudioDeviceLoopbackTest(indicationInterval: number): CallApiReturnType {
+    let fun = async () => {
+      try {
+        this._engine.irisClientManager.irisClientList.map((irisClient) => {
+          irisClient.irisClientState.enableAudioVolumeIndication = true;
+          irisClient.irisClientState.enableAudioVolumeIndicationConfig = {
+            ...irisClient.irisClientState.enableAudioVolumeIndicationConfig,
+            interval: indicationInterval,
+          };
+          irisClient.agoraRTCClient?.enableAudioVolumeIndicator();
+        });
+        this.setParameters(
+          JSON.stringify({
+            AUDIO_VOLUME_INDICATION_INTERVAL: indicationInterval,
+          })
+        );
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  stopAudioDeviceLoopbackTest(): CallApiReturnType {
+    let fun = async () => {
+      try {
+        this._engine.irisClientManager.irisClientList.map((irisClient) => {
+          irisClient.irisClientState.enableAudioVolumeIndication = false;
+          irisClient.irisClientState.enableAudioVolumeIndicationConfig = {
+            ...irisClient.irisClientState.enableAudioVolumeIndicationConfig,
+            interval: 50,
+          };
+        });
       } catch (e) {
         AgoraConsole.log(e);
         return this._engine.returnResult(false);

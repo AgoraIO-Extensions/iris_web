@@ -55,7 +55,9 @@ export class TrackHelper {
 
   public async setEnabled(track: ILocalTrack, enabled: boolean): Promise<void> {
     try {
-      await track?.setEnabled(enabled);
+      if (track && !track.muted) {
+        await track?.setEnabled(enabled);
+      }
     } catch (e) {
       AgoraConsole.error(e);
       Promise.resolve(

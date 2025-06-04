@@ -454,19 +454,15 @@ export class IrisClientEventHandler {
        * of all the remote speakers.
        */
       let totalVolume = 0;
-      if (
-        !irisClient.irisClientState.enableAudioVolumeIndicationConfig.reportVad
-      ) {
-        speakers = speakers.filter(
-          (speaker) => speaker.uid !== this.agoraRTCClient.uid
+
+      if (irisClient.irisClientState.enableAudioVolumeIndication) {
+        this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(
+          this._irisClient.connection,
+          speakers,
+          speakerNumber,
+          totalVolume
         );
       }
-      this._engine.rtcEngineEventHandler.onAudioVolumeIndicationEx(
-        this._irisClient.connection,
-        speakers,
-        speakerNumber,
-        totalVolume
-      );
     });
   }
 

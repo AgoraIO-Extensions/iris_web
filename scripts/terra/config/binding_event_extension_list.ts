@@ -1,1 +1,1 @@
-module.exports = ["RtcEngineEventHandler_onStreamMessage", "AudioFrameObserver_onPlaybackAudioFrame"];
+module.exports = ["RtcEngineEventHandler_onStreamMessageEx", "AudioFrameObserver_onPlaybackAudioFrame"];

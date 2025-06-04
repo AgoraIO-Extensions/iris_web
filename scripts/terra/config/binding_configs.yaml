@@ -4,14 +4,14 @@ parsers:
     package: '@agoraio-extensions/cxx-parser'
     args:
       includeHeaderDirs:
-        - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include'
+        - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.6.163/include'
       parseFiles:
         include:
-          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/*.h'
+          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.6.163/include/*.h'
         exclude:
-          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/time_utils.h'
-          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/rte_*.h'
-          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.3/include/IAgoraMediaComponentFactory.h'
+          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.6.163/include/time_utils.h'
+          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.6.163/include/rte_*.h'
+          - '@agoraio-extensions/terra_shared_configs:headers/rtc_4.2.6.163/include/IAgoraMediaComponentFactory.h'
 
   - name: IrisApiIdParser
     package: '@agoraio-extensions/terra_shared_configs'

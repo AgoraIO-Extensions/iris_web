@@ -591,28 +591,10 @@ export class IRtcEngineEventHandler {
     length: number,
     sentTs: number
   ): void {
-    let _obj = {
-      userId,
-      streamId,
-      data,
-      length,
-      sentTs,
-    };
-    let bufferList = eventHandlerBufferExtension(
-      'RtcEngineEventHandler_onStreamMessage',
-      _obj
+    AgoraConsole.warn(
+      'RtcEngineEventHandler_onStreamMessage not supported in this platform!'
     );
-    let _json = JSON.stringify(_obj);
-    let eventParam = new IrisCore.EventParam(
-      'RtcEngineEventHandler_onStreamMessage',
-      _json,
-      0,
-      '',
-      bufferList as any,
-      [],
-      bufferList.length
-    );
-    this.notifyEvent(eventParam);
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   onStreamMessageError(
@@ -1529,10 +1511,29 @@ export class IRtcEngineEventHandler {
     length: number,
     sentTs: number
   ): void {
-    AgoraConsole.warn(
-      'RtcEngineEventHandler_onStreamMessageEx not supported in this platform!'
+    let _obj = {
+      connection,
+      remoteUid,
+      streamId,
+      data,
+      length,
+      sentTs,
+    };
+    let bufferList = eventHandlerBufferExtension(
+      'RtcEngineEventHandler_onStreamMessageEx',
+      _obj
     );
-    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let _json = JSON.stringify(_obj);
+    let eventParam = new IrisCore.EventParam(
+      'RtcEngineEventHandler_onStreamMessageEx',
+      _json,
+      0,
+      '',
+      bufferList as any,
+      [],
+      bufferList.length
+    );
+    this.notifyEvent(eventParam);
   }
 
   onStreamMessageErrorEx(
@@ -3521,10 +3522,19 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   enableInEarMonitoring(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_enableInEarMonitoring not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let enabled = obj.enabled;
+    if (enabled === undefined) {
+      AgoraConsole.error('enabled is undefined');
+      throw 'enabled is undefined';
+    }
+    let includeAudioFilters = obj.includeAudioFilters;
+    if (includeAudioFilters === undefined) {
+      AgoraConsole.error('includeAudioFilters is undefined');
+      throw 'includeAudioFilters is undefined';
+    }
+
+    return this._impl.enableInEarMonitoring(enabled, includeAudioFilters);
   }
 
   // @ts-ignore

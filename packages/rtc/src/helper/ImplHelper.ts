@@ -204,7 +204,18 @@ export class ImplHelper {
   public async createMicrophoneAudioTrack(): Promise<IMicrophoneAudioTrack> {
     let audioTrack: IMicrophoneAudioTrack;
     try {
-      audioTrack = await this._engine.globalState.AgoraRTC.createMicrophoneAudioTrack();
+      audioTrack = await this._engine.globalState.AgoraRTC.createMicrophoneAudioTrack(
+        {
+          AEC: this._engine.globalState.enableAEC,
+          ANS: this._engine.globalState.enableANS,
+          AGC: this._engine.globalState.enableAGC,
+          //todo,等沛霖
+          encoderConfig: {
+            bitrate: 64000, //语音码率
+            stereo: true, //是否开启多声道
+          },
+        }
+      );
       await this._engine.trackHelper.setEnabled(audioTrack, false);
     } catch (e) {
       AgoraConsole.error('createMicrophoneAudioTrack failed');
@@ -213,6 +224,40 @@ export class ImplHelper {
 
     await this.processAudioTrack(audioTrack);
     return audioTrack;
+  }
+
+  public async reGenMicrophoneAudioTrack() {
+    let audioTrack: IMicrophoneAudioTrack;
+    try {
+      this._engine.irisClientManager.localAudioTrackPackages.map(async (e) => {
+        await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+          NotifyType.UNPUBLISH_TRACK,
+          [e]
+        );
+        if (e.type === IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary) {
+          audioTrack = await this.createMicrophoneAudioTrack();
+          await this._engine.trackHelper.setEnabled(
+            audioTrack as ILocalAudioTrack,
+            true
+          );
+          e.track = audioTrack;
+        }
+        if (
+          e.irisClient.irisClientState.clientRoleType ===
+            NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER &&
+          e.irisClient.irisClientState.publishMicrophoneTrack &&
+          e.irisClient.agoraRTCClient?.channelName
+        ) {
+          await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+            NotifyType.PUBLISH_TRACK,
+            [e]
+          );
+        }
+      });
+    } catch (e) {
+      AgoraConsole.error('reGenMicrophoneAudioTrack failed');
+      throw e;
+    }
   }
 
   public async createVideoCameraTrack(): Promise<ICameraVideoTrack> {
