@@ -47,6 +47,11 @@ export interface IMediaPlayer {
 
   selectAudioTrack(index: number): CallApiReturnType;
 
+  selectMultiAudioTrack(
+    playoutTrackIndex: number,
+    publishTrackIndex: number
+  ): CallApiReturnType;
+
   setPlayerOption(key: string, value: number): CallApiReturnType;
 
   setPlayerOption2(key: string, value: string): CallApiReturnType;

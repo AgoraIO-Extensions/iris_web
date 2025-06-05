@@ -13,7 +13,10 @@ import {
 
 import { InitIrisRtcOptions } from '../IrisRtcApi';
 import { IrisVideoFrameBufferConfig, VideoParams } from '../base/BaseType';
-import { IAudioFrameObserver } from '../binding/AgoraMediaBaseDispatch';
+import {
+  IAudioFrameObserver,
+  IVideoFrameMetaInfoDispatch,
+} from '../binding/AgoraMediaBaseDispatch';
 import { IH265TranscoderDispatch } from '../binding/IAgoraH265TranscoderDispatch';
 
 import {
@@ -88,6 +91,7 @@ export class IrisRtcEngine implements ApiInterceptor {
       ['MusicChartCollection', new MusicChartCollectionDispatch(this)],
       ['MusicCollection', new MusicCollectionDispatch(this)],
       ['MusicPlayer', new IMusicPlayerDispatch(this)],
+      ['VideoFrameMetaInfo', new IVideoFrameMetaInfoDispatch(this)],
       ['H265Transcoder', new IH265TranscoderDispatch(this)],
       ['MusicContentCenter', new IMusicContentCenterDispatch(this)],
       ['AudioDeviceManager', new IAudioDeviceManagerDispatch(this)],

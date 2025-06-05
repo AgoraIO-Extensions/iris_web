@@ -6,6 +6,7 @@ import {
   AUDIO_TRACK_TYPE,
   AudioTrackConfig,
   EncodedVideoFrameInfo,
+  LoopbackAudioTrackConfig,
   SenderOptions,
 } from './AgoraBase';
 import {
@@ -13,6 +14,7 @@ import {
   EXTERNAL_VIDEO_SOURCE_TYPE,
   ExternalVideoFrame,
   IAudioFrameObserver,
+  IFaceInfoObserver,
   IVideoEncodedFrameObserver,
   IVideoFrameObserver,
 } from './AgoraMediaBase';
@@ -32,6 +34,8 @@ export interface IMediaEngine {
   registerVideoEncodedFrameObserver(
     observer: IVideoEncodedFrameObserver
   ): CallApiReturnType;
+
+  registerFaceInfoObserver(observer: IFaceInfoObserver): CallApiReturnType;
 
   pushAudioFrame(frame: AudioFrame, trackId: number): CallApiReturnType;
 
@@ -85,6 +89,15 @@ export interface IMediaEngine {
   addVideoFrameRenderer(renderer: IVideoFrameObserver): CallApiReturnType;
 
   removeVideoFrameRenderer(renderer: IVideoFrameObserver): CallApiReturnType;
+
+  createLoopbackAudioTrack(config: LoopbackAudioTrackConfig): CallApiReturnType;
+
+  destroyLoopbackAudioTrack(trackId: number): CallApiReturnType;
+
+  updateLoopbackAudioTrackConfig(
+    trackId: number,
+    config: LoopbackAudioTrackConfig
+  ): CallApiReturnType;
 
   release(): CallApiReturnType;
 }

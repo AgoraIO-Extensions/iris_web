@@ -323,6 +323,14 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   }
 
   // @ts-ignore
+  setRemoteRenderRotationEx(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_setRemoteRenderRotationEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   enableLoopbackRecordingEx(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngineEx_enableLoopbackRecordingEx not supported in this platform!'
@@ -642,6 +650,14 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   startMediaRenderingTracingEx(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngineEx_startMediaRenderingTracingEx not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  getCallIdEx(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_getCallIdEx not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

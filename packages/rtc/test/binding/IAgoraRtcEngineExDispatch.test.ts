@@ -1272,6 +1272,36 @@ describe('IRtcEngineEx', () => {
     ).toBeCalledWith('test', 'test', 'test', 'test');
   });
 
+  test('RtcEngineEx_setRemoteRenderRotationEx impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      uid: 'test',
+      rotation: 'test',
+      connection: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'RtcEngineEx_setRemoteRenderRotationEx',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
+        ?.setRemoteRenderRotationEx
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
   test('RtcEngineEx_enableLoopbackRecordingEx impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')
@@ -2439,6 +2469,34 @@ describe('IRtcEngineEx', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl
         ?.startMediaRenderingTracingEx
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
+  test('RtcEngineEx_getCallIdEx impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      callId: 'test',
+      connection: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'RtcEngineEx_getCallIdEx',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('RtcEngineEx')._impl?.getCallIdEx
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(

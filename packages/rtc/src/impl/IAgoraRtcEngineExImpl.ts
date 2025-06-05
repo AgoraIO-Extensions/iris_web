@@ -66,7 +66,9 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
             IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
           )[0]
         ) {
-          let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack();
+          let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack(
+            irisClient
+          );
           this._engine.irisClientManager.addLocalAudioTrackPackage(
             new AudioTrackPackage(
               IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,

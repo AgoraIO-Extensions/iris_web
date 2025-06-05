@@ -12,6 +12,7 @@ import {
   SpatialAudioParams,
   UserInfo,
   VIDEO_MIRROR_MODE_TYPE,
+  VIDEO_ORIENTATION,
   VIDEO_STREAM_TYPE,
   VideoCanvas,
   VideoEncoderConfiguration,
@@ -145,6 +146,12 @@ export interface IRtcEngineEx {
     uid: number,
     renderMode: RENDER_MODE_TYPE,
     mirrorMode: VIDEO_MIRROR_MODE_TYPE,
+    connection: RtcConnection
+  ): CallApiReturnType;
+
+  setRemoteRenderRotationEx(
+    uid: number,
+    rotation: VIDEO_ORIENTATION,
     connection: RtcConnection
   ): CallApiReturnType;
 
@@ -303,4 +310,6 @@ export interface IRtcEngineEx {
   ): CallApiReturnType;
 
   startMediaRenderingTracingEx(connection: RtcConnection): CallApiReturnType;
+
+  getCallIdEx(callId: string, connection: RtcConnection): CallApiReturnType;
 }

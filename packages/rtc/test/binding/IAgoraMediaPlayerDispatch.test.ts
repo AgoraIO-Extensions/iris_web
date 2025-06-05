@@ -465,6 +465,35 @@ describe('IMediaPlayer', () => {
     );
   });
 
+  test('MediaPlayer_selectMultiAudioTrack impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      playoutTrackIndex: 'test',
+      publishTrackIndex: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MediaPlayer_selectMultiAudioTrack',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
+        ?.selectMultiAudioTrack
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
   test('MediaPlayer_setPlayerOption impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')

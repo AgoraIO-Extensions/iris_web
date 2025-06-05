@@ -139,6 +139,8 @@ export class MediaSource {
 
   enableCache?: boolean;
 
+  enableMultiAudioTrack?: boolean;
+
   isAgoraSource?: boolean;
 
   isLiveSource?: boolean;

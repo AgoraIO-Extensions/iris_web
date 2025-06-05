@@ -39,6 +39,35 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
+describe('IVideoFrameMetaInfo', () => {
+  test('VideoFrameMetaInfo_getMetaInfoStr impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      key: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'VideoFrameMetaInfo_getMetaInfoStr',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('VideoFrameMetaInfo')._impl
+        ?.getMetaInfoStr
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+});
 describe('IAudioPcmFrameSink', () => {
   test('AudioPcmFrameSink_onFrame impl call', async () => {
     let eventHandler = new bindingAPI.IAudioPcmFrameSink(irisRtcEngine);
@@ -442,6 +471,24 @@ describe('IVideoFrameObserver', () => {
       .spyOn(irisRtcEngine, 'returnResult')
       .mockResolvedValue(new CallIrisApiResult(0, ''));
     eventHandler.getObservedFramePosition();
+    expect(
+      eventHandler._engine.irisEventHandlerManager.notifyEvent
+    ).toBeCalledTimes(0);
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+});
+describe('IFaceInfoObserver', () => {
+  test('FaceInfoObserver_onFaceInfo impl call', async () => {
+    let eventHandler = new bindingAPI.IFaceInfoObserver(irisRtcEngine);
+    jest.spyOn(eventHandler._engine.irisEventHandlerManager, 'notifyEvent');
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    eventHandler.onFaceInfo(undefined);
     expect(
       eventHandler._engine.irisEventHandlerManager.notifyEvent
     ).toBeCalledTimes(0);

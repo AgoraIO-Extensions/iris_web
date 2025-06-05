@@ -44,6 +44,14 @@ export class IMediaEngineDispatch implements IMediaEngine {
   }
 
   // @ts-ignore
+  registerFaceInfoObserver(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MediaEngine_registerFaceInfoObserver not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   pushAudioFrame(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'MediaEngine_pushAudioFrame not supported in this platform!'
@@ -169,6 +177,30 @@ export class IMediaEngineDispatch implements IMediaEngine {
   removeVideoFrameRenderer(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'MediaEngine_removeVideoFrameRenderer not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  createLoopbackAudioTrack(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MediaEngine_createLoopbackAudioTrack not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  destroyLoopbackAudioTrack(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MediaEngine_destroyLoopbackAudioTrack not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  updateLoopbackAudioTrackConfig(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MediaEngine_updateLoopbackAudioTrackConfig not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

@@ -201,20 +201,29 @@ export class ImplHelper {
     }
   }
 
-  public async createMicrophoneAudioTrack(): Promise<IMicrophoneAudioTrack> {
+  public async createMicrophoneAudioTrack(
+    irisClient?: IrisClient
+  ): Promise<IMicrophoneAudioTrack> {
     let audioTrack: IMicrophoneAudioTrack;
+
+    let config = {
+      AEC: this._engine.globalState.enableAEC,
+      ANS: this._engine.globalState.enableANS,
+      AGC: this._engine.globalState.enableAGC,
+      encoderConfig: {
+        stereo: false,
+        bitrate: 32,
+      },
+    };
+
+    if (irisClient) {
+      config.encoderConfig.stereo = irisClient.irisClientState.isStereo;
+      config.encoderConfig.bitrate = irisClient.irisClientState.bitrate;
+    }
+
     try {
       audioTrack = await this._engine.globalState.AgoraRTC.createMicrophoneAudioTrack(
-        {
-          AEC: this._engine.globalState.enableAEC,
-          ANS: this._engine.globalState.enableANS,
-          AGC: this._engine.globalState.enableAGC,
-          //todo,等沛霖
-          encoderConfig: {
-            bitrate: 64000, //语音码率
-            stereo: true, //是否开启多声道
-          },
-        }
+        config
       );
       await this._engine.trackHelper.setEnabled(audioTrack, false);
     } catch (e) {
@@ -226,34 +235,40 @@ export class ImplHelper {
     return audioTrack;
   }
 
-  public async reGenMicrophoneAudioTrack() {
-    let audioTrack: IMicrophoneAudioTrack;
+  public async reGenMicrophoneAudioTrack(irisClient: IrisClient) {
     try {
-      this._engine.irisClientManager.localAudioTrackPackages.map(async (e) => {
+      let audioTrackPackage = this._engine.irisClientManager.getLocalAudioTrackPackageByConnection(
+        irisClient.connection
+      )[0];
+
+      if (
+        audioTrackPackage &&
+        audioTrackPackage.type ===
+          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+      ) {
         await this._engine.irisClientManager.irisClientObserver.notifyLocal(
           NotifyType.UNPUBLISH_TRACK,
-          [e]
+          [audioTrackPackage]
         );
-        if (e.type === IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary) {
-          audioTrack = await this.createMicrophoneAudioTrack();
-          await this._engine.trackHelper.setEnabled(
-            audioTrack as ILocalAudioTrack,
-            true
-          );
-          e.track = audioTrack;
-        }
+        let audioTrack: IMicrophoneAudioTrack;
+        audioTrack = await this.createMicrophoneAudioTrack(irisClient);
+        await this._engine.trackHelper.setEnabled(
+          audioTrack as ILocalAudioTrack,
+          true
+        );
+        audioTrackPackage.track = audioTrack;
         if (
-          e.irisClient.irisClientState.clientRoleType ===
+          irisClient.irisClientState.clientRoleType ===
             NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER &&
-          e.irisClient.irisClientState.publishMicrophoneTrack &&
-          e.irisClient.agoraRTCClient?.channelName
+          irisClient.irisClientState.publishMicrophoneTrack &&
+          irisClient.agoraRTCClient?.channelName
         ) {
           await this._engine.irisClientManager.irisClientObserver.notifyLocal(
             NotifyType.PUBLISH_TRACK,
-            [e]
+            [audioTrackPackage]
           );
         }
-      });
+      }
     } catch (e) {
       AgoraConsole.error('reGenMicrophoneAudioTrack failed');
       throw e;
@@ -400,6 +415,11 @@ export class ImplHelper {
     let irisClientState = irisClient.irisClientState;
     let agoraRTCClient = irisClient.agoraRTCClient;
     let irisClientObserver = irisClientManager.irisClientObserver;
+
+    if (options.parameters) {
+      this.handleChannelMediaOptionsParameters(options.parameters, irisClient);
+      this.reGenMicrophoneAudioTrack(irisClient);
+    }
     let localAudioTrackPackages = irisClientManager.localAudioTrackPackages;
     let localVideoTrackPackages = irisClientManager.localVideoTrackPackages;
     if (connection) {
@@ -563,6 +583,10 @@ export class ImplHelper {
     options = irisClient.irisClientState;
     irisClient.irisClientState.token = token;
 
+    if (options.parameters) {
+      this.handleChannelMediaOptionsParameters(options.parameters, irisClient);
+    }
+
     if (!irisClient.agoraRTCClient) {
       return this._engine.returnResult(false);
     }
@@ -612,7 +636,9 @@ export class ImplHelper {
           IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
         )[0]
       ) {
-        let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack();
+        let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack(
+          irisClient
+        );
         this._engine.irisClientManager.addLocalAudioTrackPackage(
           new AudioTrackPackage(
             IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
@@ -679,5 +705,24 @@ export class ImplHelper {
       sourceType === IrisAudioSourceType.kAudioSourceTypeCustom ||
       sourceType === IrisAudioSourceType.kAudioSourceTypeUnknown
     );
+  }
+
+  public handleChannelMediaOptionsParameters(
+    parameters: string,
+    irisClient: IrisClient
+  ) {
+    let json = JSON.parse(parameters);
+    let keyList = Object.keys(json);
+    for (let i = 0; i < keyList.length; i++) {
+      switch (keyList[i]) {
+        case 'che.audio.custom_channel_num':
+          irisClient.irisClientState.isStereo = json[keyList[i]] === 1;
+          break;
+        case 'che.audio.custom_bitrate':
+          irisClient.irisClientState.bitrate = json[keyList[i]];
+          break;
+        default:
+      }
+    }
   }
 }

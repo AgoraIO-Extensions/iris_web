@@ -786,6 +786,13 @@ export class IRtcEngineEventHandler {
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
+  onAudioRoutingChanged2(deviceType: number, routing: number): void {
+    AgoraConsole.warn(
+      'RtcEngineEventHandler_onAudioRoutingChanged2 not supported in this platform!'
+    );
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
   onChannelMediaRelayStateChanged(
     state: CHANNEL_MEDIA_RELAY_STATE,
     code: CHANNEL_MEDIA_RELAY_ERROR
@@ -900,6 +907,13 @@ export class IRtcEngineEventHandler {
   onPermissionError(permissionType: PERMISSION_TYPE): void {
     AgoraConsole.warn(
       'RtcEngineEventHandler_onPermissionError not supported in this platform!'
+    );
+    this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  onPermissionGranted(permissionType: PERMISSION_TYPE): void {
+    AgoraConsole.warn(
+      'RtcEngineEventHandler_onPermissionGranted not supported in this platform!'
     );
     this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -2081,6 +2095,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
   }
 
   // @ts-ignore
+  queryDeviceScore(): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngine_queryDeviceScore not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   preloadChannel(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngine_preloadChannel not supported in this platform!'
@@ -3223,6 +3245,12 @@ export class IRtcEngineDispatch implements IRtcEngine {
   }
 
   // @ts-ignore
+  writeLog(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn('RtcEngine_writeLog not supported in this platform!');
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   setLocalRenderMode(apiParam: ApiParam): CallApiReturnType {
     let obj = JSON.parse(apiParam.data) as any;
     let renderMode = obj.renderMode;
@@ -3800,6 +3828,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
   }
 
   // @ts-ignore
+  setCameraStabilizationMode(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngine_setCameraStabilizationMode not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   setDefaultAudioRouteToSpeakerphone(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngine_setDefaultAudioRouteToSpeakerphone not supported in this platform!'
@@ -3827,6 +3863,22 @@ export class IRtcEngineDispatch implements IRtcEngine {
   setRouteInCommunicationMode(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngine_setRouteInCommunicationMode not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  isSupportPortraitCenterStage(): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngine_isSupportPortraitCenterStage not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  enablePortraitCenterStage(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngine_enablePortraitCenterStage not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
@@ -3867,6 +3919,14 @@ export class IRtcEngineDispatch implements IRtcEngine {
   getAudioDeviceInfo(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngine_getAudioDeviceInfo not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  setRemoteRenderRotation(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngine_setRemoteRenderRotation not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

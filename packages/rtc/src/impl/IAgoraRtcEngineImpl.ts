@@ -1009,15 +1009,35 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
                 break;
               case 'che.audio.agc.enable':
                 this._engine.globalState.enableAGC = json[keyList[i]];
-                this._engine.implHelper.reGenMicrophoneAudioTrack();
+
+                this._engine.irisClientManager.irisClientList.map(
+                  (irisClient) => {
+                    this._engine.implHelper.reGenMicrophoneAudioTrack(
+                      irisClient
+                    );
+                  }
+                );
+
                 break;
               case 'che.audio.aec.enable':
                 this._engine.globalState.enableAEC = json[keyList[i]];
-                this._engine.implHelper.reGenMicrophoneAudioTrack();
+                this._engine.irisClientManager.irisClientList.map(
+                  (irisClient) => {
+                    this._engine.implHelper.reGenMicrophoneAudioTrack(
+                      irisClient
+                    );
+                  }
+                );
                 break;
               case 'che.audio.ans.enable':
                 this._engine.globalState.enableANS = json[keyList[i]];
-                this._engine.implHelper.reGenMicrophoneAudioTrack();
+                this._engine.irisClientManager.irisClientList.map(
+                  (irisClient) => {
+                    this._engine.implHelper.reGenMicrophoneAudioTrack(
+                      irisClient
+                    );
+                  }
+                );
                 break;
               default:
                 (this._engine.globalState.AgoraRTC as any).setParameter(

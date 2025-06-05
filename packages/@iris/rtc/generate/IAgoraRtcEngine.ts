@@ -15,6 +15,7 @@ import {
   AudioRecordingConfiguration,
   AudioVolumeInfo,
   BeautyOptions,
+  CAMERA_STABILIZATION_MODE,
   CAPTURE_BRIGHTNESS_LEVEL_TYPE,
   CHANNEL_MEDIA_RELAY_ERROR,
   CHANNEL_MEDIA_RELAY_EVENT,
@@ -424,6 +425,8 @@ export class CameraCapturerConfiguration {
 
   deviceId?: string;
 
+  cameraId?: string;
+
   format?: VideoFormat;
 
   followEncodeDimensionRatio?: boolean;
@@ -531,6 +534,10 @@ export class ChannelMediaOptions {
 
   publishCustomAudioTrackId?: number;
 
+  publishLoopbackAudioTrack?: boolean;
+
+  publishLoopbackAudioTrackId?: number;
+
   publishCustomVideoTrack?: boolean;
 
   publishEncodedVideoTrack?: boolean;
@@ -540,6 +547,12 @@ export class ChannelMediaOptions {
   publishMediaPlayerVideoTrack?: boolean;
 
   publishTranscodedVideoTrack?: boolean;
+
+  publishMixedAudioTrack?: boolean;
+
+  mixPolicyForMixedTrack?: number;
+
+  publishLipSyncTrack?: boolean;
 
   autoSubscribeAudio?: boolean;
 
@@ -572,6 +585,8 @@ export class ChannelMediaOptions {
   customVideoTrackId?: number;
 
   isAudioFilterable?: boolean;
+
+  parameters?: string;
 }
 
 export enum PROXY_TYPE {
@@ -851,6 +866,8 @@ export interface IRtcEngineEventHandler {
 
   onAudioRoutingChanged(routing: number): void;
 
+  onAudioRoutingChanged2(deviceType: number, routing: number): void;
+
   onChannelMediaRelayStateChanged(
     state: CHANNEL_MEDIA_RELAY_STATE,
     code: CHANNEL_MEDIA_RELAY_ERROR
@@ -897,6 +914,8 @@ export interface IRtcEngineEventHandler {
   onEncryptionError(errorType: ENCRYPTION_ERROR_TYPE): void;
 
   onPermissionError(permissionType: PERMISSION_TYPE): void;
+
+  onPermissionGranted(permissionType: PERMISSION_TYPE): void;
 
   onLocalUserRegistered(uid: number, userAccount: string): void;
 
@@ -1382,6 +1401,18 @@ export class DirectCdnStreamingMediaOptions {
   publishMediaPlayerId?: number;
 
   customVideoTrackId?: number;
+
+  publishScreenTrack?: boolean;
+
+  publishSecondaryScreenTrack?: boolean;
+
+  publishThirdScreenTrack?: boolean;
+
+  publishFourthScreenTrack?: boolean;
+
+  publishLoopbackAudioTrack?: boolean;
+
+  publishLoopbackDeviceName?: string;
 }
 
 export class ExtensionInfo {
@@ -1407,6 +1438,8 @@ export interface IRtcEngine {
     codecInfo: CodecCapInfo[],
     size: number
   ): CallApiReturnType;
+
+  queryDeviceScore(): CallApiReturnType;
 
   preloadChannel(
     token: string,
@@ -1796,6 +1829,8 @@ export interface IRtcEngine {
 
   uploadLogFile(requestId: string): CallApiReturnType;
 
+  writeLog(level: LOG_LEVEL, fmt: string): CallApiReturnType;
+
   setLocalRenderMode(
     renderMode: RENDER_MODE_TYPE,
     mirrorMode: VIDEO_MIRROR_MODE_TYPE
@@ -2038,6 +2073,10 @@ export interface IRtcEngine {
 
   setCameraAutoExposureFaceModeEnabled(enabled: boolean): CallApiReturnType;
 
+  setCameraStabilizationMode(
+    mode: CAMERA_STABILIZATION_MODE
+  ): CallApiReturnType;
+
   setDefaultAudioRouteToSpeakerphone(
     defaultToSpeaker: boolean
   ): CallApiReturnType;
@@ -2047,6 +2086,10 @@ export interface IRtcEngine {
   isSpeakerphoneEnabled(): CallApiReturnType;
 
   setRouteInCommunicationMode(route: number): CallApiReturnType;
+
+  isSupportPortraitCenterStage(): CallApiReturnType;
+
+  enablePortraitCenterStage(enabled: boolean): CallApiReturnType;
 
   getScreenCaptureSources(
     thumbSize: SIZE,
@@ -2071,6 +2114,11 @@ export interface IRtcEngine {
   ): CallApiReturnType;
 
   getAudioDeviceInfo(deviceInfo: DeviceInfo): CallApiReturnType;
+
+  setRemoteRenderRotation(
+    uid: number,
+    rotation: VIDEO_ORIENTATION
+  ): CallApiReturnType;
 
   startScreenCaptureByWindowId(
     windowId: any,

@@ -353,6 +353,33 @@ describe('IMusicPlayer', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
+
+  test('MusicPlayer_setPlayMode impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      mode: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MusicPlayer_setPlayMode',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MusicPlayer')._impl?.setPlayMode
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
 });
 describe('IMusicContentCenter', () => {
   test('MusicContentCenter_initialize impl call', async () => {
@@ -508,6 +535,34 @@ describe('IMusicContentCenter', () => {
     expect(
       irisRtcEngine.implDispatchesMap.get('MusicContentCenter')._impl
         ?.createMusicPlayer
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
+  test('MusicContentCenter_destroyMusicPlayer impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      music_player: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MusicContentCenter_destroyMusicPlayer',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MusicContentCenter')._impl
+        ?.destroyMusicPlayer
     ).toBeUndefined();
     expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
     expect(irisRtcEngine.returnResult).toBeCalledWith(
@@ -755,7 +810,7 @@ describe('IMusicContentCenter', () => {
     let nParam = {
       requestId: 'test',
       songCode: 'test',
-      LyricType: 'test',
+      lyricType: 'test',
     };
     let apiParam = new IrisCore.EventParam(
       'MusicContentCenter_getLyric',

@@ -150,6 +150,12 @@ export class IrisClientState {
   //用来记录暂停或者恢复的
   currChannelMediaRelayConfiguration: NATIVE_RTC.ChannelMediaRelayConfiguration = new NATIVE_RTC.ChannelMediaRelayConfiguration();
 
+  //是否立体声
+  isStereo: boolean = false;
+
+  //语音码率
+  bitrate: number = 32;
+
   constructor(globalState: IrisGlobalState) {
     this._globalState = globalState;
     if (globalState.rtcEngineContext?.channelProfile) {

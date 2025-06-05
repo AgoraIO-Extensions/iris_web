@@ -2,6 +2,12 @@
 
 import { CallApiReturnType } from 'iris-web-core';
 
+export enum MusicPlayMode {
+  kMusicPlayModeOriginal = 0,
+  kMusicPlayModeAccompany = 1,
+  kMusicPlayModeLeadSing = 2,
+}
+
 export enum PreloadStatusCode {
   kPreloadStatusCompleted = 0,
   kPreloadStatusFailed = 1,
@@ -148,6 +154,8 @@ export class MusicContentCenterConfiguration {
 
 export interface IMusicPlayer {
   open(songCode: number, startPos: number): CallApiReturnType;
+
+  setPlayMode(mode: MusicPlayMode): CallApiReturnType;
 }
 
 export interface IMusicContentCenter {
@@ -164,6 +172,8 @@ export interface IMusicContentCenter {
   unregisterEventHandler(): CallApiReturnType;
 
   createMusicPlayer(): CallApiReturnType;
+
+  destroyMusicPlayer(music_player: IMusicPlayer): CallApiReturnType;
 
   getMusicCharts(requestId: string): CallApiReturnType;
 
@@ -199,7 +209,7 @@ export interface IMusicContentCenter {
   getLyric(
     requestId: string,
     songCode: number,
-    LyricType: number
+    lyricType: number
   ): CallApiReturnType;
 
   getSongSimpleInfo(requestId: string, songCode: number): CallApiReturnType;
