@@ -98,13 +98,16 @@ export class AudioTrackPackage {
     | IMicrophoneAudioTrack
     | ILocalTrack;
   irisClient: IrisClient;
+  hasPipe: boolean = false;
 
   constructor(
     type: IrisAudioSourceType,
-    track: ILocalAudioTrack | IRemoteAudioTrack
+    track: ILocalAudioTrack | IRemoteAudioTrack,
+    hasPipe: boolean = false
   ) {
     this.type = type;
     this.track = track;
+    this.hasPipe = hasPipe;
   }
 
   dispose() {
@@ -129,7 +132,7 @@ export class BufferSourceAudioTrackPackage extends AudioTrackPackage {
     track: IBufferSourceAudioTrack,
     soundId: number
   ) {
-    super(type, track);
+    super(type, track, false);
     this.type = type;
     this.track = track;
     this.soundId = soundId;

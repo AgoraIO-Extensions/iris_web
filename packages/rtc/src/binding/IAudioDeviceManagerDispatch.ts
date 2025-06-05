@@ -196,18 +196,19 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
 
   // @ts-ignore
   startAudioDeviceLoopbackTest(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'AudioDeviceManager_startAudioDeviceLoopbackTest not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let indicationInterval = obj.indicationInterval;
+    if (indicationInterval === undefined) {
+      AgoraConsole.error('indicationInterval is undefined');
+      throw 'indicationInterval is undefined';
+    }
+
+    return this._impl.startAudioDeviceLoopbackTest(indicationInterval);
   }
 
   // @ts-ignore
   stopAudioDeviceLoopbackTest(): CallApiReturnType {
-    AgoraConsole.warn(
-      'AudioDeviceManager_stopAudioDeviceLoopbackTest not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    return this._impl.stopAudioDeviceLoopbackTest();
   }
 
   // @ts-ignore

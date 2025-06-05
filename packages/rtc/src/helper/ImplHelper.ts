@@ -226,6 +226,12 @@ export class ImplHelper {
         config
       );
       await this._engine.trackHelper.setEnabled(audioTrack, false);
+      if (this._engine.globalState.playbackDeviceId) {
+        await this._engine.trackHelper.setPlaybackDevice(
+          audioTrack,
+          this._engine.globalState.playbackDeviceId
+        );
+      }
     } catch (e) {
       AgoraConsole.error('createMicrophoneAudioTrack failed');
       throw e;
@@ -703,7 +709,8 @@ export class ImplHelper {
       sourceType === IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary ||
       sourceType === IrisAudioSourceType.kAudioSourceTypeScreenCapture ||
       sourceType === IrisAudioSourceType.kAudioSourceTypeCustom ||
-      sourceType === IrisAudioSourceType.kAudioSourceTypeUnknown
+      sourceType === IrisAudioSourceType.kAudioSourceTypeUnknown ||
+      sourceType === IrisAudioSourceType.kAudioSourceTypeMicrophoneLoopbackTest
     );
   }
 

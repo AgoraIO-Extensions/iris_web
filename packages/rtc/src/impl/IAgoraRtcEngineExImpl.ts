@@ -349,7 +349,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         connection
       );
       irisClient.irisClientState.dataStreamConfig = config;
-      return this._engine.returnResult();
+      return this._engine.returnResult(
+        true,
+        0,
+        JSON.stringify({
+          result: 0,
+          streamId: 0,
+        })
+      );
     };
 
     return this._engine.execute(processFunc);

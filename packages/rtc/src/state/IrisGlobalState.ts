@@ -98,6 +98,9 @@ export class IrisGlobalState {
   enableAEC: boolean = false;
   enableANS: boolean = false;
   enableAGC: boolean = false;
+  enableAINS: boolean = false;
+  AINSprocessor: any;
+  AINSWasmPath: string;
 
   reset() {
     this.enabledAudio = true;

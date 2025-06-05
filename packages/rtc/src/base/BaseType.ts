@@ -16,6 +16,7 @@ export enum IrisAudioSourceType {
   kAudioSourceTypeBufferSourceAudio = 2005,
   kAudioSourceTypeRemote = 2006,
   kAudioSourceTypeUnknown = 2007,
+  kAudioSourceTypeMicrophoneLoopbackTest = 2008,
 }
 
 export interface IrisVideoFrameBufferConfig {

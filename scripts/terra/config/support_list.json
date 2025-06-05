@@ -125,6 +125,7 @@
   "RtcEngineEx_adjustUserPlaybackSignalVolumeEx",
   "RtcEngineEx_enableAudioVolumeIndicationEx",
   "RtcEngine_enableInEarMonitoring",
-  "RtcEngine_startAudioDeviceLoopbackTest",
-  "RtcEngine_stopAudioDeviceLoopbackTest"
+  "AudioDeviceManager_startAudioDeviceLoopbackTest",
+  "AudioDeviceManager_stopAudioDeviceLoopbackTest",
+  "RtcEngine_setAINSMode"
 ]

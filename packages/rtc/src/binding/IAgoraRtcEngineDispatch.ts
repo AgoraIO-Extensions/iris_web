@@ -4327,8 +4327,19 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   setAINSMode(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn('RtcEngine_setAINSMode not supported in this platform!');
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let enabled = obj.enabled;
+    if (enabled === undefined) {
+      AgoraConsole.error('enabled is undefined');
+      throw 'enabled is undefined';
+    }
+    let mode = obj.mode;
+    if (mode === undefined) {
+      AgoraConsole.error('mode is undefined');
+      throw 'mode is undefined';
+    }
+
+    return this._impl.setAINSMode(enabled, mode);
   }
 
   // @ts-ignore

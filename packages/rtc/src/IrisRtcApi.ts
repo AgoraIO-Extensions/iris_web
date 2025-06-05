@@ -43,6 +43,7 @@ declare global {
   interface Window {
     __AGORA_IRIS_CLIENT_MANAGER__: IrisClientManager;
     __AGORA_IRIS_VERSION__: string;
+    AIDenoiser: any;
   }
 }
 
