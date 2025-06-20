@@ -723,7 +723,7 @@ export class ImplHelper {
     for (let i = 0; i < keyList.length; i++) {
       switch (keyList[i]) {
         case 'che.audio.custom_channel_num':
-          irisClient.irisClientState.isStereo = json[keyList[i]] === 1;
+          irisClient.irisClientState.isStereo = json[keyList[i]] === 2;
           break;
         case 'che.audio.custom_bitrate':
           irisClient.irisClientState.bitrate = json[keyList[i]];

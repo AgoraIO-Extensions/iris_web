@@ -37,6 +37,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       irisClient.createClient(options);
       irisClient.irisClientState.token = token;
       let agoraRTCClient = irisClient.agoraRTCClient;
+
+      if (options.parameters) {
+        this._engine.implHelper.handleChannelMediaOptionsParameters(
+          options.parameters,
+          irisClient
+        );
+      }
+
       try {
         await agoraRTCClient!.join(
           this._engine.globalState.rtcEngineContext.appId!,
