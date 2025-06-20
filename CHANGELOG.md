@@ -1,5 +1,12 @@
 # IRIS_WEB
 
+## [0.9.1-rc.1](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.9...v0.9.1-rc.1) (2025-06-20)
+
+
+### Features
+
+* support audioframe and uploadLogfile ([#45](https://github.com/AgoraIO-Extensions/iris_web/issues/45)) ([3aa848c](https://github.com/AgoraIO-Extensions/iris_web/commit/3aa848c615775d8598b71fbe1c72c67499595549))
+
 ## [0.9.1](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.9...v0.9.1) (2025-05-21)
 
 
