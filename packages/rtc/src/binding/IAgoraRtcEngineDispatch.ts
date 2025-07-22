@@ -2710,10 +2710,19 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   setRemoteVideoStreamType_9e6406e(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_setRemoteVideoStreamType_9e6406e not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let streamType = obj.streamType;
+    if (streamType === undefined) {
+      AgoraConsole.error('streamType is undefined');
+      throw 'streamType is undefined';
+    }
+
+    return this._impl.setRemoteVideoStreamType_9e6406e(uid, streamType);
   }
 
   // @ts-ignore
@@ -4484,10 +4493,40 @@ export class IRtcEngineDispatch implements IRtcEngine {
 
   // @ts-ignore
   sendCustomReportMessage_56d6589(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngine_sendCustomReportMessage_56d6589 not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let id = obj.id;
+    if (id === undefined) {
+      AgoraConsole.error('id is undefined');
+      throw 'id is undefined';
+    }
+    let category = obj.category;
+    if (category === undefined) {
+      AgoraConsole.error('category is undefined');
+      throw 'category is undefined';
+    }
+    let event = obj.event;
+    if (event === undefined) {
+      AgoraConsole.error('event is undefined');
+      throw 'event is undefined';
+    }
+    let label = obj.label;
+    if (label === undefined) {
+      AgoraConsole.error('label is undefined');
+      throw 'label is undefined';
+    }
+    let value = obj.value;
+    if (value === undefined) {
+      AgoraConsole.error('value is undefined');
+      throw 'value is undefined';
+    }
+
+    return this._impl.sendCustomReportMessage_56d6589(
+      id,
+      category,
+      event,
+      label,
+      value
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore

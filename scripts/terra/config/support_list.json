@@ -46,6 +46,8 @@
   "RtcEngine_stopEffect_46f8ab7",
   "RtcEngine_playEffect_531a783",
   "RtcEngine_stopAllEffects",
+  "RtcEngine_sendCustomReportMessage_56d6589",
+  "RtcEngine_setRemoteVideoStreamType_9e6406e",
   "RtcEngine_setLocalRenderMode_bedb5ae",
   "RtcEngine_setLocalRenderMode_cfb201b",
   "RtcEngine_setLocalVideoMirrorMode_b8a6c69",

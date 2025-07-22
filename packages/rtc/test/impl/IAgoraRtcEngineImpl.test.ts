@@ -1130,4 +1130,54 @@ describe('IAgoraRtcEngineImpl', () => {
         .mirror
     ).toBe(true);
   });
+  test('setRemoteVideoStreamType_9e6406e', async () => {
+    let param = {
+      uid: TEST_REMOTE_UID,
+      streamType: NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH,
+    };
+    await joinChannel(apiEnginePtr, null);
+
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClient();
+
+    jest.spyOn(irisClient?.agoraRTCClient!, 'setRemoteVideoStreamType');
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_setRemoteVideoStreamType_9e6406e',
+      param
+    );
+    expect(
+      irisClient?.agoraRTCClient?.setRemoteVideoStreamType
+    ).toHaveBeenCalledWith(
+      param.uid,
+      AgoraTranslate.NATIVE_RTC_VIDEO_STREAM_TYPE2Number(param.streamType)
+    );
+  });
+  test('sendCustomReportMessage_56d6589', async () => {
+    let param = {
+      id: '1',
+      category: 'test',
+      event: 'test',
+      label: 'test',
+      value: 1,
+    };
+    await joinChannel(apiEnginePtr, null);
+
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClient();
+
+    jest.spyOn(irisClient?.agoraRTCClient!, 'sendCustomReportMessage');
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_sendCustomReportMessage_56d6589',
+      param
+    );
+    expect(
+      irisClient?.agoraRTCClient?.sendCustomReportMessage
+    ).toHaveBeenCalledWith({
+      reportId: param.id,
+      category: param.category,
+      event: param.event,
+      label: param.label,
+      value: param.value,
+    });
+  });
 });
