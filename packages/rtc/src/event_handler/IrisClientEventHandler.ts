@@ -313,6 +313,9 @@ export class IrisClientEventHandler {
                 channelId,
                 {
                   buffer: byteArray,
+                  samplesPerChannel: length / buffer.numberOfChannels,
+                  channels: buffer.numberOfChannels,
+                  samplesPerSec: buffer.sampleRate * buffer.numberOfChannels,
                 }
               );
             }, this._engine.globalState.audioFrameParameters.samplesPerCall);

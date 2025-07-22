@@ -1258,4 +1258,67 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     };
     return this._engine.execute(fun);
   }
+
+  setRemoteVideoStreamType_9e6406e(
+    uid: number,
+    streamType: NATIVE_RTC.VIDEO_STREAM_TYPE
+  ): CallApiReturnType {
+    let fun = async () => {
+      try {
+        for (
+          let i = 0;
+          i < this._engine.irisClientManager.irisClientList.length;
+          i++
+        ) {
+          let irisClient = this._engine.irisClientManager.irisClientList[i];
+          let agoraRTCClient = irisClient.agoraRTCClient;
+          if (
+            agoraRTCClient &&
+            agoraRTCClient.remoteUsers.filter((user) => {
+              return user.uid === uid;
+            }).length > 0
+          ) {
+            await agoraRTCClient.setRemoteVideoStreamType(
+              uid,
+              AgoraTranslate.NATIVE_RTC_VIDEO_STREAM_TYPE2Number(streamType)
+            );
+          }
+        }
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  sendCustomReportMessage_56d6589(
+    id: string,
+    category: string,
+    event: string,
+    label: string,
+    value: number
+  ): CallApiReturnType {
+    let fun = async () => {
+      try {
+        let agoraRTCClient = this._engine.irisClientManager.getIrisClient()
+          .agoraRTCClient;
+        if (agoraRTCClient) {
+          await agoraRTCClient.sendCustomReportMessage({
+            reportId: id,
+            category: category,
+            event: event,
+            label: label,
+            value: value,
+          });
+        }
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
 }

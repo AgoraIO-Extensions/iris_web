@@ -536,4 +536,29 @@ export class AgoraTranslate {
         return 'fill';
     }
   }
+
+  public static NATIVE_RTC_VIDEO_STREAM_TYPE2Number(
+    type: NATIVE_RTC.VIDEO_STREAM_TYPE
+  ): number {
+    switch (type) {
+      case NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_HIGH:
+        return RemoteStreamType.HIGH_STREAM;
+      case NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_LOW:
+        return RemoteStreamType.LOW_STREAM;
+      case NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_LAYER_1:
+        return RemoteStreamType.HIGH_STREAM_LAYER1;
+      case NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_LAYER_2:
+        return RemoteStreamType.HIGH_STREAM_LAYER2;
+      case NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_LAYER_3:
+        return RemoteStreamType.HIGH_STREAM_LAYER3;
+      case NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_LAYER_4:
+        return RemoteStreamType.HIGH_STREAM_LAYER4;
+      case NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_LAYER_5:
+        return RemoteStreamType.HIGH_STREAM_LAYER5;
+      case NATIVE_RTC.VIDEO_STREAM_TYPE.VIDEO_STREAM_LAYER_6:
+        return RemoteStreamType.HIGH_STREAM_LAYER6;
+      default:
+        return RemoteStreamType.HIGH_STREAM;
+    }
+  }
 }
