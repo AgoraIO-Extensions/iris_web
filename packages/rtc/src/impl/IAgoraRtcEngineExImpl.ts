@@ -489,6 +489,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
           connection
         );
+        irisClient.irisClientState.playbackVolume = volume;
         if (irisClient) {
           let user = irisClient.agoraRTCClient?.remoteUsers.find(
             (item) => item.uid === uid
@@ -515,6 +516,7 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
           connection
         );
+        irisClient.irisClientState.microphoneVolume = volume;
         irisClient?.audioTrackPackages.map((audioTrackPackage) => {
           if (
             audioTrackPackage.track &&

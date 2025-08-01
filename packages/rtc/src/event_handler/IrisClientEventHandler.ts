@@ -178,11 +178,11 @@ export class IrisClientEventHandler {
       this._engine.rtcEngineEventHandler.onUserInfoUpdated(_uintid, userInfo);
       this._engine.irisClientManager.addUserInfo(userInfo);
     }
-    let userPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      remoteUid
+    let userPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
+      connection
     );
-    if (!userPackage) {
-      userPackage = new RemoteUserPackage(
+    if (userPackages.length == 0) {
+      let userPackage = new RemoteUserPackage(
         connection,
         '',
         defaultRemoteVideoPlayerConfig,
@@ -195,7 +195,9 @@ export class IrisClientEventHandler {
         this.agoraRTCClient
       );
     } else {
-      userPackage.uid = remoteUid;
+      userPackages.forEach((userPackage) => {
+        userPackage.uid = remoteUid;
+      });
     }
     this._engine.rtcEngineEventHandler.onRemoteAudioStateChangedEx(
       this._irisClient.connection,

@@ -232,6 +232,12 @@ export class ImplHelper {
           this._engine.globalState.playbackDeviceId
         );
       }
+      if (irisClient) {
+        this._engine.trackHelper.setVolume(
+          audioTrack,
+          irisClient.irisClientState.microphoneVolume
+        );
+      }
     } catch (e) {
       AgoraConsole.error('createMicrophoneAudioTrack failed');
       throw e;
@@ -256,13 +262,33 @@ export class ImplHelper {
           NotifyType.UNPUBLISH_TRACK,
           [audioTrackPackage]
         );
+        await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+          NotifyType.REMOVE_TRACK,
+          [audioTrackPackage]
+        );
         let audioTrack: IMicrophoneAudioTrack;
         audioTrack = await this.createMicrophoneAudioTrack(irisClient);
+        let newAudioTrackPackage = new AudioTrackPackage(
+          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
+          audioTrack
+        );
+        this._engine.irisClientManager.addLocalAudioTrackPackage(
+          newAudioTrackPackage
+        );
+        this._engine.trackHelper.setVolume(
+          audioTrack,
+          irisClient.irisClientState.microphoneVolume
+        );
+        if (this._engine.globalState.AINSprocessor) {
+          audioTrack
+            .pipe(this._engine.globalState.AINSprocessor)
+            .pipe(audioTrack.processorDestination);
+          newAudioTrackPackage.hasPipe = true;
+        }
         await this._engine.trackHelper.setEnabled(
           audioTrack as ILocalAudioTrack,
           true
         );
-        audioTrackPackage.track = audioTrack;
         if (
           irisClient.irisClientState.clientRoleType ===
             NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER &&
@@ -271,7 +297,7 @@ export class ImplHelper {
         ) {
           await this._engine.irisClientManager.irisClientObserver.notifyLocal(
             NotifyType.PUBLISH_TRACK,
-            [audioTrackPackage]
+            [newAudioTrackPackage]
           );
         }
       }

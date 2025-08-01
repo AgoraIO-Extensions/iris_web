@@ -136,6 +136,9 @@ export class IrisClientState {
     reportVad: false,
   };
 
+  microphoneVolume: number = 100;
+  playbackVolume: number = 100;
+
   //setPlaybackDevice: audiDevice
   playbackDeviceId: string = '';
   //setRecordingDevice: recordingDevice
