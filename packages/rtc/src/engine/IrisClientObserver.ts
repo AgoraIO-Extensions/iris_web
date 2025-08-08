@@ -376,6 +376,10 @@ export class IrisClientObserver {
       await irisClient.agoraRTCClient.subscribe(user, 'audio').then(() => {
         AgoraConsole.debug('onEventUserPublished subscribe audio success');
         this._engine.trackHelper.play(user!.audioTrack!);
+        this._engine.trackHelper.setVolume(
+          user!.audioTrack!,
+          irisClient.irisClientState.playbackVolume
+        );
         let param: IrisTrackEventHandlerParam = {
           client: irisClient.agoraRTCClient,
           remoteUser: user!,
