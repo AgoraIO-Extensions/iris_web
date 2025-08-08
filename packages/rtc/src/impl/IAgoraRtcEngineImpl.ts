@@ -1073,6 +1073,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               let denoiser = new window.AIDenoiser.AIDenoiserExtension({
                 assetsPath: this._engine.globalState.AINSWasmPath,
               });
+              denoiser.parameters.ADJUST_3A_FROM_PLUGINS = false;
 
               if (!denoiser.checkCompatibility()) {
                 AgoraConsole.error('Does not support AI Denoiser!');
