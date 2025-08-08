@@ -1,5 +1,12 @@
 # IRIS_WEB
 
+## [0.9.1-rc.2](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.9.1-rc.1...v0.9.1-rc.2) (2025-08-01)
+
+
+### Bug Fixes
+
+* onuserjoin ([fd5eb6c](https://github.com/AgoraIO-Extensions/iris_web/commit/fd5eb6c6e9fbc6efb8472d71e3ef13431cec2bcf))
+
 ## [0.9.1-rc.1](https://github.com/AgoraIO-Extensions/iris_web/compare/v0.8.9...v0.9.1-rc.1) (2025-06-20)
 
 
