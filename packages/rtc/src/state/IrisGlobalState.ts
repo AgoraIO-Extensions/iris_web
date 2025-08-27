@@ -99,7 +99,7 @@ export class IrisGlobalState {
   enableANS: boolean = false;
   enableAGC: boolean = false;
   enableAINS: boolean = false;
-  AINSprocessor: any;
+  AIDenoiser: any;
   AINSWasmPath: string;
 
   reset() {

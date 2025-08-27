@@ -56,7 +56,7 @@ export class ImplHelper {
       bufferSourceAudioTrack!,
       soundId
     );
-    this._engine.irisClientManager.addLocalAudioTrackPackage(
+    await this._engine.irisClientManager.addLocalAudioTrackPackage(
       bufferSourceAudioTrackPackage
     );
 
@@ -160,7 +160,7 @@ export class ImplHelper {
             IrisAudioSourceType.kAudioSourceTypeScreenCapture,
             audioTrack
           );
-          this._engine.irisClientManager.addLocalAudioTrackPackage(
+          await this._engine.irisClientManager.addLocalAudioTrackPackage(
             audioTrackPackage
           );
         }
@@ -272,19 +272,13 @@ export class ImplHelper {
           IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
           audioTrack
         );
-        this._engine.irisClientManager.addLocalAudioTrackPackage(
+        await this._engine.irisClientManager.addLocalAudioTrackPackage(
           newAudioTrackPackage
         );
         this._engine.trackHelper.setVolume(
           audioTrack,
           irisClient.irisClientState.microphoneVolume
         );
-        if (this._engine.globalState.AINSprocessor) {
-          audioTrack
-            .pipe(this._engine.globalState.AINSprocessor)
-            .pipe(audioTrack.processorDestination);
-          newAudioTrackPackage.hasPipe = true;
-        }
         await this._engine.trackHelper.setEnabled(
           audioTrack as ILocalAudioTrack,
           true
@@ -671,7 +665,7 @@ export class ImplHelper {
         let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack(
           irisClient
         );
-        this._engine.irisClientManager.addLocalAudioTrackPackage(
+        await this._engine.irisClientManager.addLocalAudioTrackPackage(
           new AudioTrackPackage(
             IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
             audioTrack

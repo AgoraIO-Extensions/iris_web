@@ -188,7 +188,7 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
         let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack(
           this._engine.irisClientManager.getIrisClient()
         );
-        this._engine.irisClientManager.addLocalAudioTrackPackage(
+        await this._engine.irisClientManager.addLocalAudioTrackPackage(
           new AudioTrackPackage(
             IrisAudioSourceType.kAudioSourceTypeMicrophoneLoopbackTest,
             audioTrack

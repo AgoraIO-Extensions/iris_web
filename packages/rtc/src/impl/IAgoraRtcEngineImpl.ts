@@ -537,7 +537,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           )[0]
         ) {
           let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack();
-          this._engine.irisClientManager.addLocalAudioTrackPackage(
+          await this._engine.irisClientManager.addLocalAudioTrackPackage(
             new AudioTrackPackage(
               IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
               audioTrack
@@ -969,30 +969,30 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       if (enabled) {
-        if (!this._engine.globalState.AINSprocessor) {
+        if (!this._engine.globalState.AIDenoiser) {
           AgoraConsole.error(
-            'AINSprocessor not found, please set it first by use engine.setParameters'
+            'AIDenoiser not found, please set it first by use engine.setParameters'
           );
           return this._engine.returnResult(false);
         }
-
-        this._engine.irisClientManager.localAudioTrackPackages.map(
-          (audioTrackPackage) => {
-            let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
-            if (!audioTrackPackage.hasPipe) {
-              audioTrack
-                .pipe(this._engine.globalState.AINSprocessor)
-                .pipe(audioTrack.processorDestination);
-              audioTrackPackage.hasPipe = true;
+      }
+      this._engine.irisClientManager.localAudioTrackPackages.map(
+        async (audioTrackPackage) => {
+          let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
+          if (!audioTrackPackage.AINSprocessor) {
+            let AINSprocessor = this._engine.globalState.AIDenoiser.createProcessor();
+            audioTrack
+              .pipe(AINSprocessor)
+              .pipe(audioTrack.processorDestination);
+            audioTrackPackage.AINSprocessor = AINSprocessor;
+            if (enabled) {
+              await AINSprocessor.enable();
+            } else {
+              await AINSprocessor.disable();
             }
           }
-        );
-
-        this._engine.globalState.AINSprocessor.enable();
-      } else {
-        //if already enabled, need uninstall extension
-        await this._engine.globalState.AINSprocessor.disable();
-      }
+        }
+      );
       this._engine.globalState.enableAINS = enabled;
 
       return this._engine.returnResult();
@@ -1045,8 +1045,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               this._engine.globalState.enableAGC = json[keyList[i]];
 
               this._engine.irisClientManager.irisClientList.map(
-                (irisClient) => {
-                  this._engine.implHelper.reGenMicrophoneAudioTrack(irisClient);
+                async (irisClient) => {
+                  await this._engine.implHelper.reGenMicrophoneAudioTrack(
+                    irisClient
+                  );
                 }
               );
 
@@ -1054,40 +1056,46 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             case 'che.audio.aec.enable':
               this._engine.globalState.enableAEC = json[keyList[i]];
               this._engine.irisClientManager.irisClientList.map(
-                (irisClient) => {
-                  this._engine.implHelper.reGenMicrophoneAudioTrack(irisClient);
+                async (irisClient) => {
+                  await this._engine.implHelper.reGenMicrophoneAudioTrack(
+                    irisClient
+                  );
                 }
               );
               break;
             case 'che.audio.ans.enable':
               this._engine.globalState.enableANS = json[keyList[i]];
               this._engine.irisClientManager.irisClientList.map(
-                (irisClient) => {
-                  this._engine.implHelper.reGenMicrophoneAudioTrack(irisClient);
+                async (irisClient) => {
+                  await this._engine.implHelper.reGenMicrophoneAudioTrack(
+                    irisClient
+                  );
                 }
               );
               break;
             case 'iris.web.ains.assets_path':
+              (this._engine.globalState.AgoraRTC as any).setParameter(
+                'WEBAUDIO_INIT_OPTIONS',
+                {
+                  latencyHint: 0.03,
+                  sampleRate: 48000,
+                }
+              );
               this._engine.globalState.AINSWasmPath = json[keyList[i]];
 
               let denoiser = new window.AIDenoiser.AIDenoiserExtension({
                 assetsPath: this._engine.globalState.AINSWasmPath,
+                fetchOptions: { cache: 'no-cache' },
               });
               denoiser.parameters.ADJUST_3A_FROM_PLUGINS = false;
-
               if (!denoiser.checkCompatibility()) {
                 AgoraConsole.error('Does not support AI Denoiser!');
                 return this._engine.returnResult(false);
               }
 
               this._engine.globalState.AgoraRTC.registerExtensions([denoiser]);
+              this._engine.globalState.AIDenoiser = denoiser;
 
-              denoiser.onloaderror = (e: any) => {
-                AgoraConsole.error(e);
-                this._engine.globalState.AINSprocessor = null;
-              };
-
-              this._engine.globalState.AINSprocessor = denoiser.createProcessor();
               break;
             default:
               (this._engine.globalState.AgoraRTC as any).setParameter(
@@ -1378,7 +1386,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           audioTag.play();
           audioTag.setSinkId(this._engine.globalState.playbackDeviceId);
 
-          this._engine.irisClientManager.addLocalAudioTrackPackage(
+          await this._engine.irisClientManager.addLocalAudioTrackPackage(
             new AudioTrackPackage(
               IrisAudioSourceType.kAudioSourceTypeMicrophoneLoopbackTest,
               audioTrack

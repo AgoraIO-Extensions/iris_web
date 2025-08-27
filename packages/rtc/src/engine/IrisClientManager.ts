@@ -98,16 +98,18 @@ export class AudioTrackPackage {
     | IMicrophoneAudioTrack
     | ILocalTrack;
   irisClient: IrisClient;
-  hasPipe: boolean = false;
+  AINSprocessor?: any;
 
   constructor(
     type: IrisAudioSourceType,
     track: ILocalAudioTrack | IRemoteAudioTrack,
-    hasPipe: boolean = false
+    AINSprocessor?: any
   ) {
     this.type = type;
     this.track = track;
-    this.hasPipe = hasPipe;
+    if (AINSprocessor) {
+      this.AINSprocessor = AINSprocessor;
+    }
   }
 
   dispose() {
@@ -115,6 +117,11 @@ export class AudioTrackPackage {
       if (this.track) {
         if (this.track.isPlaying) {
           this.track.stop();
+        }
+        if (this.AINSprocessor) {
+          (this.track as ILocalAudioTrack).unpipe();
+          this.AINSprocessor.unpipe();
+          this.AINSprocessor.destroy();
         }
         (this.track as ILocalTrack).close();
       }
@@ -225,9 +232,16 @@ export class IrisClientManager {
     });
   }
 
-  addLocalAudioTrackPackage(audioTrackPackage: MultiAudioTrackPackage) {
+  async addLocalAudioTrackPackage(audioTrackPackage: MultiAudioTrackPackage) {
     this.localAudioTrackPackages.push(audioTrackPackage);
     this.irisClientObserver.addAudioTrackPackageObserver(audioTrackPackage);
+    let track = audioTrackPackage.track as ILocalAudioTrack;
+    if (this._engine.globalState.enableAINS) {
+      let AINSprocessor = this._engine.globalState.AIDenoiser.createProcessor();
+      track.pipe(AINSprocessor).pipe(track.processorDestination);
+      audioTrackPackage.AINSprocessor = AINSprocessor;
+      await AINSprocessor.enable();
+    }
   }
 
   getLocalAudioTrackPackageBySourceType(

@@ -32,25 +32,13 @@ export class TrackHelper {
       } else {
         track?.play(element);
       }
-    } catch (e) {
-      AgoraConsole.error(e);
-      Promise.resolve(
-        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-      );
-      throw e;
-    }
+    } catch (e) {}
   }
 
   public stop(track: ITrack): void {
     try {
       track?.stop();
-    } catch (e) {
-      AgoraConsole.error(e);
-      Promise.resolve(
-        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-      );
-      throw e;
-    }
+    } catch (e) {}
   }
 
   public async setEnabled(track: ILocalTrack, enabled: boolean): Promise<void> {
@@ -58,26 +46,14 @@ export class TrackHelper {
       if (track && !track.muted) {
         await track?.setEnabled(enabled);
       }
-    } catch (e) {
-      AgoraConsole.error(e);
-      Promise.resolve(
-        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-      );
-      throw e;
-    }
+    } catch (e) {}
   }
   public async setMuted(track: ILocalTrack, enabled: boolean): Promise<void> {
     try {
       if (track?.enabled) {
         await track?.setMuted(enabled);
       }
-    } catch (e) {
-      AgoraConsole.error(e);
-      Promise.resolve(
-        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-      );
-      throw e;
-    }
+    } catch (e) {}
   }
   public async setDevice(
     track: ICameraVideoTrack | IMicrophoneAudioTrack,
