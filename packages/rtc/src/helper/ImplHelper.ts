@@ -232,6 +232,12 @@ export class ImplHelper {
           this._engine.globalState.playbackDeviceId
         );
       }
+      if (this._engine.globalState.recordingDeviceId) {
+        await this._engine.trackHelper.setDevice(
+          audioTrack,
+          this._engine.globalState.recordingDeviceId
+        );
+      }
       if (irisClient) {
         this._engine.trackHelper.setVolume(
           audioTrack,
