@@ -225,7 +225,6 @@ export class ImplHelper {
       audioTrack = await this._engine.globalState.AgoraRTC.createMicrophoneAudioTrack(
         config
       );
-      await this._engine.trackHelper.setEnabled(audioTrack, false);
       if (this._engine.globalState.playbackDeviceId) {
         await this._engine.trackHelper.setPlaybackDevice(
           audioTrack,
@@ -286,10 +285,6 @@ export class ImplHelper {
             audioTrack,
             irisClient.irisClientState.microphoneVolume
           );
-          await this._engine.trackHelper.setEnabled(
-            audioTrack as ILocalAudioTrack,
-            true
-          );
           if (
             irisClient.irisClientState.clientRoleType ===
               NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER &&
@@ -313,7 +308,6 @@ export class ImplHelper {
     let videoTrack: ICameraVideoTrack;
     try {
       videoTrack = await this._engine.globalState.AgoraRTC.createCameraVideoTrack();
-      await this._engine.trackHelper.setEnabled(videoTrack, false);
     } catch (e) {
       AgoraConsole.error('createCameraVideoTrack failed');
       throw e;

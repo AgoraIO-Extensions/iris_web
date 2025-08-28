@@ -976,23 +976,36 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           return this._engine.returnResult(false);
         }
       }
-      this._engine.irisClientManager.localAudioTrackPackages.map(
-        async (audioTrackPackage) => {
-          let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
+
+      for (
+        let i = 0;
+        i < this._engine.irisClientManager.localAudioTrackPackages.length;
+        i++
+      ) {
+        let audioTrackPackage = this._engine.irisClientManager
+          .localAudioTrackPackages[i];
+        let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
+
+        if (enabled) {
           if (!audioTrackPackage.AINSprocessor) {
             let AINSprocessor = this._engine.globalState.AIDenoiser.createProcessor();
             audioTrack
               .pipe(AINSprocessor)
               .pipe(audioTrack.processorDestination);
             audioTrackPackage.AINSprocessor = AINSprocessor;
-            if (enabled) {
-              await AINSprocessor.enable();
-            } else {
-              await AINSprocessor.disable();
-            }
+            await AINSprocessor.enable();
+          } else {
+            await audioTrackPackage.AINSprocessor.enable();
+          }
+        } else {
+          if (audioTrackPackage.AINSprocessor) {
+            await audioTrackPackage.AINSprocessor.disable();
+          } else {
+            //do nothing
           }
         }
-      );
+      }
+
       this._engine.globalState.enableAINS = enabled;
 
       return this._engine.returnResult();

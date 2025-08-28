@@ -178,27 +178,18 @@ export class IrisClientEventHandler {
       this._engine.rtcEngineEventHandler.onUserInfoUpdated(_uintid, userInfo);
       this._engine.irisClientManager.addUserInfo(userInfo);
     }
-    let userPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
-      connection
+    let userPackage = new RemoteUserPackage(
+      connection,
+      '',
+      defaultRemoteVideoPlayerConfig,
+      remoteUid,
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
+      IrisAudioSourceType.kAudioSourceTypeRemote
     );
-    if (userPackages.length == 0) {
-      let userPackage = new RemoteUserPackage(
-        connection,
-        '',
-        defaultRemoteVideoPlayerConfig,
-        remoteUid,
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
-        IrisAudioSourceType.kAudioSourceTypeRemote
-      );
-      this._engine.irisClientManager.addRemoteUserPackage(
-        userPackage,
-        this.agoraRTCClient
-      );
-    } else {
-      userPackages.forEach((userPackage) => {
-        userPackage.uid = remoteUid;
-      });
-    }
+    this._engine.irisClientManager.addRemoteUserPackage(
+      userPackage,
+      this.agoraRTCClient
+    );
     this._engine.rtcEngineEventHandler.onRemoteAudioStateChangedEx(
       this._irisClient.connection,
       remoteUid,

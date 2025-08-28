@@ -188,28 +188,42 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   ): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
       if (isDefined(canvas.uid) && isDefined(canvas.view)) {
-        let remoteUserPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
-          canvas.uid
+        let remoteUserPackages = this._engine.irisClientManager.remoteUserPackages.filter(
+          (remoteUserPackage) => {
+            return remoteUserPackage.uid == canvas.uid;
+          }
         );
-        if (remoteUserPackage) {
-          remoteUserPackage.element = canvas.view;
-        }
-        let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
-          connection
-        );
-        if (irisClient) {
-          let remoteUser = irisClient.agoraRTCClient?.remoteUsers.find(
-            (user) => user.uid === canvas.uid
+        if (remoteUserPackages.length > 0) {
+          remoteUserPackages = remoteUserPackages.filter(
+            (remoteUserPackage) => {
+              return (
+                remoteUserPackage.connection.channelId == connection.channelId
+              );
+            }
           );
-          // subscribe video maybe called before setupVideo, so we need to play video here too
-          if (remoteUser && remoteUser.videoTrack) {
-            this._engine.trackHelper.play(
-              remoteUser.videoTrack!,
-              remoteUserPackage.element,
-              remoteUserPackage.videoPlayerConfig
+        }
+
+        for (let i = 0; i < remoteUserPackages.length; i++) {
+          let remoteUserPackage = remoteUserPackages[i];
+          remoteUserPackage.element = canvas.view;
+          let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+            connection
+          );
+          if (irisClient) {
+            let remoteUser = irisClient.agoraRTCClient?.remoteUsers.find(
+              (user) => user.uid === canvas.uid
             );
+            // subscribe video maybe called before setupVideo, so we need to play video here too
+            if (remoteUser && remoteUser.videoTrack) {
+              this._engine.trackHelper.play(
+                remoteUser.videoTrack!,
+                remoteUserPackage.element,
+                remoteUserPackage.videoPlayerConfig
+              );
+            }
           }
         }
+
         return this._engine.returnResult();
       } else {
         return this._engine.returnResult(
