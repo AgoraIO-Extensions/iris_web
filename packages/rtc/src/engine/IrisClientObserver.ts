@@ -221,7 +221,7 @@ export class IrisClientObserver {
       if (!irisClient) {
         irisClient = irisClientManager.irisClientList[0];
       }
-      this.unpublishTrack(trackPackage);
+      await this.unpublishTrack(trackPackage);
       if (this._engine.implHelper.isAudio(trackPackage.type!)) {
         await irisClientManager.processAudioTrackClose(
           trackPackage as AudioTrackPackage

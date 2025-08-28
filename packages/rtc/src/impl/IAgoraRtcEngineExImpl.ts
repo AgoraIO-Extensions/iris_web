@@ -1,9 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import {
-  ILocalAudioTrack,
-  IMicrophoneAudioTrack,
-  VideoPlayerConfig,
-} from 'agora-rtc-sdk-ng';
+import { ILocalAudioTrack, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
 import { IrisAudioSourceType } from '../base/BaseType';
@@ -123,25 +119,27 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         connection
       );
 
+      let audioTrackPackages = this._engine.irisClientManager.getLocalAudioTrackPackageByConnection(
+        irisClient.connection
+      );
+
+      let videoTrackPackages = this._engine.irisClientManager.getLocalVideoTrackPackageByConnection(
+        irisClient.connection
+      );
+
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         NotifyType.UNPUBLISH_TRACK,
-        [
-          ...this._engine.irisClientManager.localAudioTrackPackages,
-          ...this._engine.irisClientManager.localVideoTrackPackages,
-        ]
+        [...audioTrackPackages, ...videoTrackPackages]
+      );
+
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        NotifyType.REMOVE_TRACK,
+        [...audioTrackPackages, ...videoTrackPackages]
       );
 
       let agoraRTCClient = irisClient?.agoraRTCClient;
       if (agoraRTCClient) {
         //读取 options
-        for (let trackPackage of irisClient.audioTrackPackages) {
-          if (trackPackage.track) {
-            let track = trackPackage.track as IMicrophoneAudioTrack;
-            if (options.stopMicrophoneRecording) {
-              await this._engine.trackHelper.setMuted(track, true);
-            }
-          }
-        }
         if (options.stopAllEffect) {
           this._engine.getImplInstance('RtcEngine').stopAllEffects();
         }
