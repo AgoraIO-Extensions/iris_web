@@ -340,7 +340,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       try {
         let track = videoTrackPackage?.track as ILocalVideoTrack;
         if (track) {
-          await this._engine.trackHelper.setEnabled(track, true);
           if (videoTrackPackage.element) {
             this._engine.trackHelper.play(
               track,
@@ -464,8 +463,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       let track = trackPackage.track as ILocalVideoTrack;
       if (track) {
-        await this._engine.trackHelper.setEnabled(track, true);
-
         if (trackPackage.element && trackPackage.isPreview) {
           this._engine.trackHelper.play(
             track,

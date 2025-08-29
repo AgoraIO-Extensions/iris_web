@@ -673,10 +673,6 @@ export class ImplHelper {
             audioTrack
           )
         );
-        await this._engine.trackHelper.setEnabled(
-          audioTrack as ILocalAudioTrack,
-          true
-        );
       }
     }
 

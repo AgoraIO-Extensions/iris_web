@@ -221,15 +221,20 @@ export class IrisClientEventHandler {
     user: IAgoraRTCRemoteUser,
     reason: string
   ): Promise<void> {
+    let connection: NATIVE_RTC.RtcConnection = {
+      channelId: this.agoraRTCClient.channelName,
+      localUid: this.agoraRTCClient.uid as number,
+    };
     let remoteUid: number = getUidFromRemoteUser(user);
-    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      remoteUid
+    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUidAndConnection(
+      remoteUid,
+      connection
     );
     let reason2 = AgoraTranslate.string2NATIVE_RTCUSER_OFFLINE_REASON_TYPE(
       reason
     );
     this._engine.rtcEngineEventHandler.onUserOfflineEx(
-      this._irisClient.connection,
+      connection,
       remoteUid,
       reason2
     );
@@ -244,10 +249,13 @@ export class IrisClientEventHandler {
       [remoteUser]
     );
     await this._engine.irisClientManager.irisClientObserver.notifyRemote(
-      NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
+      NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK,
       [remoteUser]
     );
-    this._engine.irisClientManager.removeRemoteUserPackage(user.uid as number);
+    this._engine.irisClientManager.removeRemoteUserPackageByUidAndConnection(
+      remoteUid,
+      connection
+    );
     this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
       user,
       'all'
@@ -258,10 +266,15 @@ export class IrisClientEventHandler {
     user: IAgoraRTCRemoteUser,
     mediaType: 'audio' | 'video'
   ): Promise<void> {
+    let connection: NATIVE_RTC.RtcConnection = {
+      channelId: this.agoraRTCClient.channelName,
+      localUid: this.agoraRTCClient.uid as number,
+    };
     let remoteUid: number = getUidFromRemoteUser(user);
     let isLocal = user.uid === this.agoraRTCClient.uid;
-    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      remoteUid
+    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUidAndConnection(
+      remoteUid,
+      connection
     );
     if (remoteUser) {
       if (mediaType == 'audio') {
@@ -337,10 +350,16 @@ export class IrisClientEventHandler {
     user: IAgoraRTCRemoteUser,
     mediaType: 'audio' | 'video'
   ): Promise<void> {
+    let connection: NATIVE_RTC.RtcConnection = {
+      channelId: this.agoraRTCClient.channelName,
+      localUid: this.agoraRTCClient.uid as number,
+    };
     let remoteUid: number = getUidFromRemoteUser(user);
-    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      remoteUid
+    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUidAndConnection(
+      remoteUid,
+      connection
     );
+
     if (remoteUser) {
       if (mediaType == 'audio') {
         await this._engine.irisClientManager.irisClientObserver.notifyRemote(

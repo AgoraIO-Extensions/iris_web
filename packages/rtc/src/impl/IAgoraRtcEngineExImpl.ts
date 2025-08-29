@@ -79,10 +79,6 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
               audioTrack
             )
           );
-          await this._engine.trackHelper.setEnabled(
-            audioTrack as ILocalAudioTrack,
-            true
-          );
         }
       }
 

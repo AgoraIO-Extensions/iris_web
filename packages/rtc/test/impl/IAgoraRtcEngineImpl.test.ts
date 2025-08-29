@@ -532,6 +532,8 @@ describe('IAgoraRtcEngineImpl', () => {
         sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
       },
     };
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
     await callIris(apiEnginePtr, 'RtcEngine_setupLocalVideo', param);
     expect(irisRtcEngine.irisClientManager.localVideoTrackPackages.length).toBe(
       1

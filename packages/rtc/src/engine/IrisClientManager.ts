@@ -305,6 +305,18 @@ export class IrisClientManager {
     });
   }
 
+  getRemoteUserPackageByUidAndConnection(
+    uid: number,
+    connection: NATIVE_RTC.RtcConnection
+  ): RemoteUserPackage {
+    return this.remoteUserPackages.filter((remoteUserPackage) => {
+      return (
+        remoteUserPackage.uid == uid &&
+        remoteUserPackage.connection?.channelId == connection.channelId
+      );
+    })[0];
+  }
+
   addRemoteUserPackage(
     remoteUserPackage: RemoteUserPackage,
     agoraRTCClient: IAgoraRTCClient
@@ -337,6 +349,27 @@ export class IrisClientManager {
     for (let i = 0; i < this.remoteUserPackages.length; i++) {
       let userPackage = this.remoteUserPackages[i];
       if (userPackage.uid == uid) {
+        this.remoteUserPackages.splice(i, 1);
+        i--;
+        this.irisClientObserver.removeRemoteUserPackageObserver(userPackage);
+        this._engine.removeIrisIntervalByUid(uid);
+        userPackage.dispose();
+
+        break;
+      }
+    }
+  }
+
+  removeRemoteUserPackageByUidAndConnection(
+    uid: number,
+    connection: NATIVE_RTC.RtcConnection
+  ) {
+    for (let i = 0; i < this.remoteUserPackages.length; i++) {
+      let userPackage = this.remoteUserPackages[i];
+      if (
+        userPackage.uid == uid &&
+        userPackage.connection?.channelId == connection.channelId
+      ) {
         this.remoteUserPackages.splice(i, 1);
         i--;
         this.irisClientObserver.removeRemoteUserPackageObserver(userPackage);
