@@ -76,11 +76,7 @@ export class TrackHelper {
     try {
       await track?.setPlaybackDevice(deviceId);
     } catch (e) {
-      AgoraConsole.error(e);
-      Promise.resolve(
-        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-      );
-      throw e;
+      //
     }
   }
 
