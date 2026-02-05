@@ -23,6 +23,7 @@ import { NotifyType } from '../engine/IrisClientObserver';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { IrisTrackEventHandler } from '../event_handler/IrisTrackEventHandler';
+import { IRtcEngineExImpl } from '../impl/IAgoraRtcEngineExImpl';
 import { IRtcEngineImpl } from '../impl/IAgoraRtcEngineImpl';
 
 import { IrisGlobalState } from '../state/IrisGlobalState';
@@ -244,7 +245,11 @@ export class ImplHelper {
         );
       }
     } catch (e) {
-      AgoraConsole.error('createMicrophoneAudioTrack failed');
+      this._engine.rtcEngineEventHandler.onError(
+        NATIVE_RTC.ERROR_CODE_TYPE.ERR_NO_PERMISSION,
+        ''
+      );
+      AgoraConsole.warn('createMicrophoneAudioTrack failed');
       throw e;
     }
 
@@ -465,12 +470,21 @@ export class ImplHelper {
           NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE &&
         irisClientState.clientRoleType !== options.clientRoleType
       ) {
-        (this._engine.getImplInstance(
-          'RtcEngine'
-        ) as IRtcEngineImpl).muteLocalAudioStream(true);
-        (this._engine.getImplInstance(
-          'RtcEngine'
-        ) as IRtcEngineImpl).muteLocalVideoStream(true);
+        if (connection) {
+          (this._engine.getImplInstance(
+            'RtcEngineEx'
+          ) as IRtcEngineExImpl).muteLocalAudioStreamEx(true, connection);
+          (this._engine.getImplInstance(
+            'RtcEngineEx'
+          ) as IRtcEngineExImpl).muteLocalVideoStreamEx(true, connection);
+        } else {
+          (this._engine.getImplInstance(
+            'RtcEngine'
+          ) as IRtcEngineImpl).muteLocalAudioStream(true);
+          (this._engine.getImplInstance(
+            'RtcEngine'
+          ) as IRtcEngineImpl).muteLocalVideoStream(true);
+        }
         this._engine.rtcEngineEventHandler.onClientRoleChangedEx(
           irisClient.connection!,
           irisClientState.clientRoleType!,

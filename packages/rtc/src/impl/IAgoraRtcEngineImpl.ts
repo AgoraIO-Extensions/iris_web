@@ -983,22 +983,28 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           .localAudioTrackPackages[i];
         let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
 
-        if (enabled) {
-          if (!audioTrackPackage.AINSprocessor) {
-            let AINSprocessor = this._engine.globalState.AIDenoiser.createProcessor();
-            audioTrack
-              .pipe(AINSprocessor)
-              .pipe(audioTrack.processorDestination);
-            audioTrackPackage.AINSprocessor = AINSprocessor;
-            await AINSprocessor.enable();
+        //only enable AINS for microphone primary
+        if (
+          audioTrackPackage.type ===
+          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+        ) {
+          if (enabled) {
+            if (!audioTrackPackage.AINSprocessor) {
+              let AINSprocessor = this._engine.globalState.AIDenoiser.createProcessor();
+              audioTrack
+                .pipe(AINSprocessor)
+                .pipe(audioTrack.processorDestination);
+              audioTrackPackage.AINSprocessor = AINSprocessor;
+              await AINSprocessor.enable();
+            } else {
+              await audioTrackPackage.AINSprocessor.enable();
+            }
           } else {
-            await audioTrackPackage.AINSprocessor.enable();
-          }
-        } else {
-          if (audioTrackPackage.AINSprocessor) {
-            await audioTrackPackage.AINSprocessor.disable();
-          } else {
-            //do nothing
+            if (audioTrackPackage.AINSprocessor) {
+              await audioTrackPackage.AINSprocessor.disable();
+            } else {
+              //do nothing
+            }
           }
         }
       }

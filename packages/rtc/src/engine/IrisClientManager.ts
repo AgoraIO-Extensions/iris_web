@@ -236,7 +236,12 @@ export class IrisClientManager {
     this.localAudioTrackPackages.push(audioTrackPackage);
     this.irisClientObserver.addAudioTrackPackageObserver(audioTrackPackage);
     let track = audioTrackPackage.track as ILocalAudioTrack;
-    if (this._engine.globalState.enableAINS) {
+    //only enable AINS for microphone primary
+    if (
+      this._engine.globalState.enableAINS &&
+      audioTrackPackage.type ===
+        IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+    ) {
       let AINSprocessor = this._engine.globalState.AIDenoiser.createProcessor();
       track.pipe(AINSprocessor).pipe(track.processorDestination);
       audioTrackPackage.AINSprocessor = AINSprocessor;
