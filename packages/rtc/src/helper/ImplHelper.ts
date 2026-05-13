@@ -450,8 +450,13 @@ export class ImplHelper {
     let irisClientObserver = irisClientManager.irisClientObserver;
 
     if (options.parameters) {
-      this.handleChannelMediaOptionsParameters(options.parameters, irisClient);
-      this.reGenMicrophoneAudioTrack(irisClient);
+      const shouldReGenMicrophoneTrack = this.handleChannelMediaOptionsParameters(
+        options.parameters,
+        irisClient
+      );
+      if (shouldReGenMicrophoneTrack) {
+        await this.reGenMicrophoneAudioTrack(irisClient);
+      }
     }
     let localAudioTrackPackages = irisClientManager.localAudioTrackPackages;
     let localVideoTrackPackages = irisClientManager.localVideoTrackPackages;
@@ -749,19 +754,30 @@ export class ImplHelper {
   public handleChannelMediaOptionsParameters(
     parameters: string,
     irisClient: IrisClient
-  ) {
+  ): boolean {
     let json = JSON.parse(parameters);
     let keyList = Object.keys(json);
+    let shouldReGenMicrophoneTrack = false;
     for (let i = 0; i < keyList.length; i++) {
       switch (keyList[i]) {
         case 'che.audio.custom_channel_num':
-          irisClient.irisClientState.isStereo = json[keyList[i]] === 2;
+          {
+            const isStereo = json[keyList[i]] === 2;
+            if (irisClient.irisClientState.isStereo !== isStereo) {
+              irisClient.irisClientState.isStereo = isStereo;
+              shouldReGenMicrophoneTrack = true;
+            }
+          }
           break;
         case 'che.audio.custom_bitrate':
-          irisClient.irisClientState.bitrate = json[keyList[i]];
+          if (irisClient.irisClientState.bitrate !== json[keyList[i]]) {
+            irisClient.irisClientState.bitrate = json[keyList[i]];
+            shouldReGenMicrophoneTrack = true;
+          }
           break;
         default:
       }
     }
+    return shouldReGenMicrophoneTrack;
   }
 }

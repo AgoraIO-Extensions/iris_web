@@ -229,6 +229,40 @@ describe('IAgoraRtcEngineImpl', () => {
     ).toBeCalledTimes(1);
   });
 
+  test('setParameters skips regenerating microphone track when audio flags are unchanged', async () => {
+    await joinChannel(apiEnginePtr, null);
+    const reGenSpy = jest.spyOn(
+      irisRtcEngine.implHelper,
+      'reGenMicrophoneAudioTrack'
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngine_setParameters', {
+      parameters: JSON.stringify({
+        'che.audio.aec.enable': false,
+      }),
+    });
+    await callIris(apiEnginePtr, 'RtcEngine_setParameters', {
+      parameters: JSON.stringify({
+        'che.audio.agc.enable': false,
+      }),
+    });
+    await callIris(apiEnginePtr, 'RtcEngine_setParameters', {
+      parameters: JSON.stringify({
+        'che.audio.ans.enable': false,
+      }),
+    });
+
+    expect(reGenSpy).toBeCalledTimes(0);
+
+    await callIris(apiEnginePtr, 'RtcEngine_setParameters', {
+      parameters: JSON.stringify({
+        'che.audio.agc.enable': true,
+      }),
+    });
+
+    expect(reGenSpy).toBeCalledTimes(1);
+  });
+
   test('setAudioProfile', async () => {
     let param = {
       profile: NATIVE_RTC.AUDIO_PROFILE_TYPE.AUDIO_PROFILE_DEFAULT,

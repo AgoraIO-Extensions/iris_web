@@ -1058,50 +1058,53 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               }
               break;
             case 'che.audio.agc.enable':
-              this._engine.globalState.enableAGC = json[keyList[i]];
+              if (this._engine.globalState.enableAGC !== json[keyList[i]]) {
+                this._engine.globalState.enableAGC = json[keyList[i]];
 
-              for (
-                let i = 0;
-                i < this._engine.irisClientManager.irisClientList.length;
-                i++
-              ) {
-                let irisClient = this._engine.irisClientManager.irisClientList[
-                  i
-                ];
-                await this._engine.implHelper.reGenMicrophoneAudioTrack(
-                  irisClient
-                );
+                for (
+                  let i = 0;
+                  i < this._engine.irisClientManager.irisClientList.length;
+                  i++
+                ) {
+                  let irisClient = this._engine.irisClientManager
+                    .irisClientList[i];
+                  await this._engine.implHelper.reGenMicrophoneAudioTrack(
+                    irisClient
+                  );
+                }
               }
 
               break;
             case 'che.audio.aec.enable':
-              this._engine.globalState.enableAEC = json[keyList[i]];
-              for (
-                let i = 0;
-                i < this._engine.irisClientManager.irisClientList.length;
-                i++
-              ) {
-                let irisClient = this._engine.irisClientManager.irisClientList[
-                  i
-                ];
-                await this._engine.implHelper.reGenMicrophoneAudioTrack(
-                  irisClient
-                );
+              if (this._engine.globalState.enableAEC !== json[keyList[i]]) {
+                this._engine.globalState.enableAEC = json[keyList[i]];
+                for (
+                  let i = 0;
+                  i < this._engine.irisClientManager.irisClientList.length;
+                  i++
+                ) {
+                  let irisClient = this._engine.irisClientManager
+                    .irisClientList[i];
+                  await this._engine.implHelper.reGenMicrophoneAudioTrack(
+                    irisClient
+                  );
+                }
               }
               break;
             case 'che.audio.ans.enable':
-              this._engine.globalState.enableANS = json[keyList[i]];
-              for (
-                let i = 0;
-                i < this._engine.irisClientManager.irisClientList.length;
-                i++
-              ) {
-                let irisClient = this._engine.irisClientManager.irisClientList[
-                  i
-                ];
-                await this._engine.implHelper.reGenMicrophoneAudioTrack(
-                  irisClient
-                );
+              if (this._engine.globalState.enableANS !== json[keyList[i]]) {
+                this._engine.globalState.enableANS = json[keyList[i]];
+                for (
+                  let i = 0;
+                  i < this._engine.irisClientManager.irisClientList.length;
+                  i++
+                ) {
+                  let irisClient = this._engine.irisClientManager
+                    .irisClientList[i];
+                  await this._engine.implHelper.reGenMicrophoneAudioTrack(
+                    irisClient
+                  );
+                }
               }
               break;
             case 'iris.web.ains.assets_path':

@@ -165,6 +165,37 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(agoraRTCClient?.renewToken).toBeCalledTimes(1);
     expect(agoraRTCClient?.setClientRole).toBeCalledTimes(1);
   });
+  test('updateChannelMediaOptionsEx only regenerates microphone track when parameters change stereo or bitrate', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let reGenSpy = jest.spyOn(
+      irisRtcEngine.implHelper,
+      'reGenMicrophoneAudioTrack'
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_updateChannelMediaOptionsEx', {
+      connection,
+      options: {
+        parameters: JSON.stringify({
+          'che.audio.custom_channel_num': 1,
+          'che.audio.custom_bitrate': 32,
+        }),
+      },
+    });
+
+    expect(reGenSpy).toBeCalledTimes(0);
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_updateChannelMediaOptionsEx', {
+      connection,
+      options: {
+        parameters: JSON.stringify({
+          'che.audio.custom_channel_num': 2,
+          'che.audio.custom_bitrate': 32,
+        }),
+      },
+    });
+
+    expect(reGenSpy).toBeCalledTimes(1);
+  });
   test('setupRemoteVideoEx', async () => {
     let connection = await joinChannelEx(apiEnginePtr);
     let param2 = {

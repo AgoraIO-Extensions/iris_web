@@ -1,6 +1,6 @@
 {
   "name": "iris-web-rtc",
-  "version": "0.9.1-rc.6",
+  "version": "0.9.1-rc.7",
   "description": "wait",
   "main": "./src/index.ts",
   "scripts": {
