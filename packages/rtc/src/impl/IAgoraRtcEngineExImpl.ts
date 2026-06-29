@@ -125,12 +125,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
 
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         NotifyType.UNPUBLISH_TRACK,
-        [...audioTrackPackages, ...videoTrackPackages]
+        [...audioTrackPackages, ...videoTrackPackages],
+        [irisClient]
       );
 
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         NotifyType.REMOVE_TRACK,
-        [...audioTrackPackages, ...videoTrackPackages]
+        [...audioTrackPackages, ...videoTrackPackages],
+        [irisClient]
       );
 
       let agoraRTCClient = irisClient?.agoraRTCClient;
@@ -263,9 +265,13 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let localAudioTrackPackages = this._engine.irisClientManager.getLocalAudioTrackPackageByConnection(
         connection
       );
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         mute ? NotifyType.UNPUBLISH_TRACK : NotifyType.PUBLISH_TRACK,
-        localAudioTrackPackages
+        localAudioTrackPackages,
+        irisClient ? [irisClient] : undefined
       );
 
       return this._engine.returnResult();
@@ -326,9 +332,13 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let localVideoTrackPackages = this._engine.irisClientManager.getLocalVideoTrackPackageByConnection(
         connection
       );
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         mute ? NotifyType.UNPUBLISH_TRACK : NotifyType.PUBLISH_TRACK,
-        localVideoTrackPackages
+        localVideoTrackPackages,
+        irisClient ? [irisClient] : undefined
       );
 
       return this._engine.returnResult();

@@ -61,7 +61,7 @@ export class VideoTrackPackage {
   type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
   track?: ILocalVideoTrack | IRemoteVideoTrack;
   isPreview: boolean = false;
-  irisClient: IrisClient;
+  irisClients: IrisClient[] = [];
 
   constructor(
     element?: string,
@@ -88,6 +88,20 @@ export class VideoTrackPackage {
       }
     } catch {}
   }
+
+  get irisClient(): IrisClient | undefined {
+    return this.irisClients[0];
+  }
+
+  addIrisClient(irisClient: IrisClient) {
+    if (!this.irisClients.includes(irisClient)) {
+      this.irisClients.push(irisClient);
+    }
+  }
+
+  removeIrisClient(irisClient: IrisClient) {
+    this.irisClients = this.irisClients.filter((item) => item !== irisClient);
+  }
 }
 
 export class AudioTrackPackage {
@@ -97,7 +111,7 @@ export class AudioTrackPackage {
     | IRemoteAudioTrack
     | IMicrophoneAudioTrack
     | ILocalTrack;
-  irisClient: IrisClient;
+  irisClients: IrisClient[] = [];
   AINSprocessor?: any;
 
   constructor(
@@ -126,6 +140,20 @@ export class AudioTrackPackage {
         (this.track as ILocalTrack).close();
       }
     } catch {}
+  }
+
+  get irisClient(): IrisClient | undefined {
+    return this.irisClients[0];
+  }
+
+  addIrisClient(irisClient: IrisClient) {
+    if (!this.irisClients.includes(irisClient)) {
+      this.irisClients.push(irisClient);
+    }
+  }
+
+  removeIrisClient(irisClient: IrisClient) {
+    this.irisClients = this.irisClients.filter((item) => item !== irisClient);
   }
 }
 
@@ -191,7 +219,7 @@ export class IrisClientManager {
       let trackPackage = this.localVideoTrackPackages[i];
       if (
         trackPackage.track == videoTrackPackage.track &&
-        trackPackage.type == trackPackage.type
+        trackPackage.type == videoTrackPackage.type
       ) {
         this.localVideoTrackPackages.splice(i, 1);
         i--;
@@ -224,11 +252,12 @@ export class IrisClientManager {
     connection: NATIVE_RTC.RtcConnection
   ): VideoTrackPackage[] {
     return this.localVideoTrackPackages.filter((trackPackage) => {
-      return (
-        trackPackage?.irisClient?.connection?.channelId ===
-          connection.channelId &&
-        trackPackage?.irisClient?.connection?.localUid === connection.localUid
-      );
+      return trackPackage.irisClients.some((irisClient) => {
+        return (
+          irisClient.connection?.channelId === connection.channelId &&
+          irisClient.connection?.localUid === connection.localUid
+        );
+      });
     });
   }
 
@@ -269,11 +298,12 @@ export class IrisClientManager {
     connection: NATIVE_RTC.RtcConnection
   ): MultiAudioTrackPackage[] {
     return this.localAudioTrackPackages.filter((trackPackage) => {
-      return (
-        trackPackage?.irisClient?.connection?.channelId ===
-          connection.channelId &&
-        trackPackage?.irisClient?.connection?.localUid === connection.localUid
-      );
+      return trackPackage.irisClients.some((irisClient) => {
+        return (
+          irisClient.connection?.channelId === connection.channelId &&
+          irisClient.connection?.localUid === connection.localUid
+        );
+      });
     });
   }
 
@@ -282,7 +312,7 @@ export class IrisClientManager {
       let trackPackage = this.localAudioTrackPackages[i];
       if (
         trackPackage.track == audioTrackPackage.track &&
-        trackPackage.type == trackPackage.type
+        trackPackage.type == audioTrackPackage.type
       ) {
         this.localAudioTrackPackages.splice(i, 1);
         i--;

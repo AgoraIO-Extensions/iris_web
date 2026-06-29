@@ -220,7 +220,7 @@ export class IrisClient {
       return;
     }
     this.audioTrackPackages.push(trackPackage);
-    trackPackage.irisClient = this;
+    trackPackage.addIrisClient(this);
   }
 
   removeLocalAudioTrack(trackPackage: AudioTrackPackage) {
@@ -236,7 +236,7 @@ export class IrisClient {
 
   setLocalVideoTrack(trackPackage: VideoTrackPackage) {
     this.videoTrackPackage = trackPackage;
-    trackPackage.irisClient = this;
+    trackPackage.addIrisClient(this);
   }
 
   clearLocalVideoTrack() {

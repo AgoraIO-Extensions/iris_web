@@ -30,6 +30,21 @@ let apiEnginePtr: IrisApiEngine;
 let irisRtcEngine: IrisRtcEngine;
 let rtcEngineExImpl: IRtcEngineExImpl;
 
+function createDeferred<T>() {
+  let resolve!: (value: T | PromiseLike<T>) => void;
+  let promise = new Promise<T>((res) => {
+    resolve = res;
+  });
+
+  return { promise, resolve };
+}
+
+async function flushMicrotasks(times: number = 5) {
+  for (let i = 0; i < times; i += 1) {
+    await Promise.resolve();
+  }
+}
+
 beforeEach(async () => {
   apiEnginePtr = IrisCore.createIrisApiEngine();
   IrisCore.createIrisEventHandler({} as any);
@@ -127,6 +142,60 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(irisClient.videoTrackPackage).toBeUndefined();
     expect(irisClient.audioTrackPackages.length).toBe(0);
   });
+  test('leaveChannelEx2 keeps shared microphone track alive for remaining channel', async () => {
+    let firstConnection = await joinChannelEx(apiEnginePtr);
+    let secondConnection = {
+      channelId: `${FAKE_CHANNEL_NAME}_2`,
+      localUid: TEST_UID + 1,
+    };
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', {
+      token: '5678',
+      connection: secondConnection,
+      options: {
+        channelProfile:
+          NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+        publishMicrophoneTrack: true,
+      },
+    });
+
+    let firstClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      firstConnection
+    );
+    let secondClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      secondConnection
+    );
+    let sharedAudioTrackPackage = irisRtcEngine.irisClientManager.getLocalAudioTrackPackageByConnection(
+      firstConnection
+    )[0];
+    let sharedAudioTrack = sharedAudioTrackPackage.track as ILocalAudioTrack;
+
+    let closeSpy = jest.spyOn(sharedAudioTrack, 'close');
+    let setEnabledSpy = jest.spyOn(sharedAudioTrack, 'setEnabled');
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_leaveChannelEx2', {
+      connection: secondConnection,
+      options: defaultLeaveChannelOptions,
+    });
+
+    expect(closeSpy).not.toBeCalled();
+    expect(setEnabledSpy).not.toBeCalledWith(false);
+    expect(firstClient.audioTrackPackages).toContain(sharedAudioTrackPackage);
+    expect(secondClient.audioTrackPackages).not.toContain(
+      sharedAudioTrackPackage
+    );
+    expect(
+      irisRtcEngine.irisClientManager.getLocalAudioTrackPackageByConnection(
+        firstConnection
+      )
+    ).toContain(sharedAudioTrackPackage);
+    expect(
+      irisRtcEngine.irisClientManager.getLocalAudioTrackPackageByConnection(
+        secondConnection
+      )
+    ).toHaveLength(0);
+  });
   test('updateChannelMediaOptionsEx', async () => {
     let param = {
       token: '1234',
@@ -164,6 +233,48 @@ describe('IAgoraRtcEngineImpl', () => {
     );
     expect(agoraRTCClient?.renewToken).toBeCalledTimes(1);
     expect(agoraRTCClient?.setClientRole).toBeCalledTimes(1);
+  });
+  test('updateChannelMediaOptionsEx waits for local mute tasks before resolving', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let muteAudioDeferred = createDeferred<any>();
+    let muteVideoDeferred = createDeferred<any>();
+    let setClientRoleDeferred = createDeferred<void>();
+
+    jest
+      .spyOn(rtcEngineExImpl, 'muteLocalAudioStreamEx')
+      .mockReturnValue(muteAudioDeferred.promise);
+    jest
+      .spyOn(rtcEngineExImpl, 'muteLocalVideoStreamEx')
+      .mockReturnValue(muteVideoDeferred.promise);
+    jest
+      .spyOn(irisRtcEngine.clientHelper, 'setClientRole')
+      .mockReturnValue(setClientRoleDeferred.promise as any);
+
+    let updatePromise = rtcEngineExImpl.updateChannelMediaOptionsEx(
+      {
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE,
+      },
+      connection
+    ) as Promise<any>;
+    let settled = false;
+
+    updatePromise.then(() => {
+      settled = true;
+    });
+
+    setClientRoleDeferred.resolve();
+    await flushMicrotasks();
+    expect(settled).toBe(false);
+
+    muteAudioDeferred.resolve(await irisRtcEngine.returnResult());
+    await flushMicrotasks();
+    expect(settled).toBe(false);
+
+    muteVideoDeferred.resolve(await irisRtcEngine.returnResult());
+    await updatePromise;
+
+    expect(irisRtcEngine.clientHelper.setClientRole).toBeCalledTimes(1);
+    expect(settled).toBe(true);
   });
   test('updateChannelMediaOptionsEx only regenerates microphone track when parameters change stereo or bitrate', async () => {
     let connection = await joinChannelEx(apiEnginePtr);
@@ -330,7 +441,8 @@ describe('IAgoraRtcEngineImpl', () => {
     ).toHaveBeenNthCalledWith(
       1,
       NotifyType.UNPUBLISH_TRACK,
-      irisRtcEngine.irisClientManager.localVideoTrackPackages
+      irisRtcEngine.irisClientManager.localVideoTrackPackages,
+      [irisRtcEngine.irisClientManager.getIrisClientByConnection(connection)]
     );
 
     await callIris(apiEnginePtr, 'RtcEngineEx_muteLocalVideoStreamEx', {
@@ -342,7 +454,8 @@ describe('IAgoraRtcEngineImpl', () => {
     ).toHaveBeenNthCalledWith(
       2,
       NotifyType.PUBLISH_TRACK,
-      irisRtcEngine.irisClientManager.localVideoTrackPackages
+      irisRtcEngine.irisClientManager.localVideoTrackPackages,
+      [irisRtcEngine.irisClientManager.getIrisClientByConnection(connection)]
     );
   });
   test('muteRemoteVideoStreamEx', async () => {
