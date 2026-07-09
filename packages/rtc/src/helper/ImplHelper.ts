@@ -476,13 +476,13 @@ export class ImplHelper {
         irisClientState.clientRoleType !== options.clientRoleType
       ) {
         if (connection) {
-          (this._engine.getImplInstance(
+          await (this._engine.getImplInstance(
             'RtcEngineEx'
           ) as IRtcEngineExImpl).muteLocalAudioStreamEx_3cf17a4(
             true,
             connection
           );
-          (this._engine.getImplInstance(
+          await (this._engine.getImplInstance(
             'RtcEngineEx'
           ) as IRtcEngineExImpl).muteLocalVideoStreamEx_3cf17a4(
             true,

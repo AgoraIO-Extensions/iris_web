@@ -159,8 +159,24 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(irisClient.audioTrackPackages.length).toBe(0);
   });
   test('leaveChannelEx2 keeps shared microphone track alive for remaining channel', async () => {
-    let firstConnection = await joinChannelEx(apiEnginePtr);
-    let secondConnection = {
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+
+    let firstConnection: NATIVE_RTC.RtcConnection = {
+      channelId: FAKE_CHANNEL_NAME,
+      localUid: TEST_UID,
+    };
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_a3cd08c', {
+      token: '1234',
+      connection: firstConnection,
+      options: {
+        channelProfile:
+          NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+        publishMicrophoneTrack: true,
+      },
+    });
+
+    let secondConnection: NATIVE_RTC.RtcConnection = {
       channelId: `${FAKE_CHANNEL_NAME}_2`,
       localUid: TEST_UID + 1,
     };
@@ -182,6 +198,8 @@ describe('IAgoraRtcEngineImpl', () => {
     let secondClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
       secondConnection
     );
+    firstConnection = firstClient.connection;
+    secondConnection = secondClient.connection;
     let sharedAudioTrackPackage = irisRtcEngine.irisClientManager.getLocalAudioTrackPackageByConnection(
       firstConnection
     )[0];
@@ -190,7 +208,7 @@ describe('IAgoraRtcEngineImpl', () => {
     let closeSpy = jest.spyOn(sharedAudioTrack, 'close');
     let setEnabledSpy = jest.spyOn(sharedAudioTrack, 'setEnabled');
 
-    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_a3cd08c', {
+    await callIris(apiEnginePtr, 'RtcEngineEx_leaveChannelEx_b03ee9a', {
       connection: secondConnection,
       options: defaultLeaveChannelOptions,
     });
@@ -299,27 +317,35 @@ describe('IAgoraRtcEngineImpl', () => {
       'reGenMicrophoneAudioTrack'
     );
 
-    await callIris(apiEnginePtr, 'RtcEngineEx_updateChannelMediaOptionsEx', {
-      connection,
-      options: {
-        parameters: JSON.stringify({
-          'che.audio.custom_channel_num': 1,
-          'che.audio.custom_bitrate': 32,
-        }),
-      },
-    });
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_updateChannelMediaOptionsEx_457bb35',
+      {
+        connection,
+        options: {
+          parameters: JSON.stringify({
+            'che.audio.custom_channel_num': 1,
+            'che.audio.custom_bitrate': 32,
+          }),
+        },
+      }
+    );
 
     expect(reGenSpy).toBeCalledTimes(0);
 
-    await callIris(apiEnginePtr, 'RtcEngineEx_updateChannelMediaOptionsEx', {
-      connection,
-      options: {
-        parameters: JSON.stringify({
-          'che.audio.custom_channel_num': 2,
-          'che.audio.custom_bitrate': 32,
-        }),
-      },
-    });
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_updateChannelMediaOptionsEx_457bb35',
+      {
+        connection,
+        options: {
+          parameters: JSON.stringify({
+            'che.audio.custom_channel_num': 2,
+            'che.audio.custom_bitrate': 32,
+          }),
+        },
+      }
+    );
 
     expect(reGenSpy).toBeCalledTimes(1);
   });
@@ -634,7 +660,7 @@ describe('IAgoraRtcEngineImpl', () => {
     };
     await callIris(
       apiEnginePtr,
-      'RtcEngineEx_enableAudioVolumeIndicationEx',
+      'RtcEngineEx_enableAudioVolumeIndicationEx_ac84f2a',
       param
     );
     expect(
@@ -649,18 +675,21 @@ describe('IAgoraRtcEngineImpl', () => {
     ).toBeCalledTimes(1);
   });
   test('adjustRecordingSignalVolumeEx', async () => {
-    let connection = await joinChannelEx(apiEnginePtr);
     await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+    let connection = await joinChannelEx(apiEnginePtr);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
     let param = {
       volume: 300,
       connection: connection,
     };
-    let localAudioTrack = irisRtcEngine.irisClientManager
-      .localAudioTrackPackages[0].track as ILocalAudioTrack;
+    let localAudioTrack = irisClient.audioTrackPackages[0]
+      .track as ILocalAudioTrack;
     jest.spyOn(localAudioTrack!, 'setVolume');
     await callIris(
       apiEnginePtr,
-      'RtcEngineEx_adjustRecordingSignalVolumeEx',
+      'RtcEngineEx_adjustRecordingSignalVolumeEx_e84d10e',
       param
     );
     expect(localAudioTrack!.setVolume).toBeCalledWith(
