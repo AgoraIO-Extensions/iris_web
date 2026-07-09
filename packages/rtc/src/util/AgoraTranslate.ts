@@ -561,4 +561,11 @@ export class AgoraTranslate {
         return RemoteStreamType.HIGH_STREAM;
     }
   }
+
+  public static NATIVE_RTC_Volume2WebVolume(volume: number): number {
+    if (typeof volume !== 'number' || isNaN(volume) || !isFinite(volume)) {
+      throw new Error('volume is not a number');
+    }
+    return volume;
+  }
 }

@@ -23,7 +23,7 @@ import {
   VideoTrackPackage,
 } from '../engine/IrisClientManager';
 import { NotifyRemoteType, NotifyType } from '../engine/IrisClientObserver';
-import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { IrisIntervalType, IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import { IRtcEngineExtensions } from '../extensions/IAgoraRtcEngineExtensions';
 import { SendDataStreamMessage } from '../helper/ClientHelper';
@@ -346,7 +346,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       try {
         let track = videoTrackPackage?.track as ILocalVideoTrack;
         if (track) {
-          await this._engine.trackHelper.setEnabled(track, true);
           if (videoTrackPackage.element) {
             this._engine.trackHelper.play(
               track,
@@ -474,8 +473,6 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
       let track = trackPackage.track as ILocalVideoTrack;
       if (track) {
-        await this._engine.trackHelper.setEnabled(track, true);
-
         if (trackPackage.element && trackPackage.isPreview) {
           this._engine.trackHelper.play(
             track,
@@ -549,7 +546,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           )[0]
         ) {
           let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack();
-          this._engine.irisClientManager.addLocalAudioTrackPackage(
+          await this._engine.irisClientManager.addLocalAudioTrackPackage(
             new AudioTrackPackage(
               IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
               audioTrack
@@ -766,27 +763,14 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     smooth: number,
     reportVad: boolean
   ): CallApiReturnType {
-    let processFunc = async (): Promise<CallIrisApiResult> => {
-      this._engine.globalState.enableAudioVolumeIndicationConfig = {
-        ...this._engine.globalState.enableAudioVolumeIndicationConfig,
-        ...(interval && { interval }),
-        ...(smooth && { smooth }),
-        ...(reportVad && { reportVad }),
-      };
-      let agoraRTCClient = this._engine.irisClientManager.getIrisClient()
-        ?.agoraRTCClient;
-
-      this._engine.globalState.enableAudioVolumeIndication = interval > 0;
-
-      if (this._engine.globalState.enableAudioVolumeIndication) {
-        this.setParameters_3a2037f(
-          JSON.stringify({ AUDIO_VOLUME_INDICATION_INTERVAL: interval })
-        );
-        agoraRTCClient?.enableAudioVolumeIndicator();
-      }
-      return this._engine.returnResult();
-    };
-    return this._engine.execute(processFunc);
+    return this._engine
+      .getImplInstance('RtcEngineEx')
+      .enableAudioVolumeIndicationEx_ac84f2a(
+        interval,
+        smooth,
+        reportVad,
+        this._engine.irisClientManager.getIrisClient()?.connection
+      );
   }
   playEffect_531a783(
     soundId: number,
@@ -989,6 +973,62 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     return this._engine.execute(processFunc);
   }
 
+  setAINSMode_4df3049(
+    enabled: boolean,
+    mode: NATIVE_RTC.AUDIO_AINS_MODE
+  ): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      if (enabled) {
+        if (!this._engine.globalState.AIDenoiser) {
+          AgoraConsole.error(
+            'AIDenoiser not found, please set it first by use engine.setParameters'
+          );
+          return this._engine.returnResult(false);
+        }
+      }
+
+      for (
+        let i = 0;
+        i < this._engine.irisClientManager.localAudioTrackPackages.length;
+        i++
+      ) {
+        let audioTrackPackage = this._engine.irisClientManager
+          .localAudioTrackPackages[i];
+        let audioTrack = audioTrackPackage.track as ILocalAudioTrack;
+
+        //only enable AINS for microphone primary
+        if (
+          audioTrackPackage.type ===
+          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+        ) {
+          if (enabled) {
+            if (!audioTrackPackage.AINSprocessor) {
+              let AINSprocessor = this._engine.globalState.AIDenoiser.createProcessor();
+              audioTrack
+                .pipe(AINSprocessor)
+                .pipe(audioTrack.processorDestination);
+              audioTrackPackage.AINSprocessor = AINSprocessor;
+              await AINSprocessor.enable();
+            } else {
+              await audioTrackPackage.AINSprocessor.enable();
+            }
+          } else {
+            if (audioTrackPackage.AINSprocessor) {
+              await audioTrackPackage.AINSprocessor.disable();
+            } else {
+              //do nothing
+            }
+          }
+        }
+      }
+
+      this._engine.globalState.enableAINS = enabled;
+
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(processFunc);
+  }
+
   registerEventHandler_5fc0465(eventHandler: any): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
       this._engine.irisEventHandlerManager.addEventHandler(
@@ -1029,6 +1069,80 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
               } else {
                 this._engine.globalState.AgoraRTC.disableLogUpload();
               }
+              break;
+            case 'che.audio.agc.enable':
+              if (this._engine.globalState.enableAGC !== json[keyList[i]]) {
+                this._engine.globalState.enableAGC = json[keyList[i]];
+
+                for (
+                  let i = 0;
+                  i < this._engine.irisClientManager.irisClientList.length;
+                  i++
+                ) {
+                  let irisClient = this._engine.irisClientManager
+                    .irisClientList[i];
+                  await this._engine.implHelper.reGenMicrophoneAudioTrack(
+                    irisClient
+                  );
+                }
+              }
+
+              break;
+            case 'che.audio.aec.enable':
+              if (this._engine.globalState.enableAEC !== json[keyList[i]]) {
+                this._engine.globalState.enableAEC = json[keyList[i]];
+                for (
+                  let i = 0;
+                  i < this._engine.irisClientManager.irisClientList.length;
+                  i++
+                ) {
+                  let irisClient = this._engine.irisClientManager
+                    .irisClientList[i];
+                  await this._engine.implHelper.reGenMicrophoneAudioTrack(
+                    irisClient
+                  );
+                }
+              }
+              break;
+            case 'che.audio.ans.enable':
+              if (this._engine.globalState.enableANS !== json[keyList[i]]) {
+                this._engine.globalState.enableANS = json[keyList[i]];
+                for (
+                  let i = 0;
+                  i < this._engine.irisClientManager.irisClientList.length;
+                  i++
+                ) {
+                  let irisClient = this._engine.irisClientManager
+                    .irisClientList[i];
+                  await this._engine.implHelper.reGenMicrophoneAudioTrack(
+                    irisClient
+                  );
+                }
+              }
+              break;
+            case 'iris.web.ains.assets_path':
+              (this._engine.globalState.AgoraRTC as any).setParameter(
+                'WEBAUDIO_INIT_OPTIONS',
+                {
+                  latencyHint: 0.03,
+                  sampleRate: 48000,
+                }
+              );
+              this._engine.globalState.AINSWasmPath = json[keyList[i]];
+
+              let denoiser = new window.AIDenoiser.AIDenoiserExtension({
+                assetsPath: this._engine.globalState.AINSWasmPath,
+                fetchOptions: { cache: 'no-cache' },
+              });
+              denoiser.parameters.ADJUST_3A_FROM_PLUGINS = false;
+              if (!denoiser.checkCompatibility()) {
+                AgoraConsole.error('Does not support AI Denoiser!');
+                return this._engine.returnResult(false);
+              }
+
+              this._engine.globalState.AgoraRTC.registerExtensions([denoiser]);
+              this._engine.globalState.AIDenoiser = denoiser;
+
               break;
             default:
               (this._engine.globalState.AgoraRTC as any).setParameter(
@@ -1250,6 +1364,146 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
             samplesPerCall,
           };
         }
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  adjustPlaybackSignalVolume_46f8ab7(volume: number): CallApiReturnType {
+    let fun = async () => {
+      try {
+        this._engine.irisClientManager.irisClientList.map((irisClient) => {
+          irisClient.agoraRTCClient?.remoteUsers.map((remoteUser) => {
+            if (remoteUser.hasAudio && remoteUser.audioTrack) {
+              this._engine.trackHelper.setVolume(remoteUser.audioTrack, volume);
+            }
+          });
+        });
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  adjustRecordingSignalVolume_46f8ab7(volume: number): CallApiReturnType {
+    let fun = async () => {
+      try {
+        this._engine.irisClientManager.localAudioTrackPackages.map(
+          (audioTrackPackage) => {
+            if (
+              audioTrackPackage.track &&
+              this._engine.implHelper.isAudio(audioTrackPackage.type)
+            ) {
+              this._engine.trackHelper.setVolume(
+                audioTrackPackage.track as ILocalAudioTrack,
+                volume
+              );
+            }
+          }
+        );
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  enableInEarMonitoring_077cf5f(
+    enabled: boolean,
+    includeAudioFilters: NATIVE_RTC.EAR_MONITORING_FILTER_TYPE
+  ): CallApiReturnType {
+    let fun = async () => {
+      try {
+        if (enabled) {
+          let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack(
+            this._engine.irisClientManager.getIrisClient()
+          );
+          const mediaStreamTrack = audioTrack.getMediaStreamTrack();
+          const audioTag = document.createElement('audio');
+          audioTag.srcObject = new MediaStream([mediaStreamTrack]);
+          audioTag.play();
+          audioTag.setSinkId(this._engine.globalState.playbackDeviceId);
+
+          await this._engine.irisClientManager.addLocalAudioTrackPackage(
+            new AudioTrackPackage(
+              IrisAudioSourceType.kAudioSourceTypeMicrophoneLoopbackTest,
+              audioTrack
+            )
+          );
+          await this._engine.trackHelper.setEnabled(
+            audioTrack as ILocalAudioTrack,
+            true
+          );
+          this._engine.trackHelper.play(audioTrack as ILocalAudioTrack);
+          this._engine.addIrisInterval(
+            IrisIntervalType.loopbackTest,
+            setInterval(() => {
+              this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
+                this._engine.irisClientManager.getIrisClient().connection,
+                [
+                  {
+                    uid: 0,
+                    volume: audioTrack.getVolumeLevel() * 100 * 2.55,
+                  },
+                ],
+                audioTrack.getVolumeLevel() > 0 ? 1 : 0,
+                audioTrack.getVolumeLevel() * 100 * 2.55
+              );
+            }, 200),
+            0
+          );
+        } else {
+          await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+            NotifyType.REMOVE_TRACK,
+            this._engine.irisClientManager.localAudioTrackPackages.filter(
+              (item) =>
+                item.type ==
+                IrisAudioSourceType.kAudioSourceTypeMicrophoneLoopbackTest
+            )
+          );
+          this._engine.removeIrisIntervalByType(IrisIntervalType.loopbackTest);
+        }
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  adjustUserPlaybackSignalVolume_88641bf(
+    uid: number,
+    volume: number
+  ): CallApiReturnType {
+    let fun = async () => {
+      try {
+        this._engine.irisClientManager.remoteUserPackages.map(
+          (remoteUserPackage) => {
+            if (remoteUserPackage.uid === uid) {
+              let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+                remoteUserPackage.connection
+              );
+              if (irisClient) {
+                let user = irisClient.agoraRTCClient?.remoteUsers.find(
+                  (item) => item.uid === remoteUserPackage.uid
+                );
+                if (user?.hasAudio && user.audioTrack) {
+                  this._engine.trackHelper.setVolume(user.audioTrack, volume);
+                }
+              }
+            }
+          }
+        );
       } catch (e) {
         AgoraConsole.log(e);
         return this._engine.returnResult(false);

@@ -78,14 +78,6 @@ export class IrisGlobalState {
   //setRecordingDevice_4ad5f6e()
   recordingDeviceId: string;
 
-  //enableAudioVolumeIndication
-  enableAudioVolumeIndication: boolean = false;
-  enableAudioVolumeIndicationConfig = {
-    interval: 50,
-    smooth: 3,
-    reportVad: false,
-  };
-
   channelProfile: NATIVE_RTC.CHANNEL_PROFILE_TYPE =
     NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING;
 
@@ -102,6 +94,13 @@ export class IrisGlobalState {
       NATIVE_RTC.RAW_AUDIO_FRAME_OP_MODE_TYPE.RAW_AUDIO_FRAME_OP_MODE_READ_ONLY,
     samplesPerCall: 1024,
   };
+
+  enableAEC: boolean = false;
+  enableANS: boolean = false;
+  enableAGC: boolean = false;
+  enableAINS: boolean = false;
+  AIDenoiser: any;
+  AINSWasmPath: string;
 
   reset() {
     this.enabledAudio = true;

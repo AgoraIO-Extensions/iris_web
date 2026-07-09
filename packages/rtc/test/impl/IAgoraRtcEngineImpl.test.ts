@@ -3,19 +3,15 @@ import {
   FakeAgoraRTCWrapper,
 } from '@agoraio-extensions/agora-rtc-sdk-ng-fake';
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { AREAS, IAgoraRTC, ILocalTrack } from 'agora-rtc-sdk-ng';
-
+import { AREAS, IAgoraRTC, ILocalAudioTrack } from 'agora-rtc-sdk-ng';
 import { IrisApiEngine, IrisCore } from 'iris-web-core';
 
 import { IrisWebRtc } from '../../src/IrisRtcApi';
-
 import { IrisAudioSourceType } from '../../src/base/BaseType';
 import { BufferSourceAudioTrackPackage } from '../../src/engine/IrisClientManager';
 import { NotifyType } from '../../src/engine/IrisClientObserver';
 import { AgoraConsole, AgoraTranslate } from '../../src/util';
-
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
-
 import {
   TEST_REMOTE_STRING_UID,
   TEST_REMOTE_UID,
@@ -75,7 +71,7 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(AgoraRTCMock.setLogLevel).toBeCalledTimes(1);
     expect(AgoraRTCMock.setLogLevel).toBeCalledWith(1);
     expect(AgoraRTCMock.checkSystemRequirements).toBeCalledTimes(1);
-    //check if already initialized
+    // check if already initialized
     let nParam = {
       context: 'test',
     };
@@ -229,7 +225,41 @@ describe('IAgoraRtcEngineImpl', () => {
     ).toBeCalledTimes(1);
   });
 
-  test('setAudioProfile_d944543', async () => {
+  test('setParameters skips regenerating microphone track when audio flags are unchanged', async () => {
+    await joinChannel(apiEnginePtr, null);
+    const reGenSpy = jest.spyOn(
+      irisRtcEngine.implHelper,
+      'reGenMicrophoneAudioTrack'
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngine_setParameters_3a2037f', {
+      parameters: JSON.stringify({
+        'che.audio.aec.enable': false,
+      }),
+    });
+    await callIris(apiEnginePtr, 'RtcEngine_setParameters_3a2037f', {
+      parameters: JSON.stringify({
+        'che.audio.agc.enable': false,
+      }),
+    });
+    await callIris(apiEnginePtr, 'RtcEngine_setParameters_3a2037f', {
+      parameters: JSON.stringify({
+        'che.audio.ans.enable': false,
+      }),
+    });
+
+    expect(reGenSpy).toBeCalledTimes(0);
+
+    await callIris(apiEnginePtr, 'RtcEngine_setParameters_3a2037f', {
+      parameters: JSON.stringify({
+        'che.audio.agc.enable': true,
+      }),
+    });
+
+    expect(reGenSpy).toBeCalledTimes(1);
+  });
+
+  test('setAudioProfile', async () => {
     let param = {
       profile: NATIVE_RTC.AUDIO_PROFILE_TYPE.AUDIO_PROFILE_DEFAULT,
       scenario: NATIVE_RTC.AUDIO_SCENARIO_TYPE.AUDIO_SCENARIO_CHATROOM,
@@ -311,9 +341,8 @@ describe('IAgoraRtcEngineImpl', () => {
 
   test('enableAudioVolumeIndication_39794a0', async () => {
     await joinChannel(apiEnginePtr, null);
-    let agoraRTCClient = irisRtcEngine.irisClientManager.getIrisClient()
-      .agoraRTCClient;
-    jest.spyOn(agoraRTCClient!, 'enableAudioVolumeIndicator');
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClient();
+    jest.spyOn(irisClient.agoraRTCClient!, 'enableAudioVolumeIndicator');
     jest.spyOn(
       irisRtcEngine.rtcEngineEventHandler,
       'onAudioVolumeIndication_781482a'
@@ -330,13 +359,15 @@ describe('IAgoraRtcEngineImpl', () => {
       param
     );
     expect(
-      irisRtcEngine.globalState.enableAudioVolumeIndicationConfig.smooth
+      irisClient.irisClientState.enableAudioVolumeIndicationConfig.smooth
     ).toBe(param.smooth);
     expect(
-      irisRtcEngine.globalState.enableAudioVolumeIndicationConfig.smooth
+      irisClient.irisClientState.enableAudioVolumeIndicationConfig.smooth
     ).toBe(param.smooth);
-    expect(irisRtcEngine.globalState.enableAudioVolumeIndication).toBeTruthy();
-    expect(agoraRTCClient?.enableAudioVolumeIndicator).toBeCalledTimes(1);
+    expect(irisClient.irisClientState.enableAudioVolumeIndication).toBeTruthy();
+    expect(
+      irisClient.agoraRTCClient?.enableAudioVolumeIndicator
+    ).toBeCalledTimes(1);
   });
 
   test('leaveChannel', async () => {
@@ -548,6 +579,8 @@ describe('IAgoraRtcEngineImpl', () => {
         sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY,
       },
     };
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
     await callIris(apiEnginePtr, 'RtcEngine_setupLocalVideo_acc9c38', param);
     expect(irisRtcEngine.irisClientManager.localVideoTrackPackages.length).toBe(
       1
@@ -571,7 +604,7 @@ describe('IAgoraRtcEngineImpl', () => {
       level: 3,
     };
     await callIris(apiEnginePtr, 'RtcEngine_setLogLevel_f125d83', param);
-    //由于initialize时已经调用过一次setLogLevel，所以这里调用次数为2
+    // 由于initialize时已经调用过一次setLogLevel，所以这里调用次数为2
     expect(AgoraRTCMock.setLogLevel).toBeCalledTimes(2);
   });
   test('startScreenCapture_270da41', async () => {
@@ -603,7 +636,7 @@ describe('IAgoraRtcEngineImpl', () => {
         NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY
       ).length
     ).toBe(1);
-    //由于initialize时已经创建了一个microphone track，所以这里是2
+    // 由于initialize时已经创建了一个microphone track，所以这里是2
     expect(
       irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
         IrisAudioSourceType.kAudioSourceTypeScreenCapture
@@ -1129,6 +1162,60 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.irisClientManager.remoteUserPackages[0].videoPlayerConfig
         .mirror
     ).toBe(true);
+  });
+  test('adjustPlaybackSignalVolume_46f8ab7', async () => {
+    let param = {
+      volume: 300,
+    };
+    AgoraRTCMock = irisRtcEngine.globalState.AgoraRTC;
+    await joinChannel(apiEnginePtr, null);
+    let remoteAudioTrack = irisRtcEngine.irisClientManager.getIrisClient()
+      .agoraRTCClient?.remoteUsers[0].audioTrack;
+    jest.spyOn(remoteAudioTrack!, 'setVolume');
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_adjustPlaybackSignalVolume_46f8ab7',
+      param
+    );
+    expect(remoteAudioTrack!.setVolume).toBeCalledWith(
+      AgoraTranslate.NATIVE_RTC_Volume2WebVolume(param.volume)
+    );
+  });
+  test('adjustRecordingSignalVolume_46f8ab7', async () => {
+    let param = {
+      volume: 300,
+    };
+    await joinChannel(apiEnginePtr, null);
+    let localAudioTrack = irisRtcEngine.irisClientManager
+      .localAudioTrackPackages[0].track as ILocalAudioTrack;
+    jest.spyOn(localAudioTrack!, 'setVolume');
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_adjustRecordingSignalVolume_46f8ab7',
+      param
+    );
+    expect(localAudioTrack!.setVolume).toBeCalledWith(
+      AgoraTranslate.NATIVE_RTC_Volume2WebVolume(param.volume)
+    );
+  });
+  test('adjustUserPlaybackSignalVolume_88641bf', async () => {
+    let param = {
+      volume: 300,
+      uid: TEST_REMOTE_UID,
+    };
+    await joinChannel(apiEnginePtr, null);
+    let remoteAudioTrack = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      irisRtcEngine.irisClientManager.remoteUserPackages[0].connection
+    ).agoraRTCClient?.remoteUsers[0].audioTrack;
+    jest.spyOn(remoteAudioTrack!, 'setVolume');
+    await callIris(
+      apiEnginePtr,
+      'RtcEngine_adjustUserPlaybackSignalVolume_88641bf',
+      param
+    );
+    expect(remoteAudioTrack!.setVolume).toBeCalledWith(
+      AgoraTranslate.NATIVE_RTC_Volume2WebVolume(param.volume)
+    );
   });
   test('setRemoteVideoStreamType_9e6406e', async () => {
     let param = {

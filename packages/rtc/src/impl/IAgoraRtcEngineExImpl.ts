@@ -1,9 +1,5 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import {
-  ILocalAudioTrack,
-  IMicrophoneAudioTrack,
-  VideoPlayerConfig,
-} from 'agora-rtc-sdk-ng';
+import { ILocalAudioTrack, VideoPlayerConfig } from 'agora-rtc-sdk-ng';
 import { CallApiReturnType, CallIrisApiResult } from 'iris-web-core';
 
 import { IrisAudioSourceType } from '../base/BaseType';
@@ -37,6 +33,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       irisClient.createClient(options);
       irisClient.irisClientState.token = token;
       let agoraRTCClient = irisClient.agoraRTCClient;
+
+      if (options.parameters) {
+        this._engine.implHelper.handleChannelMediaOptionsParameters(
+          options.parameters,
+          irisClient
+        );
+      }
+
       try {
         await agoraRTCClient!.join(
           this._engine.globalState.rtcEngineContext.appId!,
@@ -69,16 +73,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
             IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
           )[0]
         ) {
-          let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack();
-          this._engine.irisClientManager.addLocalAudioTrackPackage(
+          let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack(
+            irisClient
+          );
+          await this._engine.irisClientManager.addLocalAudioTrackPackage(
             new AudioTrackPackage(
               IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
               audioTrack
             )
-          );
-          await this._engine.trackHelper.setEnabled(
-            audioTrack as ILocalAudioTrack,
-            true
           );
         }
       }
@@ -118,25 +120,29 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         connection
       );
 
+      let audioTrackPackages = this._engine.irisClientManager.getLocalAudioTrackPackageByConnection(
+        irisClient.connection
+      );
+
+      let videoTrackPackages = this._engine.irisClientManager.getLocalVideoTrackPackageByConnection(
+        irisClient.connection
+      );
+
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         NotifyType.UNPUBLISH_TRACK,
-        [
-          ...this._engine.irisClientManager.localAudioTrackPackages,
-          ...this._engine.irisClientManager.localVideoTrackPackages,
-        ]
+        [...audioTrackPackages, ...videoTrackPackages],
+        [irisClient]
+      );
+
+      await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+        NotifyType.REMOVE_TRACK,
+        [...audioTrackPackages, ...videoTrackPackages],
+        [irisClient]
       );
 
       let agoraRTCClient = irisClient?.agoraRTCClient;
       if (agoraRTCClient) {
         //读取 options
-        for (let trackPackage of irisClient.audioTrackPackages) {
-          if (trackPackage.track) {
-            let track = trackPackage.track as IMicrophoneAudioTrack;
-            if (options.stopMicrophoneRecording) {
-              await this._engine.trackHelper.setMuted(track, true);
-            }
-          }
-        }
         if (options.stopAllEffect) {
           this._engine.getImplInstance('RtcEngine').stopAllEffects();
         }
@@ -185,28 +191,42 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
   ): CallApiReturnType {
     let processVideoTrack = async (): Promise<CallIrisApiResult> => {
       if (isDefined(canvas.uid) && isDefined(canvas.view)) {
-        let remoteUserPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
-          canvas.uid
+        let remoteUserPackages = this._engine.irisClientManager.remoteUserPackages.filter(
+          (remoteUserPackage) => {
+            return remoteUserPackage.uid == canvas.uid;
+          }
         );
-        if (remoteUserPackage) {
-          remoteUserPackage.element = canvas.view;
-        }
-        let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
-          connection
-        );
-        if (irisClient) {
-          let remoteUser = irisClient.agoraRTCClient?.remoteUsers.find(
-            (user) => user.uid === canvas.uid
+        if (remoteUserPackages.length > 0) {
+          remoteUserPackages = remoteUserPackages.filter(
+            (remoteUserPackage) => {
+              return (
+                remoteUserPackage.connection.channelId == connection.channelId
+              );
+            }
           );
-          // subscribe video maybe called before setupVideo, so we need to play video here too
-          if (remoteUser && remoteUser.videoTrack) {
-            this._engine.trackHelper.play(
-              remoteUser.videoTrack!,
-              remoteUserPackage.element,
-              remoteUserPackage.videoPlayerConfig
+        }
+
+        for (let i = 0; i < remoteUserPackages.length; i++) {
+          let remoteUserPackage = remoteUserPackages[i];
+          remoteUserPackage.element = canvas.view;
+          let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+            connection
+          );
+          if (irisClient) {
+            let remoteUser = irisClient.agoraRTCClient?.remoteUsers.find(
+              (user) => user.uid === canvas.uid
             );
+            // subscribe video maybe called before setupVideo, so we need to play video here too
+            if (remoteUser && remoteUser.videoTrack) {
+              this._engine.trackHelper.play(
+                remoteUser.videoTrack!,
+                remoteUserPackage.element,
+                remoteUserPackage.videoPlayerConfig
+              );
+            }
           }
         }
+
         return this._engine.returnResult();
       } else {
         return this._engine.returnResult(
@@ -250,9 +270,13 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let localAudioTrackPackages = this._engine.irisClientManager.getLocalAudioTrackPackageByConnection(
         connection
       );
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         mute ? NotifyType.UNPUBLISH_TRACK : NotifyType.PUBLISH_TRACK,
-        localAudioTrackPackages
+        localAudioTrackPackages,
+        irisClient ? [irisClient] : undefined
       );
 
       return this._engine.returnResult();
@@ -313,9 +337,13 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       let localVideoTrackPackages = this._engine.irisClientManager.getLocalVideoTrackPackageByConnection(
         connection
       );
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
       await this._engine.irisClientManager.irisClientObserver.notifyLocal(
         mute ? NotifyType.UNPUBLISH_TRACK : NotifyType.PUBLISH_TRACK,
-        localVideoTrackPackages
+        localVideoTrackPackages,
+        irisClient ? [irisClient] : undefined
       );
 
       return this._engine.returnResult();
@@ -352,7 +380,14 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
         connection
       );
       irisClient.irisClientState.dataStreamConfig = config;
-      return this._engine.returnResult();
+      return this._engine.returnResult(
+        true,
+        0,
+        JSON.stringify({
+          result: 0,
+          streamId: 0,
+        })
+      );
     };
 
     return this._engine.execute(processFunc);
@@ -426,5 +461,102 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
       }
     }
     return this._engine.returnResult();
+  }
+
+  enableAudioVolumeIndicationEx_ac84f2a(
+    interval: number,
+    smooth: number,
+    reportVad: boolean,
+    connection: NATIVE_RTC.RtcConnection
+  ): CallApiReturnType {
+    let processFunc = async (): Promise<CallIrisApiResult> => {
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
+
+      irisClient.irisClientState.enableAudioVolumeIndicationConfig = {
+        ...irisClient.irisClientState.enableAudioVolumeIndicationConfig,
+        ...(interval && { interval }),
+        ...(smooth && { smooth }),
+        ...(reportVad && { reportVad }),
+      };
+
+      let agoraRTCClient = irisClient?.agoraRTCClient;
+
+      if (!agoraRTCClient) {
+        return this._engine.irisRtcErrorHandler.notInChannel();
+      }
+
+      irisClient.irisClientState.enableAudioVolumeIndication = interval > 0;
+
+      if (irisClient.irisClientState.enableAudioVolumeIndication) {
+        this._engine
+          .getImplInstance('RtcEngine')
+          .setParameters_3a2037f(
+            JSON.stringify({ AUDIO_VOLUME_INDICATION_INTERVAL: interval })
+          );
+        agoraRTCClient?.enableAudioVolumeIndicator();
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(processFunc);
+  }
+
+  adjustUserPlaybackSignalVolumeEx_adbd29c(
+    uid: number,
+    volume: number,
+    connection: NATIVE_RTC.RtcConnection
+  ): CallApiReturnType {
+    let fun = async () => {
+      try {
+        let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+          connection
+        );
+        irisClient.irisClientState.playbackVolume = volume;
+        if (irisClient) {
+          let user = irisClient.agoraRTCClient?.remoteUsers.find(
+            (item) => item.uid === uid
+          );
+          if (user?.hasAudio && user.audioTrack) {
+            this._engine.trackHelper.setVolume(user.audioTrack, volume);
+          }
+        }
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  adjustRecordingSignalVolumeEx_e84d10e(
+    volume: number,
+    connection: NATIVE_RTC.RtcConnection
+  ): CallApiReturnType {
+    let fun = async () => {
+      try {
+        let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+          connection
+        );
+        irisClient.irisClientState.microphoneVolume = volume;
+        irisClient?.audioTrackPackages.map((audioTrackPackage) => {
+          if (
+            audioTrackPackage.track &&
+            this._engine.implHelper.isAudio(audioTrackPackage.type)
+          ) {
+            this._engine.trackHelper.setVolume(
+              audioTrackPackage.track as ILocalAudioTrack,
+              volume
+            );
+          }
+        });
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
   }
 }

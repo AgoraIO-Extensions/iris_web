@@ -61,7 +61,7 @@ export class VideoTrackPackage {
   type?: NATIVE_RTC.VIDEO_SOURCE_TYPE | NATIVE_RTC.EXTERNAL_VIDEO_SOURCE_TYPE;
   track?: ILocalVideoTrack | IRemoteVideoTrack;
   isPreview: boolean = false;
-  irisClient: IrisClient;
+  irisClients: IrisClient[] = [];
 
   constructor(
     element?: string,
@@ -88,6 +88,20 @@ export class VideoTrackPackage {
       }
     } catch {}
   }
+
+  get irisClient(): IrisClient | undefined {
+    return this.irisClients[0];
+  }
+
+  addIrisClient(irisClient: IrisClient) {
+    if (!this.irisClients.includes(irisClient)) {
+      this.irisClients.push(irisClient);
+    }
+  }
+
+  removeIrisClient(irisClient: IrisClient) {
+    this.irisClients = this.irisClients.filter((item) => item !== irisClient);
+  }
 }
 
 export class AudioTrackPackage {
@@ -97,14 +111,19 @@ export class AudioTrackPackage {
     | IRemoteAudioTrack
     | IMicrophoneAudioTrack
     | ILocalTrack;
-  irisClient: IrisClient;
+  irisClients: IrisClient[] = [];
+  AINSprocessor?: any;
 
   constructor(
     type: IrisAudioSourceType,
-    track: ILocalAudioTrack | IRemoteAudioTrack
+    track: ILocalAudioTrack | IRemoteAudioTrack,
+    AINSprocessor?: any
   ) {
     this.type = type;
     this.track = track;
+    if (AINSprocessor) {
+      this.AINSprocessor = AINSprocessor;
+    }
   }
 
   dispose() {
@@ -113,9 +132,28 @@ export class AudioTrackPackage {
         if (this.track.isPlaying) {
           this.track.stop();
         }
+        if (this.AINSprocessor) {
+          (this.track as ILocalAudioTrack).unpipe();
+          this.AINSprocessor.unpipe();
+          this.AINSprocessor.destroy();
+        }
         (this.track as ILocalTrack).close();
       }
     } catch {}
+  }
+
+  get irisClient(): IrisClient | undefined {
+    return this.irisClients[0];
+  }
+
+  addIrisClient(irisClient: IrisClient) {
+    if (!this.irisClients.includes(irisClient)) {
+      this.irisClients.push(irisClient);
+    }
+  }
+
+  removeIrisClient(irisClient: IrisClient) {
+    this.irisClients = this.irisClients.filter((item) => item !== irisClient);
   }
 }
 
@@ -129,7 +167,7 @@ export class BufferSourceAudioTrackPackage extends AudioTrackPackage {
     track: IBufferSourceAudioTrack,
     soundId: number
   ) {
-    super(type, track);
+    super(type, track, false);
     this.type = type;
     this.track = track;
     this.soundId = soundId;
@@ -181,7 +219,7 @@ export class IrisClientManager {
       let trackPackage = this.localVideoTrackPackages[i];
       if (
         trackPackage.track == videoTrackPackage.track &&
-        trackPackage.type == trackPackage.type
+        trackPackage.type == videoTrackPackage.type
       ) {
         this.localVideoTrackPackages.splice(i, 1);
         i--;
@@ -214,17 +252,30 @@ export class IrisClientManager {
     connection: NATIVE_RTC.RtcConnection
   ): VideoTrackPackage[] {
     return this.localVideoTrackPackages.filter((trackPackage) => {
-      return (
-        trackPackage?.irisClient?.connection?.channelId ===
-          connection.channelId &&
-        trackPackage?.irisClient?.connection?.localUid === connection.localUid
-      );
+      return trackPackage.irisClients.some((irisClient) => {
+        return (
+          irisClient.connection?.channelId === connection.channelId &&
+          irisClient.connection?.localUid === connection.localUid
+        );
+      });
     });
   }
 
-  addLocalAudioTrackPackage(audioTrackPackage: MultiAudioTrackPackage) {
+  async addLocalAudioTrackPackage(audioTrackPackage: MultiAudioTrackPackage) {
     this.localAudioTrackPackages.push(audioTrackPackage);
     this.irisClientObserver.addAudioTrackPackageObserver(audioTrackPackage);
+    let track = audioTrackPackage.track as ILocalAudioTrack;
+    //only enable AINS for microphone primary
+    if (
+      this._engine.globalState.enableAINS &&
+      audioTrackPackage.type ===
+        IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+    ) {
+      let AINSprocessor = this._engine.globalState.AIDenoiser.createProcessor();
+      track.pipe(AINSprocessor).pipe(track.processorDestination);
+      audioTrackPackage.AINSprocessor = AINSprocessor;
+      await AINSprocessor.enable();
+    }
   }
 
   getLocalAudioTrackPackageBySourceType(
@@ -247,11 +298,12 @@ export class IrisClientManager {
     connection: NATIVE_RTC.RtcConnection
   ): MultiAudioTrackPackage[] {
     return this.localAudioTrackPackages.filter((trackPackage) => {
-      return (
-        trackPackage?.irisClient?.connection?.channelId ===
-          connection.channelId &&
-        trackPackage?.irisClient?.connection?.localUid === connection.localUid
-      );
+      return trackPackage.irisClients.some((irisClient) => {
+        return (
+          irisClient.connection?.channelId === connection.channelId &&
+          irisClient.connection?.localUid === connection.localUid
+        );
+      });
     });
   }
 
@@ -260,7 +312,7 @@ export class IrisClientManager {
       let trackPackage = this.localAudioTrackPackages[i];
       if (
         trackPackage.track == audioTrackPackage.track &&
-        trackPackage.type == trackPackage.type
+        trackPackage.type == audioTrackPackage.type
       ) {
         this.localAudioTrackPackages.splice(i, 1);
         i--;
@@ -286,6 +338,18 @@ export class IrisClientManager {
     return this.remoteUserPackages.filter((remoteUserPackage) => {
       return remoteUserPackage.connection?.channelId === connection.channelId;
     });
+  }
+
+  getRemoteUserPackageByUidAndConnection(
+    uid: number,
+    connection: NATIVE_RTC.RtcConnection
+  ): RemoteUserPackage {
+    return this.remoteUserPackages.filter((remoteUserPackage) => {
+      return (
+        remoteUserPackage.uid == uid &&
+        remoteUserPackage.connection?.channelId == connection.channelId
+      );
+    })[0];
   }
 
   addRemoteUserPackage(
@@ -320,6 +384,27 @@ export class IrisClientManager {
     for (let i = 0; i < this.remoteUserPackages.length; i++) {
       let userPackage = this.remoteUserPackages[i];
       if (userPackage.uid == uid) {
+        this.remoteUserPackages.splice(i, 1);
+        i--;
+        this.irisClientObserver.removeRemoteUserPackageObserver(userPackage);
+        this._engine.removeIrisIntervalByUid(uid);
+        userPackage.dispose();
+
+        break;
+      }
+    }
+  }
+
+  removeRemoteUserPackageByUidAndConnection(
+    uid: number,
+    connection: NATIVE_RTC.RtcConnection
+  ) {
+    for (let i = 0; i < this.remoteUserPackages.length; i++) {
+      let userPackage = this.remoteUserPackages[i];
+      if (
+        userPackage.uid == uid &&
+        userPackage.connection?.channelId == connection.channelId
+      ) {
         this.remoteUserPackages.splice(i, 1);
         i--;
         this.irisClientObserver.removeRemoteUserPackageObserver(userPackage);

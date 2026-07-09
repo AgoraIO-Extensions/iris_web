@@ -128,12 +128,16 @@ export class IrisClientState {
     config: new NATIVE_RTC.EncryptionConfig(),
   };
 
-  //C++ enabledAudioVolumeIndication()
-  enabledAudioVolumeIndication: {
-    interval: number;
-    smooth: number;
-    reportVad: boolean;
+  //enableAudioVolumeIndication
+  enableAudioVolumeIndication: boolean = false;
+  enableAudioVolumeIndicationConfig = {
+    interval: 50,
+    smooth: 3,
+    reportVad: false,
   };
+
+  microphoneVolume: number = 100;
+  playbackVolume: number = 100;
 
   //setPlaybackDevice: audiDevice
   playbackDeviceId: string = '';
@@ -148,6 +152,12 @@ export class IrisClientState {
 
   //用来记录暂停或者恢复的
   currChannelMediaRelayConfiguration: NATIVE_RTC.ChannelMediaRelayConfiguration = new NATIVE_RTC.ChannelMediaRelayConfiguration();
+
+  //是否立体声
+  isStereo: boolean = false;
+
+  //语音码率
+  bitrate: number = 32;
 
   constructor(globalState: IrisGlobalState) {
     this._globalState = globalState;

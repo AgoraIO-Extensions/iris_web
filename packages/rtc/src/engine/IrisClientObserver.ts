@@ -170,12 +170,18 @@ export class IrisClientObserver {
     }
   }
 
-  async unpublishTrack(trackPackage: TrackPackage) {
+  async unpublishTrack(
+    trackPackage: TrackPackage,
+    targetIrisClient?: IrisClient
+  ) {
     if (!trackPackage.track) {
       return;
     }
 
-    let irisClient = trackPackage.irisClient;
+    let irisClient = this.getTrackPackageIrisClient(
+      trackPackage,
+      targetIrisClient
+    );
     let track = trackPackage.track as ILocalTrack;
     if (!irisClient) {
       return;
@@ -184,6 +190,35 @@ export class IrisClientObserver {
     if (agoraRTCClient?.localTracks?.includes(track)) {
       AgoraConsole.debug(`unpublishTrack ${track}`);
       await this._engine.clientHelper.unpublish(agoraRTCClient!, track);
+    }
+  }
+
+  private getTrackPackageIrisClient(
+    trackPackage: TrackPackage,
+    candidate?: IrisClient
+  ): IrisClient | undefined {
+    if (candidate) {
+      return candidate;
+    }
+    return trackPackage.irisClients[0];
+  }
+
+  private detachTrackFromIrisClient(
+    trackPackage: TrackPackage,
+    irisClient: IrisClient
+  ) {
+    trackPackage.removeIrisClient(irisClient);
+
+    if (this._engine.implHelper.isAudio(trackPackage.type!)) {
+      irisClient.removeLocalAudioTrack(trackPackage as AudioTrackPackage);
+      return;
+    }
+
+    if (
+      irisClient.videoTrackPackage?.track === trackPackage.track &&
+      irisClient.videoTrackPackage?.type === trackPackage.type
+    ) {
+      irisClient.videoTrackPackage = undefined;
     }
   }
 
@@ -209,7 +244,7 @@ export class IrisClientObserver {
     }
   }
 
-  async removeTrack(trackPackage: TrackPackage) {
+  async removeTrack(trackPackage: TrackPackage, targetIrisClient?: IrisClient) {
     let irisClientManager = this._engine.irisClientManager;
     try {
       if (!trackPackage.track) {
@@ -217,11 +252,18 @@ export class IrisClientObserver {
       }
 
       AgoraConsole.debug(`removeTrack ${trackPackage.track}`);
-      let irisClient = trackPackage.irisClient;
+      let irisClient = this.getTrackPackageIrisClient(
+        trackPackage,
+        targetIrisClient
+      );
       if (!irisClient) {
         irisClient = irisClientManager.irisClientList[0];
       }
-      this.unpublishTrack(trackPackage);
+      await this.unpublishTrack(trackPackage, irisClient);
+      this.detachTrackFromIrisClient(trackPackage, irisClient);
+      if (trackPackage.irisClients.length > 0) {
+        return;
+      }
       if (this._engine.implHelper.isAudio(trackPackage.type!)) {
         await irisClientManager.processAudioTrackClose(
           trackPackage as AudioTrackPackage
@@ -241,7 +283,6 @@ export class IrisClientObserver {
         irisClientManager.removeLocalAudioTrackPackage(
           trackPackage as AudioTrackPackage
         );
-        irisClient.removeLocalAudioTrack(trackPackage as AudioTrackPackage);
       } else if (
         IrisAudioSourceType.kAudioSourceTypeBufferSourceAudio ===
         trackPackage.type
@@ -249,7 +290,6 @@ export class IrisClientObserver {
         await irisClientManager.processBufferSourceAudioTrackClose(
           trackPackage as BufferSourceAudioTrackPackage
         );
-        irisClient.removeLocalAudioTrack(trackPackage);
         irisClientManager.removeLocalAudioTrackPackage(trackPackage);
       } else if (this._engine.implHelper.isVideoCamera(trackPackage.type!)) {
         await irisClientManager.processVideoTrackClose(
@@ -267,7 +307,6 @@ export class IrisClientObserver {
         irisClientManager.removeLocalVideoTrackPackage(
           trackPackage as VideoTrackPackage
         );
-        irisClient.clearLocalVideoTrack();
       }
     } catch (reason) {
       AgoraConsole.error(reason);
@@ -303,12 +342,12 @@ export class IrisClientObserver {
 
         case NotifyType.UNPUBLISH_TRACK:
           if (scopePackage) {
-            await this.unpublishTrack(scopePackage);
+            await this.unpublishTrack(scopePackage, irisClientList?.[0]);
           }
           break;
         case NotifyType.REMOVE_TRACK:
           if (scopePackage) {
-            await this.removeTrack(scopePackage);
+            await this.removeTrack(scopePackage, irisClientList?.[0]);
           }
           break;
       }
@@ -376,6 +415,10 @@ export class IrisClientObserver {
       await irisClient.agoraRTCClient.subscribe(user, 'audio').then(() => {
         AgoraConsole.debug('onEventUserPublished subscribe audio success');
         this._engine.trackHelper.play(user!.audioTrack!);
+        this._engine.trackHelper.setVolume(
+          user!.audioTrack!,
+          irisClient.irisClientState.playbackVolume
+        );
         let param: IrisTrackEventHandlerParam = {
           client: irisClient.agoraRTCClient,
           remoteUser: user!,

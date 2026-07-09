@@ -1,14 +1,12 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
-import {
-  ILocalAudioTrack,
-  IMicrophoneAudioTrack,
-  IRemoteAudioTrack,
-} from 'agora-rtc-sdk-ng';
+import { ILocalAudioTrack, IMicrophoneAudioTrack } from 'agora-rtc-sdk-ng';
 import { CallApiReturnType } from 'iris-web-core';
 
 import { IrisAudioSourceType } from '../base/BaseType';
 
-import { IrisRtcEngine } from '../engine/IrisRtcEngine';
+import { AudioTrackPackage } from '../engine/IrisClientManager';
+import { NotifyType } from '../engine/IrisClientObserver';
+import { IrisIntervalType, IrisRtcEngine } from '../engine/IrisRtcEngine';
 import { AgoraConsole } from '../util';
 
 //@ts-ignore
@@ -61,24 +59,31 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
     let process = async () => {
       this._engine.globalState.playbackDeviceId = deviceId;
 
-      for (let audioTrackPackage of this._engine.irisClientManager
-        .localAudioTrackPackages) {
-        if (audioTrackPackage.track) {
+      this._engine.irisClientManager.irisClientList.forEach(
+        async (irisClient) => {
+          irisClient.agoraRTCClient?.remoteUsers.forEach(async (remoteUser) => {
+            if (remoteUser.hasAudio && remoteUser.audioTrack) {
+              await this._engine.trackHelper.setPlaybackDevice(
+                remoteUser.audioTrack,
+                deviceId
+              );
+            }
+          });
+        }
+      );
+      this._engine.irisClientManager.localAudioTrackPackages.map(
+        async (audioTrackPackage) => {
           if (
-            audioTrackPackage.type ==
-              IrisAudioSourceType.kAudioSourceTypeRemote ||
-            audioTrackPackage.type ==
-              IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary ||
-            audioTrackPackage.type ==
-              IrisAudioSourceType.kAudioSourceTypeMicrophoneSecondary
+            audioTrackPackage.track &&
+            this._engine.implHelper.isAudio(audioTrackPackage.type)
           ) {
             await this._engine.trackHelper.setPlaybackDevice(
-              audioTrackPackage.track as ILocalAudioTrack | IRemoteAudioTrack,
+              audioTrackPackage.track as ILocalAudioTrack,
               deviceId
             );
           }
         }
-      }
+      );
 
       return this._engine.returnResult();
     };
@@ -175,5 +180,71 @@ export class IAudioDeviceManagerImpl implements NATIVE_RTC.IAudioDeviceManager {
       return this._engine.returnResult();
     };
     return this._engine.execute(process);
+  }
+
+  startAudioDeviceLoopbackTest_46f8ab7(
+    indicationInterval: number
+  ): CallApiReturnType {
+    let fun = async () => {
+      try {
+        let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack(
+          this._engine.irisClientManager.getIrisClient()
+        );
+        await this._engine.irisClientManager.addLocalAudioTrackPackage(
+          new AudioTrackPackage(
+            IrisAudioSourceType.kAudioSourceTypeMicrophoneLoopbackTest,
+            audioTrack
+          )
+        );
+        await this._engine.trackHelper.setEnabled(
+          audioTrack as ILocalAudioTrack,
+          true
+        );
+        this._engine.trackHelper.play(audioTrack as ILocalAudioTrack);
+        this._engine.addIrisInterval(
+          IrisIntervalType.loopbackTest,
+          setInterval(() => {
+            this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
+              this._engine.irisClientManager.getIrisClient().connection,
+              [
+                {
+                  uid: 0,
+                  volume: audioTrack.getVolumeLevel() * 100 * 2.55,
+                },
+              ],
+              audioTrack.getVolumeLevel() > 0 ? 1 : 0,
+              audioTrack.getVolumeLevel() * 100 * 2.55
+            );
+          }, indicationInterval),
+          0
+        );
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
+  }
+
+  stopAudioDeviceLoopbackTest(): CallApiReturnType {
+    let fun = async () => {
+      try {
+        await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+          NotifyType.REMOVE_TRACK,
+          this._engine.irisClientManager.localAudioTrackPackages.filter(
+            (item) =>
+              item.type ==
+              IrisAudioSourceType.kAudioSourceTypeMicrophoneLoopbackTest
+          )
+        );
+        this._engine.removeIrisIntervalByType(IrisIntervalType.loopbackTest);
+      } catch (e) {
+        AgoraConsole.log(e);
+        return this._engine.returnResult(false);
+      }
+      return this._engine.returnResult();
+    };
+    return this._engine.execute(fun);
   }
 }

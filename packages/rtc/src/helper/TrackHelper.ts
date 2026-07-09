@@ -13,6 +13,7 @@ import { CallIrisApiResult } from 'iris-web-core';
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
 
 import { AgoraConsole } from '../util/AgoraConsole';
+import { AgoraTranslate } from '../util/AgoraTranslate';
 
 export class TrackHelper {
   _engine: IrisRtcEngine;
@@ -31,50 +32,28 @@ export class TrackHelper {
       } else {
         track?.play(element);
       }
-    } catch (e) {
-      AgoraConsole.error(e);
-      Promise.resolve(
-        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-      );
-      throw e;
-    }
+    } catch (e) {}
   }
 
   public stop(track: ITrack): void {
     try {
       track?.stop();
-    } catch (e) {
-      AgoraConsole.error(e);
-      Promise.resolve(
-        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-      );
-      throw e;
-    }
+    } catch (e) {}
   }
 
   public async setEnabled(track: ILocalTrack, enabled: boolean): Promise<void> {
     try {
-      await track?.setEnabled(enabled);
-    } catch (e) {
-      AgoraConsole.error(e);
-      Promise.resolve(
-        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-      );
-      throw e;
-    }
+      if (track && !track.muted) {
+        await track?.setEnabled(enabled);
+      }
+    } catch (e) {}
   }
   public async setMuted(track: ILocalTrack, enabled: boolean): Promise<void> {
     try {
       if (track?.enabled) {
         await track?.setMuted(enabled);
       }
-    } catch (e) {
-      AgoraConsole.error(e);
-      Promise.resolve(
-        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-      );
-      throw e;
-    }
+    } catch (e) {}
   }
   public async setDevice(
     track: ICameraVideoTrack | IMicrophoneAudioTrack,
@@ -97,11 +76,18 @@ export class TrackHelper {
     try {
       await track?.setPlaybackDevice(deviceId);
     } catch (e) {
+      //
+    }
+  }
+
+  public setVolume(
+    track: ILocalAudioTrack | IRemoteAudioTrack,
+    volume: number
+  ): void {
+    try {
+      track?.setVolume(AgoraTranslate.NATIVE_RTC_Volume2WebVolume(volume));
+    } catch (e) {
       AgoraConsole.error(e);
-      Promise.resolve(
-        new CallIrisApiResult(-NATIVE_RTC.ERROR_CODE_TYPE.ERR_FAILED, e)
-      );
-      throw e;
     }
   }
 }

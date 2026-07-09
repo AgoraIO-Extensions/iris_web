@@ -181,25 +181,18 @@ export class IrisClientEventHandler {
       );
       this._engine.irisClientManager.addUserInfo(userInfo);
     }
-    let userPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      remoteUid
+    let userPackage = new RemoteUserPackage(
+      connection,
+      '',
+      defaultRemoteVideoPlayerConfig,
+      remoteUid,
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
+      IrisAudioSourceType.kAudioSourceTypeRemote
     );
-    if (!userPackage) {
-      userPackage = new RemoteUserPackage(
-        connection,
-        '',
-        defaultRemoteVideoPlayerConfig,
-        remoteUid,
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
-        IrisAudioSourceType.kAudioSourceTypeRemote
-      );
-      this._engine.irisClientManager.addRemoteUserPackage(
-        userPackage,
-        this.agoraRTCClient
-      );
-    } else {
-      userPackage.uid = remoteUid;
-    }
+    this._engine.irisClientManager.addRemoteUserPackage(
+      userPackage,
+      this.agoraRTCClient
+    );
     this._engine.rtcEngineEventHandler.onRemoteAudioStateChanged_056772e(
       this._irisClient.connection,
       remoteUid,
@@ -231,15 +224,20 @@ export class IrisClientEventHandler {
     user: IAgoraRTCRemoteUser,
     reason: string
   ): Promise<void> {
+    let connection: NATIVE_RTC.RtcConnection = {
+      channelId: this.agoraRTCClient.channelName,
+      localUid: this.agoraRTCClient.uid as number,
+    };
     let remoteUid: number = getUidFromRemoteUser(user);
-    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      remoteUid
+    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUidAndConnection(
+      remoteUid,
+      connection
     );
     let reason2 = AgoraTranslate.string2NATIVE_RTCUSER_OFFLINE_REASON_TYPE(
       reason
     );
     this._engine.rtcEngineEventHandler.onUserOffline_0a32aac(
-      this._irisClient.connection,
+      connection,
       remoteUid,
       reason2
     );
@@ -254,10 +252,13 @@ export class IrisClientEventHandler {
       [remoteUser]
     );
     await this._engine.irisClientManager.irisClientObserver.notifyRemote(
-      NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
+      NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK,
       [remoteUser]
     );
-    this._engine.irisClientManager.removeRemoteUserPackage(user.uid as number);
+    this._engine.irisClientManager.removeRemoteUserPackageByUidAndConnection(
+      remoteUid,
+      connection
+    );
     this._engine.irisClientManager.removetrackEventHandlerByRemoteUser(
       user,
       'all'
@@ -268,10 +269,15 @@ export class IrisClientEventHandler {
     user: IAgoraRTCRemoteUser,
     mediaType: 'audio' | 'video'
   ): Promise<void> {
+    let connection: NATIVE_RTC.RtcConnection = {
+      channelId: this.agoraRTCClient.channelName,
+      localUid: this.agoraRTCClient.uid as number,
+    };
     let remoteUid: number = getUidFromRemoteUser(user);
     let isLocal = user.uid === this.agoraRTCClient.uid;
-    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      remoteUid
+    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUidAndConnection(
+      remoteUid,
+      connection
     );
     if (remoteUser) {
       if (mediaType == 'audio') {
@@ -350,10 +356,16 @@ export class IrisClientEventHandler {
     user: IAgoraRTCRemoteUser,
     mediaType: 'audio' | 'video'
   ): Promise<void> {
+    let connection: NATIVE_RTC.RtcConnection = {
+      channelId: this.agoraRTCClient.channelName,
+      localUid: this.agoraRTCClient.uid as number,
+    };
     let remoteUid: number = getUidFromRemoteUser(user);
-    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUid(
-      remoteUid
+    let remoteUser = this._engine.irisClientManager.getRemoteUserPackageByUidAndConnection(
+      remoteUid,
+      connection
     );
+
     if (remoteUser) {
       if (mediaType == 'audio') {
         await this._engine.irisClientManager.irisClientObserver.notifyRemote(
@@ -443,35 +455,33 @@ export class IrisClientEventHandler {
   }
 
   onEventVolumeIndicator(result: { level: number; uid: number }[]): void {
-    let speakers: NATIVE_RTC.AudioVolumeInfo[] = [];
-    for (let i = 0; i < result.length; i++) {
-      speakers.push(
-        AgoraTranslate.volumeIndicatorResult2NATIVE_RTCAudioVolumeInfo(
-          result[i]
-        )
-      );
-    }
-    let speakerNumber = result.length;
-    /* todo
-     * - In the local user's callback, `totalVolume` is the sum of the voice volume and audio-mixing volume
-     * of the local user.
-     * - In the remote users' callback, `totalVolume` is the sum of the voice volume and audio-mixing volume
-     * of all the remote speakers.
-     */
-    let totalVolume = 0;
+    this._engine.irisClientManager.irisClientList.map((irisClient) => {
+      let speakers: NATIVE_RTC.AudioVolumeInfo[] = [];
+      for (let i = 0; i < result.length; i++) {
+        speakers.push(
+          AgoraTranslate.volumeIndicatorResult2NATIVE_RTCAudioVolumeInfo(
+            result[i]
+          )
+        );
+      }
+      let speakerNumber = result.length;
+      /* todo
+       * - In the local user's callback, `totalVolume` is the sum of the voice volume and audio-mixing volume
+       * of the local user.
+       * - In the remote users' callback, `totalVolume` is the sum of the voice volume and audio-mixing volume
+       * of all the remote speakers.
+       */
+      let totalVolume = 0;
 
-    if (!this._engine.globalState.enableAudioVolumeIndicationConfig.reportVad) {
-      speakers = speakers.filter(
-        (speaker) => speaker.uid !== this.agoraRTCClient.uid
-      );
-    }
-
-    this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
-      this._irisClient.connection,
-      speakers,
-      speakerNumber,
-      totalVolume
-    );
+      if (irisClient.irisClientState.enableAudioVolumeIndication) {
+        this._engine.rtcEngineEventHandler.onAudioVolumeIndication_781482a(
+          this._irisClient.connection,
+          speakers,
+          speakerNumber,
+          totalVolume
+        );
+      }
+    });
   }
 
   onEventCryptError(): void {
