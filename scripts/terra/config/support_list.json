@@ -119,5 +119,15 @@
   "AudioDeviceManager_setPlaybackDevice_4ad5f6e",
   "AudioDeviceManager_getRecordingDevice_73b9872",
   "AudioDeviceManager_getPlaybackDevice_73b9872",
-  "AudioDeviceManager_release"
+  "AudioDeviceManager_release",
+  "RtcEngine_adjustPlaybackSignalVolume_46f8ab7",
+  "RtcEngine_adjustRecordingSignalVolume_46f8ab7",
+  "RtcEngineEx_adjustRecordingSignalVolumeEx_e84d10e",
+  "RtcEngine_adjustUserPlaybackSignalVolume_88641bf",
+  "RtcEngineEx_adjustUserPlaybackSignalVolumeEx_adbd29c",
+  "RtcEngineEx_enableAudioVolumeIndicationEx_ac84f2a",
+  "RtcEngine_enableInEarMonitoring_077cf5f",
+  "AudioDeviceManager_startAudioDeviceLoopbackTest_46f8ab7",
+  "AudioDeviceManager_stopAudioDeviceLoopbackTest",
+  "RtcEngine_setAINSMode_4df3049"
 ]

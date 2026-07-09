@@ -664,6 +664,91 @@ describe('IMediaEngine', () => {
     );
   });
 
+  test('MediaEngine_createLoopbackAudioTrack_599af35 impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      config: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MediaEngine_createLoopbackAudioTrack_599af35',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
+        ?.createLoopbackAudioTrack_599af35
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
+  test('MediaEngine_destroyLoopbackAudioTrack_6178b5d impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      trackId: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MediaEngine_destroyLoopbackAudioTrack_6178b5d',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
+        ?.destroyLoopbackAudioTrack_6178b5d
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
+  test('MediaEngine_updateLoopbackAudioTrackConfig_080b602 impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      trackId: 'test',
+      config: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MediaEngine_updateLoopbackAudioTrackConfig_080b602',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MediaEngine')._impl
+        ?.updateLoopbackAudioTrackConfig_080b602
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
+
   test('MediaEngine_release impl call', async () => {
     jest
       .spyOn(irisRtcEngine, 'returnResult')

@@ -203,6 +203,14 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
   }
 
   // @ts-ignore
+  startRecordingDeviceTest_db21a14(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'AudioDeviceManager_startRecordingDeviceTest_db21a14 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   stopRecordingDeviceTest(): CallApiReturnType {
     AgoraConsole.warn(
       'AudioDeviceManager_stopRecordingDeviceTest not supported in this platform!'
@@ -212,18 +220,19 @@ export class IAudioDeviceManagerDispatch implements IAudioDeviceManager {
 
   // @ts-ignore
   startAudioDeviceLoopbackTest_46f8ab7(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'AudioDeviceManager_startAudioDeviceLoopbackTest_46f8ab7 not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let indicationInterval = obj.indicationInterval;
+    if (indicationInterval === undefined) {
+      AgoraConsole.error('indicationInterval is undefined');
+      throw 'indicationInterval is undefined';
+    }
+
+    return this._impl.startAudioDeviceLoopbackTest_46f8ab7(indicationInterval);
   }
 
   // @ts-ignore
   stopAudioDeviceLoopbackTest(): CallApiReturnType {
-    AgoraConsole.warn(
-      'AudioDeviceManager_stopAudioDeviceLoopbackTest not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    return this._impl.stopAudioDeviceLoopbackTest();
   }
 
   // @ts-ignore

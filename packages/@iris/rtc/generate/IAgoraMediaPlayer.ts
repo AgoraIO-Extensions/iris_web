@@ -152,6 +152,8 @@ export interface IMediaPlayer {
   setSpatialAudioParams_5035667(params: SpatialAudioParams): CallApiReturnType;
 
   setSoundPositionParams_f282d50(pan: number, gain: number): CallApiReturnType;
+
+  getAudioBufferDelay_c30e349(delayMs: number): CallApiReturnType;
 }
 
 export interface IMediaPlayerCacheManager {

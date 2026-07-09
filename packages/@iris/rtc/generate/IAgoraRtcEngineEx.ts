@@ -26,6 +26,7 @@ import {
 } from './AgoraMediaBase';
 import {
   ChannelMediaOptions,
+  ImageTrackOptions,
   LeaveChannelOptions,
   STREAM_FALLBACK_OPTIONS,
 } from './IAgoraRtcEngine';
@@ -344,5 +345,30 @@ export interface IRtcEngineEx {
     connection: RtcConnection,
     metadata: string,
     length: number
+  ): CallApiReturnType;
+
+  enableVideoImageSourceEx_b63f346(
+    enable: boolean,
+    options: ImageTrackOptions,
+    connection: RtcConnection
+  ): CallApiReturnType;
+
+  preloadEffectEx_c9fae88(
+    connection: RtcConnection,
+    soundId: number,
+    filePath: string,
+    startPos: number
+  ): CallApiReturnType;
+
+  playEffectEx_ae5345c(
+    connection: RtcConnection,
+    soundId: number,
+    filePath: string,
+    loopCount: number,
+    pitch: number,
+    pan: number,
+    gain: number,
+    publish: boolean,
+    startPos: number
   ): CallApiReturnType;
 }

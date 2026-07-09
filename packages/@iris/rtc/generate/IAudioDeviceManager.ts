@@ -6,6 +6,12 @@ export enum MAX_DEVICE_ID_LENGTH_TYPE {
   MAX_DEVICE_ID_LENGTH = 512,
 }
 
+export class RecordingDeviceTestConfiguration {
+  indicationInterval?: number;
+
+  enablePlayback?: boolean;
+}
+
 export interface IAudioDeviceManager {
   enumeratePlaybackDevices(): CallApiReturnType;
 
@@ -53,6 +59,10 @@ export interface IAudioDeviceManager {
 
   startRecordingDeviceTest_46f8ab7(
     indicationInterval: number
+  ): CallApiReturnType;
+
+  startRecordingDeviceTest_db21a14(
+    config: RecordingDeviceTestConfiguration
   ): CallApiReturnType;
 
   stopRecordingDeviceTest(): CallApiReturnType;

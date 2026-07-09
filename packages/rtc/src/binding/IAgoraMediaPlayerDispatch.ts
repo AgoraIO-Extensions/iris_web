@@ -457,6 +457,14 @@ export class IMediaPlayerDispatch implements IMediaPlayer {
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
+
+  // @ts-ignore
+  getAudioBufferDelay_c30e349(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MediaPlayer_getAudioBufferDelay_c30e349 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
 }
 
 export class IMediaPlayerCacheManagerDispatch

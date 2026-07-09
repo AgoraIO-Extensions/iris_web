@@ -92,14 +92,14 @@ importers:
   packages/fake/rtc:
     dependencies:
       '@agoraio-extensions/agora-rtc-sdk-ng-fake':
-        specifier: ^1.0.15
-        version: 1.0.15
+        specifier: ^1.0.16
+        version: 1.0.16
       '@iris/native-rtc':
         specifier: 'workspace: *'
         version: link:../../@iris/rtc
       agora-rtc-sdk-ng:
-        specifier: 4.23.2
-        version: 4.23.2
+        specifier: 4.24.2
+        version: 4.24.2
       iris-web-rtc:
         specifier: 'workspace: *'
         version: link:../../rtc
@@ -147,14 +147,14 @@ importers:
   packages/rtc:
     dependencies:
       '@agoraio-extensions/agora-rtc-sdk-ng-fake':
-        specifier: ^1.0.15
-        version: 1.0.15
+        specifier: ^1.0.16
+        version: 1.0.16
       '@iris/native-rtc':
         specifier: 'workspace: *'
         version: link:../@iris/rtc
       agora-rtc-sdk-ng:
-        specifier: 4.23.2
-        version: 4.23.2
+        specifier: 4.24.2
+        version: 4.24.2
       iris-web-core:
         specifier: 'workspace: *'
         version: link:../core
@@ -210,17 +210,17 @@ packages:
   '@adobe/css-tools@4.4.3':
     resolution: {integrity: sha512-VQKMkwriZbaOgVCby1UDY/LDk5fIjhQicCvVPFqfe+69fWaPWydbWJ3wRt59/YzIwda1I81loas3oCoHxnqvdA==}
 
-  '@agora-js/media@4.23.2':
-    resolution: {integrity: sha512-mWbl/ZjAw4tT22Ks0O2CJLMX3ht4uKPsDm2+fb5XOalrUVNzJOtwJA4E36d/o4ZfVtvwiJAOYtuTpoib8LlLgQ==}
+  '@agora-js/media@4.24.2':
+    resolution: {integrity: sha512-NVi4bg9Ytn4SCeFj90HobpMqzecoH4lAkNkGq+GsfmtmJBxwagufaOPU/4RYH70sRnV4cY3HXO59UHef2tj4iA==}
 
-  '@agora-js/report@4.23.2':
-    resolution: {integrity: sha512-enHyWN5uF0RuS1crlHUlTfBZ7yy3n2zvSqt2odvsz4S1DZ0DlYQoCHFbr5CBOhN+Zb3bLEWxY3ej/2kUMqCQBA==}
+  '@agora-js/report@4.24.2':
+    resolution: {integrity: sha512-cAYi67dZhFTU+cQGxbMrD2TEJXJPBnXJSiWtXBtQ+Oxw+9Qi/dfwX/PwIvqwqmC3jjJJjwZpTZOJCuBpAHOOfQ==}
 
-  '@agora-js/shared@4.23.2':
-    resolution: {integrity: sha512-DaeqskGUWero8SeqU0QeYEfJu4OcPIIltiQ0PRyMbyVa4HL7vCzr6gRZkef9sFMVyJPNe0QXL7gdX132kA2uhg==}
+  '@agora-js/shared@4.24.2':
+    resolution: {integrity: sha512-BACC0Z46rWVHdgMIfDX+5YnLYwAIMo+971XxD4mh1pVD5LiwlbM/rQGBKjVpPJoMvFHlGW8L1/eMmRFRppjChw==}
 
-  '@agoraio-extensions/agora-rtc-sdk-ng-fake@1.0.15':
-    resolution: {integrity: sha512-aBCFrgHt+MIi48iTGDqXcHUbybz3ZiTnORVQGZ22ODMevlGN8jwq7Pt/8Yo0iDuoFxHqRiUD5kQqlhgkyI6SVw==, tarball: https://npm.pkg.github.com/download/@agoraio-extensions/agora-rtc-sdk-ng-fake/1.0.15/c90baca04af98fca901c90cd07860c5bdbeb10ec}
+  '@agoraio-extensions/agora-rtc-sdk-ng-fake@1.0.16':
+    resolution: {integrity: sha512-/Z7eYzLHk7l5Ds4VKJbk1aDAtMQ/gPkRG7HjE5f6NqnSAIb58p8HXOJ1MVXY3KaiAIh2ZknzSrJwGJ3L10GQoQ==, tarball: https://npm.pkg.github.com/download/@agoraio-extensions/agora-rtc-sdk-ng-fake/1.0.16/bc11fbeeafbd2a3a8ccda3b27a225400c1d7d0ea}
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -1309,8 +1309,8 @@ packages:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
     engines: {node: '>= 14'}
 
-  agora-rtc-sdk-ng@4.23.2:
-    resolution: {integrity: sha512-uZcJVJ0g4PJfCqnlcP9kFU6y/2n9uIlRSljRFnK2FNLHo8nlB8Vc0pf5Gs4n75PmThC4u1G2FvL4k7iFau6boQ==}
+  agora-rtc-sdk-ng@4.24.2:
+    resolution: {integrity: sha512-Oy4F8c+B6esQt8dYY8QYHKUUbWNf4SeM025tG8giWEsnytX7NB8EeINfYGMyFXoeVMqNyJO7NdAeK6lBY5c5oQ==}
 
   agora-rte-extension@1.2.4:
     resolution: {integrity: sha512-0ovZz1lbe30QraG1cU+ji7EnQ8aUu+Hf3F+a8xPml3wPOyUQEK6CTdxV9kMecr9t+fIDrGeW7wgJTsM1DQE7Nw==}
@@ -1473,8 +1473,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axios@1.7.9:
-    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
+  axios@1.18.1:
+    resolution: {integrity: sha512-3nTvFlvpn9Zu/RkHUqtc7/+al4UpRW5az71ap5zccp6e8RAYEzhMTecX8Dz1wWDYrPpUoB1HAQEGEAEvUr7S9g==}
 
   babel-jest@29.7.0:
     resolution: {integrity: sha512-BrvGY3xZSwEcCzKvKsCi2GgHqDqsYkOP4/by5xCgIwGXQxIEh+8ew3gmrE1y7XRR6LHZIj6yLYnUi/mm2KXKBg==}
@@ -2584,6 +2584,15 @@ packages:
       debug:
         optional: true
 
+  follow-redirects@1.16.0:
+    resolution: {integrity: sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+
   for-each@0.3.5:
     resolution: {integrity: sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg==}
     engines: {node: '>= 0.4'}
@@ -2598,6 +2607,10 @@ packages:
 
   form-data@4.0.4:
     resolution: {integrity: sha512-KrGhL9Q4zjj0kiUt5OO4Mr/A/jlI2jDYs5eHBpYHPcBEVSiipAvn2Ko2HnPe20rmcuuvMHNdZFp+4IlGTMF0Ow==}
+    engines: {node: '>= 6'}
+
+  form-data@4.0.6:
+    resolution: {integrity: sha512-vKatAh4SlVfgbv+YtmhiRjhEMJsYpsG1Y2rMQtR+SVSbytsSD1YGzDIcrAJmdFec88u/+VoGmxnl+80gL1tRCQ==}
     engines: {node: '>= 6'}
 
   formdata-polyfill@4.0.10:
@@ -2807,6 +2820,10 @@ packages:
 
   hasown@2.0.2:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
+    engines: {node: '>= 0.4'}
+
+  hasown@2.0.4:
+    resolution: {integrity: sha512-T2UbfbBEF32wiepXIsMlTW9+dDYC6wMh/t/vYA4tuOMKqWz/n3vr1NFSxQiyP+zk2mXsoMA/i/7qV6LKut1t1A==}
     engines: {node: '>= 0.4'}
 
   he@1.2.0:
@@ -4262,6 +4279,10 @@ packages:
   proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
 
+  proxy-from-env@2.1.0:
+    resolution: {integrity: sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==}
+    engines: {node: '>=10'}
+
   psl@1.15.0:
     resolution: {integrity: sha512-JZd3gMVBAVQkSs6HdNZo9Sdo0LNcQeMNP3CozBJb3JYC/QUYZTnKxP+f8oWRX4rHP5EurWxqAHTSwUCjlNKa1w==}
 
@@ -5427,31 +5448,34 @@ snapshots:
 
   '@adobe/css-tools@4.4.3': {}
 
-  '@agora-js/media@4.23.2':
+  '@agora-js/media@4.24.2':
     dependencies:
-      '@agora-js/report': 4.23.2
-      '@agora-js/shared': 4.23.2
+      '@agora-js/report': 4.24.2
+      '@agora-js/shared': 4.24.2
       agora-rte-extension: 1.2.4
-      axios: 1.7.9
+      axios: 1.18.1
       webrtc-adapter: 8.2.0
     transitivePeerDependencies:
       - debug
+      - supports-color
 
-  '@agora-js/report@4.23.2':
+  '@agora-js/report@4.24.2':
     dependencies:
-      '@agora-js/shared': 4.23.2
-      axios: 1.7.9
+      '@agora-js/shared': 4.24.2
+      axios: 1.18.1
     transitivePeerDependencies:
       - debug
+      - supports-color
 
-  '@agora-js/shared@4.23.2':
+  '@agora-js/shared@4.24.2':
     dependencies:
-      axios: 1.7.9
+      axios: 1.18.1
       ua-parser-js: 0.7.40
     transitivePeerDependencies:
       - debug
+      - supports-color
 
-  '@agoraio-extensions/agora-rtc-sdk-ng-fake@1.0.15': {}
+  '@agoraio-extensions/agora-rtc-sdk-ng-fake@1.0.16': {}
 
   '@ampproject/remapping@2.3.0':
     dependencies:
@@ -6757,19 +6781,20 @@ snapshots:
 
   agent-base@7.1.4: {}
 
-  agora-rtc-sdk-ng@4.23.2:
+  agora-rtc-sdk-ng@4.24.2:
     dependencies:
-      '@agora-js/media': 4.23.2
-      '@agora-js/report': 4.23.2
-      '@agora-js/shared': 4.23.2
+      '@agora-js/media': 4.24.2
+      '@agora-js/report': 4.24.2
+      '@agora-js/shared': 4.24.2
       agora-rte-extension: 1.2.4
-      axios: 1.7.9
+      axios: 1.18.1
       formdata-polyfill: 4.0.10
       pako: 2.1.0
       ua-parser-js: 0.7.40
       webrtc-adapter: 8.2.0
     transitivePeerDependencies:
       - debug
+      - supports-color
 
   agora-rte-extension@1.2.4: {}
 
@@ -6937,13 +6962,15 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  axios@1.7.9:
+  axios@1.18.1:
     dependencies:
-      follow-redirects: 1.15.9
-      form-data: 4.0.4
-      proxy-from-env: 1.1.0
+      follow-redirects: 1.16.0
+      form-data: 4.0.6
+      https-proxy-agent: 5.0.1
+      proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
+      - supports-color
 
   babel-jest@29.7.0(@babel/core@7.28.0):
     dependencies:
@@ -8253,6 +8280,8 @@ snapshots:
 
   follow-redirects@1.15.9: {}
 
+  follow-redirects@1.16.0: {}
+
   for-each@0.3.5:
     dependencies:
       is-callable: 1.2.7
@@ -8270,6 +8299,14 @@ snapshots:
       combined-stream: 1.0.8
       es-set-tostringtag: 2.1.0
       hasown: 2.0.2
+      mime-types: 2.1.35
+
+  form-data@4.0.6:
+    dependencies:
+      asynckit: 0.4.0
+      combined-stream: 1.0.8
+      es-set-tostringtag: 2.1.0
+      hasown: 2.0.4
       mime-types: 2.1.35
 
   formdata-polyfill@4.0.10:
@@ -8521,6 +8558,10 @@ snapshots:
   has-yarn@3.0.0: {}
 
   hasown@2.0.2:
+    dependencies:
+      function-bind: 1.1.2
+
+  hasown@2.0.4:
     dependencies:
       function-bind: 1.1.2
 
@@ -10268,6 +10309,8 @@ snapshots:
       - supports-color
 
   proxy-from-env@1.1.0: {}
+
+  proxy-from-env@2.1.0: {}
 
   psl@1.15.0:
     dependencies:

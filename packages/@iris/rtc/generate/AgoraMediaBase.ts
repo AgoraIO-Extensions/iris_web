@@ -97,35 +97,6 @@ export enum MEDIA_SOURCE_TYPE {
   UNKNOWN_MEDIA_SOURCE = 100,
 }
 
-export enum CONTENT_INSPECT_RESULT {
-  CONTENT_INSPECT_NEUTRAL = 1,
-  CONTENT_INSPECT_SEXY = 2,
-  CONTENT_INSPECT_PORN = 3,
-}
-
-export enum CONTENT_INSPECT_TYPE {
-  CONTENT_INSPECT_INVALID = 0,
-  CONTENT_INSPECT_MODERATION = 1,
-  CONTENT_INSPECT_SUPERVISION = 2,
-  CONTENT_INSPECT_IMAGE_MODERATION = 3,
-}
-
-export class ContentInspectModule {
-  type?: CONTENT_INSPECT_TYPE;
-
-  interval?: number;
-}
-
-export class ContentInspectConfig {
-  extraInfo?: string;
-
-  serverConfig?: string;
-
-  modules?: ContentInspectModule[];
-
-  moduleCount?: number;
-}
-
 export class PacketOptions {
   timestamp?: number;
 
@@ -146,6 +117,8 @@ export class AudioPcmFrame {
   sample_rate_hz_?: number;
 
   num_channels_?: number;
+
+  audio_track_number_?: number;
 
   bytes_per_sample?: BYTES_PER_SAMPLE;
 
@@ -417,9 +390,40 @@ export enum MEDIA_PLAYER_SOURCE_TYPE {
 
 export enum VIDEO_MODULE_POSITION {
   POSITION_POST_CAPTURER = 1,
-  POSITION_PRE_RENDERER = 1,
-  POSITION_PRE_ENCODER = 1,
-  POSITION_POST_CAPTURER_ORIGIN = 1,
+  POSITION_PRE_RENDERER = 2,
+  POSITION_PRE_ENCODER = 4,
+  POSITION_POST_CAPTURER_ORIGIN = 8,
+}
+
+export enum CONTENT_INSPECT_RESULT {
+  CONTENT_INSPECT_NEUTRAL = 1,
+  CONTENT_INSPECT_SEXY = 2,
+  CONTENT_INSPECT_PORN = 3,
+}
+
+export enum CONTENT_INSPECT_TYPE {
+  CONTENT_INSPECT_INVALID = 0,
+  CONTENT_INSPECT_MODERATION = 1,
+  CONTENT_INSPECT_SUPERVISION = 2,
+  CONTENT_INSPECT_IMAGE_MODERATION = 3,
+}
+
+export class ContentInspectModule {
+  type?: CONTENT_INSPECT_TYPE;
+
+  interval?: number;
+
+  position?: VIDEO_MODULE_POSITION;
+}
+
+export class ContentInspectConfig {
+  extraInfo?: string;
+
+  serverConfig?: string;
+
+  modules?: ContentInspectModule[];
+
+  moduleCount?: number;
 }
 
 export class SnapshotConfig {

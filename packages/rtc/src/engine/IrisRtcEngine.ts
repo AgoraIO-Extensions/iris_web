@@ -54,6 +54,7 @@ import { IrisClientManager } from './IrisClientManager';
 export enum IrisIntervalType {
   enableAudioVolumeIndication = 0,
   networkQuality = 1,
+  loopbackTest = 2,
 }
 
 export class IrisRtcEngine implements ApiInterceptor {

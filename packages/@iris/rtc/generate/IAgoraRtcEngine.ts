@@ -50,6 +50,7 @@ import {
   LICENSE_ERROR_TYPE,
   LOCAL_AUDIO_STREAM_REASON,
   LOCAL_AUDIO_STREAM_STATE,
+  LOCAL_VIDEO_EVENT_TYPE,
   LOCAL_VIDEO_STREAM_REASON,
   LOCAL_VIDEO_STREAM_STATE,
   LastmileProbeConfig,
@@ -61,6 +62,9 @@ import {
   LocalTranscoderConfiguration,
   LowlightEnhanceOptions,
   MEDIA_TRACE_EVENT,
+  MultipathMode,
+  MultipathStats,
+  MultipathType,
   NETWORK_TYPE,
   PERMISSION_TYPE,
   QUALITY_ADAPT_INDICATION,
@@ -524,6 +528,8 @@ export class ScreenCaptureSourceInfo {
   minimizeWindow?: boolean;
 
   sourceDisplayId?: number;
+
+  process_id?: number;
 }
 
 export class AdvancedAudioOptions {
@@ -549,9 +555,9 @@ export class ChannelMediaOptions {
 
   publishMicrophoneTrack?: boolean;
 
-  publishScreenCaptureVideo?: boolean;
-
   publishScreenCaptureAudio?: boolean;
+
+  publishScreenCaptureVideo?: boolean;
 
   publishScreenTrack?: boolean;
 
@@ -564,6 +570,10 @@ export class ChannelMediaOptions {
   publishCustomAudioTrack?: boolean;
 
   publishCustomAudioTrackId?: number;
+
+  publishLoopbackAudioTrack?: boolean;
+
+  publishLoopbackAudioTrackId?: number;
 
   publishCustomVideoTrack?: boolean;
 
@@ -612,6 +622,14 @@ export class ChannelMediaOptions {
   isAudioFilterable?: boolean;
 
   parameters?: string;
+
+  enableMultipath?: boolean;
+
+  uplinkMultipathMode?: MultipathMode;
+
+  downlinkMultipathMode?: MultipathMode;
+
+  preferMultipathType?: MultipathType;
 }
 
 export enum PROXY_TYPE {
@@ -633,6 +651,8 @@ export class LeaveChannelOptions {
   stopAudioMixing?: boolean;
 
   stopAllEffect?: boolean;
+
+  unloadAllEffect?: boolean;
 
   stopMicrophoneRecording?: boolean;
 }
@@ -736,6 +756,11 @@ export interface IRtcEngineEventHandler {
     width: number,
     height: number,
     rotation: number
+  ): void;
+
+  onLocalVideoEvent_7c57d16(
+    source: VIDEO_SOURCE_TYPE,
+    event: LOCAL_VIDEO_EVENT_TYPE
   ): void;
 
   onLocalVideoStateChanged_a44228a(
@@ -1042,6 +1067,8 @@ export interface IRtcEngineEventHandler {
   ): void;
 
   onSetRtmFlagResult_46f8ab7(code: number): void;
+
+  onMultipathStats_796ff12(stats: MultipathStats): void;
 
   onJoinChannelSuccess_263e4cd(
     connection: RtcConnection,
@@ -1354,6 +1381,11 @@ export interface IRtcEngineEventHandler {
     metadata: string,
     length: number
   ): void;
+
+  onMultipathStats_bc711cf(
+    connection: RtcConnection,
+    stats: MultipathStats
+  ): void;
 }
 
 export interface IVideoDeviceManager {
@@ -1378,6 +1410,71 @@ export interface IVideoDeviceManager {
   release(): CallApiReturnType;
 }
 
+export enum VIDEO_EFFECT_NODE_ID {
+  BEAUTY = 1,
+  STYLE_MAKEUP = 2,
+  FILTER = 4,
+  STICKER = 8,
+}
+
+export enum VIDEO_EFFECT_ACTION {
+  SAVE = 1,
+  RESET = 2,
+}
+
+export interface IVideoEffectObject {
+  addOrUpdateVideoEffect_303a98c(
+    nodeId: number,
+    templateName: string
+  ): CallApiReturnType;
+
+  removeVideoEffect_b48de50(nodeId: number): CallApiReturnType;
+
+  performVideoEffectAction_eddb1a6(
+    nodeId: number,
+    actionId: VIDEO_EFFECT_ACTION
+  ): CallApiReturnType;
+
+  setVideoEffectStringParam_0e4f59e(
+    option: string,
+    key: string,
+    param: string
+  ): CallApiReturnType;
+
+  setVideoEffectFloatParam_e8dfcf8(
+    option: string,
+    key: string,
+    param: number
+  ): CallApiReturnType;
+
+  setVideoEffectIntParam_3b77680(
+    option: string,
+    key: string,
+    param: number
+  ): CallApiReturnType;
+
+  setVideoEffectBoolParam_918930f(
+    option: string,
+    key: string,
+    param: boolean
+  ): CallApiReturnType;
+
+  getVideoEffectFloatParam_ccad422(
+    option: string,
+    key: string
+  ): CallApiReturnType;
+
+  getVideoEffectIntParam_ccad422(
+    option: string,
+    key: string
+  ): CallApiReturnType;
+
+  getVideoEffectBoolParam_ccad422(
+    option: string,
+    key: string
+  ): CallApiReturnType;
+}
+
 export class RtcEngineContext {
   appId?: string;
 
@@ -1398,6 +1495,8 @@ export class RtcEngineContext {
   domainLimit?: boolean;
 
   autoRegisterAgoraExtensions?: boolean;
+
+  parameters?: string;
 }
 
 export enum METADATA_TYPE {
@@ -1625,6 +1724,15 @@ export interface IRtcEngine {
     enabled: boolean,
     options: FilterEffectOptions,
     type: MEDIA_SOURCE_TYPE
+  ): CallApiReturnType;
+
+  createVideoEffectObject_65bd50d(
+    bundlePath: string,
+    type: MEDIA_SOURCE_TYPE
+  ): CallApiReturnType;
+
+  destroyVideoEffectObject_66d092b(
+    videoEffectObject: IVideoEffectObject
   ): CallApiReturnType;
 
   setLowlightEnhanceOptions_4f9f013(
@@ -2027,6 +2135,12 @@ export interface IRtcEngine {
   setPlaybackAudioFrameBeforeMixingParameters_4e92b3c(
     sampleRate: number,
     channel: number
+  ): CallApiReturnType;
+
+  setPlaybackAudioFrameBeforeMixingParameters_ee7e270(
+    sampleRate: number,
+    channel: number,
+    samplesPerCall: number
   ): CallApiReturnType;
 
   enableAudioSpectrumMonitor_46f8ab7(intervalInMS: number): CallApiReturnType;
@@ -2596,6 +2710,7 @@ export enum MEDIA_DEVICE_STATE_TYPE {
   MEDIA_DEVICE_STATE_PLUGGED_IN = 3,
   MEDIA_DEVICE_STATE_NOT_PRESENT = 4,
   MEDIA_DEVICE_STATE_UNPLUGGED = 8,
+  MEDIA_DEVICE_STATE_DEFAULT_DEVICE_CHANGED_READY = 9,
 }
 
 export enum VIDEO_PROFILE_TYPE {

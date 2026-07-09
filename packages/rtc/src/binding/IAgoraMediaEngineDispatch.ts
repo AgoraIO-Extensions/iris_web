@@ -194,6 +194,32 @@ export class IMediaEngineDispatch implements IMediaEngine {
   }
 
   // @ts-ignore
+  createLoopbackAudioTrack_599af35(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MediaEngine_createLoopbackAudioTrack_599af35 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  destroyLoopbackAudioTrack_6178b5d(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'MediaEngine_destroyLoopbackAudioTrack_6178b5d not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  updateLoopbackAudioTrackConfig_080b602(
+    apiParam: ApiParam
+  ): CallApiReturnType {
+    AgoraConsole.warn(
+      'MediaEngine_updateLoopbackAudioTrackConfig_080b602 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
   release(): CallApiReturnType {
     AgoraConsole.warn('MediaEngine_release not supported in this platform!');
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);

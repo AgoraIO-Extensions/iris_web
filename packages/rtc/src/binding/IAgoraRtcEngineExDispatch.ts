@@ -354,10 +354,19 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   adjustRecordingSignalVolumeEx_e84d10e(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_adjustRecordingSignalVolumeEx_e84d10e not supported in this platform!'
-    );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+    let obj = JSON.parse(apiParam.data) as any;
+    let volume = obj.volume;
+    if (volume === undefined) {
+      AgoraConsole.error('volume is undefined');
+      throw 'volume is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.adjustRecordingSignalVolumeEx_e84d10e(volume, connection);
   }
 
   // @ts-ignore
@@ -372,10 +381,28 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   adjustUserPlaybackSignalVolumeEx_adbd29c(
     apiParam: ApiParam
   ): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_adjustUserPlaybackSignalVolumeEx_adbd29c not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let uid = obj.uid;
+    if (uid === undefined) {
+      AgoraConsole.error('uid is undefined');
+      throw 'uid is undefined';
+    }
+    let volume = obj.volume;
+    if (volume === undefined) {
+      AgoraConsole.error('volume is undefined');
+      throw 'volume is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.adjustUserPlaybackSignalVolumeEx_adbd29c(
+      uid,
+      volume,
+      connection
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -478,10 +505,34 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
 
   // @ts-ignore
   enableAudioVolumeIndicationEx_ac84f2a(apiParam: ApiParam): CallApiReturnType {
-    AgoraConsole.warn(
-      'RtcEngineEx_enableAudioVolumeIndicationEx_ac84f2a not supported in this platform!'
+    let obj = JSON.parse(apiParam.data) as any;
+    let interval = obj.interval;
+    if (interval === undefined) {
+      AgoraConsole.error('interval is undefined');
+      throw 'interval is undefined';
+    }
+    let smooth = obj.smooth;
+    if (smooth === undefined) {
+      AgoraConsole.error('smooth is undefined');
+      throw 'smooth is undefined';
+    }
+    let reportVad = obj.reportVad;
+    if (reportVad === undefined) {
+      AgoraConsole.error('reportVad is undefined');
+      throw 'reportVad is undefined';
+    }
+    let connection = obj.connection;
+    if (connection === undefined) {
+      AgoraConsole.error('connection is undefined');
+      throw 'connection is undefined';
+    }
+
+    return this._impl.enableAudioVolumeIndicationEx_ac84f2a(
+      interval,
+      smooth,
+      reportVad,
+      connection
     );
-    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }
 
   // @ts-ignore
@@ -654,6 +705,30 @@ export class IRtcEngineExDispatch extends IRtcEngineDispatch
   sendAudioMetadataEx_e2bf1c4(apiParam: ApiParam): CallApiReturnType {
     AgoraConsole.warn(
       'RtcEngineEx_sendAudioMetadataEx_e2bf1c4 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  enableVideoImageSourceEx_b63f346(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_enableVideoImageSourceEx_b63f346 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  preloadEffectEx_c9fae88(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_preloadEffectEx_c9fae88 not supported in this platform!'
+    );
+    return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
+  }
+
+  // @ts-ignore
+  playEffectEx_ae5345c(apiParam: ApiParam): CallApiReturnType {
+    AgoraConsole.warn(
+      'RtcEngineEx_playEffectEx_ae5345c not supported in this platform!'
     );
     return this._engine.returnResult(false, -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED);
   }

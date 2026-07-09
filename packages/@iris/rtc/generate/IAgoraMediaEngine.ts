@@ -6,6 +6,7 @@ import {
   AUDIO_TRACK_TYPE,
   AudioTrackConfig,
   EncodedVideoFrameInfo,
+  LoopbackAudioTrackConfig,
   SenderOptions,
 } from './AgoraBase';
 import {
@@ -99,6 +100,17 @@ export interface IMediaEngine {
 
   removeVideoFrameRenderer_2cc0ef1(
     renderer: IVideoFrameObserver
+  ): CallApiReturnType;
+
+  createLoopbackAudioTrack_599af35(
+    config: LoopbackAudioTrackConfig
+  ): CallApiReturnType;
+
+  destroyLoopbackAudioTrack_6178b5d(trackId: number): CallApiReturnType;
+
+  updateLoopbackAudioTrackConfig_080b602(
+    trackId: number,
+    config: LoopbackAudioTrackConfig
   ): CallApiReturnType;
 
   release(): CallApiReturnType;

@@ -1588,6 +1588,34 @@ describe('IMediaPlayer', () => {
       -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
     );
   });
+
+  test('MediaPlayer_getAudioBufferDelay_c30e349 impl call', async () => {
+    jest
+      .spyOn(irisRtcEngine, 'returnResult')
+      .mockResolvedValue(new CallIrisApiResult(0, ''));
+    let nParam = {
+      delayMs: 'test',
+    };
+    let apiParam = new IrisCore.EventParam(
+      'MediaPlayer_getAudioBufferDelay_c30e349',
+      JSON.stringify(nParam),
+      0,
+      '',
+      ['test'],
+      [],
+      1
+    );
+    await IrisCore.callIrisApi(apiEnginePtr, apiParam);
+    expect(
+      irisRtcEngine.implDispatchesMap.get('MediaPlayer')._impl
+        ?.getAudioBufferDelay_c30e349
+    ).toBeUndefined();
+    expect(irisRtcEngine.returnResult).toBeCalledTimes(1);
+    expect(irisRtcEngine.returnResult).toBeCalledWith(
+      false,
+      -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+    );
+  });
 });
 describe('IMediaPlayerCacheManager', () => {
   test('MediaPlayerCacheManager_removeAllCaches impl call', async () => {
