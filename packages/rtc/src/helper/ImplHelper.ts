@@ -269,14 +269,19 @@ export class ImplHelper {
           audioTrackPackage.type ===
             IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
         ) {
-          await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-            NotifyType.UNPUBLISH_TRACK,
-            [audioTrackPackage]
-          );
-          await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-            NotifyType.REMOVE_TRACK,
-            [audioTrackPackage]
-          );
+          const owners = [...audioTrackPackage.irisClients];
+          for (const owner of owners) {
+            await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+              NotifyType.UNPUBLISH_TRACK,
+              [audioTrackPackage],
+              [owner]
+            );
+            await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+              NotifyType.REMOVE_TRACK,
+              [audioTrackPackage],
+              [owner]
+            );
+          }
           let audioTrack: IMicrophoneAudioTrack;
           audioTrack = await this.createMicrophoneAudioTrack(irisClient);
           let newAudioTrackPackage = new AudioTrackPackage(
@@ -286,20 +291,26 @@ export class ImplHelper {
           await this._engine.irisClientManager.addLocalAudioTrackPackage(
             newAudioTrackPackage
           );
+          for (const owner of owners) {
+            owner.addLocalAudioTrack(newAudioTrackPackage);
+          }
           this._engine.trackHelper.setVolume(
             audioTrack,
             irisClient.irisClientState.microphoneVolume
           );
-          if (
-            irisClient.irisClientState.clientRoleType ===
-              NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER &&
-            irisClient.irisClientState.publishMicrophoneTrack &&
-            irisClient.agoraRTCClient?.channelName
-          ) {
-            await this._engine.irisClientManager.irisClientObserver.notifyLocal(
-              NotifyType.PUBLISH_TRACK,
-              [newAudioTrackPackage]
-            );
+          for (const owner of owners) {
+            if (
+              owner.irisClientState.clientRoleType ===
+                NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER &&
+              owner.irisClientState.publishMicrophoneTrack &&
+              owner.agoraRTCClient?.channelName
+            ) {
+              await this._engine.irisClientManager.irisClientObserver.notifyLocal(
+                NotifyType.PUBLISH_TRACK,
+                [newAudioTrackPackage],
+                [owner]
+              );
+            }
           }
         }
       }
