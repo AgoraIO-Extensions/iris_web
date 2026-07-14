@@ -20,6 +20,7 @@ nohup.out
 js/
 docs/
 __temp
+/.worktrees/
 
 # Optional eslint cache
 .eslintcache
