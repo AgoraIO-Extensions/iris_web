@@ -97,9 +97,6 @@ export class IrisClientObserver {
             needPublish = true;
             break;
         }
-        if (needPublish) {
-          irisClient.addLocalAudioTrack(trackPackage as AudioTrackPackage);
-        }
       }
 
       if (globalState.enabledVideo && globalState.enabledLocalVideo) {
@@ -155,16 +152,17 @@ export class IrisClientObserver {
         }
       }
 
-      if (
-        needPublish &&
-        irisClient.agoraRTCClient?.channelName &&
-        !irisClient.agoraRTCClient.localTracks?.includes(track)
-      ) {
-        try {
-          AgoraConsole.debug(`publishTrack ${track}`);
-          await irisClient.agoraRTCClient!.publish(track);
-        } catch (reason) {
-          AgoraConsole.error(reason);
+      if (needPublish && irisClient.agoraRTCClient?.channelName) {
+        if (this._engine.implHelper.isAudio(trackPackage.type!)) {
+          irisClient.addLocalAudioTrack(trackPackage as AudioTrackPackage);
+        }
+        if (!irisClient.agoraRTCClient.localTracks?.includes(track)) {
+          try {
+            AgoraConsole.debug(`publishTrack ${track}`);
+            await irisClient.agoraRTCClient!.publish(track);
+          } catch (reason) {
+            AgoraConsole.error(reason);
+          }
         }
       }
     }
