@@ -196,6 +196,103 @@ describe('IAgoraRtcEngineImpl', () => {
       )
     ).toHaveLength(0);
   });
+  test('regenerated microphone track preserves connection owners', async () => {
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+
+    let firstConnection: NATIVE_RTC.RtcConnection = {
+      channelId: FAKE_CHANNEL_NAME,
+      localUid: TEST_UID,
+    };
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_a3cd08c', {
+      token: '1234',
+      connection: firstConnection,
+      options: {
+        channelProfile:
+          NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+        publishMicrophoneTrack: true,
+      },
+    });
+
+    let secondConnection: NATIVE_RTC.RtcConnection = {
+      channelId: `${FAKE_CHANNEL_NAME}_2`,
+      localUid: TEST_UID + 1,
+    };
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx_a3cd08c', {
+      token: '5678',
+      connection: secondConnection,
+      options: {
+        channelProfile:
+          NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+        publishMicrophoneTrack: true,
+      },
+    });
+
+    let firstClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      firstConnection
+    );
+    let secondClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      secondConnection
+    );
+    firstConnection = firstClient.connection;
+    secondConnection = secondClient.connection;
+
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_updateChannelMediaOptionsEx_457bb35',
+      {
+        connection: secondConnection,
+        options: {
+          clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE,
+          publishMicrophoneTrack: false,
+        },
+      }
+    );
+
+    let oldTrackPackage = irisRtcEngine.irisClientManager.getLocalAudioTrackPackageByConnection(
+      firstConnection
+    )[0];
+    let nonOwnerClient = irisRtcEngine.irisClientManager.getIrisClient();
+    nonOwnerClient.removeLocalAudioTrack(oldTrackPackage);
+    oldTrackPackage.removeIrisClient(nonOwnerClient);
+
+    let firstPublishSpy = jest.spyOn(firstClient.agoraRTCClient!, 'publish');
+    let secondPublishSpy = jest.spyOn(secondClient.agoraRTCClient!, 'publish');
+    firstPublishSpy.mockClear();
+    secondPublishSpy.mockClear();
+
+    await irisRtcEngine.implHelper.reGenMicrophoneAudioTrack(secondClient);
+
+    let replacementPackage = irisRtcEngine.irisClientManager
+      .getLocalAudioTrackPackageBySourceType(
+        IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+      )
+      .find((trackPackage) => trackPackage !== oldTrackPackage)!;
+    expect(replacementPackage).toBeDefined();
+    expect(firstClient.audioTrackPackages).toContain(replacementPackage);
+    expect(secondClient.audioTrackPackages).toContain(replacementPackage);
+    expect(nonOwnerClient.audioTrackPackages).not.toContain(replacementPackage);
+    expect(replacementPackage.irisClients).toEqual(
+      expect.arrayContaining([firstClient, secondClient])
+    );
+    expect(firstPublishSpy).toHaveBeenCalledWith(replacementPackage.track);
+    expect(secondPublishSpy).not.toHaveBeenCalled();
+
+    await callIris(
+      apiEnginePtr,
+      'RtcEngineEx_updateChannelMediaOptionsEx_457bb35',
+      {
+        connection: secondConnection,
+        options: {
+          clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+          publishMicrophoneTrack: true,
+        },
+      }
+    );
+
+    expect(secondPublishSpy).toHaveBeenCalledWith(replacementPackage.track);
+  });
   test('updateChannelMediaOptionsEx', async () => {
     let param = {
       token: '1234',
