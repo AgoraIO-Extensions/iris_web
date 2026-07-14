@@ -293,6 +293,153 @@ describe('IAgoraRtcEngineImpl', () => {
 
     expect(secondPublishSpy).toHaveBeenCalledWith(replacementPackage.track);
   });
+  test('enableLocalAudio binds a new microphone track before publishing', async () => {
+    let connection: NATIVE_RTC.RtcConnection = {
+      channelId: FAKE_CHANNEL_NAME,
+      localUid: TEST_UID,
+    };
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', {
+      token: '1234',
+      connection,
+      options: {
+        channelProfile:
+          NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE,
+        publishMicrophoneTrack: false,
+      },
+    });
+
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    connection = irisClient.connection;
+    let publishSpy = jest.spyOn(irisClient.agoraRTCClient!, 'publish');
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_updateChannelMediaOptionsEx', {
+      connection,
+      options: {
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+      },
+    });
+    await callIris(apiEnginePtr, 'RtcEngine_enableLocalAudio', {
+      enabled: true,
+    });
+
+    let microphoneTrackPackage = irisRtcEngine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+      IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+    )[0];
+    expect(
+      irisRtcEngine.irisClientManager.getLocalAudioTrackPackageByConnection(
+        connection
+      )
+    ).toContain(microphoneTrackPackage);
+    expect(publishSpy).not.toHaveBeenCalled();
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_updateChannelMediaOptionsEx', {
+      connection,
+      options: {
+        publishMicrophoneTrack: true,
+      },
+    });
+
+    expect(publishSpy).toHaveBeenCalledWith(microphoneTrackPackage.track);
+  });
+  test('leave and rejoin recreates and publishes the microphone track', async () => {
+    let initialClient = irisRtcEngine.irisClientManager.getIrisClient();
+    let firstConnection: NATIVE_RTC.RtcConnection = {
+      channelId: FAKE_CHANNEL_NAME,
+      localUid: TEST_UID,
+    };
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', {
+      token: '1234',
+      connection: firstConnection,
+      options: {
+        channelProfile:
+          NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE,
+        publishMicrophoneTrack: false,
+      },
+    });
+
+    let firstClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      firstConnection
+    );
+    firstConnection = firstClient.connection;
+    await callIris(apiEnginePtr, 'RtcEngineEx_updateChannelMediaOptionsEx', {
+      connection: firstConnection,
+      options: {
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+      },
+    });
+    await callIris(apiEnginePtr, 'RtcEngine_enableLocalAudio', {
+      enabled: true,
+    });
+
+    let firstTrackPackage = irisRtcEngine.irisClientManager.getLocalAudioTrackPackageByConnection(
+      firstConnection
+    )[0];
+    let firstTrack = firstTrackPackage.track as ILocalAudioTrack;
+    let firstPublishSpy = jest.spyOn(firstClient.agoraRTCClient!, 'publish');
+    let closeSpy = jest.spyOn(firstTrack, 'close');
+
+    expect(firstTrackPackage.irisClients).not.toContain(initialClient);
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_updateChannelMediaOptionsEx', {
+      connection: firstConnection,
+      options: {
+        publishMicrophoneTrack: true,
+      },
+    });
+    expect(firstPublishSpy).toHaveBeenCalledWith(firstTrack);
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_leaveChannelEx', {
+      connection: firstConnection,
+      options: defaultLeaveChannelOptions,
+    });
+    expect(closeSpy).toHaveBeenCalled();
+
+    let secondConnection: NATIVE_RTC.RtcConnection = {
+      channelId: `${FAKE_CHANNEL_NAME}_2`,
+      localUid: TEST_UID + 1,
+    };
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', {
+      token: '5678',
+      connection: secondConnection,
+      options: {
+        channelProfile:
+          NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE,
+        publishMicrophoneTrack: false,
+      },
+    });
+
+    let secondClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      secondConnection
+    );
+    secondConnection = secondClient.connection;
+    let secondPublishSpy = jest.spyOn(secondClient.agoraRTCClient!, 'publish');
+    await callIris(apiEnginePtr, 'RtcEngineEx_updateChannelMediaOptionsEx', {
+      connection: secondConnection,
+      options: {
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+      },
+    });
+    await callIris(apiEnginePtr, 'RtcEngine_enableLocalAudio', {
+      enabled: true,
+    });
+    await callIris(apiEnginePtr, 'RtcEngineEx_updateChannelMediaOptionsEx', {
+      connection: secondConnection,
+      options: {
+        publishMicrophoneTrack: true,
+      },
+    });
+
+    let secondTrackPackage = irisRtcEngine.irisClientManager.getLocalAudioTrackPackageByConnection(
+      secondConnection
+    )[0];
+    expect(secondTrackPackage.track).not.toBe(firstTrack);
+    expect(secondPublishSpy).toHaveBeenCalledWith(secondTrackPackage.track);
+  });
   test('updateChannelMediaOptionsEx', async () => {
     let param = {
       token: '1234',

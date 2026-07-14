@@ -528,18 +528,24 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalState.enabledLocalAudio = enabled;
 
       if (enabled) {
-        if (
-          !this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(
-            IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
-          )[0]
-        ) {
+        let audioTrackPackage = this._engine.irisClientManager.getLocalAudioTrackPackageBySourceType(
+          IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary
+        )[0];
+        if (!audioTrackPackage) {
           let audioTrack = await this._engine.implHelper.createMicrophoneAudioTrack();
-          await this._engine.irisClientManager.addLocalAudioTrackPackage(
-            new AudioTrackPackage(
-              IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
-              audioTrack
-            )
+          audioTrackPackage = new AudioTrackPackage(
+            IrisAudioSourceType.kAudioSourceTypeMicrophonePrimary,
+            audioTrack
           );
+          await this._engine.irisClientManager.addLocalAudioTrackPackage(
+            audioTrackPackage
+          );
+        }
+        for (const irisClient of this._engine.irisClientManager
+          .irisClientList) {
+          if (irisClient.agoraRTCClient?.channelName) {
+            irisClient.addLocalAudioTrack(audioTrackPackage);
+          }
         }
         try {
         } catch (e) {
