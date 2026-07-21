@@ -116,6 +116,55 @@ describe('IAgoraRtcEngineImpl', () => {
       irisRtcEngine.rtcEngineEventHandler.onJoinChannelSuccessEx
     ).toBeCalledTimes(1);
   });
+  test('remote mute state is isolated between Ex connections', async () => {
+    let firstParam = {
+      token: '1234',
+      connection: { channelId: 'first-channel', localUid: 101 },
+      options: {
+        channelProfile:
+          NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+      },
+    };
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', firstParam);
+    let firstClient =
+      irisRtcEngine.irisClientManager.irisClientList[
+        irisRtcEngine.irisClientManager.irisClientList.length - 1
+      ];
+    let secondParam = {
+      ...firstParam,
+      connection: { channelId: 'second-channel', localUid: 202 },
+    };
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', secondParam);
+    let secondClient =
+      irisRtcEngine.irisClientManager.irisClientList[
+        irisRtcEngine.irisClientManager.irisClientList.length - 1
+      ];
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteRemoteAudioStreamEx', {
+      uid: TEST_REMOTE_UID,
+      mute: true,
+      connection: firstClient.connection,
+    });
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteRemoteVideoStreamEx', {
+      uid: TEST_REMOTE_UID,
+      mute: true,
+      connection: secondClient.connection,
+    });
+
+    expect(
+      firstClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+    expect(
+      firstClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+    expect(
+      secondClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+    expect(
+      secondClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+  });
   test('leaveChannelEx', async () => {
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     let connection = await joinChannelEx(apiEnginePtr);

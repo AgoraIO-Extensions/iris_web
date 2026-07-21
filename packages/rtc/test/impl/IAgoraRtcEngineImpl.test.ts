@@ -1056,6 +1056,42 @@ describe('IAgoraRtcEngineImpl', () => {
     ]);
   });
 
+  test('remote mute state resets when the primary connection leaves', async () => {
+    await joinChannel(apiEnginePtr, null);
+    let irisClient = irisRtcEngine.irisClientManager.irisClientList[0];
+    await callIris(apiEnginePtr, 'RtcEngine_muteAllRemoteAudioStreams', {
+      mute: true,
+    });
+    await callIris(apiEnginePtr, 'RtcEngine_muteAllRemoteVideoStreams', {
+      mute: true,
+    });
+    expect(
+      irisClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+    expect(
+      irisClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+
+    await callIris(apiEnginePtr, 'RtcEngine_leaveChannel');
+
+    expect(irisRtcEngine.irisClientManager.irisClientList[0]).toBe(irisClient);
+    expect(
+      irisClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+    expect(
+      irisClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+
+    await joinChannel(apiEnginePtr, null);
+    expect(irisRtcEngine.irisClientManager.irisClientList[0]).toBe(irisClient);
+    expect(
+      irisClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+    expect(
+      irisClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+  });
+
   test('setParameters', async () => {
     let params = JSON.stringify({
       'rtc.audio.force_bluetooth_a2dp': true,

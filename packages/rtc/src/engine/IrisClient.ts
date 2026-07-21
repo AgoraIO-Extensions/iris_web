@@ -284,6 +284,8 @@ export class IrisClient {
       );
     }
     this.audioTrackPackages = [];
+    this.irisClientState.remoteAudioMuteState.reset();
+    this.irisClientState.remoteVideoMuteState.reset();
     this.connection = {
       channelId: '',
       localUid: 0,
