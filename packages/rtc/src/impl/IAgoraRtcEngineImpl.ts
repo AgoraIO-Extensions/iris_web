@@ -275,8 +275,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalState.enabledVideo = true;
       this.enableLocalVideo(true);
       this.muteLocalVideoStream(false);
-      this.muteAllRemoteVideoStreams(false);
-      this.muteAllRemoteVideoStreams(false);
+      let remoteUserPackages = this._engine.irisClientManager.remoteUserPackages.filter(
+        (userPackage) => {
+          let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+            userPackage.connection
+          );
+          return (
+            irisClient &&
+            !irisClient.irisClientState.remoteVideoMuteState.isMuted(
+              userPackage.uid
+            )
+          );
+        }
+      );
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
+        remoteUserPackages
+      );
 
       return this._engine.returnResult();
     };
@@ -288,8 +303,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalState.enabledVideo = false;
       this.enableLocalVideo(false);
       this.muteLocalVideoStream(true);
-      this.muteAllRemoteVideoStreams(true);
-      this.muteAllRemoteVideoStreams(true);
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK,
+        this._engine.irisClientManager.remoteUserPackages
+      );
 
       return this._engine.returnResult();
     };
@@ -481,7 +498,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalState.enabledAudio = true;
       this.enableLocalAudio(true);
       this.muteLocalAudioStream(false);
-      this.muteAllRemoteAudioStreams(false);
+      let remoteUserPackages = this._engine.irisClientManager.remoteUserPackages.filter(
+        (userPackage) => {
+          let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+            userPackage.connection
+          );
+          return (
+            irisClient &&
+            !irisClient.irisClientState.remoteAudioMuteState.isMuted(
+              userPackage.uid
+            )
+          );
+        }
+      );
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
+        remoteUserPackages
+      );
 
       return this._engine.returnResult();
     };
@@ -493,7 +526,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalState.enabledAudio = false;
       this.enableLocalAudio(false);
       this.muteLocalAudioStream(true);
-      this.muteAllRemoteAudioStreams(true);
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
+        this._engine.irisClientManager.remoteUserPackages
+      );
 
       return this._engine.returnResult();
     };
@@ -689,11 +725,18 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   muteAllRemoteVideoStreams(mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
+      let irisClient = this._engine.irisClientManager.irisClientList[0];
+      irisClient?.irisClientState.remoteVideoMuteState.setAllMuted(mute);
+      let remoteUserPackages = irisClient
+        ? this._engine.irisClientManager.getRemoteUserPackagesByConnection(
+            irisClient.connection
+          )
+        : [];
       await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK
           : NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
-        this._engine.irisClientManager.remoteUserPackages
+        remoteUserPackages
       );
 
       return this._engine.returnResult();
@@ -703,14 +746,21 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   muteRemoteVideoStream(uid: number, mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      let remoteUserPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
-        uid
-      );
+      let irisClient = this._engine.irisClientManager.irisClientList[0];
+      irisClient?.irisClientState.remoteVideoMuteState.setUidMuted(uid, mute);
+      let remoteUserPackages = irisClient
+        ? [
+            this._engine.irisClientManager.getRemoteUserPackageByUidAndConnection(
+              uid,
+              irisClient.connection
+            ),
+          ].filter(Boolean)
+        : [];
       await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK
           : NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
-        [remoteUserPackage]
+        remoteUserPackages
       );
 
       return this._engine.returnResult();
@@ -721,11 +771,18 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
 
   muteAllRemoteAudioStreams(mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
+      let irisClient = this._engine.irisClientManager.irisClientList[0];
+      irisClient?.irisClientState.remoteAudioMuteState.setAllMuted(mute);
+      let remoteUserPackages = irisClient
+        ? this._engine.irisClientManager.getRemoteUserPackagesByConnection(
+            irisClient.connection
+          )
+        : [];
       await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK
           : NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
-        this._engine.irisClientManager.remoteUserPackages
+        remoteUserPackages
       );
 
       return this._engine.returnResult();
@@ -735,14 +792,21 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   }
   muteRemoteAudioStream(uid: number, mute: boolean): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
-      let remoteUserPackage = this._engine.irisClientManager.getRemoteUserPackageByUid(
-        uid
-      );
+      let irisClient = this._engine.irisClientManager.irisClientList[0];
+      irisClient?.irisClientState.remoteAudioMuteState.setUidMuted(uid, mute);
+      let remoteUserPackages = irisClient
+        ? [
+            this._engine.irisClientManager.getRemoteUserPackageByUidAndConnection(
+              uid,
+              irisClient.connection
+            ),
+          ].filter(Boolean)
+        : [];
       await this._engine.irisClientManager.irisClientObserver.notifyRemote(
         mute
           ? NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK
           : NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
-        [remoteUserPackage]
+        remoteUserPackages
       );
 
       return this._engine.returnResult();

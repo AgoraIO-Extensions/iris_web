@@ -1,9 +1,11 @@
 import {
   FAKE_CHANNEL_NAME,
   FakeAgoraRTCWrapper,
+  FakeLocalAudioTrack,
+  FakeLocalVideoTrack,
 } from '@agoraio-extensions/agora-rtc-sdk-ng-fake';
 import * as NATIVE_RTC from '@iris/native-rtc';
-import { ILocalAudioTrack } from 'agora-rtc-sdk-ng';
+import { IAgoraRTCRemoteUser, ILocalAudioTrack } from 'agora-rtc-sdk-ng';
 
 import { EventParam, IrisApiEngine, IrisCore } from 'iris-web-core';
 
@@ -37,6 +39,16 @@ function createDeferred<T>() {
   });
 
   return { promise, resolve };
+}
+
+function createRemoteUser(uid: number): IAgoraRTCRemoteUser {
+  return {
+    uid,
+    hasAudio: true,
+    hasVideo: true,
+    audioTrack: FakeLocalAudioTrack.create(),
+    videoTrack: FakeLocalVideoTrack.create(),
+  } as IAgoraRTCRemoteUser;
 }
 
 async function flushMicrotasks(times: number = 5) {
@@ -103,6 +115,55 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(
       irisRtcEngine.rtcEngineEventHandler.onJoinChannelSuccessEx
     ).toBeCalledTimes(1);
+  });
+  test('remote mute state is isolated between Ex connections', async () => {
+    let firstParam = {
+      token: '1234',
+      connection: { channelId: 'first-channel', localUid: 101 },
+      options: {
+        channelProfile:
+          NATIVE_RTC.CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING,
+        clientRoleType: NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+      },
+    };
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', firstParam);
+    let firstClient =
+      irisRtcEngine.irisClientManager.irisClientList[
+        irisRtcEngine.irisClientManager.irisClientList.length - 1
+      ];
+    let secondParam = {
+      ...firstParam,
+      connection: { channelId: 'second-channel', localUid: 202 },
+    };
+    await callIris(apiEnginePtr, 'RtcEngineEx_joinChannelEx', secondParam);
+    let secondClient =
+      irisRtcEngine.irisClientManager.irisClientList[
+        irisRtcEngine.irisClientManager.irisClientList.length - 1
+      ];
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteRemoteAudioStreamEx', {
+      uid: TEST_REMOTE_UID,
+      mute: true,
+      connection: firstClient.connection,
+    });
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteRemoteVideoStreamEx', {
+      uid: TEST_REMOTE_UID,
+      mute: true,
+      connection: secondClient.connection,
+    });
+
+    expect(
+      firstClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+    expect(
+      firstClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+    expect(
+      secondClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+    expect(
+      secondClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
   });
   test('leaveChannelEx', async () => {
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
@@ -661,6 +722,258 @@ describe('IAgoraRtcEngineImpl', () => {
       connection,
     });
     expect(remoteUsers[0].audioTrack).not.toBeUndefined();
+  });
+
+  test('muteRemoteAudioStreamEx records an offline uid decision', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    irisRtcEngine.irisClientManager.removeRemoteUserPackageByUidAndConnection(
+      TEST_REMOTE_UID,
+      connection
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteRemoteAudioStreamEx', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+      connection,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+  });
+
+  test('muteRemoteVideoStreamEx records an offline uid decision', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    irisRtcEngine.irisClientManager.removeRemoteUserPackageByUidAndConnection(
+      TEST_REMOTE_UID,
+      connection
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteRemoteVideoStreamEx', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+      connection,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+  });
+
+  test('muteAllRemoteAudioStreamsEx replaces an older uid decision', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+
+    irisClient.irisClientState.remoteAudioMuteState.setUidMuted(
+      TEST_REMOTE_UID,
+      true
+    );
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteAllRemoteAudioStreamsEx', {
+      mute: false,
+      connection,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+  });
+
+  test('muteAllRemoteVideoStreamsEx replaces an older uid decision', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+
+    irisClient.irisClientState.remoteVideoMuteState.setUidMuted(
+      TEST_REMOTE_UID,
+      true
+    );
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteAllRemoteVideoStreamsEx', {
+      mute: false,
+      connection,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+  });
+
+  test('remote mute policy blocks audio subscribe when the user publishes again', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    let oldUser = irisClient.agoraRTCClient!.remoteUsers[0];
+    await irisClient.clientEventHandler.onEventUserLeft(oldUser, 'Quit');
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteRemoteAudioStreamEx', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+      connection,
+    });
+
+    let subscribe = jest.spyOn(irisClient.agoraRTCClient!, 'subscribe');
+    let onUserMuteAudioEx = jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onUserMuteAudioEx'
+    );
+    let onRemoteAudioStateChangedEx = jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onRemoteAudioStateChangedEx'
+    );
+    let rejoinedUser = createRemoteUser(TEST_REMOTE_UID);
+    irisClient.agoraRTCClient!.remoteUsers.splice(
+      0,
+      irisClient.agoraRTCClient!.remoteUsers.length,
+      rejoinedUser
+    );
+    irisClient.clientEventHandler.onEventUserJoined(rejoinedUser);
+    subscribe.mockClear();
+    onUserMuteAudioEx.mockClear();
+    onRemoteAudioStateChangedEx.mockClear();
+
+    await irisClient.clientEventHandler.onEventUserPublished(
+      rejoinedUser,
+      'audio'
+    );
+
+    expect(subscribe).not.toHaveBeenCalledWith(rejoinedUser, 'audio');
+    expect(onUserMuteAudioEx).toHaveBeenCalledWith(
+      connection,
+      TEST_REMOTE_UID,
+      true
+    );
+    expect(onRemoteAudioStateChangedEx).toHaveBeenCalledWith(
+      connection,
+      TEST_REMOTE_UID,
+      NATIVE_RTC.REMOTE_AUDIO_STATE.REMOTE_AUDIO_STATE_STOPPED,
+      NATIVE_RTC.REMOTE_AUDIO_STATE_REASON.REMOTE_AUDIO_REASON_LOCAL_MUTED,
+      0
+    );
+  });
+
+  test('remote mute policy blocks video subscribe when the user publishes again', async () => {
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
+    let connection = await joinChannelEx(apiEnginePtr);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    let oldUser = irisClient.agoraRTCClient!.remoteUsers[0];
+    await irisClient.clientEventHandler.onEventUserLeft(oldUser, 'Quit');
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteRemoteVideoStreamEx', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+      connection,
+    });
+
+    let subscribe = jest.spyOn(irisClient.agoraRTCClient!, 'subscribe');
+    let onUserMuteVideoEx = jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onUserMuteVideoEx'
+    );
+    let onRemoteVideoStateChangedEx = jest.spyOn(
+      irisRtcEngine.rtcEngineEventHandler,
+      'onRemoteVideoStateChangedEx'
+    );
+    let rejoinedUser = createRemoteUser(TEST_REMOTE_UID);
+    irisClient.agoraRTCClient!.remoteUsers.splice(
+      0,
+      irisClient.agoraRTCClient!.remoteUsers.length,
+      rejoinedUser
+    );
+    irisClient.clientEventHandler.onEventUserJoined(rejoinedUser);
+    subscribe.mockClear();
+    onUserMuteVideoEx.mockClear();
+    onRemoteVideoStateChangedEx.mockClear();
+
+    await irisClient.clientEventHandler.onEventUserPublished(
+      rejoinedUser,
+      'video'
+    );
+
+    expect(subscribe).not.toHaveBeenCalledWith(rejoinedUser, 'video');
+    expect(onUserMuteVideoEx).toHaveBeenCalledWith(
+      connection,
+      TEST_REMOTE_UID,
+      true
+    );
+    expect(onRemoteVideoStateChangedEx).toHaveBeenCalledWith(
+      connection,
+      TEST_REMOTE_UID,
+      NATIVE_RTC.REMOTE_VIDEO_STATE.REMOTE_VIDEO_STATE_STOPPED,
+      NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
+        .REMOTE_VIDEO_STATE_REASON_LOCAL_MUTED,
+      0
+    );
+  });
+
+  test('remote mute policy applies mute-all to a user that publishes later', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteAllRemoteAudioStreamsEx', {
+      mute: true,
+      connection,
+    });
+
+    let subscribe = jest.spyOn(irisClient.agoraRTCClient!, 'subscribe');
+    let laterUser = createRemoteUser(789);
+    irisClient.agoraRTCClient!.remoteUsers.push(laterUser);
+    irisClient.clientEventHandler.onEventUserJoined(laterUser);
+    subscribe.mockClear();
+
+    await irisClient.clientEventHandler.onEventUserPublished(
+      laterUser,
+      'audio'
+    );
+
+    expect(subscribe).not.toHaveBeenCalledWith(laterUser, 'audio');
+  });
+
+  test('remote mute policy applies an offline unmute when the user publishes again', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    let oldUser = irisClient.agoraRTCClient!.remoteUsers[0];
+    await irisClient.clientEventHandler.onEventUserLeft(oldUser, 'Quit');
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteAllRemoteAudioStreamsEx', {
+      mute: true,
+      connection,
+    });
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteRemoteAudioStreamEx', {
+      mute: false,
+      uid: TEST_REMOTE_UID,
+      connection,
+    });
+
+    let subscribe = jest.spyOn(irisClient.agoraRTCClient!, 'subscribe');
+    let rejoinedUser = createRemoteUser(TEST_REMOTE_UID);
+    irisClient.agoraRTCClient!.remoteUsers.splice(
+      0,
+      irisClient.agoraRTCClient!.remoteUsers.length,
+      rejoinedUser
+    );
+    irisClient.clientEventHandler.onEventUserJoined(rejoinedUser);
+    subscribe.mockClear();
+
+    await irisClient.clientEventHandler.onEventUserPublished(
+      rejoinedUser,
+      'audio'
+    );
+
+    expect(subscribe).toHaveBeenCalledWith(rejoinedUser, 'audio');
   });
 
   test('muteLocalVideoStreamEx', async () => {

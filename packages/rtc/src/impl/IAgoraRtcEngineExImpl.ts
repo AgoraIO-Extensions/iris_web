@@ -239,6 +239,10 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
+      irisClient?.irisClientState.remoteAudioMuteState.setUidMuted(uid, mute);
       let remoteUserPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
         connection
       );
@@ -284,6 +288,10 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
+      irisClient?.irisClientState.remoteAudioMuteState.setAllMuted(mute);
       let remoteUserPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
         connection
       );
@@ -306,6 +314,10 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
+      irisClient?.irisClientState.remoteVideoMuteState.setUidMuted(uid, mute);
       let remoteUserPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
         connection
       );
@@ -351,6 +363,10 @@ export class IRtcEngineExImpl implements NATIVE_RTC.IRtcEngineEx {
     connection: NATIVE_RTC.RtcConnection
   ): CallApiReturnType {
     let processFunc = async (): Promise<CallIrisApiResult> => {
+      let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+        connection
+      );
+      irisClient?.irisClientState.remoteVideoMuteState.setAllMuted(mute);
       let remoteUserPackages = this._engine.irisClientManager.getRemoteUserPackagesByConnection(
         connection
       );

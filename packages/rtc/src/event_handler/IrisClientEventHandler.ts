@@ -278,6 +278,25 @@ export class IrisClientEventHandler {
     );
     if (remoteUser) {
       if (mediaType == 'audio') {
+        let locallyMuted = this._irisClient.irisClientState.remoteAudioMuteState.isMuted(
+          remoteUid
+        );
+        if (locallyMuted) {
+          this._engine.rtcEngineEventHandler.onUserMuteAudioEx(
+            this._irisClient.connection,
+            remoteUid,
+            true
+          );
+          this._engine.rtcEngineEventHandler.onRemoteAudioStateChangedEx(
+            this._irisClient.connection,
+            remoteUid,
+            NATIVE_RTC.REMOTE_AUDIO_STATE.REMOTE_AUDIO_STATE_STOPPED,
+            NATIVE_RTC.REMOTE_AUDIO_STATE_REASON
+              .REMOTE_AUDIO_REASON_LOCAL_MUTED,
+            0
+          );
+          return;
+        }
         await this._engine.irisClientManager.irisClientObserver.notifyRemote(
           NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
           [remoteUser],
@@ -322,6 +341,25 @@ export class IrisClientEventHandler {
           }
         }
       } else if (mediaType == 'video') {
+        let locallyMuted = this._irisClient.irisClientState.remoteVideoMuteState.isMuted(
+          remoteUid
+        );
+        if (locallyMuted) {
+          this._engine.rtcEngineEventHandler.onUserMuteVideoEx(
+            this._irisClient.connection,
+            remoteUid,
+            true
+          );
+          this._engine.rtcEngineEventHandler.onRemoteVideoStateChangedEx(
+            this._irisClient.connection,
+            remoteUid,
+            NATIVE_RTC.REMOTE_VIDEO_STATE.REMOTE_VIDEO_STATE_STOPPED,
+            NATIVE_RTC.REMOTE_VIDEO_STATE_REASON
+              .REMOTE_VIDEO_STATE_REASON_LOCAL_MUTED,
+            0
+          );
+          return;
+        }
         await this._engine.irisClientManager.irisClientObserver.notifyRemote(
           NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
           [remoteUser],

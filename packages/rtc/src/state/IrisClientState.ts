@@ -1,6 +1,7 @@
 import * as NATIVE_RTC from '@iris/native-rtc';
 
 import { IrisGlobalState } from './IrisGlobalState';
+import { RemoteMuteState } from './RemoteMuteState';
 
 //Record the intermediate status of the client
 export class IrisClientState {
@@ -90,9 +91,8 @@ export class IrisClientState {
   //setClientOptions()
   public clientRoleOptions: NATIVE_RTC.ClientRoleOptions;
 
-  //mute 远端的用户流
-  mutedRemoteAudioStreams: Map<number, boolean> = new Map<number, boolean>();
-  mutedRemoteVideoStreams: Map<number, boolean> = new Map<number, boolean>();
+  remoteAudioMuteState: RemoteMuteState = new RemoteMuteState();
+  remoteVideoMuteState: RemoteMuteState = new RemoteMuteState();
 
   videoSourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE =
     NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA;
