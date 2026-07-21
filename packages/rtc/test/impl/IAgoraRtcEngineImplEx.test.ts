@@ -663,6 +663,88 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(remoteUsers[0].audioTrack).not.toBeUndefined();
   });
 
+  test('muteRemoteAudioStreamEx records an offline uid decision', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    irisRtcEngine.irisClientManager.removeRemoteUserPackageByUidAndConnection(
+      TEST_REMOTE_UID,
+      connection
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteRemoteAudioStreamEx', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+      connection,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+  });
+
+  test('muteRemoteVideoStreamEx records an offline uid decision', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+    irisRtcEngine.irisClientManager.removeRemoteUserPackageByUidAndConnection(
+      TEST_REMOTE_UID,
+      connection
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteRemoteVideoStreamEx', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+      connection,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+  });
+
+  test('muteAllRemoteAudioStreamsEx replaces an older uid decision', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+
+    irisClient.irisClientState.remoteAudioMuteState.setUidMuted(
+      TEST_REMOTE_UID,
+      true
+    );
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteAllRemoteAudioStreamsEx', {
+      mute: false,
+      connection,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+  });
+
+  test('muteAllRemoteVideoStreamsEx replaces an older uid decision', async () => {
+    let connection = await joinChannelEx(apiEnginePtr);
+    let irisClient = irisRtcEngine.irisClientManager.getIrisClientByConnection(
+      connection
+    );
+
+    irisClient.irisClientState.remoteVideoMuteState.setUidMuted(
+      TEST_REMOTE_UID,
+      true
+    );
+    await callIris(apiEnginePtr, 'RtcEngineEx_muteAllRemoteVideoStreamsEx', {
+      mute: false,
+      connection,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+  });
+
   test('muteLocalVideoStreamEx', async () => {
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     await callIris(apiEnginePtr, 'RtcEngine_startPreview', null);
