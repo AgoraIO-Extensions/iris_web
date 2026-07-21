@@ -15,7 +15,10 @@ import { IrisApiEngine, IrisCore } from 'iris-web-core';
 import { IrisWebRtc } from '../../src/IrisRtcApi';
 
 import { IrisAudioSourceType } from '../../src/base/BaseType';
-import { BufferSourceAudioTrackPackage } from '../../src/engine/IrisClientManager';
+import {
+  BufferSourceAudioTrackPackage,
+  RemoteUserPackage,
+} from '../../src/engine/IrisClientManager';
 import { NotifyType } from '../../src/engine/IrisClientObserver';
 import { AgoraConsole, AgoraTranslate } from '../../src/util';
 
@@ -852,6 +855,70 @@ describe('IAgoraRtcEngineImpl', () => {
     expect(remoteUsers[0].audioTrack).not.toBeUndefined();
   });
 
+  test('muteRemoteAudioStream records an offline uid decision', async () => {
+    await joinChannel(apiEnginePtr, null);
+    let irisClient = irisRtcEngine.irisClientManager.irisClientList[0];
+    irisRtcEngine.irisClientManager.removeRemoteUserPackageByUidAndConnection(
+      TEST_REMOTE_UID,
+      irisClient.connection
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteAudioStream', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+  });
+
+  test('muteAllRemoteAudioStreams replaces an older uid decision', async () => {
+    await joinChannel(apiEnginePtr, null);
+    let irisClient = irisRtcEngine.irisClientManager.irisClientList[0];
+    irisClient.irisClientState.remoteAudioMuteState.setUidMuted(
+      TEST_REMOTE_UID,
+      true
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteAllRemoteAudioStreams', {
+      mute: false,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+  });
+
+  test('muteRemoteAudioStream only applies to the primary connection', async () => {
+    await joinChannel(apiEnginePtr, null);
+    let irisClient = irisRtcEngine.irisClientManager.irisClientList[0];
+    let primaryPackage = irisRtcEngine.irisClientManager.getRemoteUserPackageByUidAndConnection(
+      TEST_REMOTE_UID,
+      irisClient.connection
+    );
+    let secondaryPackage = {
+      ...primaryPackage,
+      connection: { channelId: 'secondary', localUid: 999 },
+    } as RemoteUserPackage;
+    irisRtcEngine.irisClientManager.remoteUserPackages.unshift(
+      secondaryPackage
+    );
+    let notifyRemote = jest.spyOn(
+      irisRtcEngine.irisClientManager.irisClientObserver,
+      'notifyRemote'
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteAudioStream', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+    });
+
+    expect(notifyRemote).toHaveBeenLastCalledWith(expect.anything(), [
+      primaryPackage,
+    ]);
+  });
+
   test('muteLocalVideoStream', async () => {
     jest.spyOn(rtcEngineImpl, 'muteLocalVideoStream');
     await joinChannel(apiEnginePtr, null);
@@ -926,6 +993,67 @@ describe('IAgoraRtcEngineImpl', () => {
       uid: TEST_REMOTE_UID,
     });
     expect(remoteUsers[0].videoTrack).not.toBeUndefined();
+  });
+
+  test('muteRemoteVideoStream records an offline uid decision', async () => {
+    await joinChannel(apiEnginePtr, null);
+    let irisClient = irisRtcEngine.irisClientManager.irisClientList[0];
+    irisRtcEngine.irisClientManager.removeRemoteUserPackageByUidAndConnection(
+      TEST_REMOTE_UID,
+      irisClient.connection
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteVideoStream', {
+      mute: true,
+      uid: TEST_REMOTE_UID,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+  });
+
+  test('muteAllRemoteVideoStreams replaces an older uid decision', async () => {
+    await joinChannel(apiEnginePtr, null);
+    let irisClient = irisRtcEngine.irisClientManager.irisClientList[0];
+    irisClient.irisClientState.remoteVideoMuteState.setUidMuted(
+      TEST_REMOTE_UID,
+      true
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteAllRemoteVideoStreams', {
+      mute: false,
+    });
+
+    expect(
+      irisClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(false);
+  });
+
+  test('muteAllRemoteVideoStreams only applies to the primary connection', async () => {
+    await joinChannel(apiEnginePtr, null);
+    let irisClient = irisRtcEngine.irisClientManager.irisClientList[0];
+    let primaryPackage = irisRtcEngine.irisClientManager.getRemoteUserPackageByUidAndConnection(
+      TEST_REMOTE_UID,
+      irisClient.connection
+    );
+    let secondaryPackage = {
+      ...primaryPackage,
+      connection: { channelId: 'secondary', localUid: 999 },
+    } as RemoteUserPackage;
+    irisRtcEngine.irisClientManager.remoteUserPackages.push(secondaryPackage);
+    let notifyRemote = jest.spyOn(
+      irisRtcEngine.irisClientManager.irisClientObserver,
+      'notifyRemote'
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngine_muteAllRemoteVideoStreams', {
+      mute: true,
+    });
+
+    expect(notifyRemote).toHaveBeenLastCalledWith(expect.anything(), [
+      primaryPackage,
+    ]);
   });
 
   test('setParameters', async () => {
