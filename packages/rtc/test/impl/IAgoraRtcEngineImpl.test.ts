@@ -19,7 +19,10 @@ import {
   BufferSourceAudioTrackPackage,
   RemoteUserPackage,
 } from '../../src/engine/IrisClientManager';
-import { NotifyType } from '../../src/engine/IrisClientObserver';
+import {
+  NotifyRemoteType,
+  NotifyType,
+} from '../../src/engine/IrisClientObserver';
 import { AgoraConsole, AgoraTranslate } from '../../src/util';
 
 import { IrisRtcEngine } from '../engine/IrisRtcEngine';
@@ -162,26 +165,64 @@ describe('IAgoraRtcEngineImpl', () => {
   test('enableAudio', async () => {
     jest.spyOn(rtcEngineImpl, 'enableLocalAudio');
     jest.spyOn(rtcEngineImpl, 'muteLocalAudioStream');
-    jest.spyOn(rtcEngineImpl, 'muteAllRemoteAudioStreams');
+    let notifyRemote = jest.spyOn(
+      irisRtcEngine.irisClientManager.irisClientObserver,
+      'notifyRemote'
+    );
 
     await joinChannel(apiEnginePtr, null);
+    notifyRemote.mockClear();
 
     await callIris(apiEnginePtr, 'RtcEngine_enableAudio', null);
     expect(rtcEngineImpl.enableLocalAudio).toBeCalledWith(true);
     expect(rtcEngineImpl.muteLocalAudioStream).toBeCalledWith(false);
-    expect(rtcEngineImpl.muteAllRemoteAudioStreams).toBeCalledWith(false);
+    expect(notifyRemote).toHaveBeenCalledWith(
+      NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
+      expect.any(Array)
+    );
   });
   test('disableAudio', async () => {
     jest.spyOn(rtcEngineImpl, 'enableLocalAudio');
     jest.spyOn(rtcEngineImpl, 'muteLocalAudioStream');
-    jest.spyOn(rtcEngineImpl, 'muteAllRemoteAudioStreams');
+    let notifyRemote = jest.spyOn(
+      irisRtcEngine.irisClientManager.irisClientObserver,
+      'notifyRemote'
+    );
 
     await joinChannel(apiEnginePtr, null);
+    notifyRemote.mockClear();
 
     await callIris(apiEnginePtr, 'RtcEngine_disableAudio', null);
     expect(rtcEngineImpl.enableLocalAudio).toBeCalledWith(false);
     expect(rtcEngineImpl.muteLocalAudioStream).toBeCalledWith(true);
-    expect(rtcEngineImpl.muteAllRemoteAudioStreams).toBeCalledWith(true);
+    expect(notifyRemote).toHaveBeenCalledWith(
+      NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
+      expect.any(Array)
+    );
+  });
+  test('global audio toggles preserve per-connection remote mute policy', async () => {
+    await joinChannel(apiEnginePtr, null);
+    let irisClient = irisRtcEngine.irisClientManager.irisClientList[0];
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteAudioStream', {
+      uid: TEST_REMOTE_UID,
+      mute: true,
+    });
+
+    await callIris(apiEnginePtr, 'RtcEngine_disableAudio');
+    expect(
+      irisClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+    expect(irisClient.irisClientState.remoteAudioMuteState.isMuted(789)).toBe(
+      false
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngine_enableAudio');
+    expect(
+      irisClient.irisClientState.remoteAudioMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+    expect(irisClient.irisClientState.remoteAudioMuteState.isMuted(789)).toBe(
+      false
+    );
   });
 
   test('setClientRole', async () => {
@@ -430,26 +471,64 @@ describe('IAgoraRtcEngineImpl', () => {
   test('enableVideo', async () => {
     jest.spyOn(rtcEngineImpl, 'enableLocalVideo');
     jest.spyOn(rtcEngineImpl, 'muteLocalVideoStream');
-    jest.spyOn(rtcEngineImpl, 'muteAllRemoteVideoStreams');
+    let notifyRemote = jest.spyOn(
+      irisRtcEngine.irisClientManager.irisClientObserver,
+      'notifyRemote'
+    );
 
     await joinChannel(apiEnginePtr, null);
+    notifyRemote.mockClear();
 
     await callIris(apiEnginePtr, 'RtcEngine_enableVideo', null);
     expect(rtcEngineImpl.enableLocalVideo).toBeCalledWith(true);
     expect(rtcEngineImpl.muteLocalVideoStream).toBeCalledWith(false);
-    expect(rtcEngineImpl.muteAllRemoteVideoStreams).toBeCalledWith(false);
+    expect(notifyRemote).toHaveBeenCalledWith(
+      NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
+      expect.any(Array)
+    );
   });
   test('disableVideo', async () => {
     jest.spyOn(rtcEngineImpl, 'enableLocalVideo');
     jest.spyOn(rtcEngineImpl, 'muteLocalVideoStream');
-    jest.spyOn(rtcEngineImpl, 'muteAllRemoteVideoStreams');
+    let notifyRemote = jest.spyOn(
+      irisRtcEngine.irisClientManager.irisClientObserver,
+      'notifyRemote'
+    );
 
     await joinChannel(apiEnginePtr, null);
+    notifyRemote.mockClear();
 
     await callIris(apiEnginePtr, 'RtcEngine_disableVideo', null);
     expect(rtcEngineImpl.enableLocalVideo).toBeCalledWith(false);
     expect(rtcEngineImpl.muteLocalVideoStream).toBeCalledWith(true);
-    expect(rtcEngineImpl.muteAllRemoteVideoStreams).toBeCalledWith(true);
+    expect(notifyRemote).toHaveBeenCalledWith(
+      NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK,
+      expect.any(Array)
+    );
+  });
+  test('global video toggles preserve per-connection remote mute policy', async () => {
+    await joinChannel(apiEnginePtr, null);
+    let irisClient = irisRtcEngine.irisClientManager.irisClientList[0];
+    await callIris(apiEnginePtr, 'RtcEngine_muteRemoteVideoStream', {
+      uid: TEST_REMOTE_UID,
+      mute: true,
+    });
+
+    await callIris(apiEnginePtr, 'RtcEngine_disableVideo');
+    expect(
+      irisClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+    expect(irisClient.irisClientState.remoteVideoMuteState.isMuted(789)).toBe(
+      false
+    );
+
+    await callIris(apiEnginePtr, 'RtcEngine_enableVideo');
+    expect(
+      irisClient.irisClientState.remoteVideoMuteState.isMuted(TEST_REMOTE_UID)
+    ).toBe(true);
+    expect(irisClient.irisClientState.remoteVideoMuteState.isMuted(789)).toBe(
+      false
+    );
   });
   test('startPreview', async () => {
     await joinChannel(apiEnginePtr, null);

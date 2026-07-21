@@ -275,8 +275,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalState.enabledVideo = true;
       this.enableLocalVideo(true);
       this.muteLocalVideoStream(false);
-      this.muteAllRemoteVideoStreams(false);
-      this.muteAllRemoteVideoStreams(false);
+      let remoteUserPackages = this._engine.irisClientManager.remoteUserPackages.filter(
+        (userPackage) => {
+          let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+            userPackage.connection
+          );
+          return (
+            irisClient &&
+            !irisClient.irisClientState.remoteVideoMuteState.isMuted(
+              userPackage.uid
+            )
+          );
+        }
+      );
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        NotifyRemoteType.SUBSCRIBE_VIDEO_TRACK,
+        remoteUserPackages
+      );
 
       return this._engine.returnResult();
     };
@@ -288,8 +303,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalState.enabledVideo = false;
       this.enableLocalVideo(false);
       this.muteLocalVideoStream(true);
-      this.muteAllRemoteVideoStreams(true);
-      this.muteAllRemoteVideoStreams(true);
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        NotifyRemoteType.UNSUBSCRIBE_VIDEO_TRACK,
+        this._engine.irisClientManager.remoteUserPackages
+      );
 
       return this._engine.returnResult();
     };
@@ -481,7 +498,23 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalState.enabledAudio = true;
       this.enableLocalAudio(true);
       this.muteLocalAudioStream(false);
-      this.muteAllRemoteAudioStreams(false);
+      let remoteUserPackages = this._engine.irisClientManager.remoteUserPackages.filter(
+        (userPackage) => {
+          let irisClient = this._engine.irisClientManager.getIrisClientByConnection(
+            userPackage.connection
+          );
+          return (
+            irisClient &&
+            !irisClient.irisClientState.remoteAudioMuteState.isMuted(
+              userPackage.uid
+            )
+          );
+        }
+      );
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        NotifyRemoteType.SUBSCRIBE_AUDIO_TRACK,
+        remoteUserPackages
+      );
 
       return this._engine.returnResult();
     };
@@ -493,7 +526,10 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       this._engine.globalState.enabledAudio = false;
       this.enableLocalAudio(false);
       this.muteLocalAudioStream(true);
-      this.muteAllRemoteAudioStreams(true);
+      await this._engine.irisClientManager.irisClientObserver.notifyRemote(
+        NotifyRemoteType.UNSUBSCRIBE_AUDIO_TRACK,
+        this._engine.irisClientManager.remoteUserPackages
+      );
 
       return this._engine.returnResult();
     };
