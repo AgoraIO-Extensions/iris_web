@@ -19,6 +19,7 @@
   "dependencies": {
     "@agoraio-extensions/agora-rtc-sdk-ng-fake": "^1.0.15",
     "@iris/native-rtc": "workspace: *",
+    "agora-extension-virtual-background": "2.1.0",
     "agora-rtc-sdk-ng": "4.23.2",
     "iris-web-core": "workspace: *"
   },
