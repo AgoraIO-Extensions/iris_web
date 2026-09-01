@@ -152,6 +152,9 @@ importers:
       '@iris/native-rtc':
         specifier: 'workspace: *'
         version: link:../@iris/rtc
+      agora-extension-virtual-background:
+        specifier: 2.1.0
+        version: 2.1.0(agora-rtc-sdk-ng@4.23.2)
       agora-rtc-sdk-ng:
         specifier: 4.23.2
         version: 4.23.2
@@ -1308,6 +1311,11 @@ packages:
   agent-base@7.1.4:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
     engines: {node: '>= 14'}
+
+  agora-extension-virtual-background@2.1.0:
+    resolution: {integrity: sha512-YCqC6FVZ5Dk9QIYgCl6SoM6HS/7EGeck434sYl1chbR3UnrdLE+vBDnaVJOVAjiZ9dPNcrGwfVhpZQQ8FV5Y6Q==}
+    peerDependencies:
+      agora-rtc-sdk-ng: '>=4.15.0'
 
   agora-rtc-sdk-ng@4.23.2:
     resolution: {integrity: sha512-uZcJVJ0g4PJfCqnlcP9kFU6y/2n9uIlRSljRFnK2FNLHo8nlB8Vc0pf5Gs4n75PmThC4u1G2FvL4k7iFau6boQ==}
@@ -6756,6 +6764,10 @@ snapshots:
       - supports-color
 
   agent-base@7.1.4: {}
+
+  agora-extension-virtual-background@2.1.0(agora-rtc-sdk-ng@4.23.2):
+    dependencies:
+      agora-rtc-sdk-ng: 4.23.2
 
   agora-rtc-sdk-ng@4.23.2:
     dependencies:

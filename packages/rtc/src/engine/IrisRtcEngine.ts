@@ -48,6 +48,7 @@ import { TrackHelper } from '../helper/TrackHelper';
 import { IrisGlobalState } from '../state/IrisGlobalState';
 import { AgoraConsole } from '../util/AgoraConsole';
 import IrisRtcErrorHandler from '../util/ErrorHandler';
+import { VirtualBackgroundController } from '../virtual_background/VirtualBackgroundController';
 
 import { IrisClientManager } from './IrisClientManager';
 
@@ -71,6 +72,7 @@ export class IrisRtcEngine implements ApiInterceptor {
   public executor: CallApiExecutor;
   public irisEventHandlerManager: IrisEventHandlerManager;
   public irisElement: IrisElement;
+  public virtualBackgroundController: VirtualBackgroundController;
   public irisIntervalList: {
     type: IrisIntervalType;
     interval: NodeJS.Timeout;
@@ -119,6 +121,10 @@ export class IrisRtcEngine implements ApiInterceptor {
       AgoraConsole.debug('use agoraRTC from initIrisRtc');
       this.globalState.AgoraRTC = options.agoraRTC;
     }
+
+    this.virtualBackgroundController = new VirtualBackgroundController(
+      (extensions) => this.globalState.AgoraRTC.registerExtensions(extensions)
+    );
   }
 
   intercept(apiParam: ApiParam): ApiInterceptorReturnType {
@@ -218,6 +224,7 @@ export class IrisRtcEngine implements ApiInterceptor {
 
   public async release() {
     this.agoraEventHandler.release();
+    await this.virtualBackgroundController.release();
     await this.irisClientManager.release();
   }
 

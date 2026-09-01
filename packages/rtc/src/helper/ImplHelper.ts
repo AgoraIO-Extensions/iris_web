@@ -215,7 +215,9 @@ export class ImplHelper {
     return audioTrack;
   }
 
-  public async createVideoCameraTrack(): Promise<ICameraVideoTrack> {
+  public async createVideoCameraTrack(
+    sourceType: NATIVE_RTC.VIDEO_SOURCE_TYPE
+  ): Promise<ICameraVideoTrack> {
     let videoTrack: ICameraVideoTrack;
     try {
       videoTrack = await this._engine.globalState.AgoraRTC.createCameraVideoTrack();
@@ -226,6 +228,14 @@ export class ImplHelper {
     }
 
     await this.processVideoTrack(videoTrack);
+    const mediaSourceType =
+      sourceType === NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY
+        ? NATIVE_RTC.MEDIA_SOURCE_TYPE.SECONDARY_CAMERA_SOURCE
+        : NATIVE_RTC.MEDIA_SOURCE_TYPE.PRIMARY_CAMERA_SOURCE;
+    await this._engine.virtualBackgroundController.attachCameraTrack(
+      mediaSourceType,
+      videoTrack
+    );
     return videoTrack;
   }
 
@@ -285,7 +295,7 @@ export class ImplHelper {
     if (
       globalState.screenCaptureContentHint != null &&
       globalState.screenCaptureContentHint !=
-        NATIVE_RTC.VIDEO_CONTENT_HINT.CONTENT_HINT_NONE
+      NATIVE_RTC.VIDEO_CONTENT_HINT.CONTENT_HINT_NONE
     ) {
       conf.optimizationMode = AgoraTranslate.NATIVE_RTCVIDEO_CONTENT_HINT2string(
         globalState.screenCaptureContentHint
@@ -369,7 +379,7 @@ export class ImplHelper {
     if (isDefined(options.clientRoleType)) {
       if (
         options.clientRoleType ===
-          NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE &&
+        NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_AUDIENCE &&
         irisClientState.clientRoleType !== options.clientRoleType
       ) {
         (this._engine.getImplInstance(
@@ -558,7 +568,7 @@ export class ImplHelper {
 
     if (
       irisClient.irisClientState.clientRoleType ===
-        NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER &&
+      NATIVE_RTC.CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER &&
       this._engine.globalState.enabledAudio &&
       options.publishMicrophoneTrack
     ) {
@@ -600,7 +610,7 @@ export class ImplHelper {
     return (
       sourceType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY ||
       sourceType ==
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY ||
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY ||
       sourceType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD ||
       sourceType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH
     );
@@ -615,7 +625,7 @@ export class ImplHelper {
     return (
       sourceType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY ||
       sourceType ==
-        NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY ||
+      NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY ||
       sourceType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD ||
       sourceType == NATIVE_RTC.VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH
     );

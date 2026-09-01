@@ -29,19 +29,29 @@ import { IRtcEngineExtensions } from '../extensions/IAgoraRtcEngineExtensions';
 import { SendDataStreamMessage } from '../helper/ClientHelper';
 import { AgoraConsole } from '../util/AgoraConsole';
 import { AgoraTranslate } from '../util/AgoraTranslate';
+import { loadVirtualBackgroundImage } from '../virtual_background/VirtualBackgroundImageLoader';
+import {
+  mapBlurOptions,
+  mapColorOptions,
+  mapImageOptions,
+  VirtualBackgroundMappingResult,
+} from '../virtual_background/VirtualBackgroundMapper';
 
 export const RTCENGINE_KEY = 'RtcEngine';
 
 //@ts-ignore
 export class IRtcEngineImpl implements IRtcEngineExtensions {
   private _engine: IrisRtcEngine;
+  private _virtualBackgroundGeneration = 0;
 
   constructor(engine: IrisRtcEngine) {
     this._engine = engine;
   }
 
   release(): CallApiReturnType {
+    ++this._virtualBackgroundGeneration;
     let processFunc = async (): Promise<CallIrisApiResult> => {
+      await this._engine.virtualBackgroundController.release();
       await this._engine.irisClientManager.release();
       return this._engine.returnResult();
     };
@@ -136,7 +146,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
   leaveChannel_2c0e3aa(
     options: NATIVE_RTC.LeaveChannelOptions
   ): CallApiReturnType {
+    ++this._virtualBackgroundGeneration;
     let processFunc: AsyncTaskType = async (): Promise<CallIrisApiResult> => {
+      await this._engine.virtualBackgroundController.disable();
       if (this._engine.irisClientManager.irisClientList.length === 0) {
         return this._engine.returnResult();
       }
@@ -206,6 +218,97 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     };
 
     return this._engine.execute(processFunc);
+  }
+
+  isFeatureAvailableOnDevice(type: NATIVE_RTC.FeatureType): CallApiReturnType {
+    const available =
+      type === NATIVE_RTC.FeatureType.VIDEO_VIRTUAL_BACKGROUND &&
+      this._engine.virtualBackgroundController.isCompatible;
+    return this._engine.returnResult(
+      true,
+      NATIVE_RTC.ERROR_CODE_TYPE.ERR_OK,
+      JSON.stringify({ result: available })
+    );
+  }
+
+  enableVirtualBackground(
+    enabled: boolean,
+    backgroundSource: NATIVE_RTC.VirtualBackgroundSource,
+    _segproperty: NATIVE_RTC.SegmentationProperty,
+    type: NATIVE_RTC.MEDIA_SOURCE_TYPE
+  ): CallApiReturnType {
+    const generation = ++this._virtualBackgroundGeneration;
+    const processFunc = async (): Promise<CallIrisApiResult> => {
+      if (!enabled) {
+        await this._engine.virtualBackgroundController.disable();
+        return this._engine.returnResult();
+      }
+
+      if (!this._engine.virtualBackgroundController.isCompatible) {
+        return this._engine.returnResult(
+          false,
+          -NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+        );
+      }
+
+      if (
+        backgroundSource.background_source_type ===
+        NATIVE_RTC.BACKGROUND_SOURCE_TYPE.BACKGROUND_IMG
+      ) {
+        try {
+          const loaded = await loadVirtualBackgroundImage(
+            backgroundSource.source || ''
+          );
+          if (generation !== this._virtualBackgroundGeneration) {
+            loaded.release();
+            return this._engine.returnResult(false);
+          }
+          const mapped = mapImageOptions(loaded.image, type);
+          if ('error' in mapped) {
+            loaded.release();
+            return this.mappingErrorResult(mapped);
+          }
+          const succeeded = await this._engine.virtualBackgroundController.enable(
+            mapped.options,
+            type,
+            loaded.release
+          );
+          return this._engine.returnResult(succeeded);
+        } catch (error) {
+          AgoraConsole.error(`virtual background image load failed: ${error}`);
+          return this._engine.returnResult(
+            false,
+            -NATIVE_RTC.ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT
+          );
+        }
+      }
+
+      const mapped =
+        backgroundSource.background_source_type ===
+          NATIVE_RTC.BACKGROUND_SOURCE_TYPE.BACKGROUND_COLOR
+          ? mapColorOptions(backgroundSource, type)
+          : mapBlurOptions(backgroundSource, type);
+      if ('error' in mapped) return this.mappingErrorResult(mapped);
+
+      const succeeded = await this._engine.virtualBackgroundController.enable(
+        mapped.options,
+        type
+      );
+      return this._engine.returnResult(succeeded);
+    };
+
+    return this._engine.execute(processFunc);
+  }
+
+  private mappingErrorResult(
+    mapped: VirtualBackgroundMappingResult
+  ): Promise<CallIrisApiResult> {
+    if (!('error' in mapped)) return this._engine.returnResult();
+    const errorCode =
+      mapped.error === 'not-supported'
+        ? NATIVE_RTC.ERROR_CODE_TYPE.ERR_NOT_SUPPORTED
+        : NATIVE_RTC.ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+    return this._engine.returnResult(false, -errorCode);
   }
   setChannelProfile_a78fa4f(
     profile: NATIVE_RTC.CHANNEL_PROFILE_TYPE
@@ -338,7 +441,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         );
         if (this._engine.implHelper.isVideoCamera(sourceType)) {
           let cTrack: ICameraVideoTrack;
-          cTrack = await this._engine.implHelper.createVideoCameraTrack();
+          cTrack = await this._engine.implHelper.createVideoCameraTrack(
+            sourceType
+          );
           videoTrackPackage.track = cTrack;
         }
       }
@@ -457,15 +562,17 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
           ),
           mirror:
             canvas.mirrorMode ===
-              NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
+            NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
             canvas.mirrorMode ===
-              NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+            NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
         };
         trackPackage = new VideoTrackPackage(canvas.view, config, sourceType);
         this._engine.irisClientManager.addLocalVideoTrackPackage(trackPackage);
         if (this._engine.implHelper.isVideoCamera(sourceType)) {
           let cTrack: ICameraVideoTrack;
-          cTrack = await this._engine.implHelper.createVideoCameraTrack();
+          cTrack = await this._engine.implHelper.createVideoCameraTrack(
+            sourceType
+          );
           trackPackage.track = cTrack;
         }
       }
@@ -585,18 +692,18 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
         },
         enabled
           ? NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
-              .LOCAL_AUDIO_STREAM_STATE_RECORDING
+            .LOCAL_AUDIO_STREAM_STATE_RECORDING
           : NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
-              .LOCAL_AUDIO_STREAM_STATE_STOPPED,
+            .LOCAL_AUDIO_STREAM_STATE_STOPPED,
         NATIVE_RTC.LOCAL_AUDIO_STREAM_REASON.LOCAL_AUDIO_STREAM_REASON_OK
       );
 
       this._engine.rtcEngineEventHandler.onLocalAudioStateChanged_f33d789(
         enabled
           ? NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
-              .LOCAL_AUDIO_STREAM_STATE_RECORDING
+            .LOCAL_AUDIO_STREAM_STATE_RECORDING
           : NATIVE_RTC.LOCAL_AUDIO_STREAM_STATE
-              .LOCAL_AUDIO_STREAM_STATE_STOPPED,
+            .LOCAL_AUDIO_STREAM_STATE_STOPPED,
         NATIVE_RTC.LOCAL_AUDIO_STREAM_REASON.LOCAL_AUDIO_STREAM_REASON_OK
       );
 
@@ -1115,9 +1222,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       ),
       mirror:
         mirrorMode ===
-          NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
+        NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
         mirrorMode ===
-          NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+        NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
     };
     this._engine.irisClientManager.localVideoTrackPackages.map(
       (videoTrackPackage) => {
@@ -1146,9 +1253,9 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
       ),
       mirror:
         mirrorMode ===
-          NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
+        NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
         mirrorMode ===
-          NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
+        NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED,
     };
     let remoteUserPackage = this._engine.irisClientManager.remoteUserPackages.find(
       (user) => {
@@ -1206,7 +1313,7 @@ export class IRtcEngineImpl implements IRtcEngineExtensions {
     let mirror =
       mirrorMode === NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO ||
       mirrorMode ===
-        NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED;
+      NATIVE_RTC.VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_ENABLED;
     this._engine.irisClientManager.localVideoTrackPackages.map(
       (videoTrackPackage) => {
         let track = videoTrackPackage.track as ILocalVideoTrack;
